@@ -2,95 +2,4335 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1A4C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD4BC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53846221F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588874411;
-	bh=nlVcE5DMFtshSc2kachx4RUc+LMjoaKLypsD+DVJas8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DKVoBNKWK5trcvwZfVOHJYqlCl67iq+5w/WN8a3GOfSKllO3bc8SCH+EAH07RNl45
-	 WpJ9LcqEnqHDoo10zxreTJKhFSKMtIIhOCz6OxJ+UM4/34GUObWz/L3gI9XrmHajGV
-	 hTLENjSqbdep1QW7edc4qg80kCpDdErPs/EVYlqU=
+	by mail.kernel.org (Postfix) with ESMTP id B44F621473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgEGSAK (ORCPT
+        id S1727084AbgEGR7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:00:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42170 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgEGSAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:00:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m18so5275836otq.9;
-        Thu, 07 May 2020 11:00:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rz7afgEItK/X3b+OTl5u/Z9PROtzkZ7RI3h73BBOTWs=;
-        b=C2onDBrrYi8JmgFgYHg2CRjzGOVTh4/msLriWssc985XNsbo4g+EHrTyjDPFKFRVop
-         C6gDtRYtTqJNvQ+KwLqt6Ln2JmFORkbEihDL75+XCMHZHzEY5T4LzNezjUi9l7WLTZvu
-         C2hx3KuiYEckX9W44UhOTxVaGJCNXjSxyOdzGs0LayCrDza2WcZDNBEn3nxPfCJQEftY
-         WqpSmPpz0e0olcv6W+EEQ2ixqDdmS5rZb3BakDJcYfkh6iseuPxS67AgS7cU6DCgiGuY
-         i6gnQZrqANyAq0dHeGrRGsurALLEuCBqxhZ6lhtQE3xQ2L8O5teRDW+Bx39E5Dybt3tV
-         ztRw==
-X-Gm-Message-State: AGi0PuYvvIdtMMVM0PaALm3LibwVZW3olEuB3Ba2Ek5qRR8Ww2q8EDJ6
-        DvWzGLeZjttcomfTDwfY+w==
-X-Google-Smtp-Source: APiQypJhQbkvsuSj/TDVG5iOrhMJrjOjHURTMckguIQgXNHjamctuKBe2GrLUNQpcXTcwNq7ZO+RZg==
-X-Received: by 2002:a9d:730b:: with SMTP id e11mr12377163otk.9.1588874408974;
-        Thu, 07 May 2020 11:00:08 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u82sm1568783oia.35.2020.05.07.11.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:00:08 -0700 (PDT)
-Received: (nullmailer pid 1908 invoked by uid 1000);
-        Thu, 07 May 2020 18:00:07 -0000
-Date:   Thu, 7 May 2020 13:00:07 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Thu, 7 May 2020 13:59:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3107 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbgEGR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:59:50 -0400
+IronPort-SDR: lH/ZLkkvLHuy0KVSAizFnYxJQVElayT+Np38LIhu+aQGzfZJsTzmPnW3EHBlEyttb2H8shX8SF
+ S5biBrrMEmnA==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 10:57:16 -0700
+IronPort-SDR: SdAezf9V/9mBfHMufK4/OHz37BsmSO+ADYH1tJDssq3FPGayMhHXpIX9Ra21kPv1K7mqOyk3Js
+ RnoR8ccsB8yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208,223";a="462227322"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga006.fm.intel.com with ESMTP; 07 May 2020 10:57:15 -0700
+Date:   Thu, 7 May 2020 10:57:15 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/11] PCI: qcom: add missing reset for ipq806x
-Message-ID: <20200507180007.GA1801@bogus>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-5-ansuelsmth@gmail.com>
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+Message-ID: <20200507175715.GA22426@otc-nc-03>
+References: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
+ <878si6rx7f.fsf@nanos.tec.linutronix.de>
+ <20200505201616.GA15481@otc-nc-03>
+ <875zdarr4h.fsf@nanos.tec.linutronix.de>
+ <20200507121850.GB85463@otc-nc-03>
+ <87wo5nj48a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="n8g4imXOkfNTN/H1"
 Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-5-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87wo5nj48a.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 00:06:11 +0200, Ansuel Smith wrote:
-> Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
+
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Thomas,
+
+I think i got mixed up with logical apic id and logical cpu :-(
+
+Patch and trace attached.
+
+
+
+
+On Thu, May 07, 2020 at 02:53:41PM +0200, Thomas Gleixner wrote:
+> Ashok,
 > 
-> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v4.5+
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> "Raj, Ashok" <ashok.raj@intel.com> writes:
+> 
+> > We did a bit more tracing and it looks like the IRR check is actually
+> > not happening on the right cpu. See below.
+> 
+> What?
+> 
+> >> So we have 3 points where an interrupt can fire:
+> >> 
+> >>  A) Before #2
+> >> 
+> >>  B) After #2 and before #3
+> >> 
+> >>  C) After #3
+> >> 
+> >> #A is hitting the old vector which is still valid on the old CPU and
+> >>    will be handled once interrupts are enabled with the correct irq
+> >>    descriptor - Normal operation (same as with maskable MSI)
+> >> 
+> >> #B This must be checked in the IRR because the there is no valid vector
+> >>    on the old CPU.
+> >
+> > The check for IRR seems like on a random cpu3 vs checking for the new vector 33
+> > on old cpu 6?
+> 
+> The whole sequence runs on CPU 3. If old CPU was 6 then this should
+> never run on CPU 3.
+> 
+> > This is the place when we force the retrigger without the IRR check things seem to fix itself.
+> 
+> It's not fixing it. It's papering over the root cause.
+> 
+> > Did we miss something? 
+> 
+> Yes, you missed to analyze why this runs on CPU3 when old CPU is 6. But
+> the last interrupt actually was on CPU3.
+> 
+> >     <idle>-0     [003] d.h.   200.278052: xhci_irq: xhci irq
+> 
+> Can you please provide the full trace and the patch you used to generate
+> it?
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cheers,
+Ashok
+
+--n8g4imXOkfNTN/H1
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="msi-xhci-hang-trace.patch"
+
+From df6284b9a7a7ef5ca3200a794d2abaa5cb88c9d9 Mon Sep 17 00:00:00 2001
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Date: Thu, 7 May 2020 19:18:15 +0300
+Subject: [PATCH] msi tracing for tglx
+
+---
+ arch/x86/kernel/apic/msi.c   | 17 ++++++++++++++++-
+ drivers/pci/msi.c            |  2 ++
+ drivers/usb/host/xhci-ring.c |  1 +
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0cb8548..0feb2613fdd5 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -63,17 +63,20 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ {
+ 	struct irq_cfg old_cfg, *cfg = irqd_cfg(irqd);
+ 	struct irq_data *parent = irqd->parent_data;
+-	unsigned int cpu;
++	unsigned int cpu, this_apic;
+ 	int ret;
+ 
+ 	/* Save the current configuration */
+ 	cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
+ 	old_cfg = *cfg;
++	this_apic = apic->cpu_present_to_apicid(cpu);
+ 
+ 	/* Allocate a new target vector */
+ 	ret = parent->chip->irq_set_affinity(parent, mask, force);
+ 	if (ret < 0 || ret == IRQ_SET_MASK_OK_DONE)
+ 		return ret;
++	trace_printk("quirk[%d] new vector allocated, new apic = %d vector = %d this apic = %d\n",
++		     irqd_msi_nomask_quirk(irqd), cfg->dest_apicid, cfg->vector, this_apic);
+ 
+ 	/*
+ 	 * For non-maskable and non-remapped MSI interrupts the migration
+@@ -93,6 +96,9 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	    old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
+ 	    cfg->dest_apicid == old_cfg.dest_apicid) {
+ 		irq_msi_update_msg(irqd, cfg);
++		trace_printk("Direct Update: irq %d Ovec=%d Oapic %d "
++			     "Nvec %d Napic %d\n", irqd->irq, old_cfg.vector,
++			     old_cfg.dest_apicid, cfg->vector, cfg->dest_apicid);
+ 		return ret;
+ 	}
+ 
+@@ -138,9 +144,13 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	/* Redirect it to the new vector on the local CPU temporarily */
+ 	old_cfg.vector = cfg->vector;
+ 	irq_msi_update_msg(irqd, &old_cfg);
++	trace_printk("Redirect to new vector %d on old apic %d\n",
++		     old_cfg.vector, old_cfg.dest_apicid);
+ 
+ 	/* Now transition it to the target CPU */
+ 	irq_msi_update_msg(irqd, cfg);
++	trace_printk("Transition to new target apic %d vector %d\n",
++		     cfg->dest_apicid, cfg->vector);
+ 
+ 	/*
+ 	 * All interrupts after this point are now targeted at the new
+@@ -160,6 +170,11 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	 * underlying vector store. It's just checking the local APIC's
+ 	 * IRR.
+ 	 */
++
++	trace_printk("Update Done [IRR %d]: irq %d Nvec %d Napic %d\n",
++		     lapic_vector_set_in_irr(cfg->vector),
++		     irqd->irq, cfg->vector, cfg->dest_apicid);
++
+ 	if (lapic_vector_set_in_irr(cfg->vector))
+ 		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
+ 
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7a..20dbc757ea2a 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -323,6 +323,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
+ 		writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
+ 		writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
++		readl(base + PCI_MSIX_ENTRY_DATA);
+ 	} else {
+ 		int pos = dev->msi_cap;
+ 		u16 msgctl;
+@@ -343,6 +344,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+ 					      msg->data);
+ 		}
++		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+ 	}
+ 
+ skip:
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 0fda0c0f4d31..2ec340b1b3d5 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2838,6 +2838,7 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+ 	u32 status;
+ 	int event_loop = 0;
+ 
++	trace_printk("xhci irq\n");
+ 	spin_lock_irqsave(&xhci->lock, flags);
+ 	/* Check if the xHC generated the interrupt, or the irq is shared */
+ 	status = readl(&xhci->op_regs->status);
+-- 
+2.17.1
+
+
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=trace_tglx
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 4077/4077   #P:12
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+          <idle>-0     [005] d.h.    40.357547: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.357697: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.357867: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.358524: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.358664: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.358826: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.364056: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.364142: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.364296: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.364964: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.365050: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.365213: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.370352: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.370452: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.370582: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.371215: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.371301: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.371466: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.376611: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.376698: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.376830: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.377464: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.377550: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.377716: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.382910: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.382996: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.383149: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.383787: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.383873: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.384039: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.389141: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.389233: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.389323: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.389978: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.390076: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.390177: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.395349: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.395455: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.395564: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.396215: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.396315: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.396420: xhci_irq: xhci irq
+          <idle>-0     [005] d.h.    40.401716: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 10
+          <idle>-0     [005] d.h.    40.401737: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 10 Nvec 33 Napic 0
+          <idle>-0     [005] d.h.    40.401738: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.401857: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.401939: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.402718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.402809: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.402896: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.408087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.408179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.408235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.409006: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.409094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.409178: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.414322: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.414358: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.414452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.415056: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.415121: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.415201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.420229: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.420301: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.420369: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.421009: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.421080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.421134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.426226: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.426255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.426336: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.426924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.426954: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.427036: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.432165: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.432220: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.432258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.432935: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.432989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.433028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.438242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.438316: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.438428: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.439064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.439138: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.439201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.444311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.444379: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.444455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.445031: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.445134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.445172: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    40.446568: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 34 this apic = 6
+     migration/3-24    [003] d..1    40.446577: msi_set_affinity: Redirect to new vector 34 on old apic 6
+     migration/3-24    [003] d..1    40.446585: msi_set_affinity: Transition to new target apic 0 vector 34
+     migration/3-24    [003] d..1    40.446585: msi_set_affinity: Update Done [IRR 0]: irq 121 Nvec 34 Napic 0
+          <idle>-0     [000] d.h.    40.450349: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.450382: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.450429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.451099: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.451125: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.451205: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.456470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.456551: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.456640: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.457397: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.457435: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.457520: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.462689: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.462783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.462841: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.463565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.463677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.463741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.468913: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.468991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.469082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.469731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.469835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.469924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.475106: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.475207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.475264: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    40.476614: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.476650: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.476693: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.481916: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.481966: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.482020: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.482744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.482795: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.482850: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.488100: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.488153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.488211: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.488945: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.489003: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.489070: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.494310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.494361: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.494443: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.495150: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.495201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.495271: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.500408: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.500446: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.500500: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.501133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.501172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.501222: xhci_irq: xhci irq
+          <idle>-0     [000] dNH.    40.506454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.506586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.506698: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.507352: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.507403: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.507468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.512702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.512760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.512823: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.513490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.513530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.513570: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.518689: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.518723: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.518763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.519405: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.519451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.519493: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.524634: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.524671: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.524712: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.525363: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.525422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.525470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.530714: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.530756: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.530822: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.531521: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.532085: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.532150: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.537264: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.537310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.537371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.537990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.538036: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.538082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.543241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.543278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.543321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.543952: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.543998: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.544039: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.549210: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.549248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.549289: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.550001: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.550087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.550160: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.555343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.555455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.555535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.556185: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.556255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.556353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.561479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.561522: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.561578: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.562250: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.562304: xhci_irq: xhci irq
+          <idle>-0     [000] dNH.    40.562366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.567576: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.567613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.567681: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.568347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.568392: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.568433: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.573530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.573576: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.573617: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.574260: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.574306: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.574346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.579491: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.579532: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.579599: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.580271: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.580346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.580467: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.585681: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.585710: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.585775: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.586490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.586519: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.586555: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.591725: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.591754: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.591829: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.592455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.592485: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.592554: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.597736: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.597763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.597840: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.598480: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.598505: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.598575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.603763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.603806: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.603863: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.604528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.604575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.604606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.609702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.609739: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.609798: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.610437: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.610477: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.610517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.615678: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.615718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.615758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.616467: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    40.616488: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+          <idle>-0     [000] d.h.    40.616488: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.616504: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.616547: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.621766: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+          <idle>-0     [001] d.h.    40.621785: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+          <idle>-0     [001] d.h.    40.621786: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.621851: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.621924: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.622595: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.622648: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.622716: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.627902: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.627980: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.628055: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.628730: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.628846: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.628926: xhci_irq: xhci irq
+           <...>-14    [001] d..1    40.632522: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    40.632541: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+          <idle>-0     [003] d.h.    40.634078: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.634145: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.634226: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.634882: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.634934: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.635010: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.640299: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.640411: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.640543: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.641290: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.641371: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.641461: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    40.643740: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+     migration/3-24    [003] d..1    40.643764: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    40.646603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.646643: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.646697: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.647343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.647418: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.647472: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.652678: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.652716: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.652766: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.652825: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.652897: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.653572: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.653609: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.653658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.658999: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.659047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.659092: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    40.660746: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.660832: xhci_irq: xhci irq
+        kthreadd-2     [000] d.h.    40.660872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666023: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666129: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666798: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666863: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.666903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.672177: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.672211: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.672255: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    40.673770: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.673805: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.673845: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679130: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679171: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679869: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679892: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.679932: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685144: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685807: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.685847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691034: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691063: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691764: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691794: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.691834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697030: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697070: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697131: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697781: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697827: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.697879: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.702992: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.703031: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.703090: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.703717: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.703756: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.703796: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.708888: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.708919: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.708959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.709619: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.709643: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.709683: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.714706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.714736: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.714776: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.715455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.715484: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.715556: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.720658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.720712: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.720747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.721385: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.721436: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.721460: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.726649: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.726672: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.726720: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.727366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.727406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.727458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.732651: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.732690: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.732731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.733422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.733459: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.733498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.738664: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.738690: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.738727: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.739344: xhci_irq: xhci irq
+           klogd-191   [000] d.h.    40.739382: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.739458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.744562: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.744603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.744640: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.745313: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.745347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.745412: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.750585: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.750631: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.750665: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.751327: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.751374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.751425: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.756535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.756560: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.756598: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.757237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.757277: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.757316: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.762475: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.762506: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.762583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.763230: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.763255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.763294: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.768509: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.768556: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.768593: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.769280: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.769326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.769381: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.774529: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.774575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.774608: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.775221: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.775268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.775320: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.780489: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    40.780509: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+          <idle>-0     [000] d.h.    40.780510: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.780525: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.780565: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+          <idle>-0     [001] d.h.    40.780575: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+          <idle>-0     [001] d.h.    40.780575: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.781213: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.781249: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.781313: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.786536: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.786633: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.786732: xhci_irq: xhci irq
+          <idle>-0     [001] d.H.    40.787451: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.787544: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.787644: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.792767: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.792888: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.792938: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.793603: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.793701: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    40.793778: xhci_irq: xhci irq
+           <...>-14    [001] d..1    40.796495: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    40.796516: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+          <idle>-0     [003] d.h.    40.798934: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.798992: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.799073: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.799710: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.799766: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.799832: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.805165: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.805240: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.805287: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.806071: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.806145: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    40.806193: xhci_irq: xhci irq
+          <idle>-0     [003] d.H.    40.811405: xhci_irq: xhci irq
+         cpuhp/3-23    [003] d.h.    40.811490: xhci_irq: xhci irq
+         cpuhp/3-23    [003] d.h.    40.811584: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    40.811782: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+     migration/3-24    [003] d..1    40.811804: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+     migration/0-11    [000] d.H1    40.812815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.812903: xhci_irq: xhci irq
+        kthreadd-2     [000] d.h.    40.812975: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.818163: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.818225: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.818276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.818930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.818978: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.819016: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.824326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.824433: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.824552: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.825273: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.825327: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.825439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.830594: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.830644: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.830723: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    40.832077: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.832129: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.832179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.837321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.837395: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.837489: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.838135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.838182: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.838234: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.843481: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.843517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.843593: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.844353: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    40.844460: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    40.844559: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.849660: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.849691: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.849740: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.850362: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.850420: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.850462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.855642: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    40.855695: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.855757: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.856422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.856452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.856537: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.861718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.861756: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.861798: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.862498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.862528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.862600: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.867704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.867741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.867797: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.868437: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.868477: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.868507: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.873631: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.873671: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.873711: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.874361: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.874401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.874442: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.879685: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.879710: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.879751: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.880457: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.880488: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.880523: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.885665: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.885695: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.885737: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.886362: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.886433: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    40.886510: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.891634: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.891680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.891718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.892386: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.892431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.892461: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.897631: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.897671: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.897711: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.898381: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.898422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.898461: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.903611: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.903638: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.903677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.904322: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.904362: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.904428: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.909550: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.909580: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.909658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.910275: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.910316: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.910356: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.915529: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.915569: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.915615: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.916314: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.916353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.916406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.921506: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.921546: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.921587: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.922237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.922276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.922317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.927488: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.927513: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.927586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.928197: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.928238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.928278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.933535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.933565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.933610: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    40.934279: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    40.934326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.934369: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.939490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.939536: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.939567: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.940201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.940241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.940300: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.945458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.945498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.945545: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.946178: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.946218: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.946258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.951514: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    40.951535: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    40.951535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.951584: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.951638: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.952314: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.952347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.952423: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.957586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.957618: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.957694: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.958314: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.958347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.958442: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.963591: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.963621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.963698: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.964327: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.964380: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.964454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.969660: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.969702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.969753: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.970460: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.970492: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.970540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.975777: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.975876: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.975949: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.976667: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.976712: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.976773: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    40.982037: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.982101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.982155: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.982847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.982887: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.982945: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.988262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.988321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.988407: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.989150: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.989209: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.989281: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    40.994449: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.994516: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.994603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.995288: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.995351: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    40.995450: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.000541: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.000593: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.000665: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.001277: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.001317: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.001366: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.006460: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.006535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.006619: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.007334: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.007466: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.007569: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.012696: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.012745: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.012815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.013492: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.013575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.013659: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.018813: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.018852: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.018910: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.019605: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.019649: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.019710: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.024928: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.024969: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.025029: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.025731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.025773: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.025833: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.030993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.031050: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.031122: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.031801: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.031850: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.031914: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037827: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037865: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.037912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043213: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043923: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.043966: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049256: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049894: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.049990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.055195: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.055240: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.055309: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.055991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.056025: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.056082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.061263: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.061304: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.061365: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.062010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.062055: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.062095: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.067212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.067251: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.067289: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.067939: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.067983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.068027: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.073113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.073152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.073192: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.073843: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.073902: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.073964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.079219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.079302: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.079380: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.080063: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.080157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.080253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.085387: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.085422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.085486: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.086116: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.086173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.086214: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.091383: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.091429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.091475: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.092135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.092187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.092233: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.097451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.097500: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.097595: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.098260: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.098323: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.098425: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.103589: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.104143: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.104232: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.104895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.104934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.104998: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.110191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.110258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.110321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.110971: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.111021: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.111068: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.116280: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.116331: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.116375: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.117064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.117113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.117157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.122259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.122297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.122381: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.123007: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.123047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.123105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.128336: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    41.128363: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    41.128364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.128466: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.128611: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.129268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.129377: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.129517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.134722: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.134785: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.134862: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.135572: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.135623: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.135702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.140869: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.140955: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.141028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.141698: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.141759: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.141835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147012: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147140: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147810: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147884: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.147942: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.153188: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.153238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.153315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.153991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.154039: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.154101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.159311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.159405: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.159498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.160186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.160248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.160321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.165552: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.165621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.165718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.166446: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.166517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.166603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.171885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.171954: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.172035: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.172752: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.172821: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.172907: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178060: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178108: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178176: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178856: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.178954: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.184157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.184226: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.184302: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.185022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.185091: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.185176: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.190452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.190516: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.190586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.191260: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.191297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.191343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.196566: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.196613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.196680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.197336: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.197401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.197468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.202706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.202779: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.202865: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.203539: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.203596: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.203671: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.208889: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.208936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.210094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.210758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.210798: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.210861: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.216098: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.216180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.216253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.216939: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.217005: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.217081: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.222325: xhci_irq: xhci irq
+     kworker/5:2-307   [000] d.h.    41.222398: xhci_irq: xhci irq
+     kworker/5:2-307   [000] d.h.    41.222490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.223159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.223204: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.223272: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.228540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.228584: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.228646: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.229305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.229343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.229398: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.234571: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.234621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.234696: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.235324: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.235366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.235426: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.240588: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.240627: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.240688: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.241346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.241399: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.241450: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.246654: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.246691: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.246737: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.247401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.247441: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.247486: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.252615: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.252653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.252702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.253324: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.253364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.253423: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.258608: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.258655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.258732: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.259366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.259414: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.259469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.264701: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.264747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.264808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.265468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.265508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.265555: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.270709: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.270749: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.270796: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.271429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.271468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.271513: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.276655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.276693: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.276746: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.277440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.277485: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.277549: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.282785: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.282838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.282913: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.283626: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.283672: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.283736: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.288826: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.288872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.288934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.289576: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.289623: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.289674: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.294758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.294797: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.294838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.295468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.295508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.295553: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.300580: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.300625: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.300691: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.301337: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.301379: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.301439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.306600: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.306651: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.306722: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.307346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.307447: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.307540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.312744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.312805: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.312872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.313540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.313582: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.313648: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    41.319060: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.319122: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.319198: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.319867: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.319930: xhci_irq: xhci irq
+           udevd-303   [000] d.h.    41.320005: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325137: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325230: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325846: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.325940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331198: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331825: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.331905: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.337143: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    41.337185: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    41.337186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.337215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.337268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.337969: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.338047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.338112: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.343292: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.343366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.343439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.344078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.344124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.344174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.349372: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.349466: xhci_irq: xhci irq
+     kworker/4:1-124   [004] d.h.    41.349514: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 8
+     kworker/4:1-124   [004] d.h.    41.349528: msi_set_affinity: Direct Update: irq 122 Ovec=33 Oapic 8 Nvec 33 Napic 2
+          <idle>-0     [000] d.h.    41.349531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.350207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.350271: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.350349: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.355609: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.355709: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.355810: xhci_irq: xhci irq
+          <idle>-0     [000] dnh.    41.356507: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    41.356564: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.356641: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.361832: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.361897: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.361970: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.362628: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.362692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.362767: xhci_irq: xhci irq
+           <...>-14    [001] d..1    41.371540: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    41.371549: msi_set_affinity: Direct Update: irq 122 Ovec=33 Oapic 2 Nvec 33 Napic 6
+     migration/0-11    [000] d.H1    41.372557: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.372603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.372705: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.373306: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.373340: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.373393: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.378708: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.378745: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.378822: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.379492: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.379606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.379704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.384872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.384966: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.385057: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.385764: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.385858: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.385953: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    41.389878: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 6
+     migration/3-24    [003] d..1    41.389900: msi_set_affinity: Redirect to new vector 36 on old apic 6
+     migration/3-24    [003] d..1    41.389909: msi_set_affinity: Transition to new target apic 4 vector 36
+     migration/3-24    [003] d..1    41.389909: msi_set_affinity: Update Done [IRR 0]: irq 122 Nvec 36 Napic 4
+          <idle>-0     [000] d.h.    41.391054: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.391093: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.391133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.391804: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.391834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.391879: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.397186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.397223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.397267: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.398043: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.398091: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.398131: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.403346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.403394: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.403479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.404079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.404120: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.404215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.409353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.409387: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.409436: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.410096: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.410126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.410165: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.415455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.415501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.415578: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.416317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.416371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.416458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.421655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.421701: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.421786: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.422389: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.422461: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.422520: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    41.427930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.427970: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.428010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.428689: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.428728: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.428787: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434062: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434109: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.434897: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440081: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440797: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440833: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.440883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446050: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446106: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446768: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446801: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.446847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452066: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452121: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452161: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452824: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.452912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458030: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458069: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458107: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458757: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458797: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.458836: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.463964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.464016: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.464057: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.464747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.464813: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.464860: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.470111: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.470176: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.470223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.470922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.470988: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.471030: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.476212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.476249: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.476300: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.476980: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.477017: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.477069: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    41.482211: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.482683: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.482793: xhci_irq: xhci irq
+         syslogd-187   [000] d.h.    41.483404: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.483445: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.483508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.488702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.488737: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.488781: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.489448: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.489498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.489539: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.494709: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.494747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.494787: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.495429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.495469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.495509: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.500696: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.500752: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.500807: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.501452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.501508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.501599: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.506779: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.506837: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.506934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.507595: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.507653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.507755: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.512887: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.512960: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.513048: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.513680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.513745: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.513851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519033: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519075: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519138: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519780: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519829: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.519872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525084: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525863: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.525947: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531116: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531208: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531892: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.531960: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.537168: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.537238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.537315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.538005: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.538072: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.538136: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.543385: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.543421: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.543484: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.544155: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.544204: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.544253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.549430: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.549469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.549533: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.550152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.550191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.550235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.555418: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    41.555443: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    41.555444: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.555472: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.555531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.556157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.556230: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.556301: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.561579: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.561679: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.561818: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.562514: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.562630: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.562783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.567941: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.568047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.568113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.568771: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.568870: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.568938: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.574146: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.574253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.574317: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    41.575611: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.575744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.575871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.581102: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.581223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.581356: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.582040: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.582186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.582328: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.587446: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.587583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.587763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.588437: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.588562: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.588734: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.593812: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.593936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.594096: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.594772: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.594894: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.595082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.600110: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.600189: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.600265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.600935: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.601001: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.601064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.606228: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.606317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.606411: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.607135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.607232: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.607315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.612548: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.612677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.612844: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.613467: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.613606: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    41.613743: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.618957: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.619047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.619174: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    41.619847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.619923: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.620032: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.625261: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.625368: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.625547: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.626206: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.626302: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.626470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.631686: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.631839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.632019: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    41.632620: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    41.632675: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    41.632762: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.637973: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.638022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.638099: xhci_irq: xhci irq
+     kworker/7:2-272   [000] d.h.    41.638760: xhci_irq: xhci irq
+         syslogd-187   [000] d.h.    41.638800: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.638862: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644014: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644090: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644812: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644891: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.644956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.650089: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.650180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.650246: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.650930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.651008: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.651094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.656330: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.656395: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.656459: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.657116: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.657153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.657202: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.662325: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.662375: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.662425: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.663064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.663113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.663159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.668304: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.668343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.668399: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.669054: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.669094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.669139: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.674407: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.674449: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.674537: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.675189: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.675262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.675331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.680485: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.680613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.680714: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.681348: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.681393: xhci_irq: xhci irq
+              dd-297   [000] d.h.    41.681449: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.686617: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.686655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.686718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.687385: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.687420: xhci_irq: xhci irq
+              dd-297   [000] d.h.    41.687474: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.692680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.692719: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.692768: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.693429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.693468: xhci_irq: xhci irq
+              dd-297   [000] d.h.    41.693514: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.698685: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.698719: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.698830: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.699497: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.699590: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.699695: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.704868: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.704987: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.705107: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    41.705760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.706354: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.706476: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.711637: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.711673: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.711732: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.712404: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.712451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.712492: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.717586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.717632: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.717676: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.718324: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.718363: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.718408: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.723606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.723653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.723727: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.724421: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.724471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.724530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.729743: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.729801: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.729870: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.730586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.730635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.730702: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.735849: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.735921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.735980: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.736616: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.736662: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.736709: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.741905: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.741951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.741994: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.742636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.742682: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.742715: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.747902: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.747942: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.747981: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.748690: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.748722: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.748832: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.754017: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    41.754044: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    41.754045: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.754097: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.754183: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.754845: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.754921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.755142: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.760310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.760392: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.760473: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.761146: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.761224: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.761473: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.766697: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.766749: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.766838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.767538: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.767599: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.767839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.772986: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.773051: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.773145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.773793: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.773831: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.774070: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.779282: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.779353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.779440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.780158: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.780227: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.780497: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.785759: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.785829: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.785905: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.786634: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.786704: xhci_irq: xhci irq
+              dd-297   [000] d.h.    41.786778: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.791974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.792055: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.792135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.792825: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.792896: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.792973: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.798119: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.798171: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.798248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.798895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.798950: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.799037: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.804335: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.804409: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.804512: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.805186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.805260: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.805319: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.810496: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.810592: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.810657: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.811323: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.811386: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.811458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.816688: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.816744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.816808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.817489: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.817581: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.817663: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.822985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.823079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.823159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.823879: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.823940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.824022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.829197: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.829256: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.829337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.830011: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.830063: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.830146: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.835347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.835398: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.835471: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.841535: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.841590: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.841685: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.846894: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.846951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.847022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.847713: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.847749: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.847805: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.852940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.852985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.853028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.853662: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.853706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.853748: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.858929: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.858969: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.859013: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.859652: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.859692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.859736: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.864998: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.865073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.865141: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.865850: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.865925: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.865983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.871152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.871191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.871247: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.871896: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.871937: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.872007: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.877187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.877231: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.877305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.877981: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.878020: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.878082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.883282: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.883348: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.883413: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.884077: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.884122: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.884175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.889261: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.889305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.889348: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.889991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.890048: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.890093: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.895180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.895219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.895265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.895918: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.895961: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.896037: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.901104: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.901178: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.901236: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.901933: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.902008: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.902068: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.907217: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.907255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.907312: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.907961: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.908001: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.908071: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.913243: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.913296: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.913374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.914040: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.914075: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.914134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.919329: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.919400: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.919457: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.920135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.920175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.920215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.925315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.925361: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.925406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.926030: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.926076: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.926119: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.931258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.931297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.931342: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.931989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.932029: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.932073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.937317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.937470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.937558: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.938255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.938329: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.938441: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.943559: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.943603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.943661: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.944310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.944342: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.944410: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.949608: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.949653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.949733: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    41.950409: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.950454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.950521: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.955704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.955747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.955806: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.956471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.956518: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.956563: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.961703: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.961751: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.961802: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.962439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.962479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.962523: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.967699: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.967738: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.967778: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.968430: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.968470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.968517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.973807: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    41.973833: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    41.973834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.973886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.973965: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.974648: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.974710: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.974794: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.979976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.980063: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.980146: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.980797: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.980883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.980967: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.986124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.986203: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.986276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.986975: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.987063: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.987148: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.992431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.992493: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.992568: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.993251: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.993330: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.993411: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.998572: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.998624: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.998700: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.999357: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.999407: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    41.999471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.004627: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.004679: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.004794: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.005422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.005474: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.005583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.010832: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.010895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.010976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.011668: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.011728: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.011835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.017021: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.017092: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.017179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.017886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.017956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.018033: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.023272: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.023331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.023401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.024087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.024126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.024187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.029443: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.029504: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.029579: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.030283: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.030335: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.030423: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.035587: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.035649: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.035728: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.036337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.036447: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.036544: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.041753: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.041808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.041898: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.042549: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.042600: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.042664: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.047938: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.047987: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.048047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.048751: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.048826: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.048883: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    42.055002: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.055070: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.055136: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.055792: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.055835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.055942: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.061130: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.061172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.061238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.061922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.061965: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.062022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.067280: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.067321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.067396: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.068097: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.068135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.068191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.073360: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.073429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.073497: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.074165: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.074214: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.074271: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.079453: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.079489: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.079552: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.080202: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.080240: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.080290: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.085510: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.085550: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.085602: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.086281: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.086325: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    42.086371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.091510: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.091559: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.091624: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.092290: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.092331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.092403: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.097603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.097706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.097794: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.098462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.098509: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.098575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.103817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.103885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.103956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.104616: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.104663: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.104720: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.109866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.109924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.109971: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.110613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.110662: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.110708: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.115864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.115903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.115949: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.116575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.116614: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.116656: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.121934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.121984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.122055: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.122750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.122799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.122857: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128042: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128106: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128837: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128889: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.128948: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134119: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134190: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134227: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.134966: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.140202: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.140248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.140300: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.140971: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.141019: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.141069: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.146207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.146248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.146287: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.146948: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.146987: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.147028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.152225: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.152295: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.152335: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.153007: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.153072: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.153141: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.158331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.158357: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.158439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.159101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.159128: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.159201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.164333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.164365: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.164408: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.165053: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.165122: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.165162: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.170339: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.170422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.170462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.171117: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.171170: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.171198: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.176451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.176497: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.176531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.177219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.177274: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.177302: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.182429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.182468: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.182508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.183131: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.183172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.183211: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.188370: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    42.188420: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    42.188421: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.188447: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.188528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.189153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.189207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.189251: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.194278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.194349: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.194403: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.195064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.195103: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.195145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.200291: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.200369: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.200464: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.201101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.201184: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.201242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.206429: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.206482: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.206539: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.207190: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.207229: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.207265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.212509: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.212571: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.212700: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.213357: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.213448: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.213527: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.218697: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.218760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.218839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.219484: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.219536: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.219605: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.224813: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.224870: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.224946: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.225608: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.225659: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.225722: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.231015: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.231068: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.231185: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.231883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.231946: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.232028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.237208: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.237279: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.237369: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.238062: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.238133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.238215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.243418: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.243483: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.243556: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    42.244948: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.244998: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.245056: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.250279: xhci_irq: xhci irq
+     kworker/3:2-161   [000] d.h.    42.250337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.250642: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.251335: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.251433: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.251549: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.256706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.256778: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.256865: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.257546: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.257618: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.257707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.262927: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.262976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.263079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.263750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.263800: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.263859: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.269134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.269196: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.269268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.270010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.270072: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.270146: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.275333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.275469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.275569: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    42.277112: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.277182: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.277259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.282437: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.282487: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.282551: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.283199: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.283238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.283282: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.288540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.288582: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.288640: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.289337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.289390: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.289456: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.294628: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.294673: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.294745: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    42.295421: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.295465: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.295531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.300692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.300746: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.300813: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.301462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.301509: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.301559: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.306761: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.306808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.306851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.307530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.307577: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.307613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.312713: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.312754: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.312797: xhci_irq: xhci irq
+           klogd-191   [000] d.h.    42.313450: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.313543: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.313683: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.318812: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.319212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.319319: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.319982: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.320027: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.320127: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.325283: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.325340: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.325397: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.326086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.326137: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.326184: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.331327: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.331375: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.331424: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.332064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.332112: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.332156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.337315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.337367: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.337424: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.338074: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.338114: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.338174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.343336: xhci_irq: xhci irq
+           klogd-191   [000] d.h.    42.343391: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.343517: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.344201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.344298: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.344367: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.349566: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.349715: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.349871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.350471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.350610: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.350765: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.355906: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.356007: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.356132: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.356781: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.356877: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.357019: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.362223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.362333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.362489: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.363273: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.363312: xhci_irq: xhci irq
+          <idle>-0     [000] dNH.    42.363374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.368532: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.368568: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.368639: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.369261: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.369308: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.369358: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.374530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.374576: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.374623: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.375281: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.375329: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.375374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.380574: xhci_irq: xhci irq
+     kworker/0:0-5     [000] d.h.    42.380624: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.380686: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    42.381399: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.381490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.381628: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.386742: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.386817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.386964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.387592: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.387726: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.387878: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.393074: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.393174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.393268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.393945: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.394041: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.394179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.399401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.399501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.400223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.400889: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.400932: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.400995: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406202: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406867: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406923: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.406967: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412884: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.412967: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.418269: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    42.418293: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    42.418294: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.418337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.418415: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.419078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.419173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.419262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.424419: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.424506: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.424575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.425203: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.425250: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.425300: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.430453: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.430503: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.430595: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.431238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.431317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.431384: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.436629: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.436680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.436750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.437414: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.437454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.437521: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.442678: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.442730: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.442807: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.443443: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.443496: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.443574: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.448784: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.448833: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.448888: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.449580: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.449637: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.449713: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.455021: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.455082: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.455153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.455900: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.455962: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.456037: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.461259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.461322: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.461415: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.462101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.462174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.462248: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    42.467435: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.467504: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.467591: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.468294: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.468356: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.468454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.473760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.473832: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.473921: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    42.474597: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.474700: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.474831: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.479984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.480046: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.480132: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.480763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.480821: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.480891: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.486033: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.486144: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.486280: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.487003: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.487111: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.487248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.492354: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.492487: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.492612: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.493292: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.493438: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    42.493575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.498743: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.498829: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.498926: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.499567: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.499615: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.499739: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.504956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.505066: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.505196: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.505918: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.506055: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.506182: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.511436: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.511528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.511666: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.512309: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.512399: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.512551: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.517646: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.517758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.517875: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.518540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.518648: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.518763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.523981: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.524060: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.524173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.524855: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.524936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.525058: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.530321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.530431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.530582: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    42.531507: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.531638: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    42.531799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.536907: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.536949: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.537023: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.537665: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.537714: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.537765: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.542903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.542942: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.542984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.543633: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.543672: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.543716: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.548935: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.548971: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.549051: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.549741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.549776: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.549853: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555003: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555820: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.555960: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561130: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561824: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561874: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.561924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567132: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567882: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.567964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.573126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.573241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.573307: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.573979: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.574051: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.574150: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.579296: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.579346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.579443: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.580116: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.580164: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.580257: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.585426: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.585528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.585612: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.586301: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.586335: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.586391: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.591536: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.591613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.591704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.592340: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.592394: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.592485: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.597565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.597604: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.597671: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.598305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.598353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.598405: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.603635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.603680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.603723: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.604390: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.604422: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.604467: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.609585: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.609624: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.609664: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.610324: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.610364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.610410: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.615619: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.615714: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.615814: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.616440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.616489: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.616587: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.621777: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.621893: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.621990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.622677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.622771: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.622871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.627946: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.627989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.628067: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.628698: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.628741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.628823: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    42.634073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.634172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.634258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.634907: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.634943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.635010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.640212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.640265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.640312: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.640991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.641046: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.641091: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.646239: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.646277: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.646318: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.646950: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.646989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.647035: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.652195: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    42.652247: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    42.652248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.652276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.652325: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.653008: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.653081: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.653157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.658437: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.658486: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.658579: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.659287: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.659336: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.659438: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.664557: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.664634: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.664724: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.665376: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.665480: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.665564: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.670746: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.670848: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.670929: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    42.671565: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    42.671594: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.671645: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.676906: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.676953: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.676999: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.677725: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.677799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.677841: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.682987: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.683116: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.683265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.683890: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.684018: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.684159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.689351: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.689493: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.689676: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.690357: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.690501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.690675: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.695891: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.695995: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.696126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.696866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.696964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.697080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.702283: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.702436: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.702604: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.702742: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.702959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.703612: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.703659: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.703784: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.708982: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.709046: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.709174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.709836: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.709921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.710036: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.715331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.715473: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.715643: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.716350: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.716504: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.716678: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.721875: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.721979: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.722108: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    42.722743: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.722826: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.722951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.728656: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.728744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.728890: xhci_irq: xhci irq
+     kworker/5:2-307   [000] d.h.    42.729527: xhci_irq: xhci irq
+         syslogd-187   [000] d.h.    42.729596: xhci_irq: xhci irq
+           udevd-300   [000] d.h.    42.729716: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.735009: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.735104: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.735219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.735951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.736049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.736162: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.741331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.741451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.741588: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.742253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.742312: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.742410: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.747540: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.747654: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.747771: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.748447: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.748566: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.748700: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    42.753973: xhci_irq: xhci irq
+         syslogd-187   [000] d.h.    42.754025: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.754090: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.754803: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.754903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.754982: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760138: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760192: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760867: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760902: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.760946: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766153: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766804: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766844: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.766884: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772117: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772224: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772896: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772931: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.772972: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778190: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778902: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778938: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.778979: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784031: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784129: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784762: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784798: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.784839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.789828: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.789865: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.789904: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.790576: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.790614: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.790654: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.795805: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.795841: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.795880: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.796536: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.796573: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.796612: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.801779: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.801831: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.801903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.802566: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.802601: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.802643: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.807839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.807892: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.807943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.808615: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.808662: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.808693: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.813762: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.813811: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.813851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.814491: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.814531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.814571: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.819719: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.819758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.819799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.820454: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.820500: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.820567: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.825811: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.825849: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.825900: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.826606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.826707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.826802: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.831941: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.831996: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.832052: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.832689: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.832724: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.832767: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.837887: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.837924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.837964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.838613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.838663: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.838703: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.843929: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.843969: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.844011: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.844694: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    42.844711: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+          <idle>-0     [000] d.h.    42.844712: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.844731: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.844805: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.849978: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+          <idle>-0     [001] d.h.    42.850028: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+          <idle>-0     [001] d.h.    42.850028: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.850118: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.850245: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.850883: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.851009: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.851137: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.856278: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.856403: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.856533: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.857166: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.857225: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.857299: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.862560: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.862670: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.862829: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.863514: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.863629: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    42.863777: xhci_irq: xhci irq
+           <...>-14    [001] d..1    42.868562: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    42.868576: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+     migration/3-24    [003] d.H1    42.869592: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.869656: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.869760: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.870387: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.870493: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.870589: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.875827: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.875955: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.876145: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.876832: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.876982: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.877187: xhci_irq: xhci irq
+          <idle>-0     [003] d.H.    42.882449: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.882592: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.882775: xhci_irq: xhci irq
+          <idle>-0     [003] d.H.    42.883430: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.883570: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    42.883745: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    42.888038: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+     migration/3-24    [003] d..1    42.888064: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+     migration/0-11    [000] d.H1    42.889087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.889159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.889258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.889914: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    42.890004: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.890104: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.895313: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.895374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.895448: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.896167: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.896236: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.896326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.901565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.901635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.901728: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    42.902388: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.902465: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.902562: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    42.908083: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.908154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.908234: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.908898: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.908947: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.909064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.914285: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.914347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.914442: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.915145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.915206: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.915283: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.920471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.920530: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.920614: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.921353: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.921452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.921533: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.926714: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.926768: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.926847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.927475: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.927823: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.927883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933059: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933203: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933876: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.933985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.939158: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.939193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.939253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.939976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.940020: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.940103: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.945215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.945263: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.945330: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.945972: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.946011: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.946064: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.951243: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.951295: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.951341: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.951992: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.952049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.952092: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.957305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.957344: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.957398: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.958076: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.958115: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.958167: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.963371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.963432: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.963501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.964181: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.964240: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.964326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.969462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.969505: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.969577: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.970223: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.970259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.970309: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.975511: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.975555: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.975597: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.976278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.976322: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.976366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.981482: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.981519: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.981567: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.982199: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.982238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.982281: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.987472: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.987533: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.987616: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.988291: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.988376: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.988455: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.993668: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.993730: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.993814: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.994499: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.994553: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.994619: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.999820: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.999871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    42.999959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.000617: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.000671: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.000743: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.005890: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.005933: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.006002: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.006636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.006680: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.006731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.011951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.012000: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.012047: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.012722: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.012770: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.012817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.017949: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.017988: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.018033: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.018681: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.018719: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.018766: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.023936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.023993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.024049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.024750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.024815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.024864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.030113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.030175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.030221: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.H.    43.035838: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.035890: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.035941: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.041086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.041215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.041355: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.041993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.042030: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.042090: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.047262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.047311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.047355: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.047991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.048049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.048089: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.053328: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.053384: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.053431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.054113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.054152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.054198: xhci_irq: xhci irq
+       mayhem.sh-301   [000] d.h.    43.059342: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+       mayhem.sh-301   [000] d.h.    43.059361: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+       mayhem.sh-301   [000] d.h.    43.059362: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.059409: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.059572: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.060228: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+          <idle>-0     [001] d.h.    43.060270: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+          <idle>-0     [001] d.h.    43.060271: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.060334: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.060459: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.065619: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.065719: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.065860: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.066503: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.066602: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.066742: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.072014: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.072098: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.072209: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.072948: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.073046: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.073141: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.078290: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.078437: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.078576: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.079219: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.079324: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    43.079435: xhci_irq: xhci irq
+           <...>-14    [001] d..1    43.082661: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    43.082686: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+          <idle>-0     [003] d.h.    43.084493: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.084615: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.084771: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.085398: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.085508: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.085643: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.090711: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.090829: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.090988: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.091669: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.091790: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.091917: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.097105: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.097200: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.097277: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.097977: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.098078: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    43.098205: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    43.102052: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+     migration/3-24    [003] d..1    43.102074: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+          <idle>-0     [000] d.H.    43.103367: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.103484: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.103596: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.104274: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.104322: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.104418: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.109732: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.109838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.109887: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.110672: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.110770: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.110828: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.116086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.116173: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.116212: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.117808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.117835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.117885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.123114: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.123189: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.123237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.123985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.124060: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.124111: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.129375: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.129464: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.129563: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.130779: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.130815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.130859: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.135983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.136019: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.136069: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.136723: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.136753: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.136799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.141958: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.141989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.142034: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.142707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.142738: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.142783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148018: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148791: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148820: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.148859: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.153993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.154048: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.154087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.154709: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.154763: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.154804: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.159929: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.159969: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.160009: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.160652: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.160691: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.160731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.165943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.165992: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.166049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.166752: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.166817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.166860: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172046: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172110: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172805: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172833: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.172880: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178056: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178093: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178163: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178807: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178841: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.178896: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184089: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.184949: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190123: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190157: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190777: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.190857: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.195966: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.196013: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.196053: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.196758: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.196819: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.196862: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.202101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.202180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.202224: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.202922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.202974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.203020: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208229: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.208994: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214194: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214903: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214944: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.214985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.220190: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.220227: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.220267: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.220940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.220978: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.221016: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226181: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.226974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.232169: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.232232: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.232285: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.232976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.233049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.233105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.238314: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.238365: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.238431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.239135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.239184: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.239249: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.244398: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.244469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.245086: xhci_irq: xhci irq
+           udevd-300   [000] d.h.    43.245713: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.245753: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.245820: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.250993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.251048: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.251094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.251742: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.251796: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.251842: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257085: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257843: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.257928: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263108: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    43.263133: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    43.263134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263181: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263228: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263868: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.263972: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.269158: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.269209: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.269256: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.269945: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.269994: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.270050: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.275297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.275359: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.275413: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.276107: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.276179: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.276229: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.281389: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.281465: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.281573: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.282204: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.282307: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.282370: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.287703: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.287816: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.287926: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.288621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.288735: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.288857: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.294148: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.294257: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.294406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.295149: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.295258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.295405: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.300593: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.300747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.300890: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.301560: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.301685: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.301816: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.307032: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.307181: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.307324: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.308020: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.308158: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.308295: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.313587: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.313710: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.313838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.314586: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.314708: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.314839: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.319964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.320049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.320175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.320806: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.320871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.320977: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.326193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.326297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.326423: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.327066: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.327174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.327276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.332494: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.332572: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.332705: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.333368: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.333430: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.333551: xhci_irq: xhci irq
+          <idle>-0     [002] dNh.    43.333613: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] dNh.    43.333652: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [000] d.h.    43.338658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.338735: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.338844: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.339473: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.339547: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.339658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.344886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.344990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.345118: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.345834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.345936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.346069: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.351311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.351396: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.351527: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.352201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.352268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.352355: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.357463: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.357501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.357557: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.358219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.358252: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.358310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.363452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.363491: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.363546: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.364192: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.364224: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.364284: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.369513: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.369546: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.369603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.370280: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.370320: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.370365: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.375462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.375501: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.375542: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.376202: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.376248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.376279: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.381337: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.381374: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.381424: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.382073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.382113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.382154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387161: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387263: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387908: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387952: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.387983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393090: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393132: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393830: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393874: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.393916: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399105: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399144: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399875: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399921: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.399985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.405166: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.405203: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.405284: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.405998: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.406046: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.406108: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.411182: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.411233: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.411286: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.411940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.411973: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.412010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417220: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417267: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417902: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417941: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.417983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.423193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.423238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.423288: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.424024: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.424074: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.424139: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.429278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.429352: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.429434: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.430087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.430135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.430202: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.435397: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.435490: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.435570: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.436237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.436299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.436402: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.441589: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.441627: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.441701: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.442366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.442424: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.442476: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.447588: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.447628: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.447676: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.448324: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.448363: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.448406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.453534: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.453573: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.453636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.454262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.454299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.454349: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.459596: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.459652: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.459724: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.460440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.460486: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.460559: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.465706: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.465750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.465811: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.466476: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.466524: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.466592: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    43.472019: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.472079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.472162: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.472816: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.472865: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.472933: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.478156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.478205: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.478250: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.478905: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.478953: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.479000: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484114: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484152: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484198: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484825: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.484912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490071: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    43.490096: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    43.490097: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490185: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490932: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.490980: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.496258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.496299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.496344: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.497062: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.497109: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.497156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.502351: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.502452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.502510: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.503172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.503245: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.503320: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.508511: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.508624: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.508741: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.509368: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.509462: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.509579: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.514817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.514928: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.515054: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.515751: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.515851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.515961: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.521190: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.521299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.521447: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.522150: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.522258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.522406: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.527635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.527786: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.527928: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.528635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.528783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.528933: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.534187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.534341: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.534508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.535255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.535412: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.535555: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.540760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.540882: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.541009: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.541707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.541834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.541963: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.547148: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.547219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.547299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.547984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.548053: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.548116: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.553440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.553592: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.553734: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.554456: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.554585: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.554718: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.559872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.559953: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.560029: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.560689: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.560762: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.560871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.566135: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.566242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.566320: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.567023: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.567133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.567213: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.573073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.573137: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.573208: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.573928: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.573991: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.574074: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.579232: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.579271: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.579333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.580004: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.580054: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.580120: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.585284: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.585336: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.585409: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.586091: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.586140: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.586205: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.591421: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.591482: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.591556: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.592262: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.592301: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.592371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.597512: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.597548: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.597594: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.598241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.598288: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.598326: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.603508: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.603548: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.603591: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.604238: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.604278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.604319: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.609531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.609571: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.609621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.610315: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.610354: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.610404: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.615549: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.615584: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.615637: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.616257: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.616296: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.616337: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.621561: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.621607: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.621677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.622324: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.622364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.622408: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.627644: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.627700: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.627747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.628402: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.628451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.628498: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.633654: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.633693: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.633738: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.634395: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.634430: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.634471: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    43.639636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.639675: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.639740: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.640402: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.640435: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.640479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.645701: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.645750: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.645799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.646472: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.646519: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.646564: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.651736: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.651773: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.651844: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.652476: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.652520: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.652565: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    43.658010: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.658110: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.658201: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.658829: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.658867: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.658925: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.664156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.664205: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.664248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.664940: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.664988: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.665035: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670104: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670143: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670826: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.670909: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.675990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.676053: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.676101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.676772: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.676838: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.676885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.681943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.682005: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.682050: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.682749: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.682814: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.682862: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.687995: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.688028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.688109: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.688732: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.688768: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.688847: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    43.693999: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.694089: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.694192: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.694817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.694846: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    43.694898: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700118: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700165: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700848: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700898: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.700944: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706075: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706114: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706780: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706818: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.706862: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712060: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    43.712085: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    43.712086: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712125: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712864: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712937: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.712980: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.718220: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.718301: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.718349: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.719058: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.719129: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.719217: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.724376: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.724448: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.724538: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.725182: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.725254: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.725344: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.730456: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.730583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.730715: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.731369: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.731470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.731621: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.736861: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.736964: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.737057: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.738539: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.738674: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.738813: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.743983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.744075: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.744206: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.744877: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.744990: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.745098: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.750295: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.750416: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.750569: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.751234: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.751299: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.751457: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    43.756620: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    43.756713: xhci_irq: xhci irq
+           udevd-202   [000] d.h.    43.756802: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    43.758103: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.758172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.758235: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.763371: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.763487: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.763608: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.764258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.764323: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.764382: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.769597: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.769731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.769895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.770524: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.770656: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.770824: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.776057: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.776198: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.776323: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    43.776953: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.778058: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.778120: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.783247: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.783303: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.783600: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.784241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.784315: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.784378: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.789493: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.789570: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.789684: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.790328: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.790481: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.790606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.795885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.796026: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.796160: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.796851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.796900: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.798087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.803212: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.803253: xhci_irq: xhci irq
+              dd-297   [000] dNh.    43.803321: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.803950: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.804025: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.804147: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.809305: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.809383: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.809456: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.810094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.810134: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.810247: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.815452: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.815530: xhci_irq: xhci irq
+    kworker/0:1H-275   [000] d.h.    43.815605: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.816259: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.816330: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.816401: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.821529: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.821568: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.821640: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.822261: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.822310: xhci_irq: xhci irq
+              dd-297   [000] d.H.    43.822367: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.827479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.827528: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.827574: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.828241: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.828299: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.828344: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.833565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.833597: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.833658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.834357: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.834459: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.834580: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.839744: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.839863: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.839984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.840658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.840766: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.840885: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.846057: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.846095: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.846160: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.846814: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.846845: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.846913: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.852118: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.852163: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.852217: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.852887: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.852931: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.852985: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.858113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.858151: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.858191: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.858843: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.858883: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.858923: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.864101: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.864235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.864311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.864989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.865116: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.865196: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.870403: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.870488: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.870551: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.871207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.871230: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.871270: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.876411: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.876499: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.876583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.877226: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.877311: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.877396: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.882564: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.882603: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.882640: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.883314: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.883345: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.883404: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.888573: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.888613: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.888653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.889343: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.889383: xhci_irq: xhci irq
+              dd-297   [000] d.h.    43.889423: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.894584: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.894665: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.894748: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.895404: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.895490: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    43.895575: xhci_irq: xhci irq
+     migration/0-11    [000] d.h1    43.900713: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.900998: xhci_irq: xhci irq
+       kdevtmpfs-68    [000] d.h.    43.901060: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.901704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.901741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.901801: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907065: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907095: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907149: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907825: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907888: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.907926: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913171: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913804: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913844: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.913884: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.919105: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    43.919133: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    43.919134: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.919214: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.919265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.919906: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.920002: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.920087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.925307: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.925366: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.925445: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.926107: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.926170: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.926211: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.931435: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.931473: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.931548: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.932166: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.932235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.932278: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.937480: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.937516: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.937627: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.938246: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.938279: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.938350: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.943635: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.943691: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.943777: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.944469: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.944513: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.944564: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.949790: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.949853: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.949953: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.950636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.950690: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.950789: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.955907: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.955943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.956007: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.956692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.956728: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.956781: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.962109: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.962174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.962239: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.962983: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.963049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.963115: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.968282: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.968346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.968450: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.969168: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.969237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.969317: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.974393: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.974440: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.974516: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.975165: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.975205: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.975265: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.980352: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.980432: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.980550: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.981206: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.981268: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.981341: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    43.986466: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.986527: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.986606: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.987284: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.987346: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.987446: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.992653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.992725: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.992814: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.993485: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.993555: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.993658: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.998871: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.998923: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.998992: xhci_irq: xhci irq
+     kworker/7:1-134   [000] d.h.    43.999676: xhci_irq: xhci irq
+     kworker/7:1-134   [000] d.h.    43.999737: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    43.999857: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.004992: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.005071: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.005133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.005790: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.005869: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.005934: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.011123: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.011198: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.011261: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.011951: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.012027: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.012104: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.017331: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.017394: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.017458: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.018136: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.018186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.018234: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.023338: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.023388: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.023433: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.024078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.024127: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.024174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.029281: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.029318: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.029358: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.030028: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.030068: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.030113: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.035352: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.035387: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.035511: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.036154: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.036246: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.036364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.041526: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    44.041670: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.041785: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.042407: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.042446: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.042493: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.047659: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.047701: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.047745: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.048390: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.048431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.048477: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.053653: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.053692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.053735: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.054430: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.054470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.054515: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.059657: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.059731: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.059836: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.060451: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.060522: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.060627: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.065812: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.065930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.066094: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.066741: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.066851: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.066980: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.072187: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.072348: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.073072: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.073768: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.073891: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.074037: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.079159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.079222: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.079286: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.079906: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.079956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.080004: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085206: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085246: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.085976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.091155: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.091193: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.091232: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.091930: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.091970: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.092016: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.097192: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.097236: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.097284: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.097959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.098078: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.098228: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.103373: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.103513: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.103660: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.104317: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.104433: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.104565: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.109790: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    44.109874: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.109984: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.110668: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.110783: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.110961: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116081: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116122: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116185: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116867: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.116915: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122075: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122125: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122175: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.122912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128085: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128164: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128834: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128874: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.128922: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.134100: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    44.134125: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 0
+          <idle>-0     [000] d.h.    44.134126: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.134163: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.134248: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.134912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.134989: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.135083: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.140272: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.140435: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.140583: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.141237: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.141340: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.141471: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.146698: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.146808: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.146959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.147639: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.147749: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.147892: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.153022: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.153156: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.153297: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.153918: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.154035: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.154186: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.159358: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.159477: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.159617: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.160258: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.160364: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.160472: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.165745: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.165872: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.166013: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    44.167575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.167704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.167799: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.172974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.173080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.173155: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.173847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.173952: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.174033: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.179276: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.179395: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.179531: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.180207: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.180312: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.180439: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.185707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.185835: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.185970: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.186707: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.186810: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.186936: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.192159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.192253: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.192333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.193043: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.193136: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.193252: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.198479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.198609: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.198773: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.199391: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.199499: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.199644: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.204901: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.204996: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.205073: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.205812: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.205931: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.206011: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.211260: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.211355: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.211475: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.212145: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.212242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.212322: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.217523: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.217633: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    44.217747: xhci_irq: xhci irq
+     migration/0-11    [000] d.H1    44.219058: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.219096: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.219157: xhci_irq: xhci irq
+          <idle>-0     [000] d.H.    44.224371: xhci_irq: xhci irq
+           udevd-300   [000] d.h.    44.224682: xhci_irq: xhci irq
+           udevd-300   [000] d.h.    44.224815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.225523: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.225645: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.225795: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.231006: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.231100: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.231209: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.231899: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.231993: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.232106: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.237293: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.237389: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.237512: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.238138: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.238218: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.238333: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.243557: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.243632: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.243737: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.244405: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.244467: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.244575: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.249712: xhci_irq: xhci irq
+           klogd-191   [000] d.h.    44.249800: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.249926: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.250566: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.250636: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.250754: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.255974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.256051: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.256128: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.256780: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.256830: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.256883: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262118: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262174: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262218: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262886: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262926: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.262974: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268087: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268124: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268172: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268807: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268847: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.268895: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.273978: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.274026: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.274108: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.274732: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.274817: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.274917: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.279890: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.279944: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.280013: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.280655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.280705: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.280760: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.285906: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.285956: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.286000: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.286616: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.286663: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.286712: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.291866: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.291904: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.291943: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.292577: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.292626: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.292677: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.297868: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.297976: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.298079: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.298752: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.298815: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.298912: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304001: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304092: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304169: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304806: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304850: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.304924: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.310109: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.310159: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.310249: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.310879: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.310959: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.311052: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.316215: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.316306: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.316387: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.317031: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.317080: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.317133: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.322261: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.322310: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.322354: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.322992: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.323049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.323095: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.328210: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.328249: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.328290: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.328961: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.329000: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.329049: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.334242: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.334307: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.334347: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.335042: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.335114: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.335219: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.340311: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.340392: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.340470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.341107: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.341180: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.341235: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.346441: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.346533: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.346639: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.347255: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.347377: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.347474: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.352646: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.352682: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.352760: xhci_irq: xhci irq
+          <idle>-0     [000] dNh.    44.353408: xhci_irq: xhci irq
+           klogd-191   [000] d.h.    44.353457: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.353512: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.358640: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.358692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.358765: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.359397: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.359425: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.359478: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.364655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.364704: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.364747: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.365390: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.365431: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.365479: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.370655: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.370692: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.370734: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.371432: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.371470: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.371518: xhci_irq: xhci irq
+          <idle>-0     [000] d.h.    44.376659: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+          <idle>-0     [000] d.h.    44.376684: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+          <idle>-0     [000] d.h.    44.376685: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.376750: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+          <idle>-0     [001] d.h.    44.376774: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+          <idle>-0     [001] d.h.    44.376776: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.376859: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.377478: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.377521: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.377600: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.382739: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.382807: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.382845: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.383524: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.383603: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.383697: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.388929: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.388969: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.389008: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.389734: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.389797: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.389844: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.394976: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.395047: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.395094: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.395785: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.395824: xhci_irq: xhci irq
+          <idle>-0     [001] d.h.    44.395872: xhci_irq: xhci irq
+           <...>-14    [001] d..1    44.400666: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+           <...>-14    [001] d..1    44.400691: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+     migration/3-24    [003] d.H1    44.401707: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.401806: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.401913: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.402593: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.402714: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.402832: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.408155: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.408273: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.408370: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.409101: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.409232: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.409329: xhci_irq: xhci irq
+          <idle>-0     [003] d.H.    44.414458: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.414588: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.414730: xhci_irq: xhci irq
+          <idle>-0     [003] d.H.    44.415411: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.415549: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.415686: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.420930: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.421021: xhci_irq: xhci irq
+          <idle>-0     [003] d.h.    44.421135: xhci_irq: xhci irq
+     migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+     migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+          <idle>-0     [002] d.h.    45.317477: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    45.317505: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    46.597462: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    46.597488: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    47.301543: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    47.301577: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    49.157492: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    49.157519: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    49.350503: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    49.350529: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    51.333468: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    51.333495: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+       mayhem.sh-301   [002] d.H.    53.322115: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+       mayhem.sh-301   [002] d.H.    53.322142: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    54.277428: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    54.277454: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    55.301483: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    55.301494: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    57.350514: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    57.350540: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    59.333556: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    59.333592: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    61.319451: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    61.319469: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] dNh.    63.301475: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] dNh.    63.301502: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] dNh.    65.349588: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] dNh.    65.349614: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    67.333510: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    67.333536: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    69.317473: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    69.317491: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    71.301459: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    71.301485: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    73.357760: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    73.357787: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    75.334454: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    75.334480: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    77.317454: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    77.317481: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    78.853546: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    78.853572: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+          <idle>-0     [002] d.h.    79.301486: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 4
+          <idle>-0     [002] d.h.    79.301513: msi_set_affinity: Direct Update: irq 122 Ovec=36 Oapic 4 Nvec 36 Napic 4
+
+--n8g4imXOkfNTN/H1--
