@@ -2,141 +2,105 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD0BC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71A2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0121206D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B824B206D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RbmK7xm9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnItiLad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgEGPNq (ORCPT
+        id S1728162AbgEGPNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:13:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41494 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgEGPNp (ORCPT
+        Thu, 7 May 2020 11:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727778AbgEGPNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:13:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047FDSCZ022341;
-        Thu, 7 May 2020 10:13:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588864408;
-        bh=JigUTKaOo4sgONci8PXgDOfebCbTpuRTJNtVrPnbctU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RbmK7xm9yOZFVs+ttHo5bXF539JZ8ER2CBiXRvPOCTCURR1GNhIh/lbhEkL7m9wef
-         BzFo3c3eFGjl1ix7NT5Kg7kQKiuBzvxcYAn8rjtfCVUrHw3FnbpavEVF/GKMCIuV8t
-         ijvIaqvsnjP+AvtayKi0vyn9DK6hVLGdkhjlOgHE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047FDSZm044323;
-        Thu, 7 May 2020 10:13:28 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
- 2020 10:13:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 7 May 2020 10:13:27 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047FDPHZ107963;
-        Thu, 7 May 2020 10:13:26 -0500
-Subject: Re: [PATCH next] ARM: dts: am437x: fix networking on boards with
- ksz9031 phy
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-References: <20200506190835.31342-1-grygorii.strashko@ti.com>
- <20200507044056.4smicagmxve5yshn@pengutronix.de>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7c36e45f-5617-22dd-d1cf-7a2558aac459@ti.com>
-Date:   Thu, 7 May 2020 18:13:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 11:13:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C59C05BD43;
+        Thu,  7 May 2020 08:13:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 18so3133509pfv.8;
+        Thu, 07 May 2020 08:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wCNfAcxLHirtWhA7szQNX73G2LCH8rXx5QD9p4rA8Dk=;
+        b=fnItiLadgw6gVujkCLGxeMWnUOu819/tIkaEKowyFt2g/Nn5mUHkALPznXH/TNOJ79
+         yWdwyURQZlI5T5wZROAv2M29GKPJTD4oUIlR9Ok5e0xh2scXtpiqYk2ZZOlgncX/KnCF
+         a66SYwlNiFizvPuObtEK4h/OXk1dGLhnzVd8zIrpbccuHyqFthc9h3dcasHhv2Jkhphi
+         VgOJXrMFGryLIG39lrJIdtXZf42cY/GDJgUYxFN+VUTWPgBdTBg0ge0Izm2wQvq2Hb5R
+         mPAzY+dbzTO5NnUosx31byzGn1LXlAiN8iDlwoUX0injGUVcIUHfU+XrPHvV3Lk+ucmu
+         JIdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wCNfAcxLHirtWhA7szQNX73G2LCH8rXx5QD9p4rA8Dk=;
+        b=ZbuVrk0lfx11DkBQaBnNQILnO8NJEMZEqfDKgPGHlppZtWjt1eiLuHQUxE+5YxUUbj
+         wZM885am+YdcFVvmNyQ4YCGk2K6S0aXnq/Q28mR2oXpk0MYiNYnRmeyRaqduk4Ubrr1w
+         jmsc4Yf4UHBvyxPTLVREloQUUma5vTLcSQ/tLfgtf4PUcwqZMM/h1R1bhBFcmBARGojt
+         u147TsgMD7Q8z3UwjSE9N97Tfv8RJlp0qyCbYwzWR+feNZS8UE97D3+zQWbTBqU2ivjA
+         rwoV8PfHowLxxYaFg9lmof20RtphNJTOQ0f/NfyYCxKMgpDgumqiETdT1FQUY0l7ZcsF
+         rmlA==
+X-Gm-Message-State: AGi0PuZJIoiHxSYYRDk1G8F75UFHb+Z6OB6YijlJTcOONKv6ojWCqeju
+        o4gTAohAsA1Bk8SfqEzYLD0=
+X-Google-Smtp-Source: APiQypLmdj5NF5BayTeEdUuJYPAeEE4bIXkpQXtR0s8noMzSOLGduyoeZyIGB9WwRTgPXAz0lr3XjA==
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr14474231pfr.36.1588864432467;
+        Thu, 07 May 2020 08:13:52 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id d2sm5118326pfa.164.2020.05.07.08.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 08:13:51 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] uio_hv_generic: add missed sysfs_remove_bin_file
+Date:   Thu,  7 May 2020 23:13:43 +0800
+Message-Id: <20200507151343.792816-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200507044056.4smicagmxve5yshn@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This driver calls sysfs_create_bin_file() in probe, but forgets to
+call sysfs_remove_bin_file() in remove.
+Add the missed call to fix it.
 
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/uio/uio_hv_generic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 07/05/2020 07:40, Oleksij Rempel wrote:
-> Hi Grygorii,
-> 
-> thank you for you patches!
-> 
-> On Wed, May 06, 2020 at 10:08:35PM +0300, Grygorii Strashko wrote:
->> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
->> KSZ9031 PHY") the networking is broken on boards:
->>   am437x-gp-evm
->>   am437x-sk-evm
->>   am437x-idk-evm
->>
->> All above boards have phy-mode = "rgmii" and this is worked before, because
->> KSZ9031 PHY started with default RGMII internal delays configuration (TX
->> off, RX on 1.2 ns) and MAC provided TX delay. After above commit, the
->> KSZ9031 PHY starts handling phy mode properly and disables RX delay, as
->> result networking is become broken.
->>
->> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
->> behavior.
->>
->> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Philippe Schenker <philippe.schenker@toradex.com>
->> Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
->>   arch/arm/boot/dts/am437x-idk-evm.dts | 2 +-
->>   arch/arm/boot/dts/am437x-sk-evm.dts  | 4 ++--
->>   3 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
->> index 811c8cae315b..d692e3b2812a 100644
->> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->> @@ -943,7 +943,7 @@
->>   
->>   &cpsw_emac0 {
->>   	phy-handle = <&ethphy0>;
->> -	phy-mode = "rgmii";
->> +	phy-mode = "rgmii-rxid";
->>   };
->>   
->>   &elm {
->> diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
->> index 9f66f96d09c9..a7495fb364bf 100644
->> --- a/arch/arm/boot/dts/am437x-idk-evm.dts
->> +++ b/arch/arm/boot/dts/am437x-idk-evm.dts
->> @@ -504,7 +504,7 @@
->>   
->>   &cpsw_emac0 {
->>   	phy-handle = <&ethphy0>;
->> -	phy-mode = "rgmii";
->> +	phy-mode = "rgmii-id";
->>   };
-> 
-> Do you have here really rgmii-id?
-> 
-
-Right, thanks you.
-
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 3c5169eb23f5..4dae2320b103 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -361,6 +361,7 @@ hv_uio_remove(struct hv_device *dev)
+ 	if (!pdata)
+ 		return 0;
+ 
++	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
+ 	uio_unregister_device(&pdata->info);
+ 	hv_uio_cleanup(dev, pdata);
+ 	hv_set_drvdata(dev, NULL);
 -- 
-Best regards,
-grygorii
+2.26.2
+
