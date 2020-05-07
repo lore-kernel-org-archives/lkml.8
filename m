@@ -2,79 +2,106 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFE2C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC21C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2319B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V1dxn1S+"
+	by mail.kernel.org (Postfix) with ESMTP id E534C2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEGQQe (ORCPT
+        id S1727117AbgEGQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726393AbgEGQQd (ORCPT
+        Thu, 7 May 2020 12:18:02 -0400
+Received: from mail.netline.ch ([148.251.143.178]:33051 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgEGQSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:16:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97A6C05BD43;
-        Thu,  7 May 2020 09:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=A8uqttsFcU+RJDntrcBSCeABb5tI8iPtiiJqsyKDW04=; b=V1dxn1S+iYZZ/l2L4kNnzJsOKl
-        D5sgSRXA0U8TWty4HMvZv5pQyvRFkETw7KoQyMOmXOYOT9gbPtC+T57mcLDqekS5INAW8E4PeuMg0
-        HcNDr6JinkpcrJEcXTD7rSuLygBcrtYF/T4gLcpAtb3otJ+vJQpmct+098gJcFtL2Miz/2nTRhPPE
-        MREnEiK5hUlCWueg/4gMRkwnd5oHgyvXn+c2VtjzQhobuZqzYJ/W5aOwWLggS+wCiNbWmt2Li7/+j
-        /6JzjZCIEThKa3BrWMwMhf2jaDszjlexfq3EdRBNl9g05zYhjIAygk+X2ol2F7IcVI/3zJrlGItO8
-        h3zci7YQ==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWjCI-0002gy-PH; Thu, 07 May 2020 16:16:31 +0000
-Date:   Thu, 7 May 2020 18:16:28 +0200
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Joel Becker <jlbec@evilplan.org>
-Subject: [GIT PULL] configfs fix for 5.7
-Message-ID: <20200507161628.GA440967@infradead.org>
+        Thu, 7 May 2020 12:18:02 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 May 2020 12:18:00 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id B4E2B2A6176;
+        Thu,  7 May 2020 18:11:18 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id ahgL4LOqw5AX; Thu,  7 May 2020 18:11:18 +0200 (CEST)
+Received: from thor (252.80.76.83.dynamic.wline.res.cust.swisscom.ch [83.76.80.252])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 380502A60F7;
+        Thu,  7 May 2020 18:11:18 +0200 (CEST)
+Received: from localhost ([::1])
+        by thor with esmtp (Exim 4.93)
+        (envelope-from <michel@daenzer.net>)
+        id 1jWj7F-001f40-F2; Thu, 07 May 2020 18:11:17 +0200
+Subject: Re: [PATCH AUTOSEL 5.6 33/50] drm/amdgpu: bump version for invalidate
+ L2 before SDMA IBs
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20200507142726.25751-1-sashal@kernel.org>
+ <20200507142726.25751-33-sashal@kernel.org>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Message-ID: <349b2cb9-71f9-a0cd-aceb-308512d7501a@daenzer.net>
+Date:   Thu, 7 May 2020 18:11:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200507142726.25751-33-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
+On 2020-05-07 4:27 p.m., Sasha Levin wrote:
+> From: Marek Olšák <marek.olsak@amd.com>
+> 
+> [ Upstream commit 9017a4897a20658f010bebea825262963c10afa6 ]
+> 
+> This fixes GPU hangs due to cache coherency issues.
+> Bump the driver version. Split out from the original patch.
+> 
+> Signed-off-by: Marek Olšák <marek.olsak@amd.com>
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> index 42f4febe24c6d..8d45a2b662aeb 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> @@ -85,9 +85,10 @@
+>   * - 3.34.0 - Non-DC can flip correctly between buffers with different pitches
+>   * - 3.35.0 - Add drm_amdgpu_info_device::tcc_disabled_mask
+>   * - 3.36.0 - Allow reading more status registers on si/cik
+> + * - 3.37.0 - L2 is invalidated before SDMA IBs, needed for correctness
+>   */
+>  #define KMS_DRIVER_MAJOR	3
+> -#define KMS_DRIVER_MINOR	36
+> +#define KMS_DRIVER_MINOR	37
+>  #define KMS_DRIVER_PATCHLEVEL	0
+>  
+>  int amdgpu_vram_limit = 0;
+> 
 
-  Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
+This requires the parent commit fdf83646c0542ecfb9adc4db8f741a1f43dca058
+"drm/amdgpu: invalidate L2 before SDMA IBs (v2)". KMS_DRIVER_MINOR is
+bumped to signal to userspace the fix in that commit is present.
 
-are available in the Git repository at:
 
-  git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.7
-
-for you to fetch changes up to 8aebfffacfa379ba400da573a5bf9e49634e38cb:
-
-  configfs: fix config_item refcnt leak in configfs_rmdir() (2020-04-27 08:17:10 +0200)
-
-----------------------------------------------------------------
-configfs fix for 5.7
-
- - fix a refcount leak in configfs_rmdir (Xiyu Yang)
-
-----------------------------------------------------------------
-Xiyu Yang (1):
-      configfs: fix config_item refcnt leak in configfs_rmdir()
-
- fs/configfs/dir.c | 1 +
- 1 file changed, 1 insertion(+)
+-- 
+Earthling Michel Dänzer               |               https://redhat.com
+Libre software enthusiast             |             Mesa and X developer
