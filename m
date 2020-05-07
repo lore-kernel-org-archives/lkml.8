@@ -2,188 +2,126 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488B8C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643B2C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A90206B9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588886050;
-	bh=nDy0sEtP9kF9L34Jo/5G/mMWigMW2hNi5uXvTqim0pM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i9yIdDq6i7ohiTL7KdAZ8278uWlaI5iM/vw/z/WJMste7OjWeXkNZzhz3RwkJJEP9
-	 NnnV1j65CggI8OsRoLrAJegBLy5lxAgMQg2ulEp2McYz9fIUf2XHcbSuzn9ZcV5TfZ
-	 IA7t6EvRb/WiGBSV2GlCqVFd8qlzPFwjQI2/2odg=
+	by mail.kernel.org (Postfix) with ESMTP id 3CDCD206B9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EvyLgigN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgEGVOJ (ORCPT
+        id S1726641AbgEGVOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbgEGVOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:14:09 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082C420731;
-        Thu,  7 May 2020 21:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588886048;
-        bh=nDy0sEtP9kF9L34Jo/5G/mMWigMW2hNi5uXvTqim0pM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a2yUU+AIANQ4UaVmmqQneT/ArIvzOWURsUBdTfPSmBKjwPw+HrkXe9ThyjNY1zx7T
-         wLzdjKBW93PQ3BjJqvczVnRV0QVXUlCQlx2oxMz1uylAjh8xnFCxK3XcLUOCcXsWK5
-         84Y+HmMrGOCmL7pA2V+b3gyWOO8tX99O+9yyD5J4=
-Date:   Thu, 7 May 2020 16:18:34 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: venus: Replace zero-length array with
- flexible-array
-Message-ID: <20200507211834.GA20715@embeddedor>
-References: <20200507190750.GA15755@embeddedor>
- <a249b3b7-56dc-8bed-f079-2cf163b46712@linaro.org>
+        Thu, 7 May 2020 17:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgEGVOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:14:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB987C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:14:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k19so2577399pll.9
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=ioAtKKBLetMrNC3UOrZBDpCms01n9tKhgmw2P4KuQ10=;
+        b=EvyLgigNsQCXtN+ZrgfW3obNeN7n95kvB+iKsA3+ZKnx6Pg5GXwuwrpAimKciweQLh
+         A5IVBx9MVFabDi+Q4FiPn1IL+Ut97gCeTeb7mX2JJGN/XYRuTQAwLpP2rSFctxdoyafo
+         dTtwQ79hSAA/WHsbFnshcKXq7Ma1fctt8eopE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=ioAtKKBLetMrNC3UOrZBDpCms01n9tKhgmw2P4KuQ10=;
+        b=c2dHXHXiY7DbMfGpi7ETR2/Z/fzy/vcalkfArje9swEwZWl2MY3mcavqWKs4o+bLnV
+         RTdrDsMcXkLTJcdYzdho7SSbzS27d6t/FmJVBEzhjkcovWt9bKwqhgxErwBdWo159fP4
+         3f4jr1BQTnDZzmBsntbKKVakM4pSTOS0v74mLie7xhvMFMsh8Nwqq2wTTZBPHFwVU8bs
+         MMKfs7uVLkKipUih8qdVsABZfYAGWDN+8RFadwfaQsSeGPl0MSUhavMwJmodlViic5xS
+         iDmnvgQYcjJxbvCZGwnkR+l+q9c7ZDMK9p07m8J15IRpRN7NuEPDcl2hR8fPSe4WjUxe
+         ZEmg==
+X-Gm-Message-State: AGi0PuYYZpFVWB8mc3VftyT5xR/lEWPKWdA7paFJVZAF8HHoM0Vb7HEG
+        MJPBpHiM1VMdcNLwtzsCxpX5Rg==
+X-Google-Smtp-Source: APiQypJ3ry9ekB/Mu6A+agxgYdfo7bbCE87C+rrfPRAkcpuV1AuLxv17o9r4CKcuSidKzhyfOYnUbA==
+X-Received: by 2002:a17:90a:fd94:: with SMTP id cx20mr2284622pjb.157.1588886079220;
+        Thu, 07 May 2020 14:14:39 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x63sm5873453pfc.56.2020.05.07.14.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:14:38 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a249b3b7-56dc-8bed-f079-2cf163b46712@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200507192157.6831-1-sibis@codeaurora.org>
+References: <20200507192157.6831-1-sibis@codeaurora.org>
+Subject: Re: [PATCH v5] iommu/arm-smmu-qcom: Request direct mapping for modem device
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, dianders@chromium.org,
+        evgreen@chromium.org, mka@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Sibi Sankar <sibis@codeaurora.org>, joro@8bytes.org,
+        robin.murphy@arm.com, will@kernel.org
+Date:   Thu, 07 May 2020 14:14:37 -0700
+Message-ID: <158888607765.26370.18078298627976225073@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 11:39:51PM +0300, Stanimir Varbanov wrote:
-> Hi Gustavo,
-> 
-> Two patches from you are already queued in media_tree for v5.8.
-> 
+Quoting Sibi Sankar (2020-05-07 12:21:57)
+> The modem remote processor has two modes of access to the DDR, a direct
+> mode and through a SMMU which requires direct mapping. The configuration
+> of the modem SIDs is handled in TrustZone.
 
-Awesome. :)
+Is it "The configuration of the modem SIDs is typically handled by
+code running in the ARM CPU's secure mode, i.e. secure EL1"? And is that
+even true? I though it was programmed by EL2.
 
-Thanks, Stanimir.
---
-Gustavo
+> On platforms where TrustZone
 
-> 0f61e171e4bbac4595175070c75707f1b12f4e37 media: venus: hfi_msgs.h:
-> Replace zero-length array with flexible-array member
-> 
-> 380f3bbd9562dc93be2e3cadc329b15284fbedae media: venus: hfi_cmds.h:
-> Replace zero-length array with flexible-array member
-> 
-> 
-> On 5/7/20 10:07 PM, Gustavo A. R. Silva wrote:
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99:
-> > 
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> > 
-> > By making use of the mechanism above, we will get a compiler warning
-> > in case the flexible array does not occur last in the structure, which
-> > will help us prevent some kind of undefined behavior bugs from being
-> > inadvertently introduced[3] to the codebase from now on.
-> > 
-> > Also, notice that, dynamic memory allocations won't be affected by
-> > this change:
-> > 
-> > "Flexible array members have incomplete type, and so the sizeof operator
-> > may not be applied. As a quirk of the original implementation of
-> > zero-length arrays, sizeof evaluates to zero."[1]
-> > 
-> > sizeof(flexible-array-member) triggers a warning because flexible array
-> > members have incomplete type[1]. There are some instances of code in
-> > which the sizeof operator is being incorrectly/erroneously applied to
-> > zero-length arrays and the result is zero. Such instances may be hiding
-> > some bugs. So, this work (flexible-array member conversions) will also
-> > help to get completely rid of those sorts of issues.
-> > 
-> > This issue was found with the help of Coccinelle.
-> > 
-> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > [2] https://github.com/KSPP/linux/issues/21
-> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/media/platform/qcom/venus/hfi_cmds.h |    2 +-
-> >  drivers/media/platform/qcom/venus/hfi_msgs.h |   10 +++++-----
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > index cae9d5d61c0c..83705e237f1c 100644
-> > --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > @@ -107,7 +107,7 @@ struct hfi_session_abort_pkt {
-> >  struct hfi_session_set_property_pkt {
-> >  	struct hfi_session_hdr_pkt shdr;
-> >  	u32 num_properties;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_session_set_buffers_pkt {
-> > diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
-> > index 7694b1d25d9d..526d9f5b487b 100644
-> > --- a/drivers/media/platform/qcom/venus/hfi_msgs.h
-> > +++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
-> > @@ -155,7 +155,7 @@ struct hfi_msg_session_empty_buffer_done_pkt {
-> >  	u32 input_tag;
-> >  	u32 packet_buffer;
-> >  	u32 extradata_buffer;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_msg_session_fbd_compressed_pkt {
-> > @@ -175,7 +175,7 @@ struct hfi_msg_session_fbd_compressed_pkt {
-> >  	u32 picture_type;
-> >  	u32 packet_buffer;
-> >  	u32 extradata_buffer;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
-> > @@ -202,7 +202,7 @@ struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
-> >  	u32 picture_type;
-> >  	u32 packet_buffer;
-> >  	u32 extradata_buffer;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
-> > @@ -211,7 +211,7 @@ struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
-> >  	u32 filled_len;
-> >  	u32 offset;
-> >  	u32 packet_buffer2;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
-> > @@ -220,7 +220,7 @@ struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
-> >  	u32 filled_len;
-> >  	u32 offset;
-> >  	u32 packet_buffer3;
-> > -	u32 data[0];
-> > +	u32 data[];
-> >  };
-> >  
-> >  struct hfi_msg_session_parse_sequence_header_done_pkt {
-> > 
-> 
-> -- 
-> regards,
-> Stan
+TrustZone is always there.
+
+> is absent this needs to be explicitly done from kernel. Add compatibles
+> for modem to opt in for direct mapping on such platforms.
+>=20
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+Is Sai the author? Or does this need a co-developed-by tag?
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>=20
+> V5
+>  * Reword commit message and drop unnecessary details
+
+I don't see any improvement! Probably because I don't understand _why_
+the modem needs a direct mapping. The commit text basically says "we
+need to do it because it isn't done in secure world sometimes". This is
+probably wrong what I wrote below, but I'd like to clarify to confirm my
+understanding. Maybe the commit text should say:
+
+The modem remote processor has two access paths to DDR. One path is
+directly connected to DDR and another path goes through an SMMU. The
+SMMU path is configured to be a direct mapping because it's used by
+various peripherals in the modem subsystem. Typically this direct
+mapping is configured by programming modem SIDs into the SMMU when EL2
+responds to a hyp call from the code that loads the modem binary in the
+secure world.
+
+In certain firmware configurations, especially when the kernel is
+entered at EL2, we don't want secure mode to make hyp calls to program
+the SMMU because the kernel is in full control of the SMMU. Let's add
+compatibles here so that we can have the kernel program the SIDs for the
+modem in these cases.
