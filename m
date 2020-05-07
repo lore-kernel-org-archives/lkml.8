@@ -2,87 +2,120 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2471C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D037C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECE02083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5792084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLwhxmxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgEGOK5 (ORCPT
+        id S1728133AbgEGOLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46472 "EHLO
+        Thu, 7 May 2020 10:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727959AbgEGOKy (ORCPT
+        with ESMTP id S1728108AbgEGOIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:10:54 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C459C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:10:54 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWhEC-0002Nn-3H; Thu, 07 May 2020 16:10:20 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 566BB102652; Thu,  7 May 2020 16:10:19 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 2 05/18] x86/entry: Move irq tracing on syscall entry to C-code
-In-Reply-To: <207acd23-4acb-3fd1-7c92-9f48c79fa059@oracle.com>
-References: <20200505134112.272268764@linutronix.de> <20200505134340.611961721@linutronix.de> <207acd23-4acb-3fd1-7c92-9f48c79fa059@oracle.com>
-Date:   Thu, 07 May 2020 16:10:19 +0200
-Message-ID: <87sggbj0ok.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 7 May 2020 10:08:34 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78728C05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:34 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id v18so6842409qtq.22
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=8gUq3gZyaZ+fW8XLtscPZL56CqBcOzYoWmQ7LuAcGtI=;
+        b=FLwhxmxE9Kn4GfmG3U0Yu/lCaNdW9kqc5eEffkTMYlq/SKBA3xID+QyQlgMVnGZpKT
+         1IVUVw8AwjP3otNHvUElNrbz+jFr5KZZcYsXD5Voy2RHdAYqhcA32TncU80mhVoJq/RI
+         gRXz5+FThd7TkwHO5sGBJvyrx6VImw+GqXJMLdt9mGZpVV9U8QtsQWp+Om0zJNssRyIC
+         w7JuUSiWokcGnQqAcRjWv9Lm0PbI/SQmlFHMH+LXozd1NnyZO1ecYk6EIwJiQFPl1IRE
+         TGu1VmFv7sLEhafn2v43RJwToe0dzQfULG1451Ok9KrizD2ONEPyDOgtRRhIJfckxgHf
+         jowQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=8gUq3gZyaZ+fW8XLtscPZL56CqBcOzYoWmQ7LuAcGtI=;
+        b=B0YmpFNQ86VrN18XHoQRFhFbIr4MlWYPhudh6UapZ56KQyQ8+BOVu7e3o8fFb84OWh
+         +8IY574AWPRroCIxvhR85rQvLvGpjQ2vwKG/cgZ6ULUfe5am/mgyF7AiaFaaYFHw0xD9
+         mBoyTlsRvbLHOs3SSDGxEEPCYCHIqGa+Ap/y+Ri4y+LO9veD219CEO9rQru+JS3qaVbs
+         XruiFj/yI6IuTHA73YTnStCWZEYDco19CrCBwsg+ezAtlLPdQayHhldW/mdpRB9oMg6y
+         JUBTJoRo8yKPsReVq1f/irqqvD0jMpN25/52+xeOLGyEcNwKR7JnbPMWBgLM/iSAbS6l
+         0M+Q==
+X-Gm-Message-State: AGi0PuYp5+P5LGI5V1J2AXRt+MSwEtkMec73+ZbU/hKZ8KGinhhzej+p
+        t5Re3a5lQLS224p8gNPufqAIkggyhgnI
+X-Google-Smtp-Source: APiQypICenctDKpj6LjD3iDGO0rD+FnV+zbkXnX+hjhzB2QyYx7BvIYqsNnoM/UlfDMRcSCq+58JuDfWQxm3
+X-Received: by 2002:a0c:aa51:: with SMTP id e17mr13227862qvb.95.1588860513634;
+ Thu, 07 May 2020 07:08:33 -0700 (PDT)
+Date:   Thu,  7 May 2020 07:08:01 -0700
+In-Reply-To: <20200507140819.126960-1-irogers@google.com>
+Message-Id: <20200507140819.126960-6-irogers@google.com>
+Mime-Version: 1.0
+References: <20200507140819.126960-1-irogers@google.com>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [RFC PATCH v2 05/23] perf expr: increase max other
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        linux-kernel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexandre Chartre <alexandre.chartre@oracle.com> writes:
-> On 5/5/20 3:41 PM, Thomas Gleixner wrote:
->> -	/*
->> -	 * User mode is traced as though IRQs are on, and the interrupt
->> -	 * gate turned them off.
->> -	 */
->> -	TRACE_IRQS_OFF
->> -
->>   	movq	%rsp, %rdi
->>   	call	do_int80_syscall_32
->>   .Lsyscall_32_done:
->> 
->
-> enter_from_user_mode() is also called with the CALL_enter_from_user_mode macro,
-> which is used in interrupt_entry() and identry. Don't you need to also remove
-> the TRACE_IRQS_OFF there now?
+Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
+need more space.
 
-Hrm. right. OTOH, it's just redundant and should be no harm, but let me have a
-look at that again.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 87d627bb699b..40fc452b0f2b 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -2,7 +2,7 @@
+ #ifndef PARSE_CTX_H
+ #define PARSE_CTX_H 1
+ 
+-#define EXPR_MAX_OTHER 20
++#define EXPR_MAX_OTHER 64
+ #define MAX_PARSE_ID EXPR_MAX_OTHER
+ 
+ struct expr_parse_id {
+-- 
+2.26.2.526.g744177e7f7-goog
 
-        tglx
