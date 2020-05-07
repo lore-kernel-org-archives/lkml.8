@@ -2,94 +2,209 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26772C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADFC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8D12075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAA42075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DxHTfuWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgEGHqD (ORCPT
+        id S1726572AbgEGHqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:46:03 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25449 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgEGHqC (ORCPT
+        Thu, 7 May 2020 03:46:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34566 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725834AbgEGHqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:46:02 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-77-_HkJ_npmPTubAUZ7vouWDg-1; Thu, 07 May 2020 08:44:45 +0100
-X-MC-Unique: _HkJ_npmPTubAUZ7vouWDg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 7 May 2020 08:44:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 7 May 2020 08:44:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Brian Gerst' <brgerst@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Luc Van Oostenryck" <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] x86: bitops: fix build regression
-Thread-Topic: [PATCH] x86: bitops: fix build regression
-Thread-Index: AQHWJDdSnFcKS0TA9USbY8l3s67J1qicPRAA
-Date:   Thu, 7 May 2020 07:44:44 +0000
-Message-ID: <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
- <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com>
-In-Reply-To: <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 7 May 2020 03:46:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588837569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R/fSRFrdrjSnuIOxHUSCOfP/3ESQFRE1q+R9NH0xsQg=;
+        b=DxHTfuWi4gjUIsFr1aiImOH5dsuvTzIlZA5ADNth2nhxmvlcQyXEhnOV8yMl3BjAFrYjxI
+        2Of633Xk/+VNCsxyR0RjxjhB+kh6YvivgXNg2ur9xNLgU/DCtOKP55ZJ+LZ7EO9v+9mY5e
+        0jc6O1Ow1nHzPC0umddZcrzxG4mXAh8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-cVJMtdwgMcyLqQcpvcN9Qg-1; Thu, 07 May 2020 03:46:05 -0400
+X-MC-Unique: cVJMtdwgMcyLqQcpvcN9Qg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCF618015CF;
+        Thu,  7 May 2020 07:46:02 +0000 (UTC)
+Received: from [10.36.114.214] (ovpn-114-214.ams2.redhat.com [10.36.114.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47DEB5C1B0;
+        Thu,  7 May 2020 07:45:52 +0000 (UTC)
+Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "will@kernel.org" <will@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "tn@semihalf.com" <tn@semihalf.com>,
+        "bbhushan2@marvell.com" <bbhushan2@marvell.com>
+References: <20200414150607.28488-1-eric.auger@redhat.com>
+ <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
+ <06fe02f7-2556-8986-2f1e-dcdf59773b8c@redhat.com>
+ <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <21e162a0-b29f-94a4-8371-7e3ac2743539@redhat.com>
+Date:   Thu, 7 May 2020 09:45:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQnJpYW4gR2Vyc3QNCj4gU2VudDogMDcgTWF5IDIwMjAgMDc6MTgNCi4uLg0KPiA+IC0t
-LSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2JpdG9wcy5oDQo+ID4gKysrIGIvYXJjaC94ODYvaW5j
-bHVkZS9hc20vYml0b3BzLmgNCj4gPiBAQCAtNTQsNyArNTQsNyBAQCBhcmNoX3NldF9iaXQobG9u
-ZyBuciwgdm9sYXRpbGUgdW5zaWduZWQgbG9uZyAqYWRkcikNCj4gPiAgICAgICAgIGlmIChfX2J1
-aWx0aW5fY29uc3RhbnRfcChucikpIHsNCj4gPiAgICAgICAgICAgICAgICAgYXNtIHZvbGF0aWxl
-KExPQ0tfUFJFRklYICJvcmIgJTEsJTAiDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgOiBD
-T05TVF9NQVNLX0FERFIobnIsIGFkZHIpDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgOiAi
-aXEiIChDT05TVF9NQVNLKG5yKSAmIDB4ZmYpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-OiAiaXEiICgodTgpKENPTlNUX01BU0sobnIpICYgMHhmZikpDQo+IA0KPiBJIHRoaW5rIGEgYmV0
-dGVyIGZpeCB3b3VsZCBiZSB0byBtYWtlIENPTlNUX01BU0soKSByZXR1cm4gYSB1OCB2YWx1ZQ0K
-PiByYXRoZXIgdGhhbiBoYXZlIHRvIGNhc3Qgb24gZXZlcnkgdXNlLg0KDQpPciBhc3NpZ24gdG8g
-YSBsb2NhbCB2YXJpYWJsZSAtIHRoZW4gaXQgZG9lc24ndCBtYXR0ZXIgaG93DQp0aGUgdmFsdWUg
-aXMgYWN0dWFsbHkgY2FsY3VsYXRlZC4gU286DQoJCQl1OCBtYXNrID0gQ09OU1RfTUFTSyhucik7
-DQoJCQlhc20gdm9sYXRpbGUoTE9DS19QUkVGSVggIm9yYiAlMSwlMCINCgkJCQk6IENPTlNUX01B
-U0tfQUREUihuciwgYWRkcikNCgkJCQk6ICJpcSIgbWFzaw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
-ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
-ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Hi Shameer,
+
+On 5/7/20 8:59 AM, Shameerali Kolothum Thodi wrote:
+> Hi Eric,
+>=20
+>> -----Original Message-----
+>> From: Shameerali Kolothum Thodi
+>> Sent: 30 April 2020 10:38
+>> To: 'Auger Eric' <eric.auger@redhat.com>; Zhangfei Gao
+>> <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
+>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
+>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
+>> Cc: jean-philippe@linaro.org; alex.williamson@redhat.com;
+>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linar=
+o.org;
+>> tn@semihalf.com; bbhushan2@marvell.com
+>> Subject: RE: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+>>
+>> Hi Eric,
+>>
+>>> -----Original Message-----
+>>> From: Auger Eric [mailto:eric.auger@redhat.com]
+>>> Sent: 16 April 2020 08:45
+>>> To: Zhangfei Gao <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
+>>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+>>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
+>>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
+>>> Cc: jean-philippe@linaro.org; Shameerali Kolothum Thodi
+>>> <shameerali.kolothum.thodi@huawei.com>; alex.williamson@redhat.com;
+>>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@lina=
+ro.org;
+>>> tn@semihalf.com; bbhushan2@marvell.com
+>>> Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+>>>
+>>> Hi Zhangfei,
+>>>
+>>> On 4/16/20 6:25 AM, Zhangfei Gao wrote:
+>>>>
+>>>>
+>>>> On 2020/4/14 =E4=B8=8B=E5=8D=8811:05, Eric Auger wrote:
+>>>>> This version fixes an issue observed by Shameer on an SMMU 3.2,
+>>>>> when moving from dual stage config to stage 1 only config.
+>>>>> The 2 high 64b of the STE now get reset. Otherwise, leaving the
+>>>>> S2TTB set may cause a C_BAD_STE error.
+>>>>>
+>>>>> This series can be found at:
+>>>>> https://github.com/eauger/linux/tree/v5.6-2stage-v11_10.1
+>>>>> (including the VFIO part)
+>>>>> The QEMU fellow series still can be found at:
+>>>>> https://github.com/eauger/qemu/tree/v4.2.0-2stage-rfcv6
+>>>>>
+>>>>> Users have expressed interest in that work and tested v9/v10:
+>>>>> - https://patchwork.kernel.org/cover/11039995/#23012381
+>>>>> - https://patchwork.kernel.org/cover/11039995/#23197235
+>>>>>
+>>>>> Background:
+>>>>>
+>>>>> This series brings the IOMMU part of HW nested paging support
+>>>>> in the SMMUv3. The VFIO part is submitted separately.
+>>>>>
+>>>>> The IOMMU API is extended to support 2 new API functionalities:
+>>>>> 1) pass the guest stage 1 configuration
+>>>>> 2) pass stage 1 MSI bindings
+>>>>>
+>>>>> Then those capabilities gets implemented in the SMMUv3 driver.
+>>>>>
+>>>>> The virtualizer passes information through the VFIO user API
+>>>>> which cascades them to the iommu subsystem. This allows the guest
+>>>>> to own stage 1 tables and context descriptors (so-called PASID
+>>>>> table) while the host owns stage 2 tables and main configuration
+>>>>> structures (STE).
+>>>>>
+>>>>>
+>>>>
+>>>> Thanks Eric
+>>>>
+>>>> Tested v11 on Hisilicon kunpeng920 board via hardware zip accelerato=
+r.
+>>>> 1. no-sva works, where guest app directly use physical address via i=
+octl.
+>>> Thank you for the testing. Glad it works for you.
+>>>> 2. vSVA still not work, same as v10,
+>>> Yes that's normal this series is not meant to support vSVM at this st=
+age.
+>>>
+>>> I intend to add the missing pieces during the next weeks.
+>>
+>> Thanks for that. I have made an attempt to add the vSVA based on
+>> your v10 + JPBs sva patches. The host kernel and Qemu changes can
+>> be found here[1][2].
+>>
+>> This basically adds multiple pasid support on top of your changes.
+>> I have done some basic sanity testing and we have some initial success
+>> with the zip vf dev on our D06 platform. Please note that the STALL ev=
+ent is
+>> not yet supported though, but works fine if we mlock() guest usr mem.
+>=20
+> I have added STALL support for our vSVA prototype and it seems to be
+> working(on our hardware). I have updated the kernel and qemu branches w=
+ith
+> the same[1][2]. I should warn you though that these are prototype code =
+and I am pretty
+> much re-using the VFIO_IOMMU_SET_PASID_TABLE interface for almost every=
+thing.
+> But thought of sharing, in case if it is useful somehow!.
+
+Thank you very much for your work. I intend to look at your additions by
+beginning of next week.
+
+Best Regards
+
+Eric
+>=20
+> Thanks,
+> Shameer
+>=20
+> [1]https://github.com/hisilicon/kernel-dev/commits/vsva-prototype-host-=
+v1
+>=20
+> [2]https://github.com/hisilicon/qemu/tree/v4.2.0-2stage-rfcv6-vsva-prot=
+otype-v1
+>=20
 
