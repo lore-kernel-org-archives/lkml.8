@@ -2,164 +2,151 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE85C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670DDC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FBD20725
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F90720725
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="jjnN0Drm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kOcLODoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEGWDu (ORCPT
+        id S1726891AbgEGWFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
+        Thu, 7 May 2020 18:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbgEGWDs (ORCPT
+        with ESMTP id S1726579AbgEGWFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:03:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6477EC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:03:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so8037197ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:03:47 -0700 (PDT)
+        Thu, 7 May 2020 18:05:16 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD01C05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:05:16 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u6so8035337ljl.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=wUuNuaJIglL+Kx5ApW0YvQ2BpX31cdZYGLJ2BUr4Tvs=;
-        b=jjnN0DrmtBzX5eCaj5CLxE3x/6tX8xc+xUqp7+sjt26xKKaixfXPpZTbSSbc/kGCDL
-         1GmTHBJ23lXZm2Bx5sy4NBd+9MNy1KyQ6SBfhIiQ9N8Elg3BVT12iXakMMVFe/tYlwmo
-         8AdCHMohcZt6/OugywymC2rIyNOEKrf3kvNa4HJz+7POopF+wtHjrR43HRO0nhKX6Os3
-         o9j0Wpw6JVwng7qk1MTXH/+YTIcQH9CmQTxD0O8LlEgLqagzAqwDrcWWed7/6cdeY9fh
-         tnMczF33SvTguEIfSP8JMHvpxfzyfebE6iN8oOmq7RaLTfMJqFSDEjcoaPafnbzoc1yN
-         8/gA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nPPvWhYSDBZH/W9ZzOHKWz2UFG4yFEnZgxOOVnctufk=;
+        b=kOcLODoKztByz0UBmzjXeqlmhusevIjl+c2HbLw3k5rPnNKk0UOKclN/cgZBe7f2BE
+         KEqsud4Rf5RdhjLb6rTlhUM5ds3Xzk7FnKfAsKFuTOitseFo/B4W7DCsQHn6MIDZOtdM
+         XpjV+SB82Z1h1ka5YTJZ7+6LcnBoSsPmQiuy7w3g1RSKnALtjhnggH/JTqnX8Bs27TGN
+         ood1tyTML/spLGCWlwrocHp6j+kCbFQp1TxUGnP/5eZHSKTDWrjMVOJMV0mMmz5OWK8f
+         xD7VPnGMNREiVpMw0n8DDrvcOIkqDBd0J/2WjILG0vEpGGnV+iSSQP4JFsm6KT8nJ2Q/
+         xEMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wUuNuaJIglL+Kx5ApW0YvQ2BpX31cdZYGLJ2BUr4Tvs=;
-        b=Waoucns6kYyUb1OP2AjfeqC49tPPAz9lcFznS9SEFOVwb70oPUxCy8gFOGTy/ldu3I
-         NAw3ygF+Bafif3Ua7lLXCl+i5f+gNKvDe5Oqf8KimoTuoveKl6OLjsoHAQruRQzxCaKq
-         yel4XIMQwTjAolv0EVf8q3N+Zv+dUh+oaam7VmVlTr3sDmv1A6yGw4jdFIMQ04jiy6o9
-         n01rzYg233Phk4K+Ktl6llP2b+RYEVSNvrlFlBYo2dTJb6DUxvfvEjg1AWBEG7daUbcw
-         K/BA+UoOUwwpHfrSh81q17eNQdy6BRkIKAbwgxUaXATjFoUcswQZu3DWnDlpbH/7IzZT
-         96hQ==
-X-Gm-Message-State: AGi0PuYZ4InsHoKekoBt6O0J3pkQD+FpqnN/4j/MK6TF1TkzL02rq02Y
-        QSce1PIIgO22gWovVGyqoHJ7Iw==
-X-Google-Smtp-Source: APiQypLfjpW+TsQ8WZmwmd/fpl1/0cAj9W9AWHktmin9enHLmhIo3KDk1ZXJ6X2Heb2MyqGmrKXyfg==
-X-Received: by 2002:a2e:9691:: with SMTP id q17mr9599037lji.116.1588889025769;
-        Thu, 07 May 2020 15:03:45 -0700 (PDT)
-Received: from rad-H81M-S1.semihalf.local (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id a13sm4095267ljm.25.2020.05.07.15.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 15:03:44 -0700 (PDT)
-From:   Radoslaw Biernacki <rad@semihalf.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     Ben Zhang <benzh@chromium.org>, Marcin Wojtas <mw@semihalf.com>,
-        Alex Levin <levinale@google.com>,
-        Chinyue Chen <chinyue@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: Intel: Boards: Support headset button function for nau88l25max and nau88l25ssm
-Date:   Fri,  8 May 2020 00:03:32 +0200
-Message-Id: <20200507220332.24686-1-rad@semihalf.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nPPvWhYSDBZH/W9ZzOHKWz2UFG4yFEnZgxOOVnctufk=;
+        b=HVJBvkHRydPmx/tAFIsKLjz/xfaYbxDeRO0RHCMr8JRwagzdQS3/gaIQTx28A0w6H4
+         N0BWL2G9UleeJU7PFtmIsmbpIrdb2RglCPNuDGRIbULwB5/n+PcleReZub3AgOw5FZ9R
+         tlceY0KFjXX6mhKBVBPMgyTaAqeuAho4ih0xQlt17qCYbj1CLlRNQ4wEVe9kTx7oT9zk
+         MtbMdXWvHtA8ObdTRR2Np89aK3Z0usCcfNGX59qZxTOy8rGzEXF4Jq33hQe7BTNmyJ27
+         G227/sDMQHgDQtmiScFvNEqJkYUTdUR4ahVu66KTv0pU8vLuoifNHfzi214ncYLo96+t
+         HEgA==
+X-Gm-Message-State: AGi0PualdtjSoYSYoojtKzT+2qjvB3q2zXo4sNe8u9aJt0NM8YzYakgb
+        Elpb/Tu3kl4IMTxLL/YCriBamavD83uqeisivXjvIw==
+X-Google-Smtp-Source: APiQypKNdCY3OtiIkeJWX0PcE2nxNIMwzLCH+DsayspwmtDmIkVB8t6LffEY5ZO8WubCZPRo18ZG04Dd+peMVypsg08=
+X-Received: by 2002:a2e:2e16:: with SMTP id u22mr10215821lju.243.1588889114309;
+ Thu, 07 May 2020 15:05:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <1480357509-28074-1-git-send-email-johan@kernel.org>
+ <1480357509-28074-12-git-send-email-johan@kernel.org> <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
+ <20200507064412.GL2042@localhost> <20200507064734.GA798308@kroah.com> <20200507111312.GA1497799@kroah.com>
+In-Reply-To: <20200507111312.GA1497799@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 8 May 2020 03:35:02 +0530
+Message-ID: <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
+Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
+ phydev leaks
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Netdev <netdev@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map the buttons from the Android reference headset to
-KEY_PLAYPAUSE, KEY_VOICECOMMAND, KEY_VOLUMEUP, and KEY_VOLUMEDOWN.
-KEY_PLAYPAUSE is used instead of KEY_MEDIA for BTN_0 as it is more
-logical and have much broader userspace support. Like Chrome OS
-use it to play/pause of video and audio. KEY_PLAYPAUSE is also
-supported by Android (USB headset spec requires KEY_PLAYPAUSE
-for BTN_0.)
-https://source.android.com/devices/accessories/headset/usb-headset-spec
+On Thu, 7 May 2020 at 16:43, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+<trim>
+> > >
+> > > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
+> > > PHYs") needs to be backported as well for these.
+> > >
+> > > Original series can be found here:
+> > >
+> > >     https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan=
+@kernel.org
+> >
+> > Ah, thanks for that, I thought I dropped all of the ones that caused
+> > build errors, but missed the above one.  I'll go take the whole series
+> > instead.
+>
+> This should now all be fixed up, thanks.
 
-Signed-off-by: Chinyue Chen <chinyue@chromium.org>
-Signed-off-by: Benson Leung <bleung@chromium.org>
-Signed-off-by: Radoslaw Biernacki <rad@semihalf.com>
----
- sound/soc/intel/boards/skl_nau88l25_max98357a.c | 7 +++++++
- sound/soc/intel/boards/skl_nau88l25_ssm4567.c   | 7 +++++++
- 2 files changed, 14 insertions(+)
+While building kernel Image for arm architecture on stable-rc 4.4 branch
+the following build error found.
 
-diff --git a/sound/soc/intel/boards/skl_nau88l25_max98357a.c b/sound/soc/intel/boards/skl_nau88l25_max98357a.c
-index d7b8154c43a4..103ea94c3bd1 100644
---- a/sound/soc/intel/boards/skl_nau88l25_max98357a.c
-+++ b/sound/soc/intel/boards/skl_nau88l25_max98357a.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2015, Intel Corporation. All rights reserved.
-  */
- 
-+#include <linux/input.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <sound/core.h>
-@@ -158,6 +159,7 @@ static int skylake_nau8825_codec_init(struct snd_soc_pcm_runtime *rtd)
- {
- 	int ret;
- 	struct snd_soc_component *component = asoc_rtd_to_codec(rtd, 0)->component;
-+	struct snd_soc_jack *jack;
- 
- 	/*
- 	 * Headset buttons map to the google Reference headset.
-@@ -172,6 +174,11 @@ static int skylake_nau8825_codec_init(struct snd_soc_pcm_runtime *rtd)
- 		return ret;
- 	}
- 
-+	jack = &skylake_headset;
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
- 	nau8825_enable_jack_detect(component, &skylake_headset);
- 
- 	snd_soc_dapm_ignore_suspend(&rtd->card->dapm, "SoC DMIC");
-diff --git a/sound/soc/intel/boards/skl_nau88l25_ssm4567.c b/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
-index 4b317bcf6ea0..1528e72c3a11 100644
---- a/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
-+++ b/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
-@@ -10,6 +10,7 @@
-  *   Copyright (C) 2015, Intel Corporation. All rights reserved.
-  */
- 
-+#include <linux/input.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <sound/core.h>
-@@ -177,6 +178,7 @@ static int skylake_nau8825_codec_init(struct snd_soc_pcm_runtime *rtd)
- {
- 	int ret;
- 	struct snd_soc_component *component = asoc_rtd_to_codec(rtd, 0)->component;
-+	struct snd_soc_jack *jack;
- 
- 	/*
- 	 * 4 buttons here map to the google Reference headset
-@@ -191,6 +193,11 @@ static int skylake_nau8825_codec_init(struct snd_soc_pcm_runtime *rtd)
- 		return ret;
- 	}
- 
-+	jack = &skylake_headset;
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
- 	nau8825_enable_jack_detect(component, &skylake_headset);
- 
- 	snd_soc_dapm_ignore_suspend(&rtd->card->dapm, "SoC DMIC");
+of_mdio: add helper to deregister fixed-link PHYs
+commit 3f65047c853a2a5abcd8ac1984af3452b5df4ada upstream.
 
-base-commit: f8729a41aa17f5eb5291a0e78926154e948bb4ad
--- 
-2.17.1
+Add helper to deregister fixed-link PHYs registered using
+of_phy_register_fixed_link().
 
+Convert the two drivers that care to deregister their fixed-link PHYs to
+use the new helper, but note that most drivers currently fail to do so.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[only take helper function for 4.4.y - gregkh]
+
+ # make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm
+CROSS_COMPILE=3Darm-linux-gnueabihf- HOSTCC=3Dgcc CC=3D"sccache
+arm-linux-gnueabihf-gcc" O=3Dbuild zImage
+70 #
+71 ../drivers/of/of_mdio.c: In function =E2=80=98of_phy_deregister_fixed_li=
+nk=E2=80=99:
+72 ../drivers/of/of_mdio.c:379:2: error: implicit declaration of
+function =E2=80=98fixed_phy_unregister=E2=80=99; did you mean =E2=80=98fixe=
+d_phy_register=E2=80=99?
+[-Werror=3Dimplicit-function-declaration]
+73  379 | fixed_phy_unregister(phydev);
+74  | ^~~~~~~~~~~~~~~~~~~~
+75  | fixed_phy_register
+76 ../drivers/of/of_mdio.c:381:22: error: =E2=80=98struct phy_device=E2=80=
+=99 has no
+member named =E2=80=98mdio=E2=80=99; did you mean =E2=80=98mdix=E2=80=99?
+77  381 | put_device(&phydev->mdio.dev); /* of_phy_find_device() */
+78  | ^~~~
+79  | mdix
+
+>
+> greg k-h
