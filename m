@@ -2,56 +2,70 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A95C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749BBC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA99208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54336208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgEGLnQ (ORCPT
+        id S1726751AbgEGLnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:43:16 -0400
-Received: from elvis.franken.de ([193.175.24.41]:43566 "EHLO elvis.franken.de"
+        Thu, 7 May 2020 07:43:22 -0400
+Received: from elvis.franken.de ([193.175.24.41]:43576 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgEGLnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:43:16 -0400
+        id S1725914AbgEGLnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:43:21 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jWevq-00081e-00; Thu, 07 May 2020 13:43:14 +0200
+        id 1jWevq-00081e-03; Thu, 07 May 2020 13:43:14 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 54465C0408; Thu,  7 May 2020 12:59:28 +0200 (CEST)
-Date:   Thu, 7 May 2020 12:59:28 +0200
+        id 93899C0409; Thu,  7 May 2020 13:09:51 +0200 (CEST)
+Date:   Thu, 7 May 2020 13:09:51 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] MIPS: tools: Move "returns" after "loongson3-llsc-check"
-Message-ID: <20200507105928.GA11616@alpha.franken.de>
-References: <1588464302-4690-1-git-send-email-yangtiezhu@loongson.cn>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
+Message-ID: <20200507110951.GD11616@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588464302-4690-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 08:05:02AM +0800, Tiezhu Yang wrote:
-> Just move "returns" after "loongson3-llsc-check", no function changes.
+On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/mips/tools/loongson3-llsc-check.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Indeed according to the P5600/P6000 manual the MAAR pair register
+> address field either takes [12:31] bits for 32-bits non-XPA systems
+> and [12:35] otherwise. In any case the current address mask is just
+> wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
+> value. This shall cover the 64-bits architecture and systems with XPA
+> enabled, and won't cause any problem for non-XPA 32-bit systems, since
+> the value will be just truncated when written to the 32-bits register.
 
-applied to mips-next.
+according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
+ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
+Does the wider mask cause any problems ?
 
 Thomas.
 
