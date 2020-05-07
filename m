@@ -2,159 +2,126 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455FEC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4DF20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1651F20575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WevyCnOp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hf0UgtlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgEGQaB (ORCPT
+        id S1727859AbgEGQa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:30:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53577 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726308AbgEGQaA (ORCPT
+        Thu, 7 May 2020 12:30:28 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47344 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgEGQa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:30:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588868999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e7iMCcJ0qsnQwLB3wwMjiGDP/YW9nSq1UVvNlnZHm78=;
-        b=WevyCnOpqs1K2QRjJtvprM91QoQRP2Ow6UlHmTioxFiXeXPd+88GoqFl2PoiZyguoDpaqG
-        xlD6fn8VRT0uqBUJ8fAuFTNf4kXFlatu1NILPS3+RRNew9wmxsw1aFaOEk90MiE8b5dm+V
-        whrdL1tn2JNEPF6t1I8QUw5wq2SJHd0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-_D2I7j4LOeuuVKFW714jXA-1; Thu, 07 May 2020 12:29:57 -0400
-X-MC-Unique: _D2I7j4LOeuuVKFW714jXA-1
-Received: by mail-ed1-f69.google.com with SMTP id x14so2624863edv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:29:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e7iMCcJ0qsnQwLB3wwMjiGDP/YW9nSq1UVvNlnZHm78=;
-        b=mszSMVu6e4K2mSLcw7I86zT3rNZLAs0gEnaVoDq7/0AY1sQvAmdV/PYSPcs05ugfzD
-         561qexuCG3KxVJN1ybWRO6C1GbRXtWp+C5ciyzSWHztTrOsebHnLw7EXxZg9gcH55eqs
-         PIjHj0EXJk1Zq5v+ABboi8C1jMCvmtWiV5n3POfSiespE2nvAmIfBh7B2YoFbYV1e1Cq
-         fTSfo26LIC0/dYhg4JrRyCwHjNh0ItHjzEhawE2gRZpWzRXeXFSrBY1HW3HVB/NuSEAu
-         YvbghwmxVoxQtAU59b6BPCEgdcLmUM+UmiFPGdcXuhMSlC5SndBkPVb29/iV2CaPP9Vy
-         tYSw==
-X-Gm-Message-State: AGi0PuZVLyNCTbBx+K+j1dJ2lWhcPzTn28njDtAZOkwuOqH9tTcQYU3M
-        kRPL2rg0Co9rSiah31bEA7QIU+x8YPfXfy7GmOwdAwIXXw4Rzgcxob2HjcYUgkrDL3OPvMoR4l7
-        /b9ZL0mGlVlBBJxhuD6EQZDHIc+J/O2jkWKMvMT12
-X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr13369331ejb.137.1588868996404;
-        Thu, 07 May 2020 09:29:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI/tAK72ofsR0W7siiARMS+UqHhSIuek7idqi6/W26qVAvJz1p0lEni/R1zsrh7MCp33PsxHvorkj/Tp1DUTxU=
-X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr13369301ejb.137.1588868996149;
- Thu, 07 May 2020 09:29:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
- <20200312155640.GX3818@techsingularity.net> <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
- <20200312214736.GA3818@techsingularity.net> <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
- <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net>
-In-Reply-To: <20200507155422.GD3758@techsingularity.net>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Thu, 7 May 2020 18:29:44 +0200
-Message-ID: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Thu, 7 May 2020 12:30:27 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GTLNt032314;
+        Thu, 7 May 2020 16:29:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=tGZ/tF3VhHuD0aZmrzS1ozwUOBMUdb3Emkf86UQ6w2w=;
+ b=hf0UgtlIfdSDXoWb4aSAuZ7ek44tCIKopO08IfWPjrSXLkd51r78s3cb4j7yWNggqF1G
+ dVyMVgvA98VlLMH3rSBRun4avnPiCIgB4qgVSQyAx+F4iVeTuFJPoM0ApNcfRQnOLeVY
+ LbrNtJTATxrzz67GFk1Sljyx2u2Mi3TaES69D6iQTc8wkcYJJ1JCW0mSMXK/yeuZe6hR
+ VvuIdi1J9rTl93UiXuMMIBI7a26KLN3hp8uiCEakoMlz4yByrdjm1hvXAcacQ5sRMTl2
+ L4QSXYqYjPbFjwB72XX3ZEXILgeDR9bM0pYpGDabw0XqPTCf3F3J3KkR2lsB96zX/Xdq gQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30usgq8a4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 16:29:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GSphs163224;
+        Thu, 7 May 2020 16:29:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjnpuaby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 16:29:36 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047GSxGL013026;
+        Thu, 7 May 2020 16:28:59 GMT
+Received: from linux-1.home (/92.157.36.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 May 2020 09:28:59 -0700
+Subject: Re: [patch V4 part 3 12/29] x86/entry/common: Provide
+ idtentry_enter/exit()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+References: <20200505134354.774943181@linutronix.de>
+ <20200505134904.457578656@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <7fb86de4-d76d-061e-8076-61f269faba50@oracle.com>
+Date:   Thu, 7 May 2020 18:27:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200505134904.457578656@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=889 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=924 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mel,
 
-we are not targeting just OMP applications. We see the performance
-degradation also for other workloads, like SPECjbb2005 and
-SPECjvm2008. Even worse, it also affects a higher number of threads.
-For example, comparing 5.7.0-0.rc2 against 5.6 kernel, on 4 NUMA
-server with 2x AMD 7351 CPU, we see performance degradation 22% for 32
-threads (the system has 64 CPUs in total). We observe this degradation
-only when we run a single SPECjbb binary. When running 4 SPECjbb
-binaries in parallel, there is no change in performance between 5.6
-and 5.7.
+On 5/5/20 3:44 PM, Thomas Gleixner wrote:
+> Provide functions which handle the low level entry and exit similiar to
+> enter/exit from user mode.
 
-That's why we are asking for the kernel tunable, which we would add to
-the tuned profile. We don't expect users to change this frequently but
-rather to set the performance profile once based on the purpose of the
-server.
+typo: "similiar"
 
-If you could prepare a patch for us, we would be more than happy to
-test it extensively. Based on the results, we can then evaluate if
-it's the way to go. Thoughts?
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/common.c         |   89 ++++++++++++++++++++++++++++++++++++++++
+>   arch/x86/include/asm/idtentry.h |    3 +
+>   2 files changed, 92 insertions(+)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+...
+> +/**
+> + * idtentry_exit - Common code to handle return from exceptions
+> + * @regs:	Pointer to pt_regs (exception entry regs)
+> + *
+> + * Depending on the return target (kernel/user) this runs the necessary
+> + * preemption and work checks if possible and reguired and returns to
 
-Thanks a lot!
-Jirka
+typo: "reguired"
 
-On Thu, May 7, 2020 at 5:54 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Thu, May 07, 2020 at 05:24:17PM +0200, Jirka Hladky wrote:
-> > Hi Mel,
-> >
-> > > > Yes, it's indeed OMP.  With low threads count, I mean up to 2x number of
-> > > > NUMA nodes (8 threads on 4 NUMA node servers, 16 threads on 8 NUMA node
-> > > > servers).
-> > >
-> > > Ok, so we know it's within the imbalance threshold where a NUMA node can
-> > > be left idle.
-> >
-> > we have discussed today with my colleagues the performance drop for
-> > some workloads for low threads counts (roughly up to 2x number of NUMA
-> > nodes). We are worried that it can be a severe issue for some use
-> > cases, which require a full memory bandwidth even when only part of
-> > CPUs is used.
-> >
-> > We understand that scheduler cannot distinguish this type of workload
-> > from others automatically. However, there was an idea for a * new
-> > kernel tunable to control the imbalance threshold *. Based on the
-> > purpose of the server, users could set this tunable. See the tuned
-> > project, which allows creating performance profiles [1].
-> >
->
-> I'm not completely opposed to it but given that the setting is global,
-> I imagine it could have other consequences if two applications ran
-> at different times have different requirements. Given that it's OMP,
-> I would have imagined that an application that really cared about this
-> would specify what was needed using OMP_PLACES. Why would someone prefer
-> kernel tuning or a tuned profile over OMP_PLACES? After all, it requires
-> specific knowledge of the application even to know that a particular
-> tuned profile is needed.
->
-> --
-> Mel Gorman
-> SUSE Labs
->
-
-
--- 
--Jirka
-
+alex.
