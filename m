@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0DAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A140C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C0E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B7221655
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PwBWweDO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XE5En1H+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgEGUJJ (ORCPT
+        id S1728647AbgEGUJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45814 "EHLO
+        Thu, 7 May 2020 16:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728427AbgEGUJD (ORCPT
+        by vger.kernel.org with ESMTP id S1728580AbgEGUJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:09:03 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BB2C05BD0C
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:09:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t11so3307544pgg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:09:01 -0700 (PDT)
+        Thu, 7 May 2020 16:09:09 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7E8C05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:09:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id s10so2524019plr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T9272gqaO+LckyRVgAqfebSkljgLEU7jgQEMbEqhbqA=;
-        b=PwBWweDOmiGoPgQ6XskZuJKwOl5DVieYaqfy2Zxee+5GB88Ew09QMacIygXnq1RVdR
-         dVFrvj58J8n+h+TTrKz7pVdsV1GhkEBJS8T8lo7xCoPxTPOBkdgwt2sDUWR5SMRvBLZ6
-         33tptodzxHomlW+7m6xOmJ9Jzqp0LiPbpI54Y=
+        bh=+igHgzIqWZe6OT6gTK1ehvXj127NSNGPVn9Isn122A8=;
+        b=XE5En1H+lpOUQAX8ckpo+HHEGAyxCAmUBvhkKbZMRLxQT47ProdK8zaHod/JbejEoB
+         sXh/Tu/5AhbLKSQfHn96xpSNZhK++iWxZEmNf3n00E7bbkO7DqQS+C+GLh9i60S4xQ0m
+         eWVJ5rkfjbi64nWZcUyAR1cMh0h46rlZb+HqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T9272gqaO+LckyRVgAqfebSkljgLEU7jgQEMbEqhbqA=;
-        b=uoD0wKReGjDNQ82J4s0gmF8jahHZTIVcAHYfe+b87aSqrTJ3aUVPTHwXvQiPCuB+Th
-         qlvD1JU6Sztf+cf3VXlocr60CcsOCq6h/leQ/XS5I6l+ns/q3OQVnnP42TlZ6CfmlUxG
-         PmuyruERQf1CdbhZ62LRWScFz5kfiFPllzJqsx+tLBn8PzD5CDKlLel0G473cWtV2yLZ
-         ZRdR/AoWEat3oR9fVa/8TbRbDyP1Uw929bzQjfxKMvvwr/DSA7W2vF2X+isX/Yf07aN1
-         q38BKptWo8EShMeZ6GcC6ZUpuUV8kpduYjud6CHoJNnaiSdsrRA9eiaWfP6pAmWZSitb
-         k2iQ==
-X-Gm-Message-State: AGi0PuYlqlYIw4znh1o4B5SSKoNrPIzO8TDNUSA4oHQUxTX1rlB3wj/Y
-        g2D4t4XCN90M0O/H+hAr/HZ0EA==
-X-Google-Smtp-Source: APiQypLGdySvW1SVYn3nADJH+1U6Eb0qfgJ+/9rtUwTpLt4LPXYbz/b/X0kqeEDfmxy85fVHm3qYCg==
-X-Received: by 2002:a63:211d:: with SMTP id h29mr2875478pgh.231.1588882141068;
-        Thu, 07 May 2020 13:09:01 -0700 (PDT)
+        bh=+igHgzIqWZe6OT6gTK1ehvXj127NSNGPVn9Isn122A8=;
+        b=YGwJIjYBrGHSH8r7zGeQkQhOWTjAsnJndfYtqqivLvwZbJiew4SO4CfObPoB9SdeJY
+         iR2VdJtfSOUqmws3IoQLLNPofXNvwG9Bv73dBgLa3bqAwvUj4LHSZCqzjXghAqwqi4R3
+         EciS1kkd0dOm6RZ88xRIUhslzZPzyXu+Frc8yUgxvwq94e+HnMZqSAC70wqV9Ma+8E8r
+         L9ThZGDtTV+yVONGpdLvRm8gh413Y6K089ESlDbk62vpnY2kNAiIa+zOtZCzR+uRIF02
+         QOvYmNtdpep400g/OIr3b4cUxTf09JO0CfoRgrfbrbAOqoTM5+shhVCiIK5kXLjgsRtm
+         uQTQ==
+X-Gm-Message-State: AGi0PubDRstMb/y6jsfcBAvHzpl1rhzAocH4erDZ/lSnpx/7nHvxGqxx
+        d8nqskkodIK9H2+PCCs2zcqUTw==
+X-Google-Smtp-Source: APiQypL0biztyRxmF7Lwtt+4aWp6foHRtH/yfwnzRkceu6JjnF1a0fFW6TVpNoKxLoUIWIM9V/3cuQ==
+X-Received: by 2002:a17:902:7596:: with SMTP id j22mr14310656pll.226.1588882149206;
+        Thu, 07 May 2020 13:09:09 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d203sm5547601pfd.79.2020.05.07.13.08.59
+        by smtp.gmail.com with ESMTPSA id d203sm5547601pfd.79.2020.05.07.13.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:09:00 -0700 (PDT)
+        Thu, 07 May 2020 13:09:08 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -66,9 +66,9 @@ Cc:     corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
         agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
         Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/12] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
-Date:   Thu,  7 May 2020 13:08:39 -0700
-Message-Id: <20200507130644.v4.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid>
+Subject: [PATCH v4 07/12] kgdboc: Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc
+Date:   Thu,  7 May 2020 13:08:45 -0700
+Message-Id: <20200507130644.v4.7.Icb528f03d0026d957e60f537aa711ada6fd219dc@changeid>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 In-Reply-To: <20200507200850.60646-1-dianders@chromium.org>
 References: <20200507200850.60646-1-dianders@chromium.org>
@@ -79,71 +79,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 81eaadcae81b ("kgdboc: disable the console lock when in
-kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
-kgdboc.  That still works fine, but it turns out that we get a similar
-yell when using other I/O drivers.  One example is the "I/O driver"
-for the kgdb test suite (kgdbts).  When I enabled that I again got the
-same yells.
+This file is only ever compiled if that config is on since the
+Makefile says:
 
-Even though "kgdbts" doesn't actually interact with the user over the
-console, using it still causes kgdb to print to the consoles.  That
-trips the same warning:
-  con_is_visible+0x60/0x68
-  con_scroll+0x110/0x1b8
-  lf+0x4c/0xc8
-  vt_console_print+0x1b8/0x348
-  vkdb_printf+0x320/0x89c
-  kdb_printf+0x68/0x90
-  kdb_main_loop+0x190/0x860
-  kdb_stub+0x2cc/0x3ec
-  kgdb_cpu_enter+0x268/0x744
-  kgdb_handle_exception+0x1a4/0x200
-  kgdb_compiled_brk_fn+0x34/0x44
-  brk_handler+0x7c/0xb8
-  do_debug_exception+0x1b4/0x228
+  obj-$(CONFIG_KGDB_SERIAL_CONSOLE) += kgdboc.o
 
-Let's increment/decrement the "ignore_console_lock_warning" variable
-all the time when we enter the debugger.
+Let's get rid of the useless #ifdef.
 
-This will allow us to later revert commit 81eaadcae81b ("kgdboc:
-disable the console lock when in kgdb").
-
+Reported-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
 
-Changes in v4: None
+Changes in v4:
+- ("kgdboc: Remove useless #ifdef...") new for v4.
+
 Changes in v3: None
-Changes in v2:
-- ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb") new for v2.
+Changes in v2: None
 
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/kgdboc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2b7c9b67931d..950dc667c823 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -668,6 +668,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
- 		goto kgdb_restore;
+diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+index 519d8cfbfbed..2e9158fff976 100644
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -380,7 +380,6 @@ static struct kgdb_io kgdboc_io_ops = {
+ 	.post_exception		= kgdboc_post_exp_handler,
+ };
  
-+	atomic_inc(&ignore_console_lock_warning);
-+
- 	/* Call the I/O driver's pre_exception routine */
- 	if (dbg_io_ops->pre_exception)
- 		dbg_io_ops->pre_exception();
-@@ -740,6 +742,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (dbg_io_ops->post_exception)
- 		dbg_io_ops->post_exception();
+-#ifdef CONFIG_KGDB_SERIAL_CONSOLE
+ static int kgdboc_option_setup(char *opt)
+ {
+ 	if (!opt) {
+@@ -409,7 +408,6 @@ static int __init kgdboc_early_init(char *opt)
+ }
  
-+	atomic_dec(&ignore_console_lock_warning);
-+
- 	if (!kgdb_single_step) {
- 		raw_spin_unlock(&dbg_slave_lock);
- 		/* Wait till all the CPUs have quit from the debugger. */
+ early_param("ekgdboc", kgdboc_early_init);
+-#endif /* CONFIG_KGDB_SERIAL_CONSOLE */
+ 
+ module_init(init_kgdboc);
+ module_exit(exit_kgdboc);
 -- 
 2.26.2.645.ge9eca65c58-goog
 
