@@ -2,199 +2,241 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68EFC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DBCC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C1E208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="iJA+AxpG"
+	by mail.kernel.org (Postfix) with ESMTP id 6615E20725
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgEGFDc (ORCPT
+        id S1726518AbgEGFDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 01:03:32 -0400
-Received: from mail-eopbgr760092.outbound.protection.outlook.com ([40.107.76.92]:22353
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbgEGFDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 01:03:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Go0GHRPJjjODy7rYDaELbrn596ysCoRRXlzKbKQdWq8aFvelc+d0a+LkDadAGn9+JA0+DX3WZXt7rI8dYK+Dl1WSNXuUXV4YEXDykIYW/ZikreKb6/ZTuHtemfMf2lXsSv7L76k9k9QB3DVv9dqw4uE14GgjhQhMg4lE4+uXBzkxliRWNcsPLM0c5oj2Om4SewTmLhMrIgKeUNID3DdilxrVCtsF5XUroCU7WBYy26fpRJsmwULst4Uh5I5psG0UExIf2JqNNkwEFH4Wtdm/mJtxggA0ucfsvrcmHzwqcpYlg8yQu6hZUomAr2V0C2uv0wCLiQkmhU/+XwAm4vZHtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
- b=a+L70UaxBVsxSVo+WiZEY8l2uU1BDy4aaGF8RYBIj3iOil5SG98l17AeC1rnK1mBjvcGK6hsN7ayIyCVAsK5tfbTeOZsNQFfElH2hnA3M5kCL1TXjYWQJniGTZcs/98mLWo37vpD5Oz+LSa7aQcBnT+rl/Y/qE7kYzoeVt49CYjffXueiv+KdYBbZpVsrPm/3zBcpulEX6KCWBjRw8qfGoF3D4m3/v1HefPMRpeKTcdpYT+gmnrqsxy9Yrdv3yQBphIR5j98fXmEbwKPPRzSnubc7+aX6Nh0+OEyWcW37nnqN7K+GaltVJEkHY7DmRKpb6GuDh5Gd65xBHeAY0JxrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
- b=iJA+AxpGiWTrPf8xdEGI1onAX9VIKwNWA+yC7zxbCed3OEktKmz3RnEV3xYfXB/ynt5ARTx63SUI87d4RboxAQW+74fLEfIrjKwlP1IVGTU+dX/GkloDMa1x2g/YcenFasd1dIpz9rAdnTcbSAzh0G6X9fw1HoUyC+GHqiIGJ5w=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
- by SN4PR2101MB1584.namprd21.prod.outlook.com (2603:10b6:803:43::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3; Thu, 7 May
- 2020 05:03:28 +0000
-Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
- ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
- ([fe80::a9e6:4244:f67e:c55%6]) with mapi id 15.20.3000.004; Thu, 7 May 2020
- 05:03:28 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Cc:     Wei Hu <weh@microsoft.com>
-Subject: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the first attempt failed with invalid device state
-Date:   Thu,  7 May 2020 13:03:00 +0800
-Message-Id: <20200507050300.10974-1-weh@microsoft.com>
-X-Mailer: git-send-email 2.20.1
-Reply-To: weh@microsoft.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0046.apcprd02.prod.outlook.com
- (2603:1096:3:18::34) To SN6PR2101MB1021.namprd21.prod.outlook.com
- (2603:10b6:805:8::12)
+        Thu, 7 May 2020 01:03:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:13542 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgEGFDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 01:03:54 -0400
+IronPort-SDR: UUapGBflz0SZkX0BBdYf3kdtyl3BWNM3A9IjAilTQrS0o5UWLu1ztEsOytvm2wd749atibUwnN
+ SslPc0G7qUsA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 22:03:53 -0700
+IronPort-SDR: JDMPi4J5tTFEgCNjxL2pFzfCKgxlsdEK9g3fU0/dEYdJhb/1fsWrC2nTteztaho1kthciLSQ/b
+ caVZpJiSAdcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
+   d="scan'208";a="249991765"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 22:03:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWYhK-000IUt-LP; Thu, 07 May 2020 13:03:50 +0800
+Date:   Thu, 07 May 2020 13:03:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:kcsan-dev] BUILD SUCCESS
+ 50a19ad4b1ec531eb550183cb5d4ab9f25a56bf8
+Message-ID: <5eb396a8.2a93NZjuG/kFptfv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR02CA0046.apcprd02.prod.outlook.com (2603:1096:3:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 05:03:24 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [167.220.255.113]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 41a8155d-8c26-43c0-7e78-08d7f243fac2
-X-MS-TrafficTypeDiagnostic: SN4PR2101MB1584:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN4PR2101MB1584F24C18FBCF112CD328B0BBA50@SN4PR2101MB1584.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03965EFC76
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rTFzUuomV3TsTRGTJ9WUhbgKRKfwAG2sx6p/mrJmRUeAQtoFA5PZn4LRNAOh/yuDU1Av0brp/EjFSFv3oY+RH8lvxrrhfxeq8O2Mieis7Vj04osxUBxxzw/geQeb3GC619jNqBATQvuurBP0utgrQNTTM8cm/G3nmgLcdjGC7QTmf10uPu5zMAz0uxV6bR1aqqA4/e2JelEi8LyL/WlbiEf3g47gIQ1C87jMAQDMDKyVVaLBDs9vbFLZISV5viauBk6TP9I9sSLvTSQ1W5Tj6ySyBllq1bBLJwYHFZ5eRLEDOCcA7DiaCWdYt9XO+j3PBclnUGbJaOAi6rplgZ5++t8j5IclZNCyiBaWB5Tv8tHJyWwvDxLFCtST6fOVYifBXKWH/QUeuZO8w05pTaApeZbJTWkfL5GxXoDBFs7jd7BAy09rgJ/j/5IRSHA5HNycNSCiKukd372k98n95wjTscZSgvYSSCGq4aliJwS1fVZHT4Bn8kh0h8OfWEY5xqzMA+gTw6nFc1r9VcpgKWdUsaDV8RCfax8OcaP2NESTZaI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(33430700001)(82950400001)(5660300002)(2616005)(956004)(478600001)(10290500003)(316002)(1076003)(83300400001)(83280400001)(83320400001)(83310400001)(83290400001)(66946007)(3450700001)(82960400001)(4326008)(6636002)(107886003)(26005)(7696005)(52116002)(36756003)(33440700001)(86362001)(6666004)(66476007)(8676002)(186003)(6486002)(66556008)(2906002)(16526019)(8936002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: cBANEynu1zzzef11M3ERjNFrxelnlcXxkHOHex38IiKK4+sHsofeo631xowm9BCjVCARC+HrJd8MPZB94m3pUaoPg6Q+CaxlMcGktMd3X1L/2bzVsQdrEZf6WSs5WXwRZRN/u+75cX+CPRlGxFLf/aeWdUGwNRimB2Yk49LJaZINu6ehkgHFWZxBTZTrKo9ejTCwyHBaS4vAq+HY5RFJo7kXFXc9KaH8svzefDI4Rp4rYfbCh9YMsl7m0dsggL9eTEjr5NsiJmQ0Z8bWbdZFTgHq7+e3/zbtZHOesN4t0Dj92fSGe5gvvyUeugHBBzs6P5LLLmG+5onEQXiYgNsXQzYM9FmqxdJ3/mc9768WNpmo6rIHdwbMbOX5Y+IWerN8iGyjFr4NXnpjIEKHy9Et4ScjmrGQql8uIAvClhB7s77QS7dVF07ICXrkfcdXPTkXr50w7IiLpb6dduZPuHHj++M85fuGTc5ekJUPJydtvitcS+EcyjB/w0nZFiKt+gC9l9nF0Xa1M7G54CZV+WkkSBfH/cZVz6whjtBvNvHn7yeNHGkcfLQu0CLBayVJviKi1KS4GIUozRYUkC/FmLCFmKdgONhplt7lt1/9MR+z+qmusC7dU0+Oq6rXcwKFKWbzvloxL03pANMuCIUWRqkEyigFT+PD201+BYSwN38PRqwouVssj3QIPuYhD+TB5RERegRT120Eeb2JpcEU6QmT85wZlxa0HqdWq5iGl4ASeyo5vG5xUO0IFPk1bh6OPYTqCxmjjdo+72ApuZxykUqwzJC6zIwBeUPa4yvdkrVlpV6w50bHBwWj875M4wFos4wp
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41a8155d-8c26-43c0-7e78-08d7f243fac2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 05:03:28.3283
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vKOTRcy6upIjrPsp8xmzhmAJtZIFY61HslCGcWSZLr45ChorV6FlW11xorYUq9RDyQnfOsxHYOsbQgdsuNRB7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR2101MB1584
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of kdump, the PCI device was not cleanly shut down
-before the kdump kernel starts. This causes the initial
-attempt of entering D0 state in the kdump kernel to fail with
-invalid device state returned from Hyper-V host.
-When this happens, explicitly call PCI bus exit and retry to
-enter the D0 state.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  kcsan-dev
+branch HEAD: 50a19ad4b1ec531eb550183cb5d4ab9f25a56bf8  objtool, kcsan: Add kcsan_disable_current() and kcsan_enable_current_nowarn()
 
-Signed-off-by: Wei Hu <weh@microsoft.com>
+elapsed time: 483m
+
+configs tested: 174
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+ia64                             allyesconfig
+i386                              allnoconfig
+s390                             allmodconfig
+csky                             allyesconfig
+mips                             allyesconfig
+riscv                               defconfig
+openrisc                            defconfig
+powerpc                             defconfig
+h8300                            allmodconfig
+ia64                             alldefconfig
+xtensa                              defconfig
+openrisc                         allyesconfig
+um                               allmodconfig
+nds32                               defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          alldefconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+m68k                 randconfig-a001-20200506
+mips                 randconfig-a001-20200506
+nds32                randconfig-a001-20200506
+parisc               randconfig-a001-20200506
+alpha                randconfig-a001-20200506
+riscv                randconfig-a001-20200506
+m68k                 randconfig-a001-20200507
+mips                 randconfig-a001-20200507
+nds32                randconfig-a001-20200507
+parisc               randconfig-a001-20200507
+alpha                randconfig-a001-20200507
+riscv                randconfig-a001-20200507
+h8300                randconfig-a001-20200506
+nios2                randconfig-a001-20200506
+microblaze           randconfig-a001-20200506
+c6x                  randconfig-a001-20200506
+sparc64              randconfig-a001-20200506
+h8300                randconfig-a001-20200507
+nios2                randconfig-a001-20200507
+microblaze           randconfig-a001-20200507
+c6x                  randconfig-a001-20200507
+sparc64              randconfig-a001-20200507
+s390                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200506
+sh                   randconfig-a001-20200506
+openrisc             randconfig-a001-20200506
+csky                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200507
+sh                   randconfig-a001-20200507
+openrisc             randconfig-a001-20200507
+csky                 randconfig-a001-20200507
+i386                 randconfig-b003-20200506
+i386                 randconfig-b001-20200506
+x86_64               randconfig-b001-20200506
+x86_64               randconfig-b003-20200506
+i386                 randconfig-b002-20200506
+x86_64               randconfig-c002-20200507
+x86_64               randconfig-c001-20200507
+i386                 randconfig-c002-20200507
+i386                 randconfig-c003-20200507
+x86_64               randconfig-c003-20200507
+i386                 randconfig-c001-20200507
+x86_64               randconfig-d001-20200507
+i386                 randconfig-d003-20200507
+i386                 randconfig-d001-20200507
+x86_64               randconfig-d003-20200507
+x86_64               randconfig-d002-20200507
+i386                 randconfig-d002-20200507
+i386                 randconfig-e003-20200506
+x86_64               randconfig-e003-20200506
+x86_64               randconfig-e001-20200506
+i386                 randconfig-e002-20200506
+i386                 randconfig-e001-20200506
+x86_64               randconfig-a003-20200506
+x86_64               randconfig-a001-20200506
+x86_64               randconfig-a002-20200506
+i386                 randconfig-a001-20200506
+i386                 randconfig-a002-20200506
+i386                 randconfig-a003-20200506
+i386                 randconfig-f003-20200507
+x86_64               randconfig-f002-20200507
+i386                 randconfig-f001-20200507
+i386                 randconfig-f002-20200507
+x86_64               randconfig-g003-20200506
+i386                 randconfig-g003-20200506
+i386                 randconfig-g002-20200506
+x86_64               randconfig-g001-20200506
+i386                 randconfig-g001-20200506
+x86_64               randconfig-g002-20200506
+i386                 randconfig-h002-20200506
+i386                 randconfig-h001-20200506
+i386                 randconfig-h003-20200506
+x86_64               randconfig-h002-20200506
+x86_64               randconfig-h003-20200506
+x86_64               randconfig-h001-20200506
+x86_64               randconfig-a002-20200507
+i386                 randconfig-a001-20200507
+i386                 randconfig-a002-20200507
+i386                 randconfig-a003-20200507
+ia64                 randconfig-a001-20200506
+arm64                randconfig-a001-20200506
+arc                  randconfig-a001-20200506
+powerpc              randconfig-a001-20200506
+arm                  randconfig-a001-20200506
+sparc                randconfig-a001-20200506
+ia64                 randconfig-a001-20200507
+arm64                randconfig-a001-20200507
+arc                  randconfig-a001-20200507
+arm                  randconfig-a001-20200507
+sparc                randconfig-a001-20200507
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             alldefconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                             i386_defconfig
+um                               allyesconfig
+um                                  defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
-    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
-    Bjorn Helgaas
-
- drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index e6fac0187722..92092a47d3af 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
- 	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
- }
- 
-+static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
-+
- /**
-  * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	struct pci_bus_d0_entry *d0_entry;
- 	struct hv_pci_compl comp_pkt;
- 	struct pci_packet *pkt;
-+	bool retry = true;
- 	int ret;
- 
-+enter_d0_retry:
- 	/*
- 	 * Tell the host that the bus is ready to use, and moved into the
- 	 * powered-on state.  This includes telling the host which region
-@@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	if (ret)
- 		goto exit;
- 
-+	/*
-+	 * In certain case (Kdump) the pci device of interest was
-+	 * not cleanly shut down and resource is still held on host
-+	 * side, the host could return invalid device status.
-+	 * We need to explicitly request host to release the resource
-+	 * and try to enter D0 again.
-+	 */
-+	if (comp_pkt.completion_status < 0 && retry) {
-+		retry = false;
-+
-+		dev_err(&hdev->device, "Retrying D0 Entry\n");
-+
-+		/*
-+		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-+		 * to free up resources of its child devices.
-+		 * In the kdump kernel we need to set the
-+		 * wslot_res_allocated to 255 so it scans all child
-+		 * devices to release resources allocated in the
-+		 * normal kernel before panic happened.
-+		 */
-+		hbus->wslot_res_allocated = 255;
-+
-+		ret = hv_pci_bus_exit(hdev, true);
-+
-+		if (ret == 0) {
-+			kfree(pkt);
-+			goto enter_d0_retry;
-+		}
-+		dev_err(&hdev->device,
-+			"Retrying D0 failed with ret %d\n", ret);
-+	}
-+
- 	if (comp_pkt.completion_status < 0) {
- 		dev_err(&hdev->device,
- 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-@@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	return ret;
- }
- 
--static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
-+static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- {
- 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
- 	struct {
-@@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
- 	if (hdev->channel->rescind)
- 		return 0;
- 
--	if (!hibernating) {
-+	if (!keep_devs) {
- 		/* Delete any children which might still exist. */
- 		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
- 		if (dr && hv_pci_start_relations_work(hbus, dr))
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
