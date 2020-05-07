@@ -2,141 +2,252 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBEDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12635C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C773220747
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A8820747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEGJaK (ORCPT
+        id S1727029AbgEGJan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgEGJaJ (ORCPT
+        Thu, 7 May 2020 05:30:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726825AbgEGJam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:30:09 -0400
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [IPv6:2001:1600:3:17::42af])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0302C0610D5
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:30:09 -0700 (PDT)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Hp8Y5bRPzlj0xy;
-        Thu,  7 May 2020 11:30:05 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Hp8W2z2hzlrdKX;
-        Thu,  7 May 2020 11:30:03 +0200 (CEST)
-Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
- <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
- <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <64426377-7fc4-6f37-7371-2e2a584e3032@digikod.net>
-Date:   Thu, 7 May 2020 11:30:02 +0200
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Thu, 7 May 2020 05:30:42 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04793VJX146293;
+        Thu, 7 May 2020 05:30:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gwwca9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 05:30:41 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04793XNX146363;
+        Thu, 7 May 2020 05:30:40 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gwwc9g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 05:30:40 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0479Pfhg025142;
+        Thu, 7 May 2020 09:30:38 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5u0n3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 09:30:38 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0479TPSg55509356
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 09:29:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 353FEA4057;
+        Thu,  7 May 2020 09:30:35 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05F15A4051;
+        Thu,  7 May 2020 09:30:35 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 May 2020 09:30:34 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: [PATCH 2/2] s390/pci: create links between PFs and VFs
+Date:   Thu,  7 May 2020 11:30:34 +0200
+Message-Id: <20200507093034.56143-3-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200507093034.56143-1-schnelle@linux.ibm.com>
+References: <20200507093034.56143-1-schnelle@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_04:2020-05-05,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On s390 PCI Virtual Functions (VFs) are scanned by firmware and are made
+available to Linux via the hot-plug interface. As such the common code
+path of doing the scan directly using the parent Physical Function (PF)
+is not used and fenced off with the no_vf_scan attribute.
 
-On 07/05/2020 11:00, David Laight wrote:
-> From: Mickaël Salaün
->> Sent: 07 May 2020 09:37
-> ...
->>> None of that description actually says what the patch actually does.
->>
->> "Add support for O_MAYEXEC" "to enable to control script execution".
->> What is not clear here? This seems well understood by other commenters.
->> The documentation patch and the talks can also help.
-> 
-> I'm guessing that passing O_MAYEXEC to open() requests the kernel
-> check for execute 'x' permissions (as well as read).
+Even if the partition created the VFs itself e.g. using the sriov_numvfs
+attribute of a PF, the PF/VF links thus need to be established after the
+fact. To do this when a VF is plugged we scan through all functions on
+the same zbus and test whether they are the parent PF in which case we
+establish the necessary links.
 
-Yes, but only with openat2().
+With these links established there is now no more need to fence off
+pci_iov_remove_virtfn() for pdev->no_vf_scan as the common code now
+works fine.
 
-> 
-> Then kernel policy determines whether 'read' access is actually enough,
-> or whether 'x' access (possibly masked by mount permissions) is needed.
-> 
-> If that is true, two lines say what is does.
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ arch/s390/include/asm/pci.h     |  3 +-
+ arch/s390/include/asm/pci_clp.h |  3 +-
+ arch/s390/pci/pci_bus.c         | 69 ++++++++++++++++++++++++++++++++-
+ arch/s390/pci/pci_clp.c         |  1 +
+ drivers/pci/iov.c               |  3 --
+ 5 files changed, 73 insertions(+), 6 deletions(-)
 
-The "A simple system-wide security policy" paragraph introduce that, but
-I'll highlight it in the next cover letter. The most important point is
-to understand why it is required, before getting to how it will be
-implemented.
+diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+index c1558cf071b8..99b92c3e46b0 100644
+--- a/arch/s390/include/asm/pci.h
++++ b/arch/s390/include/asm/pci.h
+@@ -131,7 +131,8 @@ struct zpci_dev {
+ 	u8		port;
+ 	u8		rid_available	: 1;
+ 	u8		has_hp_slot	: 1;
+-	u8		reserved	: 6;
++	u8		is_physfn	: 1;
++	u8		reserved	: 5;
+ 	unsigned int	devfn;		/* DEVFN part of the RID*/
+ 
+ 	struct mutex lock;
+diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+index 896ee41e23e3..eb51272dd2cc 100644
+--- a/arch/s390/include/asm/pci_clp.h
++++ b/arch/s390/include/asm/pci_clp.h
+@@ -95,7 +95,8 @@ struct clp_rsp_query_pci {
+ 	u16 vfn;			/* virtual fn number */
+ 	u16			:  3;
+ 	u16 rid_avail		:  1;
+-	u16			:  2;
++	u16 is_physfn		:  1;
++	u16 reserved1		:  1;
+ 	u16 mio_addr_avail	:  1;
+ 	u16 util_str_avail	:  1;	/* utility string available? */
+ 	u16 pfgid		:  8;	/* pci function group id */
+diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+index 542c6b8f56df..52d79a2f6722 100644
+--- a/arch/s390/pci/pci_bus.c
++++ b/arch/s390/pci/pci_bus.c
+@@ -126,6 +126,64 @@ static struct zpci_bus *zpci_bus_alloc(int pchid)
+ 	return zbus;
+ }
+ 
++#ifdef CONFIG_PCI_IOV
++static int zpci_bus_link_virtfn(struct pci_dev *pdev,
++		struct pci_dev *virtfn, int vfid)
++{
++	int rc;
++
++	virtfn->physfn = pci_dev_get(pdev);
++	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
++	if (rc) {
++		pci_dev_put(pdev);
++		virtfn->physfn = NULL;
++		return rc;
++	}
++	return 0;
++}
++
++static int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
++		struct pci_dev *virtfn, int vfn)
++{
++	int i, cand_devfn;
++	struct zpci_dev *zdev;
++	struct pci_dev *pdev;
++	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
++	int rc = 0;
++
++	virtfn->is_virtfn = 1;
++	virtfn->multifunction = 0;
++	WARN_ON(vfid < 0);
++	/* If the parent PF for the given VF is also configured in the
++	 * instance, it must be on the same zbus.
++	 * We can then identify the parent PF by checking what
++	 * devfn the VF would have if it belonged to that PF using the PF's
++	 * stride and offset. Only if this candidate devfn matches the
++	 * actual devfn will we link both functions.
++	 */
++	for (i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
++		zdev = zbus->function[i];
++		if (zdev && zdev->is_physfn) {
++			pdev = pci_get_slot(zbus->bus, zdev->devfn);
++			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
++			if (cand_devfn == virtfn->devfn) {
++				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
++				break;
++			}
++		}
++	}
++	return rc;
++}
++#else
++static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
++		struct pci_dev *virtfn, int vfn)
++{
++	virtfn->is_virtfn = 1;
++	virtfn->multifunction = 0;
++	return 0;
++}
++#endif
++
+ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+ {
+ 	struct pci_bus *bus;
+@@ -157,11 +215,20 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+ 
+ 	pdev = pci_scan_single_device(bus, zdev->devfn);
+ 	if (pdev) {
+-		pdev->multifunction = 1;
++		if (!zdev->is_physfn) {
++			rc = zpci_bus_setup_virtfn(zbus, pdev, zdev->vfn);
++			if (rc)
++				goto failed_with_pdev;
++		}
+ 		pci_bus_add_device(pdev);
+ 	}
+ 
+ 	return 0;
++
++failed_with_pdev:
++	pci_stop_and_remove_bus_device(pdev);
++	pci_dev_put(pdev);
++	return rc;
+ }
+ 
+ static void zpci_bus_add_devices(struct zpci_bus *zbus)
+diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+index 9b318824a134..d7bd3c287cf7 100644
+--- a/arch/s390/pci/pci_clp.c
++++ b/arch/s390/pci/pci_clp.c
+@@ -159,6 +159,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+ 	zdev->uid = response->uid;
+ 	zdev->fmb_length = sizeof(u32) * response->fmb_len;
+ 	zdev->rid_available = response->rid_avail;
++	zdev->is_physfn = response->is_physfn;
+ 	if (!s390_pci_no_rid && zdev->rid_available)
+ 		zdev->devfn = response->rid & ZPCI_RID_MASK_DEVFN;
+ 
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index ee6fbe688498..b37e08c4f9d1 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -571,9 +571,6 @@ static void sriov_del_vfs(struct pci_dev *dev)
+ 	struct pci_sriov *iov = dev->sriov;
+ 	int i;
+ 
+-	if (dev->no_vf_scan)
+-		return;
+-
+ 	for (i = 0; i < iov->num_VFs; i++)
+ 		pci_iov_remove_virtfn(dev, i);
+ }
+-- 
+2.17.1
 
-> 
-> Have you ever set a shell script permissions to --x--s--x ?
-> Ends up being executable by everyone except the owner!
-
-In this case the script is indeed executable but it can't be executed
-because the interpreter (i.e. the user) needs to be able to read the
-file. Of course, if the user has CAP_DAC_OVERRIDE (like the root user),
-read is still allowed.
-
-> Having the kernel pass all '#!' files to their interpreters
-> through an open fd might help security.
-
-This is interesting but it doesn't address the current issue: being able
-to have a consistent (script) executability system policy. Maybe its
-this point of view which wasn't clear enough?
-
-> In that case the user doesn't need read access to the file
-> in order to get an interpreter to process it.
-
-Yes, but this brings security issues, because the interpreter (i.e. the
-user) would then be able to read files without read permission.
-
-> (You'd need to stop strace showing the contents to actually
-> hide them.)
-
-It doesn't matter if the process is traced or not, the kernel handles
-impersonation scopes thanks to ptrace_may_access().
