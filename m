@@ -2,99 +2,80 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC19C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C25C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC3D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOAXfSmt"
+	by mail.kernel.org (Postfix) with ESMTP id A4DFF20725
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgEGDri (ORCPT
+        id S1726625AbgEGDsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgEGDri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:47:38 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391CDC061A0F;
-        Wed,  6 May 2020 20:47:38 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d184so2296620pfd.4;
-        Wed, 06 May 2020 20:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=k42B0v+KyyPwXu1TxJ3NGB+Mz8tcGMWNDg8BOG5X2is=;
-        b=fOAXfSmtHy7lzjwH9nWI5vGd1yHZZPStW3GW1bYOQqGke1WNtouCxNQsSz90iYTS6r
-         Hx8OfIYANa5Rwv5PlUgSvrQ/0VnwKC9cKL+MI/OzYsZAyY+dBDGjRJZtJh5Emr3Rusfy
-         OUqf6q+dKRXE7q4V2035TYzqDG92bHKGqhxvSUWx1ovSBCB+I7t7AmrnXSefkX7HI/oF
-         wRikRHkJJ3m/YhFgBU873E01jRxvqL7r1d8iD6ON46OPz5Y9Y/Emhf/Eh/0VZ+cSc2zw
-         tGL/BMEE+9X5to6tLunbS205C0vyefX/0fgHwVAAnL2Wh8haaB3kRtfE9YiyOWpmOs9F
-         IL4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k42B0v+KyyPwXu1TxJ3NGB+Mz8tcGMWNDg8BOG5X2is=;
-        b=osA0sg1OcpFJVQmCSaJI1IUJgyCFW5rqV1mPUgyj4kRxZ+v3gWmBfKbahLzH0gUPU0
-         7vJPi9ozYPLsvVrkGdjRkay4cI9T2V79+m3GlsXMeSi6j6JUnycRbwPzshxu5cdg2lJU
-         E3hUYhDtMutu7WmSinhbeiGIQIqisktFHRGQ4+OTeqtAGFr8ialwvZItUyh0tNtMsleE
-         YpkwCqKLEiWkdXM1bPRoJHmeYTDOMWj5MT3YBih9tvwZ/vwpqNRRv5+pGsZTv/yS4i4D
-         2kiGcHyTooyR4MkEex3sCU2yRewK2R2xqSEVz/L9YBK6u+GLypgFXpNxVdtDlKaAYWfy
-         DRTA==
-X-Gm-Message-State: AGi0PuYtmY/a5bIiItSZuEeAravr+Yb6qoH0vqMRPYlr+NGSq237DE6E
-        FI1DbTe2E9SHbEZE9gyUBtw=
-X-Google-Smtp-Source: APiQypK4A84ZXMUNrHmbDEQoXCfj0mgTIbuCvHuFZnvKDZjmlLnwqTsib4w28kxI/hDuD805kIO41A==
-X-Received: by 2002:a63:e050:: with SMTP id n16mr9888597pgj.93.1588823257540;
-        Wed, 06 May 2020 20:47:37 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z5sm3130716pfn.142.2020.05.06.20.47.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 May 2020 20:47:36 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: sprd: Fix the incorrect pull-up definition
-Date:   Thu,  7 May 2020 11:47:25 +0800
-Message-Id: <e973f8f194ce4cb2639121572e8621b5efa5bfbe.1588823152.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 6 May 2020 23:48:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33584 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbgEGDsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:48:18 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E933DA39FC9FCBC8410B;
+        Thu,  7 May 2020 11:48:06 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 11:47:58 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <mpe@ellerman.id.au>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>
+CC:     <alsa-devel@alsa-project.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] ALSA: sound/ppc: Use bitwise instead of arithmetic operator for flags
+Date:   Thu, 7 May 2020 11:54:07 +0800
+Message-ID: <1588823647-12480-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bits of pull up resistor selection were defined mistakenly,
-thus fix them.
+Fix the following coccinelle warnings:
 
-Fixes: 41d32cfce1ae ("pinctrl: sprd: Add Spreadtrum pin control driver")
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+sound/ppc/pmac.c:729:57-58: WARNING: sum of probable bitmasks, consider |
+sound/ppc/pmac.c:229:37-38: WARNING: sum of probable bitmasks, consider |
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
 ---
- drivers/pinctrl/sprd/pinctrl-sprd.c | 4 ++--
+ sound/ppc/pmac.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 48cbf2a..08dc193 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -68,8 +68,8 @@
- #define SLEEP_PULL_UP_MASK		0x1
- #define SLEEP_PULL_UP_SHIFT		3
+diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
+index 592532c..2e750b3 100644
+--- a/sound/ppc/pmac.c
++++ b/sound/ppc/pmac.c
+@@ -226,7 +226,7 @@ static int snd_pmac_pcm_prepare(struct snd_pmac *chip, struct pmac_stream *rec,
+ 		offset += rec->period_size;
+ 	}
+ 	/* make loop */
+-	cp->command = cpu_to_le16(DBDMA_NOP + BR_ALWAYS);
++	cp->command = cpu_to_le16(DBDMA_NOP | BR_ALWAYS);
+ 	cp->cmd_dep = cpu_to_le32(rec->cmd.addr);
  
--#define PULL_UP_20K			(BIT(12) | BIT(7))
--#define PULL_UP_4_7K			BIT(12)
-+#define PULL_UP_4_7K			(BIT(12) | BIT(7))
-+#define PULL_UP_20K			BIT(7)
- #define PULL_UP_MASK			0x21
- #define PULL_UP_SHIFT			7
- 
+ 	snd_pmac_dma_stop(rec);
+@@ -726,7 +726,7 @@ void snd_pmac_beep_dma_start(struct snd_pmac *chip, int bytes, unsigned long add
+ 	chip->extra_dma.cmds->xfer_status = cpu_to_le16(0);
+ 	chip->extra_dma.cmds->cmd_dep = cpu_to_le32(chip->extra_dma.addr);
+ 	chip->extra_dma.cmds->phy_addr = cpu_to_le32(addr);
+-	chip->extra_dma.cmds->command = cpu_to_le16(OUTPUT_MORE + BR_ALWAYS);
++	chip->extra_dma.cmds->command = cpu_to_le16(OUTPUT_MORE | BR_ALWAYS);
+ 	out_le32(&chip->awacs->control,
+ 		 (in_le32(&chip->awacs->control) & ~0x1f00)
+ 		 | (speed << 8));
 -- 
-1.9.1
+2.6.2
 
