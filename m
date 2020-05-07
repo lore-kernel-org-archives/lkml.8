@@ -2,181 +2,81 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5825FC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484DEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314AD2068E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SbDfHNsV"
+	by mail.kernel.org (Postfix) with ESMTP id 29C072068E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgEGDI0 (ORCPT
+        id S1728549AbgEGDJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgEGDIZ (ORCPT
+        Wed, 6 May 2020 23:09:52 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:5357 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgEGDJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:08:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930F4C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:08:23 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id i15so4073485wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gsgt81MlDlEnto/Qdmhwfg0yKkYAEa0cqpBxi8rVFIU=;
-        b=SbDfHNsVlfwga5HlZsXZUndrMHRULtSgVl0BqdUggNtB1qsob5uD0JyX829hO72zkR
-         cm/8xweeLd9jJO9m8puEA2KdLib1VQ8BLx8ALUobrhsRbyeEeyjETYOtW5+bFoF5iASD
-         ZE4hLHneOrzNo6QZ0kX0rw/CbBvg4b1fGD/G/3feDX49Cpyoi5nam9lIu9+edv+nA5DJ
-         aVR9G0FQKBxNogFDiSnECeq6gY1+oJEO2TuLnmCjUul/GzJfl2sMBspUtT4Bq/q3n53X
-         TKwTLnjHEybyfrEWSfTE+5M4PQMfS4uyumllO9W/XOePZvv7yo84bDog271sy0t6z9Im
-         yJoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gsgt81MlDlEnto/Qdmhwfg0yKkYAEa0cqpBxi8rVFIU=;
-        b=cl72yQpDiDbKMEfho1b0wBHbCEa8A63bOuZtk1X5GeHxNxF4G3/mmyfoj8nh2FFSkv
-         Jd3odjp+GmlQB03VozY8JdigMGUVrVM3mdz+b9m+O5F37sZFbHroQR58WCqWYjgLXuR7
-         GKVDKFBrfi4x1dk1g+oz2EeaXu1HrghrhLtcMNMzBqyexKcJppCVLSEq3r4nWK7xB/ud
-         duQTX8BLEfGSeGAz/kslNls7RWjf6UKS3NSwxz66uF8MZsgYj+Bb1jCfc6HW6VZ6yD94
-         E+u0vc5DuOuoLPsVhdcUlrViGOkFz1vkpyEd1Vq7iimNkAE7mxRb7pN+CyTGmQq/h72j
-         74bg==
-X-Gm-Message-State: AGi0PuZm3+bfMQ/xswPIQnvYjMsqVmPsVAqTtERzVYneJKemdtXOxB1I
-        QWgtaP03Bhmx7/JIuxJeqA/RLLTtdprGAXSuiMNNyA==
-X-Google-Smtp-Source: APiQypJYBc+4MO14/l2sBXNv+eueA8YQH/AYbiQD4bmsfXP2t3f539TUHGl8HMJof9KUOufQG4S/sjUHWHRGOiOP17E=
-X-Received: by 2002:adf:fe51:: with SMTP id m17mr12501816wrs.414.1588820901909;
- Wed, 06 May 2020 20:08:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505102700.7912-1-anders.roxell@linaro.org>
- <CABVgOS=awiwi7APWr5HgU6Eht-VAygWPeQyNsCnAF09OLpR46A@mail.gmail.com> <CADYN=9Jdwd=3Rh=wyzO7eOxtyTSm+JqjF385iQjfMocpz1A3YA@mail.gmail.com>
-In-Reply-To: <CADYN=9Jdwd=3Rh=wyzO7eOxtyTSm+JqjF385iQjfMocpz1A3YA@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Thu, 7 May 2020 11:08:10 +0800
-Message-ID: <CABVgOSndkMOd0U+p=fMy0q-KdN29XERheY=3-3+dgVoeWf9m5g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Marco Elver <elver@google.com>
+        Wed, 6 May 2020 23:09:52 -0400
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id E210C1A30A3;
+        Thu,  7 May 2020 11:09:15 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AAsA8gAQCF1C9rDJm0RSQaqC.3.1588820955909.Hmail.bernard@vivo.com>
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kevin Hilman <khilman@baylibre.com>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6W1BBVENIXSBkcm0vbWVzb246IHBtIHJlc3VtZSBhZGQgcmV0dXJuIGVycm5vIGJyYW5jaA==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <20200428131747.2099-1-bernard@vivo.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 7 May 2020 11:09:15 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Thu, 7 May 2020 11:09:15 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVNQ0lLS0tKTUtJSkxJQllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTktISU9MQk5JN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Ogg6Qxw6Kjg9SjhCCT8xFkspKCoaCjhVSFVKTkNDQ0lLQk5NS0hIVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBT0tOSDcG
+X-HM-Tid: 0a71ed1bd32393b4kuwse210c1a30a3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 6:33 PM Anders Roxell <anders.roxell@linaro.org> wrote:
->
-> Hi David,
->
-> Thank you for the review.
->
-> On Wed, 6 May 2020 at 07:08, David Gow <davidgow@google.com> wrote:
-> >
-> > On Tue, May 5, 2020 at 6:27 PM Anders Roxell <anders.roxell@linaro.org> wrote:
-> > >
-> > > Make it easier to enable all KUnit fragments.  This is needed for kernel
-> > > test-systems, so its easy to get all KUnit tests enabled and if new gets
-> > > added they will be enabled as well.  Fragments that has to be builtin
-> > > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
-> > >
-> > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > > ---
-> > >  lib/kunit/Kconfig | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> > > index 95d12e3d6d95..537f37bc8400 100644
-> > > --- a/lib/kunit/Kconfig
-> > > +++ b/lib/kunit/Kconfig
-> > > @@ -41,4 +41,10 @@ config KUNIT_EXAMPLE_TEST
-> > >           is intended for curious hackers who would like to understand how to
-> > >           use KUnit for kernel development.
-> > >
-> > > +config KUNIT_RUN_ALL
-> > > +       tristate "KUnit run all test"
-> >
-> > I'm not 100% sure about this name and description. It only actually
-> > "runs" the tests if they're builtin (as modules, they'll only run when
-> > loaded).
-> >
-> > Would KUNIT_BUILD_ALL or KUNIT_ALL_TESTS
->
-> I would like to go with KUNIT_ALL_TESTS if no one objects.
->
-
-Personally, I'm fine with that.
-
-Brendan, thoughts?
-
-> > or similar be better?
-> >
-> > It also, as mentioned, only really runs all available (i.e., with
-> > dependencies met in the current .config) tests (as distinct from the
-> > --alltests flag to kunit.py, which builds UML with allyesconfig), it
-> > might be good to add this to the description or help.
-> >
-> > Something like "Enable all KUnit tests" or "Enable all available KUnit
-> > tests" (or even something about "all KUnit tests with satisfied
-> > dependencies") might be clearer.
->
-> I like "All KUnit tests with satisfied dependencies".
->
-> >
-> > > +       help
-> > > +         Enables all KUnit tests, if they can be enabled.
-> > > +         That depends on if KUnit is enabled as a module or builtin.
-> > > +
-> > I like the first line here, but the second one could use a bit more
-> > explanation. Maybe copy some of the boilerplate text from other tests,
-> > e.g.:
-> >
-> >           KUnit tests run during boot and output the results to the debug log
-> >          in TAP format (http://testanything.org/). Only useful for kernel devs
-> >          running the KUnit test harness, and not intended for inclusion into a
-> >          production build.
-> >
-> >          For more information on KUnit and unit tests in general please refer
-> >          to the KUnit documentation in Documentation/dev-tools/kunit/.
-> >
-> >          If unsure, say N.
->
-> Makes much more sense, thanks.
->
-> >
-> > >  endif # KUNIT
-> > > --
-> > > 2.20.1
-> > >
-> >
-> > Otherwise, this is looking good. I've done some quick testing, and it
-> > all seems to work for me. As long as it's clear what the difference
-> > between this and other ways of running "all tests" (like the
-> > --alltests kunit.py option),
->
-> Do you think it should be made clearer in some way?
->
-
-I think the changes above should do it.
-
--- David
+CkZyb206IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KRGF0ZTogMjAyMC0wNC0yOCAy
+MToxNzo0NwpUbzogIE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4sRGF2
+aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwu
+Y2g+LEtldmluIEhpbG1hbiA8a2hpbG1hbkBiYXlsaWJyZS5jb20+LGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcsbGludXgtYW1sb2dpY0BsaXN0cy5pbmZyYWRlYWQub3JnLGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+CkNjOiAgb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20sQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZp
+dm8uY29tPgpTdWJqZWN0OiBbUEFUQ0hdIGRybS9tZXNvbjogcG0gcmVzdW1lIGFkZCByZXR1cm4g
+ZXJybm8gYnJhbmNoPnBtX3Jlc3VtcCBhcGkgZGlkIG5vdCBoYW5kbGUgZHJtX21vZGVfY29uZmln
+X2hlbHBlcl9yZXN1bWUgZXJyb3IuCj5UaGlzIGNoYW5nZSBhZGQgaGFuZGxlIHRvIHJldHVybiBk
+cm1fbW9kZV9jb25maWdfaGVscGVyX3Jlc3VtZWBzCj5lcnJvciBudW1iZXIuIFRoaXMgY29kZSBs
+b2dpYyBpcyBhbGlnbmVkIHdpdGggYXBpIHBtX3N1c3BlbmQuCj5BZnRlciB0aGlzIGNoYW5nZSwg
+dGhlIGNvZGUgbWF5YmUgYSBiaXQgcmVhZGFibGUuCj4KPlNpZ25lZC1vZmYtYnk6IEJlcm5hcmQg
+WmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPi0tLQo+IGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNv
+bl9kcnYuYyB8IDQgKy0tLQo+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxl
+dGlvbnMoLSkKPgo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kcnYu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kcnYuYwo+aW5kZXggYjVmNWViN2I0YmI5
+Li44YzJlMWI0N2U4MWEgMTAwNjQ0Cj4tLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25f
+ZHJ2LmMKPisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kcnYuYwo+QEAgLTQxMiw5
+ICs0MTIsNyBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIG1lc29uX2Rydl9wbV9yZXN1bWUo
+c3RydWN0IGRldmljZSAqZGV2KQo+IAlpZiAocHJpdi0+YWZiY2Qub3BzKQo+IAkJcHJpdi0+YWZi
+Y2Qub3BzLT5pbml0KHByaXYpOwo+IAo+LQlkcm1fbW9kZV9jb25maWdfaGVscGVyX3Jlc3VtZShw
+cml2LT5kcm0pOwo+LQo+LQlyZXR1cm4gMDsKPisJcmV0dXJuIGRybV9tb2RlX2NvbmZpZ19oZWxw
+ZXJfcmVzdW1lKHByaXYtPmRybSk7Cj4gfQo+IAo+IHN0YXRpYyBpbnQgY29tcGFyZV9vZihzdHJ1
+Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEpCj4tLSAKPjIuMjYuMgo+Cg0KDQo=
