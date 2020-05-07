@@ -2,94 +2,77 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3066C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116C8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6FA9208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861090;
-	bh=Fe6gfF5urXSBFvBbOzUNW7fFTBNb7/Y+1nMsf2Yqk7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qnwhzgjLB49duS6hWBi4OAIe9x/NLZvkX+4Sk+3JCh7LjuQ9pqoq7PutxW8/Fr+er
-	 zkax0bWs+wgHNDJsAekIdjeyWb+74GGa6I6oUNUMfBGFd3D/6n0TJyxnRUQ9uAFNmz
-	 ze4LNRTu2I92QzVSAliIxpAnLqS1FQzlwkUue9is=
+	by mail.kernel.org (Postfix) with ESMTP id D4F2E2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgEGOSK (ORCPT
+        id S1726598AbgEGOV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgEGOSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:18:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E48542075E;
-        Thu,  7 May 2020 14:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861089;
-        bh=Fe6gfF5urXSBFvBbOzUNW7fFTBNb7/Y+1nMsf2Yqk7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=moh/xIgqrEwzUio6N/CaL7SwsOTz2ms2PnrAifuDB9S9strf9Z7Z7ycBZFC2tFV/5
-         ip5ugnTg010qNxa1egT9mC2QixcvUaFY+EYyRV4kxp2TchazDZ9JlY+on4Qf4Ff1NN
-         r0BTI3tNk3+D3txlnN64FC23CYrJP/VQnaKjBcEg=
-Date:   Thu, 7 May 2020 15:18:03 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCHv4 4/6] iommu/arm-smmu-qcom: Request direct mapping for
- modem device
-Message-ID: <20200507141803.GA1422@willie-the-truck>
-References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
- <8ef5d93c74f5cd9e4a6edab86d1d46efbf3aa038.1587407458.git.saiprakash.ranjan@codeaurora.org>
- <20200507130210.GB31783@willie-the-truck>
- <f41beaa18f0ba49c3c6f7552291a0641@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f41beaa18f0ba49c3c6f7552291a0641@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 7 May 2020 10:21:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54949 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGOV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:21:28 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jWhOn-00036d-BO; Thu, 07 May 2020 14:21:17 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jeffrey.t.kirsher@intel.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Neftin <sasha.neftin@intel.com>,
+        Dima Ruinskiy <dima.ruinskiy@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>,
+        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] e1000e: Disable TSO for buffer overrun workaround
+Date:   Thu,  7 May 2020 22:21:07 +0800
+Message-Id: <20200507142108.13090-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:44:01PM +0530, Sibi Sankar wrote:
-> On 2020-05-07 18:32, Will Deacon wrote:
-> > On Tue, Apr 21, 2020 at 12:03:52AM +0530, Sai Prakash Ranjan wrote:
-> > > From: Sibi Sankar <sibis@codeaurora.org>
-> > > 
-> > > The Q6 modem sub-system has direct access to DDR through memnoc.
-> > > Also SMMU is not expected to provide access control/translation
-> > > for these SIDs (sandboxing of the modem is achieved through XPUs
-> > > engaged using SMC calls). So request direct mapping for modem on
-> > > platforms which don't have TrustZone.
-> > 
-> > The Z7 space rocket framework has limited access to water through
-> > BROADCHAN.
-> > Also, this commit message really sucks. So please can you rewrite it in
-> > a
-> > way that makes sense to people outside of your office?
-> 
-> lol, sure I'll re-word ^^ tday
+Commit b10effb92e27 ("e1000e: fix buffer overrun while the I219 is
+processing DMA transactions") imposes roughly 30% performance penalty.
 
-Thanks :)
+The commit log states that "Disabling TSO eliminates performance loss
+for TCP traffic without a noticeable impact on CPU performance", so
+let's disable TSO by default to regain the loss.
 
-WIll
+Fixes: b10effb92e27 ("e1000e: fix buffer overrun while the I219 is processing DMA transactions")
+BugLink: https://bugs.launchpad.net/bugs/1802691
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 177c6da80c57..9b5509149578 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5294,6 +5294,10 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 					/* oops */
+ 					break;
+ 				}
++				if (hw->mac.type == e1000_pch_spt) {
++					netdev->features &= ~NETIF_F_TSO;
++					netdev->features &= ~NETIF_F_TSO6;
++				}
+ 			}
+ 
+ 			/* enable transmits in the hardware, need to do this
+-- 
+2.17.1
+
