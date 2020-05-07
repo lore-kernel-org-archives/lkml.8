@@ -2,139 +2,185 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412FBC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA8BC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7122145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbIMaMty"
+	by mail.kernel.org (Postfix) with ESMTP id 73C3121473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgEGSFR (ORCPT
+        id S1728383AbgEGSFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:05:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20655 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726514AbgEGSFQ (ORCPT
+        Thu, 7 May 2020 14:05:23 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51330 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbgEGSFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:05:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588874715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7ZT8uf+8nR83y0d403Od1JUqxjPNizjmPd+u74qytwY=;
-        b=dbIMaMtyowm+UNPdR0XQrz3rLX09T3QF8RIWJdeCC587UF7OWtIQTkWer6rlo+WaQSJTKt
-        O8TfMW5okqRoC5u0Bt73LsUJ4StSNfKp7nUbCw7iOg2hBJHzNsdE86+CfCEL3TPujHi13S
-        0EQ0y55yLH8FkroEMV7cQmfmxW8C4XA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-2UqXDvlnMmy8rXYVrwXgrQ-1; Thu, 07 May 2020 14:05:12 -0400
-X-MC-Unique: 2UqXDvlnMmy8rXYVrwXgrQ-1
-Received: by mail-qk1-f198.google.com with SMTP id i10so6619134qkm.23
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:05:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7ZT8uf+8nR83y0d403Od1JUqxjPNizjmPd+u74qytwY=;
-        b=BBS7jn8lgnSYWpEKOxbyvB6fTp68/+u2vArRq0+kDMFwgsJjbyduMB9dsFbZm6TEHz
-         cryBas/bFVriqLnbDeNHlrQWRf74//DylBFJecY2bTDL2lhci+gvKTnEA5/pLOYq2oB7
-         2NeZeVTdqOpZKTVBIUojUrVchrecz+WJhjf6WYKqvFONTasp0n4kvgaUbThCdHWMNfoM
-         QoFNgsk2YYKrUW1YNxH6F7uhagIzVpFjT3A4W5xegTNZ2SIt62FfFhO6p9eeklmoGXQw
-         pEWQLptlzAVJdwgurozHyRkeuXoX6IGcgWtjtnUmFuU3Zs8LUWMDTf2/7BM+uSFHDe2j
-         2rKg==
-X-Gm-Message-State: AGi0PuYL5MXxv9TI+c/0xU4qfplNKSAA5E4hdb0aYwuDShFsN6UiuA1A
-        8jpZhLUAJE1o302eBBtdU4I6NezC5XMCvi+EndqhbzAkkppg6SNYyDCAa1I7GFnDN7CAwmp4NFl
-        2uFF0nCMLLWFtp4lGMhl7WYeI
-X-Received: by 2002:a37:8d07:: with SMTP id p7mr16276236qkd.500.1588874711177;
-        Thu, 07 May 2020 11:05:11 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLaD9wsQNdumwebtoAZ7rJYDUyJERvx2DqBTrcl3tFL8/q8qwbOR3ce/0xUX7ee+QK3N2tBXw==
-X-Received: by 2002:a37:8d07:: with SMTP id p7mr16276184qkd.500.1588874710644;
-        Thu, 07 May 2020 11:05:10 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id o16sm4104750qko.38.2020.05.07.11.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:05:09 -0700 (PDT)
-Date:   Thu, 7 May 2020 14:05:08 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 9/9] KVM: VMX: pass correct DR6 for GD userspace exit
-Message-ID: <20200507180508.GH228260@xz-x1>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
- <20200507115011.494562-10-pbonzini@redhat.com>
- <20200507161854.GF228260@xz-x1>
- <7abe5f7b-2b5a-4e32-34e2-f37d0afef00a@redhat.com>
- <20200507163839.GG228260@xz-x1>
- <db06ffa7-1e3c-14e5-28b8-5053f4383ecf@redhat.com>
+        Thu, 7 May 2020 14:05:21 -0400
+Received: from 89-64-84-94.dynamic.chello.pl (89.64.84.94) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id eede8e33c27c587e; Thu, 7 May 2020 20:05:18 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: System fails to exit s2idle by a keystroke on my laptop
+Date:   Thu, 07 May 2020 20:05:11 +0200
+Message-ID: <5029155.caIQduTdCh@kreacher>
+In-Reply-To: <CAB4CAweZcN0SPe-a7jbthV=-ip9cCzJOM=NfP9YvtXw97ugKgQ@mail.gmail.com>
+References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com> <CAJZ5v0gX1gx1_zTZg=M+xEOqxPEaq8ZU-N3hwk7OGcGdzrdBTg@mail.gmail.com> <CAB4CAweZcN0SPe-a7jbthV=-ip9cCzJOM=NfP9YvtXw97ugKgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <db06ffa7-1e3c-14e5-28b8-5053f4383ecf@redhat.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:42:25PM +0200, Paolo Bonzini wrote:
-> On 07/05/20 18:38, Peter Xu wrote:
-> > On Thu, May 07, 2020 at 06:21:18PM +0200, Paolo Bonzini wrote:
-> >> On 07/05/20 18:18, Peter Xu wrote:
-> >>>>  		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) {
-> >>>> -			vcpu->run->debug.arch.dr6 = vcpu->arch.dr6;
-> >>>> +			vcpu->run->debug.arch.dr6 = DR6_BD | DR6_RTM | DR6_FIXED_1;
-> >>> After a second thought I'm thinking whether it would be okay to have BS set in
-> >>> that test case.  I just remembered there's a test case in the kvm-unit-test
-> >>> that checks explicitly against BS leftover as long as dr6 is not cleared
-> >>> explicitly by the guest code, while the spec seems to have no explicit
-> >>> description on this case.
-> >>
-> >> Yes, I noticed that test as well.  But I don't like having different
-> >> behavior for Intel and AMD, and the Intel behavior is more sensible.
-> >> Also...
-> > 
-> > Do you mean the AMD behavior is more sensible instead? :)
+On Thursday, May 7, 2020 5:38:11 AM CEST Chris Chiu wrote:
+> On Wed, May 6, 2020 at 6:19 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Wed, May 6, 2020 at 11:32 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > >
+> > > Thanks for the report, the issue evidently is EC-related.
+> > >
+> > > > @@ -1024,7 +1024,7 @@ static bool acpi_s2idle_wake(void)
+> > > >                  * regarded as a spurious one.
+> > > >                  */
+> > > >                 if (!acpi_ec_dispatch_gpe())
+> > > > -                       return false;
+> > > > +                       return true;
+> > >
+> > > Have you tried commenting out simply removing the if () check and the
+> > > following return statement?
+> >
+> > Scratch that.
+> >
+> > Instead, please try doing
+> >
+> > acpi_ec_dispatch_gpe()
+> >
+> > instead of the if () and the following return statement.
 > 
-> No, I mean within the context of KVM_EXIT_DEBUG: the Intel behavior is
-> to only include the latest debug exception in kvm_run's DR6 field, while
-> the AMD behavior would be to include all of them.  This was an
-> implementation detail (it happens because Intel sets kvm_run's DR6 from
-> the exit qualification of #DB), but it's more sensible too.
+> Yes. I verified with the modification you suggested on my laptop. It's
+> working OK.
+> I can wake from a keystroke w/o problem.
 > 
-> In addition:
+> @ -1024,8 +1024,7 @@ static bool acpi_s2idle_wake(void)
+>                  * If the EC GPE status bit has not been set, the wakeup is
+>                  * regarded as a spurious one.
+>                  */
+> -               if (!acpi_ec_dispatch_gpe())
+> -                       return false;
+> +               acpi_ec_dispatch_gpe();
 > 
-> * AMD was completely broken until this week, so the behavior of
-> KVM_EXIT_DEBUG is defined de facto by kvm_intel.ko.  Userspace has not
-> been required to set DR6 with KVM_SET_GUEST_DEBUG, and since we can
-> emulate that on AMD, we should.
+>                 /*
+>                  * Cancel the wakeup and process all pending events in case
 > 
-> * we have to fix anyway the fact that on AMD a KVM_EXIT_DEBUG is
-> clobbering the contents of the guest's DR6
-> 
-> >>> Intead of above, I'm thinking whether we should allow the userspace to also
-> >>> change dr6 with the KVM_SET_GUEST_DEBUG ioctl when they wanted to (right now
-> >>> iiuc dr6 from userspace is completely ignored), instead of offering a fake dr6.
-> >>> Or to make it simple, maybe we can just check BD bit only?
-> >>
-> >> ... I'm afraid that this would be a backwards-incompatible change, and
-> >> it would require changes in userspace.  If you look at v2, emulating the
-> >> Intel behavior in AMD turns out to be self-contained and relatively
-> >> elegant (will be better when we finish cleaning up nested SVM).
-> > 
-> > I'm still trying to read the other patches (I need some more digest because I'm
-> > even less familiar with nested...).  I agree that it would be good to keep the
-> > same behavior across Intel/AMD.  Actually that also does not violate Intel spec
-> > because the AMD one is stricter.
-> 
-> Again, careful---we're talking about KVM_EXIT_DEBUG, not the #DB exception.
 
-OK I get your point now.  Thanks,
+OK, great, thanks for the confirmation!
 
--- 
-Peter Xu
+Does the appended patch work for you then?
+
+It should be functionally equivalent to the above change if I didn't mess it up.
+
+
+---
+ drivers/acpi/ec.c       |   23 ++++++++++++++---------
+ drivers/acpi/internal.h |    1 -
+ drivers/acpi/sleep.c    |   14 ++------------
+ 3 files changed, 16 insertions(+), 22 deletions(-)
+
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
+ 		if (acpi_check_wakeup_handlers())
+ 			return true;
+ 
+-		/*
+-		 * If the status bit is set for any enabled GPE other than the
+-		 * EC one, the wakeup is regarded as a genuine one.
+-		 */
+-		if (acpi_ec_other_gpes_active())
++		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
++		if (acpi_ec_dispatch_gpe())
+ 			return true;
+ 
+ 		/*
+-		 * If the EC GPE status bit has not been set, the wakeup is
+-		 * regarded as a spurious one.
+-		 */
+-		if (!acpi_ec_dispatch_gpe())
+-			return false;
+-
+-		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
+ 		 *
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1994,23 +1994,28 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+ 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+ }
+ 
+-bool acpi_ec_other_gpes_active(void)
+-{
+-	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
+-}
+-
+ bool acpi_ec_dispatch_gpe(void)
+ {
+ 	u32 ret;
+ 
+ 	if (!first_ec)
+-		return false;
++		return acpi_any_gpe_status_set(U32_MAX);
+ 
++	/*
++	 * Report wakeup if the status bit is set for any enabled GPE other
++	 * than the EC one.
++	 */
++	if (acpi_any_gpe_status_set(first_ec->gpe))
++		return true;
++
++	/*
++	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
++	 * to allow the caller to process events properly after that.
++	 */
+ 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+-	if (ret == ACPI_INTERRUPT_HANDLED) {
++	if (ret == ACPI_INTERRUPT_HANDLED)
+ 		pm_pr_dbg("EC GPE dispatched\n");
+-		return true;
+-	}
++
+ 	return false;
+ }
+ #endif /* CONFIG_PM_SLEEP */
+Index: linux-pm/drivers/acpi/internal.h
+===================================================================
+--- linux-pm.orig/drivers/acpi/internal.h
++++ linux-pm/drivers/acpi/internal.h
+@@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
+ 
+ #ifdef CONFIG_PM_SLEEP
+ void acpi_ec_flush_work(void);
+-bool acpi_ec_other_gpes_active(void);
+ bool acpi_ec_dispatch_gpe(void);
+ #endif
+ 
+
+
 
