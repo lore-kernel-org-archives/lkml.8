@@ -2,95 +2,242 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C89C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2492DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD4120736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AFB20736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgEGCFe (ORCPT
+        id S1727082AbgEGCHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:05:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725869AbgEGCFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:05:33 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047242Xu083334;
-        Wed, 6 May 2020 22:05:21 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r5wfcr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 22:05:21 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04722dhg012142;
-        Thu, 7 May 2020 02:05:19 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5m5wd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 02:05:19 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0472479U64880896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 02:04:07 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57D6111C052;
-        Thu,  7 May 2020 02:05:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83BEC11C04A;
-        Thu,  7 May 2020 02:05:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.197.80])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 02:05:16 +0000 (GMT)
-Message-ID: <1588817116.4624.51.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] powerpc/ima: fix secure boot rules in ima arch policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Date:   Wed, 06 May 2020 22:05:16 -0400
-In-Reply-To: <1588342612-14532-1-git-send-email-nayna@linux.ibm.com>
-References: <1588342612-14532-1-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Wed, 6 May 2020 22:07:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:30926 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbgEGCHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:07:47 -0400
+IronPort-SDR: FLajgIDe9kWV+IU30Ao/YcxIiyYCeTPoTC3tByt+cSInSKfrjhIedt2mzg9sXOaXfzxDaWJasn
+ YLLqjoTxkEtQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 19:07:47 -0700
+IronPort-SDR: /RgcEt39l1yDVLY3139yPdd13Ehwl8pXcEGbOLpdu4F1qgD/vKcI+LUk2J+kUDKvh4jYWkRS5G
+ LKwUyTBfzMiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
+   d="scan'208";a="296393612"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 06 May 2020 19:07:45 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWVwv-000EqI-2q; Thu, 07 May 2020 10:07:45 +0800
+Date:   Thu, 07 May 2020 10:07:15 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cache] BUILD SUCCESS
+ 0c4d5ba1b998e713815b7790d3db6ced0ae49489
+Message-ID: <5eb36d53.+UNYFObQAGo/NbBu%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1011 priorityscore=1501 malwarescore=0
- impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-01 at 10:16 -0400, Nayna Jain wrote:
-> To prevent verifying the kernel module appended signature twice
-> (finit_module), once by the module_sig_check() and again by IMA, powerpc
-> secure boot rules define an IMA architecture specific policy rule
-> only if CONFIG_MODULE_SIG_FORCE is not enabled. This, unfortunately, does
-> not take into account the ability of enabling "sig_enforce" on the boot
-> command line (module.sig_enforce=1).
-> 
-> Including the IMA module appraise rule results in failing the finit_module
-> syscall, unless the module signing public key is loaded onto the IMA
-> keyring.
-> 
-> This patch fixes secure boot policy rules to be based on CONFIG_MODULE_SIG
-> instead.
-> 
-> Fixes: 4238fad366a6 ("powerpc/ima: Add support to initialize ima policy rules")
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cache
+branch HEAD: 0c4d5ba1b998e713815b7790d3db6ced0ae49489  x86/resctrl: Support wider MBM counters
 
-Thanks, Nayna.
+elapsed time: 480m
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+configs tested: 175
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                              allmodconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+ia64                             allyesconfig
+csky                             allyesconfig
+mips                             allyesconfig
+alpha                            allyesconfig
+m68k                                defconfig
+powerpc                           allnoconfig
+c6x                               allnoconfig
+powerpc                             defconfig
+s390                             alldefconfig
+ia64                             alldefconfig
+sparc64                          allmodconfig
+nds32                               defconfig
+i386                             alldefconfig
+um                               allmodconfig
+ia64                              allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+openrisc                         allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          alldefconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+m68k                 randconfig-a001-20200506
+mips                 randconfig-a001-20200506
+nds32                randconfig-a001-20200506
+parisc               randconfig-a001-20200506
+alpha                randconfig-a001-20200506
+riscv                randconfig-a001-20200506
+m68k                 randconfig-a001-20200507
+mips                 randconfig-a001-20200507
+nds32                randconfig-a001-20200507
+parisc               randconfig-a001-20200507
+alpha                randconfig-a001-20200507
+riscv                randconfig-a001-20200507
+h8300                randconfig-a001-20200506
+nios2                randconfig-a001-20200506
+microblaze           randconfig-a001-20200506
+c6x                  randconfig-a001-20200506
+sparc64              randconfig-a001-20200506
+h8300                randconfig-a001-20200507
+nios2                randconfig-a001-20200507
+microblaze           randconfig-a001-20200507
+c6x                  randconfig-a001-20200507
+sparc64              randconfig-a001-20200507
+s390                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200506
+sh                   randconfig-a001-20200506
+openrisc             randconfig-a001-20200506
+csky                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200507
+sh                   randconfig-a001-20200507
+openrisc             randconfig-a001-20200507
+csky                 randconfig-a001-20200507
+x86_64               randconfig-a003-20200506
+x86_64               randconfig-a001-20200506
+x86_64               randconfig-a002-20200506
+i386                 randconfig-a001-20200506
+i386                 randconfig-a002-20200506
+i386                 randconfig-a003-20200506
+i386                 randconfig-b003-20200506
+i386                 randconfig-b001-20200506
+x86_64               randconfig-b001-20200506
+x86_64               randconfig-b003-20200506
+i386                 randconfig-b002-20200506
+x86_64               randconfig-c002-20200507
+x86_64               randconfig-c001-20200507
+i386                 randconfig-c002-20200507
+i386                 randconfig-c003-20200507
+x86_64               randconfig-c003-20200507
+i386                 randconfig-c001-20200507
+i386                 randconfig-d003-20200506
+i386                 randconfig-d001-20200506
+x86_64               randconfig-d002-20200506
+i386                 randconfig-d002-20200506
+x86_64               randconfig-d001-20200507
+i386                 randconfig-d003-20200507
+i386                 randconfig-d001-20200507
+x86_64               randconfig-d003-20200507
+x86_64               randconfig-d002-20200507
+i386                 randconfig-d002-20200507
+i386                 randconfig-e003-20200506
+x86_64               randconfig-e003-20200506
+x86_64               randconfig-e001-20200506
+i386                 randconfig-e002-20200506
+i386                 randconfig-e001-20200506
+i386                 randconfig-f003-20200507
+x86_64               randconfig-f002-20200507
+i386                 randconfig-f001-20200507
+i386                 randconfig-f002-20200507
+i386                 randconfig-f003-20200506
+x86_64               randconfig-f001-20200506
+x86_64               randconfig-f003-20200506
+x86_64               randconfig-f002-20200506
+i386                 randconfig-f001-20200506
+i386                 randconfig-f002-20200506
+x86_64               randconfig-g003-20200506
+i386                 randconfig-g003-20200506
+i386                 randconfig-g002-20200506
+x86_64               randconfig-g001-20200506
+i386                 randconfig-g001-20200506
+x86_64               randconfig-g002-20200506
+i386                 randconfig-h002-20200506
+i386                 randconfig-h001-20200506
+i386                 randconfig-h003-20200506
+x86_64               randconfig-h002-20200506
+x86_64               randconfig-h003-20200506
+x86_64               randconfig-h001-20200506
+ia64                 randconfig-a001-20200506
+arm64                randconfig-a001-20200506
+arc                  randconfig-a001-20200506
+powerpc              randconfig-a001-20200506
+arm                  randconfig-a001-20200506
+sparc                randconfig-a001-20200506
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
