@@ -2,114 +2,144 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEAFC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD49C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D7C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="IrhklOVr"
+	by mail.kernel.org (Postfix) with ESMTP id 18A8F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgEGP5U (ORCPT
+        id S1728051AbgEGP5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:57:20 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:12990 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727999AbgEGP5P (ORCPT
+        Thu, 7 May 2020 11:57:18 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:9779 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEGP5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 11:57:15 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047FrwXA010471;
-        Thu, 7 May 2020 10:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=p/ahMeJsP1I0U4dHGegXC/mmB+l7j8dt/grWfY6l+uE=;
- b=IrhklOVrJVbyYa4e+8WdDXR1NCWKL9IxwRqKkOLKehw18bc0UOB/eA566audfSpXparc
- 0AV0HxkTGDTBoO4L16TVxj+75Q9YXCT/zjX2M7uFVNH2jBqheDBWdVSV0o6ZHVWWTvaj
- U2OtUtm5n58RUsSgcCswgoMuit0iZUZt2QPAC8Hxqc5/0ojUueDbMnJKBmc9QxyaGU/A
- XgCOKYSCurU/9Pp7O9BaapUz9h3/M/VVGlTJPYvDVgl+P+Q5dRhCoX5I+6gS+NyQEFxb
- MuLgherRQded+Xt9bz24lFjR8jWy0z7OF5EAXN+nHH+t4s6KYE4MeFwv7/oO1OTPimEn hw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30s69397f9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 07 May 2020 10:57:13 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 7 May 2020
- 16:57:09 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Thu, 7 May 2020 16:57:09 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7B9FE2C6;
-        Thu,  7 May 2020 15:57:09 +0000 (UTC)
-Date:   Thu, 7 May 2020 15:57:09 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        <patches@opensource.cirrus.com>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: wm831x-ts - add missed input_unregister_device
-Message-ID: <20200507155709.GA71940@ediswmail.ad.cirrus.com>
-References: <20200507151259.792697-1-hslester96@gmail.com>
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 56F95240005;
+        Thu,  7 May 2020 15:57:12 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 2/3] dt-bindings: usb: atmel: Mark EP child node as deprecated
+Date:   Thu,  7 May 2020 17:56:50 +0200
+Message-Id: <20200507155651.1094142-3-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200507155651.1094142-1-gregory.clement@bootlin.com>
+References: <20200507155651.1094142-1-gregory.clement@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200507151259.792697-1-hslester96@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 phishscore=0 bulkscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 impostorscore=0 suspectscore=2
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070128
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 11:12:59PM +0800, Chuhong Yuan wrote:
-> This driver calls input_register_device() in probe, but misses
-> input_unregister_device() in remove.
-> Add the missed function call to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/input/touchscreen/wm831x-ts.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/touchscreen/wm831x-ts.c b/drivers/input/touchscreen/wm831x-ts.c
-> index 607d1aeb595d..db09dd473ada 100644
-> --- a/drivers/input/touchscreen/wm831x-ts.c
-> +++ b/drivers/input/touchscreen/wm831x-ts.c
-> @@ -379,6 +379,7 @@ static int wm831x_ts_remove(struct platform_device *pdev)
->  {
->  	struct wm831x_ts *wm831x_ts = platform_get_drvdata(pdev);
->  
-> +	input_unregister_device(wm831x_ts->input_dev);
+There is no need to describe the end point in the deice tree. These
+properties won't be use anymore, so mark them as deprecated to keep
+the old device tree documented.
 
-Are you seeing specific issues caused by this being missing, if
-so it would be good if you could elaborate on them? My understanding
-is that since this driver uses devm_input_allocate_device
-input_unregister_device will be handled automatically, see the
-comments on input_register_device/devm_input_allocate_device.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ .../devicetree/bindings/usb/atmel-usb.txt     | 56 +------------------
+ 1 file changed, 3 insertions(+), 53 deletions(-)
 
-Thanks,
-Charles
+diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+index 44e80153b148..423b99a8fd97 100644
+--- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
++++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+@@ -88,13 +88,15 @@ Required properties:
+  - clock-names: Should contain two strings
+ 		"pclk" for the peripheral clock
+ 		"hclk" for the host clock
++
++Deprecated property:
+  - ep childnode: To specify the number of endpoints and their properties.
+ 
+ Optional properties:
+  - atmel,vbus-gpio: If present, specifies a gpio that allows to detect whether
+    vbus is present (USB is connected).
+ 
+-Required child node properties:
++Deprecated child node properties:
+  - name: Name of the endpoint.
+  - reg: Num of the endpoint.
+  - atmel,fifo-size: Size of the fifo.
+@@ -112,56 +114,4 @@ usb2: gadget@fff78000 {
+ 	clocks = <&utmi>, <&udphs_clk>;
+ 	clock-names = "hclk", "pclk";
+ 	atmel,vbus-gpio = <&pioB 19 0>;
+-
+-	ep@0 {
+-		reg = <0>;
+-		atmel,fifo-size = <64>;
+-		atmel,nb-banks = <1>;
+-	};
+-
+-	ep@1 {
+-		reg = <1>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <2>;
+-		atmel,can-dma;
+-		atmel,can-isoc;
+-	};
+-
+-	ep@2 {
+-		reg = <2>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <2>;
+-		atmel,can-dma;
+-		atmel,can-isoc;
+-	};
+-
+-	ep@3 {
+-		reg = <3>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <3>;
+-		atmel,can-dma;
+-	};
+-
+-	ep@4 {
+-		reg = <4>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <3>;
+-		atmel,can-dma;
+-	};
+-
+-	ep@5 {
+-		reg = <5>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <3>;
+-		atmel,can-dma;
+-		atmel,can-isoc;
+-	};
+-
+-	ep@6 {
+-		reg = <6>;
+-		atmel,fifo-size = <1024>;
+-		atmel,nb-banks = <3>;
+-		atmel,can-dma;
+-		atmel,can-isoc;
+-	};
+ };
+-- 
+2.26.2
 
->  	free_irq(wm831x_ts->pd_irq, wm831x_ts);
->  	free_irq(wm831x_ts->data_irq, wm831x_ts);
->  
-> -- 
-> 2.26.2
-> 
