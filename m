@@ -2,135 +2,140 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB834C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DAAC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B7F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljddwFgY"
+	by mail.kernel.org (Postfix) with ESMTP id 2EAE32083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgEGQ0E (ORCPT
+        id S1727108AbgEGQ0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726470AbgEGQ0E (ORCPT
+        Thu, 7 May 2020 12:26:37 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:40329 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgEGQ0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:26:04 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36330C05BD43;
-        Thu,  7 May 2020 09:26:04 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d7so2738953ioq.5;
-        Thu, 07 May 2020 09:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DxrpDcEowC2nWijqj13bXtMWCGzq2IqmtnQs3KgvsXI=;
-        b=ljddwFgYm/EfJhn50K7SOmOsqWqMR5j/cLfNW11NDz81cwXUjaKQ3mBtGQ0MQ3Czrw
-         iuA5Z0o4BBm/uHkO5FszeGeNA+lwcliuRrtyTSNCyA7WnfiTotNo1cZ1xdkstRgvuBVT
-         1DSjFDO49P0i88RsSEF4mkyNjxYQ7hWE7Ng5hk+xWZoI3ephe6o2w+ZkFaDMwIzieeWu
-         d/CRl5/FdlyfTKiH84PY4GoSBW8ixz1Mc8KdERpywIo2RHCRKiMROAroNg8v+iCgqpY8
-         Z9SI8SJa1MVZuiflc2gS6fTvO/a+mu+UZnIfdszf6vcRXvddN37f9+yEO6GnINjpFeE4
-         O5rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DxrpDcEowC2nWijqj13bXtMWCGzq2IqmtnQs3KgvsXI=;
-        b=chOZ0qW3SuKH6nvwzTsy/7kfWhv6HlPYxjFF0cvtTlrb7A9GhIOjBngIJnkoVKS8da
-         Pr3V1DdIdxB7OBHA+p08UosrkJ4EUo8WAKsQ05sl0naqolTLLD4OyHX02avCZPAj7on1
-         DWDFePoOxY9Ll6PTrJ/R1I/4Rc8T6rd6yLGKovH9GkSK6S2ShUYgiISI9HBvIfb6CVXT
-         KL5TU2JN+Zl1jA8trFPu0KF9600c296+TiWOoLa5EMKh98YPJs+iEoMXbHA7tLi5p6al
-         ywTw///947qqY/UpEUMF04H4OIddblCzbAt9OmUV72vNX8TFzlFHTMW10DEuxL75gIMg
-         E4ZA==
-X-Gm-Message-State: AGi0PuZLaQHPB01Dwpkg1U84sriVA9RTy5nlNGx3PzAFoNbIvR8gP3Hn
-        0v1b5FOGJ/cQ0OpbGHlLJGaI5bVerBv3H7vW1Nk=
-X-Google-Smtp-Source: APiQypKDF58jn4byCgHHNjiVKd2T2f04YumBuTEle19S+IjBAzkjZmg/zOArb9caTa4uMTFbNgwyIY+epItZP9R8RoM=
-X-Received: by 2002:a5e:a607:: with SMTP id q7mr14744359ioi.109.1588868762638;
- Thu, 07 May 2020 09:26:02 -0700 (PDT)
+        Thu, 7 May 2020 12:26:36 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MWRe1-1jeBD910tn-00Xufr; Thu, 07 May 2020 18:26:24 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Marco Elver <elver@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] [v2] ubsan, kcsan: don't combine sanitizer with kcov on clang
+Date:   Thu,  7 May 2020 18:25:31 +0200
+Message-Id: <20200507162617.2472578-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <CANpmjNPCZ2r9V7t50_yy+F_-roBWJdiQWgmvvcqTFxzdzOwKhg@mail.gmail.com>
+References: <CANpmjNPCZ2r9V7t50_yy+F_-roBWJdiQWgmvvcqTFxzdzOwKhg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200505125902.GA10381@suse.com> <e5839bffe4939c6290d74ca2fb39310bd4916c16.camel@kernel.org>
-In-Reply-To: <e5839bffe4939c6290d74ca2fb39310bd4916c16.camel@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Thu, 7 May 2020 18:26:03 +0200
-Message-ID: <CAOi1vP8oO156ZH0Ge3d5V0fu+NTW6LO12bxgy1h-W5X4+9zN=w@mail.gmail.com>
-Subject: Re: [PATCH] ceph: demote quotarealm lookup warning to a debug message
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Luis Henriques <lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Wu355d2keiT+DomNoCv1+GG6rk5RbqLzx+vkGjzDKtS+V3yIyQG
+ 6ihXPPX397wJmWAjP409EOBm8Lb7F4b5kdcec4kIwwwPQ3FN9b+jjt07gItE5RG+npOFhnF
+ AtoA281a5IOmWhWqiiCkA8G/24I7wTZjfyMeqvC3+U5TxLO3coNrS27G7XjimIPp7D7H7O0
+ AYIUgrAAEr4H3ddktCgrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bhWFnq9NWHo=:5tJlgXF+2Bv3nOEYTE0p9j
+ NPqVpsQ/jxgKgi/vuEMU/q0I1znfnkbRj0TaJf7uMzprYNs6Z8WavH+Z0aIicQn7Qd1FAwuFA
+ Xu3bmkkHmAjseqOjycwICf00icuCxzQFsCLKadIjQnpkZHLArutNStKOOg/rD/m9Zj7WEdEVs
+ w1EWLd8ATnolfxyZfLfwGsaGV6zrpcSgy+wmQwCmKaa+7pQKxMzCvINVssmZxTaARcZJGb4kV
+ UzfQ0DYqOigKSL8pC1Xt+piE5vr0Iwu0xfZzgiuzHUMnhQ37ra6wWPVkX2rPjuAHG+K1mPzfW
+ aXC+84ux4k7hrjI5CmAQbb6VO8aTQE8k0fHTYoTTDMD+6Uo/XhkjQxe80wJWNBOomNtJ3nkD+
+ 3Z2MlGwgb892a/RLG/q9E3dDrsaAaRm0YarN0ljlJMhmeNA3oNMJDfK/1j2KI05P8Z6ynWsjr
+ FFGd4tEXMOQHYZyp658iTwKGTpNtUDIz+NPtj3gFUd+OaBAU8t03wupeM5cUzyCsKwU92jGvr
+ UEMvAhCl0mfH/Jh0wgfYydHKyJ6Gu2EV3cEjvf+J4TlKdE4sQvDDxcqoHXYvd3+lRPFNMOXBJ
+ 8Rxayg6e5/Upae+M7PwLfv89k1XL2VTeyz6Th/E30Dq71RUqt1rsPVmWg7nFnQ1Vyq1TTYauU
+ 6csJmqx1idVdulaXD70scaCmRvzLsI2pXDKhifXGNCEbJxeZGVpNRjdps2bdmpunI2PA57K5g
+ fZ90kS53ULz00soz5VfAUg4LcH85CoZwE8YJWrYr9o0M8BgD0emMo8PmqGMyQIICOAvs/dXKF
+ QJZfjlEvR8vhPJaFCyjkQX+mXRROG0zX7xkjfNm1qVeAM12amA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 3:44 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> On Tue, 2020-05-05 at 13:59 +0100, Luis Henriques wrote:
-> > A misconfigured cephx can easily result in having the kernel client
-> > flooding the logs with:
-> >
-> >   ceph: Can't lookup inode 1 (err: -13)
-> >
-> > Change his message to debug level.
-> >
-> > Link: https://tracker.ceph.com/issues/44546
-> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > ---
-> > Hi!
-> >
-> > This patch should fix some harmless warnings when using cephx to restri=
-ct
-> > users access to certain filesystem paths.  I've added a comment to the
-> > tracker where removing this warning could result (unlikely, IMHO!) in a=
-n
-> > admin to miss not-so-harmless bogus configurations.
-> >
-> > Cheers,
-> > --
-> > Lu=C3=ADs
-> >
-> >  fs/ceph/quota.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
-> > index de56dee60540..19507e2fdb57 100644
-> > --- a/fs/ceph/quota.c
-> > +++ b/fs/ceph/quota.c
-> > @@ -159,8 +159,8 @@ static struct inode *lookup_quotarealm_inode(struct=
- ceph_mds_client *mdsc,
-> >       }
-> >
-> >       if (IS_ERR(in)) {
-> > -             pr_warn("Can't lookup inode %llx (err: %ld)\n",
-> > -                     realm->ino, PTR_ERR(in));
-> > +             dout("Can't lookup inode %llx (err: %ld)\n",
-> > +                  realm->ino, PTR_ERR(in));
-> >               qri->timeout =3D jiffies + msecs_to_jiffies(60 * 1000); /=
-* XXX */
-> >       } else {
-> >               qri->timeout =3D 0;
-> >
->
-> Ilya,
->
-> We've had a number of reports where people get a ton of kernel log spam
-> when they hit this problem. I think we probably ought to mark this patch
-> for stable and go ahead and send it to Linus for v5.7 -- any objection?
+Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
+with -fsanitize=bounds or with ubsan:
 
-Sure, I'll queue it up.
+clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
+clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
 
-Thanks,
+To avoid the warning, check whether clang can handle this correctly
+or disallow ubsan and kcsan when kcov is enabled.
 
-                Ilya
+Link: https://bugs.llvm.org/show_bug.cgi?id=45831
+Link: https://lore.kernel.org/lkml/20200505142341.1096942-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: this implements Marco's suggestion to check what the compiler
+actually supports, and references the bug report I now opened.
+
+Let's wait for replies on that bug report before this gets applied,
+in case the feedback there changes the conclusion.
+---
+ lib/Kconfig.kcsan | 11 +++++++++++
+ lib/Kconfig.ubsan | 11 +++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index ea28245c6c1d..a7276035ca0d 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -3,9 +3,20 @@
+ config HAVE_ARCH_KCSAN
+ 	bool
+ 
++config KCSAN_KCOV_BROKEN
++	def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
++	depends on CC_IS_CLANG
++	depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=thread -fsanitize-coverage=trace-pc)
++	help
++	  Some versions of clang support either KCSAN and KCOV but not the
++	  combination of the two.
++	  See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
++	  in newer releases.
++
+ menuconfig KCSAN
+ 	bool "KCSAN: dynamic data race detector"
+ 	depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
++	depends on !KCSAN_KCOV_BROKEN
+ 	select STACKTRACE
+ 	help
+ 	  The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 929211039bac..a5ba2fd51823 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -26,9 +26,20 @@ config UBSAN_TRAP
+ 	  the system. For some system builders this is an acceptable
+ 	  trade-off.
+ 
++config UBSAN_KCOV_BROKEN
++	def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
++	depends on CC_IS_CLANG
++	depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=bounds -fsanitize-coverage=trace-pc)
++	help
++	  Some versions of clang support either UBSAN or KCOV but not the
++	  combination of the two.
++	  See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
++	  in newer releases.
++
+ config UBSAN_BOUNDS
+ 	bool "Perform array index bounds checking"
+ 	default UBSAN
++	depends on !UBSAN_KCOV_BROKEN
+ 	help
+ 	  This option enables detection of directly indexed out of bounds
+ 	  array accesses, where the array size is known at compile time.
+-- 
+2.26.0
+
