@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7198C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8318BC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9906C2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4D72173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588878073;
-	bh=nahneUqYpBDA+fIQmeNNoV4oxPN2jOZllVzWp4NDAEw=;
+	s=default; t=1588878079;
+	bh=Bd9ng0ejT5N0guis1pv/eylwB+4g3fX/7CGGNiSv4ns=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iKdBKNAnrHRfYlcRs94NEWH7boyDHgm3L1d6D7jGUjQxEZ5hWB8VMwzeoVDB8nn8H
-	 MbkDaC2Ub0gP7wpipqWyrQcCQgRsSYaMgSgpeaFg29V3QHWVpXZHDJNbZX2Y4K3UOW
-	 7zM64/ge51YmlhVOScsRXD6kmLxdMF6ChHIB89Q8=
+	b=z5qvakvUSnboLa3kZr53puDYHWZGpCEEtpHhNARtJZC4o+CIm+cFap+pt4IVDcdVL
+	 lC6bWdzaaOHv8skere3KG0jf2h3Z5/U9eU0SndcvzVkH0/dNgm0ShPkMP3CSPNIRQh
+	 p9IYLvpGDgu2pQ+23xLGOnEUywF0QcdY8NOsPaXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgEGTBM (ORCPT
+        id S1728410AbgEGTBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGTBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:01:12 -0400
+        id S1726320AbgEGTBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:01:18 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D743A2083B;
-        Thu,  7 May 2020 19:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F2912083B;
+        Thu,  7 May 2020 19:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588878072;
-        bh=nahneUqYpBDA+fIQmeNNoV4oxPN2jOZllVzWp4NDAEw=;
+        s=default; t=1588878077;
+        bh=Bd9ng0ejT5N0guis1pv/eylwB+4g3fX/7CGGNiSv4ns=;
         h=Date:From:To:Cc:Subject:From;
-        b=E87V8uf6OHPsAIuN0PgNMbYm2YBnJAR3V3SWVZro8R9X5W/GrpQljQxHHVCaUNAqs
-         F4vdb5SqOpD+wx3uQmifzKWahD8IWCoT4hJCNS16PkuM7zC29rbzwFJJylHgy2YdUF
-         uzjjYTju2ipP+Q7naAugPQjBFvN12vH/Yodx6hOc=
-Date:   Thu, 7 May 2020 14:05:38 -0500
+        b=K9d07fSnZ94nYK4zmbNDVzIrF6tgyErVnZUYBrXhugNE/ywoecfMuGXt9YpBaXCQC
+         HtAZHWFFviBG1b8/8rkAWY3CaQxa9ZCM20CFYZQHTWL4DUWXFYrELuqcOr50D3wckM
+         DUH3q20sCUwcbSd18JfFmWd9/EW7iqTl/itSkzVQ=
+Date:   Thu, 7 May 2020 14:05:44 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] pcdp: Replace zero-length array with flexible-array
-Message-ID: <20200507190538.GA15601@embeddedor>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Replace zero-length array with flexible-array
+Message-ID: <20200507190544.GA15633@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,19 +91,43 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/firmware/pcdp.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c   |    2 +-
+ include/linux/pci.h |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/pcdp.h b/drivers/firmware/pcdp.h
-index ce75d1da9e84..e02540571c52 100644
---- a/drivers/firmware/pcdp.h
-+++ b/drivers/firmware/pcdp.h
-@@ -103,6 +103,6 @@ struct pcdp {
- 	u8			creator_id[4];
- 	u32			creator_rev;
- 	u32			num_uarts;
--	struct pcdp_uart	uart[0];	/* actual size is num_uarts */
-+	struct pcdp_uart	uart[];	/* actual size is num_uarts */
- 	/* remainder of table is pcdp_device structures */
- } __attribute__((packed));
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 595fcf59843f..bb78f580814e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1578,7 +1578,7 @@ EXPORT_SYMBOL(pci_restore_state);
+ 
+ struct pci_saved_state {
+ 	u32 config_space[16];
+-	struct pci_cap_saved_data cap[0];
++	struct pci_cap_saved_data cap[];
+ };
+ 
+ /**
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 83ce1cdf5676..0453ee458ab1 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -279,7 +279,7 @@ struct pci_cap_saved_data {
+ 	u16		cap_nr;
+ 	bool		cap_extended;
+ 	unsigned int	size;
+-	u32		data[0];
++	u32		data[];
+ };
+ 
+ struct pci_cap_saved_state {
+@@ -532,7 +532,7 @@ struct pci_host_bridge {
+ 			resource_size_t start,
+ 			resource_size_t size,
+ 			resource_size_t align);
+-	unsigned long	private[0] ____cacheline_aligned;
++	unsigned long	private[] ____cacheline_aligned;
+ };
+ 
+ #define	to_pci_host_bridge(n) container_of(n, struct pci_host_bridge, dev)
 
