@@ -2,99 +2,239 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A84C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65DA120870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588888161;
-	bh=M7Z9T6pVFBlgJEyOOCzx/GF79vGhq1eXg8T9YE89ldY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pNLadZboqXx9XmcM5EOlNf6aNHjlkIY/GxxjObTK2qV+Doe58Jo6wGoqcB6xKFSFQ
-	 rgJrw6qSfzdTpfpinD2YKMb+MK+TEDO2EVnb83t9caX52FcMiopeNye/rjFaAzqG0x
-	 QmgJBCvMp+nYcD/U1+WRQQE+Tmb1c5g/Q+KvApgQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9518C20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEGVtU (ORCPT
+        id S1726531AbgEGVvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:49:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42819 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEGVtU (ORCPT
+        Thu, 7 May 2020 17:51:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43731 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgEGVvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:49:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i13so6609505oie.9;
-        Thu, 07 May 2020 14:49:19 -0700 (PDT)
+        Thu, 7 May 2020 17:51:47 -0400
+Received: from mail-qk1-f198.google.com ([209.85.222.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jWoLe-0000Ea-4O
+        for linux-kernel@vger.kernel.org; Thu, 07 May 2020 21:46:30 +0000
+Received: by mail-qk1-f198.google.com with SMTP id a83so7289532qkc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:46:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+K99SXnOq1F0ZjGFhanj1w7QeN74kq3HeaG8Lj+To9M=;
-        b=Vtv11yw9JLcRIiZl3lRUcfIYY/NUebo0pIvVCSnXQu17pKTgpRB4Kv4ypGWHuVhIri
-         OT6gbZnnwmlMLz6xHKsxRB1LqBiF+VtpELzmG0zvuYyz9TkWFQs+r++q8tDZXCDIHAUI
-         El3jd/kTX5KQ6pYj5usTf2dObyIE4M0QsZqgHX8Sj2dcYa2YuUmlbkrO1CdoXMMEN36F
-         rv+qWEYt6w+OIi3OrZa6uUt3pXYevHhO+BSOOpu0RGBQvaeAxD9VRKojbGxSvcqDftbQ
-         z9FY9mPKYp5c+SocRsROkSAI4/+yXWi3iKS2N7xvhPRlHV08CI35Meg4bPxrm5Nj7Ice
-         6CzA==
-X-Gm-Message-State: AGi0PuaL6nLcELYPNMLKlOhI/xQwvsicFEOe+v4TGrGhclFe1tCT+lsW
-        3gVqVoPQ6xES6OCcUWEw4Q==
-X-Google-Smtp-Source: APiQypKdSAfXlYDSJkrzlHUQWVZ3sDz1eGY4XlY4moRp5cxhz0qwaJnHQ2p2QyHEOMcpweAS8N35kw==
-X-Received: by 2002:aca:447:: with SMTP id 68mr7898114oie.94.1588888159223;
-        Thu, 07 May 2020 14:49:19 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b25sm1671203otj.7.2020.05.07.14.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:49:18 -0700 (PDT)
-Received: (nullmailer pid 1308 invoked by uid 1000);
-        Thu, 07 May 2020 21:49:17 -0000
-Date:   Thu, 7 May 2020 16:49:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when  present
-Message-ID: <20200507214917.GA876@bogus>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-4-nsaenzjulienne@suse.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wvPfmcdMdphP7PKHpPwwL797MmH4rqHB2sXxdxkGfdE=;
+        b=Tor6BtvZd/J/1OYTC+M4kQbRifNpux9TloXwaX9b7hzM6mgno1RkEoS/aTSTLd1awn
+         myrI80ZqufIzqcGXB2Z3uG4eLHZxz4aZ+ytqREo0AhflqikWt2W+GoviPyrG/OxA255Y
+         dx8SiYbiXO9qxFuIYrICban0QVZLp7TIfpXerwSh/HzP8Tm0RMNni+H992gILrO5BxRv
+         /vhoQRBpQaVbg+jZF7WstxKQmyVxu+iFhqFky2g7xKKOsMUsvKL+eNEymh4ys1N2IdiC
+         0xAqfdO7ldT32der2YDu17wLsEyIuku/qwknoRq/evS2ZadOuydD0G8HzaKyz1ihcF9V
+         HcnA==
+X-Gm-Message-State: AGi0PuaXBsm5nkodYmiXpjzEiI2qDyd2YzdBx5vwB3soo7TJO1zgMwcl
+        1eqf2bKTVyeQ59i439DDRF4/D/awqg5NywmMUm2SOl0wCcwZjdmIx7fPuA94iPApGB3J/eqMU69
+        ye0aAPoh3jI30pqP+8GsxQ4dRzT3x118mtXEYk1ETnA==
+X-Received: by 2002:aed:2467:: with SMTP id s36mr4968181qtc.292.1588887988936;
+        Thu, 07 May 2020 14:46:28 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIYU4MHFu72sGxvnvZgRXzKhk08WjfxU8yTpSPMTDnzbVSTQ8dP3C8CfZL/vDirDutyf/BGqw==
+X-Received: by 2002:aed:2467:: with SMTP id s36mr4968163qtc.292.1588887988568;
+        Thu, 07 May 2020 14:46:28 -0700 (PDT)
+Received: from localhost ([187.56.73.116])
+        by smtp.gmail.com with ESMTPSA id s15sm5498340qtc.31.2020.05.07.14.46.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 14:46:27 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, keescook@chromium.org,
+        yzaikin@google.com, mcgrof@kernel.org, vbabka@suse.cz,
+        gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH] kernel/watchdog.c: convert {soft/hard}lockup boot parameters to sysctl aliases
+Date:   Thu,  7 May 2020 18:46:24 -0300
+Message-Id: <20200507214624.21911-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-4-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 18:13:16 +0200, Nicolas Saenz Julienne wrote:
-> xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-> RPi4's VideoCore firmware interface to be up and running. It's possible
-> for both initializations to race, so make sure it's available prior to
-> starting.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> ---
-> 
-> Changes since v6:
-> - Add more complete comment
-> 
->  drivers/pci/controller/pcie-brcmstb.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
+After a recent change introduced by Vlastimil's series [0], kernel is
+able now to handle sysctl parameters on kernel command line; also, the
+series introduced a simple infrastructure to convert legacy boot
+parameters (that duplicate sysctls) into sysctl aliases.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This patch converts the watchdog parameters softlockup_panic and
+{hard,soft}lockup_all_cpu_backtrace to use the new alias infrastructure.
+It fixes the documentation too, since the alias only accepts values 0
+or 1, not the full range of integers. We also took the opportunity here
+to improve the documentation of the previously converted hung_task_panic
+(see the patch series [0]) and put the alias table in alphabetical order.
+
+[0] lore.kernel.org/lkml/20200427180433.7029-1-vbabka@suse.cz
+
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+---
+
+
+This patch is based on linux-next/akpm branch, at d0f3f6070c3a. Thanks
+in advance for reviews!
+Cheers,
+
+Guilherme
+
+
+ .../admin-guide/kernel-parameters.txt         | 10 ++---
+ fs/proc/proc_sysctl.c                         |  7 +++-
+ kernel/watchdog.c                             | 38 +++++--------------
+ 3 files changed, 19 insertions(+), 36 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 5a44c1bf85e7..d9197499aad1 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1435,7 +1435,7 @@
+ 	hardlockup_all_cpu_backtrace=
+ 			[KNL] Should the hard-lockup detector generate
+ 			backtraces on all cpus.
+-			Format: <integer>
++			Format: 0 | 1
+ 
+ 	hashdist=	[KNL,NUMA] Large hashes allocated during boot
+ 			are distributed across NUMA nodes.  Defaults on
+@@ -1503,7 +1503,7 @@
+ 
+ 	hung_task_panic=
+ 			[KNL] Should the hung task detector generate panics.
+-			Format: <integer>
++			Format: 0 | 1
+ 
+ 			A value of 1 instructs the kernel to panic when a
+ 			hung task is detected. The default value is controlled
+@@ -4643,9 +4643,9 @@
+ 
+ 	softlockup_panic=
+ 			[KNL] Should the soft-lockup detector generate panics.
+-			Format: <integer>
++			Format: 0 | 1
+ 
+-			A nonzero value instructs the soft-lockup detector
++			A value of 1 instructs the soft-lockup detector
+ 			to panic the machine when a soft-lockup occurs. It is
+ 			also controlled by the kernel.softlockup_panic sysctl
+ 			and CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC, which is the
+@@ -4654,7 +4654,7 @@
+ 	softlockup_all_cpu_backtrace=
+ 			[KNL] Should the soft-lockup detector generate
+ 			backtraces on all cpus.
+-			Format: <integer>
++			Format: 0 | 1
+ 
+ 	sonypi.*=	[HW] Sony Programmable I/O Control Device driver
+ 			See Documentation/admin-guide/laptops/sonypi.rst
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 15030784566c..5b405f32971d 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1720,8 +1720,11 @@ struct sysctl_alias {
+  * parameter.
+  */
+ static const struct sysctl_alias sysctl_aliases[] = {
+-	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+-	{"hung_task_panic",		"kernel.hung_task_panic" },
++	{"hardlockup_all_cpu_backtrace",	"kernel.hardlockup_all_cpu_backtrace" },
++	{"hung_task_panic",			"kernel.hung_task_panic" },
++	{"numa_zonelist_order",			"vm.numa_zonelist_order" },
++	{"softlockup_all_cpu_backtrace",	"kernel.softlockup_all_cpu_backtrace" },
++	{"softlockup_panic",			"kernel.softlockup_panic" },
+ 	{ }
+ };
+ 
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index fa5aacbfd000..1b939532fcc1 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -50,6 +50,11 @@ struct cpumask watchdog_cpumask __read_mostly;
+ unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+ 
+ #ifdef CONFIG_HARDLOCKUP_DETECTOR
++
++# ifdef CONFIG_SMP
++int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
++# endif /* CONFIG_SMP */
++
+ /*
+  * Should we panic when a soft-lockup or hard-lockup occurs:
+  */
+@@ -82,17 +87,6 @@ static int __init hardlockup_panic_setup(char *str)
+ }
+ __setup("nmi_watchdog=", hardlockup_panic_setup);
+ 
+-# ifdef CONFIG_SMP
+-int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+-
+-static int __init hardlockup_all_cpu_backtrace_setup(char *str)
+-{
+-	sysctl_hardlockup_all_cpu_backtrace = !!simple_strtol(str, NULL, 0);
+-	return 1;
+-}
+-__setup("hardlockup_all_cpu_backtrace=", hardlockup_all_cpu_backtrace_setup);
+-# endif /* CONFIG_SMP */
+-
+ atomic_t hardlockup_detected = ATOMIC_INIT(0);
+ 
+ static inline void flush_hardlockup_messages(void)
+@@ -183,6 +177,10 @@ static void lockup_detector_update_enable(void)
+ 
+ #define SOFTLOCKUP_RESET	ULONG_MAX
+ 
++#ifdef CONFIG_SMP
++int __read_mostly sysctl_softlockup_all_cpu_backtrace;
++#endif
++
+ /* Global variables, exported for sysctl */
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+@@ -198,13 +196,6 @@ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
+ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
+ static unsigned long soft_lockup_nmi_warn;
+ 
+-static int __init softlockup_panic_setup(char *str)
+-{
+-	softlockup_panic = simple_strtoul(str, NULL, 0);
+-	return 1;
+-}
+-__setup("softlockup_panic=", softlockup_panic_setup);
+-
+ static int __init nowatchdog_setup(char *str)
+ {
+ 	watchdog_user_enabled = 0;
+@@ -226,17 +217,6 @@ static int __init watchdog_thresh_setup(char *str)
+ }
+ __setup("watchdog_thresh=", watchdog_thresh_setup);
+ 
+-#ifdef CONFIG_SMP
+-int __read_mostly sysctl_softlockup_all_cpu_backtrace;
+-
+-static int __init softlockup_all_cpu_backtrace_setup(char *str)
+-{
+-	sysctl_softlockup_all_cpu_backtrace = !!simple_strtol(str, NULL, 0);
+-	return 1;
+-}
+-__setup("softlockup_all_cpu_backtrace=", softlockup_all_cpu_backtrace_setup);
+-#endif
+-
+ static void __lockup_detector_cleanup(void);
+ 
+ /*
+-- 
+2.25.2
+
