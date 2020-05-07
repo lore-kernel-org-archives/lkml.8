@@ -2,137 +2,195 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954BDC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE18C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74051207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A98207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ShBlW6b+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Rhbv2EbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgEGSAo (ORCPT
+        id S1728126AbgEGSA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:00:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45780 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgEGSAn (ORCPT
+        Thu, 7 May 2020 14:00:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11637 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726491AbgEGSA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:00:43 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HxGbk193256;
-        Thu, 7 May 2020 17:59:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=eNm8TslRfbAqOJ0il5EFDqQ5BbtyQf+gW8C4YjNf6PU=;
- b=ShBlW6b+n76I0t9PPaaK17p3bBhSBnnb7APKXKt0xU81bRyii/HW/DnnUz187lUXB0Db
- 19TPylcypXK/RaCiEmBvy5W/nB47m+OxYI3u+s2NN//Ix/p4w2K0Hvu2jDGEu+3MYL99
- Qo85BTFXBQ96wnkQ3ijxYKAFsfuLJAsNWbHFN9cqWDvAaHLm1BV4sjvHi9jAG7GrAuln
- /UA6XKyfijbSLx+PDkE/GzrhOeTfGCvDVEIvyfh6bZRNgy8+IKEarcvlclUQc7uA4uEM
- cK57Sw1XRPjYEPgexJP0teLXh+6SSWCieUghGtU+di0hwYA0HUrQN5upxz+wRn8/cKRj Xg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30usgq8st7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 17:59:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HrXse152229;
-        Thu, 7 May 2020 17:59:22 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjnq543d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 17:59:22 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047HxEnw031926;
-        Thu, 7 May 2020 17:59:14 GMT
-Received: from [10.154.153.82] (/10.154.153.82)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 10:59:13 -0700
-Subject: Re: [RFC 34/43] shmem: PKRAM: multithread preserving and restoring
- shmem pages
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
-        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
-        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
-        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
-        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
-        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
-        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, minchan@kernel.org,
-        mhocko@kernel.org, ying.huang@intel.com,
-        yang.shi@linux.alibaba.com, gustavo@embeddedor.com,
-        ziqian.lzq@antfin.com, vdavydov.dev@gmail.com,
-        jason.zeng@intel.com, kevin.tian@intel.com, zhiyuan.lv@intel.com,
-        lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
- <1588812129-8596-35-git-send-email-anthony.yznaga@oracle.com>
- <4e44858d-a416-696e-0d65-0b5ca8836b7d@infradead.org>
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <533ec65c-6d92-a75b-b151-aaa3f43224f8@oracle.com>
-Date:   Thu, 7 May 2020 10:59:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 14:00:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588874458; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=V2UzeczAOzuRzbcwtp57WQZkgmlbothElG0QWq0YFcc=;
+ b=Rhbv2EbIAPuCnWOHRzYcL+1i4IvxIUZfAfjG/cMpGsR4QBw4V+EUmp4OqwOnF4U3PCSdDAnD
+ GjHZZT/jFkMiR2lfWWbvZKCrDNslMDYYRQ/rdZBhCdCzpsbk01vRTBnJZ1MYUoJcXEsII6YL
+ K45gRAQiNWVRtRPOqwmGLbx6VhA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8996FC433F2; Thu,  7 May 2020 18:00:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0693FC433BA;
+        Thu,  7 May 2020 18:00:20 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <4e44858d-a416-696e-0d65-0b5ca8836b7d@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1011
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070147
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 May 2020 11:00:19 -0700
+From:   rishabhb@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Chris Lew <clew@codeaurora.org>, Sibi <sibis@codeaurora.org>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH 1/4] remoteproc: qcom: Pass ssr_name to glink subdevice
+In-Reply-To: <20200423003736.2027371-2-bjorn.andersson@linaro.org>
+References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
+ <20200423003736.2027371-2-bjorn.andersson@linaro.org>
+Message-ID: <6138eb0490203f138e97baf9c3fdaf1a@codeaurora.org>
+X-Sender: rishabhb@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-04-22 17:37, Bjorn Andersson wrote:
+> Pass ssr_name to glink subdevice in preparation for tying glink_ssr to
+> the glink subdevice, rather than having its own "ssr subdevice".
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
+Acked-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 
-On 5/7/20 9:30 AM, Randy Dunlap wrote:
-> On 5/6/20 5:42 PM, Anthony Yznaga wrote:
->> Improve performance by multithreading the work to preserve and restore
->> shmem pages.
->>
->> Add 'pkram_max_threads=' kernel option to specify the maximum number
->> of threads to use to preserve or restore the pages of a shmem file.
->> The default is 16.
-> Hi,
-> Please document kernel boot options in Documentation/admin-guide/kernel-parameters.txt.
-
-I'll do that.  Thanks!
-
-Anthony
-
->
->> When preserving pages each thread saves chunks of a file to a pkram_obj
->> until no more no more chunks are available.
->>
->> When restoring pages each thread loads pages using a copy of a
->> pkram_stream initialized by pkram_prepare_load_obj(). Under the hood
->> each thread ends up fetching and operating on pkram_link pages.
->>
->> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
->> ---
->>  include/linux/pkram.h |   2 +
->>  mm/shmem_pkram.c      | 101 +++++++++++++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 101 insertions(+), 2 deletions(-)
-> thanks.
-
+>  drivers/remoteproc/qcom_common.c    | 9 ++++++++-
+>  drivers/remoteproc/qcom_common.h    | 5 ++++-
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
+>  drivers/remoteproc/qcom_q6v5_mss.c  | 2 +-
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 2 +-
+>  5 files changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c 
+> b/drivers/remoteproc/qcom_common.c
+> index 60650bcc8c67..ff26f2b68752 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -46,8 +46,10 @@ static void glink_subdev_stop(struct rproc_subdev
+> *subdev, bool crashed)
+>   * qcom_add_glink_subdev() - try to add a GLINK subdevice to rproc
+>   * @rproc:	rproc handle to parent the subdevice
+>   * @glink:	reference to a GLINK subdev context
+> + * @ssr_name:	identifier of the associated remoteproc for ssr 
+> notifications
+>   */
+> -void qcom_add_glink_subdev(struct rproc *rproc, struct 
+> qcom_rproc_glink *glink)
+> +void qcom_add_glink_subdev(struct rproc *rproc, struct 
+> qcom_rproc_glink *glink,
+> +			   const char *ssr_name)
+>  {
+>  	struct device *dev = &rproc->dev;
+> 
+> @@ -55,6 +57,10 @@ void qcom_add_glink_subdev(struct rproc *rproc,
+> struct qcom_rproc_glink *glink)
+>  	if (!glink->node)
+>  		return;
+> 
+> +	glink->ssr_name = kstrdup_const(ssr_name, GFP_KERNEL);
+> +	if (!glink->ssr_name)
+> +		return;
+> +
+>  	glink->dev = dev;
+>  	glink->subdev.start = glink_subdev_start;
+>  	glink->subdev.stop = glink_subdev_stop;
+> @@ -74,6 +80,7 @@ void qcom_remove_glink_subdev(struct rproc *rproc,
+> struct qcom_rproc_glink *glin
+>  		return;
+> 
+>  	rproc_remove_subdev(rproc, &glink->subdev);
+> +	kfree_const(glink->ssr_name);
+>  	of_node_put(glink->node);
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_remove_glink_subdev);
+> diff --git a/drivers/remoteproc/qcom_common.h 
+> b/drivers/remoteproc/qcom_common.h
+> index 58de71e4781c..34e5188187dc 100644
+> --- a/drivers/remoteproc/qcom_common.h
+> +++ b/drivers/remoteproc/qcom_common.h
+> @@ -11,6 +11,8 @@ struct qcom_sysmon;
+>  struct qcom_rproc_glink {
+>  	struct rproc_subdev subdev;
+> 
+> +	const char *ssr_name;
+> +
+>  	struct device *dev;
+>  	struct device_node *node;
+>  	struct qcom_glink *edge;
+> @@ -30,7 +32,8 @@ struct qcom_rproc_ssr {
+>  	const char *name;
+>  };
+> 
+> -void qcom_add_glink_subdev(struct rproc *rproc, struct
+> qcom_rproc_glink *glink);
+> +void qcom_add_glink_subdev(struct rproc *rproc, struct 
+> qcom_rproc_glink *glink,
+> +			   const char *ssr_name);
+>  void qcom_remove_glink_subdev(struct rproc *rproc, struct
+> qcom_rproc_glink *glink);
+> 
+>  int qcom_register_dump_segments(struct rproc *rproc, const struct
+> firmware *fw);
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c
+> b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index c60dabc6939e..d2a2574dcf35 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -461,7 +461,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto disable_pm;
+> 
+> -	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
+>  	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
+>  	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
+>  					      desc->sysmon_name,
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
+> b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 7af1d0c987e0..b5dd36775b77 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -1762,7 +1762,7 @@ static int q6v5_probe(struct platform_device 
+> *pdev)
+> 
+>  	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
+>  	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
+> -	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &qproc->glink_subdev, "mpss");
+>  	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
+>  	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
+>  	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
+> b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 8ecc157f1ed1..fc6658b523b6 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -436,7 +436,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto detach_proxy_pds;
+> 
+> -	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
+>  	qcom_add_smd_subdev(rproc, &adsp->smd_subdev);
+>  	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
+>  	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
