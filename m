@@ -2,167 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A69C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0909CC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBE7208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D71208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hrgYnUms"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mBZidmmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgEGXNL (ORCPT
+        id S1727110AbgEGXN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46152 "EHLO
+        Thu, 7 May 2020 19:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726514AbgEGXNJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726514AbgEGXN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:13:09 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF1AC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:13:09 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id r16so6918092edw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:13:09 -0700 (PDT)
+        Thu, 7 May 2020 19:13:56 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B219DC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:13:55 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id e10so4535378vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hOgoGFfrQiuxoVLXtR6ns0cA7T4PnQXjD00h0lBOWe4=;
-        b=hrgYnUmsGdoaS3xDvgxUWyQB+Y5ou6argIEx1l1Kr98VcT/PuZNB21w7VF4wNyOf3b
-         ZTR3HijaDV+aYn7AVymILBM1HG6SsF3OBVQw+NaTDBW7yCAUHp+xDTo+d2HF2cWV62Kx
-         J0RHUmvKSo3QkxABUHofYEIYdck5hZ1pQ6TIdTqfGuRxHAfc9lc9WoKNSXaf5jd4sGH6
-         5zsj2CdRwbHBtEc5v/2QRCkRx3FkrQQQfcWJEBhPumdfcYetulcFpdZ2IUdvb+Ej1ldh
-         tWc0dThiiOgWTKPjGS8u0xo8v7dsvuhAFMjWHTib/xrlps+UHajnDWMLelWRkA9TeCdP
-         2JmQ==
+        bh=fcgsSpkOF4V2/dMkMwoZFNyt4xCzZWf3dkFNjsli0zk=;
+        b=mBZidmmPO+ALfIEafwpB3wu14fPRgMvEfTO6vKXBbWujEOWhsImPNL+r3wnUG5WvGy
+         dn/ZYE1eKpBzfNbebCQDk25V+8id5VgOzM8nHflavKdMaZI5O+VTx/QB+P9FwlPQOzfb
+         +XGyxarvQuOB7t5RKVuMECQLXt9CjQywEdxz0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hOgoGFfrQiuxoVLXtR6ns0cA7T4PnQXjD00h0lBOWe4=;
-        b=ee6fdBe/sdxY+YCbPhVnl4L1f6uHja/YOSrMMKAye6fYuUORDbKmenG0WZucPDLSqX
-         VugiFKSLaRsu8w0swbtQnK3lB1r4dajAI6biys7G1t8Z6w5oOnf6q5E9CsyVJ3VDxtfo
-         +UzmLbFbiJWk2YmQA9uXE8tzJUEsr/NC6Vi642ELAhviKfmwIw7o7FrATTE9EE4SbllK
-         0TOKVE+2HIkWmtIwt9z/uNZ57Cpne1kC7YCeFDDbDq4QNZ3Rjfzslp/sHEXlZrP0zBPR
-         ojmMAqCZHjV6PVEkxNH+QApfsnPhp0KTufH2Jj73TDsO7Y86j33WtL4aoAjsuSfDWdHM
-         MDYA==
-X-Gm-Message-State: AGi0PuZoz8osRYszcmTdANAwwTdhish2nY5dFcn6VfQVg78uTP/X2pPt
-        boDbJDD6f73dk4lr0h1CoXZnOXrfn9eF7vAQZwVzSw==
-X-Google-Smtp-Source: APiQypLKOsixtTx2ArZFZo5Vte0u7Uot4DdFVW14d0f8hZF71PsBU1ityGME4xeFTnZmsoCmyniMyBMwVkOsZylK9MA=
-X-Received: by 2002:a05:6402:3136:: with SMTP id dd22mr13983824edb.165.1588893188370;
- Thu, 07 May 2020 16:13:08 -0700 (PDT)
+        bh=fcgsSpkOF4V2/dMkMwoZFNyt4xCzZWf3dkFNjsli0zk=;
+        b=Nc6VehtsbX/C04CHTq8OECNczpM7Ds5pRWtb+5J/cyEi5d91wJMfkRfLU4FOzhozA0
+         qapYFOW+5EPTDGQFUonXzPRg4GRbuHjDlXnuQEYhiY1Cf4SP6p9kOLWKW1rISTOPWRjT
+         9sxNm/1XyGlsYGQTJRKVxy2SM+AGTGs1hXr5k2yRyZ3ljvnl9spPQFWIakIBAAqpUaFB
+         UdjXAzCfW9PW0PAe+SqKJMWjcB3dJ1nwZaCU9q2KqkuCj7wtA0VvgMUemTAix16qmaEN
+         aQ8aVieyA4xhYeZXqEEh67+H+vVeAP6WhUp/ZygAnP3/U0dCc3f7wI5mNMGFPXrl8/lk
+         95wA==
+X-Gm-Message-State: AGi0PuYzmHaJh/iP/EMU2RB8d4iRpSXEWHQYzNLsIcU6Cu6cNLFGR2Fd
+        V3bme30nIkOWlG0Y82neJKOlIg1nWJw=
+X-Google-Smtp-Source: APiQypK/lIoMBopLousXfEr7ss1geKg1HD2gbt5IJjfLtYLvL7XdIVaaMtyC/eFHj8gMolstOMTzdg==
+X-Received: by 2002:ab0:375a:: with SMTP id i26mr13843707uat.120.1588893234424;
+        Thu, 07 May 2020 16:13:54 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id q15sm3903879vsn.24.2020.05.07.16.13.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 16:13:53 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id w188so2113972vkf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:13:53 -0700 (PDT)
+X-Received: by 2002:a1f:5fc3:: with SMTP id t186mr13876099vkb.92.1588893233117;
+ Thu, 07 May 2020 16:13:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <158880834905.2183490.15616329469420234017.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAHp75Vf0zBnwHubK+C265M9nh3Y5K2K=8ck61HQtnW+021bgwQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vf0zBnwHubK+C265M9nh3Y5K2K=8ck61HQtnW+021bgwQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 7 May 2020 16:12:57 -0700
-Message-ID: <CAPcyv4gOxrOZUKfA4cObKUaZRkkjRyQFkS+=Q9FXziK00CE8yA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Drop rcu usage for MMIO mappings
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <20200213150553.313596-1-daniel.thompson@linaro.org> <CAD=FV=Uqgjgf+hL7=tpBixyxiDhXA_k5kfZ1RUtk6f+CVgUikg@mail.gmail.com>
+In-Reply-To: <CAD=FV=Uqgjgf+hL7=tpBixyxiDhXA_k5kfZ1RUtk6f+CVgUikg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 7 May 2020 16:13:41 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VUj3gPmY0TznsneWMgWO6m_WqauTiYocnihm6byVU=YQ@mail.gmail.com>
+Message-ID: <CAD=FV=VUj3gPmY0TznsneWMgWO6m_WqauTiYocnihm6byVU=YQ@mail.gmail.com>
+Subject: Re: [PATCH] kdb: Eliminate strncpy() warnings by replacing with strscpy()
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 2:25 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, May 7, 2020 at 3:21 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Recently a performance problem was reported for a process invoking a
-> > non-trival ASL program. The method call in this case ends up
-> > repetitively triggering a call path like:
-> >
-> >     acpi_ex_store
-> >     acpi_ex_store_object_to_node
-> >     acpi_ex_write_data_to_field
-> >     acpi_ex_insert_into_field
-> >     acpi_ex_write_with_update_rule
-> >     acpi_ex_field_datum_io
-> >     acpi_ex_access_region
-> >     acpi_ev_address_space_dispatch
-> >     acpi_ex_system_memory_space_handler
-> >     acpi_os_map_cleanup.part.14
-> >     _synchronize_rcu_expedited.constprop.89
-> >     schedule
-> >
-> > The end result of frequent synchronize_rcu_expedited() invocation is
-> > tiny sub-millisecond spurts of execution where the scheduler freely
-> > migrates this apparently sleepy task. The overhead of frequent scheduler
-> > invocation multiplies the execution time by a factor of 2-3X.
-> >
-> > For example, performance improves from 16 minutes to 7 minutes for a
-> > firmware update procedure across 24 devices.
-> >
-> > Perhaps the rcu usage was intended to allow for not taking a sleeping
-> > lock in the acpi_os_{read,write}_memory() path which ostensibly could be
-> > called from an APEI NMI error interrupt? Neither rcu_read_lock() nor
-> > ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
-> > was not serving as a mechanism to avoid direct calls to ioremap(). Even
-> > the original implementation had a spin_lock_irqsave(), but that is not
-> > NMI safe.
-> >
-> > APEI itself already has some concept of avoiding ioremap() from
-> > interrupt context (see erst_exec_move_data()), if the new warning
-> > triggers it means that APEI either needs more instrumentation like that
-> > to pre-emptively fail, or more infrastructure to arrange for pre-mapping
-> > the resources it needs in NMI context.
->
-> ...
->
-> > +static void __iomem *acpi_os_rw_map(acpi_physical_address phys_addr,
-> > +                                   unsigned int size, bool *did_fallback)
-> > +{
-> > +       void __iomem *virt_addr = NULL;
->
-> Assignment is not needed as far as I can see.
+Hi,
 
-True, holdover from a previous version, will drop.
-
+On Tue, Mar 3, 2020 at 12:52 PM Doug Anderson <dianders@chromium.org> wrote:
 >
-> > +       if (WARN_ONCE(in_interrupt(), "ioremap in interrupt context\n"))
-> > +               return NULL;
-> > +
-> > +       /* Try to use a cached mapping and fallback otherwise */
-> > +       *did_fallback = false;
-> > +       mutex_lock(&acpi_ioremap_lock);
-> > +       virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
-> > +       if (virt_addr)
-> > +               return virt_addr;
-> > +       mutex_unlock(&acpi_ioremap_lock);
-> > +
-> > +       virt_addr = acpi_os_ioremap(phys_addr, size);
-> > +       *did_fallback = true;
-> > +
-> > +       return virt_addr;
-> > +}
+> Hi,
 >
-> I'm wondering if Sparse is okay with this...
+> On Thu, Feb 13, 2020 at 7:06 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > Currently the code to manage the kdb history buffer uses strncpy() to
+> > copy strings to/and from the history and exhibits the classic "but
+> > nobody ever told me that strncpy() doesn't always terminate strings"
+> > bug. Modern gcc compilers recognise this bug and issue a warning.
+> >
+> > In reality these calls will only abridge the copied string if kdb_read()
+> > has *already* overflowed the command buffer. Thus the use of counted
+> > copies here is only used to reduce the secondary effects of a bug
+> > elsewhere in the code.
+> >
+> > Therefore transitioning these calls into strscpy() (without checking
+> > the return code) is appropriate.
+> >
+> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> >  kernel/debug/kdb/kdb_main.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> > index ba12e9f4661e..a4641be4123c 100644
+> > --- a/kernel/debug/kdb/kdb_main.c
+> > +++ b/kernel/debug/kdb/kdb_main.c
+> > @@ -1102,12 +1102,12 @@ static int handle_ctrl_cmd(char *cmd)
+> >         case CTRL_P:
+> >                 if (cmdptr != cmd_tail)
+> >                         cmdptr = (cmdptr-1) % KDB_CMD_HISTORY_COUNT;
+>
+> The above line (not touched by your patch) is slightly worrying to me.
+> I always have it in mind that "%" of numbers that might be negative
+> isn't an amazingly good idea.  Some searches say that this must be
+> true:
+>
+> a == (a / b * b) + a % b
+>
+> ...which makes it feel like this is totally broken because "cmdptr"
+> will end up as -1.  Huh?
+>
+> OK, after much digging and some printouts, I figured this out.  cmdptr
+> is _unsigned_ and KDB_CMD_HISTORY_COUNT is a power of 2 (it's 32)
+> which makes this work.  AKA if you start out at 0 and subtract 1, you
+> get 0xffffffff and then that "% 32" is 31 which is the answer that was
+> desired.  Totally non-obvious.
+>
+> I guess a future change should make the above:
+>
+> cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
+>   KDB_CMD_HISTORY_COUNT;
 
-Seems like it is:
+This has been sitting in the back of my mind for a while.  Finally posted:
 
-$ sparse --version
-v0.6.1-191-gc51a0382202e
+https://lore.kernel.org/r/20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid
 
-$ cat out | grep osl\.c
-  CHECK   drivers/acpi/osl.c
-drivers/acpi/osl.c:373:17: warning: cast removes address space
-'<asn:2>' of expression
-
-...was the only warning I got.
+-Doug
