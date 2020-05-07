@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FE9C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667F6C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE36620659
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4487420659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862271;
-	bh=VSEFqWFJ30Jx4QBuBa34nYEd2ASRnuTWxnOnECO+R6c=;
+	s=default; t=1588862276;
+	bh=fBhiprq29eEWdDTuroMAxF80we9TCXs3bgGO2sFHv7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLEB+bklv03BVDbAfY9gzxN/onTyi7GkAWrzVLxKnaXuvLA/e73lZ3ErAJkyzO9Ig
-	 0Y931KeWUQV0rmSj0oCztpg3QlVeNXGdyftDxjlm4+Gr0kD1e0JCm0iAdPAeVeF3Nm
-	 d7uobG9onkOquoBpdGrUtqiXjPJUq+668D8yytlc=
+	b=tp1mbMy4vycNcd0Y6KjEfxwnw5bRLloAxOb2qRqr55wtQHj1MM+VheH0VJrronL+l
+	 6kiR/kVWmPm+NotFPWuefWf2s+NNrvJ5OUV0NlE6uk0a+oJAtjT3gtyNG4S69zVSSm
+	 1kMd7qz30/h3h5hnQNPaTjqjsyuzw0FL+XuT3v7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgEGOhv (ORCPT
+        id S1727794AbgEGO1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgEGO1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:51 -0400
+        id S1727105AbgEGO1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC07920870;
-        Thu,  7 May 2020 14:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4278A20A8B;
+        Thu,  7 May 2020 14:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861670;
-        bh=VSEFqWFJ30Jx4QBuBa34nYEd2ASRnuTWxnOnECO+R6c=;
+        s=default; t=1588861664;
+        bh=fBhiprq29eEWdDTuroMAxF80we9TCXs3bgGO2sFHv7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpXQsIsrozZRoFN111dqifr6OL3uTbGu+KFcGEkd/Na09vIOS2i3lzrlyWMSFrJtl
-         fYxDwsw+fy/P3WfaY6MGVcTNkn5wmqrGKTRpjdtugSKk7y1bb1AzvsJfRqmTQCe/cC
-         NlU5VJQwwT/SI3qMRCCkhz12c2h5u0K80brNrtQc=
+        b=V68G2r5EEw9DV1364lZT+7j0I243jeV5za1dzsEcn5dG5T5/SXNo2B37NBJlktPK9
+         Ai0VOwur+oB0mwjZ0oqsP2FpQ+q1GEm1GKShQr3Sl0AbxEthTTcEjNuzFL7H7SGucl
+         ocTKiWAOmxPYs6SS/1R4GHyDAZSjEUBTXJoRbWUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 19/50] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
-Date:   Thu,  7 May 2020 10:26:55 -0400
-Message-Id: <20200507142726.25751-19-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 14/50] RDMA/core: Prevent mixed use of FDs between shared ufiles
+Date:   Thu,  7 May 2020 10:26:50 -0400
+Message-Id: <20200507142726.25751-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -59,75 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 5cbf3264bc715e9eb384e2b68601f8c02bb9a61d ]
+[ Upstream commit 0fb00941dc63990a10951146df216fc7b0e20bc2 ]
 
-Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
-vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
-attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
-memory calculates garbage for the PFN.
+FDs can only be used on the ufile that created them, they cannot be mixed
+to other ufiles. We are lacking a check to prevent it.
 
-Hilariously, this only got detected because the first "PFN" calculated
-by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
-uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
-because the translation "failed".  PFN 0 is now unconditionally reserved
-on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
-to return true and in turns results in vaddr_get_pfn() returning success
-for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
-reserved and leads to failure in vfio_pin_map_dma().  The subsequent
-call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
+  BUG: KASAN: null-ptr-deref in atomic64_sub_and_test include/asm-generic/atomic-instrumented.h:1547 [inline]
+  BUG: KASAN: null-ptr-deref in atomic_long_sub_and_test include/asm-generic/atomic-long.h:460 [inline]
+  BUG: KASAN: null-ptr-deref in fput_many+0x1a/0x140 fs/file_table.c:336
+  Write of size 8 at addr 0000000000000038 by task syz-executor179/284
 
-  WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
-  CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
-  Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
-  RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
-  RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
-  RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
-  R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
-  R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
-  FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  CPU: 0 PID: 284 Comm: syz-executor179 Not tainted 5.5.0-rc5+ #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
   Call Trace:
-   vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
-   vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
-   ksys_ioctl+0x92/0xb0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x180
+   __dump_stack lib/dump_stack.c:77 [inline]
+   dump_stack+0x94/0xce lib/dump_stack.c:118
+   __kasan_report+0x18f/0x1b7 mm/kasan/report.c:510
+   kasan_report+0xe/0x20 mm/kasan/common.c:639
+   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+   check_memory_region+0x15d/0x1b0 mm/kasan/generic.c:192
+   atomic64_sub_and_test include/asm-generic/atomic-instrumented.h:1547 [inline]
+   atomic_long_sub_and_test include/asm-generic/atomic-long.h:460 [inline]
+   fput_many+0x1a/0x140 fs/file_table.c:336
+   rdma_lookup_put_uobject+0x85/0x130 drivers/infiniband/core/rdma_core.c:692
+   uobj_put_read include/rdma/uverbs_std_types.h:96 [inline]
+   _ib_uverbs_lookup_comp_file drivers/infiniband/core/uverbs_cmd.c:198 [inline]
+   create_cq+0x375/0xba0 drivers/infiniband/core/uverbs_cmd.c:1006
+   ib_uverbs_create_cq+0x114/0x140 drivers/infiniband/core/uverbs_cmd.c:1089
+   ib_uverbs_write+0xaa5/0xdf0 drivers/infiniband/core/uverbs_main.c:769
+   __vfs_write+0x7c/0x100 fs/read_write.c:494
+   vfs_write+0x168/0x4a0 fs/read_write.c:558
+   ksys_write+0xc8/0x200 fs/read_write.c:611
+   do_syscall_64+0x9c/0x390 arch/x86/entry/common.c:294
    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f15d04c75d7
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
+  RIP: 0033:0x44ef99
+  Code: 00 b8 00 01 00 00 eb e1 e8 74 1c 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c4 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007ffc0b74c028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 00007ffc0b74c030 RCX: 000000000044ef99
+  RDX: 0000000000000040 RSI: 0000000020000040 RDI: 0000000000000005
+  RBP: 00007ffc0b74c038 R08: 0000000000401830 R09: 0000000000401830
+  R10: 00007ffc0b74c038 R11: 0000000000000246 R12: 0000000000000000
+  R13: 0000000000000000 R14: 00000000006be018 R15: 0000000000000000
 
-Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: cf8966b3477d ("IB/core: Add support for fd objects")
+Link: https://lore.kernel.org/r/20200421082929.311931-2-leon@kernel.org
+Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/rdma_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index ec9be79ba2d79..4315facf0243a 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -341,8 +341,8 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
- 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
- 
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--		if (is_invalid_reserved_pfn(*pfn))
-+		if (!follow_pfn(vma, vaddr, pfn) &&
-+		    is_invalid_reserved_pfn(*pfn))
- 			ret = 0;
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 5128cb16bb485..8f480de5596a2 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -360,7 +360,7 @@ lookup_get_fd_uobject(const struct uverbs_api_object *obj,
+ 	 * uverbs_uobject_fd_release(), and the caller is expected to ensure
+ 	 * that release is never done while a call to lookup is possible.
+ 	 */
+-	if (f->f_op != fd_type->fops) {
++	if (f->f_op != fd_type->fops || uobject->ufile != ufile) {
+ 		fput(f);
+ 		return ERR_PTR(-EBADF);
  	}
- done:
 -- 
 2.20.1
 
