@@ -2,128 +2,148 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72410C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F18C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC7E20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFA920870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="RTA0Qpoz"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="MiE+Ud43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEGVoY (ORCPT
+        id S1727094AbgEGVo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
+        Thu, 7 May 2020 17:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgEGVoT (ORCPT
+        with ESMTP id S1726926AbgEGVoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:44:19 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F51AC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:44:18 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so6739199edv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:44:18 -0700 (PDT)
+        Thu, 7 May 2020 17:44:23 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54C4C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:44:22 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q8so5911246eja.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=P/Uxm8WJTzq78ynhVicYHDZPtqRu1XH16x/cAF/+cO8=;
-        b=RTA0Qpozn0gf5IlvdzhJe9faA2tLyc+M18gYbapWmEybjegaUApJHd/BozIGf0VNuC
-         toHUgjug/NLRp2smPMRTlVhR2Rwtio5qBJTXsCb5EDWeMTYm6ozlWAkzzCzp7jVl6DOU
-         6ncrW3w9rHSrbrjhxz/hvbmiE5+boJzTeXGHct1PiNJiKP3kYfIf4axpm6MMII9mLhYF
-         eliOYBRbyDXIGWFxSApJHuxto1X+uEbFNOTBDS7KR0HWstCFFfdd2m2LBTrVM7x6aQ9c
-         BkLbCAcf8z7cnnl2mQ7doiREcsx2z4wwpje++yIBHqFx9n2omFLL0ncNMH/do0DH8fks
-         lvmQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=du3Ie5iI06/rdz6CvBPo+dvSjUqDqQE7i/LV2aJP+GA=;
+        b=MiE+Ud43dKkBLTxwwtjTs8umgmPkN0BYwfIJF9NimpzgXaIoLUNwUPzrYIMfxjp/wE
+         9z7US+ja9ZyQtJgqqQIWp21xQ1iOfe4ZgjJytHnEpV/HgRot8yYEuaSkR1lrjKRQtJWL
+         SDy6+wKTfKyvFcVN2gr2WozwC7ThujTOvGVSBqNU8k8SlUaLgdDrqXEEzDqPLenmaVQf
+         AEriawM+qcLmVmMqDnbfaqwG2jfhJisNwoFCodJ2W0L86jMRiXofvUsXlEKRNlHFYKFy
+         UbH5e9SqflHWa7fKLZUcGwAbbt7xfzUDABCLtZyQIvIAQQxPhVa/Vfs12FCp3Tp5aLxs
+         zQOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=P/Uxm8WJTzq78ynhVicYHDZPtqRu1XH16x/cAF/+cO8=;
-        b=WzwP8wuM8SE1muqU+krZz/kMYdoZLpzFj9XW9pZPa4vkY44CD7e3PsfM1cHaNmQrTG
-         vAlQLIMafOiTLwdAtdiBadEcxunb5IEUGjw7XlHdC25cfYBIj+KTkH7aXqAIpJ3Tap3b
-         nb5bKrM/fFlGPo91si1ls81oIZkS8s54aHVhjNB0mUkP0Xg9cBvdZspToewGmX1jU4z6
-         pF9YN93g2/fcNerPjxn3laIibIIdFIIQeb29fHNPQO7vcVSAnY3WUS7iVF4qP9E8GIVk
-         0qnCLc/hODwcC1EC+BwNkaJyIhsmlDE0AmXnvACQno4H6Al4Yhr9WtB3eid/Q1zAXxFF
-         0mHg==
-X-Gm-Message-State: AGi0PuaJnCLC7YIZqJYBCu5Qt1a6OJlgertV/ZNtGoyme9l7sjBBnc/5
-        JrfhkEIC+0Fwq5Le7bsTn1jikg==
-X-Google-Smtp-Source: APiQypLCk1OU9FRlIMNCpJvBaEgq8st+iAcnPir0Yd+Gt2UqsyC+O4XA6UhV8pJWiHK1w5UEtqE9yA==
-X-Received: by 2002:a05:6402:3129:: with SMTP id dd9mr14179355edb.121.1588887856645;
-        Thu, 07 May 2020 14:44:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=du3Ie5iI06/rdz6CvBPo+dvSjUqDqQE7i/LV2aJP+GA=;
+        b=p49ohM4JnSDlRoG48mqeHcYnvv7My4RyTSJbzw8C+9yMVLwkQgDkv8Cuwxd7k/bfvs
+         JQHX3cufGu8VyuwAc38ZodU6U2zBs59I/yrMs0CE6Mn+gzOkgOGCNgHSduMsh7VaM2gS
+         QotQZoy562JkDPSErzE3q9DRBTdVOkr2Lzs8ZTEceNrKPgL+S9qz9CmTX+nEUjyGs8VG
+         lzrKZ2d4GREKTGnV4dKMdpmiktVkpJBe51lPRECNfGqepvl7Z5CHmLg1Ac5/Z8VJiqAq
+         co325CuAlWvBFVSgoTpwup0c4dw56VI6aLhIPp9M8Gm3epTDu4EIC899s3rhsv//RQW6
+         HXKw==
+X-Gm-Message-State: AGi0PuZixzeikrba29/2qLGTTfJ6+x8b0nRPoS6MHD3yS/fhEU30pDeH
+        37fEQCRJfq7txKZ+W0hqoVTaZQ==
+X-Google-Smtp-Source: APiQypL4O3/QHa4GVRZbemx7icFjGNwfTGUsTYsyFOjCkG+jrsEi/Fe+zD6Xr+OUjvj3miNQGayvRw==
+X-Received: by 2002:a17:906:ce4b:: with SMTP id se11mr14818360ejb.178.1588887861475;
+        Thu, 07 May 2020 14:44:21 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:a1ee:a39a:b93a:c084])
-        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.15
+        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:44:15 -0700 (PDT)
+        Thu, 07 May 2020 14:44:20 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     david@fromorbit.com, hch@infradead.org, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [RFC PATCH V3 0/9] Introduce attach/detach_page_private to cleanup code
-Date:   Thu,  7 May 2020 23:43:50 +0200
-Message-Id: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [RFC PATCH V3 04/10] fs/buffer.c: use attach/detach_page_private
+Date:   Thu,  7 May 2020 23:43:54 +0200
+Message-Id: <20200507214400.15785-5-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
+References: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Since the new pair function is introduced, we can call them to clean the
+code in buffer.c.
 
-Based on the previous thread [1], this patchset introduces attach_page_private
-and detach_page_private to replace attach_page_buffers and __clear_page_buffers.
-Thanks a lot for the constructive suggestions and comments from Christoph,
-Matthew and Dave.
-
-And sorry for cross post to different lists since it modifies different subsystems.
-
-RFC V2 -> RFC V3:
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+RFC V2 -> RFC V3
 1. rename clear_page_private to detach_page_private.
-2. Update the comments for attach/detach_page_private from Mattew.
-3. add one patch to call new function in mm/migrate.c as suggested by Mattew, but
-   use the conservative way to keep the orginal semantics [2].
 
+RFC -> RFC V2
+1. change the name of new functions to attach/clear_page_private.
 
-RFC -> RFC V2:
-1. rename the new functions and add comments for them.
-2. change the return type of attach_page_private.
-3. call attach_page_private(newpage, clear_page_private(page)) to cleanup code further.
-4. avoid potential use-after-free in orangefs.
+ fs/buffer.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-[1]. https://lore.kernel.org/linux-fsdevel/20200420221424.GH5820@bombadil.infradead.org/
-[2]. https://lore.kernel.org/lkml/e4d5ddc0-877f-6499-f697-2b7c0ddbf386@cloud.ionos.com/
-
-Thanks,
-Guoqing
-
-Guoqing Jiang (10):
-  include/linux/pagemap.h: introduce attach/detach_page_private
-  md: remove __clear_page_buffers and use attach/detach_page_private
-  btrfs: use attach/detach_page_private
-  fs/buffer.c: use attach/detach_page_private
-  f2fs: use attach/detach_page_private
-  iomap: use attach/detach_page_private
-  ntfs: replace attach_page_buffers with attach_page_private
-  orangefs: use attach/detach_page_private
-  buffer_head.h: remove attach_page_buffers
-  mm/migrate.c: call detach_page_private to cleanup code
-
- drivers/md/md-bitmap.c      | 12 ++----------
- fs/btrfs/disk-io.c          |  4 +---
- fs/btrfs/extent_io.c        | 21 ++++++---------------
- fs/btrfs/inode.c            | 23 +++++------------------
- fs/buffer.c                 | 16 ++++------------
- fs/f2fs/f2fs.h              | 11 ++---------
- fs/iomap/buffered-io.c      | 19 ++++---------------
- fs/ntfs/aops.c              |  2 +-
- fs/ntfs/mft.c               |  2 +-
- fs/orangefs/inode.c         | 32 ++++++--------------------------
- include/linux/buffer_head.h |  8 --------
- include/linux/pagemap.h     | 37 +++++++++++++++++++++++++++++++++++++
- mm/migrate.c                |  5 +----
- 13 files changed, 70 insertions(+), 122 deletions(-)
-
+diff --git a/fs/buffer.c b/fs/buffer.c
+index a60f60396cfa..059404658d5d 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -123,14 +123,6 @@ void __wait_on_buffer(struct buffer_head * bh)
+ }
+ EXPORT_SYMBOL(__wait_on_buffer);
+ 
+-static void
+-__clear_page_buffers(struct page *page)
+-{
+-	ClearPagePrivate(page);
+-	set_page_private(page, 0);
+-	put_page(page);
+-}
+-
+ static void buffer_io_error(struct buffer_head *bh, char *msg)
+ {
+ 	if (!test_bit(BH_Quiet, &bh->b_state))
+@@ -906,7 +898,7 @@ link_dev_buffers(struct page *page, struct buffer_head *head)
+ 		bh = bh->b_this_page;
+ 	} while (bh);
+ 	tail->b_this_page = head;
+-	attach_page_buffers(page, head);
++	attach_page_private(page, head);
+ }
+ 
+ static sector_t blkdev_max_block(struct block_device *bdev, unsigned int size)
+@@ -1580,7 +1572,7 @@ void create_empty_buffers(struct page *page,
+ 			bh = bh->b_this_page;
+ 		} while (bh != head);
+ 	}
+-	attach_page_buffers(page, head);
++	attach_page_private(page, head);
+ 	spin_unlock(&page->mapping->private_lock);
+ }
+ EXPORT_SYMBOL(create_empty_buffers);
+@@ -2567,7 +2559,7 @@ static void attach_nobh_buffers(struct page *page, struct buffer_head *head)
+ 			bh->b_this_page = head;
+ 		bh = bh->b_this_page;
+ 	} while (bh != head);
+-	attach_page_buffers(page, head);
++	attach_page_private(page, head);
+ 	spin_unlock(&page->mapping->private_lock);
+ }
+ 
+@@ -3227,7 +3219,7 @@ drop_buffers(struct page *page, struct buffer_head **buffers_to_free)
+ 		bh = next;
+ 	} while (bh != head);
+ 	*buffers_to_free = head;
+-	__clear_page_buffers(page);
++	detach_page_private(page);
+ 	return 1;
+ failed:
+ 	return 0;
 -- 
 2.17.1
 
