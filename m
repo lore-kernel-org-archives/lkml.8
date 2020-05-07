@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E4C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC60DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBFB24957
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9801924957
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877388;
-	bh=fkbkeAahLwkX2lnMf9WgnPl9OcYwVeE2Nk51rboRP08=;
+	s=default; t=1588877426;
+	bh=nqOGOlFxuyC6xZdJp9v/9qIDCZ0j/hOOQI15Lck0i2o=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xb2agTvZfc7AYHuFtniiAw0sRbX8dtIfr9CsoWDfPIZpejmaGev/w/XePIXdqQLRR
-	 HRq02IYVFsvBmWK/Z6e9sZePyi7kXpN8+m/pcGw/cIkDYFHxXJyq8xIHfYVupE4xsY
-	 wnRdY2AoCcEL5h5Knu3Lk+jAkT51TI2EiGQ8ZPvE=
+	b=g8nYzR0U5U68zXpJ5AoTQFpxEvkaeBLfdN++XwZY9XZRLIx6AqlXud8MJDtFKGX/5
+	 z0KfD+pksLg//QwcJU+EMXS54ntPg9dYVkVAG8AGrIJZPKIUgDF0Yt6ogiXqox2BIM
+	 +tNGYjXuglSoCu0kJQOzecI1lZvhEIcRN+UaGEdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgEGSts (ORCPT
+        id S1728478AbgEGSu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgEGStr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:49:47 -0400
+        id S1726558AbgEGSuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:50:25 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D10124957;
-        Thu,  7 May 2020 18:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7229E24957;
+        Thu,  7 May 2020 18:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877386;
-        bh=fkbkeAahLwkX2lnMf9WgnPl9OcYwVeE2Nk51rboRP08=;
+        s=default; t=1588877424;
+        bh=nqOGOlFxuyC6xZdJp9v/9qIDCZ0j/hOOQI15Lck0i2o=;
         h=Date:From:To:Cc:Subject:From;
-        b=EcjQ9F+cajSdMzNf13o4290jHrc3hiXxrsOXujxafyGrYsOfH3G7YVWazRngdr0yM
-         WUIUBnq8npVPl5gRq59mjmvVXvitiQlc2fbzlRoifRFS86xmm6H2SqVIaXBhoQOgh6
-         1+Jq8BeUsgsGnSZbCysaPEzcu18w7Mc9Nod0H2TQ=
-Date:   Thu, 7 May 2020 13:54:13 -0500
+        b=rKGN1yf2eLyFyXoiJ9HPQgLt8tiaJmevWivWKV5KuOd8WIkrknOwHSkIXqBYryvAl
+         1PD1t4LOXnvJjeGZOs1KFrUglNwYlJnNNNMMXbc5BblMdJanv6kJQkYzdDLYtP0OPb
+         MoDn81SI8RSYglTAbmXkOvG1iL4zdFYXboWxoRe0=
+Date:   Thu, 7 May 2020 13:54:51 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tomas Winkler <tomas.winkler@intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] treewide: Replace zero-length array with flexible-array
-Message-ID: <20200507185413.GA14583@embeddedor>
+To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ipw2x00: Replace zero-length array with flexible-array
+Message-ID: <20200507185451.GA14603@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +91,201 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- samples/mei/mei-amt-version.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c |    2 -
+ drivers/net/wireless/intel/ipw2x00/ipw2200.h |   10 ++++-----
+ drivers/net/wireless/intel/ipw2x00/libipw.h  |   28 +++++++++++++--------------
+ 3 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
-index 32234481ad7d..ad3e56042f96 100644
---- a/samples/mei/mei-amt-version.c
-+++ b/samples/mei/mei-amt-version.c
-@@ -267,7 +267,7 @@ struct amt_host_if_msg_header {
- struct amt_host_if_resp_header {
- 	struct amt_host_if_msg_header header;
- 	uint32_t status;
--	unsigned char data[0];
-+	unsigned char data[];
- } __attribute__((packed));
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index 60b5e08dd6df..64563840df00 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -3386,7 +3386,7 @@ struct ipw_fw {
+ 	__le32 boot_size;
+ 	__le32 ucode_size;
+ 	__le32 fw_size;
+-	u8 data[0];
++	u8 data[];
+ };
  
- const uuid_le MEI_IAMTHIF = UUID_LE(0x12f80028, 0xb4b7, 0x4b2d,  \
+ static int ipw_get_fw(struct ipw_priv *priv,
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.h b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
+index 4346520545c4..09fa7f19050f 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.h
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
+@@ -448,7 +448,7 @@ struct tfd_command {
+ 	u8 index;
+ 	u8 length;
+ 	__le16 reserved;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct tfd_data {
+@@ -675,7 +675,7 @@ struct ipw_rx_frame {
+ 	// is identical)
+ 	u8 rtscts_seen;		// 0x1 RTS seen ; 0x2 CTS seen
+ 	__le16 length;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct ipw_rx_header {
+@@ -1002,7 +1002,7 @@ struct ipw_cmd {	 /* XXX */
+    * Incoming parameters listed 1-st, followed by outcoming params.
+    * nParams=(len+3)/4+status_len
+    */
+-	u32 param[0];
++	u32 param[];
+ } __packed;
+ 
+ #define STATUS_HCMD_ACTIVE      (1<<0)	/**< host command in progress */
+@@ -1108,7 +1108,7 @@ struct ipw_fw_error {	 /* XXX */
+ 	u32 log_len;
+ 	struct ipw_error_elem *elem;
+ 	struct ipw_event *log;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ #ifdef CONFIG_IPW2200_PROMISCUOUS
+@@ -1153,7 +1153,7 @@ struct ipw_rt_hdr {
+ 	s8 rt_dbmsignal;	/* signal in dbM, kluged to signed */
+ 	s8 rt_dbmnoise;
+ 	u8 rt_antenna;	/* antenna number */
+-	u8 payload[0];  /* payload... */
++	u8 payload[];  /* payload... */
+ } __packed;
+ #endif
+ 
+diff --git a/drivers/net/wireless/intel/ipw2x00/libipw.h b/drivers/net/wireless/intel/ipw2x00/libipw.h
+index e4a6ab4e8391..e87538a8b88b 100644
+--- a/drivers/net/wireless/intel/ipw2x00/libipw.h
++++ b/drivers/net/wireless/intel/ipw2x00/libipw.h
+@@ -334,7 +334,7 @@ struct libipw_hdr_1addr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct libipw_hdr_2addr {
+@@ -342,7 +342,7 @@ struct libipw_hdr_2addr {
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+ 	u8 addr2[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct libipw_hdr_3addr {
+@@ -352,7 +352,7 @@ struct libipw_hdr_3addr {
+ 	u8 addr2[ETH_ALEN];
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct libipw_hdr_4addr {
+@@ -363,7 +363,7 @@ struct libipw_hdr_4addr {
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+ 	u8 addr4[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct libipw_hdr_3addrqos {
+@@ -380,7 +380,7 @@ struct libipw_hdr_3addrqos {
+ struct libipw_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /*
+@@ -406,7 +406,7 @@ struct libipw_auth {
+ 	__le16 transaction;
+ 	__le16 status;
+ 	/* challenge */
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ struct libipw_channel_switch {
+@@ -442,7 +442,7 @@ struct libipw_disassoc {
+ struct libipw_probe_request {
+ 	struct libipw_hdr_3addr header;
+ 	/* SSID, supported rates */
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ struct libipw_probe_response {
+@@ -452,7 +452,7 @@ struct libipw_probe_response {
+ 	__le16 capability;
+ 	/* SSID, supported rates, FH params, DS params,
+ 	 * CF params, IBSS params, TIM (if beacon), RSN */
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ /* Alias beacon for probe_response */
+@@ -463,7 +463,7 @@ struct libipw_assoc_request {
+ 	__le16 capability;
+ 	__le16 listen_interval;
+ 	/* SSID, supported rates, RSN */
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ struct libipw_reassoc_request {
+@@ -471,7 +471,7 @@ struct libipw_reassoc_request {
+ 	__le16 capability;
+ 	__le16 listen_interval;
+ 	u8 current_ap[ETH_ALEN];
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ struct libipw_assoc_response {
+@@ -480,7 +480,7 @@ struct libipw_assoc_response {
+ 	__le16 status;
+ 	__le16 aid;
+ 	/* supported rates */
+-	struct libipw_info_element info_element[0];
++	struct libipw_info_element info_element[];
+ } __packed;
+ 
+ struct libipw_txb {
+@@ -490,7 +490,7 @@ struct libipw_txb {
+ 	u8 reserved;
+ 	u16 frag_size;
+ 	u16 payload_size;
+-	struct sk_buff *fragments[0];
++	struct sk_buff *fragments[];
+ };
+ 
+ /* SWEEP TABLE ENTRIES NUMBER */
+@@ -594,7 +594,7 @@ struct libipw_ibss_dfs {
+ 	struct libipw_info_element ie;
+ 	u8 owner[ETH_ALEN];
+ 	u8 recovery_interval;
+-	struct libipw_channel_map channel_map[0];
++	struct libipw_channel_map channel_map[];
+ };
+ 
+ struct libipw_csa {
+@@ -830,7 +830,7 @@ struct libipw_device {
+ 
+ 	/* This must be the last item so that it points to the data
+ 	 * allocated beyond this structure by alloc_libipw */
+-	u8 priv[0];
++	u8 priv[];
+ };
+ 
+ #define IEEE_A            (1<<0)
 
