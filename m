@@ -2,344 +2,188 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BADC54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEE8C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7403321835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FBF20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LWfDDso3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgEGRYA (ORCPT
+        id S1728361AbgEGRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:24:00 -0400
-Received: from muru.com ([72.249.23.125]:53272 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbgEGRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:23:58 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id BD3A3817C;
-        Thu,  7 May 2020 17:24:43 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH 07/14] ARM: dts: Configure system timers for am437x
-Date:   Thu,  7 May 2020 10:23:23 -0700
-Message-Id: <20200507172330.18679-8-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200507172330.18679-1-tony@atomide.com>
-References: <20200507172330.18679-1-tony@atomide.com>
+        Thu, 7 May 2020 13:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726950AbgEGRYq (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:24:46 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F23AC05BD43
+        for <Linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:24:46 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id q206so3332243ybg.1
+        for <Linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qwi/mLzlnIWo6FMJsWVhJEnxBXCBJt31KahfK+nSC0Q=;
+        b=LWfDDso3CgtTjnaJD88rEpOj8W0NhidIlYFA13IHjIvqkKcHU3ry454k5VeItAE2P0
+         i7nLoQw3BYJQmC1qBsiJ3hgfTxAtqiXx4P4Pye740pQpOw/l4pJNy/AL6XD1L2SQIl6P
+         P2C8uMrzJnyBGOuXoAg/GrZDECM0G7Nfgf7zJEXIG8UwNrRhPOT37rxv57KOXjrFoOCN
+         Y9sl0Nr5mum724HV43BR7pO8TBoODmJuSzcIoreHlwZQfn4XIOSnqhe8G887JbZBTAIo
+         Ni5jlNvC9+T0m3a9cZKNRFGRNSmZJedxkLiZ7EQddicxn2tMvaNgnmd9MiCObz044Ft0
+         suJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qwi/mLzlnIWo6FMJsWVhJEnxBXCBJt31KahfK+nSC0Q=;
+        b=GElBbarM5yGcYJK7mesmiP689XTOxXsHs1WaAfhe7JAEKqm+G+G7lRsSAZrEnhmk+9
+         iEhO7RkSHdeExscYk9i/7mnNrTh+12b8JAlKHqQYbiVvK+DzaPj8cqqB0ZtyHm2vQGGG
+         aOEhBdBDu47Z0ntyUgoszKMg7DZfyle2uF3ZSjc9psUhZooeiqwOBdELE7cv4o10tNW4
+         eUz338C/mMzzEZ9XYvhQBN/rKgcHCSajkBAnalmmcH/bqUYQ/MM+z5XcJnSJmn1++7+o
+         lfRRajlzM97FweFmAtobJIT3syByuvnQ3F32Nr/aCNlbKhvcs6xQky9J7ryNFcKgDQLY
+         tWUA==
+X-Gm-Message-State: AGi0PuZDSEjswc+WU3omqcnpQgx6hmXUWPRZWalFPvf3ScUnwt/mcVbh
+        41p7NydGfGiKEATudFKS9I7wkwH/aza6XLWiUHQHTw==
+X-Google-Smtp-Source: APiQypKtWuh1zSMJ8f5a6u4OOAmP+GM9mskpuX5ChgmSySL0OT40yI9ciCA+7aw90CVi7PC4qZhfgnwixv4lJmtQDDQ=
+X-Received: by 2002:a25:4446:: with SMTP id r67mr3020164yba.41.1588872285289;
+ Thu, 07 May 2020 10:24:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200430003618.17002-1-yao.jin@linux.intel.com>
+ <20200430084529.GC1681583@krava> <66b84e3f-f7d8-bb65-616e-d159a509a439@huawei.com>
+ <20200430111551.GC1694693@krava> <0195184b-0b43-f2fd-8d80-3b70d3f5a950@huawei.com>
+ <8685d584-1d28-4648-8d85-2ea637f3c695@linux.intel.com> <20200507164642.GD31109@kernel.org>
+In-Reply-To: <20200507164642.GD31109@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 7 May 2020 10:24:34 -0700
+Message-ID: <CAP-5=fX21fHWAn8C7inhyfQhq7+qq2KL_8nbhZOPiJeo9NRCKw@mail.gmail.com>
+Subject: Re: [PATCH] perf parse-events: Use strcmp to compare the PMU name
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     "Jin, Yao" <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        LKML <Linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
+        yao.jin@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now init system timers using the dmtimer and 32k counter
-based on only devicetree data and drivers/clocksource timers.
-Let's configure the clocksource and clockevent, and drop the old
-unused platform data.
+On Thu, May 7, 2020 at 9:46 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Thu, Apr 30, 2020 at 09:38:34PM +0800, Jin, Yao escreveu:
+> > Hi John, Jiri,
+> >
+> > On 4/30/2020 7:48 PM, John Garry wrote:
+> > > On 30/04/2020 12:15, Jiri Olsa wrote:
+> > >
+> > > +
+> > >
+> > > > On Thu, Apr 30, 2020 at 09:54:18AM +0100, John Garry wrote:
+> > > > > On 30/04/2020 09:45, Jiri Olsa wrote:
+> > > > > > On Thu, Apr 30, 2020 at 08:36:18AM +0800, Jin Yao wrote:
+> > > > > > > A big uncore event group is split into multiple small groups which
+> > > > > > > only include the uncore events from the same PMU. This has been
+> > > > > > > supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
+> > > > > > > uncore event aliases in small groups properly").
+> > > > > > >
+> > > > > > > If the event's PMU name starts to repeat, it must be a new event.
+> > > > > > > That can be used to distinguish the leader from other members.
+> > > > > > > But now it only compares the pointer of pmu_name
+> > > > > > > (leader->pmu_name == evsel->pmu_name).
+> > > > > > >
+> > > > > > > If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
+> > > > > > > the event list is:
+> > > > > > >
+> > > > > > > evsel->name                    evsel->pmu_name
+> > > > > > > ---------------------------------------------------------------
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_4 (as leader)
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_2
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_0
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_5
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_3
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_1
+> > > > > > > unc_iio_data_req_of_cpu.mem_write.part1        uncore_iio_4
+> > > > > > > ......
+> > > > > > >
+> > > > > > > For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
+> > > > > > > "uncore_iio_4", it should be the event from PMU "uncore_iio_4".
+> > > > > > > It's not a new leader for this PMU.
+> > > > > > >
+> > > > > > > But if we use "(leader->pmu_name == evsel->pmu_name)", the check
+> > > > > > > would be failed and the event is stored to leaders[] as a new
+> > > > > > > PMU leader.
+> > > > > > >
+> > > > > > > So this patch uses strcmp to compare the PMU name between events.
+> > > > > > >
+> > > > > > > Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore
+> > > > > > > event aliases in small groups properly")
+> > > > > > > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> > > > > >
+> > > > > > looks good, any chance we could have automated test
+> > > > > > for this uncore leader setup logic? like maybe the way
+> > > > > > John did the pmu-events tests? like test will trigger
+> > > > > > only when there's the pmu/events in the system
+> > > > > >
+> > > > > > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > > > > >
+> > > > > > thanks,
+> > > > > > jirka
+> > > > >
+> > > > > Hi jirka,
+> > > > >
+> > > > > JFYI, this is effectively the same patch as I mentioned to you, which was a
+> > > > > fix for the same WARN:
+> > > > >
+> > > > > https://lore.kernel.org/linux-arm-kernel/1587120084-18990-2-git-send-email-john.garry@huawei.com/
+> > > > >
+> > > > >
+> > > > > but I found that it "fixed" d4953f7ef1a2 ("perf parse-events: Fix 3 use
+> > > > > after frees found with clang ASANutil/parse-events.c"), based on bisect
+> > > > > breakage
+> > > >
+> > > > hum right.. sorry I did not recalled that, there's
+> > > > also the warn removal in here, could you guys also
+> > > > plz sync on the fixes clauses?
+> > >
+> > > I just thought that it fixes d4953f7ef1a2, as I found that the pointer
+> > > equality fails from that commit. I assume the parse-events code was
+> > > sound before then (in that regard). That's all I know :)
+> > >
+> > > Thanks!
+> > >
+> >
+> > For 3cdc5c2cb924a, I just think it should use strcmp for pmu_name comparison
+> > rather than using pointer. But I'm OK to add d4953f7ef1a2 in fixes clauses.
+> > :)
+>
+> So, I'm keeping Ian's patch, as I just applied it, and replaced the
+> fixes clause to:
+>
+> Fixes: d4953f7ef1a2 ("perf parse-events: Fix 3 use after frees found with clang ASAN")
+>
+>
+> Would this be ok? Or does John's fix has something else in it (I haven't
+> checked).
 
-As we're just dropping platform data, and the early platform data
-init is based on the custom ti,hwmods property, we want to drop
-both the platform data and ti,hwmods property in a single patch.
+It is great! This patch is the same as John's except it also removes a
+warning that can now no longer happen. As such this patch is the
+better and the Fixes is correct.
 
-Since the dmtimer can use both 32k clock and system clock as the
-source, let's also configure the SoC specific default values. The
-board specific dts files can reconfigure these with assigned-clocks
-and assigned-clock-parents as needed.
+Thanks,
+Ian
 
-Cc: devicetree@vger.kernel.org
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/am4372.dtsi                 | 20 +++++++
- arch/arm/boot/dts/am437x-l4.dtsi              |  7 +--
- arch/arm/mach-omap2/board-generic.c           |  2 +-
- .../omap_hwmod_33xx_43xx_common_data.h        |  2 -
- .../omap_hwmod_33xx_43xx_interconnect_data.c  |  8 ---
- .../omap_hwmod_33xx_43xx_ipblock_data.c       | 60 -------------------
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c    | 45 --------------
- 7 files changed, 23 insertions(+), 121 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -553,3 +553,23 @@ prm_device: prm@4000 {
- 		#reset-cells = <1>;
- 	};
- };
-+
-+/* Preferred always-on timer for clocksource */
-+&timer1_target {
-+	ti,no-reset-on-init;
-+	ti,no-idle;
-+	timer@0 {
-+		assigned-clocks = <&timer1_fck>;
-+		assigned-clock-parents = <&sys_clkin_ck>;
-+	};
-+};
-+
-+/* Preferred timer for clockevent */
-+&timer2_target {
-+	ti,no-reset-on-init;
-+	ti,no-idle;
-+	timer@0 {
-+		assigned-clocks = <&timer2_fck>;
-+		assigned-clock-parents = <&sys_clkin_ck>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -328,9 +328,8 @@ scm_clockdomains: clockdomains {
- 			};
- 		};
- 
--		target-module@31000 {			/* 0x44e31000, ap 24 40.0 */
-+		timer1_target: target-module@31000 {	/* 0x44e31000, ap 24 40.0 */
- 			compatible = "ti,sysc-omap2-timer", "ti,sysc";
--			ti,hwmods = "timer1";
- 			reg = <0x31000 0x4>,
- 			      <0x31010 0x4>,
- 			      <0x31014 0x4>;
-@@ -450,7 +449,6 @@ target-module@40000 {			/* 0x44e40000, ap 36 68.0 */
- 
- 		target-module@86000 {			/* 0x44e86000, ap 40 70.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "counter_32k";
- 			reg = <0x86000 0x4>,
- 			      <0x86004 0x4>;
- 			reg-names = "rev", "sysc";
-@@ -868,9 +866,8 @@ mcasp1: mcasp@0 {
- 			};
- 		};
- 
--		target-module@40000 {			/* 0x48040000, ap 18 1e.0 */
-+		timer2_target: target-module@40000 {	/* 0x48040000, ap 18 1e.0 */
- 			compatible = "ti,sysc-omap4-timer", "ti,sysc";
--			ti,hwmods = "timer2";
- 			reg = <0x40000 0x4>,
- 			      <0x40010 0x4>,
- 			      <0x40014 0x4>;
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -308,7 +308,7 @@ DT_MACHINE_START(AM43_DT, "Generic AM43 (Flattened Device Tree)")
- 	.init_late	= am43xx_init_late,
- 	.init_irq	= omap_gic_of_init,
- 	.init_machine	= omap_generic_init,
--	.init_time	= omap3_gptimer_timer_init,
-+	.init_time	= omap_init_time_of,
- 	.dt_compat	= am43_boards_compat,
- 	.restart	= omap44xx_restart,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-@@ -44,8 +44,6 @@ extern struct omap_hwmod am33xx_smartreflex0_hwmod;
- extern struct omap_hwmod am33xx_smartreflex1_hwmod;
- extern struct omap_hwmod am33xx_gpmc_hwmod;
- extern struct omap_hwmod am33xx_rtc_hwmod;
--extern struct omap_hwmod am33xx_timer1_hwmod;
--extern struct omap_hwmod am33xx_timer2_hwmod;
- 
- extern struct omap_hwmod_class am33xx_emif_hwmod_class;
- extern struct omap_hwmod_class am33xx_l4_hwmod_class;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
-@@ -106,14 +106,6 @@ struct omap_hwmod_ocp_if am33xx_l3_s__gpmc = {
- 	.user		= OCP_USER_MPU,
- };
- 
--/* l4 per -> timer2 */
--struct omap_hwmod_ocp_if am33xx_l4_ls__timer2 = {
--	.master		= &am33xx_l4_ls_hwmod,
--	.slave		= &am33xx_timer2_hwmod,
--	.clk		= "l4ls_gclk",
--	.user		= OCP_USER_MPU,
--};
--
- /* l3 main -> ocmc */
- struct omap_hwmod_ocp_if am33xx_l3_main__ocmc = {
- 	.master		= &am33xx_l3_main_hwmod,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -307,64 +307,6 @@ struct omap_hwmod am33xx_rtc_hwmod = {
- 	},
- };
- 
--/* 'timer 2-7' class */
--static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.syss_offs	= 0x0014,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
--			  SYSC_HAS_RESET_STATUS,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			  SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
--};
--
--struct omap_hwmod_class am33xx_timer_hwmod_class = {
--	.name		= "timer",
--	.sysc		= &am33xx_timer_sysc,
--};
--
--/* timer1 1ms */
--static struct omap_hwmod_class_sysconfig am33xx_timer1ms_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_CLOCKACTIVITY | SYSC_HAS_SIDLEMODE |
--			SYSC_HAS_SOFTRESET | SYSC_HAS_AUTOIDLE |
--			SYSS_HAS_RESET_STATUS),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class am33xx_timer1ms_hwmod_class = {
--	.name		= "timer",
--	.sysc		= &am33xx_timer1ms_sysc,
--};
--
--struct omap_hwmod am33xx_timer1_hwmod = {
--	.name		= "timer1",
--	.class		= &am33xx_timer1ms_hwmod_class,
--	.clkdm_name	= "l4_wkup_clkdm",
--	.main_clk	= "timer1_fck",
--	.prcm		= {
--		.omap4	= {
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--struct omap_hwmod am33xx_timer2_hwmod = {
--	.name		= "timer2",
--	.class		= &am33xx_timer_hwmod_class,
--	.clkdm_name	= "l4ls_clkdm",
--	.main_clk	= "timer2_fck",
--	.prcm		= {
--		.omap4	= {
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
- static void omap_hwmod_am33xx_clkctrl(void)
- {
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
-@@ -397,12 +339,10 @@ void omap_hwmod_am33xx_reg(void)
- 
- static void omap_hwmod_am43xx_clkctrl(void)
- {
--	CLKCTRL(am33xx_timer2_hwmod, AM43XX_CM_PER_TIMER2_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
- 		AM43XX_CM_WKUP_SMARTREFLEX1_CLKCTRL_OFFSET);
--	CLKCTRL(am33xx_timer1_hwmod, AM43XX_CM_WKUP_TIMER1_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_rtc_hwmod, AM43XX_CM_RTC_RTC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_gpmc_hwmod, AM43XX_CM_PER_GPMC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_l4_ls_hwmod, AM43XX_CM_PER_L4LS_CLKCTRL_OFFSET);
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -85,34 +85,6 @@ static struct omap_hwmod am43xx_control_hwmod = {
- 	},
- };
- 
--static struct omap_hwmod_class_sysconfig am43xx_synctimer_sysc = {
--	.rev_offs	= 0x0,
--	.sysc_offs	= 0x4,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO),
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class am43xx_synctimer_hwmod_class = {
--	.name	= "synctimer",
--	.sysc	= &am43xx_synctimer_sysc,
--};
--
--static struct omap_hwmod am43xx_synctimer_hwmod = {
--	.name		= "counter_32k",
--	.class		= &am43xx_synctimer_hwmod_class,
--	.clkdm_name	= "l4_wkup_aon_clkdm",
--	.flags		= HWMOD_SWSUP_SIDLE,
--	.main_clk	= "synctimer_32kclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = AM43XX_CM_WKUP_SYNCTIMER_CLKCTRL_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--
- static struct omap_hwmod_class_sysconfig am43xx_usb_otg_ss_sysc = {
- 	.rev_offs	= 0x0000,
- 	.sysc_offs	= 0x0010,
-@@ -206,20 +178,6 @@ static struct omap_hwmod_ocp_if am43xx_l4_wkup__control = {
- 	.user		= OCP_USER_MPU,
- };
- 
--static struct omap_hwmod_ocp_if am43xx_l4_wkup__timer1 = {
--	.master		= &am33xx_l4_wkup_hwmod,
--	.slave		= &am33xx_timer1_hwmod,
--	.clk		= "sys_clkin_ck",
--	.user		= OCP_USER_MPU,
--};
--
--static struct omap_hwmod_ocp_if am33xx_l4_wkup__synctimer = {
--	.master		= &am33xx_l4_wkup_hwmod,
--	.slave		= &am43xx_synctimer_hwmod,
--	.clk		= "sys_clkin_ck",
--	.user		= OCP_USER_MPU,
--};
--
- static struct omap_hwmod_ocp_if am43xx_l3_s__usbotgss0 = {
- 	.master         = &am33xx_l3_s_hwmod,
- 	.slave          = &am43xx_usb_otg_ss0_hwmod,
-@@ -235,7 +193,6 @@ static struct omap_hwmod_ocp_if am43xx_l3_s__usbotgss1 = {
- };
- 
- static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
--	&am33xx_l4_wkup__synctimer,
- 	&am33xx_mpu__l3_main,
- 	&am33xx_mpu__prcm,
- 	&am33xx_l3_s__l4_ls,
-@@ -252,8 +209,6 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	&am43xx_l4_wkup__control,
- 	&am43xx_l4_wkup__smartreflex0,
- 	&am43xx_l4_wkup__smartreflex1,
--	&am43xx_l4_wkup__timer1,
--	&am33xx_l4_ls__timer2,
- 	&am33xx_l3_s__gpmc,
- 	&am33xx_l3_main__ocmc,
- 	&am43xx_l3_s__usbotgss0,
--- 
-2.26.2
+> - Arnaldo
