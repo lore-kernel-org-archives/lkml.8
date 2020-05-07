@@ -2,138 +2,194 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39895C54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55745C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 085D520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rjy+p4PW"
+	by mail.kernel.org (Postfix) with ESMTP id 401C6208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgEGEwM (ORCPT
+        id S1726218AbgEGEwg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 00:52:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725893AbgEGEwL (ORCPT
+        Thu, 7 May 2020 00:52:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60897 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgEGEwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 00:52:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FF8C061A10
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 21:52:09 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q24so2080273pjd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 21:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FYkaUuQ0Hcijpg8fXzFbNqstsBym+T1ZVc+9xfGMFXI=;
-        b=rjy+p4PWdreHUZMb3DXmAQFd1efDM9tlKf0HJE+/ybAFXUpRwsj+qLj6/nikE0BrxH
-         8O4xAdkgqHHyoUiPY4fxdQZXZRJVRnPo0gfhbhNGMu188qw/TZR/WlWbskfmuVqcNzH0
-         wTxY4fLXM3RIVF9eomTo8zVDKmZ0lwZajSMe5zSjFw4Et7KM2etVYhzFwE1Zxg9XQ2U5
-         X2EbBuxDl0qfzMxhUKJEv0yipky959uomgqO1+rGozNrnVogJcutrSYylnKL8UzwcUP9
-         uFTxX7kyHHCdM4VWNP8xRM1SiAJvDVE6JuyTCj8G8ZJFb1ed3LiXCIShV0wh7XdxZNaE
-         6vZQ==
+        Thu, 7 May 2020 00:52:35 -0400
+Received: from mail-pl1-f199.google.com ([209.85.214.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jWYWP-0000T6-BD
+        for linux-kernel@vger.kernel.org; Thu, 07 May 2020 04:52:33 +0000
+Received: by mail-pl1-f199.google.com with SMTP id k23so4143233pll.19
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 21:52:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FYkaUuQ0Hcijpg8fXzFbNqstsBym+T1ZVc+9xfGMFXI=;
-        b=SfBzWfo19IBURZwE4SkuC2s/whcYezB448/XRTn1mm+9I3jST+sA3tcBhiXzt9YBao
-         4EH74V+j4tEsBCbfsx/oZviiNVpN97JwxDPbhJzAbYejgIGuiZss8eOx6gLzVYLYrH9S
-         nU858CZLOdUZfnYbvykpMo1+8YzzegTL7PFmRpLw28oDQ7Z5pPt9vZBEaDWzHp/8SGRy
-         nAJ3j056HgLZOmEfboix6dfVNAqJDTiWRnE7L3qZhbU4jn2ukok7hGbOMs1XJ3LsxM5S
-         z1vLtWvZKLUkFkFFX5DG22VBD9ZZU0IaPYuax5ys95wlEExPkZ1y3m5oGRBrXK25Nm3B
-         dAAw==
-X-Gm-Message-State: AGi0PuZq0V0SVHY/z0a54a4uWPuZuF/F1peyO2dP2VVy8XMC99jeUrTH
-        giezUhOSmj1A9Mvk2HaFUvyLQg==
-X-Google-Smtp-Source: APiQypJeThSOJg6sXA6qEy1XEL6FUsr6CHGbZUU7u6C7pBB/gU3FNKMkjcI6fPvCUeZkEcANxv0tsg==
-X-Received: by 2002:a17:90a:8d12:: with SMTP id c18mr13335798pjo.144.1588827128685;
-        Wed, 06 May 2020 21:52:08 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i128sm3501379pfc.149.2020.05.06.21.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 21:52:08 -0700 (PDT)
-Date:   Wed, 6 May 2020 21:52:55 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net, marcel@holtmann.org,
-        andy.gross@linaro.org, wcn36xx@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] wcn36xx: Fix error handling path in 'wcn36xx_probe()'
-Message-ID: <20200507045255.GB3236072@builder.lan>
-References: <20200507043619.200051-1-christophe.jaillet@wanadoo.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507043619.200051-1-christophe.jaillet@wanadoo.fr>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=w4FDbx+sqaj7/I18BPPgkxjRI2IWGp9DxRd9OXfc4I8=;
+        b=sgrRqdiD+2VUZ1HBk9dx3cRXdUMuOISmE8+D0bDYcwEa+qpAQipb7qFl21T59st9CA
+         lvS0ZTF8QV3bTPfYCs1RqHwSS2VH/LU2URxB++WIhZHPYmoDsJbKzOm3B7791Gk/SNt7
+         d9vTkfEnPmoAu3hrCzTBpE+chuM0mAhIsCKk9zgP9TcVmcWWWd0t+/dy/57QVatVwJ1i
+         9Cv7q7q5pcu3HIpONXWCrujzBMYRMCkZSyaniSbtiaHIgZ/CCtyhQ9BYA9UjHZLR9AXi
+         /r8X7rZeEB/67spuIulIWO5I7Os2YJxnErs8NlHXL0KKkiSrHxaOLCkGY+yzIxko2wE+
+         Lfuw==
+X-Gm-Message-State: AGi0PuZyoYKjZo3uqLbt9KXzv1xhnWUu/EE2eF7xFIsBrmikeOFgt5Lp
+        9dwMkWHaoj3PMcWA9XxOXpgKOMMj4ICBorcbyuNyg4UylM9JSWppJbUUWVQGhFJFxEvX6wRpf+B
+        6zSJUbG43hYAR1RMIOQazd5EetL+0YFvX27BpUB/lqA==
+X-Received: by 2002:a17:902:7289:: with SMTP id d9mr11737736pll.147.1588827151903;
+        Wed, 06 May 2020 21:52:31 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKd1OFSTF85NtleoC+pgFpSup5vc27PkUDpOeKCJJnN6mB3hBbdRvincDHIf2zmxpakc3zpnw==
+X-Received: by 2002:a17:902:7289:: with SMTP id d9mr11737714pll.147.1588827151405;
+        Wed, 06 May 2020 21:52:31 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id w13sm3396670pfn.192.2020.05.06.21.52.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 21:52:30 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] xhci: Set port link to RxDetect if port is not enabled
+ after resume
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <a4311a60-ad12-e9a8-d391-f34832f65ef5@linux.intel.com>
+Date:   Thu, 7 May 2020 12:52:28 +0800
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <79060777-FF5B-4394-9A05-8573B6EF6578@canonical.com>
+References: <20200311040456.25851-1-kai.heng.feng@canonical.com>
+ <B4E44BDC-5AFE-4F8A-8498-0EEE9CDAC0E1@canonical.com>
+ <635B3350-F064-4B45-B194-40F793423049@canonical.com>
+ <35fbb517-31b1-7bba-8e07-795ab18af1ff@linux.intel.com>
+ <47BCEDDA-2E91-4CE3-AA45-B2EEB1DA111D@canonical.com>
+ <a4311a60-ad12-e9a8-d391-f34832f65ef5@linux.intel.com>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06 May 21:36 PDT 2020, Christophe JAILLET wrote:
 
-> In case of error, 'qcom_wcnss_open_channel()' must be undone by a call to
-> 'rpmsg_destroy_ept()', as already done in the remove function.
+
+> On Apr 28, 2020, at 00:49, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
 > 
-> Fixes: 5052de8deff5 ("soc: qcom: smd: Transition client drivers from smd to rpmsg")
-
-It seems I introduced this bug in f303a9311065 ("wcn36xx: Transition
-driver to SMD client"), but your patch should should apply back to your
-Fixes, so I think it's good.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Not 100% sure of the commit for Fixes, but it is consistent with the
-> analysis in efad8396e906 where the same call has been added in the remove
-> function.
-> ---
->  drivers/net/wireless/ath/wcn36xx/main.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> On 27.4.2020 12.05, Kai-Heng Feng wrote:
+>> 
+>> 
+>>> On Apr 23, 2020, at 19:25, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
+>>> 
+>>> Was this roothub port forcefully suspended xhci_bus_suspend()?
+>>> i.e. was a bit set in bus_state->bus_suspended for this port?
+>> 
+>> No, it's a USB3 device so it was set to U3 via USB_PORT_FEAT_LINK_STATE.
 > 
-> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
-> index e49c306e0eef..1acdc13a74fc 100644
-> --- a/drivers/net/wireless/ath/wcn36xx/main.c
-> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
-> @@ -1339,7 +1339,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
->  	if (addr && ret != ETH_ALEN) {
->  		wcn36xx_err("invalid local-mac-address\n");
->  		ret = -EINVAL;
-> -		goto out_wq;
-> +		goto out_channel;
->  	} else if (addr) {
->  		wcn36xx_info("mac address: %pM\n", addr);
->  		SET_IEEE80211_PERM_ADDR(wcn->hw, addr);
-> @@ -1347,7 +1347,7 @@ static int wcn36xx_probe(struct platform_device *pdev)
->  
->  	ret = wcn36xx_platform_get_resources(wcn, pdev);
->  	if (ret)
-> -		goto out_wq;
-> +		goto out_channel;
->  
->  	wcn36xx_init_ieee80211(wcn);
->  	ret = ieee80211_register_hw(wcn->hw);
-> @@ -1359,6 +1359,8 @@ static int wcn36xx_probe(struct platform_device *pdev)
->  out_unmap:
->  	iounmap(wcn->ccu_base);
->  	iounmap(wcn->dxe_base);
-> +out_channel:
-> +	rpmsg_destroy_ept(wcn->smd_channel);
->  out_wq:
->  	ieee80211_free_hw(hw);
->  out_err:
-> -- 
-> 2.25.1
+> Logs show port was first forced by xhci_bus_suspend() to U3  ("port 0 not
+> suspended" message)
+> and only later set to U3 by USB_PORT_FEAT_LINK_STATE.
+> Seems line wrong order or race.
+
+The "port 0 not suspended" is actually for 3-1, if we print bus num and port + 1:
+[  213.732977] xhci_hcd 0000:3f:00.0: port 3-1 not suspended
+
+For port 4-1 it's always suspended before suspend the bus.
+I'll send a patch to adjust the debug message for better clarity.
+
 > 
+> while suspended we get a port event about a connect status change,
+> showing port link state is in disabled.
+> Cherry picked messages:
+> 
+> [ 1330.021450] xhci_hcd 0000:3f:00.0: port 0 not suspended
+> [ 1330.036822] xhci_hcd 0000:3f:00.0: Set port 4-1 link state, portsc: 0x1203, write 0x11261
+> [ 1331.020736] xhci_hcd 0000:3f:00.0: Port change event, 4-1, id 1, portsc: 0x20280
+> [ 1331.020738] xhci_hcd 0000:3f:00.0: resume root hub
+> [ 1331.020741] xhci_hcd 0000:3f:00.0: handle_port_status: starting port polling.
+> 
+> If we force the port link state to U3 in xhci_bus_suspend() maybe it would make
+> sense to try and recover it in xhci_bus_resume(). But only for that forced
+> port.
+> 
+> None of the previous suspend/resume cycles in the logs went smooth either.
+> Each time device 4-1 was forced to U3 bus xhci_bus_suspend(), and at resume the
+> link was stuck in polling until timeout, after which it went to compliance mode,
+> and had to be warm reset to recover.
+
+If my observation above is true, port 4-1 is indeed suspended by usb_port_suspend() rather than xhci_bus_suspend().
+
+> 
+> We could add the code to recover USB3 ports from disabled state in case we
+> forced them to U3, but the rootcause of theus suspend/resume issues should
+> be found as well
+
+Seems like the issue doesn't happen if the host system use S2Idle instead of S3.
+However, I can't see any difference in xHCI driver with different suspend methods.
+Maybe the root cause is that, ASMedia controller and SMSC hub are just quirky?
+
+> 
+> Limiting your code to USB3 devices that xhi_bus_suspend forced to U3 would look
+> something like this:
+> 
+> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> index 9eca1fe81061..0f16dd936ab8 100644
+> --- a/drivers/usb/host/xhci-hub.c
+> +++ b/drivers/usb/host/xhci-hub.c
+> @@ -1789,6 +1789,15 @@ int xhci_bus_resume(struct usb_hcd *hcd)
+> 			case XDEV_RESUME:
+> 				/* resume already initiated */
+> 				break;
+> +			case XDEV_DISABLED:
+> +				if (hcd->speed >= HCD_USB3) {
+> +					portsc = xhci_port_state_to_neutral(
+> +						portsc);
+> +					portsc &= ~PORT_PLS_MASK;
+> +					portsc |= PORT_LINK_STROBE |
+> +						XDEV_RXDETECT;
+> +				}
+> +				/* fall through for both USB3 abd USB2 */
+> 			default:
+> 				/* not in a resumeable state, ignore it */
+> 				clear_bit(port_index,
+
+This doesn't work because port 4-1 isn't suspended by xhci_bus_suspend().
+
+Maybe we can restrict the case to ports that are suspended by USB_PORT_FEAT_LINK_STATE.
+Is the following patch looks good to you?
+
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index f37316d2c8fa..dc2e14ea308d 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1787,6 +1787,16 @@ int xhci_bus_resume(struct usb_hcd *hcd)
+                        clear_bit(port_index, &bus_state->bus_suspended);
+                        continue;
+                }
++
++               if (bus_state->suspended_ports & (1 << port_index)) {
++                       if ((portsc & PORT_PLS_MASK) == XDEV_DISABLED &&
++                           hcd->speed >= HCD_USB3) {
++                               portsc = xhci_port_state_to_neutral(portsc);
++                               portsc &= ~PORT_PLS_MASK;
++                               portsc |= PORT_LINK_STROBE | XDEV_RXDETECT;
++                       }
++               }
++
+                /* resume if we suspended the link, and it is still suspended */
+                if (test_bit(port_index, &bus_state->bus_suspended))
+                        switch (portsc & PORT_PLS_MASK) {
+
+
+Kai-Heng
+
+> 
+> -Mathias
+
