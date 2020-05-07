@@ -2,105 +2,103 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F76C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3149C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC24C208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4A820870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgEGUTC (ORCPT
+        id S1728608AbgEGUTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:19:02 -0400
-Received: from smtprelay0136.hostedemail.com ([216.40.44.136]:35374 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGUTB (ORCPT
+        Thu, 7 May 2020 16:19:42 -0400
+Received: from www62.your-server.de ([213.133.104.62]:33822 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGUTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:19:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id CAE0D182D31F1;
-        Thu,  7 May 2020 20:19:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: paste82_6b8b670b6782c
-X-Filterd-Recvd-Size: 3000
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  7 May 2020 20:18:58 +0000 (UTC)
-Message-ID: <3d88023b2da9ead8669d4c180b6c11ebf536abe7.camel@perches.com>
-Subject: Re: [PATCH] sched/fair: Return true,false in
- voluntary_active_balance()
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Jason Yan <yanaijie@huawei.com>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
-Date:   Thu, 07 May 2020 13:18:57 -0700
-In-Reply-To: <20200507154512.1065cba8@gandalf.local.home>
-References: <20200507110625.37254-1-yanaijie@huawei.com>
-         <jhjpnbg6lkf.mognet@arm.com> <20200507132828.1af39b80@gandalf.local.home>
-         <20200507133024.18dbe349@gandalf.local.home>
-         <f0e6f50e910238366b1d8f398c91d3066baac7cf.camel@perches.com>
-         <20200507144534.09abd685@gandalf.local.home>
-         <96fe70f11245433ce4f19bffaf2d167dbf69a2a0.camel@perches.com>
-         <20200507154512.1065cba8@gandalf.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Thu, 7 May 2020 16:19:41 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWmzZ-0000uo-43; Thu, 07 May 2020 22:19:37 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWmzY-000Pq5-CQ; Thu, 07 May 2020 22:19:36 +0200
+Subject: Re: [RFC PATCH bpf-next 2/3] bpf, arm64: Optimize AND,OR,XOR,JSET
+ BPF_K using arm64 logical immediates
+To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20200507010504.26352-1-luke.r.nels@gmail.com>
+ <20200507010504.26352-3-luke.r.nels@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2b05950b-5f7a-e5e7-81fe-27703c3ef77f@iogearbox.net>
+Date:   Thu, 7 May 2020 22:19:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20200507010504.26352-3-luke.r.nels@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25805/Thu May  7 14:14:46 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 15:45 -0400, Steven Rostedt wrote:
-> On Thu, 07 May 2020 12:06:56 -0700
-> Joe Perches <joe@perches.com> wrote:
+On 5/7/20 3:05 AM, Luke Nelson wrote:
+> The current code for BPF_{AND,OR,XOR,JSET} BPF_K loads the immediate to
+> a temporary register before use.
 > 
-> > People describe changes as a "fix" all the time for stuff
-> > that isn't an actual fix for a logic defect but is instead
-> > an update to a particular style preference.
-> > 
-> > Then the "fix" word causes the patch to be rather uselessly
-> > applied to stable trees by AUTOSEL.
-> > 
-> > It's especially bad when the 'Fixes: <sha1> ("description")'
-> > tag is also added.
-> > 
-> > It's a difficult thing to regulate and I don't believe a
-> > good mechanism would be possible to add to checkpatch or
-> > coccinelle to help isolate these things.
-> > 
-> > git diff -w sometimes helps, but that's not really a thing
-> > that checkpatch could do.
-> > 
-> > Any suggestions?
+> This patch changes the code to avoid using a temporary register
+> when the BPF immediate is encodable using an arm64 logical immediate
+> instruction. If the encoding fails (due to the immediate not being
+> encodable), it falls back to using a temporary register.
 > 
-> I'm unfamiliar with how the coccinelle script is used, but I thought there
-> was some discussion some time back to have checkpatch not produces the same
-> kinds of warnings to code as it does to patches.
+> Example of generated code for BPF_ALU32_IMM(BPF_AND, R0, 0x80000001):
 > 
-> A lot of useless updates were being submitted when people were running
-> checkpatch on existing kernel code and producing warnings that are not
-> worth "fixing", but something that new code should try to avoid.
+> without optimization:
+> 
+>    24: mov  w10, #0x8000ffff
+>    28: movk w10, #0x1
+>    2c: and  w7, w7, w10
+> 
+> with optimization:
+> 
+>    24: and  w7, w7, #0x80000001
+> 
+> Since the encoding process is quite complex, the JIT reuses existing
+> functionality in arch/arm64/kernel/insn.c for encoding logical immediates
+> rather than duplicate it in the JIT.
+> 
+> Co-developed-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
-checkpatch already has several blocks that look like
+Great find, thanks! Given Will wanted to queue them:
 
-	if (input_is_a_patch)
-		warn(...)
-	else if (input_is_a_file)
-		check(...)
-
-where by default, check() is not output.
-
-I've also suggested variations discouraging checkpatch
-use on files outside of drivers/staging/ multiple times
-
-https://lore.kernel.org/lkml/0753cae7829b98998ac3f5f9fcb52ba1f2475ee1.camel@perches.com/
-
-
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
