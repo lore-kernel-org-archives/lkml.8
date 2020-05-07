@@ -2,97 +2,96 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB8EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BED5C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C848A2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE786208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgEGVca (ORCPT
+        id S1726644AbgEGVdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:32:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38628 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgEGVc2 (ORCPT
+        Thu, 7 May 2020 17:33:40 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:35769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGVdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:32:28 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7CEDE803087C;
-        Thu,  7 May 2020 21:32:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fl9KsNoMQI8f; Fri,  8 May 2020 00:32:24 +0300 (MSK)
-Date:   Fri, 8 May 2020 00:32:22 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Markos Chandras <markos.chandras@imgtec.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
+        Thu, 7 May 2020 17:33:39 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MxVfj-1jDKON2Jhp-00xv0X; Thu, 07 May 2020 23:33:26 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 04/20] mips: cm: Fix an invalid error code of
- INTVN_*_ERR
-Message-ID: <20200507213222.ju3qeb27ml22omej@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-5-Sergey.Semin@baikalelectronics.ru>
- <20200507111007.GE11616@alpha.franken.de>
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: cxusb-analog: fix V4L2 dependency
+Date:   Thu,  7 May 2020 23:33:14 +0200
+Message-Id: <20200507213325.1843982-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200507111007.GE11616@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Rv72NQ7lV3Em1OEsWqDRAyPR38KvtDNs+dtnkIuB+d8R9Xh2XAl
+ 31PdnpcP4hqkNR0493P5xqUwSBY8QdnFmKiJD2mxoj3z21pJn5hobueEYT2fqztCUtnMQ87
+ QEvRHgaQbgGcpVYqtFDZevReF6Rf1jjzxO4AYAgjlamInBgLWgupeTwtIpV/ulLOU25SW8C
+ 1Zu8nTtMb0Phs/E9e9KYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vEyyDlsoHbA=:AHuUt9P5LntWj+2JvWGvNk
+ dDkkwDbgcPkwUTzLqsmafxt57RiGWPDmuCiW8eVb+UpVbOmrmOmo5psU0YeP3U6vkc03oNSm7
+ JS0adBDVTqCZG6XAOQU8cEcJErNlXKdi5YDuGKymLYl09MU/gChSF3uuZv2VybnizPG38ZpHP
+ kEQ3VWL+OLJWi+o+MNZc4VNQwMw/BaMrwLFx0VP/mFJ4Hfkf0rpaEbQdIRGPWf0xn6cQaNuQg
+ npPQL13lVm3Fm5froD3xVBNM07xJtSNfnGreM0wiqXy99DDkdtarIopjo2R/G3aJq9goxrdar
+ YGWjP6JXCzYgpGBlRokIWFe7qZD6NG3c9MgqL5g4BI5QUqTQVEw34O57ntDFVkUDgmPD1C8CZ
+ vYB5h/UjfwUXRV3/RYD6QjSyoWmcKlguE/eISUSBMemJd/1xUQHLmflWTPW6smsfy2UKE5Eyg
+ Cq25LNXrk5dxiAIxNhJ6DsVpiNK0c4DX7PdKPbEpQTDKbXBCQMoXPRMS06iKViARHXMOZSTQ7
+ wUPpRf6F7jz1aU/YtEJhz5ekkt/wh71oKN5MTUKfwRgN4Hd8mcZdEtYj2wEZRrevC2Ay98rJC
+ FG+IPErjd+FKJB5JrtFeMt7fYuUGa3d1slFOtQpdsfQtGxfLwxyM594iK5WgTksW0BbS+ku/9
+ K2uyqM6N1JJfCTcz9C04uCis6MChM2iSqj7VgNImMucrg9docymcOWAs6TwbTZtXy73OTtHu8
+ dW+AYVzNNyQkmKTmBJp/feNH97lCcJgiRsFqw4aaZKYvEhP/ST7EIQDNgx3gqI+jQqztXuJ9u
+ FEHIkPcuinQAglTmOyADeViAEp4oL5huwaDgtFxQwSPq11aA/g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:10:07PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 06, 2020 at 08:42:22PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-> > errors") adds cm2_causes[] array with map of error type ID and
-> > pointers to the short description string. There is a mistake in
-> > the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-> > correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-> > claims they have {0x17,0x18} codes. This is obviously hex-dec
-> > copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
-> > 
-> > Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  arch/mips/kernel/mips-cm.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> applied to mips-next.
+CONFIG_DVB_USB_CXUSB_ANALOG is a 'bool' symbol with a dependency on the
+tristate CONFIG_VIDEO_V4L2, which means it can be enabled as =y even
+when its dependency is =m. This leads to a link failure:
 
-Great! Thanks.
+drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_analog_init':
+cxusb-analog.c:(.text+0x92): undefined reference to `v4l2_subdev_call_wrappers'
+drivers/media/usb/dvb-usb/cxusb-analog.o: In function `cxusb_medion_register_analog':
+cxusb-analog.c:(.text+0x466): undefined reference to `v4l2_device_register'
+cxusb-analog.c:(.text+0x4c3): undefined reference to `v4l2_i2c_new_subdev'
+cxusb-analog.c:(.text+0x4fb): undefined reference to `v4l2_subdev_call_wrappers'
+...
 
--Sergey
+Change the dependency only disallow the analog portion of the driver
+in that configuration.
 
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+Fixes: e478d4054054 ("media: cxusb: add analog mode support for Medion MD95700")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/usb/dvb-usb/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index 15d29c91662f..25ba03edcb5c 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -151,6 +151,7 @@ config DVB_USB_CXUSB
+ config DVB_USB_CXUSB_ANALOG
+ 	bool "Analog support for the Conexant USB2.0 hybrid reference design"
+ 	depends on DVB_USB_CXUSB && VIDEO_V4L2
++	depends on VIDEO_V4L2=y || VIDEO_V4L2=DVB_USB_CXUSB
+ 	select VIDEO_CX25840
+ 	select VIDEOBUF2_VMALLOC
+ 	help
+-- 
+2.26.0
+
