@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB7AC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30F8C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D833820575
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746BA20575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877781;
-	bh=jm3fKnCO4Xf3QTCG3k8/S+/8DNeXKLAAKD5XoFMMhyY=;
+	s=default; t=1588877787;
+	bh=sAMUhJ6jmW33DzaBv1Y3zsijxrB/wdRq159fUGE4xBA=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=WIbJstk4vDX9H6AwY335uUnJI18da6JYIeOKulB0O4ynjQ6CqMAM3iCR+ZS+mED1f
-	 7Bhzy3nfbFTNLLfxZ2QolNFhJ3YtupI7mm/TCW1dGW+eIIDe1ULXzK8hCIHRBg4VbB
-	 8kA4EiJniICdZfspEqi8JhvowMWRIL0vrootPTtc=
+	b=E/lKHMkBynNvAZ+Ae4+TbPEETvogLKWVqEddkXbK/Nt3fBMnltEq5LyRYj8CVYgCS
+	 uZJgOTroNQRfS507kf83KXFq8E0AOTzzuoFRjfZIosQUgBTbJkejtGsNiOvoxAt8Ap
+	 ECFOjcUj3xUZJrEMCx1O9DyJ+si6x9v4Fxgjf26o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgEGS4V (ORCPT
+        id S1728528AbgEGS41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:56:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgEGS4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:56:20 -0400
+        id S1727891AbgEGS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:56:26 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3DC9216FD;
-        Thu,  7 May 2020 18:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2245B20575;
+        Thu,  7 May 2020 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877780;
-        bh=jm3fKnCO4Xf3QTCG3k8/S+/8DNeXKLAAKD5XoFMMhyY=;
+        s=default; t=1588877785;
+        bh=sAMUhJ6jmW33DzaBv1Y3zsijxrB/wdRq159fUGE4xBA=;
         h=Date:From:To:Cc:Subject:From;
-        b=j8F77k+hOMYWNsm4ZYGQsIc2ubNpcV2lJi+sF3xlCpyYvURINI7X9RHHgSWg7/c0j
-         k45JS4quwF/uKI6F4RcPAt11oF+N91Qn+NxJt0yJ/nN7nFfTnYIiWChCWiNAjpgmMV
-         lhfWkscvzOYaHFDVlhw9do8omT79Q0bRoM6p4Wh0=
-Date:   Thu, 7 May 2020 14:00:46 -0500
+        b=ld84k1iV7zQCEtDcb4KRhPV9MWP7EavFa5wv6X7eXO/OR6b2F7Le9ituuQdQxcyFn
+         bhNAFrMg9a+EDD4Lp6WIUu0dtFdPHxU4gUYGvD6xRemMjFS7YommBPjjwL/sofGlx3
+         hyzRLiFecATsj8cZZxyGaOZ6zNmpmV2Vh9OKd7wY=
+Date:   Thu, 7 May 2020 14:00:52 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
- flexible-array
-Message-ID: <20200507190046.GA15298@embeddedor>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Replace zero-length array with flexible-array
+Message-ID: <20200507190052.GA15325@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/at_xdmac.c |    2 +-
+ arch/mips/kernel/signal.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index bb0eaf38b594..fd92f048c491 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -212,7 +212,7 @@ struct at_xdmac {
- 	struct clk		*clk;
- 	u32			save_gim;
- 	struct dma_pool		*at_xdmac_desc_pool;
--	struct at_xdmac_chan	chan[0];
-+	struct at_xdmac_chan	chan[];
+diff --git a/arch/mips/kernel/signal.c b/arch/mips/kernel/signal.c
+index f6efabcb4e92..4ee626049d92 100644
+--- a/arch/mips/kernel/signal.c
++++ b/arch/mips/kernel/signal.c
+@@ -52,7 +52,7 @@ struct sigframe {
+ 	/* Matches struct ucontext from its uc_mcontext field onwards */
+ 	struct sigcontext sf_sc;
+ 	sigset_t sf_mask;
+-	unsigned long long sf_extcontext[0];
++	unsigned long long sf_extcontext[];
  };
  
- 
+ struct rt_sigframe {
 
