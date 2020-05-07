@@ -2,165 +2,202 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2858EC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E35C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F2A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WllBOboB"
+	by mail.kernel.org (Postfix) with ESMTP id 2562C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgEGSdl (ORCPT
+        id S1728237AbgEGSdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:33:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59818 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGSdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:33:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588876419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=pkfkngglHMgB29Wih8/yDRJONw7zEpxS+kgwQBqouk8=;
-        b=WllBOboB52iJFQhw6khZ+rEoJjnvJkWz5AXS38SYmOOeN5VfqyACHYpksS8U5og2kL9laJ
-        kJtPfTLKH94w1NeeLuZjoBThRViRdFjMnf9ES3DZYJy1MNjVUhVI4yrYqdm3LJIVAsiwky
-        spHrdc9uS6z0/hcSAa5tlF0vgjNi16Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-eAJ9gQinPA-a9yzqSu712Q-1; Thu, 07 May 2020 14:33:35 -0400
-X-MC-Unique: eAJ9gQinPA-a9yzqSu712Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E792B107ACCD;
-        Thu,  7 May 2020 18:33:33 +0000 (UTC)
-Received: from lszubowi.redhat.com (unknown [10.10.110.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BDF585C1B0;
-        Thu,  7 May 2020 18:33:32 +0000 (UTC)
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-To:     ardb@kernel.org, eric.snowberg@oracle.com, mingo@kernel.org,
-        nivedita@alum.mit.edu, tglx@linutronix.de,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
-Date:   Thu,  7 May 2020 14:33:32 -0400
-Message-Id: <20200507183332.6153-1-lszubowi@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Thu, 7 May 2020 14:33:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:37266 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgEGSdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:33:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32AC730E;
+        Thu,  7 May 2020 11:33:51 -0700 (PDT)
+Received: from [10.57.36.85] (unknown [10.57.36.85])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FCD63F305;
+        Thu,  7 May 2020 11:33:49 -0700 (PDT)
+Subject: Re: [PATCH] iommu/iova: Retry from last rb tree node if iova search
+ fails
+To:     Ajay kumar <ajaynumb@gmail.com>
+Cc:     vjitta@codeaurora.org, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        vinmenon@codeaurora.org, kernel-team@android.com
+References: <1588795317-20879-1-git-send-email-vjitta@codeaurora.org>
+ <d9bfde9f-8f16-bf1b-311b-ea6c2b8ab93d@arm.com>
+ <CAEC9eQMKc0dK9jGqOjeOQ3LT0fkJtYjgScb+ZF6MNagLERC7Jw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <099cb855-62c7-6f58-6836-d910466afd4d@arm.com>
+Date:   Thu, 7 May 2020 19:33:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAEC9eQMKc0dK9jGqOjeOQ3LT0fkJtYjgScb+ZF6MNagLERC7Jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In allocate_e820(), call the EFI get_memory_map() service directly
-instead of indirectly via efi_get_memory_map(). This avoids allocation
-of a buffer and return of the full EFI memory map, which is not needed
-here and would otherwise need to be freed.
+On 2020-05-07 7:22 pm, Ajay kumar wrote:
+> On 5/7/20, Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 2020-05-06 9:01 pm, vjitta@codeaurora.org wrote:
+>>> From: Vijayanand Jitta <vjitta@codeaurora.org>
+>>>
+>>> When ever a new iova alloc request comes iova is always searched
+>>> from the cached node and the nodes which are previous to cached
+>>> node. So, even if there is free iova space available in the nodes
+>>> which are next to the cached node iova allocation can still fail
+>>> because of this approach.
+>>>
+>>> Consider the following sequence of iova alloc and frees on
+>>> 1GB of iova space
+>>>
+>>> 1) alloc - 500MB
+>>> 2) alloc - 12MB
+>>> 3) alloc - 499MB
+>>> 4) free -  12MB which was allocated in step 2
+>>> 5) alloc - 13MB
+>>>
+>>> After the above sequence we will have 12MB of free iova space and
+>>> cached node will be pointing to the iova pfn of last alloc of 13MB
+>>> which will be the lowest iova pfn of that iova space. Now if we get an
+>>> alloc request of 2MB we just search from cached node and then look
+>>> for lower iova pfn's for free iova and as they aren't any, iova alloc
+>>> fails though there is 12MB of free iova space.
+>>
+>> Yup, this could definitely do with improving. Unfortunately I think this
+>> particular implementation is slightly flawed...
+>>
+>>> To avoid such iova search failures do a retry from the last rb tree node
+>>> when iova search fails, this will search the entire tree and get an iova
+>>> if its available
+>>>
+>>> Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+>>> ---
+>>>    drivers/iommu/iova.c | 11 +++++++++++
+>>>    1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+>>> index 0e6a953..2985222 100644
+>>> --- a/drivers/iommu/iova.c
+>>> +++ b/drivers/iommu/iova.c
+>>> @@ -186,6 +186,7 @@ static int __alloc_and_insert_iova_range(struct
+>>> iova_domain *iovad,
+>>>    	unsigned long flags;
+>>>    	unsigned long new_pfn;
+>>>    	unsigned long align_mask = ~0UL;
+>>> +	bool retry = false;
+>>>
+>>>    	if (size_aligned)
+>>>    		align_mask <<= fls_long(size - 1);
+>>> @@ -198,6 +199,8 @@ static int __alloc_and_insert_iova_range(struct
+>>> iova_domain *iovad,
+>>>
+>>>    	curr = __get_cached_rbnode(iovad, limit_pfn);
+>>>    	curr_iova = rb_entry(curr, struct iova, node);
+>>> +
+>>> +retry_search:
+>>>    	do {
+>>>    		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
+>>>    		new_pfn = (limit_pfn - size) & align_mask;
+>>> @@ -207,6 +210,14 @@ static int __alloc_and_insert_iova_range(struct
+>>> iova_domain *iovad,
+>>>    	} while (curr && new_pfn <= curr_iova->pfn_hi);
+>>>
+>>>    	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
+>>> +		if (!retry) {
+>>> +			curr = rb_last(&iovad->rbroot);
+>>
+>> Why walk when there's an anchor node there already? However...
+> +1
+>>
+>>> +			curr_iova = rb_entry(curr, struct iova, node);
+>>> +			limit_pfn = curr_iova->pfn_lo;
+>>
+>> ...this doesn't look right, as by now we've lost the original limit_pfn
+>> supplied by the caller, so are highly likely to allocate beyond the
+>> range our caller asked for. In fact AFAICS we'd start allocating from
+>> directly directly below the anchor node, beyond the end of the entire
+>> address space.
+> +1
+>>
+>> The logic I was imagining we want here was something like the rapidly
+>> hacked up (and untested) diff below.
+>>
+>> Thanks,
+>> Robin.
+>>
+>> ----->8-----
+>> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+>> index 0e6a9536eca6..3574c19272d6 100644
+>> --- a/drivers/iommu/iova.c
+>> +++ b/drivers/iommu/iova.c
+>> @@ -186,6 +186,7 @@ static int __alloc_and_insert_iova_range(struct
+>> iova_domain *iovad,
+>>           unsigned long flags;
+>>           unsigned long new_pfn;
+>>           unsigned long align_mask = ~0UL;
+>> +       unsigned long alloc_hi, alloc_lo;
+>>
+>>           if (size_aligned)
+>>                   align_mask <<= fls_long(size - 1);
+>> @@ -196,17 +197,27 @@ static int __alloc_and_insert_iova_range(struct
+>> iova_domain *iovad,
+>>                           size >= iovad->max32_alloc_size)
+>>                   goto iova32_full;
+>>
+>> +       alloc_hi = IOVA_ANCHOR;
+>> +       alloc_lo = iovad->start_pfn;
+>> +retry:
+>>           curr = __get_cached_rbnode(iovad, limit_pfn);
+>>           curr_iova = rb_entry(curr, struct iova, node);
+>> +       if (alloc_hi < curr_iova->pfn_hi) {
+>> +               alloc_lo = curr_iova->pfn_hi;
+>> +               alloc_hi = limit_pfn;
+>> +       }
+>> +
+>>           do {
+>> -               limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
+>> -               new_pfn = (limit_pfn - size) & align_mask;
+>> +               alloc_hi = min(alloc_hi, curr_iova->pfn_lo);
+> During retry case, the curr and curr_iova is not updated. Kindly check it.
 
-Routine allocate_e820() only needs to know how many EFI memory
-descriptors there are in the map to allocate an adequately sized
-e820ext buffer, if it's needed. Note that since efi_get_memory_map()
-returns a memory map buffer sized with extra headroom, allocate_e820()
-now needs to explicitly factor that into the e820ext size calculation.
+Right, after we've used the cached node to set the lower limit for the 
+retry pass, we also need to search the tree for the next node above 
+limit_pfn for the actual starting point.
 
-Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
---
-v3:
-  - Move define of EFI_MMAP_NR_SLACK_SLOTS to efistub.h instead
-    of providing a helper function to get it.
+Did I mention this was a completely untested brain-dump? :D
 
-v2:
-  - Instead of freeing the EFI memory map buffer allocated by
-    efi_get_memory_map(), avoid the allocation in the first place.
+Thanks,
+Robin.
 
-  - Changed the title of the patch because the v1 title no longer
-    applies. v1 ref:
-    https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
---
----
- drivers/firmware/efi/libstub/efistub.h  | 13 +++++++++++++
- drivers/firmware/efi/libstub/mem.c      |  2 --
- drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
- 3 files changed, 21 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 67d26949fd26..62943992f02f 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -92,6 +92,19 @@ extern __pure efi_system_table_t  *efi_system_table(void);
- #define EFI_LOCATE_BY_REGISTER_NOTIFY		1
- #define EFI_LOCATE_BY_PROTOCOL			2
- 
-+/*
-+ * An efi_boot_memmap is used by efi_get_memory_map() to return the
-+ * EFI memory map in a dynamically allocated buffer.
-+ *
-+ * The buffer allocated for the EFI memory map includes extra room for
-+ * a minimum of EFI_MMAP_NR_SLACK_SLOTS additional EFI memory descriptors.
-+ * This facilitates the reuse of the EFI memory map buffer when a second
-+ * call to ExitBootServices() is needed because of intervening changes to
-+ * the EFI memory map. Other related structures, e.g. x86 e820ext, need
-+ * to factor in this headroom requirement as well.
-+ */
-+#define EFI_MMAP_NR_SLACK_SLOTS	8
-+
- struct efi_boot_memmap {
- 	efi_memory_desc_t	**map;
- 	unsigned long		*map_size;
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-index 869a79c8946f..09f4fa01914e 100644
---- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -5,8 +5,6 @@
- 
- #include "efistub.h"
- 
--#define EFI_MMAP_NR_SLACK_SLOTS	8
--
- static inline bool mmap_has_headroom(unsigned long buff_size,
- 				     unsigned long map_size,
- 				     unsigned long desc_size)
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 05ccb229fb45..a0aeb1cda8e3 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
- 				  struct setup_data **e820ext,
- 				  u32 *e820ext_size)
- {
--	unsigned long map_size, desc_size, buff_size;
--	struct efi_boot_memmap boot_map;
--	efi_memory_desc_t *map;
-+	unsigned long map_size, desc_size;
- 	efi_status_t status;
- 	__u32 nr_desc;
- 
--	boot_map.map		= &map;
--	boot_map.map_size	= &map_size;
--	boot_map.desc_size	= &desc_size;
--	boot_map.desc_ver	= NULL;
--	boot_map.key_ptr	= NULL;
--	boot_map.buff_size	= &buff_size;
-+	/* Only need the size of the mem map and size of each mem descriptor */
-+	map_size = 0;
-+	status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
-+			     &desc_size, NULL);
-+	if (status != EFI_BUFFER_TOO_SMALL)
-+		return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
- 
--	status = efi_get_memory_map(&boot_map);
--	if (status != EFI_SUCCESS)
--		return status;
--
--	nr_desc = buff_size / desc_size;
-+	nr_desc = map_size / desc_size + EFI_MMAP_NR_SLACK_SLOTS;
- 
- 	if (nr_desc > ARRAY_SIZE(params->e820_table)) {
- 		u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
--- 
-2.18.4
-
+> Ajay
+>> +               new_pfn = (alloc_hi - size) & align_mask;
+>>                   prev = curr;
+>>                   curr = rb_prev(curr);
+>>                   curr_iova = rb_entry(curr, struct iova, node);
+>>           } while (curr && new_pfn <= curr_iova->pfn_hi);
+>>
+>> -       if (limit_pfn < size || new_pfn < iovad->start_pfn) {
+>> +       if (limit_pfn < size || new_pfn < alloc_lo) {
+>> +               if (alloc_lo == iovad->start_pfn)
+>> +                       goto retry;
+>>                   iovad->max32_alloc_size = size;
+>>                   goto iova32_full;
+>>           }
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
