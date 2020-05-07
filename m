@@ -6,93 +6,107 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2941CC54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA825C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EB821655
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F7A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ql9fwMag"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="r54QaoLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEGUdv (ORCPT
+        id S1726750AbgEGUfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
+        Thu, 7 May 2020 16:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgEGUdu (ORCPT
+        by vger.kernel.org with ESMTP id S1726218AbgEGUfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:33:50 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74723C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:33:51 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id k81so7630401qke.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:33:51 -0700 (PDT)
+        Thu, 7 May 2020 16:35:04 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0500EC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:35:06 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b188so7623056qkd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:35:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=baTteJqyH6isN/89zdtKchdhH2DBXV9A3IqICZz/QOE=;
-        b=ql9fwMagiN0bQ+ctBRPwFkrgKyHeVXx8Q80yLGh4UpVEp26yaQwCdGZ4qSDYv9RYRF
-         kO01i1USbkS3uBGPMelctZrrOhx3sQb9AEJtWDGkzVCZk4jcDJNco2YCusnjNLDTjfE2
-         aKQCh+/AmnCztjhFrv5RSn0VZG8l9092XS88Z5bBA+I8HnB/wKRqzg0bKZ/yyBuZEl1l
-         73ohXJZ4eIMeDQ5gx4lV4qfBWWOaaqrvOc/l1qGXpol6sWFi9FQS9kBgsNwLbfXDpWix
-         bcr/2KfsbPnwCRiI5qEbSa+EsuqImEZ3hMc2aHCmwj2Q0c3kuIxBUphC7AbLnITF0Xsw
-         kJLA==
+        bh=RSDWBO3KlSH7VUaml385yztVrt94O/2spKycJW0cj/0=;
+        b=r54QaoLh54AUaLYcMXfF56LEl3r+ooemYCoqO7ird14qYPBgk+62dOPtF7vzatUcbV
+         TI3dAf4vwvc6fqdSnpT5VVVntfLPsbm7TOVZwgePR0+8l471+2W99dDqiUxzazExetKX
+         2D04O4ZoLBnVFXEgZRHkSXONB2MPOpGWxoxumdV8WAdHwDr1mA7o051gdl5p4kl9iJ0K
+         aRNRtGRMR6m3YiPGHP6X4eXqSXxiJDR3uImh+palqnnsrf1bwQuO/N0Ob+junxtbcIxB
+         eyX0IXQP/lqCC0vmcAy9nERkERqWEpc0q4jOmLMsWsFillX71G0FWZTWqr+V5p9eNMZN
+         PSNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=baTteJqyH6isN/89zdtKchdhH2DBXV9A3IqICZz/QOE=;
-        b=MHbGOScKwRFr1K6DEIbnydBMQQ1fEoV3PeDaTes4Y63icltMuZk6B4htbO0H6jVBQ2
-         uVdn4xosfPm7cFyNar71Ce7vlVVyfob14LPy55dymKrOkFIOiKCyhnuPx7HCUwJWiF+R
-         +w08x/zr65RxPVelEYLJIgFJ1fQXQVphL8KUu8hp7v7lROPF2y0yqgFKs9JRk1r/MNNo
-         x/cJVDl3HUzPlmEO0tPwfVBfAP2EIpGII8EA5dvqe02VE64JZ92rDz6gewrbUb3EMpUZ
-         7EfDW7h9Pm4J8h31551Eha8dzBu+HAwAsqlolYGZg5fjeE+ka55kEZ7EGzIxLPtB4sPM
-         OcgA==
-X-Gm-Message-State: AGi0PuZFMQCNJozhbiwf1N2qvW7MI5dCPmtPmuSb9GS8athwBO85Ovkr
-        69NbSgabj+3w8EaQl/pxdlM3eg==
-X-Google-Smtp-Source: APiQypJN7/JRV7OJ8s/kqjkaowwIPEF6+tYYtQrtoPjYW1yZ84PCDiVZqt0gcfZGOSXWQap6ET6GdQ==
-X-Received: by 2002:a37:bd47:: with SMTP id n68mr16454193qkf.379.1588883630463;
-        Thu, 07 May 2020 13:33:50 -0700 (PDT)
+        bh=RSDWBO3KlSH7VUaml385yztVrt94O/2spKycJW0cj/0=;
+        b=FWv91soS55DtavNT3imYFGCc+crqSmTd3p+UolmJ/PmfkstqwChXRHbD+0CInVVcYr
+         0StpwgbGu8itgIe5JgPTiQyn7mQ05qTiboMgu8QzXIO/R84hMLPrDc0qWFlm+zKbaMLK
+         Ec82vfywuHQpiXy3ecek+STvUhOOI5bO9jBWgvtoXlncHURxyEZ1V6BWp3gA75frT7F2
+         avL7czDzeP7/PzGB/8K8BL+GrTcU2ED058upx6OXx2tNLMnzy1SzbpcrOflmvnIKhy2t
+         9t46d+w2reXqgMbr3EiIx0RK1Ymw8K1iJG7yIx8k1VpCJ2rIuKzPbPR7NOeYjA8zPeIy
+         I4ig==
+X-Gm-Message-State: AGi0PuZaY3EkaNhfausflsN/yXMNY9YXJvZ4/6f/v+j6R3+JJY+1YYIa
+        91GP/XLO7I81HFd2CxPcFu7G0Q==
+X-Google-Smtp-Source: APiQypJnQGp+W8vdB4wl6qofgeQ17bUrjsLYFEjiibo3uV4je5mhYeTV9b+raRIejY0clyGjHc0k7A==
+X-Received: by 2002:a37:82c1:: with SMTP id e184mr17283899qkd.186.1588883705299;
+        Thu, 07 May 2020 13:35:05 -0700 (PDT)
 Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id a139sm5156158qkg.107.2020.05.07.13.33.49
+        by smtp.gmail.com with ESMTPSA id 124sm5220016qkn.73.2020.05.07.13.35.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:33:49 -0700 (PDT)
-Date:   Thu, 7 May 2020 16:33:34 -0400
+        Thu, 07 May 2020 13:35:04 -0700 (PDT)
+Date:   Thu, 7 May 2020 16:34:49 -0400
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Roman Gushchin <guro@fb.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
         kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/19] mm: memcg: factor out memcg- and lruvec-level
- changes out of __mod_lruvec_state()
-Message-ID: <20200507203334.GA161043@cmpxchg.org>
+Subject: Re: [PATCH v3 02/19] mm: memcg: prepare for byte-sized vmstat items
+Message-ID: <20200507203449.GB161043@cmpxchg.org>
 References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-2-guro@fb.com>
+ <20200422204708.2176080-3-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422204708.2176080-2-guro@fb.com>
+In-Reply-To: <20200422204708.2176080-3-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:46:50PM -0700, Roman Gushchin wrote:
-> To convert memcg and lruvec slab counters to bytes there must be
-> a way to change these counters without touching node counters.
-> Factor out __mod_memcg_lruvec_state() out of __mod_lruvec_state().
+On Wed, Apr 22, 2020 at 01:46:51PM -0700, Roman Gushchin wrote:
+> To implement per-object slab memory accounting, we need to
+> convert slab vmstat counters to bytes. Actually, out of
+> 4 levels of counters: global, per-node, per-memcg and per-lruvec
+> only two last levels will require byte-sized counters.
+> It's because global and per-node counters will be counting the
+> number of slab pages, and per-memcg and per-lruvec will be
+> counting the amount of memory taken by charged slab objects.
+> 
+> Converting all vmstat counters to bytes or even all slab
+> counters to bytes would introduce an additional overhead.
+> So instead let's store global and per-node counters
+> in pages, and memcg and lruvec counters in bytes.
+> 
+> To make the API clean all access helpers (both on the read
+> and write sides) are dealing with bytes.
+> 
+> To avoid back-and-forth conversions a new flavor of helpers
+> is introduced, which always returns values in pages:
+> node_page_state_pages() and global_node_page_state_pages().
+> 
+> Actually new helpers are just reading raw values. Old helpers are
+> simple wrappers, which perform a conversion if the vmstat items are
+> in bytes. Because at the moment no one actually need bytes,
+> there are WARN_ON_ONCE() macroses inside to warn about inappropriate
+> use cases.
+> 
+> Thanks to Johannes Weiner for the idea of having the byte-sized API
+> on top of the page-sized internal storage.
 > 
 > Signed-off-by: Roman Gushchin <guro@fb.com>
 
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-
-Roman and I have talked a bunch about the function names here. They're
-not optimal, with mod_lruvec_state() doing the entire intersection -
-node, memcg, lruvec - and mod_memcg_lruvec_state() being a specific
-version that does not update the node.
-
-However, the usecases for mod_memcg_lruvec_state() are highly
-specific, so the function won't be widely used. As such, it received
-the longer name, and we get to keep the shorter mod_lruvec_state() for
-the much more widely used function.
