@@ -2,387 +2,174 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76702C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AC5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F9F24976
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9082495C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z9KjjZ5c"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JtWRvxPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgEGUUh (ORCPT
+        id S1728645AbgEGUVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728609AbgEGUUg (ORCPT
+        Thu, 7 May 2020 16:21:31 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39004 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEGUVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:20:36 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173F6C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:20:36 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f7so3547322pfa.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+U7NE1nmyW1megEDVcih1zXAnGvq/h4Jgwf62ESkjr0=;
-        b=Z9KjjZ5caljWdicu2iQDe4UHHU376NJnmw7OtTKbg8hXcrGxms8FCbVeUUzYEIbj1u
-         1KLsONXOKHbTPDaPqIbzNizpYEJy7U+k3j6y0r0imDcDYQYmTh3ENLG0gvimReUuGE4M
-         m8gl+tU4uao1XXP1V5hEE56wvfGPLXF8alILcfdJgIwP69MkOAWQPDXwlh0eqh2/GDYB
-         yUMyKrFl2oo8vxd47sQFlXfvkG73BjC6wTN7VkT1+Fj//Z1Ty5lAE8JjGeLsVutqDqez
-         tsusgjDXUWnbV6IM37gXvuZ3PmFTHsXSkYdJm5kQABoPqBWPE022KIDcVlyPznPAwx6c
-         Rv9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+U7NE1nmyW1megEDVcih1zXAnGvq/h4Jgwf62ESkjr0=;
-        b=UTXz09gJef3LImJn1700vx4lZB/teQyw2Seinp6t8A8lXITv3OSM5WHr/U0JoUHizi
-         DLadqYnokTK5ZYCIMfme7je9xeHBHfr9YjXwZI934AjCLx+7AwSDAhzR0KZ2EaNOC2Fr
-         ogkoEDOU+BhA/+PC+AlC1bmfZYpme/9tH6RY0STlog3k+mYb8n63WtKz7r7f6QNuwskK
-         0Eia+747IBcOjEHjFaAucZuIR3O6lPf/uAOLYzSwQkmZDtTBzpmonG6zoi/BfmSLBecb
-         W2afpJpx+Mb7OhqgI175u7Nf2wUqqXRHvWJJKHUVkuuUZitZmnqMUbfQCzWdaOCwwy3H
-         3HBg==
-X-Gm-Message-State: AGi0PuaagYJxtkmb5JmK9cXiGSuhTXOZQY3pC7VhhhVq1cxhHfd//w52
-        52DmpxNcyME3ifz5ZzlzMbdN2geEz14=
-X-Google-Smtp-Source: APiQypKApmnZMSjq993TU3XPBDJCR4bVujh47DQJzkTKgjux5gZE84YQJRbAkry3wC0xBfxAGF77yw==
-X-Received: by 2002:a62:8448:: with SMTP id k69mr8085670pfd.67.1588882835202;
-        Thu, 07 May 2020 13:20:35 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a19sm5873645pfd.91.2020.05.07.13.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:20:33 -0700 (PDT)
-Date:   Thu, 7 May 2020 13:21:21 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ohad@wizery.com, mathieu.poirier@linaro.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org
-Subject: Re: [PATCH 2/3] remoteproc: Add inline coredump functionality
-Message-ID: <20200507202121.GK2329931@builder.lan>
-References: <1587062312-4939-1-git-send-email-rishabhb@codeaurora.org>
- <1587062312-4939-2-git-send-email-rishabhb@codeaurora.org>
+        Thu, 7 May 2020 16:21:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047KHrqL057929;
+        Thu, 7 May 2020 20:20:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=nd5DdgG3fn6gi3FUpqauceZ8VNUcmEBV6Yu0oAQgeCg=;
+ b=JtWRvxPPTESJSiimjfZzQhUWBp6qN1IEJZwPwUpm2oat+M/NTOb2tDnWMhstnHpaO+/B
+ jvWKOxWG1a4ucX5X6PBZZSY60/MMsIpR+wwmDRbNwOQHeA+Eo0qaxjKSr68lQaV2QiUt
+ es/zSycvoZlzxhQ2UVYNqrsjF+hmSBtRQejUI0Io95LcPB61N0wtYM+d/jI/E+y21t/r
+ QD2eS9YdotPxQXLKFSEmsuYm1v4On7rcEN6mCr8gLlHnAGL8BskddBiAng6tZhu+5/t+
+ Rfb1ulee1Ap9bD/2IKKKTa4aRhERO2NCeiNUQA2al+TUEdb/5r1ett6t7gAKYi9R2WPj VQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30vpwd8rj5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 20:20:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047KChsB068594;
+        Thu, 7 May 2020 20:20:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30us7rd3rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 20:20:49 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047KKaFD002298;
+        Thu, 7 May 2020 20:20:36 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 May 2020 13:20:36 -0700
+Date:   Thu, 7 May 2020 16:20:58 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/7] mm: move zone iterator outside of
+ deferred_init_maxorder()
+Message-ID: <20200507202058.4mskqbt3vci3xy4k@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-6-daniel.m.jordan@oracle.com>
+ <deadac9a-fbef-6c66-207c-83d251d2ef50@linux.intel.com>
+ <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
+ <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com>
+ <20200505005432.bohmaa6zeffhdkgn@ca-dmjordan1.us.oracle.com>
+ <CAKgT0Uegw2vFSCOcsCMATfDu0Q8NP2ZVi-2Fgm8P2RwU_B2c3A@mail.gmail.com>
+ <20200506223923.z6cbixg2mhtjjlfo@ca-dmjordan1.us.oracle.com>
+ <CAKgT0UdDcq_PL1hbvkhBvo9tQN1YA9YDQ6hECHL3TnWA-ytPhw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587062312-4939-2-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <CAKgT0UdDcq_PL1hbvkhBvo9tQN1YA9YDQ6hECHL3TnWA-ytPhw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxscore=0 suspectscore=2 impostorscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 Apr 11:38 PDT 2020, Rishabh Bhatnagar wrote:
-
-> This patch adds the inline coredump functionality. The current
-> coredump implementation uses vmalloc area to copy all the segments.
-> But this might put a lot of strain on low memory targets as the
-> firmware size sometimes is in ten's of MBs. The situation becomes
-> worse if there are multiple remote processors  undergoing recovery
-> at the same time. This patch directly copies the device memory to
-> userspace buffer and avoids extra memory usage. This requires
-> recovery to be halted until data is read by userspace and free
-> function is called.
+On Thu, May 07, 2020 at 08:26:26AM -0700, Alexander Duyck wrote:
+> On Wed, May 6, 2020 at 3:39 PM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> > On Tue, May 05, 2020 at 08:27:52AM -0700, Alexander Duyck wrote:
+> > > > Maybe it's better to leave deferred_init_maxorder alone and adapt the
+> > > > multithreading to the existing implementation.  That'd mean dealing with the
+> > > > pesky opaque index somehow, so deferred_init_mem_pfn_range_in_zone() could be
+> >
+> > I should have been explicit, was thinking of @i from
+> > () when mentioning the opaque index.
 > 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  drivers/remoteproc/remoteproc_coredump.c | 130 +++++++++++++++++++++++++++++++
->  drivers/remoteproc/remoteproc_internal.h |  23 +++++-
->  include/linux/remoteproc.h               |   2 +
->  3 files changed, 153 insertions(+), 2 deletions(-)
+> Okay, that makes sense. However in reality you don't need to split
+> that piece out. All you really are doing is splitting up the
+> first_init_pfn value over multiple threads so you just need to make
+> use of deferred_init_mem_pfn_range_in_zone() to initialize it.
+
+Ok, I assume you mean that each thread should use
+deferred_init_mem_pfn_range_in_zone.  Yes, that's what I meant when saying that
+function could be generalized, though not sure we should opt for this.
+
+> > > > generalized to find it in the thread function based on the start/end range, or
+> > > > it could be maintained as part of the range that padata passes to the thread
+> > > > function.
+> > >
+> > > You may be better off just implementing your threads to operate like
+> > > deferred_grow_zone does. All your worker thread really needs then is
+> > > to know where to start performing the page initialization and then it
+> > > could go through and process an entire section worth of pages. The
+> > > other bit that would have to be changed is patch 6 so that you combine
+> > > any ranges that might span a single section instead of just splitting
+> > > the work up based on the ranges.
+> >
+> > How are you thinking of combining them?  I don't see a way to do it without
+> > storing an arbitrary number of ranges somewhere for each thread.
 > 
-> diff --git a/drivers/remoteproc/remoteproc_coredump.c b/drivers/remoteproc/remoteproc_coredump.c
-> index 9de0467..888b7dec91 100644
-> --- a/drivers/remoteproc/remoteproc_coredump.c
-> +++ b/drivers/remoteproc/remoteproc_coredump.c
-> @@ -12,6 +12,84 @@
->  #include <linux/remoteproc.h>
->  #include "remoteproc_internal.h"
->  
-> +static void rproc_free_dump(void *data)
+> So when you are putting together your data you are storing a starting
+> value and a length. All you end up having to do is make certain that
+> the size + start pfn is section aligned. Then if you jump to a new
+> section you have the option of either adding to the size of your
+> current section or submitting the range and starting with a new start
+> pfn in a new section. All you are really doing is breaking up the
+> first_deferred_pfn over multiple sections. What I would do is section
+> align end_pfn, and then check the next range from the zone. If the
+> start_pfn of the next range is less than end_pfn you merge the two
+> ranges by just increasing the size, otherwise you could start a new
+> range.
+> 
+> The idea is that you just want to define what the valid range of PFNs
+> are, and if there are sizable holes you skip over them. You would
+> leave most of the lifting for identifying exactly what PFNs to
+> initialize to the pfn_range_in_zone iterators since they would all be
+> read-only accesses anyway.
 
-rproc_coredump_free()
+Ok, I follow you.  My assumption is that there are generally few free pfn
+ranges relative to the total number of pfns being initialized so that it's
+efficient to parallelize over a single pfn range from the zone iterator.  On
+the systems I tested, there were about 20 tiny ranges and one enormous range
+per node so that firing off a job per range kept things simple without
+affecting performance.  If that assumption holds, I'm not sure it's worth it to
+merge ranges.
 
-> +{
-> +	struct rproc_coredump_state *dump_state = data;
-> +
-> +	complete(&dump_state->dump_done);
-
-vfree(dump_state->header);
-
-> +}
-> +
-> +static unsigned long resolve_addr(loff_t user_offset,
-
-rproc_coredump_find_segment()
-
-> +				   struct list_head *segments,
-> +				   unsigned long *data_left)
-> +{
-> +	struct rproc_dump_segment *segment;
-> +
-> +	list_for_each_entry(segment, segments, node) {
-> +		if (user_offset >= segment->size)
-> +			user_offset -= segment->size;
-> +		else
-> +			break;
-
-		if (user_offset < segment->size) {
-			*data_left = segment->size - user_offset;
-			return segment->da + user_offset;
-		}
-
-		user_offset -= segment->size;
-> +	}
-
-	*data_left = 0;
-	return 0;
-
-> +
-> +	if (&segment->node == segments) {
-> +		*data_left = 0;
-> +		return 0;
-> +	}
-> +
-> +	*data_left = segment->size - user_offset;
-> +
-> +	return segment->da + user_offset;
-> +}
-> +
-> +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
-> +				void *data, size_t header_size)
-> +{
-> +	void *device_mem;
-> +	size_t data_left, copy_size, bytes_left = count;
-> +	unsigned long addr;
-> +	struct rproc_coredump_state *dump_state = data;
-> +	struct rproc *rproc = dump_state->rproc;
-> +	void *elfcore = dump_state->header;
-> +
-> +	/* Copy the header first */
-> +	if (offset < header_size) {
-> +		copy_size = header_size - offset;
-> +		copy_size = min(copy_size, bytes_left);
-> +
-> +		memcpy(buffer, elfcore + offset, copy_size);
-> +		offset += copy_size;
-> +		bytes_left -= copy_size;
-> +		buffer += copy_size;
-> +	}
-
-Perhaps you can take inspiration from devcd_readv() here?
-
-> +
-> +	while (bytes_left) {
-> +		addr = resolve_addr(offset - header_size,
-> +				    &rproc->dump_segments, &data_left);
-> +		/* EOF check */
-> +		if (data_left == 0) {
-
-Afaict data_left denotes the amount of data left in this particular
-segment, rather than in the entire core.
-
-I think you should start by making bytes_left the minimum of the core
-size and @count and then have this loop as long as bytes_left, copying
-data to the buffer either from header or an appropriate segment based on
-the current offset.
-
-> +			pr_info("Ramdump complete %lld bytes read", offset);
-
-dev_dbg(&rproc->dev, ...)
-
-> +			break;
-> +		}
-> +
-> +		copy_size = min_t(size_t, bytes_left, data_left);
-> +
-> +		device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
-
-rproc_da_to_va()
-
-> +		if (!device_mem) {
-> +			pr_err("Address:%lx with size %zd out of remoteproc carveout\n",
-
-dev_err(&rproc->dev, "coredump: %#lx size %#zx outside of carveouts\n",
-..);
-
-> +				addr, copy_size);
-> +			return -ENOMEM;
-> +		}
-> +		memcpy(buffer, device_mem, copy_size);
-> +
-> +		offset += copy_size;
-> +		buffer += copy_size;
-> +		bytes_left -= copy_size;
-> +	}
-> +
-> +	return count - bytes_left;
-> +}
-> +
->  static void create_elf_header(void *data, int phnum, struct rproc *rproc)
->  {
->  	struct elf32_phdr *phdr;
-> @@ -55,6 +133,58 @@ static void create_elf_header(void *data, int phnum, struct rproc *rproc)
->  }
->  
->  /**
-> + * rproc_inline_coredump() - perform synchronized coredump
-> + * @rproc:	rproc handle
-> + *
-> + * This function will generate an ELF header for the registered segments
-> + * and create a devcoredump device associated with rproc. This function
-> + * directly copies the segments from device memory to userspace. The
-> + * recovery is stalled until the enitire coredump is read. This approach
-> + * avoids using extra vmalloc memory(which can be really large).
-> + */
-> +void rproc_inline_coredump(struct rproc *rproc)
-> +{
-> +	struct rproc_dump_segment *segment;
-> +	struct elf32_phdr *phdr;
-> +	struct elf32_hdr *ehdr;
-> +	struct rproc_coredump_state *dump_state;
-
-This can live on the stack, unless you follow my suggestion below...
-
-> +	size_t header_size;
-> +	void *data;
-> +	int phnum = 0;
-> +
-> +	if (list_empty(&rproc->dump_segments))
-> +		return;
-> +
-> +	header_size = sizeof(*ehdr);
-> +	list_for_each_entry(segment, &rproc->dump_segments, node) {
-> +		header_size += sizeof(*phdr);
-> +
-> +		phnum++;
-> +	}
-> +
-> +	data = vmalloc(header_size);
-> +	if (!data)
-> +		return;
-> +
-> +	ehdr = data;
-
-ehdr is unused.
-
-> +	create_elf_header(data, phnum, rproc);
-> +
-> +	dump_state = kzalloc(sizeof(*dump_state), GFP_KERNEL);
-> +	dump_state->rproc = rproc;
-> +	dump_state->header = data;
-> +	init_completion(&dump_state->dump_done);
-> +
-> +	dev_coredumpm(&rproc->dev, NULL, dump_state, header_size, GFP_KERNEL,
-> +		      rproc_read_dump, rproc_free_dump);
-
-I can help feeling that if you vmalloc() either the header or the entire
-thing depending on DEFAULT vs INLINE and populate it with either all
-segments or just the header, then you should be able to use the same
-(custom) read function to serve both cases.
-
-You should by doing this be able to avoid some duplication, your two
-code paths would not diverge and the main difference would be if you
-wait or not below (the kfree would have to go in the rproc_free_dump).
-
-> +
-> +	/* Wait until the dump is read and free is called */
-> +	wait_for_completion(&dump_state->dump_done);
-> +
-> +	kfree(dump_state);
-> +}
-> +EXPORT_SYMBOL(rproc_inline_coredump);
-> +
-> +/**
->   * rproc_default_coredump() - perform coredump
->   * @rproc:	rproc handle
->   *
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 28b6af2..ea6146e 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -24,6 +24,18 @@ struct rproc_debug_trace {
->  	struct rproc_mem_entry trace_mem;
->  };
->  
-> +struct rproc_coredump_state {
-
-This is only used within remoteproc_coredump.c, so please move it there.
-
-> +	struct rproc *rproc;
-> +	void *header;
-> +	struct completion dump_done;
-> +};
-> +
-> +enum rproc_coredump_conf {
-
-How about rproc_coredump_mechanism?
-
-> +	COREDUMP_DEFAULT,
-> +	COREDUMP_INLINE,
-> +	COREDUMP_DISABLED,
-> +};
-> +
->  /* from remoteproc_core.c */
->  void rproc_release(struct kref *kref);
->  irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
-> @@ -49,6 +61,7 @@ struct dentry *rproc_create_trace_file(const char *name, struct rproc *rproc,
->  
->  /* from remoteproc_coredump.c */
->  void rproc_default_coredump(struct rproc *rproc);
-> +void rproc_inline_coredump(struct rproc *rproc);
->  
->  void rproc_free_vring(struct rproc_vring *rvring);
->  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
-> @@ -125,8 +138,14 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
->  static inline
->  void rproc_coredump(struct rproc *rproc)
->  {
-> -	return rproc_default_coredump(rproc);
-> -
-> +	switch (rproc->coredump_conf) {
-> +	case COREDUMP_DEFAULT:
-> +		return rproc_default_coredump(rproc);
-> +	case COREDUMP_INLINE:
-> +		return rproc_inline_coredump(rproc);
-> +	default:
-> +		break;
-> +	}
-
-I think this better belong inside remoteproc_coredump.c
-
-Regards,
-Bjorn
-
->  }
->  
->  #endif /* REMOTEPROC_INTERNAL_H */
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad666..23298ce 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -459,6 +459,7 @@ struct rproc_dump_segment {
->   * @dev: virtual device for refcounting and common remoteproc behavior
->   * @power: refcount of users who need this rproc powered up
->   * @state: state of the device
-> + * @coredump_conf: Currenlty selected coredump configuration
->   * @lock: lock which protects concurrent manipulations of the rproc
->   * @dbg_dir: debugfs directory of this rproc device
->   * @traces: list of trace buffers
-> @@ -492,6 +493,7 @@ struct rproc {
->  	struct device dev;
->  	atomic_t power;
->  	unsigned int state;
-> +	unsigned int coredump_conf;
->  	struct mutex lock;
->  	struct dentry *dbg_dir;
->  	struct list_head traces;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+With the series as it stands plus leaving in the section alignment check in
+deferred_grow_zone (which I think could be relaxed to a maxorder alignment
+check) so it doesn't stop mid-max-order-block, threads simply deal with a
+start/end range and deferred_init_maxorder becomes shorter and simpler too.
