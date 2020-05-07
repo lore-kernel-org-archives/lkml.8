@@ -2,152 +2,139 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9A4C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECAFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7D62083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+Eco3yT"
+	by mail.kernel.org (Postfix) with ESMTP id D664C2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgEGJQ2 (ORCPT
+        id S1726598AbgEGJQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgEGJQ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:16:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7884EC061A41
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:16:26 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s10so1845238plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 02:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=L4sM3AW3j6UIA7E8JtPyZaEOpo7L03/nH/zacWPyyAQ=;
-        b=O+Eco3yTtSm5e3+ZZJEPQW7LYANk0ENsvTeGBvwhhxBe6+m53DXNgfqZ7KlDwc6zBf
-         JCLRKcMxF6PEn50vbF+FNy9Ca9UdLt6ezVQyaiKWh8VK0EgLC+PocTQ/yPrm4+Do8wgf
-         gNfYp2QPEOrvfTN3DnPJs5bycglTABJG+XJTlYpq1c+CQNHVVQcPLw8Y4+Ky6rXVAby3
-         W4DbHEUaWenVwfWH88cdIn6tORbxYxpxeMuQxL6bfTI03XS2cSePVcvcab8cBgW5hFwB
-         RPaIqLbrsfy9qwYdbvRIb21IB5r0QTfkx0wwZo5F6TEjBsFiD2XMmrhlYNbRyyISdZ5E
-         5LaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=L4sM3AW3j6UIA7E8JtPyZaEOpo7L03/nH/zacWPyyAQ=;
-        b=HF3869Ldw71DcJ7vnm9qbHtZkUiiG0yvnMYZJJdVqE+ky1zWdYJd//MfQnq7WmqX/d
-         Ly+cdUrD+TlC4Z8ciloak0jDtV0q/xH2gJ4qh4waBeCwGz/XZ9UjSuaWEy4SCOSwe+Wc
-         nAkihNnCFHPPAK1DtBs2rASMNhlEGKf/L+bSq/PYScCMEf50rA1enJJELEymXgNpddyN
-         lyxAnREAzEwESX+6JnoSzJ/iPlRnwKHZ57jqBK2O6OrSwUj95oAm2tQG0TRsfyv/9yua
-         1+fUc88B3vgzjxhWeGV00GqTODsXAntsaGSZITmi6FNKtLqEb6jxzL7AC0WIAZD/6jRW
-         KAFw==
-X-Gm-Message-State: AGi0PuYFjMtskElSlw8F+/Dcj8iiNHuf9p6EAASk0wda2TN19uf25TNG
-        +EO77X5d1kFYevq64aLqCdo=
-X-Google-Smtp-Source: APiQypLbcwB9R3OvqJ1MZo4353PGHtm6f1Og5xJlUP4Dg+wBN0WjbeLkBl8G7D4+ObVPV5HAMXpj6g==
-X-Received: by 2002:a17:902:b711:: with SMTP id d17mr12427536pls.333.1588842986055;
-        Thu, 07 May 2020 02:16:26 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id m8sm660100pjz.27.2020.05.07.02.16.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 May 2020 02:16:25 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        philippe.schenker@toradex.com
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 3/4] ARM: dts: stm32: enable stmpe811 on stm32429-disco board
-Date:   Thu,  7 May 2020 17:16:11 +0800
-Message-Id: <1588842971-20495-2-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588842971-20495-1-git-send-email-dillon.minfei@gmail.com>
-References: <philippe.schenker@toradex.com>
- <1588842971-20495-1-git-send-email-dillon.minfei@gmail.com>
+        Thu, 7 May 2020 05:16:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57202 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726476AbgEGJQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 05:16:42 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3ABD85AD673B3CE51DB3;
+        Thu,  7 May 2020 17:16:40 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 7 May 2020
+ 17:16:38 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change maximum zstd compression buffer
+ size
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Chao Yu <chao@kernel.org>, <kernel-team@android.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200504143039.155644-1-jaegeuk@kernel.org>
+ <7177aab9-630e-e077-7005-0023c93134b3@kernel.org>
+ <20200505230559.GA203407@google.com>
+ <9aaeac5e-4511-5c81-653c-23a85b3c335a@huawei.com>
+ <20200506145608.GD107238@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <357d5a28-5163-c52d-2a7d-c6162b56e1cb@huawei.com>
+Date:   Thu, 7 May 2020 17:16:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200506145608.GD107238@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+On 2020/5/6 22:56, Jaegeuk Kim wrote:
+> On 05/06, Chao Yu wrote:
+>> On 2020/5/6 7:05, Jaegeuk Kim wrote:
+>>> On 05/05, Chao Yu wrote:
+>>>> On 2020-5-4 22:30, Jaegeuk Kim wrote:
+>>>>> From: Daeho Jeong <daehojeong@google.com>
+>>>>>
+>>>>> Current zstd compression buffer size is one page and header size less
+>>>>> than cluster size. By this, zstd compression always succeeds even if
+>>>>> the real compression data is failed to fit into the buffer size, and
+>>>>> eventually reading the cluster returns I/O error with the corrupted
+>>>>> compression data.
+>>>>
+>>>> What's the root cause of this issue? I didn't get it.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>>>> ---
+>>>>>  fs/f2fs/compress.c | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>>>> index 4c7eaeee52336..a9fa8049b295f 100644
+>>>>> --- a/fs/f2fs/compress.c
+>>>>> +++ b/fs/f2fs/compress.c
+>>>>> @@ -313,7 +313,7 @@ static int zstd_init_compress_ctx(struct compress_ctx *cc)
+>>>>>  	cc->private = workspace;
+>>>>>  	cc->private2 = stream;
+>>>>>
+>>>>> -	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>>>>> +	cc->clen = ZSTD_compressBound(PAGE_SIZE << cc->log_cluster_size);
+>>>>
+>>>> In my machine, the value is 66572 which is much larger than size of dst
+>>>> buffer, so, in where we can tell the real size of dst buffer to zstd
+>>>> compressor? Otherwise, if compressed data size is larger than dst buffer
+>>>> size, when we flush compressed data into dst buffer, we may suffer overflow.
+>>>
+>>> Could you give it a try compress_log_size=2 and check decompression works?
+>>
+>> I tried some samples before submitting the patch, did you encounter app's data
+>> corruption when using zstd algorithm? If so, let me check this issue.
+> 
+> Daeho reported:
+> 1. cp -a src_file comp_dir/dst_file (comp_dir is a directory for compression)
+> 2. sync comp_dir/dst_file
+> 3. echo 3 > /proc/sys/vm/drop_caches
+> 4. cat comp_dir/dst_file > dump (it returns I/O error depending on the file).
 
-Enable the stmpe811 touch screen on stm32429-disco board.
+ * ZSTD_endStream() to complete the flush. It returns the number of bytes left
+ * in the internal buffer and must be called until it returns 0.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- arch/arm/boot/dts/stm32f429-disco.dts | 47 +++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+It looks we need to check return value of ZSTD_endStream() to see whether
+dst buffer has enough space to store all compressed data.
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 30c0f67..fad1ec1 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -49,6 +49,8 @@
- #include "stm32f429.dtsi"
- #include "stm32f429-pinctrl.dtsi"
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "STMicroelectronics STM32F429i-DISCO board";
-@@ -127,3 +129,48 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	stmpe811@41 {
-+		compatible = "st,stmpe811";
-+		reg = <0x41>;
-+		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-parent = <&gpioa>;
-+		/* 3.25 MHz ADC clock speed */
-+		st,adc-freq = <1>;
-+		/* 12-bit ADC */
-+		st,mod-12b = <1>;
-+		/* internal ADC reference */
-+		st,ref-sel = <0>;
-+		/* ADC converstion time: 80 clocks */
-+		st,sample-time = <4>;
-+
-+		stmpe_touchscreen {
-+			compatible = "st,stmpe-ts";
-+			/* 8 sample average control */
-+			st,ave-ctrl = <3>;
-+			/* 7 length fractional part in z */
-+			st,fraction-z = <7>;
-+			/*
-+			 * 50 mA typical 80 mA max touchscreen drivers
-+			 * current limit value
-+			 */
-+			st,i-drive = <1>;
-+			/* 1 ms panel driver settling time */
-+			st,settling = <3>;
-+			/* 5 ms touch detect interrupt delay */
-+			st,touch-det-delay = <5>;
-+		};
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			/* forbid to use ADC channels 3-0 (touch) */
-+			st,norequest-mask = <0x0F>;
-+		};
-+	};
-+};
--- 
-2.7.4
+Thanks,
 
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>>>  	return 0;
+>>>>>  }
+>>>>>
+>>>>> @@ -330,7 +330,7 @@ static int zstd_compress_pages(struct compress_ctx *cc)
+>>>>>  	ZSTD_inBuffer inbuf;
+>>>>>  	ZSTD_outBuffer outbuf;
+>>>>>  	int src_size = cc->rlen;
+>>>>> -	int dst_size = src_size - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>>>>> +	int dst_size = cc->clen;
+>>>>>  	int ret;
+>>>>>
+>>>>>  	inbuf.pos = 0;
+>>>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-f2fs-devel mailing list
+>>> Linux-f2fs-devel@lists.sourceforge.net
+>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>> .
+>>>
+> .
+> 
