@@ -2,117 +2,132 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DA7C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80EFC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E982082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:34:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fh45KTMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8C1972082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEGWeq (ORCPT
+        id S1727030AbgEGWfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:34:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57416 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726531AbgEGWep (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:34:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588890884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YFxt0hAMAmZMhnnigW2On7zZSB0TMxbZAm7tsfbKgfA=;
-        b=Fh45KTMZ7E/w3pwNnI7aK0L7zP9uSP4YrRHpqQM8Q0JfSJwpvUPiuYRhZAZwhB3+epWwYQ
-        WirJY5aMxyc6/biPYEnPlp4u6Nt3Z7+PNRLry6CUqA/AVIFhtbX8dnpSKPdn4pPWydawXp
-        wIhzD5XgleItkziCemCOcRzBDHYO/Nk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-pXGr9zU4Nwa0r0PzW6Vb6A-1; Thu, 07 May 2020 18:34:42 -0400
-X-MC-Unique: pXGr9zU4Nwa0r0PzW6Vb6A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C59C107ACCA;
-        Thu,  7 May 2020 22:34:41 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E05A5C1B0;
-        Thu,  7 May 2020 22:34:38 +0000 (UTC)
-Date:   Thu, 7 May 2020 16:34:37 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, jgg@ziepe.ca
-Subject: Re: [PATCH v2 0/3] vfio-pci: Block user access to disabled device
- MMIO
-Message-ID: <20200507163437.77b4bf2e@x1.home>
-In-Reply-To: <20200507215908.GQ228260@xz-x1>
-References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
-        <20200507215908.GQ228260@xz-x1>
-Organization: Red Hat
+        Thu, 7 May 2020 18:35:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:61147 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgEGWfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 18:35:33 -0400
+IronPort-SDR: uLrvK/32LMeeZLllEX36hd+nNN30nUbg2AFE0wQOH3MV5sKGB6V6SdXgBr6KlOIErbZwjxL6na
+ EjeE1TP8jmYw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 15:35:33 -0700
+IronPort-SDR: +xmbftKEF8aQrQvCrAclLYWjWFXwZ7qWR5chILIOGlDwmGTD0U7BW5Eurdyhgh7lYe6DWvPb5/
+ vtchSM8fvDjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
+   d="scan'208";a="295880538"
+Received: from hhuan26-mobl1.amr.corp.intel.com ([10.255.72.181])
+  by fmsmga002.fm.intel.com with ESMTP; 07 May 2020 15:35:31 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To:     "Nathaniel McCallum" <npmccallum@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>
+Cc:     "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, "Neil Horman" <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        "Josh Triplett" <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, "David Rientjes" <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Patrick Uiterwijk" <puiterwijk@redhat.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+ <20200506221422.GK3329@linux.intel.com>
+ <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+ <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
+ <20200507193459.GA24519@linux.intel.com>
+Date:   Thu, 07 May 2020 17:35:31 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+From:   "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel Corp
+Message-ID: <op.0j9qdhziwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+In-Reply-To: <20200507193459.GA24519@linux.intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 17:59:08 -0400
-Peter Xu <peterx@redhat.com> wrote:
+On Thu, 07 May 2020 14:34:59 -0500, Sean Christopherson  
+<sean.j.christopherson@intel.com> wrote:
 
-> On Tue, May 05, 2020 at 03:54:36PM -0600, Alex Williamson wrote:
-> > v2:
-> > 
-> > Locking in 3/ is substantially changed to avoid the retry scenario
-> > within the fault handler, therefore a caller who does not allow retry
-> > will no longer receive a SIGBUS on contention.  IOMMU invalidations
-> > are still not included here, I expect that will be a future follow-on
-> > change as we're not fundamentally changing that issue in this series.
-> > The 'add to vma list only on fault' behavior is also still included
-> > here, per the discussion I think it's still a valid approach and has
-> > some advantages, particularly in a VM scenario where we potentially
-> > defer the mapping until the MMIO BAR is actually DMA mapped into the
-> > VM address space (or the guest driver actually accesses the device
-> > if that DMA mapping is eliminated at some point).  Further discussion
-> > and review appreciated.  Thanks,  
-> 
-> Hi, Alex,
-> 
-> I have a general question on the series.
-> 
-> IIUC this series tries to protect illegal vfio userspace writes to device MMIO
-> regions which may cause platform-level issues.  That makes perfect sense to me.
-> However what if the write comes from the devices' side?  E.g.:
-> 
->   - Device A maps MMIO region X
-> 
->   - Device B do VFIO_IOMMU_DMA_MAP on Device A's MMIO region X
->     (so X's MMIO PFNs are mapped in device B's IOMMU page table)
-> 
->   - Device A clears PCI_COMMAND_MEMORY (reset, etc.)
->     - this should zap all existing vmas that mapping region X, however device
->       B's IOMMU page table is not aware of this?
-> 
->   - Device B writes to MMIO region X of device A even if PCI_COMMAND_MEMORY
->     cleared on device A's PCI_COMMAND register
-> 
-> Could this happen?
+> On Thu, May 07, 2020 at 12:49:15PM -0400, Nathaniel McCallum wrote:
+>> On Thu, May 7, 2020 at 1:03 AM Haitao Huang
+>> <haitao.huang@linux.intel.com> wrote:
+>> >
+>> > On Wed, 06 May 2020 17:14:22 -0500, Sean Christopherson
+>> > <sean.j.christopherson@intel.com> wrote:
+>> >
+>> > > On Wed, May 06, 2020 at 05:42:42PM -0400, Nathaniel McCallum wrote:
+>> > >> Tested on Enarx. This requires a patch[0] for v29 support.
+>> > >>
+>> > >> Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
+>> > >>
+>> > >> However, we did uncover a small usability issue. See below.
+>> > >>
+>> > >> [0]:
+>> > >>  
+>> https://github.com/enarx/enarx/pull/507/commits/80da2352aba46aa7bc6b4d1fccf20fe1bda58662
+>> > >
+>> > > ...
+>> > >
+>> > >> > * Disallow mmap(PROT_NONE) from /dev/sgx. Any mapping (e.g.
+>> > >> anonymous) can
+>> > >> >   be used to reserve the address range. Now /dev/sgx supports  
+>> only
+>> > >> opaque
+>> > >> >   mappings to the (initialized) enclave data.
+>> > >>
+>> > >> The statement "Any mapping..." isn't actually true.
+>
+> Yeah, this definitely misleading.  I haven't looked at our most recent  
+> docs,
+> but I'm going to go out on a limb and assume we haven't documented the
+> preferred mechanism for carving out virtual memory for the enclave.  That
+> absolutely should be done.
+>
+>> > >> Enarx creates a large enclave (currently 64GiB). This worked when  
+>> we
+>> > >> created a file-backed mapping on /dev/sgx/enclave. However,  
+>> switching
+>> > >> to an anonymous mapping fails with ENOMEM. We suspect this is  
+>> because
+>> > >> the kernel attempts to allocate all the pages and zero them but  
+>> there
+>> > >> is insufficient RAM available. We currently work around this by
+>> > >> creating a shared mapping on /dev/zero.
+>> > >
+>> > > Hmm, the kernel shouldn't actually allocate physical pages unless  
+>> they're
+>> > > written.  I'll see if I can reproduce.
+>> > >
+>> >
+>> > For larger size mmap, I think it requires enabling vm overcommit mode  
+>> 1:
+>> > echo 1 | sudo tee /proc/sys/vm/overcommit_memory
+>
+> It shouldn't unless the initial mmap is "broken".  Not truly broken, but
+> broken in the sense that what Enarx is asking for is not actually what it
+> desires.
+>
+So I tried, this passes with mode 1 but fail with ENOMEM by default:
 
-Yes, this can happen and Jason has brought up variations on this
-scenario that are important to fix as well.  I've got some ideas, but
-the access in this series was the current priority.  There are also
-issues in the above scenario that if a platform considers a DMA write
-to an invalid IOMMU PTE and triggering an IOMMU fault to have the same
-severity as the write to disabled MMIO space we've prevented, then our
-hands are tied.  Thanks,
-
-Alex
-
+mmap(NULL, 0x100000000000UL, PROT_NONE, MAP_SHARED| MAP_ANONYMOUS, -1, 0);
