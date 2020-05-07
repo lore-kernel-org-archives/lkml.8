@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7205C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F6AC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A54424957
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9783524957
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877357;
-	bh=3zqkOg25IOb4epiOZLlDxGqlvC/e+9jul0mU4G1ZBWg=;
+	s=default; t=1588877363;
+	bh=gzQdXGdukWQXxGMFIs8FZ5L8aSEjT+BWpXNTGia59qA=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kyz+L9rkWP9TlfcGFGqRdJbLFC/5GCTX5/i2kY5C6A3Repijb8EIXAYgJDjq+yGu4
-	 b+wFzpsW+AXOLDkKkMwa924zGkB8fkk9o0yYoBP9e03ThUM1pqD7G7edggO3PUOszy
-	 YkIPBvfpsQBLo0+YlASI9OIJQ3kOVk0yTvuLcrBw=
+	b=dw5E9xmW9jMM4zkWaO5IHNmJ7hzyzGsQODcSJp8XU7Gb62emBwM1bF8YNhA86/aMo
+	 D4+1hKRadxxO0dhyQr9T/pSHfdpTmwWnwZyHxJIWzkBZlcDuDH/5q+4bn1GZrU8Scc
+	 d3jbEbO0NbjuBdk3aaVyNKppe4j70HmZXKLZ+B+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgEGStQ (ORCPT
+        id S1728690AbgEGStX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgEGStQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:49:16 -0400
+        id S1728398AbgEGStV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:49:21 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 456A724955;
-        Thu,  7 May 2020 18:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 794BA24957;
+        Thu,  7 May 2020 18:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877355;
-        bh=3zqkOg25IOb4epiOZLlDxGqlvC/e+9jul0mU4G1ZBWg=;
+        s=default; t=1588877360;
+        bh=gzQdXGdukWQXxGMFIs8FZ5L8aSEjT+BWpXNTGia59qA=;
         h=Date:From:To:Cc:Subject:From;
-        b=pDveR0FQ+qhDTp7BEwzmuNKuZ64tFbpTfedYqemjhpWjTVws9B5xp5nw6XobhKWIz
-         9wVzylCa7ldLNXFTWxpqVaeAte4AvYrLll9Hk8dZ3T+TXW/cHeloK6kTwEJPK1W3Hb
-         TOqRjRYKMElxAUGVJ+sLVx4wuVoR0O+T8vLmCLH4=
-Date:   Thu, 7 May 2020 13:53:42 -0500
+        b=xjBiCc6EEUnzfNyl22wFSpmSotSdrHIWWrGXbKuKnbMvX3IGkeuHP+oZxsrb9iyQV
+         cIyjpWD5dQl+CnXrDr2j4l+J9m/7jBrx7iSl/HPWLhHjPQNeD+q/xQY5qG9bNDzJqo
+         7pbCLbib4HAr0lR7tYyMir3AQr4M9Nz+r4fFa8F8=
+Date:   Thu, 7 May 2020 13:53:47 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/rdmavt: Replace zero-length array with flexible-array
-Message-ID: <20200507185342.GA14476@embeddedor>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: Replace zero-length array with flexible-array
+Message-ID: <20200507185347.GA14499@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/rdma/rdmavt_qp.h |    2 +-
+ drivers/input/keyboard/applespi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/rdma/rdmavt_qp.h b/include/rdma/rdmavt_qp.h
-index 5fc10108703a..982bf2340840 100644
---- a/include/rdma/rdmavt_qp.h
-+++ b/include/rdma/rdmavt_qp.h
-@@ -440,7 +440,7 @@ struct rvt_qp {
- 	/*
- 	 * This sge list MUST be last. Do not add anything below here.
- 	 */
--	struct rvt_sge r_sg_list[0] /* verified SGEs */
-+	struct rvt_sge r_sg_list[] /* verified SGEs */
- 		____cacheline_aligned_in_smp;
+diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+index d38398526965..14362ebab9a9 100644
+--- a/drivers/input/keyboard/applespi.c
++++ b/drivers/input/keyboard/applespi.c
+@@ -186,7 +186,7 @@ struct touchpad_protocol {
+ 	u8			number_of_fingers;
+ 	u8			clicked2;
+ 	u8			unknown3[16];
+-	struct tp_finger	fingers[0];
++	struct tp_finger	fingers[];
  };
  
+ /**
 
