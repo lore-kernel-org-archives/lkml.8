@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC7C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8BFC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A93208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D62F21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879044;
-	bh=jCoTy5MqBatp+N4A2hyv+CcwMbeePmBG8iZQJXgFJyk=;
+	s=default; t=1588879049;
+	bh=NI1NNHNQxAj31G0gMyaFy0gKg4JKQOVR7RH2UvV+/x4=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=aAe5j4qm8uuRpUeOvJDLG3qFap25V4SkVB81VLYDt8FI1yxHDuhthxh2sZ4yUa4/r
-	 2/HvMhQBO5lF+zY0tx5g3ZzYwVddo0tBXWzKh8ELqSFGW+nDD1nZnnKxHjEAOeZ3Cn
-	 WeWz4/8O7y4VATsjoECEffESSgafe8bOBkALqhiU=
+	b=nQiP5vseiPsMta+M6dIu3c4rviLyKI5XMLMQTeudrbummhwcsbR5Zw4yzNNoP4EEB
+	 otjyQ+aoY9stpa6xyp8yRw+8ksK+i/Q1JGXzu913jcRfc6zx44BGw9aaMIwmeeg9ET
+	 jfZyV9Bf3mBfb/mhtADXpyosHz9Srpdleoq10VRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgEGTRW (ORCPT
+        id S1728486AbgEGTR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgEGTRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:17:21 -0400
+        id S1726367AbgEGTR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:17:27 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCBD208E4;
-        Thu,  7 May 2020 19:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D94208E4;
+        Thu,  7 May 2020 19:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879041;
-        bh=jCoTy5MqBatp+N4A2hyv+CcwMbeePmBG8iZQJXgFJyk=;
+        s=default; t=1588879046;
+        bh=NI1NNHNQxAj31G0gMyaFy0gKg4JKQOVR7RH2UvV+/x4=;
         h=Date:From:To:Cc:Subject:From;
-        b=Si6p6NGivshUDV6cBs2VzvsOg7asKsaSfn/Wf4UUkPHAoSp9Ku+0Rs0uUbBBoFFYt
-         cyBxz+gNCsMd6ZDc8ALgWrupc7wZweRCZTHD3k7Uu4aYBDsjLaba/FV0nzglcnl63j
-         7EuWj4JiyJn6xmqXk/YCO4JKUxuIj1trtIjiHo6s=
-Date:   Thu, 7 May 2020 14:21:47 -0500
+        b=jl48oLR2VeoTo602PGIg4UgQyYWFUhkSiAF2YGCFd3+6VJ8hDms5jE1FomSdDJs2R
+         VtH30SDdEr+tCmYj0FfNpdmkjnJ1xE2d3fmK0k5t8mgIF/QXuz0Q5t/lC4eBf6GK3Z
+         mRTkotziX+9eCoKp8tY7+6as1FgI4TJm0wkjubtY=
+Date:   Thu, 7 May 2020 14:21:52 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: libsas: Replace zero-length array with flexible-array
-Message-ID: <20200507192147.GA16206@embeddedor>
+To:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sctp: Replace zero-length array with flexible-array
+Message-ID: <20200507192152.GA16230@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,112 +93,163 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/aic94xx/aic94xx_sds.c |   14 +++++++-------
- include/scsi/sas.h                 |    8 ++++----
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ include/linux/sctp.h |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/aic94xx/aic94xx_sds.c b/drivers/scsi/aic94xx/aic94xx_sds.c
-index 3ddc8852bc32..105adba559a1 100644
---- a/drivers/scsi/aic94xx/aic94xx_sds.c
-+++ b/drivers/scsi/aic94xx/aic94xx_sds.c
-@@ -406,7 +406,7 @@ struct asd_manuf_sec {
- 	u8    sas_addr[SAS_ADDR_SIZE];
- 	u8    pcba_sn[ASD_PCBA_SN_SIZE];
- 	/* Here start the other segments */
--	u8    linked_list[0];
-+	u8    linked_list[];
- } __attribute__ ((packed));
+diff --git a/include/linux/sctp.h b/include/linux/sctp.h
+index 8ccd82105de8..76731230bbc5 100644
+--- a/include/linux/sctp.h
++++ b/include/linux/sctp.h
+@@ -221,7 +221,7 @@ struct sctp_datahdr {
+ 	__be16 stream;
+ 	__be16 ssn;
+ 	__u32 ppid;
+-	__u8  payload[0];
++	__u8  payload[];
+ };
  
- struct asd_manuf_phy_desc {
-@@ -449,7 +449,7 @@ struct asd_ms_sb_desc {
- 	u8    type;
- 	u8    node_desc_index;
- 	u8    conn_desc_index;
--	u8    _recvd[0];
-+	u8    _recvd[];
- } __attribute__ ((packed));
+ struct sctp_data_chunk {
+@@ -269,7 +269,7 @@ struct sctp_inithdr {
+ 	__be16 num_outbound_streams;
+ 	__be16 num_inbound_streams;
+ 	__be32 initial_tsn;
+-	__u8  params[0];
++	__u8  params[];
+ };
  
- #if 0
-@@ -478,12 +478,12 @@ struct asd_ms_conn_desc {
- 	u8    size_sideband_desc;
- 	u32   _resvd;
- 	u8    name[16];
--	struct asd_ms_sb_desc sb_desc[0];
-+	struct asd_ms_sb_desc sb_desc[];
- } __attribute__ ((packed));
+ struct sctp_init_chunk {
+@@ -299,13 +299,13 @@ struct sctp_cookie_preserve_param {
+ /* Section 3.3.2.1 Host Name Address (11) */
+ struct sctp_hostname_param {
+ 	struct sctp_paramhdr param_hdr;
+-	uint8_t hostname[0];
++	uint8_t hostname[];
+ };
  
- struct asd_nd_phy_desc {
- 	u8    vp_attch_type;
--	u8    attch_specific[0];
-+	u8    attch_specific[];
- } __attribute__ ((packed));
+ /* Section 3.3.2.1 Supported Address Types (12) */
+ struct sctp_supported_addrs_param {
+ 	struct sctp_paramhdr param_hdr;
+-	__be16 types[0];
++	__be16 types[];
+ };
  
- #if 0
-@@ -503,7 +503,7 @@ struct asd_ms_node_desc {
- 	u8    size_phy_desc;
- 	u8    _resvd;
- 	u8    name[16];
--	struct asd_nd_phy_desc phy_desc[0];
-+	struct asd_nd_phy_desc phy_desc[];
- } __attribute__ ((packed));
+ /* ADDIP Section 3.2.6 Adaptation Layer Indication */
+@@ -317,25 +317,25 @@ struct sctp_adaptation_ind_param {
+ /* ADDIP Section 4.2.7 Supported Extensions Parameter */
+ struct sctp_supported_ext_param {
+ 	struct sctp_paramhdr param_hdr;
+-	__u8 chunks[0];
++	__u8 chunks[];
+ };
  
- struct asd_ms_conn_map {
-@@ -518,7 +518,7 @@ struct asd_ms_conn_map {
- 	u8    usage_model_id;
- 	u32   _resvd;
- 	struct asd_ms_conn_desc conn_desc[0];
--	struct asd_ms_node_desc node_desc[0];
-+	struct asd_ms_node_desc node_desc[];
- } __attribute__ ((packed));
+ /* AUTH Section 3.1 Random */
+ struct sctp_random_param {
+ 	struct sctp_paramhdr param_hdr;
+-	__u8 random_val[0];
++	__u8 random_val[];
+ };
  
- struct asd_ctrla_phy_entry {
-@@ -542,7 +542,7 @@ struct asd_ll_el {
- 	u8   id0;
- 	u8   id1;
- 	__le16  next;
--	u8   something_here[0];
-+	u8   something_here[];
- } __attribute__ ((packed));
+ /* AUTH Section 3.2 Chunk List */
+ struct sctp_chunks_param {
+ 	struct sctp_paramhdr param_hdr;
+-	__u8 chunks[0];
++	__u8 chunks[];
+ };
  
- static int asd_poll_flash(struct asd_ha_struct *asd_ha)
-diff --git a/include/scsi/sas.h b/include/scsi/sas.h
-index a5d8ae49198c..4726c1bbec65 100644
---- a/include/scsi/sas.h
-+++ b/include/scsi/sas.h
-@@ -324,7 +324,7 @@ struct ssp_response_iu {
- 	__be32 response_data_len;
+ /* AUTH Section 3.3 HMAC Algorithm */
+ struct sctp_hmac_algo_param {
+ 	struct sctp_paramhdr param_hdr;
+-	__be16 hmac_ids[0];
++	__be16 hmac_ids[];
+ };
  
- 	u8     resp_data[0];
--	u8     sense_data[0];
-+	u8     sense_data[];
- } __attribute__ ((packed));
+ /* RFC 2960.  Section 3.3.3 Initiation Acknowledgement (INIT ACK) (2):
+@@ -350,7 +350,7 @@ struct sctp_initack_chunk {
+ /* Section 3.3.3.1 State Cookie (7) */
+ struct sctp_cookie_param {
+ 	struct sctp_paramhdr p;
+-	__u8 body[0];
++	__u8 body[];
+ };
  
- struct ssp_command_iu {
-@@ -346,7 +346,7 @@ struct ssp_command_iu {
- 	u8    add_cdb_len:6;
+ /* Section 3.3.3.1 Unrecognized Parameters (8) */
+@@ -384,7 +384,7 @@ struct sctp_sackhdr {
+ 	__be32 a_rwnd;
+ 	__be16 num_gap_ack_blocks;
+ 	__be16 num_dup_tsns;
+-	union sctp_sack_variable variable[0];
++	union sctp_sack_variable variable[];
+ };
  
- 	u8    cdb[16];
--	u8    add_cdb[0];
-+	u8    add_cdb[];
- } __attribute__ ((packed));
+ struct sctp_sack_chunk {
+@@ -436,7 +436,7 @@ struct sctp_shutdown_chunk {
+ struct sctp_errhdr {
+ 	__be16 cause;
+ 	__be16 length;
+-	__u8  variable[0];
++	__u8  variable[];
+ };
  
- struct xfer_rdy_iu {
-@@ -555,7 +555,7 @@ struct ssp_response_iu {
- 	__be32 response_data_len;
+ struct sctp_operr_chunk {
+@@ -594,7 +594,7 @@ struct sctp_fwdtsn_skip {
  
- 	u8     resp_data[0];
--	u8     sense_data[0];
-+	u8     sense_data[];
- } __attribute__ ((packed));
+ struct sctp_fwdtsn_hdr {
+ 	__be32 new_cum_tsn;
+-	struct sctp_fwdtsn_skip skip[0];
++	struct sctp_fwdtsn_skip skip[];
+ };
  
- struct ssp_command_iu {
-@@ -577,7 +577,7 @@ struct ssp_command_iu {
- 	u8    _r_c:2;
+ struct sctp_fwdtsn_chunk {
+@@ -611,7 +611,7 @@ struct sctp_ifwdtsn_skip {
  
- 	u8    cdb[16];
--	u8    add_cdb[0];
-+	u8    add_cdb[];
- } __attribute__ ((packed));
+ struct sctp_ifwdtsn_hdr {
+ 	__be32 new_cum_tsn;
+-	struct sctp_ifwdtsn_skip skip[0];
++	struct sctp_ifwdtsn_skip skip[];
+ };
  
- struct xfer_rdy_iu {
+ struct sctp_ifwdtsn_chunk {
+@@ -658,7 +658,7 @@ struct sctp_addip_param {
+ 
+ struct sctp_addiphdr {
+ 	__be32	serial;
+-	__u8	params[0];
++	__u8	params[];
+ };
+ 
+ struct sctp_addip_chunk {
+@@ -718,7 +718,7 @@ struct sctp_addip_chunk {
+ struct sctp_authhdr {
+ 	__be16 shkey_id;
+ 	__be16 hmac_id;
+-	__u8   hmac[0];
++	__u8   hmac[];
+ };
+ 
+ struct sctp_auth_chunk {
+@@ -733,7 +733,7 @@ struct sctp_infox {
+ 
+ struct sctp_reconf_chunk {
+ 	struct sctp_chunkhdr chunk_hdr;
+-	__u8 params[0];
++	__u8 params[];
+ };
+ 
+ struct sctp_strreset_outreq {
+@@ -741,13 +741,13 @@ struct sctp_strreset_outreq {
+ 	__be32 request_seq;
+ 	__be32 response_seq;
+ 	__be32 send_reset_at_tsn;
+-	__be16 list_of_streams[0];
++	__be16 list_of_streams[];
+ };
+ 
+ struct sctp_strreset_inreq {
+ 	struct sctp_paramhdr param_hdr;
+ 	__be32 request_seq;
+-	__be16 list_of_streams[0];
++	__be16 list_of_streams[];
+ };
+ 
+ struct sctp_strreset_tsnreq {
 
