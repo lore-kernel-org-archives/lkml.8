@@ -2,180 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A512C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7291AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B62208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879492;
-	bh=wW6HapZyPKcAS2pniJhuefRACI9qGnuvgtx2jsOUUYE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UjdnoBDlwpBOXVbokh9upE6i5BGsiqTXAaLJVwpuVXLjpc4M/3ijf2uUljssTZris
-	 TbnwySnYCtQNE2q2p8ON9F+nrAHoaPh0CZX2US9Kj6KGq4aEdIlyXTkCNJZzf1N8eo
-	 puh931RhkbCtIwif04B1GxiuC9zvMgNj9JKvRlhA=
+	by mail.kernel.org (Postfix) with ESMTP id 4AA5C208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oaHQJr7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgEGTYv (ORCPT
+        id S1728229AbgEGTZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:24:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgEGTYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:24:50 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+        Thu, 7 May 2020 15:25:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33630 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727837AbgEGTZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:25:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588879504; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Ix9XkAMYCQsp/8JQnx4zfbI/X7x9n8NFh7hLnjbOM8Q=; b=oaHQJr7Fnhpn9axu6zzRngnCgmBwXIognsjP3JrVGDkv1ICOlS/BI0gmQXJcFfLql1KN8lQZ
+ wHtW6LW+az3KLmPci+vh0cATQ+M7JX8ZDCk8xvfE1jZDvVhAo5D8SCU+4xmHxLtLeNeYviGo
+ U0nUq0jDfVK/X6gWCEbGdJWuN98=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb4608e.7f318b7827d8-smtp-out-n04;
+ Thu, 07 May 2020 19:25:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1F638C433D2; Thu,  7 May 2020 19:25:01 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C705E208D6;
-        Thu,  7 May 2020 19:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879489;
-        bh=wW6HapZyPKcAS2pniJhuefRACI9qGnuvgtx2jsOUUYE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tVFkrN62oIpbiYkxCjb/8By3qy2iMEIOcK+pWpF803xbdCZK8zJRavcXuPz8RhnBz
-         Cfm9DLoGHTPTo6WudSn26XaNslq6BVQbLrY2I1T6t3/67Jm1OKkxaPCfBpmJjMaahS
-         ONLGUPtYJwACf5Xt69gfZKdBghnpVBXq2Jk7rMOE=
-Received: by mail-io1-f49.google.com with SMTP id 19so1709952ioz.10;
-        Thu, 07 May 2020 12:24:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaJA+0C+9YYiKQtzQOgB24RfwS3p71pXh28BCoeMa3d1J9mFswx
-        Ojlfq9HpstMYuj1Ej/DeN8N7FRdC2wyc9/kMMmg=
-X-Google-Smtp-Source: APiQypLRkklJ7aV3gPOvJS6Io4eaLQ9MNmNRgbveyH5ByIhA36D82P/M8hjRUyBis2HMj1IJCsrQAqmip8GynNzHFQg=
-X-Received: by 2002:a5d:8045:: with SMTP id b5mr15433368ior.16.1588879489201;
- Thu, 07 May 2020 12:24:49 -0700 (PDT)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 056A6C433BA;
+        Thu,  7 May 2020 19:24:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 056A6C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
+ flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200507185016.GA13883@embeddedor>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <1b3cda25-5f3a-5359-4bf7-d16a8364f545@codeaurora.org>
+Date:   Thu, 7 May 2020 13:24:57 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200507183332.6153-1-lszubowi@redhat.com>
-In-Reply-To: <20200507183332.6153-1-lszubowi@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 7 May 2020 21:24:37 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE-ozARWTkRhaG3h0H6-2B_B3hgqp+tR7j0Ved8j3i53w@mail.gmail.com>
-Message-ID: <CAMj1kXE-ozARWTkRhaG3h0H6-2B_B3hgqp+tR7j0Ved8j3i53w@mail.gmail.com>
-Subject: Re: [PATCH V3] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
-To:     Lenny Szubowicz <lszubowi@redhat.com>
-Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200507185016.GA13883@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 at 20:33, Lenny Szubowicz <lszubowi@redhat.com> wrote:
->
-> In allocate_e820(), call the EFI get_memory_map() service directly
-> instead of indirectly via efi_get_memory_map(). This avoids allocation
-> of a buffer and return of the full EFI memory map, which is not needed
-> here and would otherwise need to be freed.
->
-> Routine allocate_e820() only needs to know how many EFI memory
-> descriptors there are in the map to allocate an adequately sized
-> e820ext buffer, if it's needed. Note that since efi_get_memory_map()
-> returns a memory map buffer sized with extra headroom, allocate_e820()
-> now needs to explicitly factor that into the e820ext size calculation.
->
-> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
-> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-
-Thanks Lenny. I'll get this queued up.
-
-> --
-> v3:
->   - Move define of EFI_MMAP_NR_SLACK_SLOTS to efistub.h instead
->     of providing a helper function to get it.
->
-> v2:
->   - Instead of freeing the EFI memory map buffer allocated by
->     efi_get_memory_map(), avoid the allocation in the first place.
->
->   - Changed the title of the patch because the v1 title no longer
->     applies. v1 ref:
->     https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
-> --
+On 5/7/2020 12:50 PM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/firmware/efi/libstub/efistub.h  | 13 +++++++++++++
->  drivers/firmware/efi/libstub/mem.c      |  2 --
->  drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
->  3 files changed, 21 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 67d26949fd26..62943992f02f 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -92,6 +92,19 @@ extern __pure efi_system_table_t  *efi_system_table(void);
->  #define EFI_LOCATE_BY_REGISTER_NOTIFY          1
->  #define EFI_LOCATE_BY_PROTOCOL                 2
->
-> +/*
-> + * An efi_boot_memmap is used by efi_get_memory_map() to return the
-> + * EFI memory map in a dynamically allocated buffer.
-> + *
-> + * The buffer allocated for the EFI memory map includes extra room for
-> + * a minimum of EFI_MMAP_NR_SLACK_SLOTS additional EFI memory descriptors.
-> + * This facilitates the reuse of the EFI memory map buffer when a second
-> + * call to ExitBootServices() is needed because of intervening changes to
-> + * the EFI memory map. Other related structures, e.g. x86 e820ext, need
-> + * to factor in this headroom requirement as well.
-> + */
-> +#define EFI_MMAP_NR_SLACK_SLOTS        8
-> +
->  struct efi_boot_memmap {
->         efi_memory_desc_t       **map;
->         unsigned long           *map_size;
-> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> index 869a79c8946f..09f4fa01914e 100644
-> --- a/drivers/firmware/efi/libstub/mem.c
-> +++ b/drivers/firmware/efi/libstub/mem.c
-> @@ -5,8 +5,6 @@
->
->  #include "efistub.h"
->
-> -#define EFI_MMAP_NR_SLACK_SLOTS        8
-> -
->  static inline bool mmap_has_headroom(unsigned long buff_size,
->                                      unsigned long map_size,
->                                      unsigned long desc_size)
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 05ccb229fb45..a0aeb1cda8e3 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
->                                   struct setup_data **e820ext,
->                                   u32 *e820ext_size)
->  {
-> -       unsigned long map_size, desc_size, buff_size;
-> -       struct efi_boot_memmap boot_map;
-> -       efi_memory_desc_t *map;
-> +       unsigned long map_size, desc_size;
->         efi_status_t status;
->         __u32 nr_desc;
->
-> -       boot_map.map            = &map;
-> -       boot_map.map_size       = &map_size;
-> -       boot_map.desc_size      = &desc_size;
-> -       boot_map.desc_ver       = NULL;
-> -       boot_map.key_ptr        = NULL;
-> -       boot_map.buff_size      = &buff_size;
-> +       /* Only need the size of the mem map and size of each mem descriptor */
-> +       map_size = 0;
-> +       status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
-> +                            &desc_size, NULL);
-> +       if (status != EFI_BUFFER_TOO_SMALL)
-> +               return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
->
-> -       status = efi_get_memory_map(&boot_map);
-> -       if (status != EFI_SUCCESS)
-> -               return status;
-> -
-> -       nr_desc = buff_size / desc_size;
-> +       nr_desc = map_size / desc_size + EFI_MMAP_NR_SLACK_SLOTS;
->
->         if (nr_desc > ARRAY_SIZE(params->e820_table)) {
->                 u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
-> --
-> 2.18.4
->
+>   drivers/dma/qcom/bam_dma.c         |    2 +-
+>   drivers/firmware/qcom_scm-legacy.c |    2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+
+Shouldn't these two files be two different patches?
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
