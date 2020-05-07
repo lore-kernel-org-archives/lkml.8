@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F6AC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBFFC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9783524957
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA5124957
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877363;
-	bh=gzQdXGdukWQXxGMFIs8FZ5L8aSEjT+BWpXNTGia59qA=;
+	s=default; t=1588877367;
+	bh=pk7QrAL3NDjeA4BB8U07kjEUUtfctxSRQ394nM277v4=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dw5E9xmW9jMM4zkWaO5IHNmJ7hzyzGsQODcSJp8XU7Gb62emBwM1bF8YNhA86/aMo
-	 D4+1hKRadxxO0dhyQr9T/pSHfdpTmwWnwZyHxJIWzkBZlcDuDH/5q+4bn1GZrU8Scc
-	 d3jbEbO0NbjuBdk3aaVyNKppe4j70HmZXKLZ+B+U=
+	b=IFRAfth14x1kcGEKiUphaqsr72uHWwRWQeTiWmnMV5chaSN5t9jqF5zQkW/Qc6cqA
+	 A88o/o3w/Gf/+4wpnQYFR+86w2aU+6COQyT79+6uITFn9Tbe7Ahad4NrBfVQs0u+hI
+	 NB29UuupFbSa9hQ/IuMAokeW99kNMBQccxiq85mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgEGStX (ORCPT
+        id S1728697AbgEGSt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgEGStV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:49:21 -0400
+        id S1728097AbgEGStZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:49:25 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794BA24957;
-        Thu,  7 May 2020 18:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0943124957;
+        Thu,  7 May 2020 18:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877360;
-        bh=gzQdXGdukWQXxGMFIs8FZ5L8aSEjT+BWpXNTGia59qA=;
+        s=default; t=1588877365;
+        bh=pk7QrAL3NDjeA4BB8U07kjEUUtfctxSRQ394nM277v4=;
         h=Date:From:To:Cc:Subject:From;
-        b=xjBiCc6EEUnzfNyl22wFSpmSotSdrHIWWrGXbKuKnbMvX3IGkeuHP+oZxsrb9iyQV
-         cIyjpWD5dQl+CnXrDr2j4l+J9m/7jBrx7iSl/HPWLhHjPQNeD+q/xQY5qG9bNDzJqo
-         7pbCLbib4HAr0lR7tYyMir3AQr4M9Nz+r4fFa8F8=
-Date:   Thu, 7 May 2020 13:53:47 -0500
+        b=ewFUKtOokui8KqvgXxgQbs1XcpdPapWxul2Zw+SPUBSPM2TvMrwTGaDW6+kek18ka
+         khLJOC525uEUctcdf8bKfyhasQTJbEx3L70DCvIEMkBkdyc+QyCzuhl45XzC9igQvQ
+         VnELWJfggr5xFYGVJEg14g8TdtP6OPk9dbZ4UX2E=
+Date:   Thu, 7 May 2020 13:53:51 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: Replace zero-length array with flexible-array
-Message-ID: <20200507185347.GA14499@embeddedor>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ima: Replace zero-length array with flexible-array
+Message-ID: <20200507185351.GA14519@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +92,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/input/keyboard/applespi.c |    2 +-
+ security/integrity/ima/ima.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-index d38398526965..14362ebab9a9 100644
---- a/drivers/input/keyboard/applespi.c
-+++ b/drivers/input/keyboard/applespi.c
-@@ -186,7 +186,7 @@ struct touchpad_protocol {
- 	u8			number_of_fingers;
- 	u8			clicked2;
- 	u8			unknown3[16];
--	struct tp_finger	fingers[0];
-+	struct tp_finger	fingers[];
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 64317d95363e..da4246ee7e35 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -95,7 +95,7 @@ struct ima_template_entry {
+ 	u8 digest[TPM_DIGEST_SIZE];	/* sha1 or md5 measurement hash */
+ 	struct ima_template_desc *template_desc; /* template descriptor */
+ 	u32 template_data_len;
+-	struct ima_field_data template_data[0];	/* template related data */
++	struct ima_field_data template_data[];	/* template related data */
  };
  
- /**
+ struct ima_queue_entry {
 
