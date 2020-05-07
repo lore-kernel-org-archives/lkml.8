@@ -2,146 +2,90 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1983FC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0826C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB6AE20736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ohl5ibJI"
+	by mail.kernel.org (Postfix) with ESMTP id D266020736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgEGLGE (ORCPT
+        id S1726612AbgEGLHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:06:04 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50345 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726367AbgEGLGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:06:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588849563; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KUkv11UrsJT4bCOAv4o9yBeyPANsHJVXo3wLqp+3x3w=;
- b=ohl5ibJIZrusXwdN3xIjxiqErLs9AMzKuowN8jxzZQPfnOpQ/7ABO+4d0Y7gdtDWJi0B9v/b
- X3S7bqOWuBZBFeOQbpn2tXishsRnQzN7Nq1AT6YsONja2XlhhVJCf1n5gODoi5UlwoBnrFxC
- 0v/B/GCZP1cItsKO9qw5LISJ7dc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb3eb8a.7f4612d8bed8-smtp-out-n04;
- Thu, 07 May 2020 11:05:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ABF22C433D2; Thu,  7 May 2020 11:05:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D6E4C433F2;
-        Thu,  7 May 2020 11:05:44 +0000 (UTC)
+        Thu, 7 May 2020 07:07:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3887 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726069AbgEGLHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:07:13 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4E1542626C23AAB9DE86;
+        Thu,  7 May 2020 19:07:11 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
+ 19:07:03 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
+        <bsegall@google.com>, <mgorman@suse.de>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] sched/fair: Return true,false in voluntary_active_balance()
+Date:   Thu, 7 May 2020 19:06:25 +0800
+Message-ID: <20200507110625.37254-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 07 May 2020 16:35:44 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more
- informative
-In-Reply-To: <2f3cd963-dffe-290b-02bf-819687713738@arm.com>
-References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
- <CAD=FV=U0Hhae3D1-P8kbcZafHeuqng11BNAbOb2YWPx+M7X5Gw@mail.gmail.com>
- <0b5098c28360d018f390a97155b9776c@codeaurora.org>
- <2f3cd963-dffe-290b-02bf-819687713738@arm.com>
-Message-ID: <7c3fd8c1d5b26ac277b8729d59531474@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-07 16:03, Robin Murphy wrote:
-> On 2020-05-07 11:04 am, Sai Prakash Ranjan wrote:
->> Hi,
->> 
->> On 2020-05-07 05:40, Doug Anderson wrote:
->>> Hi,
->>> 
->>> On Thu, Apr 23, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> 
->>> wrote:
->>>> 
->>>> Hi,
->>>> 
->>>> On Thu, Apr 23, 2020 at 2:55 AM Sai Prakash Ranjan
->>>> <saiprakash.ranjan@codeaurora.org> wrote:
->>>> >
->>>> > Currently on reboot/shutdown, the following messages are
->>>> > displayed on the console as error messages before the
->>>> > system reboots/shutdown as part of remove callback.
->>>> >
->>>> > On SC7180:
->>>> >
->>>> >   arm-smmu 15000000.iommu: removing device with active domains!
->>>> >   arm-smmu 5040000.iommu: removing device with active domains!
->>>> >
->>>> > Make this error message more informative and less scary.
->>>> >
->>>> > Reported-by: Douglas Anderson <dianders@chromium.org>
->>>> > Suggested-by: Robin Murphy <robin.murphy@arm.com>
->>>> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>>> > ---
->>>> >  drivers/iommu/arm-smmu.c | 2 +-
->>>> >  1 file changed, 1 insertion(+), 1 deletion(-)
->>>> 
->>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->>> 
->>> Is this patch waiting on anything in particular now?  Do we need
->>> reviews from Robin and/or Will?
->>> 
->> 
->> Waiting for their reviews as they are the maintainers/reviewers :)
-> 
-> Sorry, this did register at the time, I just felt that it's a bit
-> redundant to give a review tag to say "yes, this is exactly what I
-> suggested" :)
-> 
-> That said, I do wish I hadn't forgotten about the dev_notice message
-> level, but I think that lies over in the conceptual purity corner
-> rather than making any practical difference, so I'm still OK with the
-> patch as-is. Will?
-> 
+Fix the following coccicheck warning:
 
-I can change to dev_notice if you have strong preference for that.
-I chose dev_info since we see the messages on every reboot and that 
-makes
-it more informational than something to notice everytime.
+kernel/sched/fair.c:9375:9-10: WARNING: return of 0/1 in function
+'voluntary_active_balance' with return type bool
 
-> 
-> p.s. whoever has this entry in their address book for the IOMMU list 
-> (Doug?):
-> 
-> "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-> Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
-> 
-> it really messes up Thunderbird's ability to generate working headers
-> for a reply ;)
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ kernel/sched/fair.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Not me ;)
-
-Thanks,
-Sai
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b3bb4d6e49c3..e8390106ada4 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9373,7 +9373,7 @@ voluntary_active_balance(struct lb_env *env)
+ 	struct sched_domain *sd = env->sd;
+ 
+ 	if (asym_active_balance(env))
+-		return 1;
++		return true;
+ 
+ 	/*
+ 	 * The dst_cpu is idle and the src_cpu CPU has only 1 CFS task.
+@@ -9385,13 +9385,13 @@ voluntary_active_balance(struct lb_env *env)
+ 	    (env->src_rq->cfs.h_nr_running == 1)) {
+ 		if ((check_cpu_capacity(env->src_rq, sd)) &&
+ 		    (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
+-			return 1;
++			return true;
+ 	}
+ 
+ 	if (env->migration_type == migrate_misfit)
+-		return 1;
++		return true;
+ 
+-	return 0;
++	return false;
+ }
+ 
+ static int need_active_balance(struct lb_env *env)
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.1
+
