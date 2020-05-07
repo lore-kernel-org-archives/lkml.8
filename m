@@ -2,214 +2,73 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E15C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE572C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6BE120725
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJunktMQ"
+	by mail.kernel.org (Postfix) with ESMTP id C437820735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgEGWGa (ORCPT
+        id S1727104AbgEGWGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:06:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59672 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726926AbgEGWG3 (ORCPT
+        Thu, 7 May 2020 18:06:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44227 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgEGWGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:06:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588889186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=O0zq6BKZdqRzSQ4IajAdIW2yn8DScQjo8LRrUKBrr9w=;
-        b=hJunktMQvyJuk7L9myiH5hLF3AMUM65X+1n/ANeBx3VV9O9f5JO+4H+6lZZFUZFwU2BLFr
-        XYqI1KpdHXzgoY8zI+fnyXD9fJqAhwLTqPu8aeC7wf1ObhjcN0hceO0O8GzQF/oiSCEqd0
-        v4q6f+s8YoIXNAAicpl0ajR0Zz5KnT0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-N6yridzlO2exTfgZLy4BXQ-1; Thu, 07 May 2020 18:06:22 -0400
-X-MC-Unique: N6yridzlO2exTfgZLy4BXQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B490C800688;
-        Thu,  7 May 2020 22:06:19 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B81C5D9C5;
-        Thu,  7 May 2020 22:06:09 +0000 (UTC)
-Date:   Thu, 7 May 2020 18:06:06 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Tso Ted <tytso@mit.edu>, Adrian Bunk <bunk@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Jeff Mahoney <jeffm@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Jessica Yu <jeyu@suse.de>, Takashi Iwai <tiwai@suse.de>,
-        Ann Davis <AnDavis@suse.com>,
-        Richard Palethorpe <rpalethorpe@suse.de>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200507220606.GK205881@optiplex-lnx>
-References: <20200507180631.308441-1-aquini@redhat.com>
- <20200507182257.GX11244@42.do-not-panic.com>
- <20200507184307.GF205881@optiplex-lnx>
- <20200507184705.GG205881@optiplex-lnx>
- <20200507203340.GZ11244@42.do-not-panic.com>
+        Thu, 7 May 2020 18:06:34 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jWodU-000300-A9; Thu, 07 May 2020 22:04:56 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: asus_wmi: remove redundant initialization of variable status
+Date:   Thu,  7 May 2020 23:04:55 +0100
+Message-Id: <20200507220455.66681-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507203340.GZ11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
-> On Thu, May 07, 2020 at 02:47:05PM -0400, Rafael Aquini wrote:
-> > On Thu, May 07, 2020 at 02:43:16PM -0400, Rafael Aquini wrote:
-> > > On Thu, May 07, 2020 at 06:22:57PM +0000, Luis Chamberlain wrote:
-> > > > On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
-> > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > > > index 8a176d8727a3..b80ab660d727 100644
-> > > > > --- a/kernel/sysctl.c
-> > > > > +++ b/kernel/sysctl.c
-> > > > > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
-> > > > >  		.extra1		= SYSCTL_ZERO,
-> > > > >  		.extra2		= SYSCTL_ONE,
-> > > > >  	},
-> > > > > +	{
-> > > > > +		.procname	= "panic_on_taint",
-> > > > > +		.data		= &panic_on_taint,
-> > > > > +		.maxlen		= sizeof(unsigned long),
-> > > > > +		.mode		= 0644,
-> > > > > +		.proc_handler	= proc_doulongvec_minmax,
-> > > > > +	},
-> > > > 
-> > > > You sent this out before I could reply to the other thread on v1.
-> > > > My thoughts on the min / max values, or lack here:
-> > > >                                                                                 
-> > > > Valid range doesn't mean "currently allowed defined" masks.                     
-> > > > 
-> > > > For example, if you expect to panic due to a taint, but a new taint type
-> > > > you want was not added on an older kernel you would be under a very
-> > > > *false* sense of security that your kernel may not have hit such a
-> > > > taint, but the reality of the situation was that the kernel didn't
-> > > > support that taint flag only added in future kernels.                           
-> > > > 
-> > > > You may need to define a new flag (MAX_TAINT) which should be the last
-> > > > value + 1, the allowed max values would be                                      
-> > > > 
-> > > > (2^MAX_TAINT)-1                                                                 
-> > > > 
-> > > > or                                                                              
-> > > > 
-> > > > (1<<MAX_TAINT)-1  
-> > > > 
-> > > > Since this is to *PANIC* I think we do want to test ranges and ensure
-> > > > only valid ones are allowed.
-> > > >
-> > > 
-> > > Ok. I'm thinking in:
-> > > 
-> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > index 8a176d8727a3..ee492431e7b0 100644
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -1217,6 +1217,15 @@ static struct ctl_table kern_table[] = {
-> > >                 .extra1         = SYSCTL_ZERO,
-> > >                 .extra2         = SYSCTL_ONE,
-> > >         },
-> > > +       {
-> > > +               .procname       = "panic_on_taint",
-> > > +               .data           = &panic_on_taint,
-> > > +               .maxlen         = sizeof(unsigned long),
-> > > +               .mode           = 0644,
-> > > +               .proc_handler   = proc_doulongvec_minmax,
-> > > +               .extra1         = SYSCTL_ZERO,
-> > > +               .extra2         = (1 << TAINT_FLAGS_COUNT << 1) - 1,
-> > 							^^^^^^^^
-> > Without that crap, obviously. Sorry. That was a screw up on my side,
-> > when copyin' and pasting.
-> 
-> I really think that the implications of this needs a bit further review,
-> hence the wider CCs.
-> 
-> Since this can trivially crash a system, I think we need to be careful
-> about this value. First, proc_doulongvec_minmax() will not suffice alone,
-> we'll *at least* want to check for capable(CAP_SYS_ADMIN)) as in
-> proc_taint().  Second first note that we *always* build proc_taint(), if
-> just CONFIG_PROC_SYSCTL is enabled. That has been the way since it got
-> merged via commit 34f5a39899f3f ("Add TAINT_USER and ability to set
-> taint flags from userspace") since v2.6.21. We need to evaluate if this
-> little *new* knob you are introducing merits its own kconfig tucked away
-> under debugging first. The ship has already sailed for proc_taint().
-> Anyone with CAP_SYS_ADMIN can taint.
-> 
-> The good thing is that proc_taint() added its own TAINT_USER, *but*, hey
-> it didn't use it. A panic-on-taint system would be able to tell if a
-> panic was caused by proc_taint() throught the stack trace only. 
-> If panic-on-taint proc was used *later* after a custom taint was set
-> or happened naturally, no panic would trigger since your panic-on-taint
-> check on your patch only happens on add_taint(). This means that for
-> those thinking about using this for QA or security purposes, the only
-> sensible *reliable* way to use panic-on-taint would be through cmdline,
-> from boot. Post-boot means to enable this would either need to check
-> existing taint flags, or we'd want to a way to check if this was not
-> added post boot. Also, a post-booteed system with panic-on-taint could
-> easily allow for reductions of the intended goal, thereby allowing one
-> to cheat.
-> 
-> I think a new TAINT_MODIFIED for use when proc_taint() is used is worth
-> considering. Ted? Even though 'M' is taken -- I think its silly to rely
-> on the character to be anything of meaning, once we run out of the
-> alphabet letters that will be the way anyway, unless we-redo this a bit.
-> Note we use value for when this is on and off, typically an empty space
-> when a taint is not seen.
-> 
-> The good thing is that proc_taint() only *increments* taint, it doesn't
-> remove taints.
-> 
-> Are we OK with panic-on-taint only with CAP_SYS_ADMIN?
-> 
-> I can see this building up to a "testing" solution to ensure / gaurantee
-> no bugs have happened during QA, but since QA would want the same binary
-> for production it is hard to see this enabled for QA but not production.
-> To resolve that last concern, if we do go with moving this under a
-> kconfig value, a simple cmdline append would address the concerns. Ie,
-> even if you enabled this mechanism through its kconfig you would not be
-> able to modify the panic-on-tain unless you passed a cmdline option.
-> 
-> Note that Vlastimil has some patches which are visible on linux-next,
-> but not yet merged on Linus' tree, which enable these params to be set
-> on the cmdline too now, so perhaps yet-another cmdline param is not
-> needed anymore.
-> 
-> I *think* that a cmdline route to enable this would likely remove the
-> need for the kernel config for this. But even with Vlastimil's work
-> merged, I think we'd want yet-another value to enable / disable this
-> feature. Do we need yet-another-taint flag to tell us that this feature
-> was enabled?
->
+From: Colin Ian King <colin.king@canonical.com>
 
-I guess it makes sense to get rid of the sysctl interface for
-proc_on_taint, and only keep it as a cmdline option. 
+The variable status is being initialized with a value that is never read
+and it is being updated later with a new value. The initialization is
+redundant and can be removed.
 
-But the real issue seems to be, regardless we go with a cmdline-only option
-or not, the ability of proc_taint() to set any arbitrary taint flag 
-other than just marking the kernel with TAINT_USER. 
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- Rafael
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index bb7c529d7d16..1909d728a536 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -309,7 +309,7 @@ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	struct acpi_buffer input;
+ 	u64 phys_addr;
+ 	u32 retval;
+-	u32 status = -1;
++	u32 status;
+ 
+ 	/*
+ 	 * Copy to dma capable address otherwise memory corruption occurs as
+-- 
+2.25.1
 
