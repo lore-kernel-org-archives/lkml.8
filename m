@@ -2,114 +2,113 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E43C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E83DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0AD208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfblUmOZ"
+	by mail.kernel.org (Postfix) with ESMTP id E4632208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgEGTmq (ORCPT
+        id S1728354AbgEGTn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGTmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:42:46 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCACC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:42:45 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id z8so7847221wrw.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gckpwq9UyhdYM7Snuci6fAgZatJZQE5/xPkNXtAqPXU=;
-        b=FfblUmOZXnlJN7hCY+NKlWXlXO24/IXplyKaWph6ieK2NVQDlzMlM3g2CYtfwTHdfL
-         ztEmLuU6qUGvsHMXuyHy9pTnpDKrNKu4fy5L4z5ghG2WOstzt8+p3cR4X7T/Um/omBSQ
-         OaaRpAVDiN1DN4OZPc5YNK9rcHz93V2MBdXgQ15+4U9NXB1aHBoo6+Lm3WLKIDgyNqbq
-         aH8nt8y3caCzE4pPMEEBJj9sNQBjJ4/VjNyxOzjUu24+Cs51JRnMFkCDInclzLva8fF8
-         EyUIJPRenaZ8+GW0sGe9jYuFdNUKcdK6tWGsKNOzre69ELk/Qo3MS0uE3gOzJ2/ISwYN
-         cRaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gckpwq9UyhdYM7Snuci6fAgZatJZQE5/xPkNXtAqPXU=;
-        b=ndwdl/v1AajtQiQK4eUODQRzRzIGAD96bgLN16ZRP/00p4a/mT/wQYKIiax8VsmCdb
-         ICNDgF5wNnOtO48Mt/mr0/c47+DiPqfx118In04Tq9YmnvqIH/RUTi5vDd4As4gpO+zt
-         hseZMc7OeYmQOz5zvNdjQOX6b0TE6/yQMaCS6gWgC7a8xgHWFtyZW/tyvr57FFbuWvOV
-         LqobFZPDWZfmSIVDp36yVIidnZoUSo3breAFp6wLooSmgN4v2mknLZd3xqMnGy+lq/3C
-         aJ/euqZZ3k+p3+3syY9JjGLBA4r0Wnbe+jNzV73SX48p8ZozVsITPGpjWnsl6So8gTaU
-         Uvww==
-X-Gm-Message-State: AGi0PuZ/EyUPPYoQC+4lbBlx55nkpUkJsjAw9wol4S9u1WgLKMg+/lFO
-        vQjYodOKrpbhe1+OtJhHbRvLw2msQEIpqc8HWLk=
-X-Google-Smtp-Source: APiQypL+8STjCF7ijbtEAlezcdp9vJ09CwLfmp0u9W0uVql+wV3veMDwYgsVGQiJW9eEMtjCo9WaAXWBE7ce29TPt6I=
-X-Received: by 2002:adf:fa91:: with SMTP id h17mr664269wrr.111.1588880564696;
- Thu, 07 May 2020 12:42:44 -0700 (PDT)
+        Thu, 7 May 2020 15:43:26 -0400
+Received: from mga03.intel.com ([134.134.136.65]:49363 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726644AbgEGTnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:43:25 -0400
+IronPort-SDR: IOuQnjpxDtYVnnUmRhGQOW+sEpA5+TnFcGsBqjH/6QjQC6O8FHQMUfQ3naPFakyHkJcumlqEjN
+ 5lWFBzb+RWGw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 12:43:24 -0700
+IronPort-SDR: 08o7ATRyAi9mAFigoZ+HjkcEM0EvLpHu/JpG6yj4ChlRR5OzDycoxW1qDCEYcRqx3HsKOKC2Eg
+ BbbaDCcdYEgQ==
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="251602971"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 12:43:24 -0700
+Date:   Thu, 7 May 2020 12:43:23 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] treewide: Replace zero-length array with flexible-array
+Message-ID: <20200507194323.GA9073@agluck-desk2.amr.corp.intel.com>
+References: <20200507185334.GA14456@embeddedor>
 MIME-Version: 1.0
-References: <20200507135023.33073-1-chenzhou10@huawei.com>
-In-Reply-To: <20200507135023.33073-1-chenzhou10@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 7 May 2020 15:42:33 -0400
-Message-ID: <CADnq5_M89XN26AwzRr+F0DJAP7Xz_2FWcO09iUrS2ArkFbK1cQ@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: remove duplicate headers
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507185334.GA14456@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Thu, May 07, 2020 at 01:53:34PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Alex
+I'm fine with this specific change ... so
 
-On Thu, May 7, 2020 at 11:27 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->
-> Remove duplicate headers which are included twice.
->
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> index 9ef9e50a34fa..1db592372435 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> @@ -13,7 +13,6 @@
->  #include "core_status.h"
->  #include "dpcd_defs.h"
->
-> -#include "resource.h"
->  #define DC_LOGGER \
->         link->ctx->logger
->
-> --
-> 2.20.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Acked-by: Tony Luck <tony.luck@intel.com>
+
+for anyone picking up all of these treewide: patches
+(if they don't, then I can apply this to the ia64 tree)
+
+
+But a question ... is sizeof still ok on a structure that
+contains a flexible-array-member?
+
+E.g. I'd expect:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+	printk("size of foo = %d\n", sizeof(struct foo));
+
+To not give any complilation warnings and to tell me that
+the size of the structure is 4 bytes.
+
+Is that still true and OK?
+
+-Tony
