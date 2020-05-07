@@ -2,102 +2,144 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04649C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D272145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IlMzfBoi"
+	by mail.kernel.org (Postfix) with ESMTP id BFD2F20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588875055;
+	bh=KaNl+AoGB+XzVAkjgAl4iy8wCzLm8z52Wf6FOEs/dCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UwH1Lr3QRnA0K03Tn6L7lGR06JHtmjhldQmM+YsOLDMvEbE1YdWW5F0rmwubt4oza
+	 22vAyWJsWheuCp5uE1AQOkltVXLzybDL7sNalAVnu1H3NJatb5Hi6HEnEiM8n0xDEO
+	 HtWn/ZUfZTmHo/PQ41yKfDCJKJGQl0CNGcb52vrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgEGSKu (ORCPT
+        id S1728507AbgEGSKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728469AbgEGSKm (ORCPT
+        Thu, 7 May 2020 14:10:55 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:42285 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgEGSKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:42 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD0DC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:41 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id g17so8061086ybk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=N7kuzoZFHLJw/s8kvulTGF06U3TOQxKeXMcbVwjE4XY=;
-        b=IlMzfBoiBzByCTT8SvOpeFbpTRaCvxNWjvMZljPGk5OoeTwjsb1wsaeDG4gxHKaVQZ
-         lzdyVKLAOhNQTDY9GjBd/yhOypV8xr6JkGrIdiIkOmuHYIEXWQlMLj/DbmLtNbgfFD9Q
-         SCG7OJOOpIk03XjGXpiKFMyfX8aoQ3Xrqx3iegD2s+PpWCE+7K6lsm/S9bpA6HqJbgaR
-         jMeJZirp1krHSjr5CW2MkZm66dBPji19T3oVp8Np6ywJUg8EpRdIfa2xNK2By97AoJkF
-         MC053TSntRx44lPdMaRbtpYv7DwCxcWdZbSZKNuXslPDRHTEvdqxBA1WsqkBobm/WIUG
-         gRLQ==
+        Thu, 7 May 2020 14:10:47 -0400
+Received: by mail-oo1-f66.google.com with SMTP id e18so1547996oot.9;
+        Thu, 07 May 2020 11:10:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=N7kuzoZFHLJw/s8kvulTGF06U3TOQxKeXMcbVwjE4XY=;
-        b=ntXmeswxFCiDcCuyqEI9fQn9c5Ap89RbpUHNDDoF6QzeCUAKMhjpjjs2ibKicXEzfv
-         oscYZheaFjuTKV0UQYAztiSrK702XISNcCnebUYAjRHxBmfQlJ+E6Cv7rsUcpFYQz8X5
-         0EcWs1bIYQ82dsE5km7S+SI8Zcq8BGVBsk5xdLGgXFj3PE5dW07c6x9KvGqd35fnty4D
-         hMR6H3rZVTP1Q3Mr9W24VuCP0IMo5x1rvj8qXeHTGz63vnVr4herRrgL91TQBMbCChLt
-         YQObD3HXsfptTGzEvT4H8mUdLocdGqvJPR19GNddAtsLb8IsA1Ub/IbafcHoHwdz+7+d
-         4r6g==
-X-Gm-Message-State: AGi0PuZizvPzJoOsaWgyoQMmFYPhhSYCzNkufePgvmJyL452L3yOwqQm
-        sLULsD0TVh60B35vcVCvHHoUPHIZZV2WmRTAkBkz/HFIZTUe+3rjvMxnL0L5+4X0XzDkygHnvFl
-        h9d3wuTjze0xS7+zIPdoI/MkA4fGHNb5j6AZWpKavsW6XNVDj1biF/Z4FLpzWuqYWBVG73BxA
-X-Google-Smtp-Source: APiQypJcn3oiy3Y8e0vbxO3XAex1LsJMYs5+fQTWEg+rN6GSDT89BK+2wbCqxMf6Oy2xk1QtZGIOh5nUJOcy
-X-Received: by 2002:a25:d2d8:: with SMTP id j207mr16831345ybg.517.1588875040927;
- Thu, 07 May 2020 11:10:40 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:10:10 +0100
-In-Reply-To: <20200507181012.29791-1-qperret@google.com>
-Message-Id: <20200507181012.29791-13-qperret@google.com>
-Mime-Version: 1.0
-References: <20200507181012.29791-1-qperret@google.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 12/14] x86: Export arch_scale_freq_key
-From:   Quentin Perret <qperret@google.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hKmS6Bg4CcoosQWiCpcHNn0plXy0Vmb8kMKxS1isGgw=;
+        b=sB9QsRKIsc6mIBliJh/cPtUWn3H2/sF9AQq37CefkmlVvK34H0ariRfEPltO6CS4a7
+         /wL+gR7U/5UE6c0YlqfKyz0ev/0I4w52GMy1979fPhtaHaEHKaytaVzrfFmI4SOrJuUm
+         hM/vmqML2nTYBn8KMbkFPpzktFc7I9Lz+l50+EubdKLBP8RqP3ZOGikd1a0ooqP4AIK7
+         /Pu9wLMJGSBNOVDtrpmHEBVulEddBiiRTg6JyH05w05jYAbV9dJTTEr5WW4rDpI3s96P
+         Jzc7Gb0AqHIw5D6+ohcwtYcY2sDVmc+up3mUgpd70f8PuFFQ+pMDb1tC5F2QjRzli9yY
+         OdGg==
+X-Gm-Message-State: AGi0Pub1z5B0U3aU2ZsYF6KZFHVAE+i0qSVI8OeQiwPQU1LZ3SOeAODu
+        XjNktwcI0PZFbescDdsnDqDMewE=
+X-Google-Smtp-Source: APiQypLxLD7Z5qjpV5iAc4Sn8XItc1HRXVZlZO0OIEuf4nO+dnJ4UizUwjUtv7qPrOmi8Gvmnca0cQ==
+X-Received: by 2002:a4a:92d1:: with SMTP id j17mr12892021ooh.13.1588875045762;
+        Thu, 07 May 2020 11:10:45 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t9sm1548864oie.24.2020.05.07.11.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 11:10:45 -0700 (PDT)
+Received: (nullmailer pid 19680 invoked by uid 1000);
+        Thu, 07 May 2020 18:10:44 -0000
+Date:   Thu, 7 May 2020 13:10:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/11] devicetree: bindings: pci: document PARF params
+ bindings
+Message-ID: <20200507181044.GA15159@bogus>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-9-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430220619.3169-9-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It will be needed by schedutil once modularized, export it.
+On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
+> It is now supported the editing of Tx De-Emphasis, Tx Swing and
+> Rx equalization params on ipq8064. Document this new optional params.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 6efcef040741..8cc5aea8a1da 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -254,6 +254,42 @@
+>  			- "perst-gpios"	PCIe endpoint reset signal line
+>  			- "wake-gpios"	PCIe endpoint wake signal line
+>  
+> +- qcom,tx-deemph-gen1:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: Gen1 De-emphasis value.
+> +		    For ipq806x should be set to 24.
 
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- arch/x86/kernel/smpboot.c | 1 +
- 1 file changed, 1 insertion(+)
+Unless these need to be tuned per board, then the compatible string for 
+ipq806x should imply all these settings.
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 8c89e4d9ad28..a8ccd69ba5ff 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1804,6 +1804,7 @@ void native_play_dead(void)
-  */
- 
- DEFINE_STATIC_KEY_FALSE(arch_scale_freq_key);
-+EXPORT_SYMBOL_GPL(arch_scale_freq_key);
- 
- static DEFINE_PER_CPU(u64, arch_prev_aperf);
- static DEFINE_PER_CPU(u64, arch_prev_mperf);
--- 
-2.26.2.526.g744177e7f7-goog
-
+> +
+> +- qcom,tx-deemph-gen2-3p5db:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: Gen2 (3.5db) De-emphasis value.
+> +		    For ipq806x should be set to 24.
+> +
+> +- qcom,tx-deemph-gen2-6db:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: Gen2 (6db) De-emphasis value.
+> +		    For ipq806x should be set to 34.
+> +
+> +- qcom,tx-swing-full:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: TX launch amplitude swing_full value.
+> +		    For ipq806x should be set to 120.
+> +
+> +- qcom,tx-swing-low:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: TX launch amplitude swing_low value.
+> +		    For ipq806x should be set to 120.
+> +
+> +- qcom,rx0-eq:
+> +	Usage: optional (available for ipq/apq8064)
+> +	Value type: <u32>
+> +	Definition: RX0 equalization value.
+> +		    For ipq806x should be set to 4.
+> +
+>  * Example for ipq/apq8064
+>  	pcie@1b500000 {
+>  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
+> -- 
+> 2.25.1
+> 
