@@ -2,130 +2,179 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B34C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDDC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6BD20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3684E207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a6GmPJVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgEGJoX (ORCPT
+        id S1726326AbgEGJrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:44:23 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60336 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbgEGJoW (ORCPT
+        Thu, 7 May 2020 05:47:02 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43971 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgEGJrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:44:22 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-224-NnifUXbxOzWpb5XrCVK4yA-1; Thu, 07 May 2020 10:44:19 +0100
-X-MC-Unique: NnifUXbxOzWpb5XrCVK4yA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 7 May 2020 10:44:18 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 7 May 2020 10:44:18 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J01pY2thw6tsIFNhbGHDvG4n?= <mic@digikod.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Christian Heimes" <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Deven Bowers" <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Lakshmi Ramasubramanian" <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?utf-8?B?UGhpbGlwcGUgVHLDqWJ1Y2hldA==?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH v5 0/6] Add support for O_MAYEXEC
-Thread-Topic: [PATCH v5 0/6] Add support for O_MAYEXEC
-Thread-Index: AQHWIvJxeV/0BLZ+8kuLT1dTVkm+SqicRhNg///4h4CAABSTQP//+lUAgAAR6XA=
-Date:   Thu, 7 May 2020 09:44:18 +0000
-Message-ID: <635df0655b644408ac4822def8900383@AcuMS.aculab.com>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
- <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
- <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
- <64426377-7fc4-6f37-7371-2e2a584e3032@digikod.net>
-In-Reply-To: <64426377-7fc4-6f37-7371-2e2a584e3032@digikod.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 7 May 2020 05:47:01 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200507094658euoutp027e99d53587651365a9e94808c3ff871b~MtfHB6Dox1246412464euoutp025
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:46:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200507094658euoutp027e99d53587651365a9e94808c3ff871b~MtfHB6Dox1246412464euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588844818;
+        bh=1wsC40WzFUpfzSznWf2jwxe9vrquMK/0mvf6RWwMERU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=a6GmPJVjKfLp+Flw8jMx/2luN1LxfuSATEVD8/2bO1C17CYfONX3hyEDxH97rqEIb
+         TtJLJehfyRmE/sAQwSX5SAtWHcJj/McqEg6BU/842OxiMICr4uKKdP9nnNQPYR0Vxn
+         LzE+tslD01yZFKQa56xfhJpB1VxZMhMQFMBbs3/I=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200507094658eucas1p186723bf227b1df6597c3942a4e6bbada~MtfGt-hR41300113001eucas1p1C;
+        Thu,  7 May 2020 09:46:58 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 9B.B0.60679.219D3BE5; Thu,  7
+        May 2020 10:46:58 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200507094657eucas1p2e785a6b277c732ba4417fa9d1c9c8d5f~MtfGTZuqB0085000850eucas1p2L;
+        Thu,  7 May 2020 09:46:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200507094657eusmtrp23bad71932a3809fe73fd59cf076708dd~MtfGSr4ze2652826528eusmtrp2i;
+        Thu,  7 May 2020 09:46:57 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-33-5eb3d912bb2a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 45.21.07950.119D3BE5; Thu,  7
+        May 2020 10:46:57 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200507094657eusmtip1eaa1246eb850f8793dfc8ded22397514~MtfFxFBtx1825018250eusmtip1i;
+        Thu,  7 May 2020 09:46:57 +0000 (GMT)
+Subject: Re: [PATCH net v2] net: bcmgenet: Clear ID_MODE_DIS in
+ EXT_RGMII_OOB_CTRL when not needed
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <cf07fae3-bd8f-a645-0007-a317832c51c1@samsung.com>
+Date:   Thu, 7 May 2020 11:46:58 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200225131159.26602-1-nsaenzjulienne@suse.de>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRjm2xlnx83VcTz2VTsXEyq8IwYyu2ULSn9ERbHqpINKrsquR1o/
+        LCVz6bREWxVFwROPXDXdH1peW5lrZIcrihhKHqilRimiNY2W/57nfZ7ne98HPhKj9RbOZFRM
+        PKeOYaPlhARv6l4yudNmfbDXcB3OVN/rwpn8vnScWZ7tFDP9hnyC6S5yZJp0ZQSzkPUEMcZX
+        mdgRUqEb6SUUDRVmkaJFNyxWlNS3EQp9z3XFQv32IOKSxC+ci45K5NSe/qGSSP1CKRE3SV/r
+        b8lEqajKRossSaD2Q6chW6xFEpKmyhGkP+60EMgigqyW5nWygMCcM45tRKaK09YjZQhKzD8w
+        gcwhyJ98g3iXHRUOuQ++/xXsqbcIhjtGxbyAUSysVa1Y8JigvEE7oyV4LKX8YS6zH9ciksQp
+        V8goD+ChA6WEnE/nBIctvH46hvPYkvKDb0UDhPDiDkhrzMMELIPBsUIRvxaoVjFkd6wQwtUn
+        IK/GvN7ADqaMDWIBb4W1lo1AGoJRU7VYIHcR9N/KRYLrIAyZlgn+IozaA7UGT2F8FIqbG0T8
+        GChrGJixFY6whqymHEwYS+HObVpwu4HOWPNv7ct377GHSK7bVE23qY5uUx3d/71FCK9EMi5B
+        o4rgND4xXJKHhlVpEmIiPMJiVfXoz1fqWTUuNiPDypV2RJFIbiV9UVofTFuwiZpkVTsCEpPb
+        S61+PQumpeFscgqnjg1RJ0RzmnbkQuJymdS3eFJJUxFsPHeV4+I49YYqIi2dU5FbsktA6+5H
+        S8e3jeyrdDygdDo888W1N1sU2DsfS7OmqK5etU+fTdoF8+UbdGiSfZCTSpbvdfbnefPOZSYj
+        /eP9i7k5gROFBbVDDmN1reXGzyetTbumVgdOn/rqGxY0e+aQ33zFtHvITf104/S4x/OCD1vo
+        Y8rBlJWoCZlEqe/JbpPjmkjWey+m1rC/AXTbhcdGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xu7qCNzfHGVxarGqxtvcoi8Wc8y0s
+        Fr/eHWG3uLxrDpvFsQViFttmLWez+DxpCqPF8ROdzA4cHrPun2Xz2LLyJpPHzll32T0Wb9rP
+        5rH5dLXH501yAWxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZ
+        ZalF+nYJehmbPy9jK3gpVHF5ZydjA+Nq/i5GTg4JAROJV4ua2bsYuTiEBJYySjx+/JcdIiEj
+        cXJaAyuELSzx51oXG0TRW0aJvT3P2UASwgIpEjP6PzKDJEQEzjBKfP04lwkkwSyQKLFk304w
+        W0jAWuL6kkNgNpuAoUTX2y6wZl4BO4n3nZdZuhg5OFgEVCTaV7iBmKICsRItFzUhKgQlTs58
+        wgJicwrYSHxYcIMNYrqZxLzND5khbHmJ5q2zoWxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDI
+        sopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwBrcd+7llB2PXu+BDjAIcjEo8vAeWbYoTYk0s
+        K67MPcQowcGsJMLL82NjnBBvSmJlVWpRfnxRaU5q8SFGU6DXJjJLiSbnA9NDXkm8oamhuYWl
+        obmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxonVx+sfOQRr39MUehlnP+F5T26x
+        pftuJc5pJeLNVyrE3v++02vL+vLKq7wNmSUz8gLMi5u1nEqyo4VratwF1ku8N/JWcPm+btaH
+        fE7ZjXwf7kRt3FL+V2Je9Qsd9Qpuo6sPdl3VueAnOq9xcdWvOD6Bzb+d7XhKH9y48vVYxKKy
+        L6e3FNh5KrEUZyQaajEXFScCAHE/YSXXAgAA
+X-CMS-MailID: 20200507094657eucas1p2e785a6b277c732ba4417fa9d1c9c8d5f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200507094657eucas1p2e785a6b277c732ba4417fa9d1c9c8d5f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200507094657eucas1p2e785a6b277c732ba4417fa9d1c9c8d5f
+References: <20200225131159.26602-1-nsaenzjulienne@suse.de>
+        <CGME20200507094657eucas1p2e785a6b277c732ba4417fa9d1c9c8d5f@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWlja2HDq2wgU2FsYcO8biA8bWljQGRpZ2lrb2QubmV0Pg0KPiBTZW50OiAwNyBNYXkg
-MjAyMCAxMDozMA0KPiBPbiAwNy8wNS8yMDIwIDExOjAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+
-ID4gRnJvbTogTWlja2HDq2wgU2FsYcO8bg0KPiA+PiBTZW50OiAwNyBNYXkgMjAyMCAwOTozNw0K
-PiA+IC4uLg0KPiA+Pj4gTm9uZSBvZiB0aGF0IGRlc2NyaXB0aW9uIGFjdHVhbGx5IHNheXMgd2hh
-dCB0aGUgcGF0Y2ggYWN0dWFsbHkgZG9lcy4NCj4gPj4NCj4gPj4gIkFkZCBzdXBwb3J0IGZvciBP
-X01BWUVYRUMiICJ0byBlbmFibGUgdG8gY29udHJvbCBzY3JpcHQgZXhlY3V0aW9uIi4NCj4gPj4g
-V2hhdCBpcyBub3QgY2xlYXIgaGVyZT8gVGhpcyBzZWVtcyB3ZWxsIHVuZGVyc3Rvb2QgYnkgb3Ro
-ZXIgY29tbWVudGVycy4NCj4gPj4gVGhlIGRvY3VtZW50YXRpb24gcGF0Y2ggYW5kIHRoZSB0YWxr
-cyBjYW4gYWxzbyBoZWxwLg0KPiA+DQo+ID4gSSdtIGd1ZXNzaW5nIHRoYXQgcGFzc2luZyBPX01B
-WUVYRUMgdG8gb3BlbigpIHJlcXVlc3RzIHRoZSBrZXJuZWwNCj4gPiBjaGVjayBmb3IgZXhlY3V0
-ZSAneCcgcGVybWlzc2lvbnMgKGFzIHdlbGwgYXMgcmVhZCkuDQo+IA0KPiBZZXMsIGJ1dCBvbmx5
-IHdpdGggb3BlbmF0MigpLg0KDQpJdCBjYW4ndCBtYXR0ZXIgaWYgdGhlIGZsYWcgaXMgaWdub3Jl
-ZC4NCkl0IGp1c3QgbWVhbnMgdGhlIGtlcm5lbCBpc24ndCBlbmZvcmNpbmcgdGhlIHBvbGljeS4N
-CklmIG9wZW5hdDIoKSBmYWlsIGJlY2F1c2UgdGhlIGZsYWcgaXMgdW5zdXBwb3J0ZWQgdGhlbg0K
-dGhlIGFwcGxpY2F0aW9uIHdpbGwgbmVlZCB0byByZXRyeSB3aXRob3V0IHRoZSBmbGFnLg0KDQpT
-byBpZiB0aGUgdXNlciBoYXMgYW55IGFiaWxpdHkgY3JlYXRlIGV4ZWN1dGFibGUgZmlsZXMgdGhp
-cw0KaXMgYWxsIHBvaW50bGVzcyAoZnJvbSBhIHNlY3VyaXR5IHBvaW50IG9mIHZpZXcpLg0KVGhl
-IHVzZXIgY2FuIGVpdGhlciBjb3B5IHRoZSBmaWxlIG9yIGNvcHkgaW4gYW4gaW50ZXJwcmV0ZXIN
-CnRoYXQgZG9lc24ndCByZXF1ZXN0IE9fTUFZRVhFQy4NCg0KSXQgbWlnaHQgc3RvcCBhY2NpZGVu
-dGFsIGlzc3VlcywgYnV0IG5vdGhpbmcgbWFsaWNpb3VzLg0KDQo+ID4gVGhlbiBrZXJuZWwgcG9s
-aWN5IGRldGVybWluZXMgd2hldGhlciAncmVhZCcgYWNjZXNzIGlzIGFjdHVhbGx5IGVub3VnaCwN
-Cj4gPiBvciB3aGV0aGVyICd4JyBhY2Nlc3MgKHBvc3NpYmx5IG1hc2tlZCBieSBtb3VudCBwZXJt
-aXNzaW9ucykgaXMgbmVlZGVkLg0KPiA+DQo+ID4gSWYgdGhhdCBpcyB0cnVlLCB0d28gbGluZXMg
-c2F5IHdoYXQgaXMgZG9lcy4NCj4gDQo+IFRoZSAiQSBzaW1wbGUgc3lzdGVtLXdpZGUgc2VjdXJp
-dHkgcG9saWN5IiBwYXJhZ3JhcGggaW50cm9kdWNlIHRoYXQsIGJ1dA0KPiBJJ2xsIGhpZ2hsaWdo
-dCBpdCBpbiB0aGUgbmV4dCBjb3ZlciBsZXR0ZXIuDQoNCk5vIGl0IGRvZXNuJ3QuDQpJdCBqdXN0
-IHNheXMgdGhlcmUgaXMgc29tZSBraW5kIG9mIHBvbGljeSB0aGF0IHNvbWUgZmxhZ3MgY2hhbmdl
-Lg0KSXQgZG9lc24ndCBzYXkgd2hhdCBpcyBiZWluZyBjaGVja2VkIGZvci4NCg0KPiBUaGUgbW9z
-dCBpbXBvcnRhbnQgcG9pbnQgaXMNCj4gdG8gdW5kZXJzdGFuZCB3aHkgaXQgaXMgcmVxdWlyZWQs
-IGJlZm9yZSBnZXR0aW5nIHRvIGhvdyBpdCB3aWxsIGJlDQo+IGltcGxlbWVudGVkLg0KDQpCdXQg
-eW91IGRvbid0IHNheSB3aGF0IGlzIHJlcXVpcmVkLg0KSnVzdCBhIGxvYWQgb2YgYnV6endvcmQg
-cmFtYmxpbmdzLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
-cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
-c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Hi
+
+On 25.02.2020 14:11, Nicolas Saenz Julienne wrote:
+> Outdated Raspberry Pi 4 firmware might configure the external PHY as
+> rgmii although the kernel currently sets it as rgmii-rxid. This makes
+> connections unreliable as ID_MODE_DIS is left enabled. To avoid this,
+> explicitly clear that bit whenever we don't need it.
+>
+> Fixes: da38802211cc ("net: bcmgenet: Add RGMII_RXID support")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+I've finally bisected the network issue I have on my RPi4 used for 
+testing mainline builds. The bisect pointed to this patch. Once it got 
+applied in v5.7-rc1, the networking is broken on my RPi4 in ARM32bit 
+mode and kernel compiled from bcm2835_defconfig. I'm using u-boot to 
+tftp zImage/dtb/initrd there. After reverting this patch network is 
+working fine again. The strange thing is that networking works fine if 
+kernel is compiled from multi_v7_defconfig but I don't see any obvious 
+difference there.
+
+I'm not sure if u-boot is responsible for this break, but kernel 
+definitely should be able to properly reset the hardware to the valid state.
+
+I can provide more information, just let me know what is needed. Here is 
+the log, I hope it helps:
+
+[   11.881784] bcmgenet fd580000.ethernet eth0: Link is Up - 1Gbps/Full 
+- flow control off
+[   11.889935] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+
+root@target:~# ping host
+PING host (192.168.100.1) 56(84) bytes of data.
+ From 192.168.100.53 icmp_seq=1 Destination Host Unreachable
+...
+
+> ---
+>
+> Changes since v1:
+>   - Fix tags ordering
+>   - Add targeted tree
+>
+>   drivers/net/ethernet/broadcom/genet/bcmmii.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> index 6392a2530183..10244941a7a6 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> @@ -294,6 +294,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+>   	 */
+>   	if (priv->ext_phy) {
+>   		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+> +		reg &= ~ID_MODE_DIS;
+>   		reg |= id_mode_dis;
+>   		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
+>   			reg |= RGMII_MODE_EN_V123;
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
