@@ -2,146 +2,158 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9184C54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD8CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A785420736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD2820643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tBO1gh+b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFppU/it"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgEGOvA (ORCPT
+        id S1726616AbgEGOwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:51:00 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:30953 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgEGOu6 (ORCPT
+        Thu, 7 May 2020 10:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgEGOwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:50:58 -0400
+        Thu, 7 May 2020 10:52:23 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF713C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:52:21 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id g16so4911444qtp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588863057; x=1620399057;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=8GxZ5JWaOF5dn92Ks/d0RZ9+Pn/zgloMkgU+aU97AqA=;
-  b=tBO1gh+bP8bvdAQtQj0RKYn6OzBvzvBwPBX49ObsfROMnelUTncp7dBA
-   fwZu0vvw8Wc7bIxyPBxW1qp+5Ej6ja+E4yNn/2GTRZ4Qgni10onm5iYSd
-   sGY+ihRCfoDHXd/NdxVWXmSKthn5ZC6rf/5xhQnTHrZnDWb3DyWEUDgFH
-   c=;
-IronPort-SDR: UEJZk9DZwIeWEBZQ19joB9qGIH5Isb2hyLAQgICV8zK4hgBUf4k54zDJrFfHdprBjugHv3iHXO
- gCdieeaZyYyQ==
-X-IronPort-AV: E=Sophos;i="5.73,364,1583193600"; 
-   d="scan'208";a="30530374"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 May 2020 14:50:41 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 89215A1C36;
-        Thu,  7 May 2020 14:50:40 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 14:50:40 +0000
-Received: from uf25486d27d2d5b.ant.amazon.com (10.43.162.200) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 14:50:30 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <talel@amazon.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <eitan@amazon.com>
-Subject: [PATCH v7 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory Controller EDAC
-Date:   Thu, 7 May 2020 17:50:01 +0300
-Message-ID: <20200507145002.22010-2-talel@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507145002.22010-1-talel@amazon.com>
-References: <20200507145002.22010-1-talel@amazon.com>
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WL/t9qE3+BAvQf1Jr0p8vij392YMfCOS2shO2YG+Teg=;
+        b=lFppU/itbca0im+qFX0dAnObD6Uxu4HbNf+tXnjPVzJKx4BP6YrzJFJyGoIaRVErgV
+         UGcWaG0c5e2k5Pkg7pJvUKXDeDBTO3ArpjPwuKLaCCndBiSQuuRZhTDe2PEXhCKgfWAA
+         9J8t80FAEiKY8Iv8FjYtpN5H2z6iEJGXmAxyOMKAaNypRmtxGE9w8bYP1jp5UADJgIXt
+         0dzSyR1byTembSnpND7VGWRq/wMCsquUoGsCLaPqnu1rVGaBssurq7Bwi79iyuJG5aib
+         TqevVY92nN3DOPdDk4R937IX7xyYg8lq/aWo/76F6q0vhwVVu/oFuWGj2fsbYQ+5IAXP
+         3trw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WL/t9qE3+BAvQf1Jr0p8vij392YMfCOS2shO2YG+Teg=;
+        b=efE+0ISqy5RuV76i+CrFb7ZVbz/C1aRfhcf1SVqHkjIr8fX6HrcFrqfDMz3w0fANtL
+         PUQQhgyvnK8vzwFTmmc8A5GaDjBdxwWlfklYJomaqnsFUGakeuPWs+U4f2Yqpr+W7zNC
+         C1I15f+zoAtwShpmmfmHZUGD6sx20ClGOiYq4xS6hgubaJ9ThkBEQ8rLvy1my1biKl8l
+         39efm5AQuJvwUoMOXe0aLGpln3HX8P9Ll8PqC84DrSoIxwG5JksdGbAPC4UUPNOvzG+b
+         l8JHrsAstlW0ZKbusei32wTdZwFdTY6J2ZN5kh2aiyl2AX3SsPjURlDaFNJdV9ZBcaPI
+         0GXA==
+X-Gm-Message-State: AGi0Pubb9/cplzHJ+WWLcKhBbBifucMnbWI0yObPw728Lz+o280aa7Lj
+        cNuV9kGYevsCMZaOFiYRahM=
+X-Google-Smtp-Source: APiQypJ7U0tDQwluiuO0qo5gFGm1ZkQtVRZy2uGUyDkcmmW6DUf2eLVMRCz3PBubAw/aXteZFuf6zA==
+X-Received: by 2002:ac8:6684:: with SMTP id d4mr8291352qtp.189.1588863140985;
+        Thu, 07 May 2020 07:52:20 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id w69sm4214507qka.75.2020.05.07.07.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 07:52:20 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5B60740AFD; Thu,  7 May 2020 11:52:17 -0300 (-03)
+Date:   Thu, 7 May 2020 11:52:17 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>, Paul Khuong <pvk@pvk.ca>
+Subject: Re: [PATCH 1/5] perf tools: Do not display extra info when there is
+ nothing to build
+Message-ID: <20200507145217.GA32641@kernel.org>
+References: <20200507095024.2789147-1-jolsa@kernel.org>
+ <20200507095024.2789147-2-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.200]
-X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507095024.2789147-2-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+Em Thu, May 07, 2020 at 11:50:20AM +0200, Jiri Olsa escreveu:
+> Even with fully built tree, we still display extra output
+> when make is invoked, like:
+> 
+>   $ make
+>     BUILD:   Doing 'make -j8' parallel build
+>     DESCEND  plugins
+>   make[3]: Nothing to be done for 'plugins/libtraceevent-dynamic-list'.
+> 
+> Changing the make descend directly to plugins directory,
+> which quiets those messages down.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+Thanks a lot for getting rid of that nuisance :-)
 
-diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-new file mode 100644
-index 000000000000..543f0a6be2f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amazon's Annapurna Labs Memory Controller EDAC
-+
-+maintainers:
-+  - Talel Shenhar <talel@amazon.com>
-+  - Talel Shenhar <talelshenhar@gmail.com>
-+
-+description: |
-+  EDAC node is defined to describe on-chip error detection and correction for
-+  Amazon's Annapurna Labs Memory Controller.
-+
-+properties:
-+
-+  compatible:
-+    const: amazon,al-mc-edac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: uncorrectable error interrupt
-+      - description: correctable error interrupt
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ue
-+      - const: ce
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    edac@f0080000 {
-+      compatible = "amazon,al-mc-edac";
-+      reg = <0x0 0xf0080000 0x0 0x00010000>;
-+      interrupt-parent = <&amazon_al_system_fabric>;
-+      interrupt-names = "ue";
-+      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+    };
+- Arnaldo
+ 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/Makefile.perf | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 94a495594e99..30e41dcd4095 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -278,6 +278,7 @@ strip-libs = $(filter-out -l%,$(1))
+>  
+>  ifneq ($(OUTPUT),)
+>    TE_PATH=$(OUTPUT)
+> +  PLUGINS_PATH=$(OUTPUT)
+>    BPF_PATH=$(OUTPUT)
+>    SUBCMD_PATH=$(OUTPUT)
+>    LIBPERF_PATH=$(OUTPUT)
+> @@ -288,6 +289,7 @@ else
+>  endif
+>  else
+>    TE_PATH=$(TRACE_EVENT_DIR)
+> +  PLUGINS_PATH=$(TRACE_EVENT_DIR)plugins/
+>    API_PATH=$(LIB_DIR)
+>    BPF_PATH=$(BPF_DIR)
+>    SUBCMD_PATH=$(SUBCMD_DIR)
+> @@ -297,7 +299,7 @@ endif
+>  LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
+>  export LIBTRACEEVENT
+>  
+> -LIBTRACEEVENT_DYNAMIC_LIST = $(TE_PATH)plugins/libtraceevent-dynamic-list
+> +LIBTRACEEVENT_DYNAMIC_LIST = $(PLUGINS_PATH)libtraceevent-dynamic-list
+>  
+>  #
+>  # The static build has no dynsym table, so this does not work for
+> @@ -756,10 +758,10 @@ $(LIBTRACEEVENT): FORCE
+>  	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent.a
+>  
+>  libtraceevent_plugins: FORCE
+> -	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) plugins
+> +	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR)plugins $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) plugins
+>  
+>  $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+> -	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)plugins/libtraceevent-dynamic-list
+> +	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR)plugins $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent-dynamic-list
+>  
+>  $(LIBTRACEEVENT)-clean:
+>  	$(call QUIET_CLEAN, libtraceevent)
+> -- 
+> 2.25.4
+> 
+
 -- 
-2.17.1
 
+- Arnaldo
