@@ -2,162 +2,155 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D56C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0435C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1083420736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588812939;
-	bh=uM6sr/bKulgUggqODetgoJpXNbXWgWEfpWFV4GW35ww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gCh3hiYKfYp1TTH4B5ENXTWZzBrXnG9gLmuVqufTweW0v1oY3Q8N3DmRRatx+n6JB
-	 KIYYGTZra9dKRmnSvvcONOUeU4T/5e8PDjQcfkQF39+qNOxBU24H/NqdJxQ1zGp7AE
-	 Xsc57th/Bm4P5r06ruYiCgf/KMujXv7aOyvXHUBk=
+	by mail.kernel.org (Postfix) with ESMTP id 998BA20747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XdK+ZklR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgEGAzi (ORCPT
+        id S1728131AbgEGA4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgEGAzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:55:37 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CAC20708;
-        Thu,  7 May 2020 00:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588812936;
-        bh=uM6sr/bKulgUggqODetgoJpXNbXWgWEfpWFV4GW35ww=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J7DIjsyLvHBZ5eSTEHsBWIEAhMZXO8kVMwLGiArFkneC72whGLjPeNYwS6NdaQBpi
-         KOZ7ng1w2EAvKLDd+tOAKE1S6SF5sSceRA+L0y5y8AVBFunPSNSOFu1NCGBrBQRfv6
-         5HoM2fkTFTG0/agaQl4J3b2D3DEnsTN1CTwjVGAk=
-Date:   Wed, 6 May 2020 17:55:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        viro@zeniv.linux.org.uk, hannes@cmpxchg.org,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-Id: <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
-In-Reply-To: <20200507004240.GA9156@paulmck-ThinkPad-P72>
-References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 6 May 2020 20:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgEGA4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 20:56:09 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0766BC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 17:56:07 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id u11so4397935iow.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 17:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uTZI/F41ZnJFrUE+FVQ0Jc0NsPmmFnVbnHSoplh9O30=;
+        b=XdK+ZklREmT8RhLEEu0G6URSmzXx9v8mRFMStVvR9AnyZA+y/65G8eUd16BCnxCElq
+         agRhJuRnP4dfKugRBjiiqqh8GTv9Hr1hkmubVwk/bqxq2OxImiPGA5K+45iv1/kLtm4L
+         PlQh8IBBTlKCRKNHAFeml4o4CiGJYAB86oucI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTZI/F41ZnJFrUE+FVQ0Jc0NsPmmFnVbnHSoplh9O30=;
+        b=A6NuG6Mnt7aSlzteh+Gmcz+mm6ftju6S+Y+0dWzXdUeVpN4oiYLCUGmvgZPWsPXf/c
+         elNSJ3dLXxE3b9Guru2+fqzeUZtmqmtKuoZ9o6xXkDY+YQwq0Ad5WY9kdqRH/ASn+mm/
+         BH14GwbNIlKXeCDtaoISqk1ZrqfQpm1vz8ITfgkoIhBC4exRPzp9K5bzMLc2X0KzQpCI
+         5n3ipVV5zNjhxEMh8HKt8ctc/ISROgT2DS9LCBjSuD8OaOp4ySYZeoSXwCJxdatvvib7
+         aQOERsOazJhQxSrEhP6smC8VDbjolRhx0TSRlH/7UP5f8PpyaWcsB5PR5L2I5hDidLbV
+         Sjaw==
+X-Gm-Message-State: AGi0PuaeLBqebxTbP7Eg61AN7SyPnsZe4Hkj5f6GPVaBBFv3wPFuoyeo
+        RcDAEPACpxpj1XQjkE1rKMRU1v0GeUFZ6vxZSdzzDA==
+X-Google-Smtp-Source: APiQypK7tW3MfW0FGcrXaMeS/bmC/PyGWc0vtFD5prm2IEa/O6Nv5e6InE5cxBEN7bvCrIzsH5jyGLFDfiDh1UET0RQ=
+X-Received: by 2002:a5d:8c89:: with SMTP id g9mr11161027ion.1.1588812967176;
+ Wed, 06 May 2020 17:56:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200506172158.218366-1-bgeffon@google.com> <CAEXW_YQ+iC9tot+HbHARiXz_o_KrDU7LjvuyPkj46DVfGvSOng@mail.gmail.com>
+ <CADyq12xRzr53hM7_ejEG-O8kDF5XBdrLM7yWVpbByd8pOWsTrA@mail.gmail.com>
+In-Reply-To: <CADyq12xRzr53hM7_ejEG-O8kDF5XBdrLM7yWVpbByd8pOWsTrA@mail.gmail.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 6 May 2020 20:55:55 -0400
+Message-ID: <CAEXW_YR2=g5Sh1uFCoLKDSxswyeJieOP8uxMrf4ievePdkgbSg@mail.gmail.com>
+Subject: Re: [PATCH] userfaultfd: fix remap event with MREMAP_DONTUNMAP.
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 17:42:40 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+Hi Brian,
 
-> This commit adds a shrinker so as to inform RCU when memory is scarce.
-> RCU responds by shifting into the same fast and inefficient mode that is
-> used in the presence of excessive numbers of RCU callbacks.  RCU remains
-> in this state for one-tenth of a second, though this time window can be
-> extended by another call to the shrinker.
-> 
-> If it proves feasible, a later commit might add a function call directly
-> indicating the end of the period of scarce memory.
+On Wed, May 6, 2020 at 1:32 PM Brian Geffon <bgeffon@google.com> wrote:
+>
+> It hasn't landed in a stable kernel yet, 5.7 is rc4 so I don't think
+> it needs to cc stable, right?
 
-(Cc David Chinner, who often has opinions on shrinkers ;))
+I think the criteria is, if it has been merged into Linus's tree in a
+kernel release, then CC'ing stable means any future stable releases of
+the kernel will have the patch applied to the stable tree. The fix
+patch itself will need to be merged into Linus tree at a future date
+before being applied to the stable tree. But at least CC'ing stable
+means it is tracked my stable bots and they'll do the right. This is
+my understanding.
 
-It's a bit abusive of the intent of the slab shrinkers, but I don't
-immediately see a problem with it.  Always returning 0 from
-->scan_objects might cause a problem in some situations(?).
+If the patch you are fixing was applied for v5.7 merge window, then I
+don't think you need to CC stable.
 
-Perhaps we should have a formal "system getting low on memory, please
-do something" notification API.
+> Andrew, I'd be happy to mail a new patch if necessary, otherwise here
+> is the fixes:
+>
+> Fixes: e346b38 ("mm/mremap: add MREMAP_DONTUNMAP to mremap()")
 
-How significant is this?  How much memory can RCU consume?
+I'd also avoid top-posting and send inline replies:
+https://web.archive.org/web/20080722025748/http://www.zip.com.au/~akpm/linux/patches/stuff/top-posting.txt
+https://lkml.org/lkml/2019/12/4/267
 
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2368,8 +2368,15 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
->  	struct rcu_data *rdp;
->  	struct rcu_node *rnp;
->  
-> -	rcu_state.cbovld = rcu_state.cbovldnext;
-> +	// Load .oomovld before .oomovldend, pairing with .oomovld set.
-> +	rcu_state.cbovld = smp_load_acquire(&rcu_state.oomovld) || // ^^^
-> +			   rcu_state.cbovldnext;
->  	rcu_state.cbovldnext = false;
-> +	if (READ_ONCE(rcu_state.oomovld) &&
-> +	    time_after(jiffies, READ_ONCE(rcu_state.oomovldend))) {
-> +		WRITE_ONCE(rcu_state.oomovld, false);
-> +		pr_info("%s: Ending OOM-mode grace periods.\n", __func__);
-> +	}
->  	rcu_for_each_leaf_node(rnp) {
->  		cond_resched_tasks_rcu_qs();
->  		mask = 0;
-> @@ -2697,6 +2704,35 @@ static void check_cb_ovld(struct rcu_data *rdp)
->  	raw_spin_unlock_rcu_node(rnp);
->  }
->  
-> +/* Return a rough count of the RCU callbacks outstanding. */
-> +static unsigned long rcu_oom_count(struct shrinker *unused1,
-> +				   struct shrink_control *unused2)
-> +{
-> +	int cpu;
-> +	unsigned long ncbs = 0;
-> +
-> +	for_each_possible_cpu(cpu)
-> +		ncbs += rcu_get_n_cbs_cpu(cpu);
-> +	return ncbs;
-> +}
-> +
-> +/* Start up an interval of fast high-overhead grace periods. */
-> +static unsigned long rcu_oom_scan(struct shrinker *unused1,
-> +				  struct shrink_control *unused2)
-> +{
-> +	pr_info("%s: Starting OOM-mode grace periods.\n", __func__);
-> +	WRITE_ONCE(rcu_state.oomovldend, jiffies + HZ / 10);
-> +	smp_store_release(&rcu_state.oomovld, true); // After .oomovldend
-> +	rcu_force_quiescent_state();  // Kick grace period
-> +	return 0;  // We haven't actually reclaimed anything yet.
-> +}
-> +
-> +static struct shrinker rcu_shrinker = {
-> +	.count_objects = rcu_oom_count,
-> +	.scan_objects = rcu_oom_scan,
-> +	.seeks = DEFAULT_SEEKS,
-> +};
-> +
->  /* Helper function for call_rcu() and friends.  */
->  static void
->  __call_rcu(struct rcu_head *head, rcu_callback_t func)
-> @@ -4146,6 +4182,7 @@ void __init rcu_init(void)
->  		qovld_calc = DEFAULT_RCU_QOVLD_MULT * qhimark;
->  	else
->  		qovld_calc = qovld;
-> +	WARN_ON(register_shrinker(&rcu_shrinker));
->  }
->  
->  #include "tree_stall.h"
-> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> index 2d7fcb9..c4d8e96 100644
-> --- a/kernel/rcu/tree.h
-> +++ b/kernel/rcu/tree.h
-> @@ -326,6 +326,8 @@ struct rcu_state {
->  	int ncpus_snap;				/* # CPUs seen last time. */
->  	u8 cbovld;				/* Callback overload now? */
->  	u8 cbovldnext;				/* ^        ^  next time? */
-> +	u8 oomovld;				/* OOM overload? */
-> +	unsigned long oomovldend;		/* OOM ovld end, jiffies. */
->  
->  	unsigned long jiffies_force_qs;		/* Time at which to invoke */
->  						/*  force_quiescent_state(). */
+Thanks!
+
+ - Joel
+
+
+>
+> Brian
+>
+>
+> On Wed, May 6, 2020 at 10:28 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Wed, May 6, 2020 at 1:22 PM Brian Geffon <bgeffon@google.com> wrote:
+> > >
+> > > A user is not required to set a new address when using
+> > > MREMAP_DONTUNMAP as it can be used without MREMAP_FIXED.
+> > > When doing so the remap event will use new_addr which may not
+> > > have been set and we didn't propagate it back other then
+> > > in the return value of remap_to.
+> > >
+> > > Because ret is always the new address it's probably more
+> > > correct to use it rather than new_addr on the remap_event_complete
+> > > call, and it resolves this bug.
+> > >
+> >
+> > Does it need Fixes: tag, and CC to stable? Going into a stable kernel
+> > will mean the stable kernel merges into ChromeOS also gets it.
+> >
+> > thanks,
+> >
+> >  - Joel
+> >
+> > > Signed-off-by: Brian Geffon <bgeffon@google.com>
+> > > ---
+> > >  mm/mremap.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/mm/mremap.c b/mm/mremap.c
+> > > index c881abeba0bf..6aa6ea605068 100644
+> > > --- a/mm/mremap.c
+> > > +++ b/mm/mremap.c
+> > > @@ -794,7 +794,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+> > >         if (locked && new_len > old_len)
+> > >                 mm_populate(new_addr + old_len, new_len - old_len);
+> > >         userfaultfd_unmap_complete(mm, &uf_unmap_early);
+> > > -       mremap_userfaultfd_complete(&uf, addr, new_addr, old_len);
+> > > +       mremap_userfaultfd_complete(&uf, addr, ret, old_len);
+> > >         userfaultfd_unmap_complete(mm, &uf_unmap);
+> > >         return ret;
+> > >  }
+> > > --
+> > > 2.26.2.526.g744177e7f7-goog
+> > >
