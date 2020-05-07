@@ -2,113 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D23AC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77552C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433F02082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3553E20736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iD+R1kQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgEGBTg (ORCPT
+        id S1728261AbgEGB3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 21:19:36 -0400
-Received: from sandeen.net ([63.231.237.45]:57144 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgEGBTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 21:19:36 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id BEE752B49;
-        Wed,  6 May 2020 20:19:28 -0500 (CDT)
-Subject: Re: PROBLEM: XFS in-memory corruption with reflinks and duperemove:
- XFS (dm-4): Internal error xfs_trans_cancel at line 1048 of file
- fs/xfs/xfs_trans.c. Caller xfs_reflink_remap_extent+0x100/0x560
-To:     =?UTF-8?B?RWR3aW4gVMO2csO2aw==?= <edwin@etorok.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <f6c749739dc135ebd7a9321195a616b15c772082.camel@etorok.net>
- <20200421171616.GH6749@magnolia>
- <acc12ecd2c183c93f8af770b2302498cb30e83f4.camel@etorok.net>
- <20200504152135.GA13811@magnolia>
- <583e618512f15f10b3dee8857a92235950c862e7.camel@etorok.net>
- <20200505005811.GC5716@magnolia>
- <124EB800-8712-4C36-8B35-41363A558269@etorok.net>
- <20200506224749.GA6730@magnolia>
- <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <3fa09c4e-6233-2216-f7c8-a28bd7dcaf04@sandeen.net>
-Date:   Wed, 6 May 2020 20:19:34 -0500
+        Wed, 6 May 2020 21:29:17 -0400
+Received: from mail-dm6nam10on2073.outbound.protection.outlook.com ([40.107.93.73]:22913
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727803AbgEGB3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 21:29:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dc/mApYSPV8RvO80nIF0AXTuRWjC5BYuWU3kp/47Fq/7EjLqbf69FJzfd8iHsm+Bn4lnSSdHqnMnqRHTV3MCQ1YwA2yABPpz+KB9DR3j5J518luBCAwreHf/5W4SZkLoVRvPDOWrXt0I49fe2zDmdD0bM/zb9yd7rAa32lmO/70IQxUkDDQf4sO29bebPtrTosfgd9f88If+g4X8SfJtWy37E+96MYMQJTCtm/PhD5Ia6AmkbJt/rZaCmoeCMMdLWwpsoiMjM5v6IpXM3qBoWf/IddS1WuPS6THiXwswzC3RR9HyMilZznVYAb5d1cHpkAX+xVBX6BLKrc4rTm1kzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vo5Zw2i3cJpNH+LOw8zFlHxTdvCzfwVEcKpSEy6VAz4=;
+ b=WLT/zLwed/W4NwHT3rfXUrYNnvcR3NR21DSOqm0TgW0zydENSg/ckyaV6xXGrtGEtJdXnEOyE+7OlpYs1HLgMVuTFIjUqPJxkfP+hLYbHKqdqvIqBmK8TZ9HNEBY99g7H63nd7LSbjo5bKqWhTrA7NE0uc8ZqvjQw3CGiLuSoHxm1jwcsQIqEv+KXTCmmIW9N0wOQyOCl23QlEX66cdH4D/a0/wUqaKPY9Su1gS7Hy31ga/p83uKpj7PY5PO0Ydig+xUlyDx949LEBaE+aORZDtCFix+VZ2Lex7o7cEt4tBRIv0pAVWr3PknVBJFrjTjZhHv9xk5fTos9CrHYVkUbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vo5Zw2i3cJpNH+LOw8zFlHxTdvCzfwVEcKpSEy6VAz4=;
+ b=iD+R1kQQMVPpMcAMY/PTvCise5mv7ZvHwKaAp9V2dN8bpXPIzh2GJBGF+uf4G4SJVbTPQ64QXD0emlc1cODsvYTzBvHC/Ld3sAKFDmR5HwqmpRWPJJV8C0K3/5J27T/czTtY9qs/CHGKBcEwm9z5deFVL4vF8dUNWY0r/0BdBoA=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB2503.namprd12.prod.outlook.com (2603:10b6:4:b2::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.21; Thu, 7 May 2020 01:29:13 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.030; Thu, 7 May 2020
+ 01:29:13 +0000
+Subject: Re: [PATCH 2/4] KVM: SVM: Fixes setting V_IRQ while AVIC is still
+ enabled
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     joro@8bytes.org, jon.grimm@amd.com, mlevitsk@redhat.com
+References: <1588771076-73790-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1588771076-73790-3-git-send-email-suravee.suthikulpanit@amd.com>
+ <a963a336-4096-b53a-276b-6509f5cb9402@redhat.com>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <169cb2fb-f792-2d79-688a-3696d9074594@amd.com>
+Date:   Thu, 7 May 2020 08:29:03 +0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a963a336-4096-b53a-276b-6509f5cb9402@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU1PR03CA0031.apcprd03.prod.outlook.com
+ (2603:1096:802:19::19) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:b8e0:e252:3d1e:5b4e) by KU1PR03CA0031.apcprd03.prod.outlook.com (2603:1096:802:19::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Thu, 7 May 2020 01:29:11 +0000
+X-Originating-IP: [2403:6200:8862:d0e7:b8e0:e252:3d1e:5b4e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 91576003-49d6-4b36-bc39-08d7f2260cc5
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2503:|DM5PR12MB2503:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB25039614F37C6636B8ACBE76F3A50@DM5PR12MB2503.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 03965EFC76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QQr2uk4MSGjm6wCn9MuFLdpTkEf6lxNFLewjs/PHb8RoekTVh3JVzGffQQ1CWK+hrUW7JOfJUCQMgG1HOVRgu0fp27GVKDUu4BlJVzNCgvJK2jCcqUyNmSL5KFUgcHopGvmmzjjS6GC/jNDNIzJ77ukl+dAw02qLKNLsnTX3PXVc2xjegjbM3qYBJ6WE+LgSWXdXqS5MBH7he09xW3pNUHmnPF2b3jeG8GrjQpdKQmjnOV8uUgtY//NCGAkluLJ8AVJtFVz3bHROIAfvOXdeuXxYtA9w0BKfvbNohb+uKesmR/TvdUa9/BkV1IaWBJnD7Cv8Zxu0acrizQZCADLWmRUg/OOimG4LQu3+gtxoYoEUUmJRL8sdwmVMNSSwMkQonC6SDqUoyzkRSOLWay/0yTffse7KUUP4kNqrUe0rAeTyIJx6OTkue88244Lh6YSWR1y+PI1KKmT/BgO8KWuOjsa5aqrKKug7pi0pw0tSiiv9/6b0lpa6YJ+y6JI8gT+HzE142NMprRvHOwtXNnInVTkOESn0CaYLZ80ea1K65lJlGDnvPJ1UiWgKs9ayUJIX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(33430700001)(4326008)(31686004)(478600001)(36756003)(6486002)(6512007)(8676002)(44832011)(8936002)(5660300002)(33440700001)(52116002)(2616005)(316002)(16526019)(186003)(66556008)(6506007)(53546011)(66946007)(2906002)(66476007)(86362001)(6666004)(31696002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Q3twV10RYhoCRTuDxahUeVMSemw312wZ3drfk8k5dENB78TNJTt83TmaCGJglm4A4xKR2vahTo/lvVoCU11/jdnaYcdicXEUL07cDomN6k4z2Etw99sHAwWmmr8bh0VnfzJdgmTILPq+sfpiNAMZeA4gdcyurhXhhq/JOiqJ8GhioJTh8Bg3CDTH2Gg7AuEuL/IiKIYnDUA60C7VSmB+ojBDLYgi7z8qmuT7XLo38wNG1lVayWpRV0bqEydY8FcL9xwtmNN1EWtsTlpM/GLxQw8ax6gqTJ8ykwxAZx2hfOqKhiKb/d6kL1kzm6ds1Gsuli9F+G+77MFddzRdOWgrMkHk6NwacDVMwffjrR06EkA6JqHTB8OMDBccXzqC3hQ1igMr0QSwIayr92TbRDw/Z/joEKRLf0TYDxfZxQ+ifWcr2nTuVK0K+3Q2r1ysPSx/1YJ4OITqJJIUHrSBhkDmndFP0mzXa1a3QS95knJqMSzIZHMMlmHQeeu4c/xMNkf3rksLM4fIIYocqevGRh8o5y5w57D/7eA++wkPHBOmsvfxszXnm932AEaK+UHtdYp0nI1JFsZ4lMBhp4dZPtLWsNBc/XwJxsyoB+t5CVFCL4tNqNp7IBwz8YGcPDpceyo99VQOWLNBJusNeUE7N4Kp8faxxjCBtUeOZ8Ia1QScDspu/HqZclK1vfEU9fUxEY94qkuRlj4D3wni3cudtZcBhhg6NDE0nORq7uKnTd+CbtjSI4w7lgdDQKD1xrMQHsKFuecnDnUK1FDBIJ3SN+vkzrOz7G+hwwm1FWBtxdJYy9jw3binrCuLRMG/3sruGdt2Mv+JxaqvWLsKGaDPkIP5tnvPZA5y7Fkz1Z/7nckX34bl0ZeAkk+xyqxWofF+cQd0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91576003-49d6-4b36-bc39-08d7f2260cc5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 01:29:13.6497
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VFl/LPC/CNzj/emyEUGfpIs4cFSF6cdg+C/dhJJZkSzmgp933bEVH7oM03Tl5CPmJfQ4QaIP+yrno8FiA6RJIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/20 6:20 PM, Edwin Török wrote:
->> (Obviously, a full metadump would be useful for confirming the shape
->> of
->> the refcount btree, but...first things first let's look at the
->> filefrag
->> output.)
-> I'll try to gather one, and find a place to store/share it.
+
+
+On 5/6/20 11:29 PM, Paolo Bonzini wrote:
+> On 06/05/20 15:17, Suravee Suthikulpanit wrote:
+>>    */
+>> -void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
+>> +void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit,
+>> +			      struct kvm_vcpu *except)
+>>   {
+>>   	unsigned long old, new, expected;
+>>   
+>> @@ -8110,7 +8111,16 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
+>>   	trace_kvm_apicv_update_request(activate, bit);
+>>   	if (kvm_x86_ops.pre_update_apicv_exec_ctrl)
+>>   		kvm_x86_ops.pre_update_apicv_exec_ctrl(kvm, activate);
+>> -	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
+>> +
+>> +	/*
+>> +	 * Sending request to update APICV for all other vcpus,
+>> +	 * while update the calling vcpu immediately instead of
+>> +	 * waiting for another #VMEXIT to handle the request.
+>> +	 */
+>> +	kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
+>> +					 except);
+>> +	if (except)
+>> +		kvm_vcpu_update_apicv(except);
 > 
-> Best regards,
-> --Edwin
+> Can you use kvm_get_running_vcpu() instead of touching all callers?
+> Also a slightly better subject would be "KVM: SVM: Disable AVIC before
+> setting V_IRQ".
+> 
+> Paolo
+> 
 
-Metadumps are compact to start with and usually compress pretty well.
-Obviously a very large filesystem with lots of metadata will take some
-space, but it might not be that bad.
+Right, that's better idea. I'll send out V2 separately.
 
--Eric
+Thanks,
+Suravee
