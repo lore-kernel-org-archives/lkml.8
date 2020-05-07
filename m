@@ -2,157 +2,100 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B979C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B66CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFEDA2078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F68F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgEGGaX (ORCPT
+        id S1725900AbgEGGdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:30:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3881 "EHLO huawei.com"
+        Thu, 7 May 2020 02:33:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3832 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725783AbgEGGaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:30:22 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3AD732D253226B4F4938;
-        Thu,  7 May 2020 14:30:18 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 7 May 2020
- 14:30:16 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: get parent inode when recovering pino
-From:   Chao Yu <yuchao0@huawei.com>
-To:     Eric Biggers <ebiggers@kernel.org>, Gao Xiang <hsiangkao@gmx.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <kernel-team@android.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200505153139.201697-1-jaegeuk@kernel.org>
- <20200505165847.GA98848@gmail.com> <20200505181323.GA55221@google.com>
- <20200505181941.GC98848@gmail.com>
- <20200506001403.GA2101@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20200506012428.GG128280@sol.localdomain>
- <5641613f-48e0-171c-cfd0-e799e24d8d11@huawei.com>
-Message-ID: <cfba83e1-bae7-bd14-f41a-0d6e54366f37@huawei.com>
-Date:   Thu, 7 May 2020 14:30:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725783AbgEGGdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:33:22 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4C5D4A87EB3CBC1BFCE0;
+        Thu,  7 May 2020 14:33:21 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 14:33:14 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] ASoC: amd: acp3x-pcm-dma: Use bitwise instead of arithmetic operator for flags
+Date:   Thu, 7 May 2020 14:39:22 +0800
+Message-ID: <1588833562-14417-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <5641613f-48e0-171c-cfd0-e799e24d8d11@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/6 14:55, Chao Yu wrote:
-> On 2020/5/6 9:24, Eric Biggers wrote:
->> On Wed, May 06, 2020 at 08:14:07AM +0800, Gao Xiang wrote:
->>>>
->>>> Actually, I think this is wrong because the fsync can be done via a file
->>>> descriptor that was opened to a now-deleted link to the file.
->>>
->>> I'm still confused about this...
->>>
->>> I don't know what's wrong with this version from my limited knowledge?
->>>  inode itself is locked when fsyncing, so
->>>
->>>    if the fsync inode->i_nlink == 1, this inode has only one hard link
->>>    (not deleted yet) and should belong to a single directory; and
->>>
->>>    the only one parent directory would not go away (not deleted as well)
->>>    since there are some dirents in it (not empty).
->>>
->>> Could kindly explain more so I would learn more about this scenario?
->>> Thanks a lot!
->>
->> i_nlink == 1 just means that there is one non-deleted link.  There can be links
->> that have since been deleted, and file descriptors can still be open to them.
->>
->>>
->>>>
->>>> We need to find the dentry whose parent directory is still exists, i.e. the
->>>> parent directory that is counting towards 'inode->i_nlink == 1'.
->>>
->>> directory counting towards 'inode->i_nlink == 1', what's happening?
->>
->> The non-deleted link is the one counted in i_nlink.
->>
->>>
->>>>
->>>> I think d_find_alias() is what we're looking for.
->>>
->>> It may be simply dentry->d_parent (stable/positive as you said before, and it's
->>> not empty). why need to d_find_alias()?
->>
->> Because we need to get the dentry that hasn't been deleted yet, which isn't
->> necessarily the one associated with the file descriptor being fsync()'ed.
->>
->>> And what is the original problem? I could not get some clue from the original
->>> patch description (I only saw some extra igrab/iput because of some unknown
->>> reasons), it there some backtrace related to the problem?
->>
->> The problem is that i_pino gets set incorrectly.  I just noticed this while
->> reviewing the code.  It's not hard to reproduce, e.g.:
->>
->> #include <unistd.h>
->> #include <fcntl.h>
->> #include <sys/stat.h>
->>
->> int main()
->> {
->>         int fd;
->>
->>         mkdir("dir1", 0700);
->>         mkdir("dir2", 0700);
->>         mknod("dir1/file", S_IFREG|0600, 0);
->>         link("dir1/file", "dir2/file");
->>         fd = open("dir2/file", O_WRONLY);
->>         unlink("dir2/file");
->>         write(fd, "X", 1);
->>         fsync(fd);
->> }
->>
->> Then:
->>
->> sync
->> echo N | dump.f2fs -i $(stat -c %i dir1/file) /dev/vdb | grep 'i_pino'
->> echo "dir1 (correct): $(stat -c %i dir1)"
->> echo "dir2 (wrong): $(stat -c %i dir2)"
->>
->> i_pino will point to dir2 rather than dir1 as expected.
-> 
-> Could you add above testcase into commit message of your patch? it will
-> be easier to understand the issue we solved with it.
-> 
-> In addition, how about adding this testcase in fstest as a generic one?
+Fix the following coccinelle warnings:
 
-Oops, it's not a generic one... please ignore this.
+sound/soc/amd/raven/acp3x-pcm-dma.c:161:39-40: WARNING: sum of probable bitmasks, consider |
+sound/soc/amd/raven/acp3x-pcm-dma.c:172:39-40: WARNING: sum of probable bitmasks, consider |
+sound/soc/amd/raven/acp3x-pcm-dma.c:183:39-40: WARNING: sum of probable bitmasks, consider |
+sound/soc/amd/raven/acp3x-pcm-dma.c:194:39-40: WARNING: sum of probable bitmasks, consider |
 
-> 
->>
->> - Eric
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->> .
->>
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index e362f0b..b0cc0fe 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -158,7 +158,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 		switch (rtd->i2s_instance) {
+ 		case I2S_BT_INSTANCE:
+ 			reg_dma_size = mmACP_BT_TX_DMA_SIZE;
+-			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+ 						BT_PB_FIFO_ADDR_OFFSET;
+ 			reg_fifo_addr = mmACP_BT_TX_FIFOADDR;
+ 			reg_fifo_size = mmACP_BT_TX_FIFOSIZE;
+@@ -169,7 +169,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 		case I2S_SP_INSTANCE:
+ 		default:
+ 			reg_dma_size = mmACP_I2S_TX_DMA_SIZE;
+-			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+ 						SP_PB_FIFO_ADDR_OFFSET;
+ 			reg_fifo_addr =	mmACP_I2S_TX_FIFOADDR;
+ 			reg_fifo_size = mmACP_I2S_TX_FIFOSIZE;
+@@ -180,7 +180,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 		switch (rtd->i2s_instance) {
+ 		case I2S_BT_INSTANCE:
+ 			reg_dma_size = mmACP_BT_RX_DMA_SIZE;
+-			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+ 						BT_CAPT_FIFO_ADDR_OFFSET;
+ 			reg_fifo_addr = mmACP_BT_RX_FIFOADDR;
+ 			reg_fifo_size = mmACP_BT_RX_FIFOSIZE;
+@@ -191,7 +191,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
+ 		case I2S_SP_INSTANCE:
+ 		default:
+ 			reg_dma_size = mmACP_I2S_RX_DMA_SIZE;
+-			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
++			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
+ 						SP_CAPT_FIFO_ADDR_OFFSET;
+ 			reg_fifo_addr = mmACP_I2S_RX_FIFOADDR;
+ 			reg_fifo_size = mmACP_I2S_RX_FIFOSIZE;
+-- 
+2.6.2
+
