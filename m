@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25529C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAFCC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F266C216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3819A216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ge96F09X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e0B6HuDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgEGSKf (ORCPT
+        id S1728444AbgEGSKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
+        Thu, 7 May 2020 14:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728305AbgEGSKd (ORCPT
+        by vger.kernel.org with ESMTP id S1728307AbgEGSKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:33 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650D1C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:33 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id v18so7681677qtq.22
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:33 -0700 (PDT)
+        Thu, 7 May 2020 14:10:30 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345BEC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:29 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e2so7883055ybm.19
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=9OhNNPOR5bOJXqrXgYTR/z4ZLcIw94c7qBlgw12zehM=;
-        b=ge96F09XdFsFsB5dYM9NSm1hEwRKTOm6LHBDxv4p756JWp8TiB91WkCmvrH5GpJ7ID
-         R1VU3A76KGfuijtfRH6+xrVKU0ddCaeLZF07G8RQYkl68nCxyTdIXIQfY4W8gRGhbCod
-         azIuW5jjVQqpdZInIkwMQBSRaUjl5Tu+cNcP1+KoCyvyGrxIzqKulY0Gn7TkwjziZ94Z
-         BtRbwdywx5zzFJCVKWdH20zAP5GXCNqJLhSfhYgDYP5/Mm28PlWHVX30Ju4SOsih1iTY
-         7kpSk4677XwaHJJbNtMj+FUeOaemVnGoLjxIK5A4BsQxJR1aZ0j9uqW/oOpFjoP7CYkq
-         VN1Q==
+        bh=8H2cxWc0TJkFq1FwnzU8BhlMDlLROEsVn8jQ63PO1YA=;
+        b=e0B6HuDQFhjEiqKogDpB4FKzUc+1Dc5yC/vswLYEcVtDTUxUF+EebiB+Cc9J824OQs
+         RHMC3zH1dbpw8rXc96BMLodYXjsjhq/iL6S9yrv9krOI2qjgV8bkOqbR5k6Y3nkMqEca
+         zMbpy+PyilGMtP3Mexgi9bk3qNVRPHlEDtwyw+broZ/rkGpWZsFi+KhpXcTyOiir4g3e
+         cKMsSunv87LNlGijr/lhKEAstYnvmmaTSOHAGEC3FRDPWnxqIu2U79KpfZJRjjtRTYHr
+         sPQhmCCM9dUl6ZppLJLe8CKNIZE+or72DPVnWjlqbzcNapTLTPMNJim0aCsiIzNRDOTE
+         hKJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=9OhNNPOR5bOJXqrXgYTR/z4ZLcIw94c7qBlgw12zehM=;
-        b=Qq0N97IGRHG+M5nM4He30s0BuDThwGnX/ejOSVUyt+ETbNpVocgoFdSmx/O52hah4A
-         qqlTpe0GjJ6ZjsIn+L31jy3Zc9SdA92rxf2LMwFQ7DT9t9CwiM+lIZ07EVZMZeAhbHSj
-         5N57XQjiDnvG0/iQ8PmgLW33wGeyQLfac4vh5UXBW28uSMwuDegtCDhsuMOlPi0y2+is
-         xF9H/xMuugrcTXjYixKZINBzHCxTSiBoK4TWR1iS1tcv9x0CbJ4XlFks5X9ox0TQaToG
-         /D3aC7zGaDr8JMp/BziFA/sCTzzOdWDmjko4urkSbv5y4T6cFGKhaQjAhCltgiQax35M
-         ECCA==
-X-Gm-Message-State: AGi0PuYZcX6TLj7w53iYoBGUfp0/YqY6q2ep3W07wsspNL3QYXNC0y1/
-        SJeajanOpc1mjisHAvSJBGQkbvFaFOjn3hoxJw7hGC5rRYiCFX8r7nOT8JndMCjYG8U6/YBk0vf
-        7Xyd/M9qHRQ9EZUDMKA8Rm7BS2/usuKiI/jviD5iXpxlK6O81lBK8ecxYHKfwN22LLRJ7Po8q
-X-Google-Smtp-Source: APiQypIiwLV5BbE0n5CUQvk0QJA7FNWdGbxWcAUCqDJsE+LSuluk52+DrvUSh3DwGlH7tJ6FU4zi3lidRXSp
-X-Received: by 2002:a0c:f50a:: with SMTP id j10mr13910437qvm.172.1588875032506;
- Thu, 07 May 2020 11:10:32 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:10:06 +0100
+        bh=8H2cxWc0TJkFq1FwnzU8BhlMDlLROEsVn8jQ63PO1YA=;
+        b=gukUVsJa4G3jW4TrxNKXVTKBjlkwrxFKQ08nfD3JpwFWXMEM+uGlP64RMrzWz/ThQP
+         rllhXX5rzjr+OrYhk6ZVD7bn8RHYFbLmvLikHrSGrmibZAm0dxYAGrLqq08NVHIsTRWU
+         bgAFIxi+ZYi3Tg3fA6hRWEGWT4uW+luIqCcZCkEY0JcTlmDdEzs2mSQqfnPQiyP9upGV
+         GWVUGqB8T4CvM10JUF6HktwI9Z9whBdy4OG7F/69XbN1YP/mIi6DewR5HVKV94qM4D6P
+         i15mqieqv1obHCbHj+2YMkcRJ9GxIN2oDO8BoqtFu0Ge3Dp4PLU/wq5/ASxcsgvzqQFl
+         S+NQ==
+X-Gm-Message-State: AGi0PuZtmZraa+8Hx4Dn2A1qK2ORnp1aoCP0mZYr+yAg9Yjsd1JxVre0
+        IL+uhYoAQCAWdH6lVNjZ8lgNP2oM00J619rReFads6jg+sGiBjdP3Y0u1hL7yWVi3hp6hm1aOss
+        UremOFGNLqPH8z8gNiZRK6PueT22draO8qvBOyintxcDnWUq6p1nKxlOrfZCXBCe/3OuhrlIL
+X-Google-Smtp-Source: APiQypL5FceGu1rlwwmqFHesyQwSxJJabs9h5OpeREfdyyMJo/uIVD6Sh4CrmCFa5su+iSIK8etzgG3RTlxV
+X-Received: by 2002:a25:d80f:: with SMTP id p15mr24245303ybg.379.1588875028303;
+ Thu, 07 May 2020 11:10:28 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:10:04 +0100
 In-Reply-To: <20200507181012.29791-1-qperret@google.com>
-Message-Id: <20200507181012.29791-9-qperret@google.com>
+Message-Id: <20200507181012.29791-7-qperret@google.com>
 Mime-Version: 1.0
 References: <20200507181012.29791-1-qperret@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 08/14] sched/core: Export runqueues per-cpu array
+Subject: [PATCH 06/14] arch_topology: Export cpu_scale per-cpu array
 From:   Quentin Perret <qperret@google.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -83,24 +83,21 @@ It will be needed by schedutil once modularized, export it.
 
 Signed-off-by: Quentin Perret <qperret@google.com>
 ---
-This is only needed for cpu_rq() -> cpu_bw_dl() in schedutil, so there is
-probably an alternative if exporting this isn't desirable.
----
- kernel/sched/core.c | 1 +
+ drivers/base/arch_topology.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dbaf3f63df22..537eb45b4274 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -36,6 +36,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 4d0a0038b476..b1f0c272da67 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -48,6 +48,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+ }
  
- DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-+EXPORT_SYMBOL_GPL(runqueues);
+ DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
++EXPORT_SYMBOL_GPL(cpu_scale);
  
- #if defined(CONFIG_SCHED_DEBUG) && defined(CONFIG_JUMP_LABEL)
- /*
+ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+ {
 -- 
 2.26.2.526.g744177e7f7-goog
 
