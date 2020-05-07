@@ -8,69 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44433C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B44C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1282075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD792075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bqxfo24A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AR5Zu3h0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgEGHq4 (ORCPT
+        id S1726575AbgEGHrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
+        Thu, 7 May 2020 03:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725802AbgEGHqy (ORCPT
+        by vger.kernel.org with ESMTP id S1725802AbgEGHrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:46:54 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFB7C061A10
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 00:46:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d184so2617281pfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:46:54 -0700 (PDT)
+        Thu, 7 May 2020 03:47:20 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4158C061A10
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 00:47:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so2599700pfc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cweRr9cAyY6zAkbWBKWMpZ4+w4vWexg4Pp5+tOHzveM=;
-        b=Bqxfo24AfFYXWhsN8GHnujLuoVkBpk+oLN5n/pKhY1B/kTAZsV4QlTI/+64OgJd7me
-         /3GbM2TCKbKKs5H0kBqmM/lnyfr9O1RVWszihBOglb3thtIhJhcsvO0cuaevmIsigXdc
-         AvG+O3NOWCh8NEyKHb9rrPLijMLpT2UVpR3OtJax9CXsSrfustfDX6lSjq7KY+lxg8aH
-         cRYpX6Ay58EqICKpIAqzfQGh+rA6W3MSlwo/Gl8PisC8qnqo5nBQPZ6Vs295kRAD8EEu
-         ru29YLo93QVo76QU8igeajEgubBaI0bCFrxP9vYIm1WQw+gIC21E0CRyu41/mtzKfcMM
-         c0mA==
+        h=from:to:cc:subject:date:message-id;
+        bh=LPVqop7eYhlKO1AOSFfnjZfL6zhGOb1jJx61piurnL8=;
+        b=AR5Zu3h0zYcp2CjYSCzPv5BOBji1VqKwGPKlVLR0QF5Uo3TGwx7XJKWyLDyI+su6CY
+         WEcR6iVRdAJGvmCgEY6pKJ0Cm2D5yWjW4ZfyIILIu5rBLKHNaeCZ+DRzxu3SRQzF/Yvc
+         L8umyfpq2yFYf7Lm2HACE/KCjlW+4Ecg24dueY4O74JKLhJU/x+51Q8JVyg/QOiDbgcd
+         I5ChzDJ4tg1lm6D6yTvW9vLUJSLCLYy3rh5ZaMhCcr35nRL/HfOsYF9+8hG8JotvzWoF
+         kiK/LwSbnYfA5bY+jk8irL/cDe82nl9Y8WxllKjEzJcJHgeu0sYQCrIuO0aFyWYpdHAI
+         R5PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cweRr9cAyY6zAkbWBKWMpZ4+w4vWexg4Pp5+tOHzveM=;
-        b=QgHKpEQzLLAJOP7AJYKNN0KcYDidKuhSKVtdp+qRevx13FIzLOn0ElReAp85hQBl+J
-         mGaU0+AOf5vtSnBtegWrlGLnFb0bWbYvUBmaTsivbaVEJooIklOvWpe4HF8rjylzi2jJ
-         hyTvopMYhurXhd2kyEouuSlJBLBvLnYc7p3nyVzpEA2E+aniYewkAF6cUnUYyjGHgNo2
-         Og8K7gMDHVOQgCcjt1WIHK0Da6MsrnvbkHlOjYyJfLj/ataTIteAb8Axo828ir3oqvkG
-         j+rwsgFzBn18jIppR7R+XTIsnqG4i5GjP8arnmjMxH+VN+7U956dH+JI2DhzriO3RbUy
-         lncQ==
-X-Gm-Message-State: AGi0PuY7SmqbtvwS6cp4VebSFjEuTL3HtWIMXDJ7jkB5S7ToSPrm4r/Q
-        gqLG4YxNdD2AaPmL5JBLOHY=
-X-Google-Smtp-Source: APiQypI8VrY230e+hhO68sFDKpYBvjJ1jP2UrGvK+1FaFovSdhtxYdf0l+gaPRquhoaquZMZUdgkeQ==
-X-Received: by 2002:aa7:9429:: with SMTP id y9mr13001101pfo.8.1588837613949;
-        Thu, 07 May 2020 00:46:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LPVqop7eYhlKO1AOSFfnjZfL6zhGOb1jJx61piurnL8=;
+        b=Dl6sXiH901FLkzR5/ja4wfag4uPlN8G7sC+j9IDbC2ua7DrWVGZSK7Mo1Wyk5g9+Eo
+         Z8jtdDWjUFSuC+YwbctgrWOA5vz7/f3LU8e95qw1zg4wGUf6x2NZ15WVzkUN6dLElEym
+         YO9XSFUyCrUBcJXoqe9bTPy6mpeKEpN+STLYyAvczARR3DTBE4OeYjhg1Vo1og5LhWhR
+         p7x7uONGJUipx5PUjyrKmpIONWpIqr49wUvkHTs71Q4sf9dojBvSPTVQm6ft4akWH62y
+         XQvlqOnFjTF4lqcK7U3D1T7H1OdVve0IpIg3WABj9tAsmqfrr8HiBIbVg5jAa+MFB+d/
+         kI3w==
+X-Gm-Message-State: AGi0PuYUrIjq/OxIwdgEsWbY6bec5ul1dSII4FMsFQ+s9tvsWwORju7A
+        RlqdLuGhlirRz2IujZz9/MSvHuB4NjQ=
+X-Google-Smtp-Source: APiQypJSPQuY+csp6bCCGwKD3ZC1sC7/TB05ndt59XXU0LqPCVDPgfV81xHWnSNnl5MlKhMSWxCOMQ==
+X-Received: by 2002:a63:6cf:: with SMTP id 198mr3353646pgg.59.1588837639579;
+        Thu, 07 May 2020 00:47:19 -0700 (PDT)
 Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id r26sm4127943pfq.75.2020.05.07.00.46.51
+        by smtp.gmail.com with ESMTPSA id x12sm4011292pfo.62.2020.05.07.00.47.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 May 2020 00:46:53 -0700 (PDT)
+        Thu, 07 May 2020 00:47:19 -0700 (PDT)
 From:   dillon.minfei@gmail.com
 To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
         philippe.schenker@toradex.com
 Cc:     linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 1/4] ARM: dts: stm32: add I2C3 support on STM32F429 SoC
-Date:   Thu,  7 May 2020 15:46:43 +0800
-Message-Id: <1588837603-14206-2-git-send-email-dillon.minfei@gmail.com>
+Subject: [PATCH 2/4] ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
+Date:   Thu,  7 May 2020 15:47:15 +0800
+Message-Id: <1588837635-14267-1-git-send-email-dillon.minfei@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588837603-14206-1-git-send-email-dillon.minfei@gmail.com>
-References: <1588837603-14206-1-git-send-email-dillon.minfei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,36 +75,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: dillon min <dillon.minfei@gmail.com>
 
-This patch adds I2C3 instances of the STM32F429 SoC
+This patch adds the pin configuration for I2C3 controller on
+stm32f4.
 
 Signed-off-by: dillon min <dillon.minfei@gmail.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index d777069..257b843 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -402,6 +402,18 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+index 392fa14..051f336 100644
+--- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+@@ -316,6 +316,18 @@
+ 				};
+ 			};
  
-+		i2c3: i2c@40005c00 {
-+			compatible = "st,stm32f4-i2c";
-+			reg = <0x40005c00 0x400>;
-+			interrupts = <72>,
-+				     <73>;
-+			resets = <&rcc STM32F4_APB1_RESET(I2C3)>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(I2C3)>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++			i2c3_pins: i2c3-0 {
++				pins {
++					pinmux = <STM32_PINMUX('C', 9, AF4)>,
++						/* I2C3_SDA */
++						 <STM32_PINMUX('A', 8, AF4)>;
++						/* I2C3_SCL */
++					bias-disable;
++					drive-open-drain;
++					slew-rate = <3>;
++				};
++			};
 +
- 		dac: dac@40007400 {
- 			compatible = "st,stm32f4-dac-core";
- 			reg = <0x40007400 0x400>;
+ 			dcmi_pins: dcmi-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
 -- 
 2.7.4
 
