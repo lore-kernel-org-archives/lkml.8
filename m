@@ -2,138 +2,520 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B618C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2B9C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758012082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19048215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XN7mNqB3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B2sIj2Mx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEGCxE (ORCPT
+        id S1728446AbgEGCx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:53:04 -0400
-Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:12165
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725827AbgEGCxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:53:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ACpXuDHxLDKSYdhjAz2iKlASzh3zrk5gLNfG8c26dQKlYavD/SZsJdS1yf4D2Ds8dl/9lsg0jsLUUwpziFMN6UdXxpmZWqYJSTjiMoVPNaT5EhsdMDI6k4qQY6eDfnnvbW9mW+l7CYPs4TwnyjD1lft53wmMW/YJ30U5EderI4JP/kaLRSSELxoAt6RAKRfWWz1+499auMPjJNeWx/GNbRnvG0YYQ6iscrp7+bLBvUarT3amOV6Eqtjv0lwZYrXba7rtYMZwkzOr3rrID29nJJB+xFIcXdioIzWrheIuyqM2sZACGJpk8TsBeBI7L5VBB+IuDWA62EJUdAzI7k0paw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BeH+x+d1OI91WnjW+uFClHA1gAB4zH8lqjlkhfEF5b8=;
- b=V2MjcSAIr98jsPtnFRiCo0PbefgxwZExfLoFdTtId9YJR4h75uaZ6yZ1tyZ35PdEVAaLUz6WxZ11jw5s9I13Z8XZOBPyA0GDR7ELRNzeSNrzkT+ejUYnkJWqkhvrPn4eb3W9fqoOxaZIZ0dDB7ZW/qbMDdv+Gw1SEV0/7oYrGmYhzkkYl31TLl4Jw6N+n5JEbIOVH3tmcjZWZWGwyamXbqkjWW1Bd9mNP3FXJTrza/kxKo9keakUIpBUE+ZV7AIKTt7ProLeukAkiFJzn/eeKVZi2P3iwSJRaf6HEksziwI4FjW7VEOYjH+DuShNdiguBJ71HwnOhsfuD+CHCP+7/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BeH+x+d1OI91WnjW+uFClHA1gAB4zH8lqjlkhfEF5b8=;
- b=XN7mNqB381bF3uDyvoN95fjm09Ijq2lvwSQTQ70ZPFW0oKQEZeKEh6GyioAiP3MTBaWCqnSJvttz3uJHkK2ip5fDffydBjkRVkaDrE1DxeuECH0ZN3DHo1tiMGFyIM6bt3dXi3GZ9A0zcJUTxV2c8bGaLWNuGbdg/a5xWsHcu5o=
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VE1PR04MB6445.eurprd04.prod.outlook.com (2603:10a6:803:11c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Thu, 7 May
- 2020 02:52:56 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::1479:38ea:d4f7:a173]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::1479:38ea:d4f7:a173%7]) with mapi id 15.20.2958.030; Thu, 7 May 2020
- 02:52:56 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     "dsahern@gmail.com" <dsahern@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "vlad@buslov.dev" <vlad@buslov.dev>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>
-Subject: RE: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
- control action
-Thread-Topic: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
- control action
-Thread-Index: AdYkGP/813CTQ3HyQZuckXvjuAsisQ==
-Date:   Thu, 7 May 2020 02:52:56 +0000
-Message-ID: <VE1PR04MB64969AC550AE3A762DADEF5292A50@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 595e83a7-e875-48af-ed63-08d7f231bf01
-x-ms-traffictypediagnostic: VE1PR04MB6445:|VE1PR04MB6445:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB64451DE3AB5DAE9F5B15FE5E92A50@VE1PR04MB6445.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wElIhp+yCNxD0uZZwaqoFAm977uM45pPFNn7MBgqWU4CxffQmznWI5kRLXpIP85YoPQ5bF1jCLPsRZGZ31z+2TyPH7leFIQ4zJ0jWkVdEPgq2TtHowaE0bGidQgFj0mCz6VJAiE6BPuOWtgxxNp+LZfkJHaQm1qozW8Mmbu9sc3aRatJ/so2hwXKmYOMNUTTLmps5YwwI9Xg8hN/CYcNnsGTqhg06NMknWMVN9/8aR7Iia+5cdckocf56hZbiejqCS4wrIqzZ/2vIwO9oH7+KpHyogl32v+sFNjfKZervy6kJMKMu4EL8/R1MdZoxYno5ABGUJ97bv7YOF5eaYEsADfqaVw4c0nYvNYXKRr4ZOPnPvV500gEOrq0qv/KxGMEAy8P52+gwJFG+ePzWhiz2IRyVZpnSLjeoWWfz3hyE+gthC1CUUZgQw+3aCmb4p0ljCwIW0SVk2FuIqAaz+psFbZR5+lgRdL/0K8wG2vbueQHrVurLMWeArJHoUR8yWo/8bKxSxwqVibdhiw2od/gFQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(33430700001)(71200400001)(4326008)(478600001)(66446008)(5660300002)(9686003)(33440700001)(83300400001)(83290400001)(83280400001)(83320400001)(83310400001)(8676002)(66556008)(66476007)(316002)(54906003)(66946007)(55016002)(64756008)(186003)(44832011)(76116006)(8936002)(86362001)(33656002)(6916009)(52536014)(6506007)(2906002)(53546011)(26005)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 1Osem7V5aZBFYj2SrIHT0Fhqv9Lu0Qa5NfEUR+GAAJua0WnqDBclblBXY7rvvmE50fQTolu77eiatdVuxJL9VniyeXULg0Ua40M9Gi1nohLfB5Z97Ql/ejJb7owZg0jVqawul5lW3orFbE3uDqsSauUGQgj1hvVl2bG04hnAO2M6EIaNHCLfdb/ALA3GbDlTUk67t+GB3fPZI+J5Mlu/22mTyPk0dgOq4zZwyxdDEBSthwgcjLI2aoXx0unqDzCvAjgVK43Maw+pouJDBn2aceGz28i36GH4ycGyn+BToRuitaWuSIp2KeSma5VhrEHg4dfBr5tITeYjMz1jHgR+csREoYWb3E8mi+5NT5YdDn+4jn0ZG+0/jjs5midRrKmR55cuqcsyCi/TXfHbg/dYAt1VbfEENSud4YVHZ2j9A5JPy7rOCOqep4tjX+yfNSKJVjHi2XCK24DN/t/XXF7CL6EdQQibZ4Tt6IBHUamVZYmSLPLqHgHdabAKH1BbaGhBJ7Kv5xsGPD9n9Nl7VD/Ax6MLtqlkJ/3Dw7jqbnq0p1az1YUaGodza/szJ8RiXjA/XeW2deaV7Y4xpIVD9E50VG2sRUQPCVnhiTaggZxIId8NPjudwiktsPJWR19vD+Ial7T+qQRaH9WDjDYevfU3W+Upn6ay+AQx3yhHuPmYigwHHMvl9W5OX6FwPu5Z/7jrdb6qNJh3uzKmUdPrRuRO806z9PJioJQWDnIILKUyxzO0zvcLiUWziO/ZLylNKPDL+WJB2BCm7B7GGeRWSYvM7tHHii0ZnJKcl/ievhO+qXM=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 6 May 2020 22:53:28 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49040 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgEGCx2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:53:28 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qtu3103567;
+        Wed, 6 May 2020 21:52:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588819975;
+        bh=L0nU496hZdbdRsagNnFwhK+8Afmw2+jXQkD34ygMVgc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=B2sIj2MxkPozV2ZWt99LmldkDblt7NVGvS/JLCNdOK5exNdOoaeZ3rT5nKF2tQOEr
+         i2K9SHRfiMxa+qbNmeVKs4uCLWyrXA7aVrIEbxvnADpXiNd9xfZH1Kfa9T0d71hlfx
+         kwvhcZJeSTXI+S2Ro8C3XHnzYZL/la9oOXNVqkVw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0472qtJ8094533
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 May 2020 21:52:55 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 21:52:55 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 21:52:54 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qmu4110785;
+        Wed, 6 May 2020 21:52:49 -0500
+Subject: Re: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple base
+ for mapping outbound memory
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <cbc214fd-541a-ef2d-d00b-43379730ac1f@ti.com>
+Date:   Thu, 7 May 2020 08:22:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 595e83a7-e875-48af-ed63-08d7f231bf01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 02:52:56.7069
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JCUs7m8AVQsSAHyuBT8UIlqUSs9MSBU7O9Em8Yhw/2Ex1FYG5pvRT8IyBcwfmMX7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6445
+In-Reply-To: <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0
-ZXBoZW4gSGVtbWluZ2VyIDxzdGVwaGVuQG5ldHdvcmtwbHVtYmVyLm9yZz4NCj4gU2VudDogMjAy
-MMTqNdTCNsjVIDIzOjIyDQo+IFRvOiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPg0KPiBDYzogZHNh
-aGVybkBnbWFpbC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IG5ldGRldkB2
-Z2VyLmtlcm5lbC5vcmc7IHZpbmljaXVzLmdvbWVzQGludGVsLmNvbTsNCj4gZGF2ZW1AZGF2ZW1s
-b2Z0Lm5ldDsgdmxhZEBidXNsb3YuZGV2OyBDbGF1ZGl1IE1hbm9pbA0KPiA8Y2xhdWRpdS5tYW5v
-aWxAbnhwLmNvbT47IFZsYWRpbWlyIE9sdGVhbiA8dmxhZGltaXIub2x0ZWFuQG54cC5jb20+Ow0K
-PiBBbGV4YW5kcnUgTWFyZ2luZWFuIDxhbGV4YW5kcnUubWFyZ2luZWFuQG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbdjQsaXByb3V0ZTItbmV4dCAxLzJdIGlwcm91dGUyLW5leHQ6dGM6YWN0aW9u
-OiBhZGQgYQ0KPiBnYXRlIGNvbnRyb2wgYWN0aW9uDQo+IE9uIFdlZCwgIDYgTWF5IDIwMjAgMTY6
-NDA6MTkgKzA4MDANCj4gUG8gTGl1IDxQby5MaXVAbnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICAg
-ICAgICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiYmFzZS10aW1lIikgPT0gMCkg
-ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBORVhUX0FSRygpOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICBpZiAoZ2V0X3U2NCgmYmFzZV90aW1lLCAqYXJndiwgMTApKSB7DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW52YWxpZGFyZyA9ICJiYXNlLXRpbWUiOw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX2FyZzsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCph
-cmd2LCAiY3ljbGUtdGltZSIpID09IDApIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgTkVY
-VF9BUkcoKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgaWYgKGdldF91NjQoJmN5Y2xlX3Rp
-bWUsICphcmd2LCAxMCkpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnZh
-bGlkYXJnID0gImN5Y2xlLXRpbWUiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGdvdG8gZXJyX2FyZzsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAg
-ICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiY3ljbGUtdGltZS1leHQiKSA9PSAwKSB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIE5FWFRfQVJHKCk7DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgIGlmIChnZXRfdTY0KCZjeWNsZV90aW1lX2V4dCwgKmFyZ3YsIDEwKSkgew0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludmFsaWRhcmcgPSAiY3ljbGUtdGltZS1l
-eHQiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX2FyZzsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gQ291bGQgYWxsIHRoZXNlIHRpbWUgdmFs
-dWVzIHVzZSBleGlzdGluZyBUQyBoZWxwZXIgcm91dGluZXM/DQoNCkkgYWdyZWUgdG8ga2VlcCB0
-aGUgdGMgcm91dGluZXMgaW5wdXQuDQpUaGUgbmFtZXMgb2YgdGltZXIgaW5wdXQgYW5kIHR5cGUg
-aXMgbW9yZSByZWZlcmVuY2UgdGhlIHRhcHJpbyBpbnB1dC4NCg0KPiBTZWUgZ2V0X3RpbWUoKS4g
-IFRoZSB3YXkgeW91IGhhdmUgaXQgbWFrZXMgc2Vuc2UgZm9yIGhhcmR3YXJlIGJ1dCBzdGFuZHMN
-Cj4gb3V0IHZlcnN1cyB0aGUgcmVzdCBvZiB0Yy4NCj4gDQo+IEl0IG1heWJlIHRoYXQgdGhlIGtl
-cm5lbCBVQVBJIGlzIHdyb25nLCBhbmQgc2hvdWxkIGJlIHVzaW5nIHNhbWUgdGltZQ0KPiB1bml0
-cyBhcyByZXN0IG9mIHRjLiBGb3Jnb3QgdG8gcmV2aWV3IHRoYXQgcGFydCBvZiB0aGUgcGF0Y2gu
-DQoNCkkgd291bGQgYWxzbyBzeW5jIHdpdGgga2VybmVsIFVBUEkgaWYgbmVlZGVkLg0KDQoNCkJy
-LA0KUG8gTGl1DQo=
+
+
+On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
+> R-Car PCIe controller has support to map multiple memory regions for
+> mapping the outbound memory in local system also the controller limits
+> single allocation for each region (that is, once a chunk is used from the
+> region it cannot be used to allocate a new one). This features inspires to
+> add support for handling multiple memory bases in endpoint framework.
+> 
+> With this patch pci_epc_mem_init() initializes address space for endpoint
+> controller which support single window and pci_epc_multi_mem_init()
+> initializes multiple windows supported by endpoint controller.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
+>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++------
+>  include/linux/pci-epc.h                       |  33 ++-
+>  3 files changed, 170 insertions(+), 78 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1cdcbd102ce8..a78902cbf2f0 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -412,11 +412,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		reg = ep->msi_cap + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_readw_dbi(pci, reg);
+>  	}
+> -	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
+> +	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+>  	msg_addr = ((u64)msg_addr_upper) << 32 |
+>  			(msg_addr_lower & ~aligned_offset);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+> -				  epc->mem->page_size);
+> +				  epc->mem->window.page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -459,9 +459,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		return -EPERM;
+>  	}
+>  
+> -	aligned_offset = msg_addr & (epc->mem->page_size - 1);
+> +	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,  msg_addr,
+> -				  epc->mem->page_size);
+> +				  epc->mem->window.page_size);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -477,7 +477,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>  	struct pci_epc *epc = ep->epc;
+>  
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> -			      epc->mem->page_size);
+> +			      epc->mem->window.page_size);
+>  
+>  	pci_epc_mem_exit(epc);
+>  }
+> @@ -610,15 +610,15 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> -	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> -				 ep->page_size);
+> +	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> +			       ep->page_size);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Failed to initialize address space\n");
+>  		return ret;
+>  	}
+>  
+>  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> -					     epc->mem->page_size);
+> +					     epc->mem->window.page_size);
+>  	if (!ep->msi_mem) {
+>  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>  		return -ENOMEM;
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index cdd1d3821249..a3466da2a16f 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -23,7 +23,7 @@
+>  static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+>  {
+>  	int order;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+> +	unsigned int page_shift = ilog2(mem->window.page_size);
+>  
+>  	size--;
+>  	size >>= page_shift;
+> @@ -36,67 +36,95 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+>  }
+>  
+>  /**
+> - * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+> + * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
+>   * @epc: the EPC device that invoked pci_epc_mem_init
+> - * @phys_base: the physical address of the base
+> - * @size: the size of the address space
+> - * @page_size: size of each page
+> + * @windows: pointer to windows supported by the device
+> + * @num_windows: number of windows device supports
+>   *
+>   * Invoke to initialize the pci_epc_mem structure used by the
+>   * endpoint functions to allocate mapped PCI address.
+>   */
+> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> -		       size_t page_size)
+> +int pci_epc_multi_mem_init(struct pci_epc *epc,
+> +			   struct pci_epc_mem_window *windows,
+> +			   unsigned int num_windows)
+>  {
+> -	int ret;
+> -	struct pci_epc_mem *mem;
+> -	unsigned long *bitmap;
+> +	struct pci_epc_mem *mem = NULL;
+> +	unsigned long *bitmap = NULL;
+>  	unsigned int page_shift;
+> -	int pages;
+> +	size_t page_size;
+>  	int bitmap_size;
+> +	int pages;
+> +	int ret;
+> +	int i;
+>  
+> -	if (page_size < PAGE_SIZE)
+> -		page_size = PAGE_SIZE;
+> +	epc->num_windows = 0;
+>  
+> -	page_shift = ilog2(page_size);
+> -	pages = size >> page_shift;
+> -	bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> +	if (!windows || !num_windows)
+> +		return -EINVAL;
+>  
+> -	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> -	if (!mem) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	epc->windows = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> +	if (!epc->windows)
+> +		return -ENOMEM;
+>  
+> -	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> -	if (!bitmap) {
+> -		ret = -ENOMEM;
+> -		goto err_mem;
+> -	}
+> +	for (i = 0; i < num_windows; i++) {
+> +		page_size = windows[i].page_size;
+> +		if (page_size < PAGE_SIZE)
+> +			page_size = PAGE_SIZE;
+> +		page_shift = ilog2(page_size);
+> +		pages = windows[i].size >> page_shift;
+> +		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>  
+> -	mem->bitmap = bitmap;
+> -	mem->phys_base = phys_base;
+> -	mem->page_size = page_size;
+> -	mem->pages = pages;
+> -	mem->size = size;
+> -	mutex_init(&mem->lock);
+> +		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> +		if (!mem) {
+> +			ret = -ENOMEM;
+> +			i--;
+> +			goto err_mem;
+> +		}
+>  
+> -	epc->mem = mem;
+> +		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> +		if (!bitmap) {
+> +			ret = -ENOMEM;
+> +			kfree(mem);
+> +			i--;
+> +			goto err_mem;
+> +		}
+> +
+> +		mem->window.phys_base = windows[i].phys_base;
+> +		mem->window.size = windows[i].size;
+> +		mem->window.page_size = page_size;
+> +		mem->bitmap = bitmap;
+> +		mem->pages = pages;
+> +		mutex_init(&mem->lock);
+> +		epc->windows[i] = mem;
+> +	}
+> +
+> +	epc->mem = epc->windows[0];
+> +	epc->num_windows = num_windows;
+>  
+>  	return 0;
+>  
+>  err_mem:
+> -	kfree(mem);
+> +	for (; i >= 0; i--) {
+> +		mem = epc->windows[i];
+> +		kfree(mem->bitmap);
+> +		kfree(mem);
+> +	}
+> +	kfree(epc->windows);
+>  
+> -err:
+> -return ret;
+> +	return ret;
+>  }
+> -EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> +EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
+>  
+>  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+>  		     size_t size, size_t page_size)
+>  {
+> -	return __pci_epc_mem_init(epc, base, size, page_size);
+> +	struct pci_epc_mem_window mem_window;
+> +
+> +	mem_window.phys_base = base;
+> +	mem_window.size = size;
+> +	mem_window.page_size = page_size;
+> +
+> +	return pci_epc_multi_mem_init(epc, &mem_window, 1);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+>  
+> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+>   */
+>  void pci_epc_mem_exit(struct pci_epc *epc)
+>  {
+> -	struct pci_epc_mem *mem = epc->mem;
+> +	struct pci_epc_mem *mem;
+> +	int i;
+>  
+> +	if (!epc->num_windows)
+> +		return;
+> +
+> +	for (i = 0; i < epc->num_windows; i++) {
+> +		mem = epc->windows[i];
+> +		kfree(mem->bitmap);
+> +		kfree(mem);
+> +	}
+> +	kfree(epc->windows);
+> +
+> +	epc->windows = NULL;
+>  	epc->mem = NULL;
+> -	kfree(mem->bitmap);
+> -	kfree(mem);
+> +	epc->num_windows = 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  
+> @@ -129,31 +168,60 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size)
+>  {
+> -	int pageno;
+>  	void __iomem *virt_addr = NULL;
+> -	struct pci_epc_mem *mem = epc->mem;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+> +	size_t align_size;
+> +	int pageno;
+>  	int order;
+> +	int i;
+>  
+> -	size = ALIGN(size, mem->page_size);
+> -	order = pci_epc_mem_get_order(mem, size);
+> -
+> -	mutex_lock(&mem->lock);
+> -	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+> -	if (pageno < 0)
+> -		goto ret;
+> +	for (i = 0; i < epc->num_windows; i++) {
+> +		mem = epc->windows[i];
+> +		mutex_lock(&mem->lock);
+> +		align_size = ALIGN(size, mem->window.page_size);
+> +		order = pci_epc_mem_get_order(mem, align_size);
+>  
+> -	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
+> -	virt_addr = ioremap(*phys_addr, size);
+> -	if (!virt_addr)
+> -		bitmap_release_region(mem->bitmap, pageno, order);
+> +		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+> +						 order);
+> +		if (pageno >= 0) {
+> +			page_shift = ilog2(mem->window.page_size);
+> +			*phys_addr = mem->window.phys_base +
+> +				((phys_addr_t)pageno << page_shift);
+> +			virt_addr = ioremap(*phys_addr, align_size);
+> +			if (!virt_addr) {
+> +				bitmap_release_region(mem->bitmap,
+> +						      pageno, order);
+> +				mutex_unlock(&mem->lock);
+> +				continue;
+> +			}
+> +			mutex_unlock(&mem->lock);
+> +			return virt_addr;
+> +		}
+> +		mutex_unlock(&mem->lock);
+> +	}
+>  
+> -ret:
+> -	mutex_unlock(&mem->lock);
+>  	return virt_addr;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>  
+> +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
+> +						phys_addr_t phys_addr)
+> +{
+> +	struct pci_epc_mem *mem;
+> +	int i;
+> +
+> +	for (i = 0; i < epc->num_windows; i++) {
+> +		mem = epc->windows[i];
+> +
+> +		if (phys_addr >= mem->window.phys_base &&
+> +		    phys_addr < (mem->window.phys_base + mem->window.size))
+> +			return mem;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * pci_epc_mem_free_addr() - free the allocated memory address
+>   * @epc: the EPC device on which memory was allocated
+> @@ -166,14 +234,23 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+>  			   void __iomem *virt_addr, size_t size)
+>  {
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+> +	size_t page_size;
+>  	int pageno;
+> -	struct pci_epc_mem *mem = epc->mem;
+> -	unsigned int page_shift = ilog2(mem->page_size);
+>  	int order;
+>  
+> +	mem = pci_epc_get_matching_window(epc, phys_addr);
+> +	if (!mem) {
+> +		pr_err("failed to get matching window\n");
+> +		return;
+> +	}
+> +
+> +	page_size = mem->window.page_size;
+> +	page_shift = ilog2(page_size);
+>  	iounmap(virt_addr);
+> -	pageno = (phys_addr - mem->phys_base) >> page_shift;
+> -	size = ALIGN(size, mem->page_size);
+> +	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
+> +	size = ALIGN(size, page_size);
+>  	order = pci_epc_mem_get_order(mem, size);
+>  	mutex_lock(&mem->lock);
+>  	bitmap_release_region(mem->bitmap, pageno, order);
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 5bc1de65849e..cc66bec8be90 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -65,20 +65,28 @@ struct pci_epc_ops {
+>  	struct module *owner;
+>  };
+>  
+> +/**
+> + * struct pci_epc_mem_window - address window of the endpoint controller
+> + * @phys_base: physical base address of the PCI address window
+> + * @size: the size of the PCI address window
+> + * @page_size: size of each page
+> + */
+> +struct pci_epc_mem_window {
+> +	phys_addr_t	phys_base;
+> +	size_t		size;
+> +	size_t		page_size;
+> +};
+> +
+>  /**
+>   * struct pci_epc_mem - address space of the endpoint controller
+> - * @phys_base: physical base address of the PCI address space
+> - * @size: the size of the PCI address space
+> + * @window: address window of the endpoint controller
+>   * @bitmap: bitmap to manage the PCI address space
+>   * @pages: number of bits representing the address region
+> - * @page_size: size of each page
+>   * @lock: mutex to protect bitmap
+>   */
+>  struct pci_epc_mem {
+> -	phys_addr_t	phys_base;
+> -	size_t		size;
+> +	struct pci_epc_mem_window window;
+>  	unsigned long	*bitmap;
+> -	size_t		page_size;
+>  	int		pages;
+>  	/* mutex to protect against concurrent access for memory allocation*/
+>  	struct mutex	lock;
+> @@ -89,7 +97,11 @@ struct pci_epc_mem {
+>   * @dev: PCI EPC device
+>   * @pci_epf: list of endpoint functions present in this EPC device
+>   * @ops: function pointers for performing endpoint operations
+> - * @mem: address space of the endpoint controller
+> + * @windows: array of address space of the endpoint controller
+> + * @mem: first window of the endpoint controller, which corresponds to
+> + *       default address space of the endpoint controller supporting
+> + *       single window.
+> + * @num_windows: number of windows supported by device
+>   * @max_functions: max number of functions that can be configured in this EPC
+>   * @group: configfs group representing the PCI EPC device
+>   * @lock: mutex to protect pci_epc ops
+> @@ -100,7 +112,9 @@ struct pci_epc {
+>  	struct device			dev;
+>  	struct list_head		pci_epf;
+>  	const struct pci_epc_ops	*ops;
+> +	struct pci_epc_mem		**windows;
+>  	struct pci_epc_mem		*mem;
+> +	unsigned int			num_windows;
+>  	u8				max_functions;
+>  	struct config_group		*group;
+>  	/* mutex to protect against concurrent access of EP controller */
+> @@ -194,8 +208,9 @@ void pci_epc_put(struct pci_epc *epc);
+>  
+>  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+>  		     size_t size, size_t page_size);
+> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
+> -		       size_t page_size);
+> +int pci_epc_multi_mem_init(struct pci_epc *epc,
+> +			   struct pci_epc_mem_window *window,
+> +			   unsigned int num_windows);
+>  void pci_epc_mem_exit(struct pci_epc *epc);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size);
+> 
