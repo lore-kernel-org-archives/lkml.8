@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C26C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC7C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49313208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A93208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879037;
-	bh=xbpMeseLUa1F5bWVlyVbWAi8ZUs0iZRWzX8jkygXfNc=;
+	s=default; t=1588879044;
+	bh=jCoTy5MqBatp+N4A2hyv+CcwMbeePmBG8iZQJXgFJyk=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=1VaFZF5z1ExOIJlYmNz35+J0rn0mJL5El8vjU0O3iVW/+A3L22DaoJV0EfRXBW7xN
-	 FISuN/n0gX5pXiFG5htx5swJtri70Jd0V0lHLRvPF0jvKzlwFbp6QHrO8pbKcG2BXM
-	 I++35fotx/MkxiHxsls/iYzuH9eyIRatvuRa5iWw=
+	b=aAe5j4qm8uuRpUeOvJDLG3qFap25V4SkVB81VLYDt8FI1yxHDuhthxh2sZ4yUa4/r
+	 2/HvMhQBO5lF+zY0tx5g3ZzYwVddo0tBXWzKh8ELqSFGW+nDD1nZnnKxHjEAOeZ3Cn
+	 WeWz4/8O7y4VATsjoECEffESSgafe8bOBkALqhiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgEGTRQ (ORCPT
+        id S1728433AbgEGTRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgEGTRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:17:16 -0400
+        id S1726367AbgEGTRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:17:21 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9650208D6;
-        Thu,  7 May 2020 19:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCBD208E4;
+        Thu,  7 May 2020 19:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879035;
-        bh=xbpMeseLUa1F5bWVlyVbWAi8ZUs0iZRWzX8jkygXfNc=;
+        s=default; t=1588879041;
+        bh=jCoTy5MqBatp+N4A2hyv+CcwMbeePmBG8iZQJXgFJyk=;
         h=Date:From:To:Cc:Subject:From;
-        b=mvRSHASPfFqkfHkORLgo1m+YyYGb1LcF/gEQyoL8JEnEGt9A8YcnjI1F/AnSzEcUE
-         efHsTLZRvbaPWRuvXMWDt1j9xQiBoawncw9dBGpur8CV+APrgv97jta/YNYqUpfPB6
-         va5oMiyAqUQ8k11b/n/n9reMGpAg4VUqCUcsOJpI=
-Date:   Thu, 7 May 2020 14:21:41 -0500
+        b=Si6p6NGivshUDV6cBs2VzvsOg7asKsaSfn/Wf4UUkPHAoSp9Ku+0Rs0uUbBBoFFYt
+         cyBxz+gNCsMd6ZDc8ALgWrupc7wZweRCZTHD3k7Uu4aYBDsjLaba/FV0nzglcnl63j
+         7EuWj4JiyJn6xmqXk/YCO4JKUxuIj1trtIjiHo6s=
+Date:   Thu, 7 May 2020 14:21:47 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/fair: Replace zero-length array with flexible-array
-Message-ID: <20200507192141.GA16183@embeddedor>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: libsas: Replace zero-length array with flexible-array
+Message-ID: <20200507192147.GA16206@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -97,34 +92,112 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- kernel/sched/fair.c  |    2 +-
- kernel/sched/sched.h |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/aic94xx/aic94xx_sds.c |   14 +++++++-------
+ include/scsi/sas.h                 |    8 ++++----
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 02f323b85b6d..b34549708ef4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1094,7 +1094,7 @@ struct numa_group {
- 	 * more by CPU use than by memory faults.
- 	 */
- 	unsigned long *faults_cpu;
--	unsigned long faults[0];
-+	unsigned long faults[];
- };
+diff --git a/drivers/scsi/aic94xx/aic94xx_sds.c b/drivers/scsi/aic94xx/aic94xx_sds.c
+index 3ddc8852bc32..105adba559a1 100644
+--- a/drivers/scsi/aic94xx/aic94xx_sds.c
++++ b/drivers/scsi/aic94xx/aic94xx_sds.c
+@@ -406,7 +406,7 @@ struct asd_manuf_sec {
+ 	u8    sas_addr[SAS_ADDR_SIZE];
+ 	u8    pcba_sn[ASD_PCBA_SN_SIZE];
+ 	/* Here start the other segments */
+-	u8    linked_list[0];
++	u8    linked_list[];
+ } __attribute__ ((packed));
  
- /*
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index db3a57675ccf..f504f3ac3967 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1461,7 +1461,7 @@ struct sched_group {
- 	 * by attaching extra space to the end of the structure,
- 	 * depending on how many CPUs the kernel has booted up with)
- 	 */
--	unsigned long		cpumask[0];
-+	unsigned long		cpumask[];
- };
+ struct asd_manuf_phy_desc {
+@@ -449,7 +449,7 @@ struct asd_ms_sb_desc {
+ 	u8    type;
+ 	u8    node_desc_index;
+ 	u8    conn_desc_index;
+-	u8    _recvd[0];
++	u8    _recvd[];
+ } __attribute__ ((packed));
  
- static inline struct cpumask *sched_group_span(struct sched_group *sg)
+ #if 0
+@@ -478,12 +478,12 @@ struct asd_ms_conn_desc {
+ 	u8    size_sideband_desc;
+ 	u32   _resvd;
+ 	u8    name[16];
+-	struct asd_ms_sb_desc sb_desc[0];
++	struct asd_ms_sb_desc sb_desc[];
+ } __attribute__ ((packed));
+ 
+ struct asd_nd_phy_desc {
+ 	u8    vp_attch_type;
+-	u8    attch_specific[0];
++	u8    attch_specific[];
+ } __attribute__ ((packed));
+ 
+ #if 0
+@@ -503,7 +503,7 @@ struct asd_ms_node_desc {
+ 	u8    size_phy_desc;
+ 	u8    _resvd;
+ 	u8    name[16];
+-	struct asd_nd_phy_desc phy_desc[0];
++	struct asd_nd_phy_desc phy_desc[];
+ } __attribute__ ((packed));
+ 
+ struct asd_ms_conn_map {
+@@ -518,7 +518,7 @@ struct asd_ms_conn_map {
+ 	u8    usage_model_id;
+ 	u32   _resvd;
+ 	struct asd_ms_conn_desc conn_desc[0];
+-	struct asd_ms_node_desc node_desc[0];
++	struct asd_ms_node_desc node_desc[];
+ } __attribute__ ((packed));
+ 
+ struct asd_ctrla_phy_entry {
+@@ -542,7 +542,7 @@ struct asd_ll_el {
+ 	u8   id0;
+ 	u8   id1;
+ 	__le16  next;
+-	u8   something_here[0];
++	u8   something_here[];
+ } __attribute__ ((packed));
+ 
+ static int asd_poll_flash(struct asd_ha_struct *asd_ha)
+diff --git a/include/scsi/sas.h b/include/scsi/sas.h
+index a5d8ae49198c..4726c1bbec65 100644
+--- a/include/scsi/sas.h
++++ b/include/scsi/sas.h
+@@ -324,7 +324,7 @@ struct ssp_response_iu {
+ 	__be32 response_data_len;
+ 
+ 	u8     resp_data[0];
+-	u8     sense_data[0];
++	u8     sense_data[];
+ } __attribute__ ((packed));
+ 
+ struct ssp_command_iu {
+@@ -346,7 +346,7 @@ struct ssp_command_iu {
+ 	u8    add_cdb_len:6;
+ 
+ 	u8    cdb[16];
+-	u8    add_cdb[0];
++	u8    add_cdb[];
+ } __attribute__ ((packed));
+ 
+ struct xfer_rdy_iu {
+@@ -555,7 +555,7 @@ struct ssp_response_iu {
+ 	__be32 response_data_len;
+ 
+ 	u8     resp_data[0];
+-	u8     sense_data[0];
++	u8     sense_data[];
+ } __attribute__ ((packed));
+ 
+ struct ssp_command_iu {
+@@ -577,7 +577,7 @@ struct ssp_command_iu {
+ 	u8    _r_c:2;
+ 
+ 	u8    cdb[16];
+-	u8    add_cdb[0];
++	u8    add_cdb[];
+ } __attribute__ ((packed));
+ 
+ struct xfer_rdy_iu {
 
