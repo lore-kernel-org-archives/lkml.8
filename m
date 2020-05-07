@@ -2,102 +2,128 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A79C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A604C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFDE120731
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7051720720
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pqFEksD4"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QSBVJtiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgEGXvD (ORCPT
+        id S1726809AbgEGXy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:51:03 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62743 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726476AbgEGXvC (ORCPT
+        Thu, 7 May 2020 19:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbgEGXyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:51:02 -0400
-X-UUID: d4a0d81a670149c6b1bccba1ad43e72a-20200508
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=7rh/xNev2bozJWN2jpMZ42zVTLpDJdHHe0AkEEw+riA=;
-        b=pqFEksD4ggHIegkXQTKEXf1adsl5Vqtd0yZnmajUF+a+blHp8FILsOHUVYw9VzM/gpWlB6ro5kDxk/mgk7MHROeC9ni2GDgFUfEsi2aqjAnH3F7nk4EepCgVyfXnPbpGzoU3MuXgX/SJMbIVgkQlBKzBJQ4pHj9y7Rab2BgVBX8=;
-X-UUID: d4a0d81a670149c6b1bccba1ad43e72a-20200508
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1143080490; Fri, 08 May 2020 07:50:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 8 May 2020 07:50:56 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 8 May 2020 07:50:54 +0800
-Message-ID: <1588895457.3197.40.camel@mtkswgap22>
-Subject: Re: [PATCH v5 1/8] scsi: ufs: enable WriteBooster on some pre-3.1
- UFS devices
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>
-Date:   Fri, 8 May 2020 07:50:57 +0800
-In-Reply-To: <1588602837.3197.32.camel@mtkswgap22>
-References: <20200503113415.21034-1-stanley.chu@mediatek.com>
-         <20200503113415.21034-2-stanley.chu@mediatek.com>
-         <BYAPR04MB4629F2C00ABAB512DB833232FCA60@BYAPR04MB4629.namprd04.prod.outlook.com>
-         <1588602837.3197.32.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 7 May 2020 19:54:25 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B4DC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:54:24 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id a15so307566qvt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/raYmft6nSaYLNIgpOxoChFcf5nF1Q2ACz6k5lK6B/4=;
+        b=QSBVJtiYPNgCyg1Ax8MDmIonk9zKYH0IwrH/+u1j84YGMeisn3e+g5EGfpuObjJv7H
+         wXFl0tfpZnxNnL053pF5sRWfIpTmu9eUL4M/zurqAuPqCZexdEgP1pM2dggKDOZjnEyy
+         f6umf0+v8hfXZ4AZKWQYtiLz6vbcbQ/SZhptvHMrDLwUmI9k8+UWJ8gEEN+lNSZiuSKN
+         rgbjcYlDgqSq19b+5VbYruXqDxWlnvU6ogiMB6YnPypcQltpT5B/nG/bL2YQfDfbt0yM
+         FeKyBoa4zJpeEKZGnc4fSHBnCA/++Yf4pPt5kyhoPiECazyfelAm9wkjL4fNtPGd5gQE
+         5vUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/raYmft6nSaYLNIgpOxoChFcf5nF1Q2ACz6k5lK6B/4=;
+        b=GqTfz5JW+jmFBhdDRX+9cgvuEqHFX7Gj1YCbvHiyhlH39a+pmLdA+5wDy9twhT2BoM
+         3B98aWPi1lgalFWDvUiulpom5fr8q8JpxfMCtD8XyRCYoWIOWVRwreY4w1BnzFYFlhIh
+         GQo0RXTmiezKeq2UEcoFhK7UkbX+IhSZ+27BowduPu4Br2Ies4cF+hmg1kXonfzJiOJV
+         HxteT0tPUBuOIKytMbWU3qmvQrd2xJLeDi+jTYc3H6e9iRc69ucvvsqSOW0xrTxKxaWS
+         bcuLz3mmOh/h7GzNyQk2jWvT3JwrqZW+QceRNfaUY2vg4OjA9f5HA1vpS8uS1KEI5hyb
+         q2Iw==
+X-Gm-Message-State: AGi0PubQ+l5n/Lm3QiTCO4zGdC+6YQis226b5td0plIaXG7Iv982ESSk
+        5ABZU98jzaI323N+AOohOo2ubw==
+X-Google-Smtp-Source: APiQypJYoWIyvU8RY67V0VqBgsWt6nPorPZktKfWBDwkHhKb5x5+IKwxKG3GMtrHiOuUW542Jyo5Xw==
+X-Received: by 2002:ad4:4966:: with SMTP id p6mr61018qvy.161.1588895663160;
+        Thu, 07 May 2020 16:54:23 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id j11sm4877452qkk.33.2020.05.07.16.54.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 May 2020 16:54:22 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jWqLN-00070n-OS; Thu, 07 May 2020 20:54:21 -0300
+Date:   Thu, 7 May 2020 20:54:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200507235421.GK26002@ziepe.ca>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871568480.15589.17339878308143043906.stgit@gimli.home>
+ <20200507212443.GO228260@xz-x1>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: E528BD5724FFA756FDB6C319DCE7ED3EFAD25D9B4B53F50DE16DB1ECC31FC39B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507212443.GO228260@xz-x1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCk9uIE1vbiwgMjAyMC0wNS0wNCBhdCAyMjozMyArMDgwMCwgU3RhbmxleSBDaHUg
-d3JvdGU6DQo+IEhpIEF2cmksDQo+IA0KPiBPbiBNb24sIDIwMjAtMDUtMDQgYXQgMTA6MzcgKzAw
-MDAsIEF2cmkgQWx0bWFuIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiAgc3RhdGljIHZvaWQgdWZzaGNk
-X3diX3Byb2JlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHU4ICpkZXNjX2J1ZikNCj4gPiA+ICB7DQo+
-ID4gPiArICAgICAgIGlmICghdWZzaGNkX2lzX3diX2FsbG93ZWQoaGJhKSkNCj4gPiA+ICsgICAg
-ICAgICAgICAgICByZXR1cm47DQo+ID4gPiArDQo+ID4gPiArICAgICAgIGlmIChoYmEtPmRlc2Nf
-c2l6ZS5kZXZfZGVzYyA8PQ0KPiA+ID4gREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VGU19GRUFUVVJF
-X1NVUCkNCj4gPiBTaG91bGQgYmUgDQo+ID4gREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VGU19GRUFU
-VVJFX1NVUCArIDQgDQo+IA0KPiBJIHRoaW5rIHRoaXMgZGVzY3JpcHRpb24gbGVuZ3RoIGNoZWNr
-IGlzIHJlZHVuZGFudCBiZWNhdXNlIHRoZSBkZXZpY2UNCj4gcXVpcmsgc2hhbGwgYmUgYWRkZWQg
-b25seSBhZnRlciBXcml0ZUJvb3N0ZXIgc3VwcG9ydGF0IGlzIGNvbmZpcm1lZCBpbg0KPiBhdHRh
-Y2hlZCBVRlMgZGV2aWNlLiBTbyBJIHdpbGwgcmVtb3ZlIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0K
-DQpTb3JyeSB0aGlzIHN0YXRlbWVudCBpcyBpbmNvcnJlY3QgYmVjYXVzZSB0aGlzIGtpbmQgb24g
-ZGV2aWNlcyBtYXkgaGF2ZQ0Kc2hvcnQgKHdpdGhvdXQgREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VG
-U19GRUFUVVJFX1NVUCBmaWVsZCkgYmVmb3JlDQpmaXJtd2FyZSB1cGdyYWRpbmcuIFNvIHRoZSBj
-aGVja2luZyBmb3IgZGVzY3JpcHRvciBsZW5ndGggaXMgc3RpbGwNCnJlcXVpcmVkIHRvIGF2b2lk
-IG91dC1vZi1ib3VuZGFyeSBhY2Nlc3MgaW4gYmVsb3cgY29kZXMuDQoNCkkgd2lsbCBhZGQgaXQg
-YmFjayBpbiBuZXh0IHZlcnNpb24gYW5kIGFsc28gZml4IHRoZSBsZW5ndGguDQoNClRoYW5rcywN
-ClN0YW5sZXkgQ2h1DQoNCj4gPiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXw0KPiA+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+IExp
-bnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQo+IA0KDQo=
+On Thu, May 07, 2020 at 05:24:43PM -0400, Peter Xu wrote:
+> On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
+> > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> > the range being faulted into the vma.  Add support to manually provide
+> > that, in the same way as done on KVM with hva_to_pfn_remapped().
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+> >  1 file changed, 33 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index cc1d64765ce7..4a4cb7cd86b2 100644
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+> >  	return 0;
+> >  }
+> >  
+> > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> > +			    unsigned long vaddr, unsigned long *pfn,
+> > +			    bool write_fault)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = follow_pfn(vma, vaddr, pfn);
+> > +	if (ret) {
+> > +		bool unlocked = false;
+> > +
+> > +		ret = fixup_user_fault(NULL, mm, vaddr,
+> > +				       FAULT_FLAG_REMOTE |
+> > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> > +				       &unlocked);
+> > +		if (unlocked)
+> > +			return -EAGAIN;
+> 
+> Hi, Alex,
+> 
+> IIUC this retry is not needed too because fixup_user_fault() will guarantee the
+> fault-in is done correctly with the valid PTE as long as ret==0, even if
+> unlocked==true.
 
+It is true, and today it is fine, but be careful when reworking this
+to use notifiers as unlocked also means things like the vma pointer
+are invalidated.
+
+Jason
