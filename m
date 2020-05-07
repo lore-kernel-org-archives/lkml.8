@@ -2,187 +2,144 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AEDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10F9C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DDE20731
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50C0208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgEGVTE (ORCPT
+        id S1726877AbgEGVTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:19:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50014 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbgEGVTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:19:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4D2F5ACFE;
-        Thu,  7 May 2020 21:19:03 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Date:   Fri, 08 May 2020 07:18:53 +1000
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 26/35] SUNRPC: defer slow parts of rpc_free_client() to a workqueue.
-In-Reply-To: <20200507142830.26239-26-sashal@kernel.org>
-References: <20200507142830.26239-1-sashal@kernel.org> <20200507142830.26239-26-sashal@kernel.org>
-Message-ID: <878si3cuki.fsf@notabene.neil.brown.name>
+        Thu, 7 May 2020 17:19:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38566 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEGVTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:19:30 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8EF3C803087C;
+        Thu,  7 May 2020 21:19:27 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iD8rLD5BeSaP; Fri,  8 May 2020 00:19:26 +0300 (MSK)
+Date:   Fri, 8 May 2020 00:19:23 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Huacai Chen <chenhc@lemote.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        =?utf-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 07/20] mips: Add MIPS Warrior P5600 support
+Message-ID: <20200507211923.kfu2ly3ncqms4c2u@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-8-Sergey.Semin@baikalelectronics.ru>
+ <20200507111735.GF11616@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200507111735.GF11616@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 07, 2020 at 01:17:35PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 06, 2020 at 08:42:25PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> >  
+> > +config CPU_P5600
+> > +	bool "MIPS Warrior P5600"
+> > +	depends on SYS_HAS_CPU_P5600
+> > +	select CPU_HAS_PREFETCH
+> > +	select CPU_SUPPORTS_32BIT_KERNEL
+> > +	select CPU_SUPPORTS_HIGHMEM
+> > +	select CPU_SUPPORTS_MSA
+> > +	select CPU_SUPPORTS_UNCACHED_ACCELERATED
+> > +	select CPU_SUPPORTS_CPUFREQ
+> > +	select CPU_MIPSR2_IRQ_VI
+> > +	select CPU_MIPSR2_IRQ_EI
+> > +	select HAVE_KVM
+> > +	select MIPS_O32_FP64_SUPPORT
+> > +	help
+> > +	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
+> > +	  It's based on MIPS32r5 ISA with XPA, EVA, dual/quad issue exec pipes,
+> > +	  MMU with two-levels TLB, UCA, MSA, MDU core level features and system
+> > +	  level features like up to six P5600 calculation cores, CM2 with L2
+> > +	  cache, IOCU/IOMMU (though might be unused depending on the system-
+> > +	  specific IP core configuration), GIC, CPC, virtualisation module,
+> > +	  eJTAG and PDtrace.
+> > +
+> >  config CPU_R3000
+> >  	bool "R3000"
+> >  	depends on SYS_HAS_CPU_R3000
+> > @@ -1841,7 +1863,8 @@ endchoice
+> >  config CPU_MIPS32_3_5_FEATURES
+> >  	bool "MIPS32 Release 3.5 Features"
+> >  	depends on SYS_HAS_CPU_MIPS32_R3_5
+> > -	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6
+> > +	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6 || \
+> > +		   CPU_P5600
+> >  	help
+> >  	  Choose this option to build a kernel for release 2 or later of the
+> >  	  MIPS32 architecture including features from the 3.5 release such as
+> > @@ -1861,7 +1884,7 @@ config CPU_MIPS32_3_5_EVA
+> >  config CPU_MIPS32_R5_FEATURES
+> >  	bool "MIPS32 Release 5 Features"
+> >  	depends on SYS_HAS_CPU_MIPS32_R5
+> > -	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5
+> > +	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_P5600
+> >  	help
+> >  	  Choose this option to build a kernel for release 2 or later of the
+> >  	  MIPS32 architecture including features from release 5 such as
+> > @@ -2016,6 +2039,10 @@ config SYS_HAS_CPU_MIPS64_R6
+> >  	bool
+> >  	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
+> >  
+> > +config SYS_HAS_CPU_P5600
+> > +	bool
+> > +	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
+> > +
+> 
+> P5600 is CPU_MIPS_R5 so can't you select it here and drop all the || CPU_5600
+> above/below ?
 
-On Thu, May 07 2020, Sasha Levin wrote:
+Alas, We can't do this so easy. CONFIG_CPU_MIPS32_{R2,R5,R6} and any other
+CONFIG_CPU_* configs is something that kernel config-file is supposed to select.
+Their availability is enabled by the CONFIG_SYS_HAS_CPU_* configs. CONFIG_CPU_*
+is supposed to activate CPU-specific features and there is only one
+CONFIG_CPU_x can be enabled at a time seeing it's a part of the "CPU type"
+choice kconfig menu. In addition the CPU config also tunes a compiler to activate
+the arch-specific ISA and optimizations in the arch/mips/Makefile by setting
+-march=cpu-name (where cpu-name can be p5600, mips32r5, etc).
 
-> From: NeilBrown <neilb@suse.de>
->
-> [ Upstream commit 7c4310ff56422ea43418305d22bbc5fe19150ec4 ]
+Yes, P5600 is based on the MIPS32r5, but it also has got some specific features
+(see config CPU_P5600 and config MIPS32_R5), which makes it to be different from
+the ancestor. So In addition to the difficulties described above IMHO converting
+CPU_P5600 to a set of features activated on top of the CPU_MIPS32_R5 config
+would contradict the design of the CPU-support configs implemented in the MIPS
+arch subsystem.
 
-This one is buggy - it introduces a use-after-free.  Best delay it for
-now.
+-Sergey
 
-NeilBrown
-
->
-> The rpciod workqueue is on the write-out path for freeing dirty memory,
-> so it is important that it never block waiting for memory to be
-> allocated - this can lead to a deadlock.
->
-> rpc_execute() - which is often called by an rpciod work item - calls
-> rcp_task_release_client() which can lead to rpc_free_client().
->
-> rpc_free_client() makes two calls which could potentially block wating
-> for memory allocation.
->
-> rpc_clnt_debugfs_unregister() calls into debugfs and will block while
-> any of the debugfs files are being accessed.  In particular it can block
-> while any of the 'open' methods are being called and all of these use
-> malloc for one thing or another.  So this can deadlock if the memory
-> allocation waits for NFS to complete some writes via rpciod.
->
-> rpc_clnt_remove_pipedir() can take the inode_lock() and while it isn't
-> obvious that memory allocations can happen while the lock it held, it is
-> safer to assume they might and to not let rpciod call
-> rpc_clnt_remove_pipedir().
->
-> So this patch moves these two calls (together with the final kfree() and
-> rpciod_down()) into a work-item to be run from the system work-queue.
-> rpciod can continue its important work, and the final stages of the free
-> can happen whenever they happen.
->
-> I have seen this deadlock on a 4.12 based kernel where debugfs used
-> synchronize_srcu() when removing objects.  synchronize_srcu() requires a
-> workqueue and there were no free workther threads and none could be
-> allocated.  While debugsfs no longer uses SRCU, I believe the deadlock
-> is still possible.
->
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  include/linux/sunrpc/clnt.h |  8 +++++++-
->  net/sunrpc/clnt.c           | 21 +++++++++++++++++----
->  2 files changed, 24 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-> index abc63bd1be2b5..d99d39d45a494 100644
-> --- a/include/linux/sunrpc/clnt.h
-> +++ b/include/linux/sunrpc/clnt.h
-> @@ -71,7 +71,13 @@ struct rpc_clnt {
->  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
->  	struct dentry		*cl_debugfs;	/* debugfs directory */
->  #endif
-> -	struct rpc_xprt_iter	cl_xpi;
-> +	/* cl_work is only needed after cl_xpi is no longer used,
-> +	 * and that are of similar size
-> +	 */
-> +	union {
-> +		struct rpc_xprt_iter	cl_xpi;
-> +		struct work_struct	cl_work;
-> +	};
->  	const struct cred	*cl_cred;
->  };
->=20=20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index f7f78566be463..a7430b66c7389 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -877,6 +877,20 @@ EXPORT_SYMBOL_GPL(rpc_shutdown_client);
->  /*
->   * Free an RPC client
->   */
-> +static void rpc_free_client_work(struct work_struct *work)
-> +{
-> +	struct rpc_clnt *clnt =3D container_of(work, struct rpc_clnt, cl_work);
-> +
-> +	/* These might block on processes that might allocate memory,
-> +	 * so they cannot be called in rpciod, so they are handled separately
-> +	 * here.
-> +	 */
-> +	rpc_clnt_debugfs_unregister(clnt);
-> +	rpc_clnt_remove_pipedir(clnt);
-> +
-> +	kfree(clnt);
-> +	rpciod_down();
-> +}
->  static struct rpc_clnt *
->  rpc_free_client(struct rpc_clnt *clnt)
->  {
-> @@ -887,17 +901,16 @@ rpc_free_client(struct rpc_clnt *clnt)
->  			rcu_dereference(clnt->cl_xprt)->servername);
->  	if (clnt->cl_parent !=3D clnt)
->  		parent =3D clnt->cl_parent;
-> -	rpc_clnt_debugfs_unregister(clnt);
-> -	rpc_clnt_remove_pipedir(clnt);
->  	rpc_unregister_client(clnt);
->  	rpc_free_iostats(clnt->cl_metrics);
->  	clnt->cl_metrics =3D NULL;
->  	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
->  	xprt_iter_destroy(&clnt->cl_xpi);
-> -	rpciod_down();
->  	put_cred(clnt->cl_cred);
->  	rpc_free_clid(clnt);
-> -	kfree(clnt);
-> +
-> +	INIT_WORK(&clnt->cl_work, rpc_free_client_work);
-> +	schedule_work(&clnt->cl_work);
->  	return parent;
->  }
->=20=20
-> --=20
-> 2.20.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl60ez0ACgkQOeye3VZi
-gbkTlxAAhHKw2SYW5PnmU2uD/cyIddjxyuhSkumoo6COwdVY0602KufdxCiP5mfe
-vSOjHjYICTnZMcbaSYEd3PHZEzezAh3DZggn7sXc+8I3cJb1JU2EcZeVArClZv0n
-b/5jvqW525cmCpg1XIUGwbOZcgMsSVE4N6FmfMD/JMNrp3pA/k4NLvyS//Qd+/8P
-OG+TPIljq8lermJmhVyckBVSBojXtUuEkR9kG0+o87JJwR8JaeIKeR+CFTKuIMub
-E9ql7aDYQrPQzfKiiE4jPNSl1cqO5qQUkuEIsc/ziKHdRJR1E8txD2IvKsL6zL2y
-yV9ptqTmDT+o7M2qf7irjxamriaPM5xUMPibHUSOhdVILPY6strqeWSRqblf8C+D
-9DLpk3KM0t9oeQwiG2ODLImkzZJ3SdXXKH2oL0HwFdl/GYqb6pY5xbSF2QbX6uda
-+52AZka4B4TxIwe+SBi5W0jh6wrrJqWL02djWQWLFT2WXwVgh2gSgstUwD1+y0hg
-BvAcs8Zj+RXFq1/yUz5JSQ6EbjQaMSXD7hZ6ponFXLlODy8YkesWvsHLJVDoFu+v
-3okAx1WOUgSqujM/qeWzrYKYEYopi14fhlJeN7qY2vaSKCAJUGxChMC314nGLHrH
-unLW37ThQF4XTp9LhwgaIj9LVNhzkWHPlN5L88ff5Ai/q5XhkIk=
-=cDQC
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
