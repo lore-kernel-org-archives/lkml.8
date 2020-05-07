@@ -2,138 +2,169 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3209CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBEB216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D933208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISHzewaD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Og3DqPf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgEGTaV (ORCPT
+        id S1728528AbgEGTa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbgEGTaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:30:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8BDC05BD43;
-        Thu,  7 May 2020 12:30:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d184so3500266pfd.4;
-        Thu, 07 May 2020 12:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wT+mRFdn10BsX6lr+zvdnj+FlyAlUAG454zQtB7yLh4=;
-        b=ISHzewaDihZtLo69vhscvBrzu5TSpNcrAqC8XTeHSFmzmLskKKNP9+JyWpZcMTy0Q3
-         XhmOPkZftMvsSN23wHjKRvaa3uMwlL8QJ41bN8XQ3wKGh9gHynk4n+amimeBZvA9FPZy
-         jgw0MHBKfONAIM64HzJ/Al9L+azKLTRiuB/z6Yaw42/kFwB40x4bch+YShGbKzKMx676
-         ZkX7yHoNS6ELrgjjZroV/WSvBTcYPVvVSz7JKG2ZGRamw307aF2DTvISry0Ndp0hGayv
-         7R0OhWzh27bg/TMG/eysVLtQbSyPCY+VbJlA/JI5E3QALXCEzCkzXPV4yjsGRmn7Uznl
-         SAMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wT+mRFdn10BsX6lr+zvdnj+FlyAlUAG454zQtB7yLh4=;
-        b=A99mKOn+11+j1McRQ8HAGz8v8JYZEwWdcYHTcZy4d0qUxFr1Z0A3ZHHOKbwGdkpdxo
-         3MUPiPdVthy+Qg2h03/VqfWfM/LA7Dg54GyUamSXDVJRBxaQYL+GcIcrEl99xadblrXj
-         UGcHYnae7KLtw7EiXXqI5DGn4pRN84LJIUFVUQnqUo+5P3GDEVW1aZgA/T7jpIUyLQF+
-         rCy1Bd6wNkZrWbP9QRSohOCWrD2Z/ougvGBSclj6fwMBLTYNwEcPCUslJWZfdLxRiJgq
-         lNrwwqO6PaOfEgzgTKSsDq/BU2nWz3/PYs2lNiAZEWeWx2jvkKHPqoYImaXsWVpxbEiR
-         E3Xw==
-X-Gm-Message-State: AGi0PuZ+F2pMdYbEkYXRiZYmXxb3lFf0eWAbTH7f+5pDkAGcmzxHEj5t
-        qy382Uo11xqmpPO38I+rKTw=
-X-Google-Smtp-Source: APiQypIQxy+/cA0vId2s+7hdgtueCxQZ/IiM5LLjgeUjNQ9AeHkkA/LYYMiAAamTg3sXHVYKgnEMzg==
-X-Received: by 2002:a63:4503:: with SMTP id s3mr12964794pga.85.1588879820170;
-        Thu, 07 May 2020 12:30:20 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id t80sm5811824pfc.23.2020.05.07.12.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:30:19 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:30:17 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: Replace zero-length array with flexible-array
-Message-ID: <20200507193017.GL89269@dtor-ws>
-References: <20200507185347.GA14499@embeddedor>
+        Thu, 7 May 2020 15:30:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57983 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgEGTa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:30:27 -0400
+Received: from [IPv6:2601:646:8600:3281:6547:66ee:1a90:d675] ([IPv6:2601:646:8600:3281:6547:66ee:1a90:d675])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 047JU6CB3526329
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 7 May 2020 12:30:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 047JU6CB3526329
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588879807;
+        bh=m0lAyOHoGx1k4YzTje4D7KhG9i4zH9a+UIO21JynQkA=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=Og3DqPf6l861xqxWuiyPyNuU4pi97NvvW9O0+D/WT2BoIFVMYVWnz+ksirKZqnx9g
+         1TXrnCYHc6OwJRSiHaXpY+AlkQvr7MlkCL/6LQrXhcYfLKiS88uvFgen5pF4/fTlIa
+         Oss3swZ5yMiS4OJCw7ALcqpzXrqnAUS8JUkvQgdR6qNFr1v0TxWhv32pUBZ8rNvnPe
+         xJiSNWqOhsEh53wdycUGZ2qghWGVWg8Qhh67MVnwsad0X93fcBscx5A50oR2Ckgl7b
+         68CAfCTJEufsK5zDjpF7/mT3S7+TMNvt9BFelv4+nACgez+19fb/cSanapAW7uHDr5
+         1x4WdJMkY/SNQ==
+Date:   Thu, 07 May 2020 12:29:59 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMzpN2iCgr0rb=MCYPGMx8tcfLq2qdzv0h7YnX5hkzBB+O7JJQ@mail.gmail.com>
+References: <20200505174423.199985-1-ndesaulniers@google.com> <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com> <6A99766A-59FB-42DF-9350-80EA671A42B0@zytor.com> <CAMzpN2iCgr0rb=MCYPGMx8tcfLq2qdzv0h7YnX5hkzBB+O7JJQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507185347.GA14499@embeddedor>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Brian Gerst <brgerst@gmail.com>
+CC:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+From:   hpa@zytor.com
+Message-ID: <4AC5875F-4CCD-44D0-9DF6-76A975EC480B@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:53:47PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On May 7, 2020 6:32:24 AM PDT, Brian Gerst <brgerst@gmail=2Ecom> wrote:
+>On Thu, May 7, 2020 at 3:02 AM <hpa@zytor=2Ecom> wrote:
+>>
+>> On May 6, 2020 11:18:09 PM PDT, Brian Gerst <brgerst@gmail=2Ecom>
+>wrote:
+>> >On Tue, May 5, 2020 at 1:47 PM Nick Desaulniers
+>> ><ndesaulniers@google=2Ecom> wrote:
+>> >>
+>> >> From: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>> >>
+>> >> It turns out that if your config tickles __builtin_constant_p via
+>> >> differences in choices to inline or not, this now produces invalid
+>> >> assembly:
+>> >>
+>> >> $ cat foo=2Ec
+>> >> long a(long b, long c) {
+>> >>   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+>> >>   return c;
+>> >> }
+>> >> $ gcc foo=2Ec
+>> >> foo=2Ec: Assembler messages:
+>> >> foo=2Ec:2: Error: `%rax' not allowed with `orb'
+>> >>
+>> >> The "q" constraint only has meanting on -m32 otherwise is treated
+>as
+>> >> "r"=2E
+>> >>
+>> >> This is easily reproducible via
+>> >Clang+CONFIG_STAGING=3Dy+CONFIG_VT6656=3Dm,
+>> >> or Clang+allyesconfig=2E
+>> >>
+>> >> Keep the masking operation to appease sparse (`make C=3D1`), add
+>back
+>> >the
+>> >> cast in order to properly select the proper 8b register alias=2E
+>> >>
+>> >>  [Nick: reworded]
+>> >>
+>> >> Cc: stable@vger=2Ekernel=2Eorg
+>> >> Cc: Jesse Brandeburg <jesse=2Ebrandeburg@intel=2Ecom>
+>> >> Link: https://github=2Ecom/ClangBuiltLinux/linux/issues/961
+>> >> Link:
+>> >https://lore=2Ekernel=2Eorg/lkml/20200504193524=2EGA221287@google=2Eco=
+m/
+>> >> Fixes: 1651e700664b4 ("x86: Fix bitops=2Eh warning with a moved
+>cast")
+>> >> Reported-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>> >> Reported-by: kernelci=2Eorg bot <bot@kernelci=2Eorg>
+>> >> Suggested-by: Andy Shevchenko <andriy=2Eshevchenko@intel=2Ecom>
+>> >> Suggested-by: Ilie Halip <ilie=2Ehalip@gmail=2Ecom>
+>> >> Tested-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>> >> Signed-off-by: Sedat Dilek <sedat=2Edilek@gmail=2Ecom>
+>> >> Signed-off-by: Nick Desaulniers <ndesaulniers@google=2Ecom>
+>> >> ---
+>> >>  arch/x86/include/asm/bitops=2Eh | 4 ++--
+>> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >>
+>> >> diff --git a/arch/x86/include/asm/bitops=2Eh
+>> >b/arch/x86/include/asm/bitops=2Eh
+>> >> index b392571c1f1d=2E=2E139122e5b25b 100644
+>> >> --- a/arch/x86/include/asm/bitops=2Eh
+>> >> +++ b/arch/x86/include/asm/bitops=2Eh
+>> >> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
+>*addr)
+>> >>         if (__builtin_constant_p(nr)) {
+>> >>                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>> >>                         : CONST_MASK_ADDR(nr, addr)
+>> >> -                       : "iq" (CONST_MASK(nr) & 0xff)
+>> >> +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
+>> >
+>> >I think a better fix would be to make CONST_MASK() return a u8 value
+>> >rather than have to cast on every use=2E
+>> >
+>> >Also I question the need for the "q" constraint=2E  It was added in
+>> >commit 437a0a54 as a workaround for GCC 3=2E4=2E4=2E  Now that the min=
+imum
+>> >GCC version is 4=2E6, is this still necessary?
+>> >
+>> >--
+>> >Brian Gerst
+>>
+>> Yes, "q" is needed on i386=2E
+>
+>I think the bug this worked around was that the compiler didn't detect
+>that CONST_MASK(nr) was also constant and doesn't need to be put into
+>a register=2E  The question is does that bug still exist on compiler
+>versions we care about?
+>
+>--
+>Brian Gerst
 
-Applied, thank you.
-
-> ---
->  drivers/input/keyboard/applespi.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-> index d38398526965..14362ebab9a9 100644
-> --- a/drivers/input/keyboard/applespi.c
-> +++ b/drivers/input/keyboard/applespi.c
-> @@ -186,7 +186,7 @@ struct touchpad_protocol {
->  	u8			number_of_fingers;
->  	u8			clicked2;
->  	u8			unknown3[16];
-> -	struct tp_finger	fingers[0];
-> +	struct tp_finger	fingers[];
->  };
->  
->  /**
-> 
-
--- 
-Dmitry
+The compiler is free to do that, including for legit reasons (common subex=
+pression elimination, especially=2E) So yes=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
