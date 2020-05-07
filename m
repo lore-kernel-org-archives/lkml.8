@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F688C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8FFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 276B22064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576C32087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F258v4CU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C4+OVNvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgEGAp2 (ORCPT
+        id S1728679AbgEGApe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:45:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49036 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgEGAp2 (ORCPT
+        Wed, 6 May 2020 20:45:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39682 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgEGApb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:45:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470c16X064684;
-        Thu, 7 May 2020 00:44:14 GMT
+        Wed, 6 May 2020 20:45:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470cFcS093150;
+        Thu, 7 May 2020 00:44:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=o4VeZakxk7q/YukxMsyh8pVT0eR9oJkktza+0HTryhw=;
- b=F258v4CUKrVK7T6Q6EY2mRI9P9FAoQwDZIKnDCnu7ShoFjdjhIj3PVgoaI8w7b9nGTfD
- lsGI5U37QGPAW6648U/DlMs/4F0V+w18oLcSdcdJoLSxjlG1IPYnd+w0fwscwvhQxBIE
- LLv6ILBDZYp2qCb5JeNRfBA2J9mONHUseYdPwtJXgRxzkymZYNWzAXgd8qtTcTe+3p0d
- FIwoPNTiAAseFe5DM1z52GJKzVVP0qA0zuu7NIzSR+jImjxIUypqBj2xvd5tjd4aW7V5
- gGsYVMmFxFiqqvyJBiBh7PupIgVskESG+K/go7bQWgc9UsKPJzDHFrSlO8pNUHee6Equ 0Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30s09rdfbc-1
+ bh=DoQrZzU/UMsJZ2IxoUJb14SQbVfDKKaxGdtOnUPWmyk=;
+ b=C4+OVNvvwb1kwbmns15EmlXY9rzfDHIB9UetOGbMnxHIDD72iydl9DK8TyWHsrV7hoON
+ NlGymJDXMCb7mQYs5tvh0xbxx0IXo4j2n+4Qmtnparvw1yWqiDvgBC87b9arOKz2nX8z
+ +N0U/G7DJFx0rfYkFpXKeyDP8lAXVViydT8IbMhZf/8QECxh91r0DRWrkb+oO+N5S4gI
+ Te2L4bVGCgMM+hYZTvmkRd43auwozy6qVNCxC4L8nmQrOnPXoEh0+PfFPiCSQCpfeZFZ
+ 8/h7m8B9MtugkDRYI9OOxt/s0X5ccXnLzXwGbYy1cbl0Lg0MkIH9L7LJDe2+nrsl662C GQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30s1gnd8q2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bhYE098923;
-        Thu, 7 May 2020 00:44:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjnma4vr-1
+        Thu, 07 May 2020 00:44:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bonI131815;
+        Thu, 7 May 2020 00:44:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 30t1r95c43-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:13 +0000
+        Thu, 07 May 2020 00:44:21 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0470iCZR029965;
-        Thu, 7 May 2020 00:44:12 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470iJvK020415;
+        Thu, 7 May 2020 00:44:19 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:44:12 -0700
+        with ESMTP ; Wed, 06 May 2020 17:44:19 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,65 +71,135 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 28/43] PKRAM: ensure memblocks with preserved pages init'd for numa
-Date:   Wed,  6 May 2020 17:41:54 -0700
-Message-Id: <1588812129-8596-29-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 30/43] memblock: add for_each_reserved_mem_range()
+Date:   Wed,  6 May 2020 17:41:56 -0700
+Message-Id: <1588812129-8596-31-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070001
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to facilitate fast initialization of page structs for
-preserved pages, memblocks with preserved pages must not cross
-numa node boundaries and must have a node id assigned to them.
+To support deferred initialization of page structs for preserved
+pages, add an iterator of the memblock reserved list that can select or
+exclude ranges based on memblock flags.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/memblock.h | 10 ++++++++++
+ mm/memblock.c            | 51 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index a5e539052af6..97a7dd0a5b7d 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -21,6 +21,7 @@
- #include <linux/sysfs.h>
- #include <linux/types.h>
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 27ab2b30ae1d..f348ebb750c9 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -145,6 +145,11 @@ void __next_mem_range_rev(u64 *idx, int nid, enum memblock_flags flags,
+ void __next_reserved_mem_region(u64 *idx, phys_addr_t *out_start,
+ 				phys_addr_t *out_end);
  
-+#include <asm/numa.h>
- #include "internal.h"
- 
- 
-@@ -242,6 +243,15 @@ void __init pkram_reserve(void)
- 		return;
- 	}
- 
-+	/*
-+	 * Fix up the reserved memblock list to ensure the
-+	 * memblock regions are split along node boundaries
-+	 * and have a node ID set.  This will allow the page
-+	 * structs for the preserved pages to be initialized
-+	 * more efficiently.
-+	 */
-+	numa_isolate_memblocks();
++void __next_reserved_mem_range(u64 *idx, enum memblock_flags flags,
++			       enum memblock_flags exclflags,
++			       phys_addr_t *out_start, phys_addr_t *out_end,
++			       int *out_nid);
 +
- done:
- 	pr_info("PKRAM: %lu pages reserved\n", pkram_reserved_pages);
+ void __memblock_free_late(phys_addr_t base, phys_addr_t size);
+ 
+ /**
+@@ -202,6 +207,11 @@ void __memblock_free_late(phys_addr_t base, phys_addr_t size);
+ 	     i != (u64)ULLONG_MAX;					\
+ 	     __next_reserved_mem_region(&i, p_start, p_end))
+ 
++#define for_each_reserved_mem_range(i, flags, exclflags, p_start, p_end, p_nid)\
++	for (i = 0UL, __next_reserved_mem_range(&i, flags, exclflags, p_start, p_end, p_nid);	\
++	     i != (u64)ULLONG_MAX;					\
++	     __next_reserved_mem_range(&i, flags, exclflags, p_start, p_end, p_nid))
++
+ static inline bool memblock_is_hotpluggable(struct memblock_region *m)
+ {
+ 	return m->flags & MEMBLOCK_HOTPLUG;
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 1a9a2055ed11..33597f352dc0 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -987,6 +987,55 @@ void __init_memblock __next_reserved_mem_region(u64 *idx,
+ 	*idx = ULLONG_MAX;
  }
+ 
++/**
++ * __next_reserved_mem_range - next function for for_each_reserved_range()
++ * @idx: pointer to u64 loop variable
++ * @flags: pick blocks based on memory attributes
++ * @exclflags: exclude blocks based on memory attributes
++ * @out_start: ptr to phys_addr_t for start address of the range, can be %NULL
++ * @out_end: ptr to phys_addr_t for end address of the range, can be %NULL
++ * @out_nid: ptr to int for nid of the range, can be %NULL
++ *
++ * Iterate over all reserved memory ranges.
++ */
++void __init_memblock __next_reserved_mem_range(u64 *idx,
++					   enum memblock_flags flags,
++					   enum memblock_flags exclflags,
++					   phys_addr_t *out_start,
++					   phys_addr_t *out_end, int *out_nid)
++{
++	struct memblock_type *type = &memblock.reserved;
++	int _idx = *idx;
++
++	for (; _idx < type->cnt; _idx++) {
++		struct memblock_region *r = &type->regions[_idx];
++		phys_addr_t base = r->base;
++		phys_addr_t size = r->size;
++
++		/* skip preserved pages */
++		if ((exclflags & MEMBLOCK_PRESERVED) && memblock_is_preserved(r))
++			continue;
++
++		/* skip non-preserved pages */
++		if ((flags & MEMBLOCK_PRESERVED) && !memblock_is_preserved(r))
++			continue;
++
++		if (out_start)
++			*out_start = base;
++		if (out_end)
++			*out_end = base + size - 1;
++		if (out_nid)
++			*out_nid = r->nid;
++
++		_idx++;
++		*idx = (u64)_idx;
++		return;
++	}
++
++	/* signal end of iteration */
++	*idx = ULLONG_MAX;
++}
++
+ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
+ {
+ 	int m_nid = memblock_get_region_node(m);
+@@ -1011,7 +1060,7 @@ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
+ }
+ 
+ /**
+- * __next_mem_range - next function for for_each_free_mem_range() etc.
++ * __next__mem_range - next function for for_each_free_mem_range() etc.
+  * @idx: pointer to u64 loop variable
+  * @nid: node selector, %NUMA_NO_NODE for all nodes
+  * @flags: pick from blocks based on memory attributes
 -- 
 2.13.3
 
