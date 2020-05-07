@@ -2,126 +2,106 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B744CC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1953EC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C2F20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000FE20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgEGVrL (ORCPT
+        id S1727072AbgEGVrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:47:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38786 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgEGVrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:47:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 32FE780307C1;
-        Thu,  7 May 2020 21:47:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ATZSyttrcu1J; Fri,  8 May 2020 00:47:03 +0300 (MSK)
-Date:   Fri, 8 May 2020 00:46:56 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Xie <tony.xie@rock-chips.com>, Wen He <wen.he_1@nxp.com>,
-        Mike Looijmans <mike.looijmans@topic.nl>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] clk: Add Baikal-T1 CCU PLLs driver
-Message-ID: <20200507214656.bh254nytzrzfk5hx@mobilestation>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-4-Sergey.Semin@baikalelectronics.ru>
- <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
+        Thu, 7 May 2020 17:47:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30012 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgEGVrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:47:00 -0400
+IronPort-SDR: lZy1lW9BpjeakLNig3qvWwA18fGMQhtZVfMP07O7UGbbtjgYhWNCdb45cw1jmvINoSVmYsad0d
+ qoq8vHXJ1c0A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 14:46:54 -0700
+IronPort-SDR: XSzS7dTe6Wy7C+q//uzNDJRFqXYcvr54hWsflNNGVA2u2d/Yo2Vb3KSk0fM0DqTCqOyLDGNX46
+ U16slWjhO8sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
+   d="scan'208";a="462004281"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga005.fm.intel.com with ESMTP; 07 May 2020 14:46:52 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5A34B301C1B; Thu,  7 May 2020 14:46:52 -0700 (PDT)
+Date:   Thu, 7 May 2020 14:46:52 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH 0/7] Share events between metrics
+Message-ID: <20200507214652.GC3538@tassilo.jf.intel.com>
+References: <20200507081436.49071-1-irogers@google.com>
+ <20200507174835.GB3538@tassilo.jf.intel.com>
+ <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9259445e-86a8-8e4a-58c9-822bd00d62f8@infradead.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 03:27:57PM -0700, Randy Dunlap wrote:
-> Hi,
+> > - without this change events within a metric may get scheduled
+> >   together, after they may appear as part of a larger group and be
+> >   multiplexed at different times, lowering accuracy - however, less
+> >   multiplexing may compensate for this.
 > 
-> Typo(s):
-> 
-> On 5/6/20 3:22 PM, Serge Semin wrote:
-> > diff --git a/drivers/clk/baikal-t1/Kconfig b/drivers/clk/baikal-t1/Kconfig
-> > new file mode 100644
-> > index 000000000000..e1257af9f49e
-> > --- /dev/null
-> > +++ b/drivers/clk/baikal-t1/Kconfig
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +config CLK_BAIKAL_T1
-> > +	bool "Baikal-T1 Clocks Control Unit interface"
-> > +	depends on (MIPS_BAIKAL_T1 && OF) || COMPILE_TEST
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> > +	  responsible for the chip subsystems clocking and resetting. It
-> > +	  consists of multiple global clock domains, which can be reset by
-> > +	  means of the CCU control registers. These domains and devices placed
-> > +	  in them are fed with clocks generated by a hierarchy of PLLs,
-> > +	  configurable and fixed clock dividers. Enable this option to be able
-> > +	  to select Baikal-T1 CCU PLLs and Dividers drivers.
-> > +
-> > +if CLK_BAIKAL_T1
-> > +
-> > +config CLK_BT1_CCU_PLL
-> > +	bool "Baikal-T1 CCU PLLs support"
-> > +	select MFD_SYSCON
-> > +	default MIPS_BAIKAL_T1
-> > +	help
-> > +	  Enable this to support the PLLs embedded into the Baikal-T1 SoC
-> > +	  System Controller. These are five PLLs placed at the root of the
-> > +	  clocks hierarchy, right after an external reference osciallator
-> 
-> 	                                                      oscillator
-> 
-> > +	  (normally of 25MHz). They are used to generate high frequency
-> > +	  signals, which are either directly wired to the consumers (like
-> > +	  CPUs, DDR, etc) or passed over the clock dividers to be only then
-> 
-> and while you are here:
-> 
->                      etc.)
+> I agree the heuristic in this patch set is naive and would welcome to
+> improve it from your toplev experience. I think this change is
+> progress on TopDownL1 - would you agree?
 
-Both will be fixed in v3. Thanks.
+TopdownL1 in non SMT mode should always fit. Inside a group
+deduping always makes sense. 
 
--Sergey 
+The problem is SMT mode where it doesn't fit. toplev tries
+to group each node and each level together.
 
 > 
-> > +	  used as an individual reference clock of a target device.
-> > +
-> > +endif
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+> I'm wondering if what is needed are flags to control behavior. For
+> example, avoiding the use of groups altogether. For TopDownL1 I see.
+
+Yes the current situation isn't great.
+
+For Topdown your patch clearly is an improvement, I'm not sure
+it's for everything though.
+
+Probably the advanced heuristics are only useful for a few
+formulas, most are very simple. So maybe it's ok. I guess
+would need some testing over the existing formulas.
+
+
+-Andi
