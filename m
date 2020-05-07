@@ -2,132 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3FEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBCD2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861853;
-	bh=oFmEvwMhzT1oMjagkBpiXYcgW4V972smE29+gs+dHNc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8LK8K9tFS5KNFYzQrM5CJIFRD7kz3KcL+3C0c752d/sSfjfMnEhrY2+e7r7H1QhG
-	 9lUwWAoPGQMbyTyZ4k6MhFWmbwKuhsTzbvvNsdcb7Bhbqz+InTi2Xk1cZVpfVzkhzK
-	 923yMS0DqV4e+1+6F1k8idrnfo9hfgCEIb6toFFM=
+	by mail.kernel.org (Postfix) with ESMTP id 47C052083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgEGOax (ORCPT
+        id S1728926AbgEGObA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:31:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:60882 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgEGOaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB87620A8B;
-        Thu,  7 May 2020 14:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861824;
-        bh=oFmEvwMhzT1oMjagkBpiXYcgW4V972smE29+gs+dHNc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLQxQCa0MCwjhYScMC/I8e2f95wg8h8xtXODSQtklQPMZQCTbnfi4msUOoa+SP1kx
-         S5mqnbRYvUjra5gsP0RyBLsWDBTQ1co1H/v/u5aaD85StzoPfVy1jYr9Xpa/UtD/kG
-         7d22rRQlspk5v8mSm/9jnf188QJWXpxwSKQ9rlWg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/9] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
-Date:   Thu,  7 May 2020 10:30:14 -0400
-Message-Id: <20200507143018.27195-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
-References: <20200507143018.27195-1-sashal@kernel.org>
+        id S1728848AbgEGOac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3908D6E;
+        Thu,  7 May 2020 07:30:30 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5393F68F;
+        Thu,  7 May 2020 07:30:29 -0700 (PDT)
+Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200411200632.4045-1-peron.clem@gmail.com>
+ <20200411200632.4045-2-peron.clem@gmail.com>
+ <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
+ <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
+ <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
+ <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
+ <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
+ <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
+ <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com>
+ <CAJiuCcfrMhu5Mi7YZTttw2k+hGui0GFAmOhPh_9fv4Te27M0+A@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <13285d84-5a5e-c695-2a8b-7ca50c976b90@arm.com>
+Date:   Thu, 7 May 2020 15:30:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <CAJiuCcfrMhu5Mi7YZTttw2k+hGui0GFAmOhPh_9fv4Te27M0+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On 02/05/2020 23:07, Clément Péron wrote:
+> Hi Steven,
+> 
+> On Tue, 14 Apr 2020 at 15:10, Steven Price <steven.price@arm.com> wrote:
+>>
+>> Hi Clément,
+>>
+>> On 13/04/2020 18:28, Clément Péron wrote:
+>>> Hi Steven,
+>>>
+> 
+> <snip>
+> 
+>> Getting a backtrace from the two occurrences, I see one added from:
+>>
+>>     (debugfs_create_dir) from [<c04633f8>] (create_regulator+0xe0/0x220)
+>>     (create_regulator) from [<c04681d8>] (_regulator_get+0x168/0x204)
+>>     (_regulator_get) from [<c04682e0>] (regulator_bulk_get+0x64/0xf4)
+>>     (regulator_bulk_get) from [<c04696f0>]
+>> (devm_regulator_bulk_get+0x40/0x74)
+>>     (devm_regulator_bulk_get) from [<bf00af44>]
+>> (panfrost_device_init+0x1b4/0x48c [panfrost])
+>>     (panfrost_device_init [panfrost]) from [<bf00a4d4>]
+>> (panfrost_probe+0x94/0x184 [panfrost])
+>>     (panfrost_probe [panfrost]) from [<c04ee694>]
+>> (platform_drv_probe+0x48/0x94)
+>>
+>> And the other:
+>>
+>>     (debugfs_create_dir) from [<c04633f8>] (create_regulator+0xe0/0x220)
+>>     (create_regulator) from [<c04681d8>] (_regulator_get+0x168/0x204)
+>>     (_regulator_get) from [<c05c1280>] (dev_pm_opp_set_regulators+0x6c/0x184)
+>>     (dev_pm_opp_set_regulators) from [<bf00b4ac>]
+>> (panfrost_devfreq_init+0x38/0x1ac [panfrost])
+>>     (panfrost_devfreq_init [panfrost]) from [<bf00a508>]
+>> (panfrost_probe+0xc8/0x184 [panfrost])
+>>     (panfrost_probe [panfrost]) from [<c04ee694>]
+>> (platform_drv_probe+0x48/0x94)
+>>
+>> Both are created at /regulator/vdd_gpu
+> 
+> I'm preparing a new version with some clean from lima devfreq.
+> My working branch :
+> https://github.com/clementperon/linux/commits/panfrost_devfreq
 
-[ Upstream commit 5cbf3264bc715e9eb384e2b68601f8c02bb9a61d ]
+I had a look at that branch and gave it a quick spin on my Firefly 
+RK3288 and didn't notice any issues.
 
-Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
-vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
-attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
-memory calculates garbage for the PFN.
+> Two strange things I observe:
+>   - After 30sec the regulator is released by OPP ???
+> [   33.757627] vdd-gpu: disabling
+> Introduce the regulator support in this commit:
+> https://github.com/clementperon/linux/commit/be310c37b82010e293b7f129ccdcb711a2abb2ce
 
-Hilariously, this only got detected because the first "PFN" calculated
-by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
-uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
-because the translation "failed".  PFN 0 is now unconditionally reserved
-on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
-to return true and in turns results in vaddr_get_pfn() returning success
-for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
-reserved and leads to failure in vfio_pin_map_dma().  The subsequent
-call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
+I can't see anything wrong with this commit, but equally in my DTS I 
+have a "regulator-always-on" for vdd_gpu. My initial thought was that 
+this could be runtime PM of the GPU - but I can't see how 
+panfrost_device_suspend() would end up turning off the regulator. So 
+unless there's some way that the regulator itself suspends (but it 
+should know it's in use) I've no clue why this would be happening.
 
-  WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
-  CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
-  Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
-  RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
-  RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
-  RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
-  R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
-  R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
-  FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
-   vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
-   ksys_ioctl+0x92/0xb0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x180
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f15d04c75d7
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
+Since you've got a reproduction - can you get a backtrace where the 
+regulator is getting disabled?
 
-Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/vfio/vfio_iommu_type1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>   - The Cooling map is not probe correctly :
+> [    2.545756] panfrost 1800000.gpu: [drm:panfrost_devfreq_init
+> [panfrost]] Failed to register cooling device
+> Introduce in this commit :
+> https://github.com/clementperon/linux/commit/0252c38fd55ad78366ac4b1714e285c88db34557
+> 
+> Do you have an hint about what I'm missing ?
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 875634d0d020f..d394911ec0c98 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -227,8 +227,8 @@ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
- 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
- 
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--		if (is_invalid_reserved_pfn(*pfn))
-+		if (!follow_pfn(vma, vaddr, pfn) &&
-+		    is_invalid_reserved_pfn(*pfn))
- 			ret = 0;
- 	}
- 
--- 
-2.20.1
+Sorry, my knowledge of the cooling framework is very limited. What 
+you've got looks plausible, but I'm afraid I can't really help beyond 
+that! As before - can you try adding some printk()s in e.g. 
+of_devfreq_cooling_register_power() and find out where it is bailing out?
 
+Steve
