@@ -2,105 +2,78 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A52C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB525C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A438520A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IXHCXvl9"
+	by mail.kernel.org (Postfix) with ESMTP id 972EC20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgEGRZj (ORCPT
+        id S1728369AbgEGRZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:25:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41828 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgEGRZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:25:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HNEUW121855
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 17:25:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=HfUeggJR/O/iIeAUSeiZiFbWFcwK1K8/rIWzmcMKkx4=;
- b=IXHCXvl9079GLoInGfaNG/q76uqqWpoEUTESeX+4jLmhXcoNPUejo+c3osCcQ8l+5sk9
- f0gmryAnChIGe8loTEKFKjbUC3+KVsU6D/hhu4LIfI7d9Z3tKgLNhRsT2RoenzZfKeGY
- A/ik2Bx5HiBUZ3SE+dowZnBOCYucNaawBaI9RedfEV5440S/nACXpNnXdOZDgiqwDCwx
- Lw7tDCvUltXHVhROy2j7a7gYNahzAkj327snmV3Y5HnuBwXYL92J07RmVr8IlO1AhrYv
- CZzIXj+cUBsFyh7pjBou3PtrB5YBEl/u+peAGJHMBUGZy+VBGdbIGjb48FtrDa6nceV+ Eg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30usgq8m4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 17:25:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HGgTP045920
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 17:25:37 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30us7r2ja2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 17:25:37 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047HPa1R002283
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 17:25:36 GMT
-Received: from localhost.localdomain (/70.114.128.235)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 10:25:36 -0700
-From:   Himanshu Madhani <himanshu.madhani@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Himanshu Madhani <himanshu.madhani@oracle.com>
-Subject: [PATCH v2] .mailmap: Update address of Himanshu Madhani
-Date:   Thu,  7 May 2020 12:25:35 -0500
-Message-Id: <20200507172535.51314-1-himanshu.madhani@oracle.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 7 May 2020 13:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgEGRZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:25:42 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CDE20A8B;
+        Thu,  7 May 2020 17:25:40 +0000 (UTC)
+Date:   Thu, 7 May 2020 13:25:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+Message-ID: <20200507132539.7e081980@gandalf.local.home>
+In-Reply-To: <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834028054.28357.398159034694277189.stgit@devnote2>
+        <20200501101942.5c0da986@gandalf.local.home>
+        <20200502120842.9d93352083fb854295150235@kernel.org>
+        <20200507091207.5c3b1a92@gandalf.local.home>
+        <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=1
- mlxlogscore=998 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070141
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do not have access to my @marvell.com email ID anymore.
-Lets map my new email address correctly in .mailmap
+On Fri, 8 May 2020 00:50:28 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
----
-Changes from v1
-- Update patch subject line to reflect .mailmap changes.
+> > > Yes, I need Tom's review for this change. As far as I can test, this
+> > > fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
+> > > for this test case.
+> > >   
+> > 
+> > I still don't see how changing "keys=common_pid" to "keys=ip" has anything
+> > to do with the echo patch. If that is a problem, it should be a different
+> > patch with explanation to why "keys=common_pid" is broken.  
+> 
+> This test case uses a trace_marker event to make a histogram with
+> the common_pid key, and it expects the "echo" command is built-in command
+> so that the pid is same while writing several events to trace_marker.
+> I changed it to "ip" which is always same if trace_marker interface is
+> used.
 
----
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
+Can you explicitly state that in your change log? It wasn't obvious from
+what you meant with:
 
-diff --git a/.mailmap b/.mailmap
-index db3754a41018..30d8c3f10ca7 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -99,6 +99,8 @@ Henk Vergonet <Henk.Vergonet@gmail.com>
- Henrik Kretzschmar <henne@nachtwindheim.de>
- Henrik Rydberg <rydberg@bitmath.org>
- Herbert Xu <herbert@gondor.apana.org.au>
-+Himanshu Madhani <himanshu.madhani@oracle.com>
-+Himanshu Madhani <hmadhani2024@gmail.com>
- Jacob Shin <Jacob.Shin@amd.com>
- Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
- Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
--- 
-2.26.2
+"This also fixes some test cases which expects built-in echo command."
 
+Thanks!
+
+-- Steve
