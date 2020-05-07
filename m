@@ -2,109 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E736DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA323208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD40420857
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xe31aGYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgEGPBL (ORCPT
+        id S1728279AbgEGPBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:01:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4282 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728219AbgEGPBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:01:05 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A6F3F9C4D0216598D07B;
-        Thu,  7 May 2020 23:01:00 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 23:00:53 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Alan Kao <alankao@andestech.com>
-Subject: [PATCH -next] riscv: perf_event: Make some funciton static
-Date:   Thu, 7 May 2020 23:04:44 +0800
-Message-ID: <20200507150445.174390-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 7 May 2020 11:01:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:30984 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728227AbgEGPBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:01:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588863673; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=AFhcDY80LnoZO27lj6FbOhp6YvSPD5A1HvjLsjxeVEQ=; b=Xe31aGYw3I/nTaYiJzE0URIUn4uKKQ8f9gkRCsVSETNFQXHSiMjWu4MGk/R4YejU3l+ZScDY
+ 16Balf9F4QXahvpL3gLPINEiS1qnCRML0MHpD6kq0DBA+M6JSbezb4HqPNX+YwLLTm89h02g
+ W8Dg7C4noEpG0Ecf60TOHq1naTc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb42299.7fc67079e570-smtp-out-n05;
+ Thu, 07 May 2020 15:00:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9D6D7C3855D; Thu,  7 May 2020 15:00:40 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [27.59.217.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A08CEC00449;
+        Thu,  7 May 2020 15:00:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A08CEC00449
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V5 2/3] dt-bindings: geni-se: Add interconnect binding for
+ GENI QUP
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, c_skakit@codeaurora.org, mka@chromium.org
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+ <1584095350-841-3-git-send-email-akashast@codeaurora.org>
+ <20200313220638.GA30287@bogus>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <0aef42fe-6ae9-4d77-c0bb-363c8869df69@codeaurora.org>
+Date:   Thu, 7 May 2020 20:30:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200313220638.GA30287@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warning detected when running make with W=1,
-../arch/riscv/kernel/perf_event.c:150:5: warning: no previous prototype for ‘riscv_map_cache_decode’ [-Wmissing-prototypes]
- int riscv_map_cache_decode(u64 config, unsigned int *type,
-     ^~~~~~~~~~~~~~~~~~~~~~
-../arch/riscv/kernel/perf_event.c:345:13: warning: no previous prototype for ‘riscv_base_pmu_handle_irq’ [-Wmissing-prototypes]
- irqreturn_t riscv_base_pmu_handle_irq(int irq_num, void *dev)
-             ^~~~~~~~~~~~~~~~~~~~~~~~~
-../arch/riscv/kernel/perf_event.c:364:6: warning: no previous prototype for ‘release_pmc_hardware’ [-Wmissing-prototypes]
- void release_pmc_hardware(void)
-      ^~~~~~~~~~~~~~~~~~~~
-../arch/riscv/kernel/perf_event.c:467:12: warning: no previous prototype for ‘init_hw_perf_events’ [-Wmissing-prototypes]
- int __init init_hw_perf_events(void)
-            ^~~~~~~~~~~~~~~~~~~
+Hi Rob,
 
-Cc: Alan Kao <alankao@andestech.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- arch/riscv/kernel/perf_event.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+>>   
+>> +      interconnects:
+>> +         minItems: 2
+>> +         maxItems: 3
+>> +
+>> +      interconnect-names:
+>> +         items:
+>> +           - const: qup-core
+>> +           - const: qup-config
+>> +           - const: qup-memory
+> Don't you need 'minItems: 2' here?
 
-diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
-index 91626d9ae5f2..c835f0362d94 100644
---- a/arch/riscv/kernel/perf_event.c
-+++ b/arch/riscv/kernel/perf_event.c
-@@ -147,7 +147,7 @@ static int riscv_map_hw_event(u64 config)
- 	return riscv_pmu->hw_events[config];
- }
- 
--int riscv_map_cache_decode(u64 config, unsigned int *type,
-+static int riscv_map_cache_decode(u64 config, unsigned int *type,
- 			   unsigned int *op, unsigned int *result)
- {
- 	return -ENOENT;
-@@ -342,7 +342,7 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
- 
- static DEFINE_MUTEX(pmc_reserve_mutex);
- 
--irqreturn_t riscv_base_pmu_handle_irq(int irq_num, void *dev)
-+static irqreturn_t riscv_base_pmu_handle_irq(int irq_num, void *dev)
- {
- 	return IRQ_NONE;
- }
-@@ -361,7 +361,7 @@ static int reserve_pmc_hardware(void)
- 	return err;
- }
- 
--void release_pmc_hardware(void)
-+static void release_pmc_hardware(void)
- {
- 	mutex_lock(&pmc_reserve_mutex);
- 	if (riscv_pmu->irq >= 0)
-@@ -464,7 +464,7 @@ static const struct of_device_id riscv_pmu_of_ids[] = {
- 	{ /* sentinel value */ }
- };
- 
--int __init init_hw_perf_events(void)
-+static int __init init_hw_perf_events(void)
- {
- 	struct device_node *node = of_find_node_by_type(NULL, "pmu");
- 	const struct of_device_id *of_id;
+Yeah I need minItems: 2 here, thanks for reviewing.
+
+regards,
+
+Akash
+
+>
+> Rob
+
 -- 
-2.26.2
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
