@@ -2,79 +2,92 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFC6C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE8EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4AB208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9A6208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgEGLn2 (ORCPT
+        id S1726942AbgEGLn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:43:28 -0400
-Received: from elvis.franken.de ([193.175.24.41]:43591 "EHLO elvis.franken.de"
+        Thu, 7 May 2020 07:43:29 -0400
+Received: from elvis.franken.de ([193.175.24.41]:43620 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgEGLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:43:22 -0400
+        id S1725914AbgEGLnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:43:23 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jWevq-00081e-06; Thu, 07 May 2020 13:43:14 +0200
+        id 1jWevq-00081e-02; Thu, 07 May 2020 13:43:14 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 903F3C0409; Thu,  7 May 2020 13:17:53 +0200 (CEST)
-Date:   Thu, 7 May 2020 13:17:53 +0200
+        id 95D7EC0409; Thu,  7 May 2020 13:00:36 +0200 (CEST)
+Date:   Thu, 7 May 2020 13:00:36 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/20] mips: cm: Add L2 ECC/parity errors reporting
-Message-ID: <20200507111753.GG11616@alpha.franken.de>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-6-Sergey.Semin@baikalelectronics.ru>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: your mail
+Message-ID: <20200507110036.GC11616@alpha.franken.de>
+References: <20200506055245.3013374-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200506055245.3013374-1-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:42:23PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Wed, May 06, 2020 at 01:52:45PM +0800, Jiaxun Yang wrote:
+> Subject: [PATCH v6] MIPS: Truncate link address into 32bit for 32bit kernel
+> In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
 > 
-> According to the MIPS32 InterAptiv software manual error codes 24 - 26
-> of CM2 indicate L2 ECC/parity error with switching to a corresponding
-> errors info fields. This patch provides these errors parsing code,
-> which handles the read/write uncorrectable and correctable ECC/parity
-> errors, and prints instruction causing the fault, RAM array type, cache
-> way/dword and syndrome associated with the faulty data.
+> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+> while bfd will strip 64bit address into 32bit silently.
+> To fix LLD build, we should truncate load address provided by platform
+> into 32bit for 32bit kernel.
 > 
-> Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/786
+> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Cc: Maciej W. Rozycki <macro@linux-mips.org>
 > ---
->  arch/mips/kernel/mips-cm.c | 62 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 60 insertions(+), 2 deletions(-)
+> V2: Take MaskRay's shell magic.
+> 
+> V3: After spent an hour on dealing with special character issue in
+> Makefile, I gave up to do shell hacks and write a util in C instead.
+> Thanks Maciej for pointing out Makefile variable problem.
+> 
+> v4: Finally we managed to find a Makefile method to do it properly
+> thanks to Kees. As it's too far from the initial version, I removed
+> Review & Test tag from Nick and Fangrui and Cc instead.
+> 
+> v5: Care vmlinuz as well.
+> 
+> v6: Rename to LIKER_LOAD_ADDRESS 
+> ---
+>  arch/mips/Makefile                 | 13 ++++++++++++-
+>  arch/mips/boot/compressed/Makefile |  2 +-
+>  arch/mips/kernel/vmlinux.lds.S     |  2 +-
+>  3 files changed, 14 insertions(+), 3 deletions(-)
 
 applied to mips-next.
 
