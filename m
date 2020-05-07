@@ -2,134 +2,139 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83ACC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05472C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA73207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJ2cM97l"
+	by mail.kernel.org (Postfix) with ESMTP id DA1CE208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588871345;
+	bh=f1TwzsHifZwaBGqk5i+/qCs3tR+eDWVT3oSKd0rEp9w=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Kuv97qNBO2eFQ46DBfKLZeVqYzSjm9Ny5LVPLUxCZls299U1EWvrBDDnu2UxNlSeo
+	 TMReAZb627gzv4A1BfCi6zqRUk4FAnsf+aLO6vawL75vP/5kFzGYql95NAkWp6gWMk
+	 y4gJ1Mr/zsiwqk+Fme4pfXUM8NfKLSoJ/dRPxUN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgEGRHV (ORCPT
+        id S1728063AbgEGRJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727978AbgEGRHO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:07:14 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62262C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:07:14 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id y31so7486437qta.16
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=7/PrXCrrp5hii78pLoOm9OApKV03tezSTtbf21wn2GQ=;
-        b=vJ2cM97lrsVanMLQWlqZTgaTuRFdaYInxkAXTc1yX40b8vt+T925FTXgJal0sutkm/
-         Qod3Kghc5YBrrYcrNJdKZwVj5qtIf40beNkJT2yW5S1C0QnqVbWws9SKTPfagLcfREO0
-         gD5X+dGPLcTZSDKGFGnChODgWTY5EzyAPi3VA+ZD5mmDoS2rduAzlZDc9L0scC8/LOx+
-         2qCOly+pNoVVgZZEwX0oZ/iaAYI3wIKJXNyiSIRtdzCGKHRVlnZ6U2ahWUcez0t8gRHy
-         38s5DeSTRojmMQcMWprmAHfOoWWA77z3TSlb4p86rDN++UNEQNfB3iEnJHTvlHLGMl7Z
-         t4Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=7/PrXCrrp5hii78pLoOm9OApKV03tezSTtbf21wn2GQ=;
-        b=A0sq4uKrmYZ9NF06m4ysu8khMCfHHTwM8XXm9bxJOlshSMbhEZGZkN1YSmG52DpTXX
-         0b+a8aTESSWDkYBQhAW0OVJhZ/aIulzTATA4BCFGia7EkS2Hb2R1sF5xHvLv/zRP3u90
-         83eW9a2lNY9e8D1rjdPNrTHZETr2G6s6At5JlTZYtOuLenJP7FygFFbYgPtHeF/Qd1j6
-         YZJiR38vLZpQbCfL/Ee2pNLlWTTdqFH9t/qtzHtNpTzxr92RgFrGgXdAZkrspnIgHkUR
-         CQ0CUictfkMvzRgOWAB2aIVHlWfY1MpGlT8C4x69GMpFw6YHQBbjC6sulWFdMhoN74NR
-         n/bA==
-X-Gm-Message-State: AGi0PuY5RhixTlpPpboK+GobxFHV7LEBrs7WEByk8P+oLrQt3OMxPcck
-        Axfvg+4xhK+UCrCBPOtUyKNGv2mTEFpEhE7E
-X-Google-Smtp-Source: APiQypIy9HLMvQvr1IoBhkEe19b6+HAz9x1jbIn1bDPc6Z2265SQK2szy4myS1YuI24410DJjPCvk1IQhD93SQVM
-X-Received: by 2002:a0c:ffa3:: with SMTP id d3mr14017803qvv.12.1588871233518;
- Thu, 07 May 2020 10:07:13 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:06:58 +0200
-In-Reply-To: <cover.1588870822.git.andreyknvl@google.com>
-Message-Id: <b07af6ea7091afe7aa528b3015e041999aeebe97.1588870822.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1588870822.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH USB v3 5/5] usb: raw-gadget: documentation updates
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 May 2020 13:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgEGRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:09:04 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A724D2083B;
+        Thu,  7 May 2020 17:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588871343;
+        bh=f1TwzsHifZwaBGqk5i+/qCs3tR+eDWVT3oSKd0rEp9w=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=RZRzDYTconGM8jrgie4pVwTtZQm/pSZMyS3fMg4QyX5maLm1mJ7n1J49L2YAfFH03
+         B8ynYLezlwL6eusMBdwRB4VO4VD4ziiYKIvee5GLmqX1SPebQBfTi/uvr/zfxpieQq
+         oOas80p2NL4ZikvqxD1Raqir+BJC9MYVdqstGkvg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9249A35231A1; Thu,  7 May 2020 10:09:03 -0700 (PDT)
+Date:   Thu, 7 May 2020 10:09:03 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
+ fast/inefficient GP mode
+Message-ID: <20200507170903.GR2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
+ <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
+ <20200507170006.GA155220@cmpxchg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507170006.GA155220@cmpxchg.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mention the issue with fixed UDC addresses.
+On Thu, May 07, 2020 at 01:00:06PM -0400, Johannes Weiner wrote:
+> On Wed, May 06, 2020 at 05:55:35PM -0700, Andrew Morton wrote:
+> > On Wed, 6 May 2020 17:42:40 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > This commit adds a shrinker so as to inform RCU when memory is scarce.
+> > > RCU responds by shifting into the same fast and inefficient mode that is
+> > > used in the presence of excessive numbers of RCU callbacks.  RCU remains
+> > > in this state for one-tenth of a second, though this time window can be
+> > > extended by another call to the shrinker.
+> 
+> We may be able to use shrinkers here, but merely being invoked does
+> not carry a reliable distress signal.
+> 
+> Shrinkers get invoked whenever vmscan runs. It's a useful indicator
+> for when to age an auxiliary LRU list - test references, clear and
+> rotate or reclaim stale entries. The urgency, and what can and cannot
+> be considered "stale", is encoded in the callback frequency and scan
+> counts, and meant to be relative to the VM's own rate of aging: "I've
+> tested X percent of mine for recent use, now you go and test the same
+> share of your pool." It doesn't translate well to other
+> interpretations of the callbacks, although people have tried.
 
-Links external examples and test suite.
+Would it make sense for RCU to interpret two invocations within (say)
+100ms of each other as indicating urgency?  (Hey, I had to ask!)
 
-Add more implmenetation details and potential improvements.
+> > > If it proves feasible, a later commit might add a function call directly
+> > > indicating the end of the period of scarce memory.
+> > 
+> > (Cc David Chinner, who often has opinions on shrinkers ;))
+> > 
+> > It's a bit abusive of the intent of the slab shrinkers, but I don't
+> > immediately see a problem with it.  Always returning 0 from
+> > ->scan_objects might cause a problem in some situations(?).
+> > 
+> > Perhaps we should have a formal "system getting low on memory, please
+> > do something" notification API.
+> 
+> It's tricky to find a useful definition of what low on memory
+> means. In the past we've used sc->priority cutoffs, the vmpressure
+> interface (reclaimed/scanned - reclaim efficiency cutoffs), oom
+> notifiers (another reclaim efficiency cutoff). But none of these
+> reliably capture "distress", and they vary highly between different
+> hardware setups. It can be hard to trigger OOM itself on fast IO
+> devices, even when the machine is way past useful (where useful is
+> somewhat subjective to the user). Userspace OOM implementations that
+> consider userspace health (also subjective) are getting more common.
+> 
+> > How significant is this?  How much memory can RCU consume?
+> 
+> I think if rcu can end up consuming a significant share of memory, one
+> way that may work would be to do proper shrinker integration and track
+> the age of its objects relative to the age of other allocations in the
+> system. I.e. toss them all on a clock list with "new" bits and shrink
+> them at VM velocity. If the shrinker sees objects with new bit set,
+> clear and rotate. If it sees objects without them, we know rcu_heads
+> outlive cache pages etc. and should probably cycle faster too.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- Documentation/usb/raw-gadget.rst | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+It would be easy for RCU to pass back (or otherwise use) the age of the
+current grace period, if that would help.
 
-diff --git a/Documentation/usb/raw-gadget.rst b/Documentation/usb/raw-gadget.rst
-index 3b3d78e850b2..68d879a8009e 100644
---- a/Documentation/usb/raw-gadget.rst
-+++ b/Documentation/usb/raw-gadget.rst
-@@ -49,10 +49,36 @@ The typical usage of Raw Gadget looks like:
-    Raw Gadget and react to those depending on what kind of USB device
-    needs to be emulated.
- 
-+Note, that some UDC drivers have fixed addresses assigned to endpoints, and
-+therefore arbitrary endpoint addresses can't be used in the descriptors.
-+Nevertheles, Raw Gadget provides a UDC-agnostic way to write USB gadgets.
-+Once a USB_RAW_EVENT_CONNECT event is received via USB_RAW_IOCTL_EVENT_FETCH,
-+the USB_RAW_IOCTL_EPS_INFO ioctl can be used to find out information about
-+endpoints that the UDC driver has. Based on that information, the user must
-+chose UDC endpoints that will be used for the gadget being emulated, and
-+properly assign addresses in endpoint descriptors.
-+
-+You can find usage examples (along with a test suite) here:
-+
-+https://github.com/xairy/raw-gadget
-+
-+Internal details
-+~~~~~~~~~~~~~~~~
-+
-+Currently every endpoint read/write ioctl submits a USB request and waits until
-+its completion. This is the desired mode for coverage-guided fuzzing (as we'd
-+like all USB request processing happen during the lifetime of a syscall),
-+and must be kept in the implementation. (This might be slow for real world
-+applications, thus the O_NONBLOCK improvement suggestion below.)
-+
- Potential future improvements
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--- Reporting more events (suspend, resume, etc.) through
--  USB_RAW_IOCTL_EVENT_FETCH.
-+- Report more events (suspend, resume, etc.) through USB_RAW_IOCTL_EVENT_FETCH.
- 
- - Support O_NONBLOCK I/O.
-+
-+- Support USB 3 features (accept SS endpoint companion descriptor when
-+  enabling endpoints; allow providing stream_id for bulk transfers).
-+
-+- Support ISO transfer features (expose frame_number for completed requests).
--- 
-2.26.2.526.g744177e7f7-goog
+Tracking the age of individual callbacks is out of the question due to
+memory overhead, but RCU could approximate this via statistical sampling.
+Comparing this to grace-period durations could give information as to
+whether making grace periods go faster would be helpful.
 
+But, yes, it would be better to have an elusive unambiguous indication
+of distress.  ;-)
+
+							Thanx, Paul
