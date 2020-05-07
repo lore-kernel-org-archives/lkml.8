@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10898C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42052C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A5B21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1099820659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862140;
-	bh=tP9D+63v58Q0bM08mp96NUT3tfQZXHC9ELHMUIXPN/I=;
+	s=default; t=1588862147;
+	bh=qk7tSIhT4NHOa1YS8VMGgGrRgUSkVbypKJoUjlDwgGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJrW0375dlU3wBVp5JSLiouTIuMXLlsA/KxDAWFJZZzRhyxMchB+id0hWJg0rnExG
-	 vA/hez4SZs+DLrebe9saKNPSEKt9n/sRhB5s0Ukm/JSHpQwq1u0/P3DZ245NiTuUr7
-	 uLXBxHim/cWGC+PepSxLbxL6+1zkfYwGAVlUoGOA=
+	b=Rl29Aql7Dr8RMOnbYnV4mIDxnnfA07pJLhd5e4VQ4XyrMvPUoWvKssPAX9IQTBpGG
+	 563U815XQUyXZ+KDec9vN50kMVwWtod1imMUftJ57uTxrzzQ4BTTl3F1rzRtVYSfV0
+	 0mvFi7zcpMLKFUCNoDhZRQlVQ56FpKtmyKN/0+qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgEGOfk (ORCPT
+        id S1728630AbgEGOfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgEGO2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:39 -0400
+        id S1728165AbgEGO2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A77A2184D;
-        Thu,  7 May 2020 14:28:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17ED21473;
+        Thu,  7 May 2020 14:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861718;
-        bh=tP9D+63v58Q0bM08mp96NUT3tfQZXHC9ELHMUIXPN/I=;
+        s=default; t=1588861715;
+        bh=qk7tSIhT4NHOa1YS8VMGgGrRgUSkVbypKJoUjlDwgGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=doNWDEgCUxdNQ7rIE1AXYesHbKBY2+zR68WYEX5leWKh30I5CBcOJAjf4E4phbnaS
-         c1w3Zm3soTyP2Km1tjcnns/wQMRss1jU6CwoqcZIAzoVyTIZXawgN4Ii6PKeqDlzOk
-         Rwe5m8LBQyio5BdSQ8K03bYWXiGJdKzjOXe+maTw=
+        b=SDJf3jvJKHfI/u82RU0bn0OMaQ7DqQ7WmvxNzg9r/YGTMkia0MEtd7a5yiRX/tdcI
+         LyDPui42/JED08ND86I/oYtdeRGdDjvwpTPX56Lv0qWvXX+P2R/LQaHYYoihJSIBKr
+         Ond6pO0Utnj4h7QZ/ASKMjESCkXwYokD9jjouGPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/35] scsi: qla2xxx: set UNLOADING before waiting for session deletion
-Date:   Thu,  7 May 2020 10:28:00 -0400
-Message-Id: <20200507142830.26239-6-sashal@kernel.org>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/35] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
+Date:   Thu,  7 May 2020 10:27:58 -0400
+Message-Id: <20200507142830.26239-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -62,97 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-[ Upstream commit 856e152a3c08bf7987cbd41900741d83d9cddc8e ]
+[ Upstream commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 ]
 
-The purpose of the UNLOADING flag is to avoid port login procedures to
-continue when a controller is in the process of shutting down.  It makes
-sense to set this flag before starting session teardown.
+add parentheses to avoid possible vaddr overflow.
 
-Furthermore, use atomic test_and_set_bit() to avoid the shutdown being run
-multiple times in parallel. In qla2x00_disable_board_on_pci_error(), the
-test for UNLOADING is postponed until after the check for an already
-disabled PCI board.
-
-Link: https://lore.kernel.org/r/20200421204621.19228-2-mwilck@suse.com
-Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
-Reviewed-by: Arun Easi <aeasi@marvell.com>
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 06037e3c78549..7c588c5b5f6e3 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3700,6 +3700,13 @@ qla2x00_remove_one(struct pci_dev *pdev)
- 	}
- 	qla2x00_wait_for_hba_ready(base_vha);
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index d864277ea16f3..f471600985ff7 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -593,7 +593,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 			continue;
+ 		}
  
-+	/*
-+	 * if UNLOADING flag is already set, then continue unload,
-+	 * where it was set first.
-+	 */
-+	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
-+		return;
-+
- 	if (IS_QLA25XX(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
- 	    IS_QLA28XX(ha)) {
- 		if (ha->flags.fw_started)
-@@ -3718,15 +3725,6 @@ qla2x00_remove_one(struct pci_dev *pdev)
- 
- 	qla2x00_wait_for_sess_deletion(base_vha);
- 
--	/*
--	 * if UNLOAD flag is already set, then continue unload,
--	 * where it was set first.
--	 */
--	if (test_bit(UNLOADING, &base_vha->dpc_flags))
--		return;
--
--	set_bit(UNLOADING, &base_vha->dpc_flags);
--
- 	qla_nvme_delete(base_vha);
- 
- 	dma_free_coherent(&ha->pdev->dev,
-@@ -6053,13 +6051,6 @@ qla2x00_disable_board_on_pci_error(struct work_struct *work)
- 	struct pci_dev *pdev = ha->pdev;
- 	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
- 
--	/*
--	 * if UNLOAD flag is already set, then continue unload,
--	 * where it was set first.
--	 */
--	if (test_bit(UNLOADING, &base_vha->dpc_flags))
--		return;
--
- 	ql_log(ql_log_warn, base_vha, 0x015b,
- 	    "Disabling adapter.\n");
- 
-@@ -6070,9 +6061,14 @@ qla2x00_disable_board_on_pci_error(struct work_struct *work)
- 		return;
- 	}
- 
--	qla2x00_wait_for_sess_deletion(base_vha);
-+	/*
-+	 * if UNLOADING flag is already set, then continue unload,
-+	 * where it was set first.
-+	 */
-+	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
-+		return;
- 
--	set_bit(UNLOADING, &base_vha->dpc_flags);
-+	qla2x00_wait_for_sess_deletion(base_vha);
- 
- 	qla2x00_delete_all_vps(ha, base_vha);
- 
+-		remote_vaddr = dma->vaddr + iova - dma->iova;
++		remote_vaddr = dma->vaddr + (iova - dma->iova);
+ 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
+ 					     do_accounting);
+ 		if (ret)
 -- 
 2.20.1
 
