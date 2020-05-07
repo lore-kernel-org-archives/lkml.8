@@ -2,126 +2,128 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B28BC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1224BC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3241B20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4820208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wxkYhOFw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L6kBF/1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEGQtV (ORCPT
+        id S1727825AbgEGQtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:49:21 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55366 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgEGQtU (ORCPT
+        Thu, 7 May 2020 12:49:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32469 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726222AbgEGQta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:49:20 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GltQV085445;
-        Thu, 7 May 2020 16:48:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=yIKBOEyYFtcnZSrQHZ63Llg0wM2ybFJLkN8J9aa02fQ=;
- b=wxkYhOFwU+tW8VDjRLAutcIyUVXGvkhE7c2+1dvCPlZN5RvJ4dlAqGidtOr0dN+qBuGn
- StTTM7ZcyEdyUYFOT7hCSQmJYi1o1yBa2saTm9yYPYtTgibk4F5We3PJOADucxPgfslk
- A2JpD6rTqaOnpcqniZJ62KWREzy4D3PYIZjSVwu3DJz6qt+u5ZC3SVSsZuhRIAQspsu/
- jEKa7GOOJMtOIOMumvWY547joeXxL3nOadls9KIouelXL9J8APCa0uunZF39vRQZzL5k
- lcY3Hew8V7PNZ8KzPjdaN00WCb+Vl9WNNy1E7Tr4RDM/9/tpoJ639BOhEQtNfOe4vmAw Rw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30veckjphe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 16:48:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GlWlQ044604;
-        Thu, 7 May 2020 16:48:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30sjnpwf4y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 16:48:29 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 047GmSiV031930;
-        Thu, 7 May 2020 16:48:28 GMT
-Received: from linux-1.home (/92.157.36.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 09:48:27 -0700
-Subject: Re: [patch V4 part 3 29/29] x86/entry/32: Convert IRET exception to
- IDTENTRY_SW
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134354.774943181@linutronix.de>
- <20200505134906.128769226@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <e50333c6-386d-6b77-dd67-ea213782b1b7@oracle.com>
-Date:   Thu, 7 May 2020 18:47:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 12:49:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588870169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=J3eMS0q6Ky8AS+NYfRImuhd7GvbGAICUz7ULX5bxR6k=;
+        b=L6kBF/1YK0K1N6Hr51sU6l00DXLKvd2HV06qiSH8XI5NVmU5OXHYV5y2g2jpm9e2zWBAOt
+        qS/KKfe8WGay51qGO+tRyZgwVUHZtN+DNLh81/6B24ac4FxAm5csAwQJL+IZxF2iQWSp5w
+        jJF5jcOOXr6g28Vvylcg9ht3eQEeaF4=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-bwJfyro3OVKct_D3kxM1Zg-1; Thu, 07 May 2020 12:49:26 -0400
+X-MC-Unique: bwJfyro3OVKct_D3kxM1Zg-1
+Received: by mail-il1-f198.google.com with SMTP id i2so6578707ile.15
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:49:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J3eMS0q6Ky8AS+NYfRImuhd7GvbGAICUz7ULX5bxR6k=;
+        b=bPOYFdEA4YMaoL0YgPijK9EgwA4Mc7B9OynyE7Pw5mhb+DThnBs5hfhnXs9pcRw6B5
+         6rtOztYnCshgrEjzrV5ger/FfcLJwjuM1tBJkSCK7whQhBr4HsniWbpsMuukUrkZ3iIi
+         M1JG5PItyskX8jwKxosCsFDKiWfkEGhIYSMXHM047PZK0Fc1p3k1oU+XDNpRnz9GLXMm
+         8tZbJFeFE8Yds6QEM+dBmhMt+FZJ51GkT5O8bpsB1ZB1OpPIwviBku0mVMavluoCRxZN
+         HsA5qSjnKhge1QM4Fc3tKwlifA9qDkSkc5I3Bfe7o08YX9DXJPcucnBv95dsChnllYp5
+         sZyg==
+X-Gm-Message-State: AGi0PubIE9IK0Fkkhthy/zOrF1g6RxwvbMdibjx4+o/TeAZG5U9wZYHG
+        r1N0/NRrBueHTT2tTMEQY2DD5NbEDQPGcv4Bdmwaqafd64juZt+i00tueJi+3hDN8czckduM1or
+        QzNrVqFTZqOF5nNl43d3n6IkSezi/3nNTSvqZAQWZ
+X-Received: by 2002:a92:84c1:: with SMTP id y62mr15525295ilk.116.1588870165911;
+        Thu, 07 May 2020 09:49:25 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKExP8SbbQHzz9rGOw8+hXCd/N5kkr6E1Ib5f74K5TeISNkZvDOTH//u7ziLHw2xgbTFPXNqC937+BrUayLQ+U=
+X-Received: by 2002:a92:84c1:: with SMTP id y62mr15525255ilk.116.1588870165638;
+ Thu, 07 May 2020 09:49:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505134906.128769226@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 bulkscore=0
- spamscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070136
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+ <20200506221422.GK3329@linux.intel.com> <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+In-Reply-To: <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Thu, 7 May 2020 12:49:15 -0400
+Message-ID: <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+To:     Haitao Huang <haitao.huang@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 7, 2020 at 1:03 AM Haitao Huang
+<haitao.huang@linux.intel.com> wrote:
+>
+> On Wed, 06 May 2020 17:14:22 -0500, Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+>
+> > On Wed, May 06, 2020 at 05:42:42PM -0400, Nathaniel McCallum wrote:
+> >> Tested on Enarx. This requires a patch[0] for v29 support.
+> >>
+> >> Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
+> >>
+> >> However, we did uncover a small usability issue. See below.
+> >>
+> >> [0]:
+> >> https://github.com/enarx/enarx/pull/507/commits/80da2352aba46aa7bc6b4d1fccf20fe1bda58662
+> >
+> > ...
+> >
+> >> > * Disallow mmap(PROT_NONE) from /dev/sgx. Any mapping (e.g.
+> >> anonymous) can
+> >> >   be used to reserve the address range. Now /dev/sgx supports only
+> >> opaque
+> >> >   mappings to the (initialized) enclave data.
+> >>
+> >> The statement "Any mapping..." isn't actually true.
+> >>
+> >> Enarx creates a large enclave (currently 64GiB). This worked when we
+> >> created a file-backed mapping on /dev/sgx/enclave. However, switching
+> >> to an anonymous mapping fails with ENOMEM. We suspect this is because
+> >> the kernel attempts to allocate all the pages and zero them but there
+> >> is insufficient RAM available. We currently work around this by
+> >> creating a shared mapping on /dev/zero.
+> >
+> > Hmm, the kernel shouldn't actually allocate physical pages unless they're
+> > written.  I'll see if I can reproduce.
+> >
+>
+> For larger size mmap, I think it requires enabling vm overcommit mode 1:
+> echo 1 | sudo tee /proc/sys/vm/overcommit_memory
 
-On 5/5/20 3:44 PM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Convert the IRET exception handler to IDTENTRY_SW. This is slightly
-> different than the conversions of hardware exceptions as the IRET exception
-> is invoked via an exception table when IRET faults. So it just uses the
-> IDTENTRY_SW mechanism for consistency. It does not emit ASM code as it does
-> not fit the other idtentry exceptions.
-> 
->    - Implement the C entry point with DEFINE_IDTENTRY_SW() which maps to
->      DEFINE_IDTENTRY()
->    - Fixup the XEN/PV code
->    - Remove the old prototyoes
->    - Remove the RCU warning as the new entry macro ensures correctness
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
+Which means the default experience isn't good.
 
-For all patches of part 3:
-
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex
