@@ -2,120 +2,270 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A157C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C4CC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494D2207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B021721841
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGHxq (ORCPT
+        id S1726367AbgEGHzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:53:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3834 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbgEGHxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:53:46 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1481E6579506A334BFF2;
-        Thu,  7 May 2020 15:53:44 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
- 15:53:38 +0800
-Subject: ping; [PATCH v4] mtd: clear cache_state to avoid writing to bad
- blocks repeatedly
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <wangle6@huawei.com>, <zhangweimin12@huawei.com>,
-        <yebin10@huawei.com>, <houtao1@huawei.com>
-References: <1585618319-119741-1-git-send-email-nixiaoming@huawei.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <528b61f3-bddb-d508-8f18-37cebec9e5eb@huawei.com>
-Date:   Thu, 7 May 2020 15:53:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <1585618319-119741-1-git-send-email-nixiaoming@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
+        Thu, 7 May 2020 03:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725862AbgEGHzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:55:06 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D33AC061A41
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 00:55:06 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:6572:4a1f:d283:9ae8])
+        by michel.telenet-ops.be with bizsmtp
+        id bjv42200a3ZRV0X06jv4l4; Thu, 07 May 2020 09:55:05 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWbN2-0001WQ-Jm; Thu, 07 May 2020 09:55:04 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWbN2-0008PY-Gd; Thu, 07 May 2020 09:55:04 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Yoshihiro Kaneko <ykaneko0929@gmail.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3] dt-bindings: irqchip: renesas-intc-irqpin: Convert to json-schema
+Date:   Thu,  7 May 2020 09:55:03 +0200
+Message-Id: <20200507075503.32291-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 
-On 2020/3/31 9:31, Xiaoming Ni wrote:
-> The function call process is as follows:
-> 	mtd_blktrans_work()
-> 	  while (1)
-> 	    do_blktrans_request()
-> 	      mtdblock_writesect()
-> 	        do_cached_write()
-> 	          write_cached_data() /*if cache_state is STATE_DIRTY*/
-> 	            erase_write()
-> 
-> write_cached_data() returns failure without modifying cache_state
-> and cache_offset. So when do_cached_write() is called again,
-> write_cached_data() will be called again to perform erase_write()
-> on the same cache_offset.
-> 
-> But if this cache_offset points to a bad block, erase_write() will
-> always return -EIO. Writing to this mtdblk is equivalent to losing
-> the current data, and repeatedly writing to the bad block.
-> 
-> Repeatedly writing a bad block has no real benefits,
-> but brings some negative effects:
-> 1 Lost subsequent data
-> 2 Loss of flash device life
-> 3 erase_write() bad blocks are very time-consuming. For example:
-> 	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
-> 	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
-> 
-> Therefore, when erase_write() returns -EIO in write_cached_data(),
-> clear cache_state to avoid writing to bad blocks repeatedly.
-> 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->   drivers/mtd/mtdblock.c | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
-> index 078e0f6..32e52d8 100644
-> --- a/drivers/mtd/mtdblock.c
-> +++ b/drivers/mtd/mtdblock.c
-> @@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
->   
->   	ret = erase_write (mtd, mtdblk->cache_offset,
->   			   mtdblk->cache_size, mtdblk->cache_data);
-> -	if (ret)
-> -		return ret;
->   
->   	/*
->   	 * Here we could arguably set the cache state to STATE_CLEAN.
-> @@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
->   	 * be notified if this content is altered on the flash by other
->   	 * means.  Let's declare it empty and leave buffering tasks to
->   	 * the buffer cache instead.
-> +	 *
-> +	 * If this cache_offset points to a bad block, data cannot be
-> +	 * written to the device. Clear cache_state to avoid writing to
-> +	 * bad blocks repeatedly.
->   	 */
-> -	mtdblk->cache_state = STATE_EMPTY;
-> -	return 0;
-> +	if (ret == 0 || ret == -EIO)
-> +		mtdblk->cache_state = STATE_EMPTY;
-> +	return ret;
->   }
->   
->   
-> 
+Convert the Renesas Interrupt Controller (INTC) for external pins Device
+Tree binding documentation to json-schema.
 
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Co-developed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v3:
+  - Take over from Kaneko-san,
+  - Update license,
+  - Fix title,
+  - Remove standard descriptions,
+  - reg: fix minItems, add descriptions,
+  - interrupts: fix {min,max}Items,
+  - sense-bitfield-width: add enum and default, use description,
+  - control-parent: use description,
+  - Make clocks and power-domains required on SH/R-Mobile,
+  - Group interrupts in example,
+
+v2:
+  - Correct Geert-san's E-mail address,
+  - Delete Guennadi-san from the maintainer of this binding,
+  - Give 'sense-bitfield-width' the uint32 type,
+  - Describe 'control-parent' property as a boolean.
+---
+ .../renesas,intc-irqpin.txt                   |  62 ----------
+ .../renesas,intc-irqpin.yaml                  | 108 ++++++++++++++++++
+ 2 files changed, 108 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.yaml
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+deleted file mode 100644
+index 772c550d3b4bcfe2..0000000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-DT bindings for the R-/SH-Mobile irqpin controller
+-
+-Required properties:
+-
+-- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
+-  as fallback.
+-  Examples with soctypes are:
+-    - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
+-    - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
+-    - "renesas,intc-irqpin-r8a7779" (R-Car H1)
+-    - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
+-
+-- reg: Base address and length of each register bank used by the external
+-  IRQ pins driven by the interrupt controller hardware module. The base
+-  addresses, length and number of required register banks varies with soctype.
+-- interrupt-controller: Identifies the node as an interrupt controller.
+-- #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+-  interrupts.txt in this directory.
+-- interrupts: Must contain a list of interrupt specifiers. For each interrupt
+-  provided by this irqpin controller instance, there must be one entry,
+-  referring to the corresponding parent interrupt.
+-
+-Optional properties:
+-
+-- any properties, listed in interrupts.txt, and any standard resource allocation
+-  properties
+-- sense-bitfield-width: width of a single sense bitfield in the SENSE register,
+-  if different from the default 4 bits
+-- control-parent: disable and enable interrupts on the parent interrupt
+-  controller, needed for some broken implementations
+-- clocks: Must contain a reference to the functional clock.  This property is
+-  mandatory if the hardware implements a controllable functional clock for
+-  the irqpin controller instance.
+-- power-domains: Must contain a reference to the power domain. This property is
+-  mandatory if the irqpin controller instance is part of a controllable power
+-  domain.
+-
+-
+-Example
+--------
+-
+-	irqpin1: interrupt-controller@e6900004 {
+-		compatible = "renesas,intc-irqpin-r8a7740",
+-			     "renesas,intc-irqpin";
+-		#interrupt-cells = <2>;
+-		interrupt-controller;
+-		reg = <0xe6900004 4>,
+-			<0xe6900014 4>,
+-			<0xe6900024 1>,
+-			<0xe6900044 1>,
+-			<0xe6900064 1>;
+-		interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH
+-			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+-		power-domains = <&pd_a4s>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.yaml
+new file mode 100644
+index 0000000000000000..800243d3ee8ef42f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/renesas,intc-irqpin.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Interrupt Controller (INTC) for external pins
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,intc-irqpin-r8a7740  # R-Mobile A1
++          - renesas,intc-irqpin-r8a7778  # R-Car M1A
++          - renesas,intc-irqpin-r8a7779  # R-Car H1
++          - renesas,intc-irqpin-sh73a0   # SH-Mobile AG5
++      - const: renesas,intc-irqpin
++
++  reg:
++    minItems: 5
++    items:
++      - description: Interrupt control register
++      - description: Interrupt priority register
++      - description: Interrupt source register
++      - description: Interrupt mask register
++      - description: Interrupt mask clear register
++      - description: Interrupt control register for ICR0 with IRLM0 bit
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++
++  sense-bitfield-width:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [2, 4]
++        default: 4
++    description:
++      Width of a single sense bitfield in the SENSE register, if different from the
++      default.
++
++  control-parent:
++    type: boolean
++    description:
++      Disable and enable interrupts on the parent interrupt controller, needed for some
++      broken implementations.
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupt-controller
++  - '#interrupt-cells'
++  - interrupts
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - renesas,intc-irqpin-r8a7740
++          - renesas,intc-irqpin-sh73a0
++then:
++  required:
++    - clocks
++    - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7740-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    irqpin1: interrupt-controller@e6900004 {
++        compatible = "renesas,intc-irqpin-r8a7740", "renesas,intc-irqpin";
++        reg = <0xe6900004 4>,
++              <0xe6900014 4>,
++              <0xe6900024 1>,
++              <0xe6900044 1>,
++              <0xe6900064 1>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
++        power-domains = <&pd_a4s>;
++    };
+-- 
+2.17.1
 
