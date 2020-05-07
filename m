@@ -2,160 +2,70 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F3EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0932C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F173920643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15EA2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588858829;
+	bh=UzgNBysLz9JDcczUZ51lWGSanKbRt1nx1DOdn7L8VLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hj9Z3vecLxP9TJ4QQJAUQ40I/VGlecfCrTOpjXFCR6j1KKcrQ3msZ17b5/4Klp/BY
+	 ErTa7Ioj1RBg5tYoon9H8I5xSbGwpfaeWb2ExCyALAiqSS3iDlAItSNc8olKd3k0Uf
+	 MNEAd/7HR+XgCOGBXvFttkEGUU5vM6UeEEiHn4HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgEGNi2 (ORCPT
+        id S1727805AbgEGNk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:38:28 -0400
-Received: from smtp-bc0b.mail.infomaniak.ch ([45.157.188.11]:58861 "EHLO
-        smtp-bc0b.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727108AbgEGNi0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:38:26 -0400
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Hvg31J1fzlhS6J;
-        Thu,  7 May 2020 15:38:23 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Hvg01x5Gzlpmph;
-        Thu,  7 May 2020 15:38:20 +0200 (CEST)
-Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
- <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
- <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
- <64426377-7fc4-6f37-7371-2e2a584e3032@digikod.net>
- <635df0655b644408ac4822def8900383@AcuMS.aculab.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <1ced6f5f-7181-1dc5-2da7-abf4abd5ad23@digikod.net>
-Date:   Thu, 7 May 2020 15:38:19 +0200
-User-Agent: 
+        Thu, 7 May 2020 09:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbgEGNk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:40:26 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E62F20838;
+        Thu,  7 May 2020 13:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588858826;
+        bh=UzgNBysLz9JDcczUZ51lWGSanKbRt1nx1DOdn7L8VLI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B8+665/amOfqX+AZzAZpoNB1jVLERWcpZV1jfYbCdHkF+L2aGhzBxVvYSzuKHNeXq
+         CCgYJlftZECYx90082DWfC/gKtdtQWHFOYdkuA45fOeWj8NMzpNpvQJnd9+BFI6ZpS
+         Ty1hDWHYl/LnL7Px0At+ZxY5H/lmdRwonm7vzaeg=
+Date:   Thu, 7 May 2020 16:40:21 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     davem@davemloft.net, saeedm@mellanox.com, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: Re: [PATCH] net/mlx5e: Use IS_ERR() to check and simplify code
+Message-ID: <20200507134021.GC104730@unreal>
+References: <20200507115010.10380-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-In-Reply-To: <635df0655b644408ac4822def8900383@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507115010.10380-1-tangbin@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 07, 2020 at 07:50:10PM +0800, Tang Bin wrote:
+> Use IS_ERR() and PTR_ERR() instead of PTR_ZRR_OR_ZERO()
+> to simplify code, avoid redundant judgements.
+>
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
 
-On 07/05/2020 11:44, David Laight wrote:
-> From: Mickaël Salaün <mic@digikod.net>
->> Sent: 07 May 2020 10:30
->> On 07/05/2020 11:00, David Laight wrote:
->>> From: Mickaël Salaün
->>>> Sent: 07 May 2020 09:37
->>> ...
->>>>> None of that description actually says what the patch actually does.
->>>>
->>>> "Add support for O_MAYEXEC" "to enable to control script execution".
->>>> What is not clear here? This seems well understood by other commenters.
->>>> The documentation patch and the talks can also help.
->>>
->>> I'm guessing that passing O_MAYEXEC to open() requests the kernel
->>> check for execute 'x' permissions (as well as read).
->>
->> Yes, but only with openat2().
-> 
-> It can't matter if the flag is ignored.
-> It just means the kernel isn't enforcing the policy.
-> If openat2() fail because the flag is unsupported then
-> the application will need to retry without the flag.
-
-I don't get what you want to prove. Please read carefully the cover
-letter, the use case and the threat model.
-
-> 
-> So if the user has any ability create executable files this
-> is all pointless (from a security point of view).
-> The user can either copy the file or copy in an interpreter
-> that doesn't request O_MAYEXEC.>
-> It might stop accidental issues, but nothing malicious.
-
-The execute permission (like the write permission) does not only depends
-on the permission set on files, but it also depends on the
-options/permission of their mount points, the MAC policy, etc. The
-initial use case to enforce O_MAYEXEC is to rely on the noexec mount option.
-
-If you want a consistent policy, you need to make one. Only dealing with
-file properties may not be enough. This is explain in the cover letter
-and the patches. If you allow all users to write and execute their
-files, then there is no point in enforcing anything with O_MAYEXEC.
-
-> 
->>> Then kernel policy determines whether 'read' access is actually enough,
->>> or whether 'x' access (possibly masked by mount permissions) is needed.
->>>
->>> If that is true, two lines say what is does.
->>
->> The "A simple system-wide security policy" paragraph introduce that, but
->> I'll highlight it in the next cover letter.
-> 
-> No it doesn't.
-> It just says there is some kind of policy that some flags change.
-> It doesn't say what is being checked for.
-
-It said "the mount points or the file access rights". Please take a look
-at the documentation patch.
-
-> 
->> The most important point is
->> to understand why it is required, before getting to how it will be
->> implemented.
-> 
-> But you don't say what is required.
-
-A consistent policy. Please take a look at the documentation patch which
-explains the remaining prerequisites. You can also take a look at the
-talks for further details.
-
-> Just a load of buzzword ramblings.
-
-It is a summary. Can you please suggest something better?
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
