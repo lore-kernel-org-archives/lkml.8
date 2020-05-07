@@ -2,95 +2,119 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D4C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A34C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477FA20735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E99F20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588895836;
-	bh=ebYXrWaGG1OHw5wgm2S8iZ0+yKCW9oSG+7ZZdB9la9A=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iLUqcei1cSviBkKa/g0BZgXgN01BElwNEnHuWK7sRf2YsWk6XWKwBAhcUXzb75uih
-	 l4nzzJQH3K574LoNs13QsHnQRyuuMp3ftpGYt1G52zYLWImMbskhkJNMT7zTNYWMj6
-	 MwuTEmuLE8qJ/DRO9VMvTQLF3CecVB6SeO6nnsQw=
+	s=default; t=1588895840;
+	bh=2o+y8fxLqhtXg3APfBgUNDvTw0QO66MYP7OHCoVyRF4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C7cLAwRBbN5MBnC5G7bgbUAC6O9f5oUJRNZ/HUl5DR0ciXbWbTG6uLCbXsElbRu6m
+	 giWs8+qHbvymx+fJeIYbJ2qm1FXNJt6pj2MqbyjNA4ozsSSVLDsl1c18+D0x6VlsCR
+	 1jtBWqrPIB5G0dM84G4r1gHO+HYaWg3Om/bU0spM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgEGX5P (ORCPT
+        id S1727100AbgEGX5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgEGX5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:57:14 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB68C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:57:14 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id e8so3800814ilm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u9gJYJ3n1PrzT+nVQdUcEY+WLY9HYwAvNWuv9VcAD6k=;
-        b=iiPl+40u0RQVypHXIV4K4Yl6qfR28bqEuxAHmloqQhk0MSlpzXevMLAmCM4B6z1N9b
-         87knCEH46hb0HrDrwdHqbj7o73S0KioLHNwAo9sd/VBR58PAvOVCuIf0RayDDHIcnstm
-         zh33AoFq2C5Rx1SvngiB8CHjBFL4XvVSsR4LU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u9gJYJ3n1PrzT+nVQdUcEY+WLY9HYwAvNWuv9VcAD6k=;
-        b=P7oQSEvHFxB+/c8Mae5YYIF4IHmo3ZzIqOYabh0oIhLYlTJ8UXwe1wPAyVk4UlMdOb
-         fcRW85CdcoCMjlm7Zx+kLwhIMkGjSCigxUGKdEK0zO92fxtjYEpoTGcQd+ZaasQCVlkN
-         fbtbcPkkmKhTKEfUBRsbAzw9xSFZ4ZFNDCsFFIyoACJjxMXVD+UYMBYocTX2HTbZoNQm
-         mvdTHNK364IKI50WuTOMjpqyALH9a5QpjAj5YpiJbHXE9VtOVSljn6qxbdXLizqPLjvy
-         mNuo0l6vFK2qFec8BY7i4sHlLJdw79HJAFWB/tRsGO6X7aSVibzWWTi3kFwuseDNCR2A
-         3RbQ==
-X-Gm-Message-State: AGi0Pua3GPME04MOCs8MpUC7St8syJ61Qw96biu8ghL9g9zMRE8SD1w4
-        lG35F/Zm+hBFL0+/v/Z4mSlreg==
-X-Google-Smtp-Source: APiQypJCB+O0RXyXnDGd+gJg6HKweApSFsEIoGzatAvFK5k9aENS5j4AucalIRSxvrc/d106AIHzIg==
-X-Received: by 2002:a92:84c1:: with SMTP id y62mr17356445ilk.116.1588895834251;
-        Thu, 07 May 2020 16:57:14 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id f19sm1369893ioc.9.2020.05.07.16.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 16:57:13 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     viro@zeniv.linux.org.uk, axboe@kernel.dk, zohar@linux.vnet.ibm.com,
-        mcgrof@kernel.org, keescook@chromium.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] fs: avoid fdput() after failed fdget()
-Date:   Thu,  7 May 2020 17:57:08 -0600
-Message-Id: <cover.1588894359.git.skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 7 May 2020 19:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgEGX5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 19:57:17 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7315920720;
+        Thu,  7 May 2020 23:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588895836;
+        bh=2o+y8fxLqhtXg3APfBgUNDvTw0QO66MYP7OHCoVyRF4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tvJM2f15l0kGd0TcPZ5vvEL9T0JafTX9h9hN27JKxQS0JWHerHbeDey3Mbw8YF0WA
+         sMGk9CHL7k6wiBe60ImJu1FPC/jngFFZiLfNHeIppfP0mK2SOLuawse2sjah5xl0ko
+         Pc0Fbkn52l14GZ3LdCA4Ouv+DsGC3gWSQlnAqXug=
+Date:   Fri, 8 May 2020 08:57:12 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Julia Lawall <Julia.Lawall@inria.fr>,
+        kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Nic Volanschi <eugene.volanschi@inria.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] tracing/probe: reverse arguments to list_add
+Message-Id: <20200508085712.dcb44a32d1fb50c0a7e3e2a9@kernel.org>
+In-Reply-To: <20200507165053.291ba5ea@gandalf.local.home>
+References: <1588879808-24488-1-git-send-email-Julia.Lawall@inria.fr>
+        <20200507165053.291ba5ea@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While debugging an unrelated problem that got me down the path of
-reviewing at all the fdget() and fdput() paths in the kernel.
+On Thu, 7 May 2020 16:50:53 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-While doing the review, I noticed these two places where fdput()
-is called after failed fdget(). Fixing them in these two patches.
-  
-Shuah Khan (2):
-  fs: avoid fdput() after failed fdget() in ksys_sync_file_range()
-  fs: avoid fdput() after failed fdget() in kernel_read_file_from_fd()
+> On Thu,  7 May 2020 21:30:08 +0200
+> Julia Lawall <Julia.Lawall@inria.fr> wrote:
+> 
+> > Elsewhere in the file, the function trace_kprobe_has_same_kprobe uses
+> > a trace_probe_event.probes object as the second argument of
+> > list_for_each_entry, ie as a list head, while the list_for_each_entry
+> > iterates over the list fields of the trace_probe structures, making
+> > them the list elements.  So, exchange the arguments on the list_add
+> > call to put the list head in the second argument.
+> > 
+> > Since both list_head structures were just initialized, this problem
+> > did not cause any loss of information.
+> > 
 
- fs/exec.c | 2 +-
- fs/sync.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Oops, good catch!
+
+> > Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
+> > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> 
+> Masami,
+> 
+> Can you give a Reviewed-by to this?
+
+Yes, thanks Julia!
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+> 
+> -- Steve
+> 
+> > 
+> > ---
+> >  kernel/trace/trace_probe.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index ab8b6436d53f..b8a928e925c7 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -1006,7 +1006,7 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+> >  	INIT_LIST_HEAD(&tp->event->class.fields);
+> >  	INIT_LIST_HEAD(&tp->event->probes);
+> >  	INIT_LIST_HEAD(&tp->list);
+> > -	list_add(&tp->event->probes, &tp->list);
+> > +	list_add(&tp->list, &tp->event->probes);
+> >  
+> >  	call = trace_probe_event_call(tp);
+> >  	call->class = &tp->event->class;
+> 
+
 
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
