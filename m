@@ -2,65 +2,156 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A44EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B258CC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C963207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919022075A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588812162;
+	bh=VEI854Q0jqWSBxoyqtP2NIfRzRKCknFu7oWHhakYfCE=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=dz3fb7Us1DRwDSX/xnfq9OtgKBImkRNIS3Ji8hfPJlKMs0XCZD2TELQKP00MlEJk1
+	 XFHFHft5AQzkqjnD9vIECDmE07dSDwxF4XV3QHV81PDgAGTD/vf+fH4mQT+/EuMIYL
+	 HNBFR4U3Tn85oUvlBXAQGiMnBlkDx2z/tko0nK3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgEGAmD (ORCPT
+        id S1727983AbgEGAml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgEGAmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:42:03 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F6FC061A0F;
-        Wed,  6 May 2020 17:42:03 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 53E8D127806C0;
-        Wed,  6 May 2020 17:42:02 -0700 (PDT)
-Date:   Wed, 06 May 2020 17:42:01 -0700 (PDT)
-Message-Id: <20200506.174201.1083889819367294107.davem@davemloft.net>
-To:     elder@linaro.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/5] net: ipa: kill endpoint stop workaround
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200504235345.17118-1-elder@linaro.org>
-References: <20200504235345.17118-1-elder@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 17:42:02 -0700 (PDT)
+        Wed, 6 May 2020 20:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbgEGAml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 20:42:41 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B2C120747;
+        Thu,  7 May 2020 00:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588812161;
+        bh=VEI854Q0jqWSBxoyqtP2NIfRzRKCknFu7oWHhakYfCE=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=tYHNI2NlbDC1XkagfD9+Knn9y1j41ZnMofxiQCeHm19Cv1MAxKvkmd/8K3h7GWWJl
+         8rxa2j3ZR3lgTPyQkNUqWD6LElOqZXxlLYURhfh0m60xBJa/Ja8gEVZLyhEfdhEDP4
+         vaQjiHdRm/g1yfmVkVhK+6OmrTMtlDUx+xsomsk8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E3335352269D; Wed,  6 May 2020 17:42:40 -0700 (PDT)
+Date:   Wed, 6 May 2020 17:42:40 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        viro@zeniv.linux.org.uk, hannes@cmpxchg.org
+Subject: [PATCH RFC tip/core/rcu] Add shrinker to shift to fast/inefficient
+ GP mode
+Message-ID: <20200507004240.GA9156@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
-Date: Mon,  4 May 2020 18:53:40 -0500
+This commit adds a shrinker so as to inform RCU when memory is scarce.
+RCU responds by shifting into the same fast and inefficient mode that is
+used in the presence of excessive numbers of RCU callbacks.  RCU remains
+in this state for one-tenth of a second, though this time window can be
+extended by another call to the shrinker.
 
-> It turns out that a workaround that performs a small DMA operation
-> between retried attempts to stop a GSI channel is not needed for any
-> supported hardware.  The hardware quirk that required the extra DMA
-> operation was fixed after IPA v3.1.  So this series gets rid of that
-> workaround code, along with some other code that was only present to
-> support it.
-> 
-> NOTE:  This series depends on (and includes/duplicates) another patch
->        that has already been committed in the net tree:
->          713b6ebb4c37 net: ipa: fix a bug in ipa_endpoint_stop()
+If it proves feasible, a later commit might add a function call directly
+indicating the end of the period of scarce memory.
 
-Series applied.
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index b0fe32f..76d148d 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2368,8 +2368,15 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+ 	struct rcu_data *rdp;
+ 	struct rcu_node *rnp;
+ 
+-	rcu_state.cbovld = rcu_state.cbovldnext;
++	// Load .oomovld before .oomovldend, pairing with .oomovld set.
++	rcu_state.cbovld = smp_load_acquire(&rcu_state.oomovld) || // ^^^
++			   rcu_state.cbovldnext;
+ 	rcu_state.cbovldnext = false;
++	if (READ_ONCE(rcu_state.oomovld) &&
++	    time_after(jiffies, READ_ONCE(rcu_state.oomovldend))) {
++		WRITE_ONCE(rcu_state.oomovld, false);
++		pr_info("%s: Ending OOM-mode grace periods.\n", __func__);
++	}
+ 	rcu_for_each_leaf_node(rnp) {
+ 		cond_resched_tasks_rcu_qs();
+ 		mask = 0;
+@@ -2697,6 +2704,35 @@ static void check_cb_ovld(struct rcu_data *rdp)
+ 	raw_spin_unlock_rcu_node(rnp);
+ }
+ 
++/* Return a rough count of the RCU callbacks outstanding. */
++static unsigned long rcu_oom_count(struct shrinker *unused1,
++				   struct shrink_control *unused2)
++{
++	int cpu;
++	unsigned long ncbs = 0;
++
++	for_each_possible_cpu(cpu)
++		ncbs += rcu_get_n_cbs_cpu(cpu);
++	return ncbs;
++}
++
++/* Start up an interval of fast high-overhead grace periods. */
++static unsigned long rcu_oom_scan(struct shrinker *unused1,
++				  struct shrink_control *unused2)
++{
++	pr_info("%s: Starting OOM-mode grace periods.\n", __func__);
++	WRITE_ONCE(rcu_state.oomovldend, jiffies + HZ / 10);
++	smp_store_release(&rcu_state.oomovld, true); // After .oomovldend
++	rcu_force_quiescent_state();  // Kick grace period
++	return 0;  // We haven't actually reclaimed anything yet.
++}
++
++static struct shrinker rcu_shrinker = {
++	.count_objects = rcu_oom_count,
++	.scan_objects = rcu_oom_scan,
++	.seeks = DEFAULT_SEEKS,
++};
++
+ /* Helper function for call_rcu() and friends.  */
+ static void
+ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+@@ -4146,6 +4182,7 @@ void __init rcu_init(void)
+ 		qovld_calc = DEFAULT_RCU_QOVLD_MULT * qhimark;
+ 	else
+ 		qovld_calc = qovld;
++	WARN_ON(register_shrinker(&rcu_shrinker));
+ }
+ 
+ #include "tree_stall.h"
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index 2d7fcb9..c4d8e96 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -326,6 +326,8 @@ struct rcu_state {
+ 	int ncpus_snap;				/* # CPUs seen last time. */
+ 	u8 cbovld;				/* Callback overload now? */
+ 	u8 cbovldnext;				/* ^        ^  next time? */
++	u8 oomovld;				/* OOM overload? */
++	unsigned long oomovldend;		/* OOM ovld end, jiffies. */
+ 
+ 	unsigned long jiffies_force_qs;		/* Time at which to invoke */
+ 						/*  force_quiescent_state(). */
