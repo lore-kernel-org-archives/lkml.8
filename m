@@ -2,290 +2,87 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC60DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35964C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9801924957
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A91924957
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877426;
-	bh=nqOGOlFxuyC6xZdJp9v/9qIDCZ0j/hOOQI15Lck0i2o=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=g8nYzR0U5U68zXpJ5AoTQFpxEvkaeBLfdN++XwZY9XZRLIx6AqlXud8MJDtFKGX/5
-	 z0KfD+pksLg//QwcJU+EMXS54ntPg9dYVkVAG8AGrIJZPKIUgDF0Yt6ogiXqox2BIM
-	 +tNGYjXuglSoCu0kJQOzecI1lZvhEIcRN+UaGEdA=
+	s=default; t=1588877451;
+	bh=jRqp7Whidt2bn+KPfzhaiR0bYWm4WyDB+t+5GsshtYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ID+8FCDbbMVaGbTWuPDYX7GrvYLFqQJ7fmdHyHGz87jeUKBloe2AMcEFWa16XLpLP
+	 p+zjpxfozEgIp1NW0g+7vrFbxB8ZWBOEaF+le1QLVftCgtMN/bw74PBNmDKKwUQu+M
+	 kw/RRa++9m9mnuczXLLFnrxiQyoJZzlRFHzebbi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgEGSu0 (ORCPT
+        id S1728338AbgEGSuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgEGSuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:50:25 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7229E24957;
-        Thu,  7 May 2020 18:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877424;
-        bh=nqOGOlFxuyC6xZdJp9v/9qIDCZ0j/hOOQI15Lck0i2o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rKGN1yf2eLyFyXoiJ9HPQgLt8tiaJmevWivWKV5KuOd8WIkrknOwHSkIXqBYryvAl
-         1PD1t4LOXnvJjeGZOs1KFrUglNwYlJnNNNMMXbc5BblMdJanv6kJQkYzdDLYtP0OPb
-         MoDn81SI8RSYglTAbmXkOvG1iL4zdFYXboWxoRe0=
-Date:   Thu, 7 May 2020 13:54:51 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ipw2x00: Replace zero-length array with flexible-array
-Message-ID: <20200507185451.GA14603@embeddedor>
+        Thu, 7 May 2020 14:50:50 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35879 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgEGSut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:50:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f15so2430640plr.3;
+        Thu, 07 May 2020 11:50:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NVtq4LDDtvm7cyqcZmZ6iVyVFqaMEGZyo2ntIU6mBx8=;
+        b=MkU6SofPX1nSol8g32toQunda+QRsJDgV6ECkIfwTDWlj0tRgdBWeEYxJ+rVJ9Q53L
+         UHFoQPNDDFnzrCxHsTKJVf1Sn2w0MpWMzfX9ea9l7s1jd8EdongQZU4jSFjR7A7DBYsG
+         4u6usbp92htw/LZpUYq/2oom4r1v5Ee5wFv47+3kV93FunQz2S6saDM4CDv3DrB3F8TQ
+         ka/C2DN/ISVM+5iN8MdRtT9dS5MiUZT6eWxQkJBUwdl4DQhOBBFOOsfnOl+v+luBnQf2
+         5u/bLVWUOIQXP0Q0uqi8mLkGaHlTCMIfhEgs7xI7R5behg7f64bPlidCjP5vbtVrHj6N
+         wYEg==
+X-Gm-Message-State: AGi0PuZ01BqftuvErG1l1PAtoKe3ZxhCJNgk0DUbCf1f+ik/Ti7ZxZQl
+        QPV7leXsEnSsGBgIePqLoLk=
+X-Google-Smtp-Source: APiQypL/T4pokMBN3BjyJTmEhzQ6U4iO/Je8syJeCy3/7O5YcCFMehZ+kLkFe9ehfbZ5CmV/DTUJmw==
+X-Received: by 2002:a17:90a:d808:: with SMTP id a8mr1614734pjv.6.1588877448984;
+        Thu, 07 May 2020 11:50:48 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id ft14sm474731pjb.46.2020.05.07.11.50.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 11:50:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 92589403EA; Thu,  7 May 2020 18:50:46 +0000 (UTC)
+Date:   Thu, 7 May 2020 18:50:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507185046.GY11244@42.do-not-panic.com>
+References: <20200507180631.308441-1-aquini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200507180631.308441-1-aquini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> Another, perhaps less frequent, use for this option would be
+> as a mean for assuring a security policy (in paranoid mode)
+> case where no single taint is allowed for the running system.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+If used for this purpose then we must add a new TAINT flag for
+proc_taint() was used, otherwise we can cheat to show a taint
+*did* happen, where in fact it never happened, some punk just
+echo'd a value into the kernel's /proc/sys/kernel/tainted.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Forunately proc_taint() only allows to *increment* the taint, not
+reduce.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/intel/ipw2x00/ipw2200.c |    2 -
- drivers/net/wireless/intel/ipw2x00/ipw2200.h |   10 ++++-----
- drivers/net/wireless/intel/ipw2x00/libipw.h  |   28 +++++++++++++--------------
- 3 files changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index 60b5e08dd6df..64563840df00 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -3386,7 +3386,7 @@ struct ipw_fw {
- 	__le32 boot_size;
- 	__le32 ucode_size;
- 	__le32 fw_size;
--	u8 data[0];
-+	u8 data[];
- };
- 
- static int ipw_get_fw(struct ipw_priv *priv,
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.h b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-index 4346520545c4..09fa7f19050f 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-@@ -448,7 +448,7 @@ struct tfd_command {
- 	u8 index;
- 	u8 length;
- 	__le16 reserved;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct tfd_data {
-@@ -675,7 +675,7 @@ struct ipw_rx_frame {
- 	// is identical)
- 	u8 rtscts_seen;		// 0x1 RTS seen ; 0x2 CTS seen
- 	__le16 length;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct ipw_rx_header {
-@@ -1002,7 +1002,7 @@ struct ipw_cmd {	 /* XXX */
-    * Incoming parameters listed 1-st, followed by outcoming params.
-    * nParams=(len+3)/4+status_len
-    */
--	u32 param[0];
-+	u32 param[];
- } __packed;
- 
- #define STATUS_HCMD_ACTIVE      (1<<0)	/**< host command in progress */
-@@ -1108,7 +1108,7 @@ struct ipw_fw_error {	 /* XXX */
- 	u32 log_len;
- 	struct ipw_error_elem *elem;
- 	struct ipw_event *log;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- #ifdef CONFIG_IPW2200_PROMISCUOUS
-@@ -1153,7 +1153,7 @@ struct ipw_rt_hdr {
- 	s8 rt_dbmsignal;	/* signal in dbM, kluged to signed */
- 	s8 rt_dbmnoise;
- 	u8 rt_antenna;	/* antenna number */
--	u8 payload[0];  /* payload... */
-+	u8 payload[];  /* payload... */
- } __packed;
- #endif
- 
-diff --git a/drivers/net/wireless/intel/ipw2x00/libipw.h b/drivers/net/wireless/intel/ipw2x00/libipw.h
-index e4a6ab4e8391..e87538a8b88b 100644
---- a/drivers/net/wireless/intel/ipw2x00/libipw.h
-+++ b/drivers/net/wireless/intel/ipw2x00/libipw.h
-@@ -334,7 +334,7 @@ struct libipw_hdr_1addr {
- 	__le16 frame_ctl;
- 	__le16 duration_id;
- 	u8 addr1[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_2addr {
-@@ -342,7 +342,7 @@ struct libipw_hdr_2addr {
- 	__le16 duration_id;
- 	u8 addr1[ETH_ALEN];
- 	u8 addr2[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_3addr {
-@@ -352,7 +352,7 @@ struct libipw_hdr_3addr {
- 	u8 addr2[ETH_ALEN];
- 	u8 addr3[ETH_ALEN];
- 	__le16 seq_ctl;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_4addr {
-@@ -363,7 +363,7 @@ struct libipw_hdr_4addr {
- 	u8 addr3[ETH_ALEN];
- 	__le16 seq_ctl;
- 	u8 addr4[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_3addrqos {
-@@ -380,7 +380,7 @@ struct libipw_hdr_3addrqos {
- struct libipw_info_element {
- 	u8 id;
- 	u8 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /*
-@@ -406,7 +406,7 @@ struct libipw_auth {
- 	__le16 transaction;
- 	__le16 status;
- 	/* challenge */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_channel_switch {
-@@ -442,7 +442,7 @@ struct libipw_disassoc {
- struct libipw_probe_request {
- 	struct libipw_hdr_3addr header;
- 	/* SSID, supported rates */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_probe_response {
-@@ -452,7 +452,7 @@ struct libipw_probe_response {
- 	__le16 capability;
- 	/* SSID, supported rates, FH params, DS params,
- 	 * CF params, IBSS params, TIM (if beacon), RSN */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- /* Alias beacon for probe_response */
-@@ -463,7 +463,7 @@ struct libipw_assoc_request {
- 	__le16 capability;
- 	__le16 listen_interval;
- 	/* SSID, supported rates, RSN */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_reassoc_request {
-@@ -471,7 +471,7 @@ struct libipw_reassoc_request {
- 	__le16 capability;
- 	__le16 listen_interval;
- 	u8 current_ap[ETH_ALEN];
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_assoc_response {
-@@ -480,7 +480,7 @@ struct libipw_assoc_response {
- 	__le16 status;
- 	__le16 aid;
- 	/* supported rates */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_txb {
-@@ -490,7 +490,7 @@ struct libipw_txb {
- 	u8 reserved;
- 	u16 frag_size;
- 	u16 payload_size;
--	struct sk_buff *fragments[0];
-+	struct sk_buff *fragments[];
- };
- 
- /* SWEEP TABLE ENTRIES NUMBER */
-@@ -594,7 +594,7 @@ struct libipw_ibss_dfs {
- 	struct libipw_info_element ie;
- 	u8 owner[ETH_ALEN];
- 	u8 recovery_interval;
--	struct libipw_channel_map channel_map[0];
-+	struct libipw_channel_map channel_map[];
- };
- 
- struct libipw_csa {
-@@ -830,7 +830,7 @@ struct libipw_device {
- 
- 	/* This must be the last item so that it points to the data
- 	 * allocated beyond this structure by alloc_libipw */
--	u8 priv[0];
-+	u8 priv[];
- };
- 
- #define IEEE_A            (1<<0)
-
+  Luis
