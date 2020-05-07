@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0861FC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EABC54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB15F21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B2E20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861706;
-	bh=wWICHhShsjiNXg4Lrs8fFbE9djX+UgP3NHhA9p/iUbk=;
+	s=default; t=1588861709;
+	bh=8Shtm4idk430UQGobbDZvLe300fCi968VhfPAQDmda0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7ZvrUJFpxttgr2/VcZKbYOrb8Vkafom4tuyhO/q2GNBttmIgb7vwHegAe9HEXQf4
-	 VUORxmWPCH4VA8bQSRlsJpKq+jj04uuuGMSznfMMRIoERHDNB9KrYhqwD6gLZyDSfs
-	 wNi9NmYsfnFEP4kuAnd7NFmoB4ESGfaEJrB8HALs=
+	b=mDkS2Jc+c16x6MwwXZ7yqOtFo5bS8lhNoYdbuvhtw+qrdcu1gabKsqYhYn/ViO+2W
+	 eNBBlMr3P+E/GifOSIFf/ZFbFMT6dlRIIzaY3POdYiBiKJYByVFoeR3whCP0a9DRKk
+	 rDt+FjTsU4Ud4peCClaLQErvSEacKwB1GXdD5q18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgEGO20 (ORCPT
+        id S1728126AbgEGO22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgEGO2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:20 -0400
+        id S1728083AbgEGO2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA892145D;
-        Thu,  7 May 2020 14:28:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81CEC20870;
+        Thu,  7 May 2020 14:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861699;
-        bh=wWICHhShsjiNXg4Lrs8fFbE9djX+UgP3NHhA9p/iUbk=;
+        s=default; t=1588861702;
+        bh=8Shtm4idk430UQGobbDZvLe300fCi968VhfPAQDmda0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kAFbJKmw+kx+SNyLvkjCxoHkV2wHauOSygLJr1OgrBo5HjYYy4NCTm5u2V4kCsDzC
-         iNq/4mXiwNFGWwHpkJAxF7QlYzucofEk6rH2gqcUoOIrrvAXciP1M9FOBhyc7ZUP41
-         g+4WwDXXuohA19NGyLQHOHKFbe8lfXBN0xjpJTA4=
+        b=FSS6IB43nfDsPmrtIIJXbfp2WdFI1JdPblqaYOB5s1xcjQGthFlO8rtuZCCxvnBgK
+         krjn1v9je9JcLexujuoaolQnQTyH6aoMEGxqdbJJtKo98hB1p+vxO/BJUhpiKiiDzu
+         l8UkH3tG/9u8J1TuVShCF88P3krDVAJ04+G4i++o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ryan_chen <ryan_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 41/50] i2c: aspeed: Avoid i2c interrupt status clear race condition.
-Date:   Thu,  7 May 2020 10:27:17 -0400
-Message-Id: <20200507142726.25751-41-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 43/50] block: remove the bd_openers checks in blk_drop_partitions
+Date:   Thu,  7 May 2020 10:27:19 -0400
+Message-Id: <20200507142726.25751-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,50 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ryan_chen <ryan_chen@aspeedtech.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit c926c87b8e36dcc0ea5c2a0a0227ed4f32d0516a ]
+[ Upstream commit 10c70d95c0f2f9a6f52d0e33243d2877370cef51 ]
 
-In AST2600 there have a slow peripheral bus between CPU and i2c
-controller. Therefore GIC i2c interrupt status clear have delay timing,
-when CPU issue write clear i2c controller interrupt status. To avoid
-this issue, the driver need have read after write clear at i2c ISR.
+When replacing the bd_super check with a bd_openers I followed a logical
+conclusion, which turns out to be utterly wrong.  When a block device has
+bd_super sets it has a mount file system on it (although not every
+mounted file system sets bd_super), but that also implies it doesn't even
+have partitions to start with.
 
-Fixes: f327c686d3ba ("i2c: aspeed: added driver for Aspeed I2C")
-Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-[wsa: added Fixes tag]
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+So instead of trying to come up with a logical check for all openers,
+just remove the check entirely.
+
+Fixes: d3ef5536274f ("block: fix busy device checking in blk_drop_partitions")
+Fixes: cb6b771b05c3 ("block: fix busy device checking in blk_drop_partitions again")
+Reported-by: Michal Koutný <mkoutny@suse.com>
+Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-aspeed.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/partition-generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index a7be6f24450bd..538dfc4110f85 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
- 	/* Ack all interrupts except for Rx done */
- 	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
- 	       bus->base + ASPEED_I2C_INTR_STS_REG);
-+	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
- 	irq_remaining = irq_received;
+diff --git a/block/partition-generic.c b/block/partition-generic.c
+index ebe4c2e9834bd..8a7906fa96fd6 100644
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -468,7 +468,7 @@ int blk_drop_partitions(struct gendisk *disk, struct block_device *bdev)
  
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
-@@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
- 			irq_received, irq_handled);
- 
- 	/* Ack Rx done */
--	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
-+	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
- 		writel(ASPEED_I2CD_INTR_RX_DONE,
- 		       bus->base + ASPEED_I2C_INTR_STS_REG);
-+		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-+	}
- 	spin_unlock(&bus->lock);
- 	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;
- }
+ 	if (!disk_part_scan_enabled(disk))
+ 		return 0;
+-	if (bdev->bd_part_count || bdev->bd_openers > 1)
++	if (bdev->bd_part_count)
+ 		return -EBUSY;
+ 	res = invalidate_partition(disk, 0);
+ 	if (res)
 -- 
 2.20.1
 
