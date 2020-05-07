@@ -2,121 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07458C54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B59C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69E320575
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wji61SIe"
+	by mail.kernel.org (Postfix) with ESMTP id 6746221973
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgEGUJG (ORCPT
+        id S1728486AbgEGULJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728378AbgEGUJD (ORCPT
+        Thu, 7 May 2020 16:11:09 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49935 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgEGULI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:09:03 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BBFC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:09:02 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so3529029pfc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=c/DsRm4g6gIbDNrt7b5XJT8F2ZdnzG78OB1C4FcIZRg=;
-        b=Wji61SIerY4A7CIjkXjeQbrgHiPO+IPz799kwT2t+CDnNp3fyN1ul6dEyGHysTzfpC
-         JZo5ah0CiyK9u/ZGlwjIyCE/GpmxmmZIYPu0KXJO2nZfLuj433mngzH/hie8b0wDBddz
-         NnCipZ1Khy+kmgpi29vWHoHozWaVMNYziA4dg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=c/DsRm4g6gIbDNrt7b5XJT8F2ZdnzG78OB1C4FcIZRg=;
-        b=a6FxLhnXaiY3EvDgn7H/vnXEjyRsKPJRL8dbuhSYwLzH+cBpmT2qs3rh+PjqU04XjN
-         wipJoDBbM1eEPGlR4wxiH5gDDb+xvlHNJamCCYz1wnMdSFbP8BCTBT8RkBnN7zEdiBji
-         IRR2V3JfOKKnqdVIBgfX2G0LBpi2xlFYoREgnswphvYMGLS2FNZyyuH/Gh3cNx0tciX5
-         hpXyM5I7Y1VpDx6CzLyUe/Tip3ICa7wqWP80pOCIO4qD84TX659wm8jTslE1gpfoKChJ
-         Q+pWbqxURtHRWuAqvoKy0KZpZiRh0eitVT5hVy7mY3t87s9fg9HbAFfSYvCKNqWAbGY9
-         OGqQ==
-X-Gm-Message-State: AGi0Pub44eXp3DrDQolXwLFpsKGLFIqLbguylL+6Z6cTBr4fUQWzyky1
-        FZvfFgFzHJzN8LRxgE72CF2AOQ==
-X-Google-Smtp-Source: APiQypICIyZYq+Lw5KlpKjR4sb4ChoSHP4P4KSBPQc5p5Oha2jBsP7gH0oqRg+pBV+ShiYgjJnWVXQ==
-X-Received: by 2002:a63:200b:: with SMTP id g11mr1896922pgg.22.1588882142461;
-        Thu, 07 May 2020 13:09:02 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d203sm5547601pfd.79.2020.05.07.13.09.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:09:01 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
-        gregkh@linuxfoundation.org
-Cc:     corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
-        linux-serial@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
-        jslaby@suse.com, kgdb-bugreport@lists.sourceforge.net,
-        sumit.garg@linaro.org, will@kernel.org, tglx@linutronix.de,
-        agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/12] Revert "kgdboc: disable the console lock when in kgdb"
-Date:   Thu,  7 May 2020 13:08:40 -0700
-Message-Id: <20200507130644.v4.2.I02258eee1497e55bcbe8dc477de90369c7c7c2c5@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200507200850.60646-1-dianders@chromium.org>
-References: <20200507200850.60646-1-dianders@chromium.org>
+        Thu, 7 May 2020 16:11:08 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9AAF360002;
+        Thu,  7 May 2020 20:11:03 +0000 (UTC)
+Date:   Thu, 7 May 2020 22:11:03 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v6 2/3] drm: Add support for the LogiCVC display
+ controller
+Message-ID: <20200507201103.GH2422122@aptenodytes>
+References: <20200430192746.1866325-1-paul.kocialkowski@bootlin.com>
+ <20200430192746.1866325-3-paul.kocialkowski@bootlin.com>
+ <CACvgo51mRse3su4exyTqXYJRPPc0VqaX9+tRyKUuBPtm5Q+6XQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GBDnBH7+ZvLx8QD4"
+Content-Disposition: inline
+In-Reply-To: <CACvgo51mRse3su4exyTqXYJRPPc0VqaX9+tRyKUuBPtm5Q+6XQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 81eaadcae81b4c1bf01649a3053d1f54e2d81cf1.
 
-Commit 81eaadcae81b ("kgdboc: disable the console lock when in kgdb")
-is no longer needed now that we have the patch ("kgdb: Disable
-WARN_CONSOLE_UNLOCKED for all kgdb").  Revert it.
+--GBDnBH7+ZvLx8QD4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
+Hi Emil,
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- ("Revert "kgdboc: disable the console lock when in kgdb"") new for v2.
+Thanks for the review!
 
- drivers/tty/serial/kgdboc.c | 4 ----
- 1 file changed, 4 deletions(-)
+On Mon 04 May 20, 14:28, Emil Velikov wrote:
+> Just had a casual quick look for custom KMS properties, since new
+> drivers made that mistake in the past.
+> Thanks for not including any o/
 
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index c9f94fa82be4..8a1a4d1b6768 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -275,14 +275,10 @@ static void kgdboc_pre_exp_handler(void)
- 	/* Increment the module count when the debugger is active */
- 	if (!kgdb_connected)
- 		try_module_get(THIS_MODULE);
--
--	atomic_inc(&ignore_console_lock_warning);
- }
- 
- static void kgdboc_post_exp_handler(void)
- {
--	atomic_dec(&ignore_console_lock_warning);
--
- 	/* decrement the module count when the debugger detaches */
- 	if (!kgdb_connected)
- 		module_put(THIS_MODULE);
--- 
-2.26.2.645.ge9eca65c58-goog
+Yeah I made sure not to include any, I know it easily gets very problematic=
+ and
+creates disparity between drivers while needing to be kept alive even when a
+standard way arises due to the no API breakage policy.
 
+The not-for-merge patch that I've sent does introduce some for the colorkey,
+and that's why they are marked as such :)
+
+> I made a couple of trivial suggestions - if you agree, feel free to
+> keep them as follow-up patches.
+>=20
+> On Thu, 30 Apr 2020 at 20:28, Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+>=20
+> > +int logicvc_of_property_parse_u32(struct device_node *of_node,
+> > +                                 const char *name, u32 *target)
+> > +{
+> > +       struct logicvc_of_property *property;
+> > +       const char *string;
+> > +       u32 value;
+> > +       int ret;
+> > +
+> > +       property =3D logicvc_of_property_lookup(name);
+> > +       if (!property)
+> > +               return -EINVAL;
+> > +
+> One could have the logicvc_of_properties[] entries indexed with the
+> logicvc_of_property_parse_{u32,bool} caller, using that instead of the
+> name string.
+
+Do I understand correctly that you're suggesting passing each entry's
+struct logicvc_of_property pointer to the function?
+
+I went for strings to make the code explicit and easy to read so I'd really
+like to keep it that way and avoid passing things like
+&logicvc_of_properties[4] or an index integer.
+
+> Aside: I suspect the array (as most other arrays in this patch) should
+> be annotated const, correct?
+
+Ah yes that's a good point, thanks!
+
+>=20
+> > +       if (property->range[0] || property->range[1])
+> > +               if (value < property->range[0] || value > property->ran=
+ge[1])
+> Combine the two ifs?
+
+Definitely :)
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--GBDnBH7+ZvLx8QD4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl60a1cACgkQ3cLmz3+f
+v9E6Vgf8CXAsmdWf2+5+7oCdYtuBoURivQuOltkFzZfR1KVdwskBr3MzQylFa+BC
+BaWUbsS4uTtbg4FtS3cI90/tkzRtMSZ56a7qjKWYeXCDzLBtaLmC5AEIIwlvb/Wt
+sUvIZj6EWrVdQo5I3fy0d9vsBtpOjbxAvpxYH911fQYsuv7pHUl3wAOXtUHxpEi9
+jf8GpBYOe+D0kMmWPoCx4/39rhbj9o5pfDW4tQFhLRdo+I9KnvoF4m1C7ciYqkNd
+zP88gw8Deq4HpwnQsuLaYfUz9ep2aPoS6/GHhfIyfkhN0yCLeEoeuu7vMzBs5CV8
+SofL8WIK/ckDaOpdHqLj8wQeV89m3w==
+=ybwB
+-----END PGP SIGNATURE-----
+
+--GBDnBH7+ZvLx8QD4--
