@@ -2,226 +2,76 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1C2C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A2C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2C4207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588821657;
-	bh=tACr7FY7Rlr/2ZG1dXEePm2H8pqqmThmltv76uf50Jg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uVDQDT2yRZk4nLhl7MnP6AALQeuaV9loZFKvq+RKJ66jrF7HDCOB0eyYzTdQKmIMm
-	 pYQstAkPBH2jlO+/UMpYxoECTMmPqvEPz+Pki8/XDLQwsZHDuZjcR5Te7Kf7jyRwGM
-	 cRTYNdCIT9/+T/Xl357G7E5Ouo+mvxUPwHwMe++U=
+	by mail.kernel.org (Postfix) with ESMTP id 470FB207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEGDU4 (ORCPT
+        id S1727108AbgEGDVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:20:56 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63080 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEGDUx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:20:53 -0400
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0473KYvD014344;
-        Thu, 7 May 2020 12:20:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0473KYvD014344
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588821635;
-        bh=qQyluZ7mOy/m7UtR6KHo32hLJ8zj6s7Wbis5gOyL850=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=obwaIpbVfNHmlGM+/K3cut/ZFJ3DDIma/vMgc1y6FY+bfiZMsVJEcf+tqZ2K5bwnG
-         rESGRpG/mu+dg7LFTumeAGroNpVNEmWwkGlJav63kEO9T96Ujez237fqKZ46Dn94OJ
-         ZV1Pk9jw7MX6w03zdZ1wTNu5glOFh8aTx/qOvVrAidOQUdF+Dz1MHGPr0OtE/OEe4J
-         MjkNVx/DbdxiRTjeonFPIe7/dLdmovRUZkzN/iFbM3HAOM30gkZfiGWntXvtD0n4av
-         7LW+/ROtvoJiJu24P3NDA0YIrOVdt/vlyKWw3gUljrALc1RO7KQjn//25dBY0RzFCI
-         r3RgGDnSCxafA==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id b14so1114435vkk.10;
-        Wed, 06 May 2020 20:20:34 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZXmOK8vQhasFCgv14DCL1Q37rDazXTyFMwWXYh83joIyJ0fJNU
-        ++YixiQic2L7sEaAZxyR8URN3Ubke9TXIz0w0eQ=
-X-Google-Smtp-Source: APiQypKPWT1VyEpw8SXXLzadbs0W/IljladDXCbCPO4LoRyZSuErcwr4PH11Rt74yBLMD4rLrQL94ROkDgp9VchjKi8=
-X-Received: by 2002:a1f:2a13:: with SMTP id q19mr9970940vkq.73.1588821633138;
- Wed, 06 May 2020 20:20:33 -0700 (PDT)
+        Wed, 6 May 2020 23:21:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3874 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726542AbgEGDVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:21:31 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5F3E26763DC8128E49C9;
+        Thu,  7 May 2020 11:19:54 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
+ 11:19:40 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <pierre-louis.bossart@linux.intel.com>, <lgirdwood@gmail.com>,
+        <ranjani.sridharan@linux.intel.com>,
+        <kai.vehmanen@linux.intel.com>, <daniel.baluta@nxp.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>
+CC:     <sound-open-firmware@alsa-project.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: SOF: Intel: Mark cht_debugfs as __maybe_unused
+Date:   Thu, 7 May 2020 11:19:11 +0800
+Message-ID: <20200507031911.38644-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20200503001141.9647-1-changbin.du@gmail.com>
-In-Reply-To: <20200503001141.9647-1-changbin.du@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 12:19:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
-Message-ID: <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
-Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 9:11 AM Changbin Du <changbin.du@gmail.com> wrote:
->
-> Sometimes it is useful to preserve batches of configs when making
-> localmodconfig. For example, I usually don't want any usb and fs
-> modules to be disabled. Now we can do it by:
->
->  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
->
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
->
-> ---
-> v4: fix typo.
-> v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-> v2: fix typo in documentation. (Randy Dunlap)
-> ---
+When CONFIG_SND_SOC_SOF_BAYTRAIL is not set, gcc warns:
 
+sound/soc/sof/intel/byt.c:85:41: warning: ‘cht_debugfs’ defined but not used [-Wunused-const-variable=]
+ static const struct snd_sof_debugfs_map cht_debugfs[] = {
+                                         ^~~~~~~~~~~
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/sof/intel/byt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Personally, I do not mind the long LOCALMODCONFIG_PRESERVE,
-but this tends to be bike-sheding.
-I do not have a strong opinion.
-
-
->  Documentation/admin-guide/README.rst |  8 +++++++-
->  scripts/kconfig/Makefile             |  1 +
->  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
->  3 files changed, 31 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> index cc6151fc0845..1371deab8bc7 100644
-> --- a/Documentation/admin-guide/README.rst
-> +++ b/Documentation/admin-guide/README.rst
-> @@ -209,10 +209,16 @@ Configuring the kernel
->                             store the lsmod of that machine into a file
->                             and pass it in as a LSMOD parameter.
->
-> +                           Also, you can preserve modules in certain folders
-> +                           or kconfig files by specifying their paths in
-> +                           parameter LMC_KEEP.
-> +
->                     target$ lsmod > /tmp/mylsmod
->                     target$ scp /tmp/mylsmod host:/tmp
->
-> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> +                   host$ make LSMOD=/tmp/mylsmod \
-> +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \
-
-
-This might be another bike-sheding item, but
-can you use a space for the delimiter?
-
-
-LMC_KEEP="drivers/usb drivers/gpu fs"
-
-If you pass multiple directories,
-you will need to surround them with double-quotes.
-
-
-
-
-> +                           localmodconfig
->
->                             The above also works when cross compiling.
->
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index c9d0a4a8efb3..e0abbf5805f5 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -123,6 +123,7 @@ help:
->         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
->         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
->         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
-> +       @echo  '                    except those preserved by LMC_KEEP environment variable'
->         @echo  '  localyesconfig  - Update current config converting local mods to core'
->         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
->         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> index e2f8504f5a2d..d26543a807c9 100755
-> --- a/scripts/kconfig/streamline_config.pl
-> +++ b/scripts/kconfig/streamline_config.pl
-> @@ -143,6 +143,7 @@ my %depends;
->  my %selects;
->  my %prompts;
->  my %objects;
-> +my %config2kfile;
->  my $var;
->  my $iflevel = 0;
->  my @ifdeps;
-> @@ -201,6 +202,7 @@ sub read_kconfig {
->         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
->             $state = "NEW";
->             $config = $2;
-> +           $config2kfile{"CONFIG_$config"} = $kconfig;
->
->             # Add depends for 'if' nesting
->             for (my $i = 0; $i < $iflevel; $i++) {
-> @@ -592,6 +594,22 @@ while ($repeat) {
->
->  my %setconfigs;
->
-> +my @preserved_kconfigs;
-> +@preserved_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));
-
-Maybe, you can do 'my' declaration and the assignment
-in a single line?
-
-Can you drop the 'if ...' conditional?
-
-
-Does this work for you?
-
-my @preserved_kconfigs = split(/;/,$ENV{LMC_KEEP});
-
-
-
-
-
-
-
-> +
-> +sub in_preserved_kconfigs {
-> +    my $kconfig = $config2kfile{$_[0]};
-> +    if (!defined($kconfig)) {
-> +        return 0;
-> +    }
-> +    foreach my $excl (@preserved_kconfigs) {
-> +        if($kconfig =~ /^$excl/) {
-> +            return 1;
-> +        }
-> +    }
-> +    return 0;
-> +}
-> +
->  # Finally, read the .config file and turn off any module enabled that
->  # we could not find a reason to keep enabled.
->  foreach my $line (@config_file) {
-> @@ -644,6 +662,11 @@ foreach my $line (@config_file) {
->      }
->
->      if (/^(CONFIG.*)=(m|y)/) {
-> +        if (in_preserved_kconfigs($1)) {
-> +            dprint "Preserve config $1";
-> +            print;
-> +            next;
-> +        }
->         if (defined($configs{$1})) {
->             if ($localyesconfig) {
->                 $setconfigs{$1} = 'y';
-> --
-> 2.25.1
->
-
-
+diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
+index f872bb1f2682..1c75e4220e9d 100644
+--- a/sound/soc/sof/intel/byt.c
++++ b/sound/soc/sof/intel/byt.c
+@@ -82,7 +82,7 @@ static const struct snd_sof_debugfs_map byt_debugfs[] = {
+ 	 SOF_DEBUGFS_ACCESS_ALWAYS},
+ };
+ 
+-static const struct snd_sof_debugfs_map cht_debugfs[] = {
++static const struct snd_sof_debugfs_map __maybe_unused cht_debugfs[] = {
+ 	{"dmac0", BYT_DSP_BAR, DMAC0_OFFSET, DMAC_SIZE,
+ 	 SOF_DEBUGFS_ACCESS_ALWAYS},
+ 	{"dmac1", BYT_DSP_BAR,  DMAC1_OFFSET, DMAC_SIZE,
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
+
