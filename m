@@ -2,129 +2,121 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0774DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BB7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7CA921473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:54:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVsD6C63"
+	by mail.kernel.org (Postfix) with ESMTP id C957721835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588874069;
+	bh=QJaiSjCjLbAWFDcmuf/Pneq2du1jY9r042RVJds1hO0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=y2o5uI0AbVLo5bvd95ZGOk1vUzJg0CeCDzE6QGfumhuoCbaMRCL/TlR245lUD7UoB
+	 +R1UPfNoRMIqzu0hj3TSoOEBvTio+QqkVv8Ptm8i5ouQE72uGviK+F94wq1YFS2O2G
+	 sRKIsDXan4ZNy4BE9YnI33x9O2mEtlt6/lW2R7MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgEGRyQ (ORCPT
+        id S1728097AbgEGRy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgEGRyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:54:15 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E0BC05BD43;
-        Thu,  7 May 2020 10:54:15 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id j4so5251031otr.11;
-        Thu, 07 May 2020 10:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K9qTr+beRcohA6PMx27iJvmErOKyI82EyxD1O5Dcxzk=;
-        b=SVsD6C63OiLwNbOKAQM5ZFhQakJf5wmETFQL9x+dixJ/i776z1xlYBs4MsH37nM2Q/
-         rN20lR9IsgpWIANGiiWVwGlmETI6MlQhpuSRDvTmx+GG6KHHYSzcUoNVSnvvH7krGkvj
-         Q43/nk2XB+fPJ3E2IE3bqXw22a9vnsjtN/mdP8+cPQfVIfxvSJy+aNEnvd9ILL9vOdUm
-         5La8QEzc3kfhqomZWhA2DoXxQkPpXhtMplOVm0qU37uRCu8S1TmTFKpmv5czDR9NGbtZ
-         LigoAd2EISFD3oT6dUZbKvD8dcwnV4wuzzivD++70wK7jNSwQiHi++7UHGS5HfwfnQvw
-         i8GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K9qTr+beRcohA6PMx27iJvmErOKyI82EyxD1O5Dcxzk=;
-        b=G9m6oJDPdsYQwsyjqIiEcbGEwadzh8pSK285cM5/i2m32cM94R7vVBL3hRU1GHPwa7
-         7x2XsPU1eT42HHNa5rJGMOUW6mLT0YdwcqODSppeeht1q92d2hm1Zfbk2t6Pezuf7igr
-         EaEV8OqW+0sx1RxGm3154UbOcEhIJiv1CfqJVL4bqS9k9oH06ux1kmqNcURknanu0PAn
-         pcjmL0VoaaMUjyp7G3XM6ZsUbTT+cI7ToScznZM6f8hwJBK2gJNZWQBXioX49d5l1ZxJ
-         ZFC94Y+ds0RvMFIKT1DxWYLdIxZ8HJfYwQMLbRKkp5q7HnQpx++7ythAtXri84h2lQ3J
-         lYlw==
-X-Gm-Message-State: AGi0PuZ9ITIij31wB+e6EtZtr/gZuIodbQRmN+pz5QHffOVd4e0ggIWs
-        IM7ZzqXd9axnNkMEWb4AlA+aVvs9+4AV6N9uw0o=
-X-Google-Smtp-Source: APiQypIsmJ2T5664lpXTF/RWS8/eux+ZnXoiFN88OHtyHhUrSboY+wgSVo2JHDzVRl08o0T/GlQRWx6bo0sL6qxy4RY=
-X-Received: by 2002:a05:6830:108b:: with SMTP id y11mr11230755oto.88.1588874053316;
- Thu, 07 May 2020 10:54:13 -0700 (PDT)
+        Thu, 7 May 2020 13:54:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgEGRy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:54:27 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B1D52145D;
+        Thu,  7 May 2020 17:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588874067;
+        bh=QJaiSjCjLbAWFDcmuf/Pneq2du1jY9r042RVJds1hO0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=pKD8QCZKdNeR4cgjo9ugXAKZQS8MIUuvWNTGi+44zq2pg862dujYCMPY35hu47AYD
+         O6+hmKJ8TYF7QejWc8yOJ8ND9UfRKhg0yxPYnkEFAzRiYc86ZGk0CbtsKRZqwxRTJR
+         +DLTSFziy5UChxjljtQe1VYZCq/s9RWAKawRIo20=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4493C35231BF; Thu,  7 May 2020 10:54:27 -0700 (PDT)
+Date:   Thu, 7 May 2020 10:54:27 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Kmemleak infrastructure improvement for task_struct leaks and
+ call_rcu()
+Message-ID: <20200507175427.GT2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <45D2D811-C3B0-442B-9744-415B4AC5CCDB@lca.pw>
+ <20200506174019.GA2869@paulmck-ThinkPad-P72>
+ <20200507171418.GC3180@gaia>
 MIME-Version: 1.0
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200507174446.GC1216@bug>
-In-Reply-To: <20200507174446.GC1216@bug>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 May 2020 18:53:46 +0100
-Message-ID: <CA+V-a8u00kfN=rNs72y-R4-8fpz4rPYX8xf+DoBMmYYVjUS8fg@mail.gmail.com>
-Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507171418.GC3180@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Thu, May 07, 2020 at 06:14:19PM +0100, Catalin Marinas wrote:
+> On Wed, May 06, 2020 at 10:40:19AM -0700, Paul E. McKenney wrote:
+> > On Wed, May 06, 2020 at 12:22:37PM -0400, Qian Cai wrote:
+> > > == call_rcu() leaks ==
+> > > Another issue that might be relevant is that it seems sometimes,
+> > > kmemleak will give a lot of false positives (hundreds) because the
+> > > memory was supposed to be freed by call_rcu()  (for example, in
+> > > dst_release()) but for some reasons, it takes a long time probably
+> > > waiting for grace periods or some kind of RCU self-stall, but the
+> > > memory had already became an orphan. I am not sure how we are going
+> > > to resolve this properly until we have to figure out why call_rcu()
+> > > is taking so long to finish?
+> > 
+> > I know nothing about kmemleak, but I won't let that stop me from making
+> > random suggestions...
+> > 
+> > One approach is to do an rcu_barrier() inside kmemleak just before
+> > printing leaked blocks, and check to see if any are still leaked after
+> > the rcu_barrier().
+> 
+> The main issue is that kmemleak doesn't stop the world when scanning
+> (which can take over a minute, depending on your hardware), so we get
+> lots of transient pointer misses. There are some heuristics but
+> obviously they don't always work.
+> 
+> With RCU, objects are queued for RCU freeing later and chained via
+> rcu_head.next (IIUC). Under load, this list can be pretty volatile and
+> if this happen during kmemleak scanning, it's sufficient to lose track
+> of a next pointer and the rest of the list would be reported as a leak.
+> 
+> I think rcu_barrier() just before the starting the kmemleak scanning may
+> help if it reduces the number of objects queued.
 
-On Thu, May 7, 2020 at 6:44 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
->
-> > R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
-> > supported by the controller for mapping PCI address locally.
-> >
-> > Note:
-> > The cadence/rockchip/designware endpoint drivers are build tested only.
-> >
-> > Changes for v9 (Re-spun this series as there were minimal changes requested):
-> ...
-> > * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
->
-> Are you sure that is good idea? You are requesting 1ms sleep time with 1us tolerance,
-> I dont believe common systems can do that.
->
-Agreed the systems cannot do that, but the main reason of replacing
-mdelay(1) with usleep_range(1000, 1001) was since  pci_epc_raise_irq()
-calls mutex_lock() and then this function rcar_pcie_ep_assert_intx(),
-so we can assume this function also can sleep. And, according to
-Documentation/timers/timers-howto.rst, we should use usleep_range()
-instead of mdelay().
+It might, especially if the call_rcu() rate is lower after the
+rcu_barrier() than it was beforehand.  Which might well be the case when
+a large cleanup activity ended just before rcu_barrier() was invoked.
 
-Cheers,
---Prabhakar
+> Now, I wonder whether kmemleak itself can break this RCU chain. The
+> kmemleak metadata is allocated on a slab alloc callback. The freeing,
+> however, is done using call_rcu() because originally calling back into
+> the slab freeing from kmemleak_free() didn't go well. Since the
+> kmemleak_object structure is not tracked by kmemleak, I wonder whether
+> its rcu_head would break this directed pointer reference graph.
 
+It is true that kmemleak could decide that being passed to call_rcu()
+as being freed.  However, it would need to know the rcu_head offset.
+And there are (or were) a few places that pass linked structures to
+call_rcu(), and kmemleak would presumably need to mark them all free
+at that point.  Or maybe accept the much lower false-positive rate from
+not marking them.
 
+> Let's try the rcu_barrier() first and I'll think about the metadata case
+> over the weekend.
 
-> Best regards,
->                                                                         Pavel
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Looking forward to hearing how it goes!
+
+							Thanx, Paul
