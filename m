@@ -2,108 +2,105 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FD5C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6606CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C743B216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2F720CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQ9XyzPR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a5Huglby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgEGT3h (ORCPT
+        id S1728439AbgEGT3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726761AbgEGT3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:29:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADF1C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:29:36 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z1so3495380pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:29:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UZiFmRSwooukbARffriwuLenCobEPu6OrZKDTN6rOMI=;
-        b=LQ9XyzPRFI4yJ75kyCibj4LbWvp1W1qDaHBodoOlAqLzN7au7G8hm16e2+9JReICIG
-         HULDgeVQc0SHrcMSw+3uLHKOiNyuWFeFWClQ2JnwoAZSdklVLqkEdXxBTHOfP+AR6Lg3
-         KfYvftw299yDV4A1/mY9eZgDVAWBJA7Q7okNoMOh1cj6HL/VHljbTn5tfUEvGj1U6PHv
-         0u8kj5AgcGAeDywS+5GYg/uty2M2S/NikwNnycxUImdEs3vKuPak9nm8mPB/c2aJKuqT
-         XEJ58pqwAcaRpTyb5Yn39/DmWn9Qmo4ljwhAU63AnfKQCI7TkvuyvK2GasHQHCaU71GZ
-         X5xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UZiFmRSwooukbARffriwuLenCobEPu6OrZKDTN6rOMI=;
-        b=hxs3jZG5scR/Luk37FWKeJUl9RKiyLXLFXz5C22YZzLP6anfHHbrawQMkDaE9IVcJ5
-         fqt+xrL6mmf/HjMZ+uTjSlYUJzVkgBEICKb+Z2RtVJZfwVNudAfNDV1rYljTXSp0SftE
-         5VM0uFXqvIs96uJ1EX7EJAFNM2vFUNL7CXh1x1Dsq6VoMLd3yMH5JlSFsHNrKDUdONe8
-         d/JVcpORf0mHg0DTKIy5CA5imUOcWdpzR9qsKT6OutldJ68YzARE5McLWAcC03OTPuHE
-         Bvo1V9PpNUJJIbZyyvJi4c2zDW2Vn4ba825eBx6wDDFdKVwY9Zjo8i8lvDa53+6Zdfdt
-         Kl7Q==
-X-Gm-Message-State: AGi0PubbqrnHmS1uxX4QsbeLF85vHgK5GiOFWsisgvrYGiKI1FITzFG+
-        r1H3TcGbvUv1+Qj2skRcxR4=
-X-Google-Smtp-Source: APiQypJwuGsxsy5gPrNHxW1kn/8GAvaP1KOCkZnHKUKOelU+lAHGNOFiwX/RRY94wLD3NjEngIqwEg==
-X-Received: by 2002:aa7:9535:: with SMTP id c21mr15115063pfp.39.1588879775893;
-        Thu, 07 May 2020 12:29:35 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id d126sm5762076pfc.81.2020.05.07.12.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:29:35 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:29:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     ChenTao <chentao107@huawei.com>
-Cc:     kstewart@linuxfoundation.org, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, allison@lohutok.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] input/misc/drv260x: Remove a useless comparison
-Message-ID: <20200507192933.GK89269@dtor-ws>
-References: <20200507051617.212434-1-chentao107@huawei.com>
+        Thu, 7 May 2020 15:29:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54263 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbgEGT3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:29:53 -0400
+Received: from [IPv6:2601:646:8600:3281:6547:66ee:1a90:d675] ([IPv6:2601:646:8600:3281:6547:66ee:1a90:d675])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 047JTFWT3526223
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 7 May 2020 12:29:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 047JTFWT3526223
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588879758;
+        bh=oMuTSM+aenjMY6wnxSPIpZxcMGTGHNcIWJGGr/PBUHg=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=a5Huglbyy7CI17USh/5x8pPgRMvYdF8VgvylNOPkeaEqEjZxeRc3FDKQlGoYMXn9C
+         9s1AeunyVpKe3Q+QoqzVMuqvMODjPqJrrCuGiSMJy1rQBbI5pCfQztxQw+8+h7JZEO
+         v3LzN2SIK+ZXyPvdbGA5LjH7d1+YDKfJXO8WklUF93YYB0EKJ6PGwlZIsgpVMA2HjF
+         7ZC8WrzfLEeNDsQs5wrLHBaNHGBVcf23bjB6Tk/CArhdYYMckb9aLV2mzqoOzeFPdE
+         1xS+KjxQf0K+BrduhEFb6MWNu1SaGfAChzL5+un/gv8NAIsJoQam+n8jMy8biEcVOS
+         EO+QCxH4V/RZQ==
+Date:   Thu, 07 May 2020 12:29:08 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200507113422.GA3762@hirez.programming.kicks-ass.net>
+References: <20200505174423.199985-1-ndesaulniers@google.com> <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com> <20200507113422.GA3762@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507051617.212434-1-chentao107@huawei.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>, stable@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+From:   hpa@zytor.com
+Message-ID: <C98D29AB-442F-4DF8-8B72-9F6483A7222A@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On May 7, 2020 4:34:22 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> wrot=
+e:
+>On Tue, May 05, 2020 at 11:07:24AM -0700, hpa@zytor=2Ecom wrote:
+>> On May 5, 2020 10:44:22 AM PDT, Nick Desaulniers
+><ndesaulniers@google=2Ecom> wrote:
+>
+>> >@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
+>*addr)
+>> > 	if (__builtin_constant_p(nr)) {
+>> > 		asm volatile(LOCK_PREFIX "orb %1,%0"
+>> > 			: CONST_MASK_ADDR(nr, addr)
+>> >-			: "iq" (CONST_MASK(nr) & 0xff)
+>> >+			: "iq" ((u8)(CONST_MASK(nr) & 0xff))
+>> > 			: "memory");
+>> > 	} else {
+>> > 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+>> >@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long
+>*addr)
+>> > 	if (__builtin_constant_p(nr)) {
+>> > 		asm volatile(LOCK_PREFIX "andb %1,%0"
+>> > 			: CONST_MASK_ADDR(nr, addr)
+>> >-			: "iq" (CONST_MASK(nr) ^ 0xff));
+>> >+			: "iq" ((u8)(CONST_MASK(nr) ^ 0xff)));
+>> > 	} else {
+>> > 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>> > 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+>>=20
+>> Drop & 0xff and change ^ 0xff to ~=2E
+>
+>But then we're back to sparse being unhappy, no? The thing with ~ is
+>that it will set high bits which will be truncated, which makes sparse
+>sad=2E
 
-On Thu, May 07, 2020 at 01:16:17PM +0800, ChenTao wrote:
-> Fix the following warning:
-> 
-> 'mode' and 'library' are u32, they are never be negative,
-> DRV260X_LRA_MODE and DRV260X_LIB_EMPTY are 0x00, the comparison
-> is always false.
-
-
-The fact that the symbolic names resolve to 0 is just a happenstance. We
-should not be writing code based on concrete values in this case. I
-wish we could tell the compiler to ignore this kind of cases, where we
-want to test a range of values, and do not care about concrete numeric
-bounds of said range.
-
-> 
-> drivers/input/misc/drv260x.c:478:20: warning:
-> comparison of unsigned expression < 0 is always false [-Wtype-limits]
->   if (haptics->mode < DRV260X_LRA_MODE ||
-> drivers/input/misc/drv260x.c:490:23: warning:
-> comparison of unsigned expression < 0 is always false [-Wtype-limits]
->   if (haptics->library < DRV260X_LIB_EMPTY ||
-
-Are we planning on enabling this warning in kernel by default?
-
-Thanks.
-
--- 
-Dmitry
+In that case, sparse is just broken=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
