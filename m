@@ -2,105 +2,100 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB538C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC08C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFF20208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="oya7M2Iy"
+	by mail.kernel.org (Postfix) with ESMTP id C619E208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgEGUcp (ORCPT
+        id S1726776AbgEGUdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:32:45 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:29950 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726618AbgEGUcp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:32:45 -0400
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047KTmvf031978;
-        Thu, 7 May 2020 16:32:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=rPAJ8LZwqCBPWhT585JNmeF+aZt0Nu3YZmtZwvC2+qI=;
- b=oya7M2IyeTtwzY86Xv+auhzSKzfk/PVKTUOlLUhTBaTqNIiBhrtTnwOSE7D7W1z9d7xo
- G9zUmdcevHVcTF4KBocduoFB1Ns1ZBreVaXIO6x2wx/8yd3RwZQht5/vc64/Q0TB8I1r
- cveZcJpI3GUKEyZWRFMh3JgRE6WKPIlGwHdj0j1VX6SoB3lhm8580ctOlJyPxQ3mPX7F
- Gn+fR4s6KD7LGjhtsn1Grj1/VVyddyBm0S7NsJHk2IzB7LrHNU3nIfLRW21UUCspNTdd
- 2vhjE9FsmVPRqfDZPEJFQRYblKBosyDUaKaFI3S0tO8D2xBsmJW3hgUAhXck9pkcfTSc 2g== 
-Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 30s4py7kah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 16:32:45 -0400
-Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047KVekE018316;
-        Thu, 7 May 2020 16:32:44 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 30vkj3p13a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 16:32:44 -0400
-X-LoopCount0: from 10.166.132.134
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="546829762"
-From:   <Mario.Limonciello@dell.com>
-To:     <koba.ko@canonical.com>, <andy.shevchenko@gmail.com>
-CC:     <mjg59@srcf.ucam.org>, <pali.rohar@gmail.com>,
-        <dvhart@infradead.org>, <andy@infradead.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Thread-Topic: [PATCH] platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Thread-Index: AQHWJFPpvfyIH0nLT0eHUvql2g/2/6icw1oAgAADsACAAEt3MA==
-Date:   Thu, 7 May 2020 20:26:36 +0000
-Message-ID: <e0eb1c5f17574bfcb6dd58d12b37ce7b@AUSX13MPC101.AMER.DELL.COM>
-References: <20200507094242.7523-1-koba.ko@canonical.com>
- <CAHp75VeDFpjwZoNWj6SwvnHE70o4x+U9GnK-tbrFpK6fkBN7MA@mail.gmail.com>
- <CAJB-X+U9vOzKNt3Z-BzZrEJhyU0Gd_5rVM=yqfy3TZTWNn2_YA@mail.gmail.com>
-In-Reply-To: <CAJB-X+U9vOzKNt3Z-BzZrEJhyU0Gd_5rVM=yqfy3TZTWNn2_YA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f76a65f6-cc68-492e-9330-b8ed44b69bad;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-05-07T20:26:28.4606728Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 7 May 2020 16:33:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:44363 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgEGUdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 16:33:04 -0400
+IronPort-SDR: VIVHXsFd5uqImcWOLkjQVHoOdpfYrLGRmbBZFpCD2H9N7A48JyXCJ1rtkBjdV5Pe4qmrMLvzDo
+ kjldwaIqKFYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:32:50 -0700
+IronPort-SDR: 2LFt945J76NOTSWp7WcmWtzjtsyY/Osp3JJ2Dzj+eZGSWEwQ/ykD5fyrpZq5nnMzO+NtjCLoQd
+ Oerp+eOQH8Ig==
+X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
+   d="scan'208";a="260648194"
+Received: from tzanussi-mobl4.amr.corp.intel.com (HELO [10.252.140.107]) ([10.252.140.107])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:32:48 -0700
+Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+ <158834028054.28357.398159034694277189.stgit@devnote2>
+ <20200501101942.5c0da986@gandalf.local.home>
+ <20200502120842.9d93352083fb854295150235@kernel.org>
+ <20200507091207.5c3b1a92@gandalf.local.home>
+ <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
+ <20200507132539.7e081980@gandalf.local.home>
+From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Message-ID: <f575eead-c021-c830-b9d5-41437964db32@linux.intel.com>
+Date:   Thu, 7 May 2020 15:32:46 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_14:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=737
- phishscore=0 impostorscore=0 malwarescore=0 clxscore=1015 suspectscore=0
- bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070162
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=830 malwarescore=0 spamscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070162
+In-Reply-To: <20200507132539.7e081980@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBoaSBBbmR5LA0KPiBpdCdzIGRlbGwgZzMgMzU5MC4NCg0KT0ssIHNvIHRoaXMgaXMgcmVsZWFz
-ZWQgaGFyZHdhcmUgaW4gSW5zcGlyb24uDQoNCkkgdGhpbmsgdGhpcyBwYXRjaCBnZW5lcmFsbHkg
-bWFrZXMgZ29vZCBzZW5zZSBmb3IgdGhhdCBjYXNlLg0KDQo=
+Hi,
+
+On 5/7/2020 12:25 PM, Steven Rostedt wrote:
+> On Fri, 8 May 2020 00:50:28 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+>>>> Yes, I need Tom's review for this change. As far as I can test, this
+>>>> fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
+>>>> for this test case.
+>>>>    
+>>>
+>>> I still don't see how changing "keys=common_pid" to "keys=ip" has anything
+>>> to do with the echo patch. If that is a problem, it should be a different
+>>> patch with explanation to why "keys=common_pid" is broken.
+>>
+>> This test case uses a trace_marker event to make a histogram with
+>> the common_pid key, and it expects the "echo" command is built-in command
+>> so that the pid is same while writing several events to trace_marker.
+>> I changed it to "ip" which is always same if trace_marker interface is
+>> used.
+> 
+> Can you explicitly state that in your change log? It wasn't obvious from
+> what you meant with:
+> 
+> "This also fixes some test cases which expects built-in echo command."
+> 
+
+With that change,
+
+Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+
+Thanks,
+
+Tom
+
+> Thanks!
+> 
+> -- Steve
+> 
