@@ -2,284 +2,64 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFC3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2024C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983E720736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e6tBMfZv"
+	by mail.kernel.org (Postfix) with ESMTP id 9B9EE20736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgEGAqc (ORCPT
+        id S1728984AbgEGAqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:46:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40278 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbgEGAqJ (ORCPT
+        Wed, 6 May 2020 20:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728832AbgEGAqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:46:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470d0Ej105240;
-        Thu, 7 May 2020 00:45:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=tO+BBoL6QA83N8AKybR2dW6y4zRDAJKByikm9WLIvJA=;
- b=e6tBMfZvQU1I7oBrLvbLNbk8ehB/ncx827a2VLGsvklCAyzd8qo2KC8U01bEFq8Xq+yC
- ezx4eY6eLsFamhw4qwLpItroIYvmiLNZ9TyGONKuxkX/mUMrWXX156AnYAG0PpSS/JpV
- clkpPQPh2XNuUiPA89c3tqYVFYgYm6zMZ88YPkBCDH1RGsWrLkHoinDtzVy/mNMC6ZoM
- Eip8SgOqH/NcYWiu7gMFjQfImEuPvQ1iD7Wi1tnf2s81oJbUBGo9TJV65x3YgNuWVZe6
- /Z0j4hQIVRZP3FbQbHfeRuL9D25iCA1SP6a7ALImGzCsdL6cCKd65RYuG3KEJHhIYTc9 TA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30s1gnd8sb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:45:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bT2v098614;
-        Thu, 7 May 2020 00:45:06 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30sjnma6ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:45:06 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470j5lH020685;
-        Thu, 7 May 2020 00:45:05 GMT
-Received: from ayz-linux.localdomain (/68.7.158.207)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:45:04 -0700
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
-        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
-        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
-        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
-        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
-        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
-        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, minchan@kernel.org,
-        mhocko@kernel.org, ying.huang@intel.com,
-        yang.shi@linux.alibaba.com, gustavo@embeddedor.com,
-        ziqian.lzq@antfin.com, vdavydov.dev@gmail.com,
-        jason.zeng@intel.com, kevin.tian@intel.com, zhiyuan.lv@intel.com,
-        lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: [RFC 42/43] shmem: reduce time holding xa_lock when inserting pages
-Date:   Wed,  6 May 2020 17:42:08 -0700
-Message-Id: <1588812129-8596-43-git-send-email-anthony.yznaga@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070001
+        Wed, 6 May 2020 20:46:08 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D502C061A0F;
+        Wed,  6 May 2020 17:46:07 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 42228127814AF;
+        Wed,  6 May 2020 17:46:06 -0700 (PDT)
+Date:   Wed, 06 May 2020 17:46:05 -0700 (PDT)
+Message-Id: <20200506.174605.1163916253535180269.davem@davemloft.net>
+To:     o.rempel@pengutronix.de
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        kuba@kernel.org, corbet@lwn.net, mkubecek@suse.cz,
+        david@protonic.nl, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux@armlinux.org.uk, mkl@pengutronix.de, marex@denx.de,
+        christian.herber@nxp.com
+Subject: Re: [PATCH net-next v6 0/2] provide support for PHY master/slave
+ configuration
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200505063506.3848-1-o.rempel@pengutronix.de>
+References: <20200505063506.3848-1-o.rempel@pengutronix.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 17:46:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than adding one page at a time to the page cache and taking the
-page cache xarray lock each time, where possible add pages in bulk by
-first populating an xarray node outside of the page cache before taking
-the lock to insert it.
-When a group of pages to be inserted will fill an xarray node, add them
-to a local xarray, export the xarray node, and then take the lock on the
-page cache xarray and insert the node.
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Date: Tue,  5 May 2020 08:35:04 +0200
 
-Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
----
- mm/shmem.c | 145 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 138 insertions(+), 7 deletions(-)
+> changes v6:
+> - use NL_SET_ERR_MSG_ATTR in ethnl_update_linkmodes
+> - add sanity checks in the ioctl interface
+> - use bool for ethnl_validate_master_slave_cfg()
+ ...
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index f621d863e362..9d3c4e1f2dc1 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -732,17 +732,130 @@ static void shmem_delete_from_page_cache(struct page *page, void *radswap)
- 	BUG_ON(error);
- }
- 
-+static int shmem_add_aligned_to_page_cache(struct page *pages[], int npages,
-+					   struct address_space *mapping,
-+					   pgoff_t index, gfp_t gfp, int order)
-+{
-+	int xa_shift = order + XA_CHUNK_SHIFT - (order % XA_CHUNK_SHIFT);
-+	XA_STATE_ORDER(xas, &mapping->i_pages, index, xa_shift);
-+	struct xa_state *xas_ptr = &xas;
-+	struct xarray xa_tmp;
-+	/*
-+	 * Specify order so xas_create_range() only needs to be called once
-+	 * to allocate the entire range.  This guarantees that xas_store()
-+	 * will not fail due to lack of memory.
-+	 * Specify index == 0 so the minimum necessary nodes are allocated.
-+	 */
-+	XA_STATE_ORDER(xas_tmp, &xa_tmp, 0, xa_shift);
-+	unsigned long nr = 1UL << order;
-+	struct xa_node *node;
-+	int i;
-+
-+	if (npages * nr != 1 << xa_shift) {
-+		WARN_ONCE(1, "npages (%d) not aligned to xa_shift\n", npages);
-+		return -EINVAL;
-+	}
-+	if (!IS_ALIGNED(index, 1 << xa_shift)) {
-+		WARN_ONCE(1, "index (%lu) not aligned to xa_shift\n", index);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < npages; i++) {
-+		VM_BUG_ON_PAGE(PageTail(pages[i]), pages[i]);
-+		VM_BUG_ON_PAGE(!PageLocked(pages[i]), pages[i]);
-+		VM_BUG_ON_PAGE(!PageSwapBacked(pages[i]), pages[i]);
-+
-+		page_ref_add(pages[i], nr);
-+		pages[i]->mapping = mapping;
-+		pages[i]->index = index + (i * nr);
-+	}
-+
-+	xa_init(&xa_tmp);
-+	do {
-+		xas_lock(&xas_tmp);
-+		xas_create_range(&xas_tmp);
-+		if (xas_error(&xas_tmp))
-+			goto unlock;
-+		for (i = 0; i < npages; i++) {
-+			int j = 0;
-+next:
-+			xas_store(&xas_tmp, pages[i]);
-+			if (++j < nr) {
-+				xas_next(&xas_tmp);
-+				goto next;
-+			}
-+			if (i < npages - 1)
-+				xas_next(&xas_tmp);
-+		}
-+		xas_set_order(&xas_tmp, 0, xa_shift);
-+		node = xas_export_node(&xas_tmp);
-+unlock:
-+		xas_unlock(&xas_tmp);
-+	} while (xas_nomem(&xas_tmp, gfp));
-+
-+	if (xas_error(&xas_tmp)) {
-+		xas_ptr = &xas_tmp;
-+		goto error;
-+	}
-+
-+	do {
-+		xas_lock_irq(&xas);
-+		xas_import_node(&xas, node);
-+		if (xas_error(&xas))
-+			goto unlock1;
-+		mapping->nrpages += nr * npages;
-+		xas_unlock(&xas);
-+		for (i = 0; i < npages; i++) {
-+			__mod_node_page_state(page_pgdat(pages[i]), NR_FILE_PAGES, nr);
-+			__mod_node_page_state(page_pgdat(pages[i]), NR_SHMEM, nr);
-+			if (PageTransHuge(pages[i])) {
-+				count_vm_event(THP_FILE_ALLOC);
-+				__inc_node_page_state(pages[i], NR_SHMEM_THPS);
-+			}
-+		}
-+		local_irq_enable();
-+		break;
-+unlock1:
-+		xas_unlock_irq(&xas);
-+	} while (xas_nomem(&xas, gfp));
-+
-+	if (!xas_error(&xas))
-+		return 0;
-+
-+error:
-+	for (i = 0; i < npages; i++) {
-+		pages[i]->mapping = NULL;
-+		page_ref_sub(pages[i], nr);
-+	}
-+	return xas_error(xas_ptr);
-+}
-+
- static int shmem_add_pages_to_cache(struct page *pages[], int npages,
- 				struct address_space *mapping,
- 				pgoff_t start, gfp_t gfp)
- {
- 	pgoff_t index = start;
- 	int err = 0;
--	int i;
-+	int i, j;
- 
- 	i = 0;
- 	while (i < npages) {
- 		if (PageTransHuge(pages[i])) {
-+			if (IS_ALIGNED(index, 4096) && i+8 <= npages) {
-+				for (j = 1; j < 8; j++) {
-+					if (!PageTransHuge(pages[i+j]))
-+						break;
-+				}
-+				if (j == 8) {
-+					err = shmem_add_aligned_to_page_cache(&pages[i], 8, mapping, index, gfp, HPAGE_PMD_ORDER);
-+					if (err)
-+						goto done;
-+					index += HPAGE_PMD_NR * 8;
-+					i += 8;
-+					continue;
-+				}
-+			}
-+
- 			err = shmem_add_to_page_cache_fast(pages[i], mapping, index, gfp);
- 			if (err)
- 				break;
-@@ -751,13 +864,31 @@ static int shmem_add_pages_to_cache(struct page *pages[], int npages,
- 			continue;
- 		}
- 
--		err = shmem_add_to_page_cache_fast(pages[i], mapping, index, gfp);
--		if (err)
--			break;
--		index++;
--		i++;
--	}
-+		for (j = 1; i + j < npages; j++) {
-+			if (PageTransHuge(pages[i + j]))
-+				break;
-+		}
-+
-+		while (j > 0) {
-+			if (IS_ALIGNED(index, 64) && j >= 64) {
-+				err = shmem_add_aligned_to_page_cache(&pages[i], 64, mapping, index, gfp, 0);
-+				if (err)
-+					goto done;
-+				index += 64;
-+				i += 64;
-+				j -= 64;
-+				continue;
-+			}
- 
-+			err = shmem_add_to_page_cache_fast(pages[i], mapping, index, gfp);
-+			if (err)
-+				goto done;
-+			index++;
-+			i++;
-+			j--;
-+		}
-+	}
-+done:
- 	return err;
- }
- 
--- 
-2.13.3
-
+Series applied, thank you.
