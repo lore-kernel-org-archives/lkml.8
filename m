@@ -2,268 +2,231 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30290C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAA4C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CC72083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951DE20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjlWA5lx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="biUUCmBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEGPSE (ORCPT
+        id S1726701AbgEGPTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:18:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48255 "EHLO
+        Thu, 7 May 2020 11:19:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23370 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726470AbgEGPSD (ORCPT
+        with ESMTP id S1725948AbgEGPTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:18:03 -0400
+        Thu, 7 May 2020 11:19:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588864681;
+        s=mimecast20190719; t=1588864749;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=JO8Q38NCi/+zSR2Tizaf164GaKXO9JeA1n5iGE0H1CU=;
-        b=LjlWA5lxscJDYEA5esVbVK3gFeJdOGiP9+o2AAsmN+m7jcj9wdGLNgY7bcKtetCZvuZM5d
-        bsjsvaYH0biXg0wqB36O6dT86hybKCSyvnOpTvvLXkXwZTQCAZgC8bVcDgxjsmpyW78TvL
-        +y+CzhkOTfdqYhETi0MfiO+nnDTJGr0=
+        bh=Tp98xVmLYKzt4DrZe/bE3L4Ypj1Ikh/lU/CeJtlSpsY=;
+        b=biUUCmBcaHw2IshtsHo6AmJ4jNIVNPOJ/YF1x4EHaolOKYtVUTktjB19323tFaO2Vt77hf
+        fxYen0Ehrm6SvCTpvmLqdDYlBYYyN/MX1VpQSrhKU8bKQEfEdSr+yDx/gdjvbkJg/vMC9T
+        UinfOoRWKT6aonY4cT8ahQePRWdf4Cw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-E2g3pb3WOR2E3n5Of1qu3Q-1; Thu, 07 May 2020 11:17:58 -0400
-X-MC-Unique: E2g3pb3WOR2E3n5Of1qu3Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-189-PpELqaR5Odycp6cuYOlE7w-1; Thu, 07 May 2020 11:19:05 -0400
+X-MC-Unique: PpELqaR5Odycp6cuYOlE7w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4DC1835B7E;
-        Thu,  7 May 2020 15:17:56 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-114-114.phx2.redhat.com [10.3.114.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D8C42E178;
-        Thu,  7 May 2020 15:17:53 +0000 (UTC)
-Date:   Thu, 7 May 2020 11:17:51 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched/fair: Fix enqueue_task_fair warning some more
-Message-ID: <20200507151751.GA19331@lorien.usersys.redhat.com>
-References: <20200506141821.GA9773@lorien.usersys.redhat.com>
- <CAKfTPtADSaFmxE_-qtfgYEQw0A90oma2tEwH=XrE7r=qfRVsaA@mail.gmail.com>
- <20200506180521.GC9773@lorien.usersys.redhat.com>
- <CAKfTPtC6jEJ00YG6DyKOwxxpzuUEBE48ivoi3njKLCEB88U8LQ@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D71D7835B40;
+        Thu,  7 May 2020 15:19:03 +0000 (UTC)
+Received: from krava (unknown [10.40.194.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96A1A5C1B0;
+        Thu,  7 May 2020 15:19:01 +0000 (UTC)
+Date:   Thu, 7 May 2020 17:18:58 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v3 4/4] perf stat: Report summary for interval mode
+Message-ID: <20200507151858.GD2804092@krava>
+References: <20200507065822.8255-1-yao.jin@linux.intel.com>
+ <20200507065822.8255-5-yao.jin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtC6jEJ00YG6DyKOwxxpzuUEBE48ivoi3njKLCEB88U8LQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200507065822.8255-5-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
-
-On Thu, May 07, 2020 at 05:06:29PM +0200 Vincent Guittot wrote:
-> Hi Phil,
+On Thu, May 07, 2020 at 02:58:22PM +0800, Jin Yao wrote:
+> Currently perf-stat supports to print counts at regular interval (-I),
+> but it's not very easy for user to get the overall statistics.
 > 
-> On Wed, 6 May 2020 at 20:05, Phil Auld <pauld@redhat.com> wrote:
-> >
-> > Hi Vincent,
-> >
-> > Thanks for taking a look. More below...
-> >
-> > On Wed, May 06, 2020 at 06:36:45PM +0200 Vincent Guittot wrote:
-> > > Hi Phil,
-> > >
-> > > - reply to all this time
-> > >
-> > > On Wed, 6 May 2020 at 16:18, Phil Auld <pauld@redhat.com> wrote:
-> > > >
-> > > > sched/fair: Fix enqueue_task_fair warning some more
-> > > >
-> > > > The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
-> > > > did not fully resolve the issues with the (rq->tmp_alone_branch !=
-> > > > &rq->leaf_cfs_rq_list) warning in enqueue_task_fair. There is a case where
-> > > > the first for_each_sched_entity loop exits due to on_rq, having incompletely
-> > > > updated the list.  In this case the second for_each_sched_entity loop can
-> > > > further modify se. The later code to fix up the list management fails to do
-> > >
-> > > But for the 2nd  for_each_sched_entity, the cfs_rq should already be
-> > > in the list, isn't it ?
-> >
-> > No. In this case we hit the parent not on list case in list_add_leaf_cfs_rq
-> > which sets rq-tmp_alone_branch to cfs_rq->leaf_cfs_rq_list which is not
-> > the same. It returns false expecting the parent to be added later.
-> >
-> > But then the parent doens't get there because it's on_rq.
-> >
-> > >
-> > > The third for_each_entity loop is there for the throttled case but is
-> > > useless for other case
-> > >
-> >
-> > There actually is a throttling involved usually. The second loop breaks out
-> > early because one of the parents is throttled. But not before it advances
-> > se at least once.
+> The patch uses 'evsel->prev_raw_counts' to get counts for summary.
+> Copy the counts to 'evsel->counts' after printing the interval results.
+> Next, we just follow the non-interval processing.
 > 
-> Ok, that's even because of the throttling that the problem occurs
+> Let's see some examples,
 > 
-> >
-> > Then the 3rd loop doesn't fix the tmp_alone_branch because it doesn't start
-> > with the right se.
-> >
-> > > Could you provide us some details about the use case that creates such
-> > > a situation ?
-> > >
-> >
-> > I admit I had to add trace_printks to get here. Here's what it showed (sorry
-> > for the long lines...)
-> >
-> > 1)  sh-6271  [044]  1271.322317: bprint: enqueue_task_fair: se 0xffffa085e7e30080 on_rq 0 cfs_rq = 0xffffa085e93da200
-> > 2)  sh-6271  [044]  1271.322320: bprint: enqueue_entity: Add_leaf_rq: cpu 17: nr_r 2; cfs 0xffffa085e93da200 onlist 0 tmp_a_b = 0xffffa085ef92c868 &rq->l_c_r_l = 0xffffa085ef92c868
-> > 3)  sh-6271  [044]  1271.322322: bprint: enqueue_entity: Add_leaf_rq: cpu 17: nr_r 2: parent not onlist  Set t_a_branch to 0xffffa085e93da340 rq->l_c_r_l = 0xffffa085ef92c868
-> > 4)  sh-6271  [044]  1271.322323: bprint: enqueue_task_fair: se 0xffffa085e93d8800 on_rq 1 cfs_rq = 0xffffa085dbfaea00
-> > 5)  sh-6271  [044]  1271.322324: bprint: enqueue_task_fair: Done enqueues, se=0xffffa085e93d8800, pid=3642
-> > 6)  sh-6271  [044]  1271.322326: bprint: enqueue_task_fair: update: cfs 0xffffa085e48ce000 throttled, se = 0xffffa085dbfafc00
-> > 7)  sh-6271  [044]  1271.322326: bprint: enqueue_task_fair: current se = 0xffffa085dbfafc00, orig_se = 0xffffa085e7e30080
-> > 8)  sh-6271  [044]  1271.322327: bprint: enqueue_task_fair: Add_leaf_rq: cpu 17: nr_r 2; cfs 0xffffa085e48ce000 onlist 1 tmp_a_b = 0xffffa085e93da340 &rq->l_c_r_l = 0xffffa085ef92c868
-> > 9)  sh-6271  [044]  1271.322328: bprint: enqueue_task_fair: Add_leaf_rq: cpu 17: nr_r 0; cfs 0xffffa085ef92bf80 onlist 1 tmp_a_b = 0xffffa085e93da340 &rq->l_c_r_l = 0xffffa085ef92c868
-> > 10) sh-6271  [044]  1271.672599: bprint: enqueue_task_fair: cpu 17: rq->tmp_alone_branch = 0xffffa085e93da340 != &rq->leaf_cfs_rq_list = 0xffffa085ef92c868
-> >
-> >
-> > lines 1 and 4 are from the first loop in enqueue_task_fair. Line 2 and 3 are from the
-> > first call to list_add_leaf_rq with line 2 being at the start and line 3 showing which
-> > of the 3 cases we hit.
-> >
-> > Line 5 is right after the first loop.
-> >
-> > Line 6 is the second trip through the 2nd loop and is in the if(throttled) condition.
-> > Line 7 is right below the enqueue_throttle label.
-> >
-> > Lines 8 and 9 are from the fixup loop and since onlist is set for both of these it doesn't
-> > do anything. But we've left rq->tmp_alone_branch pointing to the cfs_rq->leaf_cfs_rq_list
-> > from the one call to list_add_leaf_rq that did something and so the cleanup doesn't work.
-> >
-> > Based on the comment at the clean up, it looked like it expected the se to be what it was
-> > when the first loop broke not whatever it was left at after the second loop.  Could have
-> > been NULL there too I guess but I didn't hit that case.
-> >
-> > This is 100% reproducible. And completely gone with the fix. I have a trace showing that.
-> >
-> > Does that make more sense?
+>  root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000412064          2,281,114      cycles
+>       2.001383658          2,547,880      cycles
 > 
-> Yes, Good catch
-> And thanks for the detailed explanation.
-
-No problem. I had to see it all myself anyway :)
-
-
+>   Performance counter stats for 'system wide':
 > 
-> >
-> >
-> >
-> > Cheers,
-> > Phil
-> >
-> >
-> > > > what is needed because se does not point to the sched_entity which broke out
-> > > > of the first loop.
-> > > >
-> > > > Address this issue by saving the se pointer when the first loop exits and
-> > > > resetting it before doing the fix up, if needed.
-> > > >
-> > > > Signed-off-by: Phil Auld <pauld@redhat.com>
-> > > > Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > > Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > Cc: Ingo Molnar <mingo@kernel.org>
-> > > > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > > > ---
-> > > >  kernel/sched/fair.c | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > index 02f323b85b6d..719c996317e3 100644
-> > > > --- a/kernel/sched/fair.c
-> > > > +++ b/kernel/sched/fair.c
-> > > > @@ -5432,6 +5432,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > >  {
-> > > >         struct cfs_rq *cfs_rq;
-> > > >         struct sched_entity *se = &p->se;
-> > > > +       struct sched_entity *saved_se = NULL;
-> > > >         int idle_h_nr_running = task_has_idle_policy(p);
-> > > >
-> > > >         /*
-> > > > @@ -5466,6 +5467,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > >                 flags = ENQUEUE_WAKEUP;
-> > > >         }
-> > > >
-> > > > +       saved_se = se;
+>           4,828,994      cycles
 > 
-> TBH, I don't like saving and going back to the saved se and loop one
-> more time on them
+>         2.002860349 seconds time elapsed
 > 
-> > > >         for_each_sched_entity(se) {
-> > > >                 cfs_rq = cfs_rq_of(se);
+>  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000389902          1,536,093      cycles
+>       1.000389902            420,226      instructions              #    0.27  insn per cycle
+>       2.001433453          2,213,952      cycles
+>       2.001433453            735,465      instructions              #    0.33  insn per cycle
 > 
-> Could you add something like below in the 2nd loop instead ?
-
-I'll give it a try this way and let you know. I had to give that machine
-away. I'll get another and make sure it hits and then we'll see.
-
-
-Thanks,
-Phil
-
-
-
+>   Performance counter stats for 'system wide':
 > 
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5486,6 +5486,13 @@ enqueue_task_fair(struct rq *rq, struct
-> task_struct *p, int flags)
->                 /* end evaluation on encountering a throttled cfs_rq */
->                 if (cfs_rq_throttled(cfs_rq))
->                         goto enqueue_throttle;
+>           3,750,045      cycles
+>           1,155,691      instructions              #    0.31  insn per cycle
+> 
+>         2.003023361 seconds time elapsed
+> 
+>  root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000435121            905,303      inst_retired.any          #      2.9 CPI
+>       1.000435121          2,663,333      cycles
+>       1.000435121            914,702      inst_retired.any          #      0.3 IPC
+>       1.000435121          2,676,559      cpu_clk_unhalted.thread
+>       2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
+>       2.001615941          3,551,357      cycles
+>       2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
+>       2.001615941          3,551,044      cpu_clk_unhalted.thread
+> 
+>   Performance counter stats for 'system wide':
+> 
+>           2,856,395      inst_retired.any          #      2.2 CPI
+>           6,214,690      cycles
+>           2,865,539      inst_retired.any          #      0.5 IPC
+>           6,227,603      cpu_clk_unhalted.thread
+> 
+>         2.003403078 seconds time elapsed
+> 
+>  v3:
+>  ---
+>  Use evsel->prev_raw_counts for summary counts
+> 
+>  v2:
+>  ---
+>  Rebase to perf/core branch
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/builtin-stat.c | 16 ++++++++++++++--
+>  tools/perf/util/stat.c    |  2 +-
+>  tools/perf/util/stat.h    |  1 +
+>  3 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 97ee941649e6..f67d6a50274e 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -334,7 +334,7 @@ static void read_counters(struct timespec *rs)
+>  		evlist__for_each_entry(evsel_list, counter) {
+>  			if (evsel__cpu_iter_skip(counter, cpu))
+>  				continue;
+> -			if (!counter->err) {
+> +			if (!counter->err && !stat_config.summary) {
+
+you'll go through all the affinity setup and do nothing at the end,
+even if you know at the begining that it's the case.. not good
+
+we need to call only the perf_stat_process_counter in summary case
+
+jirka
+
+>  				counter->err = read_counter_cpu(counter, rs,
+>  								counter->cpu_iter - 1);
+>  			}
+> @@ -364,6 +364,7 @@ static void thread_stats_reset(struct perf_stat_config *config)
+>  static void process_interval(void)
+>  {
+>  	struct timespec ts, rs;
+> +	struct stats walltime_nsecs_stats_bak;
+>  
+>  	clock_gettime(CLOCK_MONOTONIC, &ts);
+>  	diff_timespec(&rs, &ts, &ref_time);
+> @@ -377,9 +378,11 @@ static void process_interval(void)
+>  			pr_err("failed to write stat round event\n");
+>  	}
+>  
+> +	walltime_nsecs_stats_bak = walltime_nsecs_stats;
+>  	init_stats(&walltime_nsecs_stats);
+>  	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
+>  	print_counters(&rs, 0, NULL);
+> +	walltime_nsecs_stats = walltime_nsecs_stats_bak;
+>  }
+>  
+>  static void enable_counters(void)
+> @@ -735,6 +738,15 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  
+>  	update_stats(&walltime_nsecs_stats, t1 - t0);
+>  
+> +	if (interval) {
+> +		stat_config.interval = 0;
+> +		stat_config.summary = true;
+> +		perf_evlist__copy_prev_raw_counts(evsel_list);
+> +		perf_evlist__reset_prev_raw_counts(evsel_list);
+> +		thread_stats_reset(&stat_config);
+> +		perf_stat__reset_shadow_per_stat(&rt_stat);
+> +	}
 > +
-> +               /*
-> +                * One parent has been throttled and cfs_rq removed from the
-> +                * list. Add it back to not break the leaf list.
-> +                */
-> +               if (throttled_hierarchy(cfs_rq))
-> +                       list_add_leaf_cfs_rq(cfs_rq);
->         }
+>  	/*
+>  	 * Closing a group leader splits the group, and as we only disable
+>  	 * group leaders, results in remaining events becoming enabled. To
+> @@ -2158,7 +2170,7 @@ int cmd_stat(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> -	if (!forever && status != -1 && !interval)
+> +	if (!forever && status != -1 && (!interval || stat_config.summary))
+>  		print_counters(NULL, argc, argv);
+>  
+>  	if (STAT_RECORD) {
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index ede113805ecd..47b26c024830 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -393,7 +393,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+>  	 * interval mode, otherwise overall avg running
+>  	 * averages will be shown for each interval.
+>  	 */
+> -	if (config->interval) {
+> +	if (config->interval || config->summary) {
+>  		for (i = 0; i < 3; i++)
+>  			init_stats(&ps->res_stats[i]);
+>  	}
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 62cf72c71869..c60e9e5d6474 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -110,6 +110,7 @@ struct perf_stat_config {
+>  	bool			 all_kernel;
+>  	bool			 all_user;
+>  	bool			 percore_show_thread;
+> +	bool			 summary;
+>  	FILE			*output;
+>  	unsigned int		 interval;
+>  	unsigned int		 timeout;
+> -- 
+> 2.17.1
 > 
->  enqueue_throttle:
-> 
-> > > >
-> > > > @@ -5510,6 +5512,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > >                  * leaf list maintenance, resulting in triggering the assertion
-> > > >                  * below.
-> > > >                  */
-> > > > +               if (saved_se)
-> > > > +                       se = saved_se;
-> > > >                 for_each_sched_entity(se) {
-> > > >                         cfs_rq = cfs_rq_of(se);
-> > > >
-> > > > --
-> > > > 2.18.0
-> > > >
-> > > >
-> > > > Cheers,
-> > > > Phil
-> > > >
-> > >
-> >
-> > --
-> >
-> 
-
--- 
 
