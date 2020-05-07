@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614CAC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE4DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3550B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52F52073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861899;
-	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ymEuqsRB5XfB7Dv0VisY+rwoamdYFHZ1DEe6StRwhRIACVOQ7Scq4oDOW9nFNmJAG
-	 S1suBxpq99WsN/vW1qql1mymqFOBUwyQ3k2wmHWNKnd1oLEA0xB+TUkXQRSsPAnMFR
-	 EaO3SrGI8Y498txyo8mWcqnmf7D/yirj3v1HdgRA=
+	s=default; t=1588861901;
+	bh=RDHhSY3tzCybmkdjluXyuhJZH1XkZVY9EYR1V0QUo+A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=broDbgpsFf1Mm4wEUjFiYWyhbzELeAxfAJ7lEUZxlZ+8nWpoWUI3cskBA+HqAcYkU
+	 n6RvTBtmUTR899MqkXCePrI4jwsWg+ZdHk74wvPK4Qj4KHqZEhrtFRGxUI4SYLbC4C
+	 4RHHW6TgTaFT/tErV5j7UFJ6k/oEnnVOUPSr7oZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgEGOaU (ORCPT
+        id S1728348AbgEGObk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgEGO37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:59 -0400
+        id S1728732AbgEGOaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B7A208D6;
-        Thu,  7 May 2020 14:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6AA20870;
+        Thu,  7 May 2020 14:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861798;
-        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifOHW/Zp0NW4F1Nv1eATP4yvTdU9o4YgrCojaXdpfFohw8Jd6K76EDkT/tS1+CuP/
-         iUmswj56pTF15bMgG16bSKgaRFPYU10M3AT+8CDDTAIn0GWsLv+27lLSlgsYcMnnNY
-         aBUfG5U7495JxU3IALTpCp7BjC6hpmdQvkAHYzy8=
+        s=default; t=1588861820;
+        bh=RDHhSY3tzCybmkdjluXyuhJZH1XkZVY9EYR1V0QUo+A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mdvSr4y3A5eLmWuKkacWtkKHK7iVlDMLaXROrp7Afa94YOrsXxxcExdU5JW+J9Mnk
+         fWlli83oJNO3C6nfkQN7ks0F4CmCkgTRjqR/5P86BL1GnYy+04tkHbMExXDWC1CRfI
+         +Mm+RVXFX9lX59mJUAu6w8I14vpS3XI1VBPr+70U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 13/16] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
-Date:   Thu,  7 May 2020 10:29:40 -0400
-Message-Id: <20200507142943.26848-13-sashal@kernel.org>
+Cc:     Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/9] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Thu,  7 May 2020 10:30:10 -0400
+Message-Id: <20200507143018.27195-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
-References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
+[ Upstream commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c ]
 
-v2: removed TODO reminder
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ drivers/infiniband/hw/mlx4/main.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
-index 7fbcc35e8ad35..c89c10055641e 100644
---- a/drivers/gpu/drm/qxl/qxl_image.c
-+++ b/drivers/gpu/drm/qxl/qxl_image.c
-@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
- 		break;
- 	default:
- 		DRM_ERROR("unsupported image bit depth\n");
--		return -EINVAL; /* TODO: cleanup */
-+		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
-+		return -EINVAL;
- 	}
- 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
- 	image->u.bitmap.x = width;
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 6968154a073e4..ac9f173c43111 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1435,8 +1435,9 @@ static int __mlx4_ib_create_default_rules(
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
 -- 
 2.20.1
 
