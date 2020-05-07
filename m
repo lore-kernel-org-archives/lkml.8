@@ -6,53 +6,85 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A59AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2625C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D2D215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6A22173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgEGRob (ORCPT
+        id S1727889AbgEGRom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:44:31 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:40592 "EHLO
+        Thu, 7 May 2020 13:44:42 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40608 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEGRob (ORCPT
+        with ESMTP id S1726393AbgEGRol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:44:31 -0400
+        Thu, 7 May 2020 13:44:41 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CAB2D1C0255; Thu,  7 May 2020 19:44:29 +0200 (CEST)
-Date:   Thu, 7 May 2020 19:44:28 +0200
+        id CBB0C1C0256; Thu,  7 May 2020 19:44:39 +0200 (CEST)
+Date:   Thu, 7 May 2020 19:44:38 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        Paul J Murphy <paul.j.murphy@intel.com>
-Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Message-ID: <20200507174428.GA1216@bug>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
- <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+Message-ID: <20200507174438.GB1216@bug>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
+In-Reply-To: <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-04-21 17:36:18, Daniele Alessandrelli wrote:
-> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Hi!
+
+> > it uses its own memory and CPUs + its virtio-vsock emulated device for
+> > communication with the primary VM.
+> > 
+> > The memory and CPUs are carved out of the primary VM, they are dedicated
+> > for the enclave. The Nitro hypervisor running on the host ensures memory
+> > and CPU isolation between the primary VM and the enclave VM.
+> > 
+> > These two components need to reflect the same state e.g. when the
+> > enclave abstraction process (1) is terminated, the enclave VM (2) is
+> > terminated as well.
+> > 
+> > With regard to the communication channel, the primary VM has its own
+> > emulated virtio-vsock PCI device. The enclave VM has its own emulated
+> > virtio-vsock device as well. This channel is used, for example, to fetch
+> > data in the enclave and then process it. An application that sets up the
+> > vsock socket and connects or listens, depending on the use case, is then
+> > developed to use this channel; this happens on both ends - primary VM
+> > and enclave VM.
+> > 
+> > Let me know if further clarifications are needed.
 > 
-> Keem Bay bootloader sets up a temporary Isolated Memory Region (IMR) to
-> protect itself during pre-Linux boot.
+> Thanks, this is all useful.  However can you please clarify the
+> low-level details here?
 
-What kind of bootloader is the SoC using? Sounds like bootloader responsibility to me...
+Is the virtual machine manager open-source? If so, I guess pointer for sources
+would be useful.
 
+Best regards,
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
