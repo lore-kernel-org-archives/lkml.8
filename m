@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C266FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A85C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F32B20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E24020870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJ5DdgiC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hsq7csMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgEGSK4 (ORCPT
+        id S1728282AbgEGSLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        Thu, 7 May 2020 14:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728486AbgEGSKr (ORCPT
+        by vger.kernel.org with ESMTP id S1728446AbgEGSKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:47 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297AEC05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:46 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id v18so7682486qtq.22
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:46 -0700 (PDT)
+        Thu, 7 May 2020 14:10:39 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE81BC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:39 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id ev8so6693212qvb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tQJRWNXZ73jupkckFeVqSyiJPuHFNUXk3losPzo+jg0=;
-        b=OJ5DdgiCF2sqkpLYesteMXNORwEGKDR0Y0KA0Y5rnVPYA7hNXSv1oL/MShKoOyUxtV
-         ry7nKG2JXxTPRL9bLbxFdeT9Y2YqTlL4Fei31TaPiPOjMOkdUPfTils+SnDcvYFhfDJQ
-         jjCzkIM36yfW/s841TyY6iK9sscitEH4sJ4DlMMBcV5YAQU5KOKQLO1T6Aa31KbeLycu
-         LgOLgeWtLfvKc7O1SaUqq8AjMtDmYgxHFLOcjWdmib1seFPbUx4qpqmtUeU2/m1tBGXO
-         m3ec7zNB0QRGtS6NtlA9VDThwYF7JCq4VENLUDeG20hKDR8IlSt+VL8f+ePs8xq03gJ3
-         LoJg==
+        bh=zZWvTUfx/wRuyyDcQxDeif3qbH8vMyyGM38ys5fdFsY=;
+        b=Hsq7csMm3aKxHXFy3vU5SjedQTdFGmje4EFFn7pUNQI+7Tt5gipsk3gojrKeqv0oZA
+         zKJmEc4qjOnoV2Poo1wux8oWp7druRmTRThDjQx0nXRmvka5WsF9eIK05U+G5BZ5kwA9
+         7QtfLulqPmZBLYbI0vKZu/6D5HO6i4g2a6I7enOxrKuX3hdzh9btnYC61l0lBlUK9g6G
+         nIOYbvEzOurFENmE7JQ0pSeNgQ5IUaGVHwya8NGk1H3C8O8Gh3pvyYFCxt45XHtnr/q4
+         xHM22KlaIb+SQa38QzZsQOlVjsp4CDU+E/SvPDegyt/YmQrsmOX/1Q6cfHLV37HoscxQ
+         DBqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tQJRWNXZ73jupkckFeVqSyiJPuHFNUXk3losPzo+jg0=;
-        b=I/J6wgxHKr3rAC5HkC4v786ehT10tv4krSzM3zUkGnQdgi/1SND2UJtSlNWaTgAs4d
-         +q6XpRARRVXq9zW/VjO+5ITs4xOOuwoe4XxZxcaE8X21QhbpaMnUHAXPa2Cs0Uz8AhBi
-         NReg/6ymx/9zj8GtH4MeC6GnnH9P0+uZxpjSNR/yBBhM4cWMZfemScJhHC7lhOrmACPG
-         qsU10yXQVcLiAtQOM6ASMbXU8pmsRkUVUX8I7eCT4RXo7O+xozdjgPD9moUKY5E7RMGT
-         /vgW0LuYutiObFH3AmdKc3xs99spoNlZUPF2jnwZx2S0aufqcshHB5rA0g5xizzsVBrl
-         7i5A==
-X-Gm-Message-State: AGi0PuYDggBWNoawyQfXvnzaq4K9eofFmeJlnEo7zfDj6WGab+ELpXTN
-        H1XlTWd37I2KoBUvCC+o0i1BgAgzGgS1NF8Z5b1FEo4ccUy8QalOy5t9o10nxeDYuWJw0ezjA5j
-        3M30prKsDPkkeTrgxI9tWf5sOUOJBshykeI7yNhSdYAYEHKyBA2J8jko8AXQ+br3co1pzkM3u
-X-Google-Smtp-Source: APiQypLWF74i2ubQ61UdlGU8XHa46X4VRO8h//dR1bpYaMIS2zPs03r4Fxjeh4NMjh22GrvVAsE+nhm84qFL
-X-Received: by 2002:ad4:58eb:: with SMTP id di11mr14503909qvb.39.1588875045240;
- Thu, 07 May 2020 11:10:45 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:10:12 +0100
+        bh=zZWvTUfx/wRuyyDcQxDeif3qbH8vMyyGM38ys5fdFsY=;
+        b=WQBYO1B8dvGALbw5wvoiS5m5DBGqtT02eLPgHWvHYppPIMlFML7u4jbjs0dphyoxBG
+         yGJV1GHMxupXNjA0FoPl1CghoJcgfrPMrs9qNh5XQmaWwYw3ffV46VPB5Uon1fZoZvMH
+         DI5Lxb1l80tvn+ndJisfAz7KU67eNIjrTcsWx2pShxQfLkC/FjNAo03QAXSPa+DQo2J6
+         VoSp5MZJRufHPByg5bBsPi4vys0n34VSuprc/SAkdeRIEy/lkZiZREH23Bo7HiIQYV6O
+         +OEeaHsz5emfPM7+/+gpk9P6eFcyNgPb/CfoM5cA1/ZarfxdfTkemSDSuZ03YtswXs2N
+         XSaQ==
+X-Gm-Message-State: AGi0PuYOBPQQiMMaIXIo4pL4vv9stOvf1DprLf80h+9hf1zcRsN6v4L9
+        HkZNjMWW2z2Jcz9EpzZ+arRc86wcQlYjXVO2jggyldusnVLiqe/sQkPV4R3lrZk3du7C7rl2orG
+        3kNT0egOGpkGLz6xyFCtlgkoSx54wapi99Y32+4byzrZlDrxQgalVI5ZBVsEb196t3GU0o2Y3
+X-Google-Smtp-Source: APiQypLtVxYcoBCGLT2opMHxryNuYGnQnZvm1aIxlatafdQirXZzAlFCc71e959iGzwoL9cFGjpKT/1CxlGY
+X-Received: by 2002:a0c:facb:: with SMTP id p11mr14758771qvo.17.1588875038848;
+ Thu, 07 May 2020 11:10:38 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:10:09 +0100
 In-Reply-To: <20200507181012.29791-1-qperret@google.com>
-Message-Id: <20200507181012.29791-15-qperret@google.com>
+Message-Id: <20200507181012.29791-12-qperret@google.com>
 Mime-Version: 1.0
 References: <20200507181012.29791-1-qperret@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 14/14] sched: cpufreq: Modularize schedutil
+Subject: [PATCH 11/14] tick/sched: Export tick_nohz_get_idle_calls_cpu
 From:   Quentin Perret <qperret@google.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -79,59 +79,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all requirements to modularize schedutil are met, make the
-Kconfig option tristate and add the missing MODULE_*() declarations in
-cpufreq_schedutil.c.
+It will be needed by schedutil once modularized, export it.
 
 Signed-off-by: Quentin Perret <qperret@google.com>
 ---
- drivers/cpufreq/Kconfig          |  2 +-
- kernel/sched/cpufreq_schedutil.c | 15 ++++++++++-----
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ kernel/time/tick-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index c3e6bd59e920..49942f422a57 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -185,7 +185,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
- 	  If in doubt, say N.
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 3e2dc9b8858c..3b1050cabb58 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -1122,6 +1122,7 @@ unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
  
- config CPU_FREQ_GOV_SCHEDUTIL
--	bool "'schedutil' cpufreq policy governor"
-+	tristate "'schedutil' cpufreq policy governor"
- 	depends on CPU_FREQ && SMP
- 	select CPU_FREQ_GOV_ATTR_SET
- 	select IRQ_WORK
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index aeb04cc5b740..ea2778422efd 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -786,15 +786,20 @@ struct cpufreq_governor schedutil_gov = {
- #endif /* CONFIG_ENERGY_MODEL */
- };
- 
-+static int __init sugov_register(void)
-+{
-+	return cpufreq_register_governor(&schedutil_gov);
-+}
-+
- #ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
- struct cpufreq_governor *cpufreq_default_governor(void)
- {
- 	return &schedutil_gov;
+ 	return ts->idle_calls;
  }
-+core_initcall(sugov_register);
-+#else
-+module_init(sugov_register);
- #endif
++EXPORT_SYMBOL_GPL(tick_nohz_get_idle_calls_cpu);
  
--static int __init sugov_register(void)
--{
--	return cpufreq_register_governor(&schedutil_gov);
--}
--core_initcall(sugov_register);
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Schedutil CPUFreq Governor");
+ /**
+  * tick_nohz_get_idle_calls - return the current idle calls counter value
 -- 
 2.26.2.526.g744177e7f7-goog
 
