@@ -2,166 +2,186 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5E8C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34D6C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294AB20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWfo/ttF"
+	by mail.kernel.org (Postfix) with ESMTP id 9A2BD207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgEGKcB (ORCPT
+        id S1726751AbgEGKc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:32:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59872 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgEGKcA (ORCPT
+        Thu, 7 May 2020 06:32:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46313 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgEGKcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:32:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588847519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=VLTLF8okWG2U8qocbOPYjuf/W5P0dXVCWo4Nb3iuQAg=;
-        b=HWfo/ttFkGYtqRBHinrbWAUXGMYA7twEqvIgY6sK2QxBEj+RZ4RpmJc9xjz2R0/JxN4LWy
-        pDajlhza+8EZBvA75EXp8SdxqZnMtnzbq3JjAab8KLVy2vdzWPbBGCgVfIiJ//1mafUEVg
-        F19+MdELaQO9s0QhrFUa4wEH4Jdecqs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-7KSFfIZuMTWeQ6b4FFHZvw-1; Thu, 07 May 2020 06:31:55 -0400
-X-MC-Unique: 7KSFfIZuMTWeQ6b4FFHZvw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0208780183C;
-        Thu,  7 May 2020 10:31:51 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D8415D9C5;
-        Thu,  7 May 2020 10:31:28 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
+        Thu, 7 May 2020 06:32:22 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jWdpC-0007oF-Oi; Thu, 07 May 2020 10:32:18 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH v3 00/15] virtio-mem: paravirtualized memory
-Date:   Thu,  7 May 2020 12:31:04 +0200
-Message-Id: <20200507103119.11219-1-david@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Christian Kellner <christian@kellner.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Arnd Bergmann <arnd@arndb.de>, Serge Hallyn <serge@hallyn.com>,
+        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Joe Perches <joe@perches.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jan Stancek <jstancek@redhat.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        Florian Weimer <fw@deneb.enyo.de>, libc-alpha@sourceware.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2] fork: prevent accidental access to clone3 features
+Date:   Thu,  7 May 2020 12:32:14 +0200
+Message-Id: <20200507103214.77218-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is based on latest linux-next. The patches are located at:
-    https://github.com/davidhildenbrand/linux.git virtio-mem-v3
+Jan reported an issue where an interaction between sign-extending clone's
+flag argument on ppc64le and the new CLONE_INTO_CGROUP feature causes
+clone() to consistently fail with EBADF.
 
-Patch #1 - #10 where contained in v2 and only contain minor modifications
-(mostly smaller fixes). The remaining patches are new and contain smaller
-optimizations.
+The whole story is a little longer. The legacy clone() syscall is odd in a
+bunch of ways and here two things interact. First, legacy clone's flag
+argument is word-size dependent, i.e. it's an unsigned long whereas most
+system calls with flag arguments use int or unsigned int. Second, legacy
+clone() ignores unknown and deprecated flags. The two of them taken
+together means that users on 64bit systems can pass garbage for the upper
+32bit of the clone() syscall since forever and things would just work fine.
+Just try this on a 64bit kernel prior to v5.7-rc1 where this will succeed
+and on v5.7-rc1 where this will fail with EBADF:
 
-Details about virtio-mem can be found in the cover letter of v2 [1]. A
-basic QEMU implementation was posted yesterday [2].
+int main(int argc, char *argv[])
+{
+        pid_t pid;
 
-[1] https://lkml.kernel.org/r/20200311171422.10484-1-david@redhat.com
-[2] https://lkml.kernel.org/r/20200506094948.76388-1-david@redhat.com
+        /* Note that legacy clone() has different argument ordering on
+         * different architectures so this won't work everywhere.
+         *
+         * Only set the upper 32 bits.
+         */
+        pid = syscall(__NR_clone, 0xffffffff00000000 | SIGCHLD,
+                      NULL, NULL, NULL, NULL);
+        if (pid < 0)
+                exit(EXIT_FAILURE);
+        if (pid == 0)
+                exit(EXIT_SUCCESS);
+        if (wait(NULL) != pid)
+                exit(EXIT_FAILURE);
 
-v2 -> v3:
-- "virtio-mem: Paravirtualized memory hotplug"
--- Include "linux/slab.h" to fix build issues
--- Remember the "region_size", helpful for patch #11
--- Minor simplifaction in virtio_mem_overlaps_range()
--- Use notifier_from_errno() instead of notifier_to_errno() in notifier
--- More reliable check for added memory when unloading the driver
-- "virtio-mem: Allow to specify an ACPI PXM as nid"
--- Also print the nid
-- Added patch #11-#15
+        exit(EXIT_SUCCESS);
+}
 
-Cc: Sebastien Boeuf <sebastien.boeuf@intel.com>
-Cc: Samuel Ortiz <samuel.ortiz@intel.com>
-Cc: Robert Bradford <robert.bradford@intel.com>
-Cc: Luiz Capitulino <lcapitulino@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: teawater <teawaterz@linux.alibaba.com>
-Cc: Igor Mammedov <imammedo@redhat.com>
-Cc: Dr. David Alan Gilbert <dgilbert@redhat.com>
+Since legacy clone() couldn't be extended this was not a problem so far and
+nobody really noticed or cared since nothing in the kernel ever bothered to
+look at the upper 32 bits.
 
-David Hildenbrand (15):
-  virtio-mem: Paravirtualized memory hotplug
-  virtio-mem: Allow to specify an ACPI PXM as nid
-  virtio-mem: Paravirtualized memory hotunplug part 1
-  virtio-mem: Paravirtualized memory hotunplug part 2
-  mm: Allow to offline unmovable PageOffline() pages via
-    MEM_GOING_OFFLINE
-  virtio-mem: Allow to offline partially unplugged memory blocks
-  mm/memory_hotplug: Introduce offline_and_remove_memory()
-  virtio-mem: Offline and remove completely unplugged memory blocks
-  virtio-mem: Better retry handling
-  MAINTAINERS: Add myself as virtio-mem maintainer
-  virtio-mem: Add parent resource for all added "System RAM"
-  virtio-mem: Drop manual check for already present memory
-  virtio-mem: Unplug subblocks right-to-left
-  virtio-mem: Use -ETXTBSY as error code if the device is busy
-  virtio-mem: Try to unplug the complete online memory block first
+But once we introduced clone3() and expanded the flag argument in struct
+clone_args to 64 bit we opened this can of worms. With the first flag-based
+extension to clone3() making use of the upper 32 bits of the flag argument
+we've effectively made it possible for the legacy clone() syscall to reach
+clone3() only flags. The sign extension scenario is just the odd
+corner-case that we needed to figure this out.
 
- MAINTAINERS                     |    7 +
- drivers/acpi/numa/srat.c        |    1 +
- drivers/virtio/Kconfig          |   17 +
- drivers/virtio/Makefile         |    1 +
- drivers/virtio/virtio_mem.c     | 1962 +++++++++++++++++++++++++++++++
- include/linux/memory_hotplug.h  |    1 +
- include/linux/page-flags.h      |   10 +
- include/uapi/linux/virtio_ids.h |    1 +
- include/uapi/linux/virtio_mem.h |  208 ++++
- mm/memory_hotplug.c             |   81 +-
- mm/page_alloc.c                 |   26 +
- mm/page_isolation.c             |    9 +
- 12 files changed, 2314 insertions(+), 10 deletions(-)
- create mode 100644 drivers/virtio/virtio_mem.c
- create mode 100644 include/uapi/linux/virtio_mem.h
+The reason we just realized this now and not already when we introduced
+CLONE_CLEAR_SIGHAND was that CLONE_INTO_CGROUP assumes that a valid cgroup
+file descriptor has been given. So the sign extension (or the user
+accidently passing garbage for the upper 32 bits) caused the
+CLONE_INTO_CGROUP bit to be raised and the kernel to error out when it
+didn't find a valid cgroup file descriptor.
 
---=20
-2.25.3
+Let's fix this by always capping the upper 32 bits for all codepaths that
+are not aware of clone3() features. This ensures that we can't reach
+clone3() only features by accident via legacy clone as with the sign
+extension case and also that legacy clone() works exactly like before, i.e.
+ignoring any unknown flags.  This solution risks no regressions and is also
+pretty clean.
+
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dmitry V. Levin <ldv@altlinux.org>
+Cc: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: libc-alpha@sourceware.org
+Link: https://sourceware.org/pipermail/libc-alpha/2020-May/113596.html
+Fixes: 7f192e3cd316 ("fork: add clone3")
+Fixes: ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
+Cc: stable@vger.kernel.org # 5.3+
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+- Joe Perches <joe@perches.com>:
+  - Use lower_32_bit() macro.
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Cap flag argument to 32 bits in every place that is not clone3()
+    feature aware.
+  - Cc stable.
+---
+ kernel/fork.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 8c700f881d92..48ed22774efa 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2486,11 +2486,11 @@ long do_fork(unsigned long clone_flags,
+ 	      int __user *child_tidptr)
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= (clone_flags & ~CSIGNAL),
++		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
+ 		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+-		.exit_signal	= (clone_flags & CSIGNAL),
++		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
+ 		.stack		= stack_start,
+ 		.stack_size	= stack_size,
+ 	};
+@@ -2508,8 +2508,9 @@ long do_fork(unsigned long clone_flags,
+ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
+-		.exit_signal	= (flags & CSIGNAL),
++		.flags		= ((lower_32_bits(flags) | CLONE_VM |
++				    CLONE_UNTRACED) & ~CSIGNAL),
++		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
+ 		.stack		= (unsigned long)fn,
+ 		.stack_size	= (unsigned long)arg,
+ 	};
+@@ -2570,11 +2571,11 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ #endif
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= (clone_flags & ~CSIGNAL),
++		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
+ 		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+-		.exit_signal	= (clone_flags & CSIGNAL),
++		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
+ 		.stack		= newsp,
+ 		.tls		= tls,
+ 	};
+
+base-commit: 0e698dfa282211e414076f9dc7e83c1c288314fd
+-- 
+2.26.2
 
