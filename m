@@ -2,100 +2,73 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC08C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB0DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C619E208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E674208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgEGUdE (ORCPT
+        id S1726864AbgEGUdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:33:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44363 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgEGUdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:33:04 -0400
-IronPort-SDR: VIVHXsFd5uqImcWOLkjQVHoOdpfYrLGRmbBZFpCD2H9N7A48JyXCJ1rtkBjdV5Pe4qmrMLvzDo
- kjldwaIqKFYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:32:50 -0700
-IronPort-SDR: 2LFt945J76NOTSWp7WcmWtzjtsyY/Osp3JJ2Dzj+eZGSWEwQ/ykD5fyrpZq5nnMzO+NtjCLoQd
- Oerp+eOQH8Ig==
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="260648194"
-Received: from tzanussi-mobl4.amr.corp.intel.com (HELO [10.252.140.107]) ([10.252.140.107])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:32:48 -0700
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-References: <158834025077.28357.15141584656220094821.stgit@devnote2>
- <158834028054.28357.398159034694277189.stgit@devnote2>
- <20200501101942.5c0da986@gandalf.local.home>
- <20200502120842.9d93352083fb854295150235@kernel.org>
- <20200507091207.5c3b1a92@gandalf.local.home>
- <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
- <20200507132539.7e081980@gandalf.local.home>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <f575eead-c021-c830-b9d5-41437964db32@linux.intel.com>
-Date:   Thu, 7 May 2020 15:32:46 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 16:33:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41576 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbgEGUdP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 16:33:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jWnAl-00078f-F3; Thu, 07 May 2020 20:31:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: remove redundant initialization to variable rc
+Date:   Thu,  7 May 2020 21:31:11 +0100
+Message-Id: <20200507203111.64709-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200507132539.7e081980@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-On 5/7/2020 12:25 PM, Steven Rostedt wrote:
-> On Fri, 8 May 2020 00:50:28 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
->>>> Yes, I need Tom's review for this change. As far as I can test, this
->>>> fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
->>>> for this test case.
->>>>    
->>>
->>> I still don't see how changing "keys=common_pid" to "keys=ip" has anything
->>> to do with the echo patch. If that is a problem, it should be a different
->>> patch with explanation to why "keys=common_pid" is broken.
->>
->> This test case uses a trace_marker event to make a histogram with
->> the common_pid key, and it expects the "echo" command is built-in command
->> so that the pid is same while writing several events to trace_marker.
->> I changed it to "ip" which is always same if trace_marker interface is
->> used.
-> 
-> Can you explicitly state that in your change log? It wasn't obvious from
-> what you meant with:
-> 
-> "This also fixes some test cases which expects built-in echo command."
-> 
+The variable rc is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-With that change,
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/lpfc/lpfc_attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
+index 1354c141d614..87ac8ac0f72a 100644
+--- a/drivers/scsi/lpfc/lpfc_attr.c
++++ b/drivers/scsi/lpfc/lpfc_attr.c
+@@ -4877,7 +4877,7 @@ lpfc_request_firmware_upgrade_store(struct device *dev,
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	struct lpfc_vport *vport = (struct lpfc_vport *)shost->hostdata;
+ 	struct lpfc_hba *phba = vport->phba;
+-	int val = 0, rc = -EINVAL;
++	int val = 0, rc;
+ 
+ 	/* Sanity check on user data */
+ 	if (!isdigit(buf[0]))
+-- 
+2.25.1
 
-Thanks,
-
-Tom
-
-> Thanks!
-> 
-> -- Steve
-> 
