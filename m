@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F460C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DCAC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAAA21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389DA215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861694;
-	bh=b1s7I7MQRORTqaB8/KOfE25r43ZKqozH8LCVeScbEHw=;
+	s=default; t=1588861697;
+	bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOSIaE80Uh1CnW6ogrU1YiBWFD4rjEOQAXzdd43UOc6ELOLdfBUkuogH4AEt47Njd
-	 WMW9ClND5fpVGcWLGjQ/7o5FahX7XGEah4tzaFtA1zuGHyp/RWj4qdPtv0EqEeorw+
-	 72wekGXjP1F3LW0XlrGkPAclK64GMRSdEiLVakS0=
+	b=LP56CRbZFYt4PIDU9HqqDZrOQEdRyO/DQCXzFhipe7gaW36HmpVb6lKYcD9h1Qg66
+	 z05E+AD+9DnsumM/nh6dFya4DVEEuitUkpLcGU2r8NUY3Q7CG3g+rVOVcyxRmTH3R5
+	 eD5wRMSU6MW9A2MnYlhVI01v9txsKqK1oy5xm7no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgEGO2N (ORCPT
+        id S1728031AbgEGO2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgEGO2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:05 -0400
+        id S1727984AbgEGO2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FDE20936;
-        Thu,  7 May 2020 14:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E43208D6;
+        Thu,  7 May 2020 14:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861685;
-        bh=b1s7I7MQRORTqaB8/KOfE25r43ZKqozH8LCVeScbEHw=;
+        s=default; t=1588861691;
+        bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s5J0jykQaT6xmLnZIHfqVaIpyDmB9ThbHV10MDtAAPLU4GfM9VuNuOWHqZ/QRFZt8
-         amh1AGwF0oGfKrEVFxQyNPHuLKokDmUYx96UyeCP8aU7kGP8MNf7SPQK2/mBNJVTVm
-         ex1RfDPEt0Mms69gWGxC1edNq6hPW/U/kYhQF2So=
+        b=CQKuv4f/hJucKK16lVxMRhjz+Gtl9JWwD6HPK89uizrgHIoBYx9pmoT2b3xb32dlB
+         pI0PCi/hpAbDgS5REhd9g9HA7vRlBASTyS70rlfdNGEJQfDLRAYx5SstaeuxJiUhqJ
+         6hV0OiKIGud8fRdkUVT9iOd1nNLbervxZwTBUoT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Seraj Alijan <seraj.alijan@sondrel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 31/50] dmaengine: dmatest: Fix process hang when reading 'wait' parameter
-Date:   Thu,  7 May 2020 10:27:07 -0400
-Message-Id: <20200507142726.25751-31-sashal@kernel.org>
+Cc:     Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Bernstein <Eric.Bernstein@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 35/50] drm/amd/display: check if REFCLK_CNTL register is present
+Date:   Thu,  7 May 2020 10:27:11 -0400
+Message-Id: <20200507142726.25751-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -60,58 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
 
-[ Upstream commit aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca ]
+[ Upstream commit 3159d41db3a04330c31ece32f8b29752fc114848 ]
 
-If we do
+Check before programming the register since it isn't present on
+all IPs using this code.
 
-  % echo 1 > /sys/module/dmatest/parameters/run
-  [  115.851124] dmatest: Could not start test, no channels configured
-
-  % echo dma8chan7 > /sys/module/dmatest/parameters/channel
-  [  127.563872] dmatest: Added 1 threads using dma8chan7
-
-  % cat /sys/module/dmatest/parameters/wait
-  ... !!! HANG !!! ...
-
-The culprit is the commit 6138f967bccc
-
-  ("dmaengine: dmatest: Use fixed point div to calculate iops")
-
-which makes threads not to run, but pending and being kicked off by writing
-to the 'run' node. However, it forgot to consider 'wait' routine to avoid
-above mentioned case.
-
-In order to fix this, check for really running threads, i.e. with pending
-and done flags unset.
-
-It's pity the culprit commit hadn't updated documentation and tested all
-possible scenarios.
-
-Fixes: 6138f967bccc ("dmaengine: dmatest: Use fixed point div to calculate iops")
-Cc: Seraj Alijan <seraj.alijan@sondrel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200428113518.70620-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Eric Bernstein <Eric.Bernstein@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 4993e3e5c5b01..364dd34799d45 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -240,7 +240,7 @@ static bool is_threaded_test_run(struct dmatest_info *info)
- 		struct dmatest_thread *thread;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+index a444fed941849..ad422e00f9fec 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+@@ -2306,7 +2306,8 @@ void dcn20_fpga_init_hw(struct dc *dc)
  
- 		list_for_each_entry(thread, &dtc->threads, node) {
--			if (!thread->done)
-+			if (!thread->done && !thread->pending)
- 				return true;
- 		}
- 	}
+ 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_REFDIV, 2);
+ 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_ENABLE, 1);
+-	REG_WRITE(REFCLK_CNTL, 0);
++	if (REG(REFCLK_CNTL))
++		REG_WRITE(REFCLK_CNTL, 0);
+ 	//
+ 
+ 
 -- 
 2.20.1
 
