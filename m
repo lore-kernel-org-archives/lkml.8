@@ -2,128 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDB1C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D4C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07ED620720
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HR3vE013"
+	by mail.kernel.org (Postfix) with ESMTP id 477FA20735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588895836;
+	bh=ebYXrWaGG1OHw5wgm2S8iZ0+yKCW9oSG+7ZZdB9la9A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iLUqcei1cSviBkKa/g0BZgXgN01BElwNEnHuWK7sRf2YsWk6XWKwBAhcUXzb75uih
+	 l4nzzJQH3K574LoNs13QsHnQRyuuMp3ftpGYt1G52zYLWImMbskhkJNMT7zTNYWMj6
+	 MwuTEmuLE8qJ/DRO9VMvTQLF3CecVB6SeO6nnsQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEGX4h (ORCPT
+        id S1727030AbgEGX5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        Thu, 7 May 2020 19:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbgEGX4g (ORCPT
+        by vger.kernel.org with ESMTP id S1726480AbgEGX5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:56:36 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A5F8C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:56:35 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b188so158356qkd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:56:35 -0700 (PDT)
+        Thu, 7 May 2020 19:57:14 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB68C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:57:14 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id e8so3800814ilm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WNSSh316ySa201Mw7VrhiFHflm8/gYZAhfxV4vkg9go=;
-        b=HR3vE013iVwpNgLVzcugwB62eaIb1ObojGm72k1rmY+iAQ05ZLmbJuOYu/hb6QZ497
-         beZh8XJRTQw38o8hvBnQ/1q8ocb0HItnNKvYte9stjIRoIdXR7EBbIRmMzbdgOutp7ZI
-         QIXENHvx//ZdN+aX1QKzM/JLZNXljfkGn3qFA4d+c7S/R5vZbKajEuLp33s7EyXuVV/5
-         eZjp16y9105PYVVTa5/FLrahfgryd2jBPexTl82B1iJMJwdkArgwCw0fzHiVgPdiFu9G
-         xODYqemERPonyu3uXaGYkQezbOluv94yBhrvHSe6BCdOHYmdaHw7DSSvdQB5A14EhKsT
-         b+wg==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u9gJYJ3n1PrzT+nVQdUcEY+WLY9HYwAvNWuv9VcAD6k=;
+        b=iiPl+40u0RQVypHXIV4K4Yl6qfR28bqEuxAHmloqQhk0MSlpzXevMLAmCM4B6z1N9b
+         87knCEH46hb0HrDrwdHqbj7o73S0KioLHNwAo9sd/VBR58PAvOVCuIf0RayDDHIcnstm
+         zh33AoFq2C5Rx1SvngiB8CHjBFL4XvVSsR4LU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WNSSh316ySa201Mw7VrhiFHflm8/gYZAhfxV4vkg9go=;
-        b=pFPu6cVczrLGfMiEs4vhoPb6xh8wRhiNNcng1Hezxjr2hXRVKIjJyQCmNISS6WwWy/
-         FYSl15RLoNmXmilWgXDQ/6oWlsmxOwUAi87HTEmaBPEJECan64+KKO2hKWbb8U0hjGyM
-         XjDh5Pf1kAF2WkR4fl636Gkwj78aiJ1cbfPrKVP/c4j9yB7SaeIzUy6exP1zLdqJyJY3
-         Kxrkuox3ZlASkA67oCZMyIrEsMY7Esuv72UjRFEXOweV5WezXbvX8E0aPKV4oeegtaHV
-         QpXlvsgGVgE0M9Or8gA5kcAnaARJRPVjZtVOVY1kpo1ObiAUJ8eVHRlun7AjLhQXyhjv
-         /DXw==
-X-Gm-Message-State: AGi0PubV/TLzKrqKBRxk3EyvvKiWBTzn3idvBYwG0q3bG/YRQUlhaa/A
-        J9bS6PiAA9bO5jf2o2u5JzHKjgJcBB4=
-X-Google-Smtp-Source: APiQypIYvzBf9Aqa1dYsG0k4BynsrLNtV9jqu7uZFuNqpJi3UFDm3EaLM9lkfW+Gzlx0LdBPQvsRnA==
-X-Received: by 2002:a37:9a13:: with SMTP id c19mr17192qke.51.1588895794222;
-        Thu, 07 May 2020 16:56:34 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id k33sm58716qtd.22.2020.05.07.16.56.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 May 2020 16:56:33 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jWqNV-00072G-5V; Thu, 07 May 2020 20:56:33 -0300
-Date:   Thu, 7 May 2020 20:56:33 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com
-Subject: Re: [PATCH v2 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Message-ID: <20200507235633.GL26002@ziepe.ca>
-References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
- <158871569380.15589.16950418949340311053.stgit@gimli.home>
- <20200507214744.GP228260@xz-x1>
- <20200507160334.4c029518@x1.home>
- <20200507222223.GR228260@xz-x1>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u9gJYJ3n1PrzT+nVQdUcEY+WLY9HYwAvNWuv9VcAD6k=;
+        b=P7oQSEvHFxB+/c8Mae5YYIF4IHmo3ZzIqOYabh0oIhLYlTJ8UXwe1wPAyVk4UlMdOb
+         fcRW85CdcoCMjlm7Zx+kLwhIMkGjSCigxUGKdEK0zO92fxtjYEpoTGcQd+ZaasQCVlkN
+         fbtbcPkkmKhTKEfUBRsbAzw9xSFZ4ZFNDCsFFIyoACJjxMXVD+UYMBYocTX2HTbZoNQm
+         mvdTHNK364IKI50WuTOMjpqyALH9a5QpjAj5YpiJbHXE9VtOVSljn6qxbdXLizqPLjvy
+         mNuo0l6vFK2qFec8BY7i4sHlLJdw79HJAFWB/tRsGO6X7aSVibzWWTi3kFwuseDNCR2A
+         3RbQ==
+X-Gm-Message-State: AGi0Pua3GPME04MOCs8MpUC7St8syJ61Qw96biu8ghL9g9zMRE8SD1w4
+        lG35F/Zm+hBFL0+/v/Z4mSlreg==
+X-Google-Smtp-Source: APiQypJCB+O0RXyXnDGd+gJg6HKweApSFsEIoGzatAvFK5k9aENS5j4AucalIRSxvrc/d106AIHzIg==
+X-Received: by 2002:a92:84c1:: with SMTP id y62mr17356445ilk.116.1588895834251;
+        Thu, 07 May 2020 16:57:14 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id f19sm1369893ioc.9.2020.05.07.16.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 16:57:13 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     viro@zeniv.linux.org.uk, axboe@kernel.dk, zohar@linux.vnet.ibm.com,
+        mcgrof@kernel.org, keescook@chromium.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] fs: avoid fdput() after failed fdget()
+Date:   Thu,  7 May 2020 17:57:08 -0600
+Message-Id: <cover.1588894359.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507222223.GR228260@xz-x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 06:22:23PM -0400, Peter Xu wrote:
-> On Thu, May 07, 2020 at 04:03:34PM -0600, Alex Williamson wrote:
-> > On Thu, 7 May 2020 17:47:44 -0400
-> > Peter Xu <peterx@redhat.com> wrote:
-> > 
-> > > Hi, Alex,
-> > > 
-> > > On Tue, May 05, 2020 at 03:54:53PM -0600, Alex Williamson wrote:
-> > > > +/*
-> > > > + * Zap mmaps on open so that we can fault them in on access and therefore
-> > > > + * our vma_list only tracks mappings accessed since last zap.
-> > > > + */
-> > > > +static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-> > > > +{
-> > > > +	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);  
-> > > 
-> > > A pure question: is this only a safety-belt or it is required in some known
-> > > scenarios?
-> > 
-> > It's not required.  I originally did this so that I'm not allocating a
-> > vma_list entry in a path where I can't return error, but as Jason
-> > suggested I could zap here only in the case that I do encounter that
-> > allocation fault.  However I still like consolidating the vma_list
-> > handling to the vm_ops .fault and .close callbacks and potentially we
-> > reduce the zap latency by keeping the vma_list to actual users, which
-> > we'll get to eventually anyway in the VM case as memory BARs are sized
-> > and assigned addresses.
-> 
-> Yes, I don't see much problem either on doing the vma_list maintainance only in
-> .fault() and .close().  My understandingg is that the worst case is the perf
-> critical applications (e.g. DPDK) could pre-fault these MMIO region easily
-> during setup if they want.  My question was majorly about whether the vma
-> should be guaranteed to have no mapping at all when .open() is called.  But I
-> agree with you that it's always good to have that as safety-belt anyways.
+While debugging an unrelated problem that got me down the path of
+reviewing at all the fdget() and fdput() paths in the kernel.
 
-If the VMA has a mapping then that specific VMA has to be in the
-linked list.
+While doing the review, I noticed these two places where fdput()
+is called after failed fdget(). Fixing them in these two patches.
+  
+Shuah Khan (2):
+  fs: avoid fdput() after failed fdget() in ksys_sync_file_range()
+  fs: avoid fdput() after failed fdget() in kernel_read_file_from_fd()
 
-So if the zap is skipped then the you have to allocate something and
-add to the linked list to track the VMA with mapping.
+ fs/exec.c | 2 +-
+ fs/sync.c | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-It is not a 'safety belt'
+-- 
+2.20.1
 
-Jason
