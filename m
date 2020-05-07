@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C568C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74044C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07C162496D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520DE2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgEGUXl (ORCPT
+        id S1728238AbgEGU0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:23:41 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58791 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgEGUXl (ORCPT
+        Thu, 7 May 2020 16:26:03 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:39911 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGU0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:23:41 -0400
-X-Originating-IP: 93.29.109.196
+        Thu, 7 May 2020 16:26:03 -0400
 Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E845A1C0002;
-        Thu,  7 May 2020 20:23:37 +0000 (UTC)
-Date:   Thu, 7 May 2020 22:23:37 +0200
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 26FC6100002;
+        Thu,  7 May 2020 20:25:59 +0000 (UTC)
+Date:   Thu, 7 May 2020 22:25:58 +0200
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     Johan Jonker <jbx6244@gmail.com>
 Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
@@ -34,76 +33,80 @@ Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
         linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         mchehab@kernel.org, robh+dt@kernel.org,
         thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
-Message-ID: <20200507202337.GJ2422122@aptenodytes>
-References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
- <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
+Subject: Re: [PATCH v3 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+Message-ID: <20200507202558.GK2422122@aptenodytes>
+References: <20200430164245.1630174-3-paul.kocialkowski@bootlin.com>
+ <c3954924-c220-73ef-06dd-85b6876be819@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LQAwcd5tHl0Qlnzi"
+        protocol="application/pgp-signature"; boundary="aqWxf8ydqYKP8htK"
 Content-Disposition: inline
-In-Reply-To: <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
+In-Reply-To: <c3954924-c220-73ef-06dd-85b6876be819@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---LQAwcd5tHl0Qlnzi
+--aqWxf8ydqYKP8htK
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Thu 30 Apr 20, 23:24, Johan Jonker wrote:
+On Fri 01 May 20, 00:05, Johan Jonker wrote:
 > Hi Paul,
 >=20
-> >=20
-> > Add a new compatible for the PX30 Rockchip SoC, which also features
-> > a RGA block. It is compatible with the RK3288 RGA block.
+> > The PX30 features a RGA block: add the necessary node to support it.
 > >=20
 > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > > ---
-> >  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
 > >=20
-> > diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml =
-b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> > index dd645ddccb07..740586299da9 100644
-> > --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> > +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> > @@ -23,6 +23,9 @@ properties:
+> > diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/d=
+ts/rockchip/px30.dtsi
+> > index f809dd6d5dc3..3de70aa4f1ce 100644
+> > --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > @@ -1102,6 +1102,17 @@ vopl_mmu: iommu@ff470f00 {
+> >  		status =3D "disabled";
+> >  	};
+> > =20
+> > +	rga: rga@ff480000 {
+> > +		compatible =3D "rockchip,px30-rga", "rockchip,rk3288-rga";
+> > +		reg =3D <0x0 0xff480000 0x0 0x10000>;
+> > +		interrupts =3D <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +		clocks =3D <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+> > +		clock-names =3D "aclk", "hclk", "sclk";
 >=20
+> > +		resets =3D <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> > +		reset-names =3D "core", "axi", "ahb";
+> > +		power-domains =3D <&power PX30_PD_VO>;
 >=20
-> >        - items:
-> >            - const: rockchip,rk3228-rga
-> >            - const: rockchip,rk3288-rga
-> > +      - items:
-> > +          - const: rockchip,px30-rga
-> > +          - const: rockchip,rk3288-rga
+> sort
 >=20
-> Use enum.
->=20
->       - items:
->           - enum:
->             - rockchip,px30-rga
->             - rockchip,rk3228-rga
->           - const: rockchip,rk3288-rga
+> 		power-domains =3D <&power PX30_PD_VO>;
+> 		resets =3D <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> 		reset-names =3D "core", "axi", "ahb";
 
-Are you sure about this? The rk3228 above does it as I did it and other exa=
-mples
-like allwinner,sun4i-a10-csi.yaml appear to be doing the same too.
-
-The case with rockchip,rk3288-rga alone already seems covered.
+What's the rationale behind this (besides alphabetic sorting, which I don't
+believe is a rule for dt properties)? Some nodes above in the file have it =
+in
+the same order that I do, and I like to see clocks followed by resets.
 
 Cheers,
 
 Paul
 
-> > =20
-> >    reg:
-> >      maxItems: 1
+>=20
+>=20
+> > +	};
+> > +
+> >  	qos_gmac: qos@ff518000 {
+> >  		compatible =3D "syscon";
+> >  		reg =3D <0x0 0xff518000 0x0 0x20>;
 > > --=20
 > > 2.26.0
 >=20
@@ -113,19 +116,19 @@ Paul Kocialkowski, Bootlin
 Embedded Linux and kernel engineering
 https://bootlin.com
 
---LQAwcd5tHl0Qlnzi
+--aqWxf8ydqYKP8htK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl60bkkACgkQ3cLmz3+f
-v9FGRQf+NACpI/Qm8LidCAjDd2uHl97xlPGI/gb4zzpGYeK/t1BGJfLcDSY4MCkK
-srG+0VSic+47U4qA5hlWqq4jXYTLkV5DBpF79lSqNCI6yrPln2oTaZ2bIcY/mF6E
-Q1/AljAuM8pcoBnFdLwJEq7Td82Nb79teutcAlVCSl2uUvVI+bEY5EtLmWjeLnOb
-ejYXlItHF3Od/hKE8C7GPpPazLyb4Oh67ZP1/RpnxkCEmkl/J41nni9NIRi+wV7Q
-1Sz063fVOuzdDdDgmfc7NHdl9pstkqBq/gKyurtSGkpVnAC/qSfSGSRdCk3JX1Om
-QZhzaBXFzWq8bStS1rjzsAz+AHUctA==
-=zYey
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl60btYACgkQ3cLmz3+f
+v9Ha1Qf/Xr5JD/LpgWWDus3bRN+aBAhQYAdGgLJOCLzfZ73l5ovYy4znYccQvOP7
+9jefTg3IgTEVV/Dxsh+EFuaWAJzHmEREpDRMSCywxGQgrkWyU8rgB2z7GHjT0xUM
+DV0SU5Hi8mL2SDyXXMjAu+VQRu2ewNCXTSrNGMNey2R9ii5XZB51VZ61lYh4Zct8
+wZ/M1S+jG6x/JbZT4UalUqvUyQIvNHS27RlkBROLBHcEBngSWCB/iQCOuLl5kjwa
+3FFE9oLKQC/8C0q8Ys8o0Oz7lnfH5EEQ+3y4wLuHBTLGjMBrED3AREihwZOaLoHS
+OmTf3luRVKugDzmY3MKRI6vUPxK0lA==
+=fLpQ
 -----END PGP SIGNATURE-----
 
---LQAwcd5tHl0Qlnzi--
+--aqWxf8ydqYKP8htK--
