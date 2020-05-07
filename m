@@ -2,110 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F881C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BD6C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0A020753
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="edDncOw6"
+	by mail.kernel.org (Postfix) with ESMTP id 86BCD20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgEGH7m (ORCPT
+        id S1725949AbgEGIA3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:59:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41511 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgEGH7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:59:41 -0400
-Received: from [IPv6:2601:646:8600:3281:d918:a6fd:d52c:4754] ([IPv6:2601:646:8600:3281:d918:a6fd:d52c:4754])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0477xAJT3336894
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 7 May 2020 00:59:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0477xAJT3336894
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020042201; t=1588838351;
-        bh=QcutLOCTnJxVMrJr2hvrS8R5JE5w+xhrOu5seWrSXig=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=edDncOw6ExGuJsk6POL7egz6dy6fPWjFEWh3td3E9oMv5SXP0TJbKzQatvtT4mA/j
-         FIW8/LpQww4n+9WGTUWqSD2T0iWg4UjNAE4DsNqkc/mf0UV8BDhUqPBwsKqMo8R2AM
-         /PTK+lZWRYBujbzoOQIPodZXEvkh9sty32cJT/KBGuBA8xPCyX2CdzirMHzK0f+rfy
-         0hwDI7S6Mq6sAVqr6gwuogD8Y6ZN4V2SvhbMUtya6HiJ06MbItx1CqUemLfdJvNpYB
-         urzr+rNBVisCE/9E879nByfmNSPBNjvZX7mduX3QwON++dhPNTNACREVYz/i1RqVqa
-         8pnWGB4jymFKw==
-Date:   Thu, 07 May 2020 00:59:03 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com> <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com> <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
-MIME-Version: 1.0
+        Thu, 7 May 2020 04:00:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41498 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgEGIA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:00:29 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jWbQW-0006UL-VF
+        for linux-kernel@vger.kernel.org; Thu, 07 May 2020 07:58:41 +0000
+Received: by mail-pf1-f199.google.com with SMTP id 84so4741686pfx.20
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:58:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DNIHL4BvETSILFTzOQbZtGVTq1Rk6A0XJOGe7AjQ57M=;
+        b=a7J3j7Btxf1yDO4X3uWnbk09F5ax6efwGlsR/JffrWXURPClFLzyQxZa3vTSJo9+UY
+         4/8Sr3d+0YjmNE2gyKu3Tu6XYQt7iekrlcZERrLYYWmX82M9nTz+Ll/JnXhmHFWXDE5s
+         WVg8JEdefz6NDyZQ6e0BYwvi1xuD1qaGV1UKERRdhxYdYoO1jMcHIiLV2Hbik0LRUpdh
+         3S19P6vlfh67bOvoPiESn2Xgm1gBKtuXMhg3vB/RITDFBMbVyK+hft2aTD0NH9VpvIar
+         dhiFuNBbdBYzL+24LTmjd8/15Kss9zkssL/Ry3c17aT5AYBvS26FATpz3McKrMFuqYSF
+         EQ5g==
+X-Gm-Message-State: AGi0Pua3pXRqpBNhWocSJHENtKN1eM8pBneP7mMLKRfveaJrzG+K9MVD
+        QNikPIIZnvEvUrSfVFOfMxmYtBz3YyNxF0BfprPV7LN6/3iB6d06G6mYQVTtlB0zIPIf+Ncb9aj
+        3DgvtckgJQ7dyJkWHUa0MOd10XrkbF2o7NaYU1jKelg==
+X-Received: by 2002:a63:d00d:: with SMTP id z13mr462905pgf.54.1588838319574;
+        Thu, 07 May 2020 00:58:39 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJiX/vdClqh7KHfzxsqQaqvVcdsag38+vTi65xZIooATc2zD7Ct6+78cewvAk4NT+k+WjtBuQ==
+X-Received: by 2002:a63:d00d:: with SMTP id z13mr462879pgf.54.1588838319157;
+        Thu, 07 May 2020 00:58:39 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id p64sm6983683pjp.7.2020.05.07.00.58.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 00:58:38 -0700 (PDT)
 Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [PATCH] x86: bitops: fix build regression
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'Brian Gerst'" <brgerst@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-From:   hpa@zytor.com
-Message-ID: <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com>
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] xhci: Make debug message consistent with bus and port
+ number
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200507073119.GA876666@kroah.com>
+Date:   Thu, 7 May 2020 15:58:36 +0800
+Cc:     mathias.nyman@intel.com,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <90D5B23E-B037-49D2-BD44-7F9B0B2FC155@canonical.com>
+References: <20200507061755.13280-1-kai.heng.feng@canonical.com>
+ <20200507064510.GA787064@kroah.com>
+ <C4A734C8-D1C6-45BC-9C0A-92364EAEE3C0@canonical.com>
+ <20200507073119.GA876666@kroah.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 7, 2020 12:44:44 AM PDT, David Laight <David=2ELaight@ACULAB=2ECOM> =
-wrote:
->From: Brian Gerst
->> Sent: 07 May 2020 07:18
->=2E=2E=2E
->> > --- a/arch/x86/include/asm/bitops=2Eh
->> > +++ b/arch/x86/include/asm/bitops=2Eh
->> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
->*addr)
->> >         if (__builtin_constant_p(nr)) {
->> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
->> >                         : CONST_MASK_ADDR(nr, addr)
->> > -                       : "iq" (CONST_MASK(nr) & 0xff)
->> > +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
->>=20
->> I think a better fix would be to make CONST_MASK() return a u8 value
->> rather than have to cast on every use=2E
->
->Or assign to a local variable - then it doesn't matter how
->the value is actually calculated=2E So:
->			u8 mask =3D CONST_MASK(nr);
->			asm volatile(LOCK_PREFIX "orb %1,%0"
->				: CONST_MASK_ADDR(nr, addr)
->				: "iq" mask
->
->	David
->
->-
->Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
->MK1 1PT, UK
->Registration No: 1397386 (Wales)
 
-"const u8" please=2E=2E=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+
+> On May 7, 2020, at 15:31, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> On Thu, May 07, 2020 at 03:15:01PM +0800, Kai-Heng Feng wrote:
+>> 
+>> 
+>>> On May 7, 2020, at 14:45, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>>> 
+>>> On Thu, May 07, 2020 at 02:17:55PM +0800, Kai-Heng Feng wrote:
+>>>> Current xhci debug message doesn't always output bus number, so it's
+>>>> hard to figure out it's from USB2 or USB3 root hub.
+>>>> 
+>>>> In addition to that, some port numbers are offset to 0 and others are
+>>>> offset to 1. Use the latter to match the USB core.
+>>>> 
+>>>> So use "bus number - port index + 1" to make debug message consistent.
+>>>> 
+>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>>> ---
+>>>> drivers/usb/host/xhci-hub.c | 41 +++++++++++++++++++++----------------
+>>>> 1 file changed, 23 insertions(+), 18 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+>>>> index f37316d2c8fa..83088c262cc4 100644
+>>>> --- a/drivers/usb/host/xhci-hub.c
+>>>> +++ b/drivers/usb/host/xhci-hub.c
+>>>> @@ -1241,7 +1241,8 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+>>>> 			temp = readl(ports[wIndex]->addr);
+>>>> 			/* Disable port */
+>>>> 			if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
+>>>> -				xhci_dbg(xhci, "Disable port %d\n", wIndex);
+>>>> +				xhci_dbg(xhci, "Disable port %d-%d\n",
+>>>> +					 hcd->self.busnum, wIndex + 1);
+>>> 
+>>> Shouldn't xhci_dbg() show the bus number already?  
+>> 
+>> It's the PCI bus number, different to USB2/USB3 root hub bus number...
+> 
+> But if this is using dev_dbg(), and it is, then you know how to look
+> that up by seeing where that device is in sysfs at that point in time.
+> 
+> So why add this again?
+
+xHCI has two HCD, one for USB2 and one for USB3.
+If both of their port with same number are in use, for instance, port 1, then they are port 1-1 and port 2-1.
+Right now the debug message only show "Port 1", we still can't find the corresponding port via sysfs with insufficient info.
+
+> 
+>>> If not, please fix
+>>> that up there instead of having to add it to all messages "by hand".
+>> 
+>> Not all xhci debug messages need roothub number in it.
+> 
+> Why pick these random ones?  What makes these different?
+
+It's not random. We do it when there's a port in message.
+Being able to know the exact port like "port 1-1" or "port 2-1", instead of just "port 1", can be really helpful.
+
+Kai-Heng
+
+> 
+> Either all or none, be consistant please.
+> 
+> greg k-h
+
