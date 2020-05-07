@@ -2,96 +2,124 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B661C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2892C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EF22073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14122073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nkAMZOGN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3HXldLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgEGPLD (ORCPT
+        id S1728031AbgEGPLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
+        Thu, 7 May 2020 11:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726267AbgEGPLC (ORCPT
+        by vger.kernel.org with ESMTP id S1726267AbgEGPLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:11:02 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDD9C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 08:11:02 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id x6so3667043vso.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:11:02 -0700 (PDT)
+        Thu, 7 May 2020 11:11:24 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C04C05BD43;
+        Thu,  7 May 2020 08:11:24 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f15so2172334plr.3;
+        Thu, 07 May 2020 08:11:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RndLXpjGcg2BFmdbethLGIwu7OqaNE0mD4rRGU8RVzc=;
-        b=nkAMZOGNPKlk7/n/u8CYJjF3Syua63LITwI5bpol7Mqr6TTXkvZw6dqszUIx/ap1/B
-         2dZmgFSOZ9u78AywiwqogbB9v4eKI4IMaebLSxRBporBGtdbS4hwzV2kX5nAjoCwY71n
-         B0oR0yhSAs/RGthRqb1FqMAneLaVwGi1i4tdw=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wWd34HVuHsrECXOLfOiza9hgo5IiNk8HLibDa9qt1hk=;
+        b=B3HXldLBkSj6/7aetEGJvwO+sF2lj5StckhAfs/XMYWbmV5GzBhYyRmbkHMLnph+r0
+         8TbstkBNZfIFvAMSK8mmN5wrBMHE/f26nqc+YtKBBA9+RAWIiUoHXMBd9g0jHrt5pyVk
+         aUQiPXKHssV7ZnBtMffGPbiY9a2rxkdphaN0k2MAOILpEcX67G60y3q4dFbmOLLUMXld
+         C8RhgFIyPlUNx0N7sqBFkw1jXIRetHeUv43S2dyBALXxdKAgZ59fmCAc5DoepTvkSR5m
+         B+i2LPCfsunyp/YcEY3D8GCp5GFkSg3YeVsTltAfYEg7AuVI8qOlbL8WByCtPZTCv/f7
+         Lqhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RndLXpjGcg2BFmdbethLGIwu7OqaNE0mD4rRGU8RVzc=;
-        b=TZLuLDhSIr7NJOLhW+dkVtOoTDPRgV0bUpRbGP3YLTw3+z5NUWPOhqOoWcNfVTyCWl
-         nCRGh6I91cGeFCzN3sAheOd83dci1hJDJscurU9zrqk5T0Kst74Uosar0yAEZD0dY/i6
-         73PZFAPJhf7uyoBUgK/XLGgCoz3RGwvPiEPPu5Yj1NH1vqSPWeFEucl+bF6+7//1CPIE
-         h0MXMaKt0QnWVwPrNSnpDg/Lw0A6DE0uJhP+qDZ6jq6UPVhinH0R8YvYc20znbdYQIME
-         uJEuvwHuhylj6sWwzm3UtO3F1UtdpoVuLlQ7OvROCEmW//sd5bjA0nQmLRdO4udd2EcB
-         XbiA==
-X-Gm-Message-State: AGi0Pubp9W+RLxIx1BtUc3rYmOs60CstJETQeXv2plOQA/Qot54+zt7Y
-        8g+Gpmhdk7l5OtVn1I5AQykHBYZjey4=
-X-Google-Smtp-Source: APiQypJfUONTw9gDoGXveI3NB49r3wKnyC2XEdmjpl0gXNrJsjzQ2OWF+tt8/rbK9e3L8zWhAW0MmQ==
-X-Received: by 2002:a67:2dcb:: with SMTP id t194mr12733157vst.136.1588864260948;
-        Thu, 07 May 2020 08:11:00 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id l192sm271277vsd.15.2020.05.07.08.11.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 08:11:00 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id v23so1563793vke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:11:00 -0700 (PDT)
-X-Received: by 2002:a1f:c643:: with SMTP id w64mr12224571vkf.0.1588864259688;
- Thu, 07 May 2020 08:10:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wWd34HVuHsrECXOLfOiza9hgo5IiNk8HLibDa9qt1hk=;
+        b=pdPWdsfqEcPdFubV8BTKPEVrqGZza40IxMjx7YOT4ACZ1mkcq0bFRRhCNGf9ZPVl4g
+         FjryN+tEOuTySBbnkQhwmQwNxYXiD8ryuoQFG7RZWZmSMMVNEhHgXZS39uHnhTkVVEbJ
+         75EmKtm9xqca5H44X+omesKFbFv6T/DplxdNXYqVS9hi2uBe55vRNfwhu04FEkeH6lSO
+         2TCASeKZeudc8MqAJv09VzwvfkU8Btk3AVX54jd+fDZ5DleY7SJSmjamFlaeuwSYPHTt
+         wPMXwdl2LV/yZw85TwrEJL/OGPHEMIuzU1y7RoCEaWNtlfXdZoUKwTyokpz9w3siUWmY
+         j1zA==
+X-Gm-Message-State: AGi0PuboETVB6GapAbQON0fm5bAXNu6YLy20aRu6pRcxkLjDDZ30bW0E
+        Omwo9MwCUq9N8wIH8JKbpsM=
+X-Google-Smtp-Source: APiQypIZ2IswbwUyjeqOeecIJgB7zUIvYdlUQDltk0PzFqqH5fkP457/E1W/wE70RR/bU0/jxhGcmg==
+X-Received: by 2002:a17:90a:fb89:: with SMTP id cp9mr608836pjb.40.1588864284203;
+        Thu, 07 May 2020 08:11:24 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id gm3sm144620pjb.49.2020.05.07.08.11.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 08:11:23 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] Input: s6sy761 - add missed input_unregister_device
+Date:   Thu,  7 May 2020 23:11:15 +0800
+Message-Id: <20200507151115.792516-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200507110649.37426-1-yanaijie@huawei.com>
-In-Reply-To: <20200507110649.37426-1-yanaijie@huawei.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 7 May 2020 08:10:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wp-L_oYsb1N4O6VC-NN5Ht2+J8S5o7AJgOk==quhHstA@mail.gmail.com>
-Message-ID: <CAD=FV=Wp-L_oYsb1N4O6VC-NN5Ht2+J8S5o7AJgOk==quhHstA@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Return true in kgdb_nmi_poll_knock()
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This driver calls input_register_device() in probe, but misses
+input_unregister_device() in probe failure and remove.
+Add the missed function calls to fix it.
 
-On Thu, May 7, 2020 at 4:07 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> Fix the following coccicheck warning:
->
-> include/linux/kgdb.h:301:54-55: WARNING: return of 0/1 in function
-> 'kgdb_nmi_poll_knock' with return type bool
->
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  include/linux/kgdb.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/input/touchscreen/s6sy761.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+diff --git a/drivers/input/touchscreen/s6sy761.c b/drivers/input/touchscreen/s6sy761.c
+index b63d7fdf0cd2..cd8a7bd9be1e 100644
+--- a/drivers/input/touchscreen/s6sy761.c
++++ b/drivers/input/touchscreen/s6sy761.c
+@@ -464,21 +464,28 @@ static int s6sy761_probe(struct i2c_client *client,
+ 					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+ 					"s6sy761_irq", sdata);
+ 	if (err)
+-		return err;
++		goto err_unregister;
+ 
+ 	err = devm_device_add_group(&client->dev, &s6sy761_attribute_group);
+ 	if (err)
+-		return err;
++		goto err_unregister;
+ 
+ 	pm_runtime_enable(&client->dev);
+ 
+ 	return 0;
++
++err_unregister:
++	input_unregister_device(sdata->input);
++	return err;
+ }
+ 
+ static int s6sy761_remove(struct i2c_client *client)
+ {
++	struct s6sy761_data *sdata = i2c_get_clientdata(client);
++
+ 	pm_runtime_disable(&client->dev);
+ 
++	input_unregister_device(sdata->input);
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
+
