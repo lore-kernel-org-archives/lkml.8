@@ -2,187 +2,137 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02779C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622EFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56012083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UonDMcNz"
+	by mail.kernel.org (Postfix) with ESMTP id 46A2C20575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgEGOo3 (ORCPT
+        id S1728243AbgEGOod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:44:29 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:43547 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgEGOo2 (ORCPT
+        Thu, 7 May 2020 10:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgEGOod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:44:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588862668; x=1620398668;
-  h=subject:from:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=EhmFSjy/EWu4Wg4+Zq15DUvDdCItcyPtF3MIASQ4kuU=;
-  b=UonDMcNzKwUN8PLDuLfw+7jCfnD55n/tq6mESHzX9GNcydjowmXjctkI
-   Fre9xYsAQUmh2NHKX551NDMtLcDjG4FJaoqR8fC7ouE9g4T9IHug7gdAm
-   q4nCAA+5Z/hT5Ts6bAN8vpUWqk8kfRHPPMQDbBGDWD1BLugToVv+rPucu
-   Q=;
-IronPort-SDR: h8XIeuXXSd7VrbxtHgs+y2tea6p9HPut02kYVn9M57ENgzd7XyGo9x6DVBr7qaCk6mjPAvgIaI
- W815RWpqBTjg==
-X-IronPort-AV: E=Sophos;i="5.73,364,1583193600"; 
-   d="scan'208";a="33576905"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 May 2020 14:44:26 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 9C75FA21EF;
-        Thu,  7 May 2020 14:44:24 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 14:44:24 +0000
-Received: from [10.85.103.159] (10.43.161.247) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 7 May
- 2020 14:44:14 +0000
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-From:   "Shenhar, Talel" <talel@amazon.com>
-To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>, <talel@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
- <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
- <5e2c5119-52e9-2c3c-e205-e661ba218fcb@amazon.com>
-Message-ID: <07f3b407-fa91-f3b4-bc7c-9692a7b3c3c7@amazon.com>
-Date:   Thu, 7 May 2020 17:44:09 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 10:44:33 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC83C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:44:32 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWhku-0003mc-Nz; Thu, 07 May 2020 16:44:08 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 1A853102652; Thu,  7 May 2020 16:44:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: [patch V5 part 2 15/18] x86/kvm/svm: Handle hardirqs proper on guest enter/exit
+In-Reply-To: <cade8b44-4330-2dc1-e490-c2f001cc1c95@redhat.com>
+References: <20200505134112.272268764@linutronix.de> <20200505134341.579034898@linutronix.de> <baf61125-72f4-5fd1-9ba1-6d55a2efdddd@redhat.com> <87imh9o3e1.fsf@nanos.tec.linutronix.de> <cade8b44-4330-2dc1-e490-c2f001cc1c95@redhat.com>
+Date:   Thu, 07 May 2020 16:44:08 +0200
+Message-ID: <875zd7g5zb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <5e2c5119-52e9-2c3c-e205-e661ba218fcb@amazon.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.161.247]
-X-ClientProxiedBy: EX13D10UWA001.ant.amazon.com (10.43.160.216) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Entering guest mode is more or less the same as returning to user
+space. From an instrumentation point of view both leave kernel mode and the
+transition to guest or user mode reenables interrupts on the host. In user
+mode an interrupt is served directly and in guest mode it causes a VM exit
+which then handles or reinjects the interrupt.
 
-On 5/5/2020 1:44 PM, Shenhar, Talel wrote:
->
-> On 4/28/2020 2:06 PM, Borislav Petkov wrote:
->> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
->>> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>>
->>> Signed-off-by: Talel Shenhar <talel@amazon.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 
->>> +++++++++++++++++++
->>>   1 file changed, 52 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml 
->>> b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>> new file mode 100644
->>> index 000000000000..20505f37c9f8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>> @@ -0,0 +1,52 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only
->> WARNING: DT binding documents should be licensed (GPL-2.0-only OR 
->> BSD-2-Clause)
->> #36: FILE: 
->> Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
->> +# SPDX-License-Identifier: GPL-2.0-only
->>
->> Hi Rob, should I listen to checkpatch or ignore it?
->
-> Rob and other dt folks,
->
-> In continue to disscussion with Boris below, Looking at the checkpatch 
-> check:
->
->    if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
->        not $spdx_license =~/GPL-2\.0.*BSD-2-Clause/) {
->
-> It wants the whole string "GPL-2.0-only OR BSD-2-Clause" and my oatch 
-> has only "GPL-2.0-only".
->
-> Now, looking at a bunch of .yaml DT files, there are all kinds of 
-> formatting:
->
-> $ git grep -h SPDX *.yaml | sort | uniq -c
->       3 1:# SPDX-License-Identifier: (GPL-2.0)
->     313 1:# SPDX-License-Identifier: GPL-2.0
->       9 1:# SPDX-License-Identifier: GPL-2.0+
->       1 1:# SPDX-License-Identifier: (GPL-2.0-only)
->      43 1:# SPDX-License-Identifier: GPL-2.0-only
->       4 1:# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->       1 1:# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
->     148 1:# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->      25 1:# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->     104 1:# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->       3 1:# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->       2 1:# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
->       1 1:# SPDX-License-Identifier: (GPL-2.0-or-later)
->       5 1:# SPDX-License-Identifier: GPL-2.0-or-later
->       3 1:# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
->       2 1:# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
->       3 1:# SPDX-License-Identifier: (GPL-2.0 OR MIT)
->       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->       3 1:# SPDX-License-Identifier: (GPL-2.0+ OR X11)
->
-> And the patch which did rule is:
->
-> commit 50c92900214dd9a55bcecc3c53e90d072aff6560
-> Author: Lubomir Rintel<lkundrak@v3.sk>
-> Date:   Mon Apr 6 20:11:13 2020 -0700
->
->     checkpatch: check proper licensing of Devicetree bindings
->
->     According to Devicetree maintainers (see Link: below), the Devicetree
->     binding documents are preferrably licensed (GPL-2.0-only OR 
-> BSD-2-Clause).
->
->     Let's check that.  The actual check is a bit more relaxed, to 
-> allow more
->     liberal but compatible licensing (e.g.  GPL-2.0-or-later OR 
-> BSD-2-Clause).
->
->
-> Will love your help.
-> This patch already have your (Rob) Reviewed-by so Boris and myself are 
-> unsure what is the right thing to do now.
+The transition from guest mode or user mode to kernel mode disables
+interrupts, which needs to be recorded in instrumentation to set the
+correct state again.
 
-Borislav, after internal disscussion, we are good to go with the new 
-license.
+This is important for e.g. latency analysis because otherwise the execution
+time in guest or user mode would be wrongly accounted as interrupt disabled
+and could trigger false positives.
 
-This shall be part of v7.
+Add hardirq tracing to guest enter/exit functions in the same way as it
+is done in the user mode enter/exit code, respecting the RCU requirements.
 
->
-> Thanks,
-> Talel.
->
->>
->> -- 
->> Regards/Gruss,
->>      Boris.
->>
->> https://people.kernel.org/tglx/notes-about-netiquette
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+V5: Adjust comments and changelog
+---
+ arch/x86/kvm/vmx/vmx.c |   27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6604,9 +6604,21 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
+ 
+ 	/*
+-	 * Tell context tracking that this CPU is about to enter guest mode.
++	 * VMENTER enables interrupts (host state), but the kernel state is
++	 * interrupts disabled when this is invoked. Also tell RCU about
++	 * it. This is the same logic as for exit_to_user_mode().
++	 *
++	 * This ensures that e.g. latency analysis on the host observes
++	 * guest mode as interrupt enabled.
++	 *
++	 * guest_enter_irqoff() informs context tracking about the
++	 * transition to guest mode and if enabled adjusts RCU state
++	 * accordingly.
+ 	 */
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	guest_enter_irqoff();
++	lockdep_hardirqs_on(CALLER_ADDR0);
+ 
+ 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
+ 	if (static_branch_unlikely(&vmx_l1d_should_flush))
+@@ -6623,9 +6635,20 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	vcpu->arch.cr2 = read_cr2();
+ 
+ 	/*
+-	 * Tell context tracking that this CPU is back.
++	 * VMEXIT disables interrupts (host state), but tracing and lockdep
++	 * have them in state 'on' as recorded before entering guest mode.
++	 * Same as enter_from_user_mode().
++	 *
++	 * guest_exit_irqoff() restores host context and reinstates RCU if
++	 * enabled and required.
++	 *
++	 * This needs to be done before the below as native_read_msr()
++	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
++	 * into world and some more.
+ 	 */
++	lockdep_hardirqs_off(CALLER_ADDR0);
+ 	guest_exit_irqoff();
++	trace_hardirqs_off_prepare();
+ 
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
