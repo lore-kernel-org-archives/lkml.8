@@ -2,91 +2,80 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3EBC54E91
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D0C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A0C20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1646E215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588872319;
+	bh=0hVoIDZy9AMfK5oLVFXR6QcoGQGRqyyEMc5BGHJA5Ro=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WLIR2KaIUCkX/HaUoMSSlq+9LmV0b3++sw4zpBGcYQuU9AEI7hV96DBz6vL11sLOj
+	 8bcThjm9mP4OvjvXTzvSMdrfbx5HLXHt2hKOa7SGN+B/3Wv2gn6N1DyJwYgMPtbZ5+
+	 aXOnwmnfoH2+TqashY3kH5cDhLFbvcXLsfIUuUVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgEGRXz (ORCPT
+        id S1727960AbgEGRZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:23:55 -0400
-Received: from muru.com ([72.249.23.125]:53194 "EHLO muru.com"
+        Thu, 7 May 2020 13:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbgEGRXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:23:49 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 226C3822F;
-        Thu,  7 May 2020 17:24:37 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 04/14] bus: ti-sysc: Ignore timer12 on secure omap3
-Date:   Thu,  7 May 2020 10:23:20 -0700
-Message-Id: <20200507172330.18679-5-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200507172330.18679-1-tony@atomide.com>
-References: <20200507172330.18679-1-tony@atomide.com>
+        id S1726308AbgEGRZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:25:18 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70AD320A8B;
+        Thu,  7 May 2020 17:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588872317;
+        bh=0hVoIDZy9AMfK5oLVFXR6QcoGQGRqyyEMc5BGHJA5Ro=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=WFr0jpGb0RaXq1QjTETgKMSSWQCNrAspzrY1b1X6O1k4eBRJh7yewzNw74DI/L8u9
+         r77aeNvTYkMbIseF/8uWYdilEHDNZjsl42sFgNP/8oznIb2aRGyVtmk07dJGvsnf98
+         TcXcrL1+IaUriCCogWG9r5NvTQJTV/zbANn45vLk=
+Date:   Thu, 7 May 2020 19:25:14 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: linux-next: Tree for May 7 (hid/hid-asus)
+In-Reply-To: <937ea192-1702-7ecd-5b90-d281a20f3c8f@infradead.org>
+Message-ID: <nycvar.YFH.7.76.2005071925000.25812@cbobk.fhfr.pm>
+References: <20200507181524.728b6b10@canb.auug.org.au> <937ea192-1702-7ecd-5b90-d281a20f3c8f@infradead.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some early omap3 boards use timer12 for system timer, but for secure
-SoCs like on n900 it's not accessible. Likely we will be configuring
-unavailable devices for other SoCs too based on runtime SoC detection,
-so let's use a switch to start with.
+On Thu, 7 May 2020, Randy Dunlap wrote:
 
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> > Changes since 20200505:
+> > 
+> 
+> 
+> on i386 or x86_64:
+> 
+> ERROR: modpost: "usb_hid_driver" [drivers/hid/hid-asus.ko] undefined!
+> or
+> (when builtin:)
+> ld: drivers/hid/hid-asus.o: in function `asus_probe':
+> hid-asus.c:(.text+0x60f): undefined reference to `usb_hid_driver'
+> ld: hid-asus.c:(.text+0x689): undefined reference to `usb_hid_driver'
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -2744,6 +2744,17 @@ static int sysc_init_soc(struct sysc *ddata)
- 	if (match && match->data)
- 		sysc_soc->soc = (int)match->data;
- 
-+	/* Ignore devices that are not available on HS and EMU SoCs */
-+	if (!sysc_soc->general_purpose) {
-+		switch (sysc_soc->soc) {
-+		case SOC_3430 ... SOC_3630:
-+			sysc_add_disabled(0x48304000);	/* timer12 */
-+			break;
-+		default:
-+			break;
-+		};
-+	}
-+
- 	match = soc_device_match(sysc_soc_feat_match);
- 	if (!match)
- 		return 0;
+This has been fixed in hid.git earlier today. Thanks,
+
 -- 
-2.26.2
+Jiri Kosina
+SUSE Labs
+
