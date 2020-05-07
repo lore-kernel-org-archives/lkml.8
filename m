@@ -2,102 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BBAC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E5EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED720659
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF7620659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThQynXjQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEGPy1 (ORCPT
+        id S1727825AbgEGPye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:54:27 -0400
-Received: from outbound-smtp38.blacknight.com ([46.22.139.221]:47513 "EHLO
-        outbound-smtp38.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgEGPy1 (ORCPT
+        Thu, 7 May 2020 11:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726451AbgEGPyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:54:27 -0400
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp38.blacknight.com (Postfix) with ESMTPS id 42AB81A36
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:54:25 +0100 (IST)
-Received: (qmail 4187 invoked from network); 7 May 2020 15:54:25 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 May 2020 15:54:24 -0000
-Date:   Thu, 7 May 2020 16:54:22 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jirka Hladky <jhladky@redhat.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200507155422.GD3758@techsingularity.net>
-References: <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
- <20200312155640.GX3818@techsingularity.net>
- <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
- <20200312214736.GA3818@techsingularity.net>
- <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
- <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net>
- <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net>
- <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+        Thu, 7 May 2020 11:54:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F0EC05BD43;
+        Thu,  7 May 2020 08:54:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f7so3182030pfa.9;
+        Thu, 07 May 2020 08:54:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qODBvlvixTIM4uF++H0GbJezfoy8iTUvBUc/JVUBYxA=;
+        b=ThQynXjQezxuTaKhw2P2xZXcypd1fLvesj058Lm/QfVygms1wxRVgrwZJ8E6VZyCAU
+         a/tIrJ4oUID7VucfjsVZhlujX0P/iLP1pavLPBc1pGgojhP4kWqL/HT4iTGYEPL6MZF5
+         iJdOBAULSeVwFCs/nyjZ6cA/cjDXQJVb2cFgdw1MidNng46W6fIbqhave1digP801gOj
+         ZUdPvfhNM8TXiTLx2Cg1ng/mBxGNWlfbRdoBb/9WDxby74I/hiPVtM4f5mjK2EkUSo07
+         YZbgoU53WQKH7BZ32FmzRjSGCLq4/ehjKYc8T3y4AO7K78XafmV1b6vPtcXdYa6/z8ZD
+         wMKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qODBvlvixTIM4uF++H0GbJezfoy8iTUvBUc/JVUBYxA=;
+        b=Q5nLh1TWzDhMoOag4c/EJjK2ygZP77CoYni6P9Po6xkaj68fWto4dWvOLgcNN3EuUc
+         +98npuxuoPb/fX+tHQRxiJOfk3dBWBMjLAWv73g3CEFAEHspEZDfL2E4R+c5k0aENzF8
+         /8pyLfPw5l5x09hNu7v9ls7ODhJj5JsXeyNjgcFLYvz3OzZ9SCyi/lDlAMnBIWu2lMo+
+         pG9yCT10sPbtvQne5+6U83DtxkOx3VNEmbEllzOAVuSG7YK10vJ3Ujf766+e0Uv1qbYh
+         ygav4pAmA7CKWgvBR3b3zZeY8SgUIVTljbljsIPEVpHcY/Ft1/bp7jtGQYXL/+/U1oOi
+         E91w==
+X-Gm-Message-State: AGi0PuZ7AUFiQf4HUuGqTSS6mZKNlGF5fcF/rayIA2H6L09RuXO5A4Mn
+        H+xQvDC2V6yPQt+n17+Cw6ebJtWH
+X-Google-Smtp-Source: APiQypKgQitqAVNooiWscmGva4UImYjtJXRZeHamNUycjPKQVBAqUgiTEZu9zk0Skxn/ZM/jxvhEZA==
+X-Received: by 2002:a62:18d7:: with SMTP id 206mr1283594pfy.299.1588866871142;
+        Thu, 07 May 2020 08:54:31 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y63sm5191194pfg.138.2020.05.07.08.54.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 08:54:30 -0700 (PDT)
+Subject: Re: [PATCH net v2] net: bcmgenet: Clear ID_MODE_DIS in
+ EXT_RGMII_OOB_CTRL when not needed
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200225131159.26602-1-nsaenzjulienne@suse.de>
+ <cf07fae3-bd8f-a645-0007-a317832c51c1@samsung.com>
+ <CGME20200507100347eucas1p2bad4d58e4eb23e8abd22b43f872fc865@eucas1p2.samsung.com>
+ <a3df217d-f35c-9d74-4069-d47dee89173e@samsung.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <09f9fdff-867f-687f-e5af-a4f82a75e105@gmail.com>
+Date:   Thu, 7 May 2020 08:54:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a3df217d-f35c-9d74-4069-d47dee89173e@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:24:17PM +0200, Jirka Hladky wrote:
-> Hi Mel,
-> 
-> > > Yes, it's indeed OMP.  With low threads count, I mean up to 2x number of
-> > > NUMA nodes (8 threads on 4 NUMA node servers, 16 threads on 8 NUMA node
-> > > servers).
-> >
-> > Ok, so we know it's within the imbalance threshold where a NUMA node can
-> > be left idle.
-> 
-> we have discussed today with my colleagues the performance drop for
-> some workloads for low threads counts (roughly up to 2x number of NUMA
-> nodes). We are worried that it can be a severe issue for some use
-> cases, which require a full memory bandwidth even when only part of
-> CPUs is used.
-> 
-> We understand that scheduler cannot distinguish this type of workload
-> from others automatically. However, there was an idea for a * new
-> kernel tunable to control the imbalance threshold *. Based on the
-> purpose of the server, users could set this tunable. See the tuned
-> project, which allows creating performance profiles [1].
-> 
 
-I'm not completely opposed to it but given that the setting is global,
-I imagine it could have other consequences if two applications ran
-at different times have different requirements. Given that it's OMP,
-I would have imagined that an application that really cared about this
-would specify what was needed using OMP_PLACES. Why would someone prefer
-kernel tuning or a tuned profile over OMP_PLACES? After all, it requires
-specific knowledge of the application even to know that a particular
-tuned profile is needed.
 
+On 5/7/2020 3:03 AM, Marek Szyprowski wrote:
+> Hi
+> 
+> On 07.05.2020 11:46, Marek Szyprowski wrote:
+>> On 25.02.2020 14:11, Nicolas Saenz Julienne wrote:
+>>> Outdated Raspberry Pi 4 firmware might configure the external PHY as
+>>> rgmii although the kernel currently sets it as rgmii-rxid. This makes
+>>> connections unreliable as ID_MODE_DIS is left enabled. To avoid this,
+>>> explicitly clear that bit whenever we don't need it.
+>>>
+>>> Fixes: da38802211cc ("net: bcmgenet: Add RGMII_RXID support")
+>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>
+>> I've finally bisected the network issue I have on my RPi4 used for 
+>> testing mainline builds. The bisect pointed to this patch. Once it got 
+>> applied in v5.7-rc1, the networking is broken on my RPi4 in ARM32bit 
+>> mode and kernel compiled from bcm2835_defconfig. I'm using u-boot to 
+>> tftp zImage/dtb/initrd there. After reverting this patch network is 
+>> working fine again. The strange thing is that networking works fine if 
+>> kernel is compiled from multi_v7_defconfig but I don't see any obvious 
+>> difference there.
+>>
+>> I'm not sure if u-boot is responsible for this break, but kernel 
+>> definitely should be able to properly reset the hardware to the valid 
+>> state.
+>>
+>> I can provide more information, just let me know what is needed. Here 
+>> is the log, I hope it helps:
+>>
+>> [   11.881784] bcmgenet fd580000.ethernet eth0: Link is Up - 
+>> 1Gbps/Full - flow control off
+>> [   11.889935] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+>>
+>> root@target:~# ping host
+>> PING host (192.168.100.1) 56(84) bytes of data.
+>> From 192.168.100.53 icmp_seq=1 Destination Host Unreachable
+>> ...
+> 
+> Okay, I've played a bit more with this and found that enabling 
+> CONFIG_BROADCOM_PHY fixes this network issue. I wonder if Genet driver 
+> should simply select CONFIG_BROADCOM_PHY the same way as it selects 
+> CONFIG_BCM7XXX_PHY.
+
+Historically GENET has been deployed with an internal PHY and this is
+still 90% of the GENET users out there on classic Broadcom STB
+platforms, not counting the 2711. For external PHYs, there is a variety
+of options here, so selecting CONFIG_BROADCOM_PHY would be just one of
+the possibilities, I would rather fix this with the bcm2835_defconfig
+and multi_v7_defconfig update. Would that work for you?
 -- 
-Mel Gorman
-SUSE Labs
+Florian
