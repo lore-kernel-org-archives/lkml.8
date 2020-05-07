@@ -2,97 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846B7C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F308F2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588874163;
-	bh=Ju2hWiKFj3oHKpYAyY0jgL+OEIu/kKfswtVG9Uw9VUg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zKKvrHT91zezEJiu1tliFWimXy8rLYYI1IZMaYu4CN+UqvaJdI58GVY5I6ERWn3EU
-	 GNSzMBz+XI30+7Ep+d94QbxPECOcv93PvG9+VeT2n1oaJGxOoey6KDhaiyh76hSMs5
-	 e8uCb2iiq2fqAWC/LyDD9RbfzbN8tEDBKM3MQZwI=
+	by mail.kernel.org (Postfix) with ESMTP id 6441120A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RyQJp2X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgEGR4C (ORCPT
+        id S1728172AbgEGR4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGR4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:56:01 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C68621473
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 17:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588874161;
-        bh=Ju2hWiKFj3oHKpYAyY0jgL+OEIu/kKfswtVG9Uw9VUg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qPaizVSIxUfJTRePqtUsFCmPCgnabWGlDVh03fpQ89uokt/Gl8imcpEZYp306+lH5
-         gxhmvcxJ2Xye2bJsPoYbY8DirlSg3n5ncvrQVJzsfcQal2jsFyCMhzyTJY8XO0hp2X
-         s6Ojb7CKOwKBCoY0WWFHMKmDYz4sFyVW+bNVYzm0=
-Received: by mail-wm1-f44.google.com with SMTP id h4so7540910wmb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:56:00 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ4IOArt1DFrSXMrBtVWDlpdMWzsEE2G6SCtEi3Qp5uG3a/UKuQ
-        ebhLnOgsREYQbscNhnCf+PQj8DvR2pS4FP/SwJvxxA==
-X-Google-Smtp-Source: APiQypKy7RbYUczYMGVUdYhc9NxrFHVmgaOodGQy6PYtdslBgsHIS1PzSwf+neRuXSxqP+wRZ0y2ii6TplEMxQspqE8=
-X-Received: by 2002:a7b:c74d:: with SMTP id w13mr11231529wmk.36.1588874159550;
- Thu, 07 May 2020 10:55:59 -0700 (PDT)
+        Thu, 7 May 2020 13:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726470AbgEGR4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:56:24 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56DFAC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:56:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l25so3141582pgc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+r+pYRff7AZ/4qXuwOV7u7moR+JtyhaDuyhNMsjzj4k=;
+        b=RyQJp2X+IaaJ8rhhjEERO/MgnXdSBbNs3RDSl7O+V/BTSLO+ZqrZFMkF0V0UW0IEgw
+         f6yoLAAWoXdOesyJiaRvQ55Wzvn6YRgyk7uP8urmvx6Y0wE0f5/88xA1QhwdzIt188NF
+         guLRXDPLzKtaJnO9SwcPti43yJ3RZZeOkIeoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+r+pYRff7AZ/4qXuwOV7u7moR+JtyhaDuyhNMsjzj4k=;
+        b=S/WrV7xFion6oO/4/j9vtI+UjGSR47hHuBoUx6zW5GSsGigUVMQqDclROXlko2nFwP
+         pWeNsJwJ/iZhUowEeiBLmMFQeO9teJRnb45/kA44sxqJawZXc10vChMdTspepJ3ZUdE0
+         2Gi/SBK/cVPOUGvzZgl6qXBf8xrbw++0f20jzBTrd5/RSv63Y0RI6yM1RNwoc91L1NS/
+         2ZPDCNMVR48QSh4Q9rFNQkUPall0XFKNe7c5gluOPTcKeR8YRvv2SPHEF4Z3N9rIPFvB
+         f71rlogBQWR2UPdK313P1Yiycer4zeUhUrkET25W9tFPPI6aP9LGHHzlKT1+kJDOAsV2
+         PKUg==
+X-Gm-Message-State: AGi0PuY81M9quG47/lY5SFy8G36wS5qECkm0AAvXvm3kCYKOjOsnU/AZ
+        PEFR3f+sI2K6COPek+Do0k/Xpg==
+X-Google-Smtp-Source: APiQypLsE5rcW2iW/q04jg5MWZfAEx+L9VPOOOzNF7Fu7ZcO2OKfRtRFFFfDj5NCzvIrs17aP+1C0w==
+X-Received: by 2002:a63:e547:: with SMTP id z7mr11706990pgj.177.1588874183740;
+        Thu, 07 May 2020 10:56:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u3sm5445934pfb.105.2020.05.07.10.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 10:56:22 -0700 (PDT)
+Date:   Thu, 7 May 2020 10:56:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Benson Leung <bleung@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Sarthak Kukreti <sarthakkukreti@chromium.org>
+Subject: Re: linux-next: manual merge of the chrome-platform tree with the
+ pstore tree
+Message-ID: <202005071056.F83305E0@keescook>
+References: <20200507145547.7c514106@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200505131602.633487962@linutronix.de> <20200505134100.270771162@linutronix.de>
-In-Reply-To: <20200505134100.270771162@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 7 May 2020 10:55:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrU7rf8cizYM1v0Rb6LzufLEbNcAS6Ebx_BW=+3Svk+F2g@mail.gmail.com>
-Message-ID: <CALCETrU7rf8cizYM1v0Rb6LzufLEbNcAS6Ebx_BW=+3Svk+F2g@mail.gmail.com>
-Subject: Re: [patch V4 part 1 22/36] tracing: Provide lockdep less
- trace_hardirqs_on/off() variants
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507145547.7c514106@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
-> core itself is safe, but the resulting tracepoints can be utilized by
-> e.g. BPF which is unsafe.
->
-> Provide variants which do not contain the lockdep invocation so the lockdep
-> and tracer invocations can be split at the call site and placed properly.
->
-> The new variants also do not use rcuidle as they are going to be called
-> from entry code after/before context tracking.
+On Thu, May 07, 2020 at 02:55:47PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the chrome-platform tree got a conflict in:
+> 
+>   drivers/platform/chrome/chromeos_pstore.c
+> 
+> between commit:
+> 
+>   7bddec15c574 ("pstore/ram: Introduce max_reason and convert dump_oops")
+> 
+> from the pstore tree and commit:
+> 
+>   1c7c51347f2e ("platform/chrome: chromeos_pstore: set user space log size")
+> 
+> from the chrome-platform tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc drivers/platform/chrome/chromeos_pstore.c
+> index fa51153688b4,82dea8cb5da1..000000000000
+> --- a/drivers/platform/chrome/chromeos_pstore.c
+> +++ b/drivers/platform/chrome/chromeos_pstore.c
+> @@@ -57,7 -57,8 +57,8 @@@ static struct ramoops_platform_data chr
+>   	.record_size	= 0x40000,
+>   	.console_size	= 0x20000,
+>   	.ftrace_size	= 0x20000,
+> + 	.pmsg_size	= 0x20000,
+>  -	.dump_oops	= 1,
+>  +	.max_reason	= KMSG_DUMP_OOPS,
+>   };
+>   
+>   static struct platform_device chromeos_ramoops = {
 
-I can't quite follow this.  Are you saying that the new variants are
-intended to be called by the entry code in a context where tracing is
-acceptable and that the lockdep part will still be called in a context
-where tracing is not acceptable?
+Thanks! Yes, that looks correct.
 
---Andy
+-- 
+Kees Cook
