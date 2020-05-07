@@ -2,215 +2,174 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75BBC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B859CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866B220CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DYcbxanU"
+	by mail.kernel.org (Postfix) with ESMTP id 9E35B20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEGWkp (ORCPT
+        id S1727071AbgEGWlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEGWko (ORCPT
+        Thu, 7 May 2020 18:41:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38962 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgEGWlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:40:44 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36ECAC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:40:44 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x77so3745282pfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cPTDJmF/tujVfBkCFmIE4YvP6laom+6vA1WUeov6LY0=;
-        b=DYcbxanU7xOF7YD85/inr43/fl2m/NFGp69K/Fs0JxJj5YQcPBMMfEXPTjty4kzn93
-         2xJnSrkADBiKUlrja6Cu/EQMrkstARiLmcYwYTjsq913C0t7xDoN9kX0owwP9+babTbD
-         k9vhtvPWlGcBZBugvw+mAj7yMgqSS1UDC7GYk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cPTDJmF/tujVfBkCFmIE4YvP6laom+6vA1WUeov6LY0=;
-        b=i9NfkpwnX0/K4urH6WBQi+rBKGTwWAyyd6g1ZhUZB4/6qz4Dvo3iDMu+E3DPGhIK7j
-         XvDX69/xLqcoyZtNG1X2Mu4SUyhJZtjX5vE09iN/3xS5RbJes+RROmd9f2IlZQ9m1PXr
-         HOwXYNHwQw6XgiFfxAdSw1FMpBoYanx5qxmEP8PJFhOjBX8kHHcI8lgjHRpuaYVvwX6A
-         eTAAO8AYE1Vz0nS/Sfrpvum/AYNDZo3e36keZHXlisrHap9D/17+GlKlJZQJ8rPPlxBt
-         atG6Oh8u0Q8Vl6UMV+3ZDikXVYHphWyaRC7UR2/Smj8diZOGzh3AOI0fcOKDWQAbHHsU
-         1ZHA==
-X-Gm-Message-State: AGi0PuYLi6ma9SNKxfha1jK9h7NWeYlvbqc2ZuylWdpA8IKZY8z3rYmq
-        ZK8XOdwRRYeNSAn3imUKeyGeyA==
-X-Google-Smtp-Source: APiQypKzWVGuTQrhg0T2RKxcHC1dccZOfB4yuHc7rhnl1Ib0TLRLPytRWJ/yhmppXsA3XgWdl6pDDQ==
-X-Received: by 2002:a62:4ec8:: with SMTP id c191mr16441851pfb.30.1588891243415;
-        Thu, 07 May 2020 15:40:43 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id p189sm5898931pfp.135.2020.05.07.15.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 15:40:42 -0700 (PDT)
-Date:   Thu, 7 May 2020 15:40:41 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
- SBU/HSL orientation
-Message-ID: <20200507224041.GA247416@google.com>
-References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
- <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+        Thu, 7 May 2020 18:41:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E334480307C1;
+        Thu,  7 May 2020 22:41:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sIuzsjFm3Owd; Fri,  8 May 2020 01:41:37 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
+        <soc@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/4] bus: Add Baikal-T1 SoC APB/AXI bus drivers
+Date:   Fri, 8 May 2020 01:41:12 +0300
+Message-ID: <20200507224116.1523-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130731.938808030702@mail.baikalelectronics.ru>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
+Baikal-T1 SoC CPU is based on two MIPS Warrior P5600 cores. Their main
+memory Non-Coherent IO interface is connected to the OCP2AXI bridge, which
+in turn is then connected to the DW AMBA 3 AXI Interconnect (so called Main
+Interconnect) with nine masters and four slaves ports. Main Interconnect is
+responsible for the AXI-bus traffic arbitration (QoS) and its routing from
+one component to another. In addition there is a Errors Handler Block
+(EHB) responsible to detect AXI protocol errors and device not responding
+situations built on top the interconnect. Baikal-T1 AXI-bus driver included in
+this patchset will be responsible for working with that functionality,
+though currently it doesn't support QoS tuning. Instead it's capable of
+detecting the error events, reporting an info about them to the system
+log, injecting artificial errors to test the driver functionality.
+Since AXI Interconnect doesn't provide a way to find out which devices are
+connected to it, so its DT node is supposed to be compatible with
+"simple-bus" driver, while sub-nodes shall represent the masters attached
+to the bus.
 
-Thanks for the patches.
+One of the AXI Interconnect slaves is an AXI-APB bridge used to access the
+Baikal-T1 SoC subsystems CSRs. MMIO request from CPU and DMAC masters are
+routed there if they are detected to be within [0x08000000 0x1FFFFFFF]
+range of the physical memory. In case if an attempted APB transaction
+stays with no response for a pre-defined time it will be detected by the
+APB-bus Errors Handler Block (EHB), which will raise an interrupt, then
+the bus gets freed for a next operation. The APB-bus driver provides the
+interrupt handler to detect the erroneous address, update an errors
+counter and prints an error message about the faulty address. The counter
+and the APB-bus operations timeout can be accessed via corresponding sysfs
+nodes. A dedicated sysfs-node can be also used to artificially cause the
+bus errors described above. Since APB-bus is a platform bus, it doesn't
+provide a way to detect slave devices connected to it, so similarly to the
+AXI-bus it's also supposed to be compatible with "simple-bus" driver.
 
-On Thu, May 07, 2020 at 06:08:58PM +0300, Heikki Krogerus wrote:
-> The SBU and HSL orientation may be fixed/static from the mux
-> PoW. Apparently the retimer may take care of the orientation
-> of these lines. Handling the static SBU (AUX) and HSL
-> orientation with device properties.
-> 
-> If the SBU orientation is static, a device property
-> "sbu-orintation" can be used. When the property exists, the
-> driver always sets the SBU orientation according to the
-> property value, and when it's not set, the driver uses the
-> cable plug orientation with SBU.
-> 
-> And with static HSL orientation, "hsl-orientation" device
-> property can be used in the same way.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/usb/typec/mux/intel_pmc_mux.c | 42 +++++++++++++++++++++++----
->  1 file changed, 36 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-> index f5c5e0aef66f..1aac218099f3 100644
-> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
-> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-> @@ -91,6 +91,9 @@ struct pmc_usb_port {
->  
->  	u8 usb2_port;
->  	u8 usb3_port;
-> +
-> +	enum typec_orientation sbu_orientation;
-> +	enum typec_orientation hsl_orientation;
->  };
->  
->  struct pmc_usb {
-> @@ -99,6 +102,22 @@ struct pmc_usb {
->  	struct pmc_usb_port *port;
->  };
->  
-> +static int sbu_orientation(struct pmc_usb_port *port)
-> +{
-> +	if (port->sbu_orientation)
-> +		return port->sbu_orientation - 1;
-> +
-> +	return port->orientation - 1;
-> +}
-> +
-> +static int hsl_orientation(struct pmc_usb_port *port)
-> +{
-> +	if (port->hsl_orientation)
-> +		return port->hsl_orientation - 1;
-> +
-> +	return port->orientation - 1;
-> +}
-> +
->  static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
->  {
->  	u8 response[4];
-> @@ -151,8 +170,9 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
->  
->  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
->  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
-> -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
-> -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
-> +
-> +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-I'm curious to know what would happen when sbu-orientation == "normal".
-That means |port->sbu_orientation| == 1.
+Note initially the driver was a part of the patchset created to reside in
+the kernel soc subsystem. But after a short discussion with Arnd:
+https://lkml.org/lkml/2020/3/6/422
+we decided to move it here.
 
-It sounds like what should happen is the AUX_SHIFT orientation
-setting should follow what |port->orientation| is, but here it
-looks like it will always be set to |port->sbu_orientation - 1|, i.e 0,
-even if port->orientation == TYPEC_ORIENTATION_REVERSE, i.e 2, meaning
-it should be set to 1 ?
+New vendor prefix will be added in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
 
-Apologies if I misunderstood the code...
+Changelog v2:
+- Assign dual GPL/BSD licenses to the bindings.
+- Use single lined copyright headers in the bindings.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false" in the bindings.
+- Don't use a multi-arg clock phandle reference in DT binding examples.
+  Thus remove includes from there.
+- Fix some commit message and Kconfig help text spelling.
+- Move drivers from soc to the bus subsystem.
+- Convert a simple EHB drivers to the Baikal-T1 AXI and APB bus ones.
+- Convert APB bus driver to using regmap MMIO API.
+- Use syscon regmap to access the AXI-bus erroneous address.
+- Add reset line support.
+- Add Main Interconnect clock support to the AXI-bus driver.
+- Remove probe-status info string printout.
+- Discard of_match_ptr() macro utilization.
+- Don't print error-message if no platform IRQ found. Just return an error.
+- Use generic FIELD_{GET,PREP} macros instead of handwritten ones in the
+  AXI-bus driver.
 
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: linux-mips@vger.kernel.org
+Cc: soc@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Best regards,
+Serge Semin (4):
+  dt-bindings: bus: Add Baikal-T1 AXI-bus binding
+  dt-bindings: bus: Add Baikal-T1 APB-bus binding
+  bus: Add Baikal-T1 AXI-bus driver
+  bus: Add Baikal-T1 APB-bus driver
 
+ .../bindings/bus/baikal,bt1-apb.yaml          |  90 ++++
+ .../bindings/bus/baikal,bt1-axi.yaml          |  95 ++++
+ drivers/bus/Kconfig                           |  30 ++
+ drivers/bus/Makefile                          |   2 +
+ drivers/bus/bt1-apb.c                         | 421 ++++++++++++++++++
+ drivers/bus/bt1-axi.c                         | 318 +++++++++++++
+ 6 files changed, 956 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+ create mode 100644 drivers/bus/bt1-apb.c
+ create mode 100644 drivers/bus/bt1-axi.c
 
-> +	req.mode_data |= hsl_orientation(port) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
->  
->  	req.mode_data |= (state->mode - TYPEC_STATE_MODAL) <<
->  			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
-> @@ -173,8 +193,9 @@ pmc_usb_mux_tbt(struct pmc_usb_port *port, struct typec_mux_state *state)
->  
->  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
->  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
-> -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
-> -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
-> +
-> +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
-> +	req.mode_data |= hsl_orientation(port) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
->  
->  	if (TBT_ADAPTER(data->device_mode) == TBT_ADAPTER_TBT3)
->  		req.mode_data |= PMC_USB_ALTMODE_TBT_TYPE;
-> @@ -211,8 +232,8 @@ static int pmc_usb_connect(struct pmc_usb_port *port)
->  	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
->  
->  	msg[1] = port->usb2_port << PMC_USB_MSG_USB2_PORT_SHIFT;
-> -	msg[1] |= (port->orientation - 1) << PMC_USB_MSG_ORI_HSL_SHIFT;
-> -	msg[1] |= (port->orientation - 1) << PMC_USB_MSG_ORI_AUX_SHIFT;
-> +	msg[1] |= hsl_orientation(port) << PMC_USB_MSG_ORI_HSL_SHIFT;
-> +	msg[1] |= sbu_orientation(port) << PMC_USB_MSG_ORI_AUX_SHIFT;
->  
->  	return pmc_usb_command(port, msg, sizeof(msg));
->  }
-> @@ -296,6 +317,7 @@ static int pmc_usb_register_port(struct pmc_usb *pmc, int index,
->  	struct usb_role_switch_desc desc = { };
->  	struct typec_switch_desc sw_desc = { };
->  	struct typec_mux_desc mux_desc = { };
-> +	const char *str;
->  	int ret;
->  
->  	ret = fwnode_property_read_u8(fwnode, "usb2-port", &port->usb2_port);
-> @@ -306,6 +328,14 @@ static int pmc_usb_register_port(struct pmc_usb *pmc, int index,
->  	if (ret)
->  		return ret;
->  
-> +	ret = fwnode_property_read_string(fwnode, "sbu-orientation", &str);
-> +	if (!ret)
-> +		port->sbu_orientation = typec_find_orientation(str);
-> +
-> +	ret = fwnode_property_read_string(fwnode, "hsl-orientation", &str);
-> +	if (!ret)
-> +		port->hsl_orientation = typec_find_orientation(str);
-> +
->  	port->num = index;
->  	port->pmc = pmc;
->  
-> -- 
-> 2.26.2
-> 
+-- 
+2.25.1
+
