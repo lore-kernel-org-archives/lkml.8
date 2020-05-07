@@ -2,120 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F79FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A42C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39A39208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C29620870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588860481;
+	bh=up72YqQmbXKsh+0pM1oCFb1Y0z05K3pNe8Mi871M7kc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xga7FHEzWeHLeGmCds+1dU8FXz3R1E6b/gSJScTMbXpR4z/RoKiWJI2mb01oatWkx
+	 R/76lju6Kz3FtNuLHT+y/BPF7l9XH/fEhaEpxbX7hxyNywF933qW3RINzaBn2jz0of
+	 dEZ4CZLST8slzDW/BT2c5LHRdA5sYYheiTE0lEnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgEGOH4 (ORCPT
+        id S1728037AbgEGOIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgEGOH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:07:27 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44220C05BD0A;
-        Thu,  7 May 2020 07:07:27 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWhBL-00027e-3J; Thu, 07 May 2020 16:07:23 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BE6381C03AB;
-        Thu,  7 May 2020 16:07:22 +0200 (CEST)
-Date:   Thu, 07 May 2020 14:07:22 -0000
-From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/platform/uv: Mark is_uv_hubless() static
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Russ Anderson <rja@hpe.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200504171527.2845224-7-hch@lst.de>
-References: <20200504171527.2845224-7-hch@lst.de>
+        Thu, 7 May 2020 10:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbgEGOH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:07:59 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.59.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F03462084D;
+        Thu,  7 May 2020 14:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588860478;
+        bh=up72YqQmbXKsh+0pM1oCFb1Y0z05K3pNe8Mi871M7kc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jsUyk3GojI51408CO+VP69Uj5RZ4eJkVtRwanijT5SOihR0odMv6AqV9EZzz+J4vR
+         T6Tr+k2nnIhLGKQQWLg10jhz8YQoFL9axsSFvzcb+NeN05rqb4r2Q3PvDv3Hw90MXl
+         7te6rl2Rr1MRb/oDmEb64s1lK3JiRdPHtZK4Ev5U=
+Date:   Thu, 7 May 2020 19:37:50 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Subject: Re: [PATCH v3 0/2] Add CTS/RTS gpio support to STM32 UART
+Message-ID: <20200507140750.GA2019@Mani-XPS-13-9360>
+References: <20200420170204.24541-1-mani@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158886044274.8414.7034570181169059963.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420170204.24541-1-mani@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/platform branch of tip:
+Hi Greg,
 
-Commit-ID:     e4dd8b8351264fb5bef30c0a77e4d171e0603d63
-Gitweb:        https://git.kernel.org/tip/e4dd8b8351264fb5bef30c0a77e4d171e0603d63
-Author:        Christoph Hellwig <hch@lst.de>
-AuthorDate:    Mon, 04 May 2020 19:15:22 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 07 May 2020 15:32:21 +02:00
+On Mon, Apr 20, 2020 at 10:32:02PM +0530, mani@kernel.org wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> Hello,
+> 
+> This patchset adds CTS/RTS gpio support to STM32 UART controller.
+> Eventhough the UART controller supports using dedicated CTS/RTS gpios,
+> sometimes we need to use different set of gpios for flow control.
+> 
+> This is necessary for the upcoming STM32MP1 based board called Stinger96
+> IoT-Box. On that board, a bluetooth chip is connected to one of the UART
+> controller but the CTS/RTS lines got swapped mistakenly. So this patchset
+> serves as a workaround for that hardware bug and also supports the
+> usecase of using any gpio for CTS/RTS functionality. As per the sugggestion
+> provided by Andy for v1, I've now switched to mctrl_gpio driver.
+> 
+> This patchset has been validated with Stinger96 IoT-Box connected to Murata
+> WiFi-BT combo chip.
+> 
 
-x86/platform/uv: Mark is_uv_hubless() static
+Are you planning to take this series for 5.8?
 
-is_uv_hubless() is only used in x2apic_uv_x.c.
+Thanks,
+Mani
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Not-acked-by:  Dimitri Sivanich <sivanich@hpe.com>
-Cc: Russ Anderson <rja@hpe.com>
-Link: https://lkml.kernel.org/r/20200504171527.2845224-7-hch@lst.de
-
----
- arch/x86/include/asm/uv/uv.h       | 2 --
- arch/x86/kernel/apic/x2apic_uv_x.c | 3 +--
- 2 files changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
-index 45ea95c..ae587ce 100644
---- a/arch/x86/include/asm/uv/uv.h
-+++ b/arch/x86/include/asm/uv/uv.h
-@@ -31,7 +31,6 @@ static inline bool is_early_uv_system(void)
- }
- extern int is_uv_system(void);
- extern int is_uv_hubbed(int uvtype);
--extern int is_uv_hubless(int uvtype);
- extern void uv_cpu_init(void);
- extern void uv_nmi_init(void);
- extern void uv_system_init(void);
-@@ -44,7 +43,6 @@ static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
- static inline bool is_early_uv_system(void)	{ return 0; }
- static inline int is_uv_system(void)	{ return 0; }
- static inline int is_uv_hubbed(int uv)	{ return 0; }
--static inline int is_uv_hubless(int uv) { return 0; }
- static inline void uv_cpu_init(void)	{ }
- static inline void uv_system_init(void)	{ }
- static inline const struct cpumask *
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index ad53b2a..cb07a98 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -385,11 +385,10 @@ int is_uv_hubbed(int uvtype)
- }
- EXPORT_SYMBOL_GPL(is_uv_hubbed);
- 
--int is_uv_hubless(int uvtype)
-+static int is_uv_hubless(int uvtype)
- {
- 	return (uv_hubless_system & uvtype);
- }
--EXPORT_SYMBOL_GPL(is_uv_hubless);
- 
- void **__uv_hub_info_list;
- EXPORT_SYMBOL_GPL(__uv_hub_info_list);
+> Thanks,
+> Mani
+> 
+> Changes in v3:
+> 
+> * Added Andy's reviewed-by tag
+> * Fixed minor issues spotted by Fabrice
+> 
+> Changes in v2:
+> 
+> As per the review by Andy:
+> 
+> * Switched to mctrl_gpio driver instead of using custom CTS/RTS
+>   implementation
+> * Removed the use of software flow control terminology.
+> 
+> Manivannan Sadhasivam (2):
+>   dt-bindings: serial: Document CTS/RTS gpios in STM32 UART
+>   tty: serial: Add modem control gpio support for STM32 UART
+> 
+>  .../bindings/serial/st,stm32-uart.yaml        | 14 +++++
+>  drivers/tty/serial/Kconfig                    |  1 +
+>  drivers/tty/serial/stm32-usart.c              | 53 ++++++++++++++++++-
+>  drivers/tty/serial/stm32-usart.h              |  1 +
+>  4 files changed, 67 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
