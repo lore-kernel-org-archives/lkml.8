@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2625C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D07C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF6A22173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C35821835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgEGRom (ORCPT
+        id S1727983AbgEGRot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:44:42 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:40608 "EHLO
+        Thu, 7 May 2020 13:44:49 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40638 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEGRol (ORCPT
+        with ESMTP id S1727903AbgEGRot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:44:41 -0400
+        Thu, 7 May 2020 13:44:49 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CBB0C1C0256; Thu,  7 May 2020 19:44:39 +0200 (CEST)
-Date:   Thu, 7 May 2020 19:44:38 +0200
+        id 34B2C1C0257; Thu,  7 May 2020 19:44:47 +0200 (CEST)
+Date:   Thu, 7 May 2020 19:44:46 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-Message-ID: <20200507174438.GB1216@bug>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
+Message-ID: <20200507174446.GC1216@bug>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+In-Reply-To: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,35 +58,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> > it uses its own memory and CPUs + its virtio-vsock emulated device for
-> > communication with the primary VM.
-> > 
-> > The memory and CPUs are carved out of the primary VM, they are dedicated
-> > for the enclave. The Nitro hypervisor running on the host ensures memory
-> > and CPU isolation between the primary VM and the enclave VM.
-> > 
-> > These two components need to reflect the same state e.g. when the
-> > enclave abstraction process (1) is terminated, the enclave VM (2) is
-> > terminated as well.
-> > 
-> > With regard to the communication channel, the primary VM has its own
-> > emulated virtio-vsock PCI device. The enclave VM has its own emulated
-> > virtio-vsock device as well. This channel is used, for example, to fetch
-> > data in the enclave and then process it. An application that sets up the
-> > vsock socket and connects or listens, depending on the use case, is then
-> > developed to use this channel; this happens on both ends - primary VM
-> > and enclave VM.
-> > 
-> > Let me know if further clarifications are needed.
-> 
-> Thanks, this is all useful.  However can you please clarify the
-> low-level details here?
 
-Is the virtual machine manager open-source? If so, I guess pointer for sources
-would be useful.
+> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
+> supported by the controller for mapping PCI address locally.
+> 
+> Note:
+> The cadence/rockchip/designware endpoint drivers are build tested only.
+> 
+> Changes for v9 (Re-spun this series as there were minimal changes requested):
+...
+> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
+
+Are you sure that is good idea? You are requesting 1ms sleep time with 1us tolerance,
+I dont believe common systems can do that.
 
 Best regards,
 									Pavel
+
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
