@@ -2,116 +2,129 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B38EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BC0C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B5C2075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC15A2068E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="AT1YnVi/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDZcbDkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgEGDLD (ORCPT
+        id S1728717AbgEGDLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56328 "EHLO
+        Wed, 6 May 2020 23:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728295AbgEGDLD (ORCPT
+        by vger.kernel.org with ESMTP id S1728666AbgEGDLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:11:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5F6C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:11:01 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b8so1353306plm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:11:01 -0700 (PDT)
+        Wed, 6 May 2020 23:11:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CC2C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:11:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y4so4488451wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nLKE5lsx5SwaWEyA9+AGeYv3YbiLM647KJWineLVY5w=;
-        b=AT1YnVi/QlGwrwZlMFXPJg0XP0Yg1/I7Q7vApg2pVTsoQTvFiq9XdZ+mnkigbplZP4
-         2SkP8hZ2joK6cSgKD8Tz1BVy27oeh0Of51rV/WJIbhPpqbCIKEALMNcjGKLkRfC1/mx9
-         kIZU63GJ1Gtyea2zrvhl9VngAQIcJbm0xlgrVqQTmlI7dIa73vNhjGhe+lYIvzhpuRXW
-         Q5QwAPudz3DQunNQJKHfpwrVIoTe8DYYVO62dDmCiPd60j1JNNAJcnICcZdC3giLO25L
-         l/4dYeuV3icEEWsIgf7t2GXOx1Ix+aJwj+1fgHGycibNEOmHVwN644yKF6IfVVQJqIJs
-         tZ+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/M4/DuBTGflvVuChw5Y25GaHL26QwHucGpDopq+uKKM=;
+        b=EDZcbDkryNHUq+1LtvqavsxqGBJ2zTgq94L3okmprwpunnwTqR843h/HBRE9aU+gHJ
+         V4HcsR9N0EJlXs7fC0Wt4d5cyP4EvYKBZDbJQ7xDwC74mBhV6Om8NAOKru6gJ1ylLOzI
+         wE2MB+h/1AOPbbHBAdNE+XMuiBgywyQ60Mia14JbAEGLC+u7ZOLY/dhydgzotaUpF8uY
+         QwnYAynKqDtPfZzajgUJo2uvhonRZF3QPRJ1e+E9RdcEmRGMFnbFw6dAtUCuCksgLmmn
+         6JieoL6lt15z7QZ0COWZ8gB9QYLbTQg/F+92uVog9oKiv4936wfJgOmksAKdpwWjacWY
+         YYgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nLKE5lsx5SwaWEyA9+AGeYv3YbiLM647KJWineLVY5w=;
-        b=f4Wq0Oh/DoS4Fvav3RK1kB6+o2Uw2hE4JtrVsUCgyOUCNIO7tQa79Ls71009pL7Rlg
-         4SK6tiLeoWwVLdiIKXwKAo6X1Eh0FjgbjOm2Ob9PViEpJrCSYyxTuN99kcjFaehw6hnz
-         9DLHBzPLHt61xzmJEgVFO6XuUlq2ny92RDZ1CDaNorL4h+CLvez2iM6m1b3hVG0/SEwN
-         xNQWvJkumKKx1FOJbrOWiDjT9lh0I6027MDZIw0QF+rUy/UhNN348SEVQuRUaguuuo79
-         0lCVStH4HRf9I2WaD1oHpH6Yudbg69R1uP0OleTAgIeSeacgwJk/LkOvQCh84P9W52+j
-         e6Lw==
-X-Gm-Message-State: AGi0PuYuCt93WBy9QbU4BLclnv4epqPL2lU+MUeTSTrJLI1ZBxBVoQAV
-        gRHMiYhGqjrnuJ9XnnuDE12JHg==
-X-Google-Smtp-Source: APiQypIt8HrpFKFTMpnxUNHbF3+yA9MDBPiQ1IFNYa1zqeTCpTAG2qNgifabo+tSNtUh1Xl9YsjXzw==
-X-Received: by 2002:a17:902:108:: with SMTP id 8mr11668340plb.200.1588821061137;
-        Wed, 06 May 2020 20:11:01 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.221.70])
-        by smtp.gmail.com with ESMTPSA id a17sm3321109pfr.24.2020.05.06.20.10.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 May 2020 20:11:00 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v2 RESEND] sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
-Date:   Thu,  7 May 2020 11:10:39 +0800
-Message-Id: <20200507031039.32615-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/M4/DuBTGflvVuChw5Y25GaHL26QwHucGpDopq+uKKM=;
+        b=CwkUx5KYcjiFVTNQLfSEEAzML5QKzDIx0R8/6mmmrbPKDBSe3cWPPdA3JbcfYGFHIt
+         w+YSMQB5inVWl3Bp021jkxrfNtoSEF6kZa70GHlyXTfC2/oni7CKk0xJqwPxMUtKMUz3
+         Pv7nZMpC1Sr36jUuPcd/gOuwoG1S8INwQcEjvXFGwA+EIxMXAySsLHVlEebUL2/KXJwW
+         ltQ+eEn1NW7sj0pYJOwqvjJ1KI98bBIiuUW3cclb45G8Y7H8L141p2kXvSxZYK/zQWny
+         9QMnX2BntqGvK8dBSg6aPAp+laxUOtuukzrqwOcFBhB/yKb98WqeHUuVj0WdX/kMV66w
+         qJSQ==
+X-Gm-Message-State: AGi0PubHy4ZPMeo0NWAKxyhn+W34iIBWhx68yJlMjbUqV7rn6TStz+pN
+        BD1QOgiwub45/zlAZpgNakPlCcOMqy/HBYQPrNEX9A==
+X-Google-Smtp-Source: APiQypLBDSZbDJjvDYDKUk2tG5mW4OE2larhjMHIL+GzojR08YDhbTwnOD8/jg18+7ituZ8OLmGHSBh19zzrRajSfq8=
+X-Received: by 2002:adf:e34d:: with SMTP id n13mr1519574wrj.249.1588821081532;
+ Wed, 06 May 2020 20:11:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200505102714.8023-1-anders.roxell@linaro.org>
+In-Reply-To: <20200505102714.8023-1-anders.roxell@linaro.org>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 7 May 2020 11:11:10 +0800
+Message-ID: <CABVgOSnxMd1ZdEQ3jHxtok1oQcMKh=UMtxZufeS9fv-q9C3-AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] lib: Kconfig.debug: default KUNIT_* fragments to KUNIT_RUN_ALL
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, "Theodore Ts'o" <tytso@mit.edu>,
+        adilger.kernel@dilger.ca,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        =linux-kselftest@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpuacct_charge() and cpuacct_account_field() are called with
-rq->lock held, and this means preemption(and IRQs) are indeed
-disabled, so it is safe to use __this_cpu_*() to allow for better
-code-generation.
+On Tue, May 5, 2020 at 6:27 PM Anders Roxell <anders.roxell@linaro.org> wrote:
+>
+> This makes it easier to enable all KUnit fragments.
+>
+> Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
+> someone wants that even though KUNIT_RUN_ALL is enabled.
+>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
-Chane in v2:
-    1. Update changelog.
+Reviewed-by: David Gow <davidgow@google.com>
 
- kernel/sched/cpuacct.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks!
+-- David
 
-diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-index 9fbb103834345..6448b0438ffb2 100644
---- a/kernel/sched/cpuacct.c
-+++ b/kernel/sched/cpuacct.c
-@@ -347,7 +347,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
- 	rcu_read_lock();
- 
- 	for (ca = task_ca(tsk); ca; ca = parent_ca(ca))
--		this_cpu_ptr(ca->cpuusage)->usages[index] += cputime;
-+		__this_cpu_add(ca->cpuusage->usages[index], cputime);
- 
- 	rcu_read_unlock();
- }
-@@ -363,7 +363,7 @@ void cpuacct_account_field(struct task_struct *tsk, int index, u64 val)
- 
- 	rcu_read_lock();
- 	for (ca = task_ca(tsk); ca != &root_cpuacct; ca = parent_ca(ca))
--		this_cpu_ptr(ca->cpustat)->cpustat[index] += val;
-+		__this_cpu_add(ca->cpustat->cpustat[index], val);
- 	rcu_read_unlock();
- }
- 
--- 
-2.11.0
 
+> ---
+>  lib/Kconfig.debug | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 21d9c5f6e7ec..d1a94ff56a87 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2064,8 +2064,9 @@ config TEST_SYSCTL
+>           If unsure, say N.
+>
+>  config SYSCTL_KUNIT_TEST
+> -       tristate "KUnit test for sysctl"
+> +       tristate "KUnit test for sysctl" if !KUNIT_RUN_ALL
+>         depends on KUNIT
+> +       default KUNIT_RUN_ALL
+>         help
+>           This builds the proc sysctl unit test, which runs on boot.
+>           Tests the API contract and implementation correctness of sysctl.
+> @@ -2075,8 +2076,9 @@ config SYSCTL_KUNIT_TEST
+>           If unsure, say N.
+>
+>  config LIST_KUNIT_TEST
+> -       tristate "KUnit Test for Kernel Linked-list structures"
+> +       tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_RUN_ALL
+>         depends on KUNIT
+> +       default KUNIT_RUN_ALL
+>         help
+>           This builds the linked list KUnit test suite.
+>           It tests that the API and basic functionality of the list_head type
+> --
+> 2.20.1
+>
