@@ -2,229 +2,199 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F6BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F24C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1F32075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588839206;
-	bh=rNQJq7nKT8w1XwqQbSgRgvN27JbP7tFUwgsmi5ku2r0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2PjzZkFe6pf13bqj093L1ZPWs1RepHr8L1iAJ+KZQVw7RgatPisEKYXzyJ+cO+XEc
-	 PzWe0jeGwjE4rRRXmmkcEnyX5tIdSfHimj+5bI1xWgs5gz5DcI6aOqVOjY6YYzt3dX
-	 J8S30+UjhZgrV06n+L3gj1AVz/t5iB9nOTGypqcY=
+	by mail.kernel.org (Postfix) with ESMTP id 303A820753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Df6/Mbha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgEGINZ (ORCPT
+        id S1726451AbgEGINb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:13:25 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:22926 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEGINY (ORCPT
+        Thu, 7 May 2020 04:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726074AbgEGINa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:13:24 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0478DAeu016703
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 17:13:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0478DAeu016703
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588839191;
-        bh=yqnhy/Loh7LKN1m1cEYiEkGwQiIvaHjvYq0yDYsuUQM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mavmXqpGw8R7lJuk1GuibNupIMvz/hETcCJZM75fdgmvOVMDV9lXbFheD+WOgRBxw
-         E4K6whEgqlDL9YSM3WuNUA9kPWHJStbSFyXjhJE+a5ikkPqle1jivhRhwr98DGJtSj
-         FsguWWucHfp2zQLatV/XrSV4Y/yjP2tVr4XRJG3m/gQdAPSW7YAP7wD+6PHiIkQ0GR
-         pbi6GrEeo5NFI36chlWBvmKwfHd5GAXrai+EGs2VGm07Jv8PtVlg3GTO8FbwVZvP01
-         P+pSA4paEoNGPSjQcMA8JxAX+upxIk6pGU0+URrcphHyQ2MYGnC2r4cc/Ost08EHBJ
-         7DrV5n1l2FTAw==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id e10so2821285vsp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:13:10 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYqgWrlkZz1itof/rXLXB/UHhU4QrXfUq+QoWKAB0HPhWV3DSKC
-        QqmC73OQA0Ny8yQB7inNoux09Xo5413x98WtO7Y=
-X-Google-Smtp-Source: APiQypLFCNkcA++Yq32fn+1tRnbuNBqswthhAAMORjcPgW28CvggTAxPw6oxWG/vOVhQOWfDmHr4E0khGPt96S+oq9Q=
-X-Received: by 2002:a67:e94d:: with SMTP id p13mr10873449vso.215.1588839189847;
- Thu, 07 May 2020 01:13:09 -0700 (PDT)
+        Thu, 7 May 2020 04:13:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5D7C0610D6
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:13:29 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k1so5206429wrx.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J7Nyoh6TN298A/zGPu60YeuCRUMyhvi1B0VPpIRXkD8=;
+        b=Df6/MbhaEVfEMhHwUNcTRMIYUT9M/0U7WL0VSOMhhFZneTCeZNZC/3pFk4TAipIMT0
+         xp2xcpNiCkBgvgse0AeKftj58pwORKkjnwon9g3du+eSV+2bCTkCgHj9OncMCGqlQKq3
+         VCmFUyFXhiGRf9t65xr3URIgKtRwHajRWxvybsS/qcjlM/xfXZR059+o9IyjvCXbW11P
+         ibj2b7//mwD0B6P7LmHtKZUWbxVVVXt+IrbU9Uj8yY4xoDzGO7zoJGxcrVc9o+ukPx0n
+         vhmsIJRFDQC9yL45QQtGgUt8nhqV3aMHTbtJxlaFY+Vanip1Ibg5gT9UlKsLc25W3hy/
+         3rnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J7Nyoh6TN298A/zGPu60YeuCRUMyhvi1B0VPpIRXkD8=;
+        b=JgxWoo8YU8Ns0IzC1CzHvW4mqU2FoHUgJR4FLRYtHt0qH2KcSW6oyM72MN7FcIInGA
+         j/dIhKApNh9s7Wh8ig47epy3DmA1M5kWUWFunIenDUbTuyihy15t63kmdC2wd+IuxSmn
+         hCYmtSa3o0f4qE6dr7Yjv4YlojxYz/XwC9iLk97PiGmEcIUIt5cpxCIOw8V7/uUCOoi8
+         OGDUYJp5KXztMi79z6Jj8hnuDPFG5iHy55gIDjR292sNs9BDuTT42yQxuBlqRczdhCFw
+         S2zzbDBP8GCoZJKcLR79qyl2Io5BWCl0Kjb0heElaP3Dh4GNNinI83l+Kc0qd2wpoET/
+         TWZA==
+X-Gm-Message-State: AGi0PuavIFDOnY9hFpJeCWgrBu1gRQbd2NoDxO7ArKI80r89nW23P4WF
+        v6GXO1KL7jtXzW5zBYf6gmQvM5cob/kZnw==
+X-Google-Smtp-Source: APiQypJn2l9LEXuUtrCJU4T9xg/aguaE6+ll31meUQQy/XlK4lu1w23zu47PB8L6M4tnbGGhLUVbTA==
+X-Received: by 2002:adf:f652:: with SMTP id x18mr13797663wrp.262.1588839207953;
+        Thu, 07 May 2020 01:13:27 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
+        by smtp.googlemail.com with ESMTPSA id s18sm7542852wra.94.2020.05.07.01.13.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 01:13:27 -0700 (PDT)
+Subject: Re: [PATCH 1/2] media: venus: Add support for MSM8939
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-media@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200501203505.144362-1-konradybcio@gmail.com>
+ <20200501203505.144362-2-konradybcio@gmail.com>
+ <3d73eb09-ba4e-5706-042c-0d1894928a35@linaro.org>
+ <CAMS8qEVa_uRdeHEGpjni-qwGqryVVRp9VY8Ej87MbSCfTqWOFA@mail.gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <ed4b2b21-69f9-4272-2631-08e8e578096b@linaro.org>
+Date:   Thu, 7 May 2020 11:13:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CGME20200430124952epcas5p28cd53b0aa452f43eed48ed9d58b4005b@epcas5p2.samsung.com>
- <1588250972-8507-1-git-send-email-maninder1.s@samsung.com>
-In-Reply-To: <1588250972-8507-1-git-send-email-maninder1.s@samsung.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 17:12:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQuT6-sRrdwT183RYEBgHNpiKAzN=RiubHrXZeb2ifqjw@mail.gmail.com>
-Message-ID: <CAK7LNAQuT6-sRrdwT183RYEBgHNpiKAzN=RiubHrXZeb2ifqjw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] scripts/checkstack.pl: don't display $dre as
- different entity
-To:     Maninder Singh <maninder1.s@samsung.com>
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        a.sahrawat@samsung.com, Vaneet Narang <v.narang@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMS8qEVa_uRdeHEGpjni-qwGqryVVRp9VY8Ej87MbSCfTqWOFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 9:50 PM Maninder Singh <maninder1.s@samsung.com> wrote:
->
-> currnetly script prints stack usage for functions
-> in two ways:($re and $dre)
->
-> dre breaks sorting mechanism.
-> 0xffffa00011f26f88 sunxi_mux_clk_setup.isra.0 [vmlinux]:Dynamic (0x140)
-> ..
-> 0xffffa00011f27210 sunxi_divs_clk_setup [vmlinux]:      Dynamic (0x1d0)
->
-> so we can print it in decimal only.
->
-> Also address before function name is changed to function
-> start address rather than stack consumption address.
-> Because in next patch, arm has two ways to use stack
-> which can be clubbed and printed in one function only.
->
-> All symbols whose stack by adding(re and dre) is greater than
-> 100, will be printed.
->
-> 0xffffa00011f2720c0 sunxi_divs_clk_setup [vmlinux]:     464
-> ...
-> 0xffffa00011f26f840 sunxi_mux_clk_setup.isra.0 [vmlinux]:320
->
-> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> ---
->  scripts/checkstack.pl | 52 +++++++++++++++++++++++++--------------------------
->  1 file changed, 25 insertions(+), 27 deletions(-)
->
-> diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-> index 371bd17..412c459 100755
-> --- a/scripts/checkstack.pl
-> +++ b/scripts/checkstack.pl
-> @@ -109,11 +109,28 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
->  #
->  # main()
->  #
-> -my ($func, $file, $lastslash);
-> +my ($func, $file, $lastslash, $total_size, $addr, $intro);
+Hi Konrad,
 
+On 5/7/20 12:23 AM, Konrad Dybcio wrote:
+> Hi Stan,
+> 
+> I have found some issues with the submitted GCC driver, related to
+> venus, but I have to further look into them locally and work out some
+> stuff. One of the things is that freq table for venus clock should be
+> changed to the values found here [1] (currently it has 8916
+> frequencies). When I find all the causes I'll resubmit this and
+> include them in the cover letter, as I might've overlooked something
+> wrt venus driver itself when creating this patch from my WIP branch.
+> Also it seems like I tested this very patch incorrectly (getting
+> segfaults in ffmpeg with v4l2m2m now)... Anyways, I'll get back to you
+> when I make it work for sure. Sorry again for the inconvenience.
 
-$total_size is undefined for the first function.
-I think 0 is implied, but is it clearer to initialize it here?
+OK. Thanks for the details, I'm waiting for good news :). If you need
+some help with Venus bringup ping me on IRC - my nickname is svarbanov
+on #v4l channel.
 
-$total_size = 0;
+Regarding to venus clocks, these two clocks exist in below gcc driver
+but missing in msm8916:
 
+gcc_venus0_core0_vcodec0_clk
+gcc_venus0_core1_vcodec0_clk
 
+but the Venus IP block should be the same as in msm8916. Can you point
+me to the donwstream gcc driver or check from where they comes.
 
->  while (my $line = <STDIN>) {
->         if ($line =~ m/$funcre/) {
-> +               if ($total_size > 100) {
-> +                       push @stack, "$intro$total_size\n";
-> +               }
-> +
->                 $func = $1;
-> +               next if $line !~ m/^($xs*)/;
+> 
+> 
+> [1] https://github.com/konradybcio/android_kernel_asus_msm8916-1/blob/minimal/drivers/clk/qcom/clock-gcc-8936.c#L1613-L1618
+> 
+> Konrad
+> 
+> wt., 5 maj 2020 o 13:43 Stanimir Varbanov
+> <stanimir.varbanov@linaro.org> napisał(a):
+>>
+>> Hi Konrad,
+>>
+>> On 5/1/20 11:35 PM, Konrad Dybcio wrote:
+>>> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+>>> ---
+>>>  drivers/media/platform/qcom/venus/core.c | 33 ++++++++++++++++++++++++
+>>>  1 file changed, 33 insertions(+)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+>>> index 194b10b987672..f3a15991ac763 100644
+>>> --- a/drivers/media/platform/qcom/venus/core.c
+>>> +++ b/drivers/media/platform/qcom/venus/core.c
+>>> @@ -405,6 +405,38 @@ static const struct venus_resources msm8916_res = {
+>>>       .fwname = "qcom/venus-1.8/venus.mdt",
+>>>  };
+>>>
+>>> +static const struct freq_tbl msm8939_freq_table[] = {
+>>> +     { 489600, 266670000 },  /* 1080p @ 60 */
+>>> +     { 244800, 200000000 },  /* 1080p @ 30 */
+>>> +     { 244800, 133330000 },  /* 1080p @ 30 (decode only) */
+>>> +     { 220800, 133330000 },  /* 720p @ 60 (decode only?) */
+>>> +     { 108000, 133330000 },  /* 720p @ 30*/
+>>> +     { 72000, 133330000 },  /* VGA @ 60 */
+>>> +     { 36000, 133330000 },  /* VGA @ 30 */
+>>
+>> 133MHz is the minimum clock frequency in the GCC driver? Do you think
+>> that will change?
+>>
+>>> +};
+>>> +
+>>> +static const struct reg_val msm8939_reg_preset[] = {
+>>> +     { 0xe0020, 0x0aaaaaaa },
+>>> +     { 0xe0024, 0x0aaaaaaa },
+>>> +     { 0x80124, 0x00000003 },
+>>> +};
+>>> +
+>>> +static const struct venus_resources msm8939_res = {
+>>> +     .freq_tbl = msm8939_freq_table,
+>>> +     .freq_tbl_size = ARRAY_SIZE(msm8939_freq_table),
+>>> +     .reg_tbl = msm8939_reg_preset,
+>>> +     .reg_tbl_size = ARRAY_SIZE(msm8939_reg_preset),
+>>> +     .clks = { "core", "iface", "bus", },
+>>> +     .clks_num = 3,
+>>> +     .max_load = 489600, /* 1080p @ 60 */
+>>> +     .hfi_version = HFI_VERSION_1XX,
+>>> +     .vmem_id = VIDC_RESOURCE_NONE,
+>>> +     .vmem_size = 0,
+>>> +     .vmem_addr = 0,
+>>> +     .dma_mask = 0xddc00000 - 1,
+>>> +     .fwname = "qcom/venus-1.8/venus.mdt",
+>>> +};
+>>> +
+>>>  static const struct freq_tbl msm8996_freq_table[] = {
+>>>       { 1944000, 520000000 }, /* 4k UHD @ 60 (decode only) */
+>>>       {  972000, 520000000 }, /* 4k UHD @ 30 */
+>>> @@ -567,6 +599,7 @@ static const struct venus_resources sc7180_res = {
+>>>
+>>>  static const struct of_device_id venus_dt_match[] = {
+>>>       { .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
+>>> +     { .compatible = "qcom,msm8939-venus", .data = &msm8939_res, },
+>>>       { .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
+>>>       { .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
+>>>       { .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
+>>>
+>>
+>> --
+>> regards,
+>> Stan
 
-Hmm, I think this 'next' is unlikely to happen.
-But, it happened, the same line would be pushed twice.
-
-Maybe, is it better to move 'next it' above
-the 'if ($total_size > 100)' check?
-
-
-
-
-> +               $addr = $1;
-> +               $addr =~ s/ /0/g;
-> +               $addr = "0x$addr";
-> +
-> +               $intro = "$addr $func [$file]:";
-> +               my $padlen = 56 - length($intro);
-> +               while ($padlen > 0) {
-> +                       $intro .= '     ';
-> +                       $padlen -= 8;
-> +               }
-> +
-> +               $total_size = 0;
->         }
->         elsif ($line =~ m/(.*):\s*file format/) {
->                 $file = $1;
-> @@ -134,37 +151,18 @@ while (my $line = <STDIN>) {
->                 }
->                 next if ($size > 0x10000000);
->
-> -               next if $line !~ m/^($xs*)/;
-> -               my $addr = $1;
-> -               $addr =~ s/ /0/g;
-> -               $addr = "0x$addr";
-> -
-> -               my $intro = "$addr $func [$file]:";
-> -               my $padlen = 56 - length($intro);
-> -               while ($padlen > 0) {
-> -                       $intro .= '     ';
-> -                       $padlen -= 8;
-> -               }
-> -               next if ($size < 100);
-> -               push @stack, "$intro$size\n";
-> +               $total_size = $total_size + $size
-
-
-For consistency, I personally prefer adding ';'
-to every statement even for the last one in the block...
-
-
-Is this simpler ?
-
-                  $total_size += $size;
-
-
-
-
-
-
->         }
->         elsif (defined $dre && $line =~ m/$dre/) {
-> -               my $size = "Dynamic ($1)";
-> -
-> -               next if $line !~ m/^($xs*)/;
-> -               my $addr = $1;
-> -               $addr =~ s/ /0/g;
-> -               $addr = "0x$addr";
-> +               my $size = $1;
->
-> -               my $intro = "$addr $func [$file]:";
-> -               my $padlen = 56 - length($intro);
-> -               while ($padlen > 0) {
-> -                       $intro .= '     ';
-> -                       $padlen -= 8;
-> -               }
-> -               push @stack, "$intro$size\n";
-> +               $size = hex($size) if ($size =~ /^0x/);
-> +               $total_size = $total_size + $size
-
-
-
-Ditto. How about this?
-
-                  $total_size += $size;
-
-
->         }
->  }
-> +if ($total_size > 100) {
-> +       push @stack, "$intro$total_size\n";
-> +}
->
->  # Sort output by size (last field)
->  print sort { ($b =~ /:\t*(\d+)$/)[0] <=> ($a =~ /:\t*(\d+)$/)[0] } @stack;
-> --
-> 1.9.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+regards,
+Stan
