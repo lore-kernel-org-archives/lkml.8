@@ -2,134 +2,97 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD29EC35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489F8C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1F82082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2532082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCdiFMI/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCZGIOTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgEGWUU (ORCPT
+        id S1726926AbgEGWVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEGWUT (ORCPT
+        Thu, 7 May 2020 18:21:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25135 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726437AbgEGWVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:20:19 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1FBC05BD0B
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:20:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so8308941wra.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r9L5BbR1D/yVnqyNGeh7T9On6CSzY2MQWXloV95rB8U=;
-        b=bCdiFMI/LGeKAfCV93K0w0RNk3p5zRb/gu9k+4Lmy1KOsTt43unQmThIhkEwkErhqj
-         ffIpyeI8Qsw/VR+7tJfXPaCr8xhku04kaz/LOc1ed7WYAqBBj11RkHgCV2R8WWuJrddQ
-         9f9fYr8hrPKYvHADPHAz/xc3P+ONGmR/odsOYqXNtaKE9XdAvnHMQ4og2prZ+MbWf2cw
-         gHka2X4bdt5vykOH26JDjRhzwlZDzu/iQJ5MiGXNfSgcn0qkef/g7sKhwN9xy9jdMqwG
-         0W/K7Cyn5ajrN/tbFX4QpPDg0e2EISxABYVIjBv7/CcfUSkoQ2dLE6gBVGT5kyn1yH5Q
-         UM0Q==
+        Thu, 7 May 2020 18:21:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588890067;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AZoTGnbCXcMKyRQ9mPxmL7dzgnwDNH85/mAMTGS95ms=;
+        b=aCZGIOTDCKV5xrC6ZjWZPgsnbX6Jw2wEKCKX3Y8XWDe4/j8Q8UJXfIPIFMhxrcNsWvpOY+
+        D7AG/Kc5WfjRdpIw/ENZ1gy66nGosboZuWKSOhtCNqqApTKEhUrOJZTGtzVbNz+pNDaGFy
+        8yEHCNz/CTpNu6drkem/94MSA7JLAXg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-PRuNiEe5MlqPNDW4a1h3fg-1; Thu, 07 May 2020 18:21:05 -0400
+X-MC-Unique: PRuNiEe5MlqPNDW4a1h3fg-1
+Received: by mail-wr1-f72.google.com with SMTP id q13so4257008wrn.14
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:21:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r9L5BbR1D/yVnqyNGeh7T9On6CSzY2MQWXloV95rB8U=;
-        b=rAb1HLJBXk55My/XHyft5imW59/EGuXi/9WPYjmCVl6s4VnMpWVZ8U/fFOSfvzsSAQ
-         A1CAyKAIoaqLFCPca5zZLlLhbk2vfSltKZUJWfSCmYqAAFmsUAOQsjy3ZP/RHEcWfex2
-         n8BrDtnzQI3jXd8smzaZ9o/yXKU/VMabdw29ZiXAzLPlh8Ol/LH38YatJu9ChHamh+8N
-         V6EYHMC0jrdKsDVwanKA3QLqoGXOMRUoMO9MIFI2uU9Xmw2z5ptkGq38j26tqy6C3R7K
-         wBe5dtaNHs25xUp2yROpP01d/sUikbyEX6I+VY8TbN+mEeVQM10yfdJtLThf1GHNmMQx
-         OEGA==
-X-Gm-Message-State: AGi0PuY42GQY/mQvvDdp12YFeqeniCqfAZ4UAds2C3GoyynvnyZI2u3v
-        k/XTgoq/R4FFH29b0iapQD8EqRB4
-X-Google-Smtp-Source: APiQypKA/L4nT1B8zrI/psQzZhDE/LV+Zp8vgbS4hJkhPPW5GZHcOjFxofXX5nHsyc6kcK/dOXhXXw==
-X-Received: by 2002:a05:6000:1089:: with SMTP id y9mr18191404wrw.306.1588890016517;
-        Thu, 07 May 2020 15:20:16 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id j2sm3915696wrp.47.2020.05.07.15.20.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 May 2020 15:20:15 -0700 (PDT)
-Date:   Thu, 7 May 2020 22:20:14 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 3/3] mm/swapfile.c: count won't be bigger than
- SWAP_MAP_MAX
-Message-ID: <20200507222014.6s5szrt6zy2b6ybo@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200501015259.32237-1-richard.weiyang@gmail.com>
- <20200501015259.32237-3-richard.weiyang@gmail.com>
- <20200501154853.bca4cfb7b2558bd43a4942f3@linux-foundation.org>
- <20200502132911.u6y6hkh56ik4ojne@master>
- <87k11pv5ep.fsf@yhuang-dev.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AZoTGnbCXcMKyRQ9mPxmL7dzgnwDNH85/mAMTGS95ms=;
+        b=F8DB1PpAMWCsS6wyzMBGJrTcI+8KsA1CKAR2zCnMJ27UMPl8bMuOY1spaYrGasuc37
+         wtWSip0916mpB3IQ/ECVDd0HNue7QwHJ3nGrfROp8yoBPV4/9QcBhBRWkp14f/vvNBHV
+         SvRn24qr08mjxRzMcDIgpWNYniMKQgsEyUeepmgUQvwgM9qdvZcuk6hfNpHlwfpPYvpG
+         2K0gUJRbqM1UZY7vk3X3MDbe12G7/vPoFzRyUrBSeZYzZcHDF85Vj7dq1Qqpb6Y4J93H
+         hQ9veHB7XUkaQtf4gtv3fm4ZL1MMNGre13Ff0UHzp9/EOtphGYtTNXALseFxGGuy6nkA
+         pdSg==
+X-Gm-Message-State: AGi0PuZGr2LXTegBgKfVUviinaVJizleTWUAnqkBZBuZVHY7hFv55Jwh
+        eqikeX5+pT9L6K/IE4eJFNxgFt+uLDgqIc/1AVFS06CBEDKPIwoeW2TTXFZcz8vVhFcWY9ECR9w
+        P02j2eGXCmpfd3jtNP0MSF50b
+X-Received: by 2002:a5d:510f:: with SMTP id s15mr19666486wrt.103.1588890064409;
+        Thu, 07 May 2020 15:21:04 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLUV4HMfiKwgurDoaoGbriEeAIIhW/Gxxjg07T2LtNMBH9vWdh9mS5ffncMlq2akBCU6Erg8g==
+X-Received: by 2002:a5d:510f:: with SMTP id s15mr19666469wrt.103.1588890064128;
+        Thu, 07 May 2020 15:21:04 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:8d3e:39e5:cd88:13cc? ([2001:b07:6468:f312:8d3e:39e5:cd88:13cc])
+        by smtp.gmail.com with ESMTPSA id z132sm7704638wmc.29.2020.05.07.15.21.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 15:21:03 -0700 (PDT)
+Subject: Re: [PATCH v2 7/9] KVM: SVM: keep DR6 synchronized with
+ vcpu->arch.dr6
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-8-pbonzini@redhat.com> <20200507182220.GI228260@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d6e61be1-f1e0-59a5-f5a0-538c739d0805@redhat.com>
+Date:   Fri, 8 May 2020 00:21:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k11pv5ep.fsf@yhuang-dev.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200507182220.GI228260@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:22:54PM +0800, Huang, Ying wrote:
->Wei Yang <richard.weiyang@gmail.com> writes:
->
->> On Fri, May 01, 2020 at 03:48:53PM -0700, Andrew Morton wrote:
->>>On Fri,  1 May 2020 01:52:59 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
->>>
->>>> When the condition is true, there are two possibilities:
->>>
->>>I'm struggling with this one.
->>>
->>>>    1. count == SWAP_MAP_BAD
->>>>    2. count == (SWAP_MAP_MAX & COUNT_CONTINUED) == SWAP_MAP_SHMEM
->>>
->>>I'm not sure what 2. is trying to say.  For a start, (SWAP_MAP_MAX &
->>>COUNT_CONTINUED) is zero.  I guess it meant "|"?
->>
->> Oops, you are right. It should be (SWAP_MAP_MAX | COUNT_CONTINUED).
->>
->> Sorry for the confusion.
->>
->>>
->>>Also, the return value documentation says we return EINVAL for migration
->>>entries.  Where's that happening, or is the comment out of date?
->>>
->>
->> Not paid attention to this.
->>
->> Take look into the code, I don't find a relationship between the swap count
->> and migration. Seems we just make a migration entry but not duplicate it.  
->> If my understanding is correct.
->
->Per my understanding, one functionality of the error path is to catch
->the behavior that shouldn't happen at all.  For example, if
->__swap_duplicate() is called for the migration entry because of some
->race condition.
->
+On 07/05/20 20:22, Peter Xu wrote:
+>> -	svm->vmcb->save.dr6 = nested_vmcb->save.dr6;
+>> +	svm->vcpu.arch.dr6  = nested_vmcb->save.dr6;
+> The rest looks very sane to me, but here I failed to figure out how arch.dr6
+> finally applied to save.dr6.  I saw it is applied in svm_vcpu_run() in the next
+> patch, but if that's the case then iiuc this commit may break bisection. Thanks,
 
-If __swap_duplicate() run for a migration entry, it returns since
-get_swap_entry() couldn't find a swap_info_struct. So the return value is
--EINVAL.
+You're right, this needs a call to kvm_update_dr6 (which would go away
+on the next patch).
 
-While when this situation would happen? And the race condition you mean is?
+Paolo
 
->Best Regards,
->Huang, Ying
-
--- 
-Wei Yang
-Help you, Help me
