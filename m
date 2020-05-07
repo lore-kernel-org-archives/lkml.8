@@ -2,119 +2,212 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB7C54E7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F6C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15BA7208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ag8rV3XR"
+	by mail.kernel.org (Postfix) with ESMTP id 18E2B20735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEGLno (ORCPT
+        id S1726743AbgEGLo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:43:44 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:20490 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgEGLnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:43:41 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200507114335epoutp022e1fc22575470aad9e654b14b913a0dd~MvE7qu1hu2135521355epoutp02M
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:43:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200507114335epoutp022e1fc22575470aad9e654b14b913a0dd~MvE7qu1hu2135521355epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588851815;
-        bh=5lZpe+aaCuvkrdtFkz5T1CPY41dsC1TFm3yTwD+erGk=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Ag8rV3XRHzLB+pHwOlmkICWJryzfPFn7Vwo7jMOCLgndJKjJdPEJMMl/cyHM32iNE
-         l1sFcUQWvan2ugAu3dAhV0snfKoY+dvLaNWIcRh+nhClc3tADGtAvOWfsVaMf2zIp6
-         3ntLkxLXs2pm9CFew4qBlQ/SCaeKGVDnliP2PWrM=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200507114335epcas5p21b9093116416c57e642fa056772b8713~MvE7YOWDq1215912159epcas5p2w;
-        Thu,  7 May 2020 11:43:35 +0000 (GMT)
-X-AuditID: b6c32a4b-7dbff70000021b78-97-5eb3f46786c0
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.26.07032.764F3BE5; Thu,  7 May 2020 20:43:35 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE:[PATCH 4/4] scripts/checkstack.pl: fix arm sp regex
-Reply-To: maninder1.s@samsung.com
-From:   Maninder Singh <maninder1.s@samsung.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-CC:     "George G. Davis" <george_davis@mentor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        Vaneet Narang <v.narang@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <CAK7LNASf687MLf1oWqrUiOHtw=p9Ug02bi1r-KevsxnFtQni2g@mail.gmail.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20200507105122epcms5p543853209caaec4c3b031d64f916f9ccc@epcms5p5>
-Date:   Thu, 07 May 2020 16:21:22 +0530
-X-CMS-MailID: 20200507105122epcms5p543853209caaec4c3b031d64f916f9ccc
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleLIzCtJLcpLzFFi42LZdlhTSzf9y+Y4g8c9YhYXd6daPPn/ndXi
-        8q45bBYPH9xgtTh0ci6jA6vHplWdbB67vzYxevRtWcXo8XmTXABLFJdNSmpOZllqkb5dAlfG
-        4qkH2Aues1Z07v7N3MB4iqWLkZNDQsBE4uTd1WxdjFwcQgK7GSVe/9jC3sXIwcErICjxd4cw
-        SI2wgL3E938gNZxANYoSF2asYQQpERYwkPi1VQMkzCagJ7Fq1x6wkSICWhJ3lnawgoxkBhn5
-        58UlqF28EjPan0LZ0hLbl29lBLE5BQIlPj2/xAoRF5W4ufotO4z9/th8RghbRKL13llmCFtQ
-        4sHP3VBxGYnVm3uhZjYzSnQuSQVZLCEwhVFi96suNoiEucTuDfPAingFfCV+H90FtoxFQFXi
-        +fb/UM0uEtve3wGLMwvIS2x/O4cZ5ElmAU2J9bv0IUpkJaaeWscEUcIn0fv7CRPMXzvmwdiq
-        Ei03N7DC/Pj540eo8R4S0xd1skPCeRKTxKv7rcwTGBVmIYJ6FpLNsxA2L2BkXsUomVpQnJue
-        WmxaYJyXWq5XnJhbXJqXrpecn7uJEZxItLx3MG4653OIUYCDUYmHd8LnzXFCrIllxZW5hxgl
-        OJiVRHh5fmyME+JNSaysSi3Kjy8qzUktPsQozcGiJM579h1QtUB6YklqdmpqQWoRTJaJg1Oq
-        gXHSjj2cW+6JOfXwJD2YqHNi990Ndi1P5onPvfQxbmGGx/mzB4zPzpt1oVY4QsGBRaeHQ53/
-        qLQap/Iksd5fZhPWvKoUf3z3HOeVQ7tYDBVMd3Oktmyfq/5Ja/eU3n3XXPy+budc0ONSkJn3
-        1l9Z7OvK67ObvdkPvShrOLV2kaG2f+8KxebztX5KLMUZiYZazEXFiQBlmEu7IAMAAA==
-X-CMS-RootMailID: 20200430125001epcas5p2a6f02e9888481cef96f32ba14450bc63
-References: <CAK7LNASf687MLf1oWqrUiOHtw=p9Ug02bi1r-KevsxnFtQni2g@mail.gmail.com>
-        <1588250972-8507-1-git-send-email-maninder1.s@samsung.com>
-        <1588250972-8507-4-git-send-email-maninder1.s@samsung.com>
-        <CGME20200430125001epcas5p2a6f02e9888481cef96f32ba14450bc63@epcms5p5>
+        Thu, 7 May 2020 07:44:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37608 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgEGLo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:44:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 54958ABE6;
+        Thu,  7 May 2020 11:44:59 +0000 (UTC)
+Date:   Thu, 07 May 2020 13:44:56 +0200
+Message-ID: <s5heerw3r5z.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amadeusz SX2awiX4ski <amadeuszx.slawinski@linux.intel.com>,
+        <security@kernel.org>, <alsa-devel@alsa-project.org>,
+        <tiwai@suse.com>, <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+In-Reply-To: <s5hmu6k3u24.wl-tiwai@suse.de>
+References: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+        <20200507082302.GF1024567@kroah.com>
+        <s5h8si45ard.wl-tiwai@suse.de>
+        <ecc5f76f-2e87-f634-b98c-9fbcad177d72@linux.intel.com>
+        <s5hpnbg3uch.wl-tiwai@suse.de>
+        <s5hmu6k3u24.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+On Thu, 07 May 2020 12:42:27 +0200,
+Takashi Iwai wrote:
+> 
+> On Thu, 07 May 2020 12:36:14 +0200,
+> Takashi Iwai wrote:
+> > 
+> > On Thu, 07 May 2020 12:27:41 +0200,
+> > Amadeusz SX2awiX4ski wrote:
+> > > 
+> > > So if I follow this correctly, you call spin_unlock_irqrestore twice
+> > > in case of error?
+> > 
+> > Erm no, this is obviously wrong.  The error path needs re-lock.
+> > Will respin the fix.
+> 
+> ... and below is the revised patch.
 
-Thanks for review.
-We will integrate your review comements and send v2.
+and yet more brush up, with a slightly better description.
+This seems working on my local machine, but let me know if something
+still goes wrong.
 
->>
 
->> so making regex $re for ARM similar to aarch64
->>
->> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
->> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> 
-> 
->This looks good to me, and it is a bug fix.
-> 
->Just a question about the SOB.
-> 
-> 
->Maninder Singh is the author and also the submitter, right?
-> 
->What does "Signed-off-by: Vaneet Narang <v.narang@samsung.com>" mean?
-> 
->Co-developed-by or something else?
+thanks,
+
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v3] ALSA: rawmidi: Fix racy buffer resize under concurrent
+ accesses
+
+The rawmidi core allows user to resize the runtime buffer via ioctl,
+and this may lead to UAF when performed during concurrent reads or
+writes: the read/write functions unlock the runtime lock temporarily
+during copying form/to user-space, and that's the race window.
+
+This patch fixes the hole by introducing a reference counter for the
+runtime buffer read/write access and returns -EBUSY error when the
+resize is performed concurrently against read/write.
+
+Note that the ref count field is a simple integer instead of
+refcount_t here, since the all contexts accessing the buffer is
+basically protected with a spinlock, hence we need no expensive atomic
+ops.  Also, note that this busy check is needed only against read /
+write functions, and not in receive/transmit callbacks; the race can
+happen only at the spinlock hole mentioned in the above, while the
+whole function is protected for receive / transmit callbacks.
+
+Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+v1->v2: Fix spinlock unbalance at error path of snd_rawmidi_kernel_read1()    
+v2->v3: Remove superfluous ref in receive/transmit; more detailed
+	patch description
+
+ include/sound/rawmidi.h |  1 +
+ sound/core/rawmidi.c    | 31 +++++++++++++++++++++++++++----
+ 2 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+index a36b7227a15a..334842daa904 100644
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+ 	size_t avail_min;	/* min avail for wakeup */
+ 	size_t avail;		/* max used buffer for wakeup */
+ 	size_t xruns;		/* over/underruns counter */
++	int buffer_ref;		/* buffer reference count */
+ 	/* misc */
+ 	spinlock_t lock;
+ 	wait_queue_head_t sleep;
+diff --git a/sound/core/rawmidi.c b/sound/core/rawmidi.c
+index 20dd08e1f675..2a688b711a9a 100644
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work(struct work_struct *work)
+ 		runtime->event(runtime->substream);
+ }
  
-Yes All 4 patches are co-developed by Vaneet and me.
-we were checking stack usage for arm and AARCH64 and found
-some changes in scrips which can help others also.
++/* buffer refcount management: call with runtime->lock held */
++static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref++;
++}
++
++static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref--;
++}
++
+ static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
+ {
+ 	struct snd_rawmidi_runtime *runtime;
+@@ -669,6 +680,11 @@ static int resize_runtime_buffer(struct snd_rawmidi_runtime *runtime,
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
++		if (runtime->buffer_ref) {
++			spin_unlock_irq(&runtime->lock);
++			kvfree(newbuf);
++			return -EBUSY;
++		}
+ 		oldbuf = runtime->buffer;
+ 		runtime->buffer = newbuf;
+ 		runtime->buffer_size = params->buffer_size;
+@@ -1019,8 +1035,10 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 	long result = 0, count1;
+ 	struct snd_rawmidi_runtime *runtime = substream->runtime;
+ 	unsigned long appl_ptr;
++	int err = 0;
+ 
+ 	spin_lock_irqsave(&runtime->lock, flags);
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1039,16 +1057,19 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 		if (userbuf) {
+ 			spin_unlock_irqrestore(&runtime->lock, flags);
+ 			if (copy_to_user(userbuf + result,
+-					 runtime->buffer + appl_ptr, count1)) {
+-				return result > 0 ? result : -EFAULT;
+-			}
++					 runtime->buffer + appl_ptr, count1))
++				err = -EFAULT;
+ 			spin_lock_irqsave(&runtime->lock, flags);
++			if (err)
++				goto out;
+ 		}
+ 		result += count1;
+ 		count -= count1;
+ 	}
++ out:
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+-	return result;
++	return result > 0 ? result : err;
+ }
+ 
+ long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
+@@ -1342,6 +1363,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 			return -EAGAIN;
+ 		}
+ 	}
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail > 0) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1373,6 +1395,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 	}
+       __end:
+ 	count1 = runtime->avail < runtime->buffer_size;
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	if (count1)
+ 		snd_rawmidi_output_trigger(substream, 1);
+-- 
+2.25.0
 
-Thanks,
-Maninder Singh
