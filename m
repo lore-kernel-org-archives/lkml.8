@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C2DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA01C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCAC216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915A72184D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877214;
-	bh=8y1X0s6ChezuHL2SQivauYuiwtYVtJLamswoo4d7aOU=;
+	s=default; t=1588877227;
+	bh=ncntM8xusTBDowEzEWNCc7rZsUYQrqMiSs/78WsFdTs=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=QaUpXHz3z53vD4mbgMtiojSksN+teLIHo0JC3Wcdvc02FgdHlxS9hxjkT76Jq4KzY
-	 aNeAjDcuEfhPDNtfMGExGW2eOEYF5VqyqGUEtMaB2DzXlvAxw1bSLUnvXe2pnWPo2S
-	 rUX8mdcGXpCTVq5WWifzip+FzimqNCJIfJr+qfTA=
+	b=P8ZmfJ3iGvzj/fxS5rw/EjHDq6yGMC2Rfy/pQam1XdGuewMoh3VO6AiP5MgVWvSFy
+	 r1STtjU34ldIKKQkrt2kvnyfIjgl9L41FacFvqiQw7QCV7aurmnyvlGlM/g245Iy42
+	 Wyn0KVWZ2ZsVKDSjMqkaIKrN9YcEjrOTUaX1XfYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgEGSqx (ORCPT
+        id S1728476AbgEGSrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47358 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEGSqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:46:53 -0400
+        id S1726467AbgEGSrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:47:06 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2F1A20870;
-        Thu,  7 May 2020 18:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA8420870;
+        Thu,  7 May 2020 18:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877212;
-        bh=8y1X0s6ChezuHL2SQivauYuiwtYVtJLamswoo4d7aOU=;
+        s=default; t=1588877226;
+        bh=ncntM8xusTBDowEzEWNCc7rZsUYQrqMiSs/78WsFdTs=;
         h=Date:From:To:Cc:Subject:From;
-        b=PZnNClT+lg6ffcbI+UN0rLjs9ggoy1CMTteo1UmYrZyGaYYmxl/XJB9rJVLhNMTKe
-         S+DhD7/Ma0tctRvxEfiVTYM4FlWArq4S2RFUWMLXtF///otoRsihdHvAMWESUhV255
-         e3isMjfS4dZfDv+s5aWAGWMoPgTW+aVuKPqSGXLU=
-Date:   Thu, 7 May 2020 13:51:18 -0500
+        b=nhIYaf7JRBzu4XU48ShZmJkPutXiUwiboCBlGh+3FtUQ68lwPplfqV3iyb4T4mwo7
+         Oj016YcOBuI+pvLt0sMembT0yS0dHdw94+WID2icLyRyFHOOW5tpWPYABoGcJxw1PB
+         VeptL1i8bCVNG+9QvAIhbuMGv/SJZ4ikHzRKMP8U=
+Date:   Thu, 7 May 2020 13:51:32 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] can: Replace zero-length array with flexible-array
-Message-ID: <20200507185118.GA14022@embeddedor>
+To:     Christian Lamparter <chunkeey@googlemail.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] carl9170: Replace zero-length array with flexible-array
+Message-ID: <20200507185132.GA14046@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,20 +91,34 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/can/skb.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/carl9170/fwcmd.h |    2 +-
+ drivers/net/wireless/ath/carl9170/hw.h    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/can/skb.h b/include/linux/can/skb.h
-index a954def26c0d..900b9f4e0605 100644
---- a/include/linux/can/skb.h
-+++ b/include/linux/can/skb.h
-@@ -34,7 +34,7 @@
- struct can_skb_priv {
- 	int ifindex;
- 	int skbcnt;
--	struct can_frame cf[0];
-+	struct can_frame cf[];
- };
+diff --git a/drivers/net/wireless/ath/carl9170/fwcmd.h b/drivers/net/wireless/ath/carl9170/fwcmd.h
+index ea1d80f9a50e..56999a3b9d3b 100644
+--- a/drivers/net/wireless/ath/carl9170/fwcmd.h
++++ b/drivers/net/wireless/ath/carl9170/fwcmd.h
+@@ -127,7 +127,7 @@ struct carl9170_write_reg {
+ struct carl9170_write_reg_byte {
+ 	__le32	addr;
+ 	__le32  count;
+-	u8	val[0];
++	u8	val[];
+ } __packed;
  
- static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
+ #define	CARL9170FW_PHY_HT_ENABLE		0x4
+diff --git a/drivers/net/wireless/ath/carl9170/hw.h b/drivers/net/wireless/ath/carl9170/hw.h
+index 08e0ae9c5836..555ad4975970 100644
+--- a/drivers/net/wireless/ath/carl9170/hw.h
++++ b/drivers/net/wireless/ath/carl9170/hw.h
+@@ -851,7 +851,7 @@ struct ar9170_stream {
+ 	__le16 length;
+ 	__le16 tag;
+ 
+-	u8 payload[0];
++	u8 payload[];
+ } __packed __aligned(4);
+ #define AR9170_STREAM_LEN				4
+ 
 
