@@ -2,161 +2,101 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E84C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFC4C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE72B208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C16208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="irn2+fcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEGXHY (ORCPT
+        id S1727853AbgEGXH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:07:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39234 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgEGXHW (ORCPT
+        Thu, 7 May 2020 19:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727823AbgEGXHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 19:07:22 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 51BF4803087C;
-        Thu,  7 May 2020 23:07:18 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RgeR1JaAaddZ; Fri,  8 May 2020 02:07:17 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Olof Johansson <olof@lixom.net>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <linux-mips@vger.kernel.org>, <soc@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
-Date:   Fri, 8 May 2020 02:07:03 +0300
-Message-ID: <20200507230705.6468-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED07C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:07:22 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id b1so552746qtt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=cDgv5RBBNmmZoeVkSdRHbb+p5n1j6gbGkVNuskYknK8=;
+        b=irn2+fcrxp6NonlZzAmEkP+IcmaZPlVzbzxmfCG6lVabw4/G0dFt3sq6PNTCVMGxGG
+         mHrxFYOqL919h6uaxEl0JW7dIaw8NB10ABm7DPmqf/EhfuWGsilf0Zdh4cihFDxim+Mo
+         2oiV63mSEiHMYHoenvD/gjwZA2LAweN8EWw+tYVdcFwe7a8XKwwE9AkeASQmt+OrM6Ud
+         66rqMK51DOb0gUzTcrOl8r0cDm0oT8FMB5ERjpMlkKlVh00sAuv1oGi7o++rQCXNEyy3
+         NK/+1D+NyYl6NPUHDAAe/3i2dWdBxPkf5biMBOG9YHzAaT3acw0lJR7KTsOkpXlpkwHt
+         Jr4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=cDgv5RBBNmmZoeVkSdRHbb+p5n1j6gbGkVNuskYknK8=;
+        b=I35EUaAX+xZWjSUgXUk6dIdpNLDbVY3eEIg60EIM2PoZrv1qau4aIv0nOeZo4dWS2B
+         cT1QQWofcojfCysZJQECMClcnzIVcj7B2ZQsTJuln6bJSvl/5y/75BRe1biijMTtPLnG
+         /UMbBLbn6u4gnhlsFOvwWx9SnWB+yTJG5JO8kKVk7RYOuxxcPte927kNTTvBGeKuxaNt
+         jifHqJEnANk+hV++7mA/QgAQgyfrdm+kmlkei0tPjU+8e6ACK5cNuWORppVBa784LhDr
+         ZrH5q81KUe5f/oUmwbfpzbSuYEV/ScNwysG6WqGMbhg6uQI2Y2S+768lpRTQbiEMziDK
+         H1kw==
+X-Gm-Message-State: AGi0PuZORUrR00iZmEFspNBG5hVA8JxxQStHGAzGtYH5LrN39GiTkzUp
+        CIv8OTjfa4ORC6Eihu/QbEfsnw==
+X-Google-Smtp-Source: APiQypJ8nv0rS/6ipD0+tlnjwjtkoEW9gBSgFlE4m3C077d6wO4jOE6P+FabQVeufE8QHwU+D1XMog==
+X-Received: by 2002:ac8:46c9:: with SMTP id h9mr16757891qto.128.1588892841789;
+        Thu, 07 May 2020 16:07:21 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id b126sm5170080qkc.119.2020.05.07.16.07.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 16:07:21 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] kernel: add panic_on_taint
+Date:   Thu, 7 May 2020 19:07:20 -0400
+Message-Id: <6B423101-ACF4-49A3-AD53-ACBF87F1ABE0@lca.pw>
+References: <20200507221503.GL205881@optiplex-lnx>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, Baoquan He <bhe@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+In-Reply-To: <20200507221503.GL205881@optiplex-lnx>
+To:     Rafael Aquini <aquini@redhat.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a single register provided by the SoC system controller,
-which can be used to tune the L2-cache RAM up. It only provides a way
-to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
-compatible string the device node can be optionally equipped with the
-properties of Tag/Data/WS latencies.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Paul Cercueil <paul@crapouillou.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mips@vger.kernel.org
-Cc: soc@kernel.org
 
----
+> On May 7, 2020, at 6:15 PM, Rafael Aquini <aquini@redhat.com> wrote:
+>=20
+> It's a reasonable and self-contained feature that we have a valid use for.=
+=20
+> I honestly fail to see it causing that amount of annoyance as you are=20
+> suggesting here.
 
-Changelog v2:
-- Move driver to the memory subsystem.
-- Use dual GPL/BSD license.
-- Use single lined copyright header.
-- Move "allOf" restrictions to the root level of the properties.
-- Discard syscon compatible string and reg property.
-- The DT node is supposed to be a child of the Baikal-T1 system controller
-  node.
----
- .../memory-controllers/baikal,bt1-l2-ctl.yaml | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+It is not a big trouble yet, but keeping an obsolete patch that not very str=
+aightforward to figure out that it will be superseded by the panic_on_taint p=
+atch will only cause more confusion the longer it has stayed in linux-next.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-new file mode 100644
-index 000000000000..263f0cdab4e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memory-controllers/baikal,bt1-l2-ctl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Baikal-T1 L2-cache Control Block
-+
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
-+
-+description: |
-+  By means of the System Controller Baikal-T1 SoC exposes a few settings to
-+  tune the MIPS P5600 CM2 L2 cache performance up. In particular it's possible
-+  to change the Tag, Data and Way-select RAM access latencies. Baikal-T1
-+  L2-cache controller block is responsible for the tuning. Its DT node is
-+  supposed to be a child of the system controller.
-+
-+properties:
-+  compatible:
-+    const: baikal,bt1-l2-ctl
-+
-+  baikal,l2-ws-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Way-select RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
-+
-+  baikal,l2-tag-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Tag RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
-+
-+  baikal,l2-data-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Data RAM accesses
-+    default: 1
-+    minimum: 0
-+    maximum: 3
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    l2_ctl {
-+      compatible = "baikal,bt1-l2-ctl";
-+
-+      baikal,l2-ws-latency = <0>;
-+      baikal,l2-tag-latency = <0>;
-+      baikal,l2-data-latency = <1>;
-+    };
-+...
--- 
-2.25.1
+The thing is that even if you can=E2=80=99t get this panic_on_taint (the sup=
+erior solution) patch accepted for some reasons, someone else could still wo=
+rk on it until it get merged.
 
+Thus, I failed to see any possibility we will go back to the inferior soluti=
+on (mm-slub-add-panic_on_error-to-the-debug-facilities.patch) by all means.=
