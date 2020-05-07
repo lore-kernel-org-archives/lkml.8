@@ -2,194 +2,191 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C8CC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6472080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BEAn+G0J"
+	by mail.kernel.org (Postfix) with ESMTP id A214D2080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588840184;
+	bh=hK4s7mEp4L2i0jjI+ufAP/Prw7BRv28xeZTRcDf03Eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qYbysHodLuJV6yB/ycNmJtZGpYioIN9rK2cu9LIzHV7eOb7O6zZDiPzxnTcqk6P8f
+	 ASg4N1CBf+7rXHzRthCoBXonlTcXcd/eBSFSj5aGf2GOa20IrBH04s3Tl6QRMxcI9x
+	 hQv84GqH76JY0IjSBew1j5UJpEsx2nkE4QicJo0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgEGI3W (ORCPT
+        id S1726476AbgEGI3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:29:22 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:32731 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbgEGI3V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588840160; x=1620376160;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=kQdkQWchIS0juDhlAm9sTzb/ZBV6GvvpTp81oVs0nKE=;
-  b=BEAn+G0JIzpEBYAEcZNgB1Q5leuF89dE011gS/M02OB4CzkROfYmkE4E
-   vpOA1i0Nq/W7xiAkVtuQRzim9MoY33TAPk4IoviU/l4U7OPCN8NoRezoD
-   8N+lCgAhxGGrh24lezDB4rm729RGZEB3pvrLRq6ayurHIjtDInom10NkX
-   Q=;
-IronPort-SDR: aDOPUNuQuXya77sm5jk5VJKoaxwv11GiEZNQu/vbh/VIVfIMR81jxSQod3FfgthFPlRBQvsxsb
- 2h6C+r1o7xHg==
-X-IronPort-AV: E=Sophos;i="5.73,363,1583193600"; 
-   d="scan'208";a="33513335"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 May 2020 08:29:16 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 4DA2C283958;
-        Thu,  7 May 2020 08:29:14 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 08:29:13 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 7 May 2020 08:28:57 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <Jonathan.Cameron@Huawei.com>, SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 06/16] mm/damon: Split regions into 4 subregions if possible
-Date:   Thu, 7 May 2020 10:28:36 +0200
-Message-ID: <20200507082836.32145-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505110815.10532-7-sjpark@amazon.com> (raw)
+        Thu, 7 May 2020 04:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgEGI3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:29:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36B12073A;
+        Thu,  7 May 2020 08:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588840182;
+        bh=hK4s7mEp4L2i0jjI+ufAP/Prw7BRv28xeZTRcDf03Eg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xzoti7dxVqALMsVIV2N4lTmSzLlIUeq/4U2hHwg93tjPc7sx3TcKSjiPPdwPjXq2I
+         3NnhnGou2CFRLCWozH1qgD/HTlfDuw8TMVQk6lSkQ65uamVTMRemsxhsz62eOzJIuZ
+         qZrkOjIc9kn/OiEE5EGDRZRlbeMTF9nzl6XUT5Ww=
+Date:   Thu, 7 May 2020 09:29:35 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
+ 32-bit logical immediates
+Message-ID: <20200507082934.GA28215@willie-the-truck>
+References: <20200507010504.26352-1-luke.r.nels@gmail.com>
+ <20200507010504.26352-2-luke.r.nels@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D13UWB003.ant.amazon.com (10.43.161.233) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507010504.26352-2-luke.r.nels@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 May 2020 13:08:05 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+Hi Luke,
 
-> From: SeongJae Park <sjpark@amazon.de>
+Thanks for the patches.
+
+On Wed, May 06, 2020 at 06:05:01PM -0700, Luke Nelson wrote:
+> This patch fixes two issues present in the current function for encoding
+> arm64 logical immediates when using the 32-bit variants of instructions.
 > 
-> Suppose that there are a very wide and cold region and a hot region, and
-> both regions are identified by DAMON.  And then, the middle small region
-> inside the very wide and cold region becomes hot.  DAMON will not be
-> able to identify this new region because the adaptive regions adjustment
-> mechanism splits each region to only two subregions.
+> First, the code does not correctly reject an all-ones 32-bit immediate
+> and returns an undefined instruction encoding, which can crash the kernel.
+> The fix is to add a check for this case.
 > 
-> This commit modifies the logic to split each region to 4 subregions if
-> possible so that such problematic region can eventually identified.
-
-As you can check with the 'Evaluations' section in the cover letter of this
-patchset, the extend of the slowdown DAMON's recording feature made to the
-target workload has doulbed (0.55% with v9, 1.02% with this patchset).  It's
-still just a small number, but the worst case slowdown is 5.29%.  It was only
-1.88% before.  I suspect this patch is the reason, as this is the only one
-major change we made after v9.
-
-For the reason, I would like to make this patch to split each region into 3 sub
-regions instead of 4 subregions.  It will reduce the overhead a little bit
-while still allow the corner case regions be eventually detected.  If you have
-other concerns or opinions, please let me know.
-
-
-Thanks,
-SeongJae Park
-
+> Second, the code incorrectly rejects some 32-bit immediates that are
+> actually encodable as logical immediates. The root cause is that the code
+> uses a default mask of 64-bit all-ones, even for 32-bit immediates. This
+> causes an issue later on when the mask is used to fill the top bits of
+> the immediate with ones, shown here:
 > 
-> Suggested-by: James Cameron <Jonathan.Cameron@Huawei.com>
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+>   /*
+>    * Pattern: 0..01..10..01..1
+>    *
+>    * Fill the unused top bits with ones, and check if
+>    * the result is a valid immediate (all ones with a
+>    * contiguous ranges of zeroes).
+>    */
+>   imm |= ~mask;
+>   if (!range_of_ones(~imm))
+>           return AARCH64_BREAK_FAULT;
+> 
+> To see the problem, consider an immediate of the form 0..01..10..01..1,
+> where the upper 32 bits are zero, such as 0x80000001. The code checks
+> if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
+> 1..10..01..10..0, which fails the check; the correct mask yields
+> 0..01..10..0, which succeeds.
+> 
+> The fix is to use a 32-bit all-ones default mask for 32-bit immediates.
+> 
+> Currently, the only user of this function is in
+> arch/arm64/kvm/va_layout.c, which uses 64-bit immediates and won't
+> trigger these bugs.
+
+Ah, so this isn't a fix or a bpf patch ;)
+
+I can queue it via arm64 for 5.8, along with the bpf patches since there
+are some other small changes pending in the arm64 bpf backend for BTI.
+
+> We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+> logical immediates and all 5,334 encodable 64-bit logical immediates.
+> 
+> Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
+> Co-developed-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 > ---
->  mm/damon.c | 44 +++++++++++++++++++++++++++-----------------
->  1 file changed, 27 insertions(+), 17 deletions(-)
+>  arch/arm64/kernel/insn.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/mm/damon.c b/mm/damon.c
-> index cec946197e13..342f905927a0 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -650,26 +650,32 @@ static void damon_split_region_at(struct damon_ctx *ctx,
->  	damon_insert_region(new, r, damon_next_region(r));
->  }
->  
-> -/* Split every region in the given task into two randomly-sized regions */
-> -static void damon_split_regions_of(struct damon_ctx *ctx, struct damon_task *t)
-> +/* Split every region in the given task into 'nr_subs' regions */
-> +static void damon_split_regions_of(struct damon_ctx *ctx,
-> +				     struct damon_task *t, int nr_subs)
+> diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+> index 4a9e773a177f..42fad79546bb 100644
+> --- a/arch/arm64/kernel/insn.c
+> +++ b/arch/arm64/kernel/insn.c
+> @@ -1535,7 +1535,7 @@ static u32 aarch64_encode_immediate(u64 imm,
+>  				    u32 insn)
 >  {
->  	struct damon_region *r, *next;
-> -	unsigned long sz_orig_region, sz_left_region;
-> +	unsigned long sz_region, sz_sub = 0;
-> +	int i;
+>  	unsigned int immr, imms, n, ones, ror, esz, tmp;
+> -	u64 mask = ~0UL;
+> +	u64 mask;
 >  
->  	damon_for_each_region_safe(r, next, t) {
-> -		sz_orig_region = r->vm_end - r->vm_start;
-> -
-> -		/*
-> -		 * Randomly select size of left sub-region to be at least
-> -		 * 10 percent and at most 90% of original region
-> -		 */
-> -		sz_left_region = ALIGN_DOWN(damon_rand(1, 10) * sz_orig_region
-> -					    / 10, MIN_REGION);
-> -		/* Do not allow blank region */
-> -		if (sz_left_region == 0 || sz_left_region >= sz_orig_region)
-> -			continue;
-> -
-> -		damon_split_region_at(ctx, r, sz_left_region);
-> +		sz_region = r->vm_end - r->vm_start;
-> +
-> +		for (i = 0; i < nr_subs - 1 &&
-> +				sz_region > 2 * MIN_REGION; i++) {
-> +			/*
-> +			 * Randomly select size of left sub-region to be at
-> +			 * least 10 percent and at most 90% of original region
-> +			 */
-> +			sz_sub = ALIGN_DOWN(damon_rand(1, 10) *
-> +					sz_region / 10, MIN_REGION);
-> +			/* Do not allow blank region */
-> +			if (sz_sub == 0 || sz_sub >= sz_region)
-> +				continue;
-> +
-> +			damon_split_region_at(ctx, r, sz_sub);
-> +			sz_region = sz_sub;
-> +		}
->  	}
->  }
->  
-> @@ -687,14 +693,18 @@ static void kdamond_split_regions(struct damon_ctx *ctx)
->  {
->  	struct damon_task *t;
->  	unsigned int nr_regions = 0;
-> +	int nr_subregions = 2;
->  
->  	damon_for_each_task(ctx, t)
->  		nr_regions += nr_damon_regions(t);
->  	if (nr_regions > ctx->max_nr_regions / 2)
->  		return;
->  
-> +	if (nr_regions < ctx->max_nr_regions / 4)
-> +		nr_subregions = 4;
-> +
->  	damon_for_each_task(ctx, t)
-> -		damon_split_regions_of(ctx, t);
-> +		damon_split_regions_of(ctx, t, nr_subregions);
->  }
->  
->  /*
-> -- 
-> 2.17.1
-> 
+>  	/* Can't encode full zeroes or full ones */
+>  	if (!imm || !~imm)
+
+It's a bit grotty spreading the checks out now. How about we tweak things
+slightly along the lines of:
+
+
+diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+index 4a9e773a177f..60ec788eaf33 100644
+--- a/arch/arm64/kernel/insn.c
++++ b/arch/arm64/kernel/insn.c
+@@ -1535,16 +1535,10 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 				    u32 insn)
+ {
+ 	unsigned int immr, imms, n, ones, ror, esz, tmp;
+-	u64 mask = ~0UL;
+-
+-	/* Can't encode full zeroes or full ones */
+-	if (!imm || !~imm)
+-		return AARCH64_BREAK_FAULT;
++	u64 mask;
+ 
+ 	switch (variant) {
+ 	case AARCH64_INSN_VARIANT_32BIT:
+-		if (upper_32_bits(imm))
+-			return AARCH64_BREAK_FAULT;
+ 		esz = 32;
+ 		break;
+ 	case AARCH64_INSN_VARIANT_64BIT:
+@@ -1556,6 +1550,12 @@ static u32 aarch64_encode_immediate(u64 imm,
+ 		return AARCH64_BREAK_FAULT;
+ 	}
+ 
++	mask = GENMASK(esz - 1, 0);
++
++	/* Can't encode full zeroes or full ones */
++	if (imm & ~mask || !imm || imm == mask)
++		return AARCH64_BREAK_FAULT;
++
+ 	/*
+ 	 * Inverse of Replicate(). Try to spot a repeating pattern
+ 	 * with a pow2 stride.
+
+
+What do you think?
+
+Will
