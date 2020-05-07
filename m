@@ -2,77 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490D7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B093C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27A682078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EFA2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgEGIgP (ORCPT
+        id S1726538AbgEGIgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:36:15 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41749 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgEGIgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:36:14 -0400
-IronPort-SDR: xD1A086EIud7GAW+cI/RxH4k5eqAi4VUWrx5VCYKYWAumiQuR68kd/viLISXtkUrfiMKLHd7Bp
- JUpuuWlMEvtQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 01:36:14 -0700
-IronPort-SDR: jtxaYoRtPoSRyOaA6O6slb2ICn9ccV5NNbOJMxw+e12rQ2MLF3np6cfh1NtovaR+RpFCd8QUPL
- 7p7YHS0EFieg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
-   d="scan'208";a="284908332"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 07 May 2020 01:36:14 -0700
-Received: from [10.249.225.10] (abudanko-mobl.ccr.corp.intel.com [10.249.225.10])
-        by linux.intel.com (Postfix) with ESMTP id 50CA958048A;
-        Thu,  7 May 2020 01:36:12 -0700 (PDT)
-Subject: Re: [PATCH v2 11/11] perf docs: extend record mode docs with info on
- --ctl-fd[-ack] options
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
- <e7d6ffe1-0166-e98a-9693-a944107b9f0e@linux.intel.com>
- <20200506202719.GJ9893@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <c3cc9eed-f93f-d118-104f-b4843b849d02@linux.intel.com>
-Date:   Thu, 7 May 2020 11:36:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 04:36:48 -0400
+Received: from smtp-bc0d.mail.infomaniak.ch ([45.157.188.13]:60499 "EHLO
+        smtp-bc0d.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgEGIgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:36:46 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Hmyz5P4szlhrLP;
+        Thu,  7 May 2020 10:36:43 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49Hmyx5yyJzlrBJt;
+        Thu,  7 May 2020 10:36:41 +0200 (CEST)
+Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
+Date:   Thu, 7 May 2020 10:36:41 +0200
+User-Agent: 
 MIME-Version: 1.0
-In-Reply-To: <20200506202719.GJ9893@kernel.org>
+In-Reply-To: <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 06.05.2020 23:27, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 06, 2020 at 09:30:50PM +0300, Alexey Budankov escreveu:
+On 07/05/2020 10:05, David Laight wrote:
+> From: Mickaël Salaün
+>> Sent: 05 May 2020 16:32
 >>
->> Extend perf-record.txt file with --ctl-fd[-ack] options description.
->> Document possible usage model introduced by --ctl-fd[-ack] options
->> by providing example bash shell script.
+>> This fifth patch series add new kernel configurations (OMAYEXEC_STATIC,
+>> OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
+>> configure the security policy at kernel build time.  As requested by
+>> Mimi Zohar, I completed the series with one of her patches for IMA.
+>>
+>> The goal of this patch series is to enable to control script execution
+>> with interpreters help.  A new O_MAYEXEC flag, usable through
+>> openat2(2), is added to enable userspace script interpreter to delegate
+>> to the kernel (and thus the system security policy) the permission to
+>> interpret/execute scripts or other files containing what can be seen as
+>> commands.
+>>
+>> A simple system-wide security policy can be enforced by the system
+>> administrator through a sysctl configuration consistent with the mount
+>> points or the file access rights.  The documentation patch explains the
+>> prerequisites.
+>>
+>> Furthermore, the security policy can also be delegated to an LSM, either
+>> a MAC system or an integrity system.  For instance, the new kernel
+>> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
+>> integrity gap by bringing the ability to check the use of scripts [1].
+>> Other uses are expected, such as for openat2(2) [2], SGX integration
+>> [3], bpffs [4] or IPE [5].
+>>
+>> Userspace needs to adapt to take advantage of this new feature.  For
+>> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
+>> extended with policy enforcement points related to code interpretation,
+>> which can be used to align with the PowerShell audit features.
+>> Additional Python security improvements (e.g. a limited interpreter
+>> withou -c, stdin piping of code) are on their way.
+>>
+>> The initial idea come from CLIP OS 4 and the original implementation has
+>> been used for more than 12 years:
+>> https://github.com/clipos-archive/clipos4_doc
+>>
+>> An introduction to O_MAYEXEC was given at the Linux Security Summit
+>> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
+>> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
+>> The "write xor execute" principle was explained at Kernel Recipes 2018 -
+>> CLIP OS: a defense-in-depth OS:
+>> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
+>>
+>> This patch series can be applied on top of v5.7-rc4.  This can be tested
+>> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
+>> this patch series.
 > 
-> Ditto, combine this patch with the one that introduces these options.
+> None of that description actually says what the patch actually does.
 
-Addressed in v3.
-
-~Alexey
+"Add support for O_MAYEXEC" "to enable to control script execution".
+What is not clear here? This seems well understood by other commenters.
+The documentation patch and the talks can also help.
