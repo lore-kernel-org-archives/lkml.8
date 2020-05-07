@@ -2,105 +2,79 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCCAC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A92AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183A42078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C852078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgEGIfH (ORCPT
+        id S1726470AbgEGIfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:35:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:29374 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgEGIfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:35:05 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-42--XL0GonEN0uCYRKkZGNirQ-1; Thu, 07 May 2020 09:35:02 +0100
-X-MC-Unique: -XL0GonEN0uCYRKkZGNirQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 7 May 2020 09:35:01 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 7 May 2020 09:35:01 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'hpa@zytor.com'" <hpa@zytor.com>,
-        'Brian Gerst' <brgerst@gmail.com>,
-        "Nick Desaulniers" <ndesaulniers@google.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] x86: bitops: fix build regression
-Thread-Topic: [PATCH] x86: bitops: fix build regression
-Thread-Index: AQHWJDdSnFcKS0TA9USbY8l3s67J1qicPRAA///0fYCAABqNUA==
-Date:   Thu, 7 May 2020 08:35:01 +0000
-Message-ID: <ef7d077424554abebbd0d46738c90163@AcuMS.aculab.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
- <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com>
- <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
- <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com>
-In-Reply-To: <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 7 May 2020 04:35:38 -0400
+Received: from mga03.intel.com ([134.134.136.65]:2947 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgEGIfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:35:37 -0400
+IronPort-SDR: Z+lAl2FEz2jXd/QZul18QpnMAGNwHxDfbV8k9nSmx9Rd345ZW4i1DWJQNucXLOg3sNxKsYD3Cm
+ KUuU37Xs4DCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 01:35:37 -0700
+IronPort-SDR: ZE1bQRvSz2AX4inPMw+9LKw12ZSOj6upC65GAttxe2kmGB58FkT0JRaki9Umo+v3TCw+OAEdVm
+ pBh9AyRFFf8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="296458470"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 07 May 2020 01:35:37 -0700
+Received: from [10.249.225.10] (abudanko-mobl.ccr.corp.intel.com [10.249.225.10])
+        by linux.intel.com (Postfix) with ESMTP id 80A7A58048A;
+        Thu,  7 May 2020 01:35:35 -0700 (PDT)
+Subject: Re: [PATCH v2 07/11] perf docs: extend stat mode docs with info on
+ --ctl-fd[-ack] options
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
+ <fb7c1fb9-2f6b-eb4b-d256-51253b29b4ac@linux.intel.com>
+ <20200506202235.GG9893@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <10abe650-b73d-be76-23fb-9c341b459f5b@linux.intel.com>
+Date:   Thu, 7 May 2020 11:35:34 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200506202235.GG9893@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogaHBhQHp5dG9yLmNvbQ0KPiBTZW50OiAwNyBNYXkgMjAyMCAwODo1OQ0KPiBPbiBNYXkg
-NywgMjAyMCAxMjo0NDo0NCBBTSBQRFQsIERhdmlkIExhaWdodCA8RGF2aWQuTGFpZ2h0QEFDVUxB
-Qi5DT00+IHdyb3RlOg0KPiA+RnJvbTogQnJpYW4gR2Vyc3QNCj4gPj4gU2VudDogMDcgTWF5IDIw
-MjAgMDc6MTgNCj4gPi4uLg0KPiA+PiA+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2JpdG9w
-cy5oDQo+ID4+ID4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vYml0b3BzLmgNCj4gPj4gPiBA
-QCAtNTQsNyArNTQsNyBAQCBhcmNoX3NldF9iaXQobG9uZyBuciwgdm9sYXRpbGUgdW5zaWduZWQg
-bG9uZw0KPiA+KmFkZHIpDQo+ID4+ID4gICAgICAgICBpZiAoX19idWlsdGluX2NvbnN0YW50X3Ao
-bnIpKSB7DQo+ID4+ID4gICAgICAgICAgICAgICAgIGFzbSB2b2xhdGlsZShMT0NLX1BSRUZJWCAi
-b3JiICUxLCUwIg0KPiA+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDogQ09OU1RfTUFTS19B
-RERSKG5yLCBhZGRyKQ0KPiA+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIDogImlxIiAoQ09O
-U1RfTUFTSyhucikgJiAweGZmKQ0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIDogImlx
-IiAoKHU4KShDT05TVF9NQVNLKG5yKSAmIDB4ZmYpKQ0KPiA+Pg0KPiA+PiBJIHRoaW5rIGEgYmV0
-dGVyIGZpeCB3b3VsZCBiZSB0byBtYWtlIENPTlNUX01BU0soKSByZXR1cm4gYSB1OCB2YWx1ZQ0K
-PiA+PiByYXRoZXIgdGhhbiBoYXZlIHRvIGNhc3Qgb24gZXZlcnkgdXNlLg0KPiA+DQo+ID5PciBh
-c3NpZ24gdG8gYSBsb2NhbCB2YXJpYWJsZSAtIHRoZW4gaXQgZG9lc24ndCBtYXR0ZXIgaG93DQo+
-ID50aGUgdmFsdWUgaXMgYWN0dWFsbHkgY2FsY3VsYXRlZC4gU286DQo+ID4JCQl1OCBtYXNrID0g
-Q09OU1RfTUFTSyhucik7DQo+ID4JCQlhc20gdm9sYXRpbGUoTE9DS19QUkVGSVggIm9yYiAlMSwl
-MCINCj4gPgkJCQk6IENPTlNUX01BU0tfQUREUihuciwgYWRkcikNCj4gPgkJCQk6ICJpcSIgbWFz
-aw0KPiA+DQo+ID4JRGF2aWQNCj4gPg0KPiA+LQ0KPiA+UmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
-aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsDQo+ID5NSzEgMVBU
-LCBVSw0KPiA+UmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCj4gDQo+ICJjb25zdCB1
-OCIgcGxlYXNlLi4uDQoNCldoeSwganVzdCBhIHdhc3RlIG9mIGRpc2sgc3BhY2UuDQoNCglEYXZp
-ZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQg
-RmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4
-NiAoV2FsZXMpDQo=
+
+On 06.05.2020 23:22, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 06, 2020 at 09:22:55PM +0300, Alexey Budankov escreveu:
+>>
+>> Extend perf-stat.txt file with --ctl-fd[-ack] options description.
+>> Document possible usage model introduced by --ctl-fd[-ack] options
+>> by providing example bash shell script.
+> 
+> Please update the docs in the same patch that introduces the options
+> being documented.
+
+Addressed in v3.
+
+~Alexey
 
