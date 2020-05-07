@@ -2,155 +2,194 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C5AC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C8CC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9192078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6472080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy7yrFwC"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BEAn+G0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgEGI1I (ORCPT
+        id S1725964AbgEGI3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:27:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51075 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725809AbgEGI1H (ORCPT
+        Thu, 7 May 2020 04:29:22 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:32731 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbgEGI3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:27:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588840026;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NPoYkk42Am6WOW9rBd2JK5/HKb1tfllVW3fkMFDg+40=;
-        b=Gy7yrFwCfUMD3DdIYNVOVal5EYVsJlyB37ekoHYr2SGCf29SRG8TDZre6axvqeWERuN0Aj
-        l/P/4/BgPJ5z2S6sGARqeoshV+56ZdSdOVDjprQUJwLZED9ydDJvmBFzL3LAQFSOj0OBMG
-        fcd9FJ3rXeGxfxTubjyR8t/8sVqOArk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-uxXv6g1KOpaHpVPjZtvQIQ-1; Thu, 07 May 2020 04:27:02 -0400
-X-MC-Unique: uxXv6g1KOpaHpVPjZtvQIQ-1
-Received: by mail-wm1-f71.google.com with SMTP id o74so570841wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:27:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NPoYkk42Am6WOW9rBd2JK5/HKb1tfllVW3fkMFDg+40=;
-        b=TFW9P8V+DxxsMa5TkNYj0CKqkyUSxDQoLJ+wmGR8ZEmcgpinO7i0xanUyEWU7LEepi
-         OrSaqnEOr9cYYebrEgAa6BIXZ4FfQ0Ej13fVk1pXPCRUnb9UJTxWOV1etpIFBVwrWQQL
-         vjpEGYACwSjpQdgCfj80ERbdJ3OfEz+RbIflvr+HeCoAmNhNNltr526IcTcWTywrnByW
-         e+yXz4emDgtAus83OOiuiQ3BKyYSaF//liExW50jMnhjRyz44KY1AAobhjRbEdIg8Ihp
-         Xmi3Klx483F2c1yDcaTRbES7DidfzIL3Kz5ANB3xVLiuFyY+ZbHejCkAZSbWqJxNND+M
-         HHMw==
-X-Gm-Message-State: AGi0PuZEDufDPJIOga66r2D6Dt2L24JRMnqyPT2guGbu0/ZnPLH8/4Gz
-        Sqhysr0gE6aBPQgpi2sP2C4vHKApWQuVxHz1fvQn419DvBe7VPo7+bMV0W4dtnO4G+tGy2H3ezZ
-        +grSqpPhIqOyuWdcRMPFWO6Zm
-X-Received: by 2002:adf:bc41:: with SMTP id a1mr4893273wrh.302.1588840021532;
-        Thu, 07 May 2020 01:27:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypICgkhsdkD73J5RZB7foHUQ8HPIuCAtmaXh0izbxbK+Ominr6NyYwdA9dLW60G1PFuH6ke8Lw==
-X-Received: by 2002:adf:bc41:: with SMTP id a1mr4893249wrh.302.1588840021254;
-        Thu, 07 May 2020 01:27:01 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8d3e:39e5:cd88:13cc? ([2001:b07:6468:f312:8d3e:39e5:cd88:13cc])
-        by smtp.gmail.com with ESMTPSA id v16sm6912902wml.30.2020.05.07.01.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 01:27:00 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: SVM: Disable AVIC before setting V_IRQ
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     joro@8bytes.org, jon.grimm@amd.com, mlevitsk@redhat.com
-References: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <793e7151-e14c-f254-7911-a4371ad635aa@redhat.com>
-Date:   Thu, 7 May 2020 10:27:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 04:29:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588840160; x=1620376160;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=kQdkQWchIS0juDhlAm9sTzb/ZBV6GvvpTp81oVs0nKE=;
+  b=BEAn+G0JIzpEBYAEcZNgB1Q5leuF89dE011gS/M02OB4CzkROfYmkE4E
+   vpOA1i0Nq/W7xiAkVtuQRzim9MoY33TAPk4IoviU/l4U7OPCN8NoRezoD
+   8N+lCgAhxGGrh24lezDB4rm729RGZEB3pvrLRq6ayurHIjtDInom10NkX
+   Q=;
+IronPort-SDR: aDOPUNuQuXya77sm5jk5VJKoaxwv11GiEZNQu/vbh/VIVfIMR81jxSQod3FfgthFPlRBQvsxsb
+ 2h6C+r1o7xHg==
+X-IronPort-AV: E=Sophos;i="5.73,363,1583193600"; 
+   d="scan'208";a="33513335"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 May 2020 08:29:16 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 4DA2C283958;
+        Thu,  7 May 2020 08:29:14 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 7 May 2020 08:29:13 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 7 May 2020 08:28:57 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <Jonathan.Cameron@Huawei.com>, SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 06/16] mm/damon: Split regions into 4 subregions if possible
+Date:   Thu, 7 May 2020 10:28:36 +0200
+Message-ID: <20200507082836.32145-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505110815.10532-7-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-In-Reply-To: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D13UWB003.ant.amazon.com (10.43.161.233) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/20 04:35, Suravee Suthikulpanit wrote:
-> The commit 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window
-> while running L2 with V_INTR_MASKING=1") introduced a WARN_ON,
-> which checks if AVIC is enabled when trying to set V_IRQ
-> in the VMCB for enabling irq window.
+On Tue, 5 May 2020 13:08:05 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+
+> From: SeongJae Park <sjpark@amazon.de>
 > 
-> The following warning is triggered because the requesting vcpu
-> (to deactivate AVIC) does not get to process APICv update request
-> for itself until the next #vmexit.
+> Suppose that there are a very wide and cold region and a hot region, and
+> both regions are identified by DAMON.  And then, the middle small region
+> inside the very wide and cold region becomes hot.  DAMON will not be
+> able to identify this new region because the adaptive regions adjustment
+> mechanism splits each region to only two subregions.
 > 
-> WARNING: CPU: 0 PID: 118232 at arch/x86/kvm/svm/svm.c:1372 enable_irq_window+0x6a/0xa0 [kvm_amd]
->  RIP: 0010:enable_irq_window+0x6a/0xa0 [kvm_amd]
->  Call Trace:
->   kvm_arch_vcpu_ioctl_run+0x6e3/0x1b50 [kvm]
->   ? kvm_vm_ioctl_irq_line+0x27/0x40 [kvm]
->   ? _copy_to_user+0x26/0x30
->   ? kvm_vm_ioctl+0xb3e/0xd90 [kvm]
->   ? set_next_entity+0x78/0xc0
->   kvm_vcpu_ioctl+0x236/0x610 [kvm]
->   ksys_ioctl+0x8a/0xc0
->   __x64_sys_ioctl+0x1a/0x20
->   do_syscall_64+0x58/0x210
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> This commit modifies the logic to split each region to 4 subregions if
+> possible so that such problematic region can eventually identified.
+
+As you can check with the 'Evaluations' section in the cover letter of this
+patchset, the extend of the slowdown DAMON's recording feature made to the
+target workload has doulbed (0.55% with v9, 1.02% with this patchset).  It's
+still just a small number, but the worst case slowdown is 5.29%.  It was only
+1.88% before.  I suspect this patch is the reason, as this is the only one
+major change we made after v9.
+
+For the reason, I would like to make this patch to split each region into 3 sub
+regions instead of 4 subregions.  It will reduce the overhead a little bit
+while still allow the corner case regions be eventually detected.  If you have
+other concerns or opinions, please let me know.
+
+
+Thanks,
+SeongJae Park
+
 > 
-> Fixes by sending APICV update request to all other vcpus, and
-> immediately update APIC for itself.
-> 
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Link: https://lkml.org/lkml/2020/5/2/167
-> Fixes: 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window while running L2 with V_INTR_MASKING=1")
+> Suggested-by: James Cameron <Jonathan.Cameron@Huawei.com>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 > ---
->  arch/x86/kvm/x86.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  mm/damon.c | 44 +++++++++++++++++++++++++++-----------------
+>  1 file changed, 27 insertions(+), 17 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index df473f9..69a01ea 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8085,6 +8085,7 @@ void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
->   */
->  void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
->  {
-> +	struct kvm_vcpu *except;
->  	unsigned long old, new, expected;
->  
->  	if (!kvm_x86_ops.check_apicv_inhibit_reasons ||
-> @@ -8110,7 +8111,17 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
->  	trace_kvm_apicv_update_request(activate, bit);
->  	if (kvm_x86_ops.pre_update_apicv_exec_ctrl)
->  		kvm_x86_ops.pre_update_apicv_exec_ctrl(kvm, activate);
-> -	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
-> +
-> +	/*
-> +	 * Sending request to update APICV for all other vcpus,
-> +	 * while update the calling vcpu immediately instead of
-> +	 * waiting for another #VMEXIT to handle the request.
-> +	 */
-> +	except = kvm_get_running_vcpu();
-> +	kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
-> +					 except);
-> +	if (except)
-> +		kvm_vcpu_update_apicv(except);
+> diff --git a/mm/damon.c b/mm/damon.c
+> index cec946197e13..342f905927a0 100644
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -650,26 +650,32 @@ static void damon_split_region_at(struct damon_ctx *ctx,
+>  	damon_insert_region(new, r, damon_next_region(r));
 >  }
->  EXPORT_SYMBOL_GPL(kvm_request_apicv_update);
 >  
+> -/* Split every region in the given task into two randomly-sized regions */
+> -static void damon_split_regions_of(struct damon_ctx *ctx, struct damon_task *t)
+> +/* Split every region in the given task into 'nr_subs' regions */
+> +static void damon_split_regions_of(struct damon_ctx *ctx,
+> +				     struct damon_task *t, int nr_subs)
+>  {
+>  	struct damon_region *r, *next;
+> -	unsigned long sz_orig_region, sz_left_region;
+> +	unsigned long sz_region, sz_sub = 0;
+> +	int i;
+>  
+>  	damon_for_each_region_safe(r, next, t) {
+> -		sz_orig_region = r->vm_end - r->vm_start;
+> -
+> -		/*
+> -		 * Randomly select size of left sub-region to be at least
+> -		 * 10 percent and at most 90% of original region
+> -		 */
+> -		sz_left_region = ALIGN_DOWN(damon_rand(1, 10) * sz_orig_region
+> -					    / 10, MIN_REGION);
+> -		/* Do not allow blank region */
+> -		if (sz_left_region == 0 || sz_left_region >= sz_orig_region)
+> -			continue;
+> -
+> -		damon_split_region_at(ctx, r, sz_left_region);
+> +		sz_region = r->vm_end - r->vm_start;
+> +
+> +		for (i = 0; i < nr_subs - 1 &&
+> +				sz_region > 2 * MIN_REGION; i++) {
+> +			/*
+> +			 * Randomly select size of left sub-region to be at
+> +			 * least 10 percent and at most 90% of original region
+> +			 */
+> +			sz_sub = ALIGN_DOWN(damon_rand(1, 10) *
+> +					sz_region / 10, MIN_REGION);
+> +			/* Do not allow blank region */
+> +			if (sz_sub == 0 || sz_sub >= sz_region)
+> +				continue;
+> +
+> +			damon_split_region_at(ctx, r, sz_sub);
+> +			sz_region = sz_sub;
+> +		}
+>  	}
+>  }
+>  
+> @@ -687,14 +693,18 @@ static void kdamond_split_regions(struct damon_ctx *ctx)
+>  {
+>  	struct damon_task *t;
+>  	unsigned int nr_regions = 0;
+> +	int nr_subregions = 2;
+>  
+>  	damon_for_each_task(ctx, t)
+>  		nr_regions += nr_damon_regions(t);
+>  	if (nr_regions > ctx->max_nr_regions / 2)
+>  		return;
+>  
+> +	if (nr_regions < ctx->max_nr_regions / 4)
+> +		nr_subregions = 4;
+> +
+>  	damon_for_each_task(ctx, t)
+> -		damon_split_regions_of(ctx, t);
+> +		damon_split_regions_of(ctx, t, nr_subregions);
+>  }
+>  
+>  /*
+> -- 
+> 2.17.1
 > 
-
-Queued, thanks.
-
-Paolo
-
