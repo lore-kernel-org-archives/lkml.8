@@ -2,120 +2,196 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEB1C54E8A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F0C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 126B920A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jsEDGiwh"
+	by mail.kernel.org (Postfix) with ESMTP id AE80B208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgEGVfo (ORCPT
+        id S1726636AbgEGVhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgEGVff (ORCPT
+        Thu, 7 May 2020 17:37:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:51863 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgEGVhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:35:35 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8431C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:35:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mq3so3231824pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4v4vnXxurYJQOROnZvnzfPloWHp2bwE01an31yUPp4o=;
-        b=jsEDGiwhIeWeIH5fsxZpLrFy4wAWrwHVPQ0Th5YaMdW+DiPGF2V2BrQMyLzoKF17KF
-         qOZcFB9rQwZ1ibCZZ7iw4wbdZFNITQzkcLMUR6z/TFf0zAHfWY2lf/cGJq0O1FOcsMFr
-         KWwrbKtdHEusvC97ESZz7VfnP6l0eiZX9wXIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4v4vnXxurYJQOROnZvnzfPloWHp2bwE01an31yUPp4o=;
-        b=SaOKXff433i488bZwXk6G72geQXXTAlL4Va2tKSq0bUjbcmm7aJ1JYpapDIh0S6W0G
-         0fwyYYq2CT6qUCZYXW8d2UFIMSvtaHP7GsRFzk2t6VsvRZb3pQmMwU6fJPKjyAwkRHMB
-         AwybCG3wISxj9s5FrFVQz2BlfTdhaONeqqxfVOP0lJ7fNFOSLV90vuNwRU9xsWK+MwvW
-         9negGMsDPT2ujz2oNwepBxo4y/7DgKympLXazfjSiJb9lVjKOy4JkBaTG8zGeNBkXkUb
-         r75DGO5q5SUEH9wbVmMBpXgAXrFxAJ67iEOKY1KSm1rSKK1pjmYRukEZ1MVPa7tLTitm
-         hufA==
-X-Gm-Message-State: AGi0PuZGx8I6d9rygX4XKbPqgNFLznXFzA0hUYVgEO7iEGAWOiHNftFa
-        21dRNQnd+RnITNLJlkfZv3q5y+SJGdihmA==
-X-Google-Smtp-Source: APiQypJrX9Sds2V0tZ/XbcQs1N2tNz4bQqjgUQgoczdv15D6aqrUlNeX63mmz/+P2v3/w/VqhJ8N3w==
-X-Received: by 2002:a17:902:9f90:: with SMTP id g16mr15528385plq.215.1588887335252;
-        Thu, 07 May 2020 14:35:35 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i10sm5884860pfa.166.2020.05.07.14.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:35:34 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
-Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
-        linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
-        swboyd@chromium.org, jernej.skrabec@siol.net,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
-Date:   Thu,  7 May 2020 14:35:00 -0700
-Message-Id: <20200507143354.v5.6.I89df9b6094549b8149aa8b8347f7401c678055b0@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200507213500.241695-1-dianders@chromium.org>
-References: <20200507213500.241695-1-dianders@chromium.org>
+        Thu, 7 May 2020 17:37:53 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N6bHC-1j3f8b023y-01876O; Thu, 07 May 2020 23:37:51 +0200
+Received: by mail-qv1-f47.google.com with SMTP id di6so109920qvb.10;
+        Thu, 07 May 2020 14:37:50 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaP5twFroNwrDBYwPxLU2RKp0S5DWMqIzatJxq2f/f9FIZNHOvs
+        vAknHqdriVUsPMHZvHE7zsf9KCknc6XxRDNxI34=
+X-Google-Smtp-Source: APiQypIy0ivVXkCT3c5B4I5EgvFGLWa7J/9f8YYkIpCwUCnJWSFZ90o0xiJTmB7TdUw0mxevxdV5Wmq5dREViYtj/Ks=
+X-Received: by 2002:ad4:4d50:: with SMTP id m16mr15688068qvm.222.1588887469634;
+ Thu, 07 May 2020 14:37:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
+ <20200504165711.5621-1-clay@daemons.net> <f07c695b-5537-41bf-e4f8-0d8012532f64@ti.com>
+ <20200506065105.GA3226@arctic-shiba-lx> <1654101f-9dd7-2e10-7344-0d08e32bc309@ti.com>
+In-Reply-To: <1654101f-9dd7-2e10-7344-0d08e32bc309@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 May 2020 23:37:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a07z=kauDKVJzroHyOZ1ZSqpqZA4X69XJ5QCQ4c6JO_pg@mail.gmail.com>
+Message-ID: <CAK8P3a07z=kauDKVJzroHyOZ1ZSqpqZA4X69XJ5QCQ4c6JO_pg@mail.gmail.com>
+Subject: Re: [PATCH v2] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Clay McClure <clay@daemons.net>, kbuild test robot <lkp@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9yXGI+NqB+AOFwl/6L16oGEr+M21Ket9aHWEOHOZ5lCrMDxKb/l
+ PLlRan9UoQACO/ySVcQeg/wI8Mya1FO4hH4IJFR0Jw4esTfIpvP2BW+XcrUtVhQsWYOq0NG
+ d8p5zDwJZeDNW9DUH1sv+D4ZwyIRlGoeo46TdiEZBRuhRnEZqGijnRts+zpm3c5e+65jQVu
+ 0MZGaoyoVpGxlufZSPRhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Fa3joaS3tmg=:rTCt8t7D72VKmYSjJxwcoj
+ E5fer22LS1XghS8Ohw1DVVKD20xHzylIr+q1Pi/sc9oqKLebRNspSeFjvj6sG9it2cKiPtJxc
+ TG6AuWnX0JRgseQZMo52uIInsS0xfd707boEJZFfAnpqCCwTgytZSPpVcqVK/GSUbDUDmy78Z
+ HpVx0/WA2M39gUVnAx/HM3jazyNVe3NLLySj5q6FsuwdCYXVKdVZePAjKUSLQzEaMyvaDNTAC
+ bj4JiaoW7jyazrWu1K2OnW1ETul4RzWT8YZTyudr7NzwUaU9IGSKss24ib/dV/6V0Q25q7d33
+ tBeu1ujzdFwOQEZA6ct+NiKvsOUcQ4s0Ws8DpLDC7yzdcuml/770tp5NRgjPT4wXu33dduAbZ
+ 9kG7Fzu3bb2KHdZgAeFBpS82XIJFhBrnqG5RImkDqGv3YEiknJ3r8yhyAT70uPVuP2r9ZoCAB
+ z5fWmShFpksYlbHHyE3/0YOcPs/v2HysWGyHSr+n9HBPBvwW4SbXKxcpIcizJ30BMKH6cLMbK
+ ZB5EGoOkBHOhgp3xOtKt/DvSfdEcUwSA4Bc/COypB1IcSHaod8/d1+kCvB3q5A2890YTMUGFD
+ 2gZ1fTDiYZ+a961FqcMo88EwUkNvmtVdIv+6Kb6wyeooIgQCBjS1oo5qmx4vqpRmW/4Us3LsH
+ SiKdLw/EOw0hbZNmbPHWZcdqvMea9VkJRDvAFSXmhTPer0Cg+04ge7bK0CwZYSb8Ip1h9NsRm
+ +k6M/eE5SFtztnRGS1iP4JRV9ccdM5AFQvDlizTbD3JD36LLWfmbbB7nERQnWn5NYNxwdfKBg
+ XriS5/RlIrfzXH2VrCdpsRy56Fn3Kv+SIDl4ChBjQD+3InKnK0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have the HPD line hooked up to the bridge chip.  Add it as
-suggested in the patch ("dt-bindings: drm/bridge: ti-sn65dsi86:
-Document no-hpd").
+On Wed, May 6, 2020 at 10:57 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> On 06/05/2020 09:51, Clay McClure wrote:
+> > On Tue, May 05, 2020 at 10:41:26AM +0300, Grygorii Strashko wrote:
 
-NOTE: this patch isn't expected to have any effect but just keeps us
-cleaner for the future.  Currently the driver in Linux just assumes
-that nobody has HPD hooked up.  This change allows us to later
-implement HPD support in the driver without messing up sdm845-cheza.
+> >
+>
+> Ok. After some thinking and hence you commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+> seems was merged in net (not net-next)
+> 1) for-net: defconfig changes can be separated to fix build fail, but add change for multi_v7_defconfig
+> 2) for-net-next: rest of changes plus below diff on top of it
+>
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index f3f8bb724294..62f809b67469 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -49,6 +49,7 @@ config TI_CPSW_PHY_SEL
+>   config TI_CPSW
+>          tristate "TI CPSW Switch Support"
+>          depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+> +       depends on TI_CPTS || !TI_CPTS
+>          select TI_DAVINCI_MDIO
+>          select MFD_SYSCON
+>          select PAGE_POOL
+> @@ -64,6 +65,7 @@ config TI_CPSW_SWITCHDEV
+>          tristate "TI CPSW Switch Support with switchdev"
+>          depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+>          depends on NET_SWITCHDEV
+> +       depends on TI_CPTS || !TI_CPTS
+>          select PAGE_POOL
+>          select TI_DAVINCI_MDIO
+>          select MFD_SYSCON
+> @@ -78,11 +80,9 @@ config TI_CPSW_SWITCHDEV
+>
+>   config TI_CPTS
+>          tristate "TI Common Platform Time Sync (CPTS) Support"
+> -       depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV || COMPILE_TEST
+> +       depends on ARCH_OMAP2PLUS || ARCH_KEYSTONE || COMPILE_TEST
+>          depends on COMMON_CLK
+>          depends on PTP_1588_CLOCK
+> -       default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+> -       default m
+>          ---help---
+>            This driver supports the Common Platform Time Sync unit of
+>            the CPSW Ethernet Switch and Keystone 2 1g/10g Switch Subsystem.
+> @@ -109,6 +109,7 @@ config TI_KEYSTONE_NETCP
+>          select TI_DAVINCI_MDIO
+>          depends on OF
+>          depends on KEYSTONE_NAVIGATOR_DMA && KEYSTONE_NAVIGATOR_QMSS
+> +       depends on TI_CPTS || !TI_CPTS
+>          ---help---
+>            This driver supports TI's Keystone NETCP Core.
+>
+> It should properly resolve "M" vs "Y" dependencies between
+>   PTP_1588_CLOCK->TI_CPTS->TI_CPSW
+>
+> On thing, TI_CPTS can be selected without TI_CPSW, but it's probably ok.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
+I think that solution is reasonable. I had come up with a different
+for when I ran
+into the build failure, but I like yours better. Here is my patch, for
+reference:
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
 
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+commit 94233d78655876f735189890eb40ef33c49e8523 (HEAD -> randconfig)
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Thu May 7 21:25:59 2020 +0200
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9070be43a309..5938f8b2aa2f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -548,6 +548,8 @@ sn65dsi86_bridge: bridge@2d {
- 		clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
- 		clock-names = "refclk";
- 
-+		no-hpd;
-+
- 		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.26.2.645.ge9eca65c58-goog
+    cpsw: fix cpts link failure
 
+    When CONFIG_PTP_1588_CLOCK is a loadable module, trying to build cpts
+    support into the built-in cpsw driver results in a link error:
+
+    arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function
+`cpsw_probe':
+    cpsw.c:(.text+0x918): undefined reference to `cpts_release'
+    arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function
+`cpsw_remove':
+    cpsw.c:(.text+0x1048): undefined reference to `cpts_release'
+    arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function
+`cpsw_rx_handler':
+    cpsw.c:(.text+0x12c0): undefined reference to `cpts_rx_timestamp'
+    arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function
+`cpsw_ndo_open':
+
+    Add a dependency for CPTS that only allows it to be enabled when
+    doing so does not cause link-time probles.
+
+    Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+PTP_1588_CLOCK")
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 4ab35ce7b451..571caf4192c5 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -79,6 +79,9 @@ config TI_CPSW_SWITCHDEV
+ config TI_CPTS
+        bool "TI Common Platform Time Sync (CPTS) Support"
+        depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV
+|| COMPILE_TEST
++       depends on TI_CPSW=n || TI_CPSW=PTP_1588_CLOCK || PTP_1588_CLOCK=y
++       depends on TI_KEYSTONE_NETCP=n ||
+TI_KEYSTONE_NETCP=PTP_1588_CLOCK || PTP_1588_CLOCK=y
++       depends on TI_CPSW_SWITCHDEV=n ||
+TI_CPSW_SWITCHDEV=PTP_1588_CLOCK || PTP_1588_CLOCK=y
+        depends on COMMON_CLK
+        depends on POSIX_TIMERS
+        ---help---
