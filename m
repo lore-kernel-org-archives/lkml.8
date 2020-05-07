@@ -2,132 +2,122 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D81BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9849C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EC72073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Q59R7YOT"
+	by mail.kernel.org (Postfix) with ESMTP id A319C20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgEGO7N (ORCPT
+        id S1727114AbgEGPAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:59:13 -0400
-Received: from fanzine.igalia.com ([178.60.130.6]:58021 "EHLO
-        fanzine.igalia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgEGO7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:59:12 -0400
-X-Greylist: delayed 1466 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 May 2020 10:59:10 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com; s=20170329;
-        h=MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=naj0keJ9OA5+ZkME3r47DK1IAppAUaF9jwiVH91fafY=;
-        b=Q59R7YOTpic9UXJ4FFqiIfOba9Cf2rZtyzNjuiCEs6cI6bpWijPi2XcIBA43e12s/u3tXII1N9IBxfxJUpQgAU+LbcJOn7y1T+YEnowuWqJIxpelV6bBu/5PPMw6JymwAkCXoQrWu4cQF5jgsVwfsGsM5hRlItql6kM4wF53LwJ/XFavVuoUq6FXRscPWmgGCX0C1CckiYLvU9TBf0FSy2FncbYg3GfWyiNLHaiOU9g56ofyo1G9NPgQECv1faRVCKJoXEcAVR322mEaYZF9++/NPmFGLpcwKrbN5AqGSL8qWc8Z6udrc3hyneNpdV262VqSbdd4TKCJsK1UYtCjFg==;
-Received: from 53.red-88-15-141.dynamicip.rima-tde.net ([88.15.141.53] helo=maxwell)
-        by fanzine.igalia.com with esmtpsa 
-        (Cipher TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim)
-        id 1jWhbM-0008Mj-Or; Thu, 07 May 2020 16:34:16 +0200
-Message-ID: <eaaa54dbe413bf3f13f08c267e6c31c497afb509.camel@igalia.com>
-Subject: Re: [PATCH -next] ipack: tpci200: fix error return code in
- tpci200_register()
-From:   Samuel Iglesias =?ISO-8859-1?Q?Gons=E1lvez?= 
-        <siglesias@igalia.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zhouyang Jia <jiazhouyang09@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     industrypack-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Date:   Thu, 07 May 2020 16:34:06 +0200
-In-Reply-To: <20200507094237.13599-1-weiyongjun1@huawei.com>
-References: <20200507094237.13599-1-weiyongjun1@huawei.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6OhG+JRPe3bIgyHL09ni"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Thu, 7 May 2020 11:00:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26742 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgEGPAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:00:09 -0400
+IronPort-SDR: plkFD8kEOtxk76X+G4A30Z/WCGQ2QCEDiA0jCVByY5RACVJynJ3eAtduf7HM2LdDadNpu65o3+
+ /UcR7yLt5thA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:08 -0700
+IronPort-SDR: QqfM/WVijykp1e76UKZHvvEv3qS4oash02sa2hE0349Z+qr8zsJuzpIQ77z0OtNXZPr22IWitJ
+ CZhwozUGcsJg==
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="285021391"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:07 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH V3 02/15] arch/xtensa: Move kmap build bug out of the way
+Date:   Thu,  7 May 2020 07:59:50 -0700
+Message-Id: <20200507150004.1423069-3-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200507150004.1423069-1-ira.weiny@intel.com>
+References: <20200507150004.1423069-1-ira.weiny@intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ira Weiny <ira.weiny@intel.com>
 
---=-6OhG+JRPe3bIgyHL09ni
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Move the kmap() build bug to kmap_init() to facilitate patches to lift
+kmap() to the core.
 
-Hello Wei,
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Thanks for the patch!
+---
+Changes from V1:
+	combine code onto 1 line.
+---
+ arch/xtensa/include/asm/highmem.h | 5 -----
+ arch/xtensa/mm/highmem.c          | 4 ++++
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-Patch is,
-
-Acked-by: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
-
-Greg, Would you mind picking this patch series through your char-misc
-tree?
-
-Thanks!
-
-Sam
-
-On Thu, 2020-05-07 at 09:42 +0000, Wei Yongjun wrote:
-> Fix to return negative error code -ENOMEM from the ioremap() error
-> handling
-> case instead of 0, as done elsewhere in this function.
->=20
-> Fixes: 43986798fd50 ("ipack: add error handling for ioremap_nocache")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/ipack/carriers/tpci200.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/ipack/carriers/tpci200.c
-> b/drivers/ipack/carriers/tpci200.c
-> index 8a9c169..b5eec18 100644
-> --- a/drivers/ipack/carriers/tpci200.c
-> +++ b/drivers/ipack/carriers/tpci200.c
-> @@ -309,6 +309,7 @@ static int tpci200_register(struct tpci200_board
-> *tpci200)
->  			"(bn 0x%X, sn 0x%X) failed to map driver user
-> space!",
->  			tpci200->info->pdev->bus->number,
->  			tpci200->info->pdev->devfn);
-> +		res =3D -ENOMEM;
->  		goto out_release_mem8_space;
->  	}
->=20
->=20
->=20
->=20
-
---=-6OhG+JRPe3bIgyHL09ni
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEQP+ZAvaXWkfuKXiEf/S6MvF9w0MFAl60HF4ACgkQf/S6MvF9
-w0NaghAAysFj+kKNNuNU7yebV5ggXMJd2UwHJkYMm3U9YUGYnzW/GFy9MA2UuQjZ
-yUqjneHFo3yA5F9Ef+ZCFGXHxuEQbGTeW0v2mFrDb5JlyMWKHDqBkCDu1h1Y6TJ8
-ty4whqUPQpgPOB6DurAur8todoKlxwAXyTpLcX63LF4zXGoojKLczsuVXoFJXVIJ
-6s1JlITIaLNDf0kFX6ql5HTsL6Lg+WRl6wmls37YlPzq04C2EA9gPeN5xCTw6hlp
-7t4qTLnY8sh7ZvEA2TsAPkHBICfW3uN2CsuMs9h4fDlD5qijrGElw6NntzctxjZf
-EfCvVlpMY9Ac2FHTpfYb6ipUI+bqOd0winx1pE0ilnoc/K8lPYaTSpy43fhlUi8X
-EPIlcWEvEwtDm2UDnoassPJzUDuKUHpYkfCvbsZPd576AagoF/F1XvcnIIAiwLkC
-dxr04EsVpIaCdvdXRHM4zFfff2g9OEgEGQ4yrGcW6iYD9xrWmv2XsEBuBcwM1EEc
-uxpovOBUUbyYHsqvB1wJ7Le3v0sfnqRw1xDpxNNOl52RaGL/2ElL7NZFOmryRYbi
-LV8YxTfTstEZS7s7LFwsAAQXzUjqSkSuaQFCYWveCk1+PvoRu0coKq/NB0W5O1TG
-dT6dacdPb19LFVL/KayLG+14LRlmKW/6PcbL1HKbNWyr5ok6QBs=
-=0aD1
------END PGP SIGNATURE-----
-
---=-6OhG+JRPe3bIgyHL09ni--
+diff --git a/arch/xtensa/include/asm/highmem.h b/arch/xtensa/include/asm/highmem.h
+index 413848cc1e56..a9587c85be85 100644
+--- a/arch/xtensa/include/asm/highmem.h
++++ b/arch/xtensa/include/asm/highmem.h
+@@ -68,11 +68,6 @@ void kunmap_high(struct page *page);
+ 
+ static inline void *kmap(struct page *page)
+ {
+-	/* Check if this memory layout is broken because PKMAP overlaps
+-	 * page table.
+-	 */
+-	BUILD_BUG_ON(PKMAP_BASE <
+-		     TLBTEMP_BASE_1 + TLBTEMP_SIZE);
+ 	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+diff --git a/arch/xtensa/mm/highmem.c b/arch/xtensa/mm/highmem.c
+index 184ceadccc1a..da734a2ed641 100644
+--- a/arch/xtensa/mm/highmem.c
++++ b/arch/xtensa/mm/highmem.c
+@@ -88,6 +88,10 @@ void __init kmap_init(void)
+ {
+ 	unsigned long kmap_vstart;
+ 
++	/* Check if this memory layout is broken because PKMAP overlaps
++	 * page table.
++	 */
++	BUILD_BUG_ON(PKMAP_BASE < TLBTEMP_BASE_1 + TLBTEMP_SIZE);
+ 	/* cache the first kmap pte */
+ 	kmap_vstart = __fix_to_virt(FIX_KMAP_BEGIN);
+ 	kmap_pte = kmap_get_fixmap_pte(kmap_vstart);
+-- 
+2.25.1
 
