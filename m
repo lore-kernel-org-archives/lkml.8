@@ -2,157 +2,141 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3D4C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBEDC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4D620A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kI+WeYFE"
+	by mail.kernel.org (Postfix) with ESMTP id C773220747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGJ36 (ORCPT
+        id S1726815AbgEGJaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        Thu, 7 May 2020 05:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgEGJ34 (ORCPT
+        with ESMTP id S1726326AbgEGJaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:29:56 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846D9C061A10
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:29:56 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id g2so2952038vsb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 02:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=viH1iV0igem6dG1osD5lXSFto5UeKQo6I/r6j41w2Kg=;
-        b=kI+WeYFEEA9jLoKV2d3E7dwUyyonlIPIl242k9750XKo5ORe4klWfuAV7grrUmx0pe
-         81oSbWvf2JRpXrMDhtyaIzsMHzryrCqE0t4iOTWk45BvIr2QwotvhUUNbfqfE0msdui8
-         A/+Tx3vLGOvtTPE1kWGs//HDeaZI2xem+qIyqcHHUztTiprouVP8b8AuR5o78AMr89UA
-         HQzNycaDph+I3X8/VRavIrGj+mUVMK/JPdIhTI7VAtbK0NComAh/lF/6zjRcrVSpW9xG
-         GFPpsYWE/TH2D45e4L0+VhUZX/H6aNF9Tc8iOkF1hmV0MpGcaJAkoIVvTpDm7sSAnW/t
-         gQDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=viH1iV0igem6dG1osD5lXSFto5UeKQo6I/r6j41w2Kg=;
-        b=TokIjTX/+3sfsbqyBVqIJ+vaGVJeRnmuuBeEhzfD1S1nDlLNyTVP6+zdFNtROAG21U
-         X9e1xgaA7IBF+FtW8+F4gIf0OP4D7jsEl2AcfpDd3GV+gNmBLbB5EOZK8Cka/9yaRa2d
-         FIHMUCoyHMo9NWPqCx0g8Nq0B97n5Cj2sKx9Gn6LxBXrzvk6ptGvnyncbF13dn4zLeSP
-         X44qDYiqppoTmCDrmDrgbxL+PbRoR83eg1fvjwFgn04Hmk/7yD+6wfkVJU7rpow0EPSB
-         NTY/V9cfttZHm3b9wGyeYIgIeFA1Lm6ra9v5/Sx0rNZL0p73DciPwuwz5dFz+BsznGzG
-         tUhw==
-X-Gm-Message-State: AGi0PuaEh/QTarwbpaD1Je7FLHO29Bjs28PZYiKpULhskXOx2otCA4Kb
-        RoiqyazXwB9EN5UdU21Gxp2hVfG2d8+C5KnfAiJPFg==
-X-Google-Smtp-Source: APiQypI4am7jPf3se8Tdni9X7LAo6FYulFfGe4r2VYbr/7W89ZmzBdleCOUBkENYjHbYMqRf6aOMQjzkJhq36+9MZOM=
-X-Received: by 2002:a67:ee0d:: with SMTP id f13mr11495244vsp.191.1588843795661;
- Thu, 07 May 2020 02:29:55 -0700 (PDT)
+        Thu, 7 May 2020 05:30:09 -0400
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [IPv6:2001:1600:3:17::42af])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0302C0610D5
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:30:09 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Hp8Y5bRPzlj0xy;
+        Thu,  7 May 2020 11:30:05 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Hp8W2z2hzlrdKX;
+        Thu,  7 May 2020 11:30:03 +0200 (CEST)
+Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
+ <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
+ <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <64426377-7fc4-6f37-7371-2e2a584e3032@digikod.net>
+Date:   Thu, 7 May 2020 11:30:02 +0200
+User-Agent: 
 MIME-Version: 1.0
-References: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 7 May 2020 11:29:19 +0200
-Message-ID: <CAPDyKFrY0ApUCNL4gVHRc2FRcYaS0PKr_P4a18RUZHxcVceVWg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: meson-mx-sdio: trigger a soft reset after a timeout
- or CRC error
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ad28ab5fe7854b41a575656e95b4da17@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 00:28, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> The vendor driver (from the 3.10 kernel) triggers a soft reset every
-> time before starting a new command. While this fixes a problem where
-> SDIO cards are not detected at all (because all commands simply
-> timed out) this hurts SD card read performance a bit (in my tests
-> between 10% to 20%).
->
-> Trigger a soft reset after we got a CRC error or if the previous command
-> timed out (just like the vendor driver from the same 3.10 kernel for the
-> newer SDHC controller IP does). This fixes detection of SDIO cards and
-> doesn't hurt SD card read performance at the same time.
->
-> With this patch the initialization of an RTL8723BS SDIO card looks like
-> this:
->   req done (CMD52): -110: 00000000 00000000 00000000 00000000
->   clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
->   starting CMD0 arg 00000000 flags 000000c0
->   req done (CMD0): 0: 00000000 00000000 00000000 00000000
->   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
->   starting CMD8 arg 000001aa flags 000002f5
->   req done (CMD8): -110: 00000000 00000000 00000000 00000000
->   starting CMD5 arg 00000000 flags 000002e1
->   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
->   starting CMD5 arg 00200000 flags 000002e1
->   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
->   starting CMD3 arg 00000000 flags 00000075
->   req done (CMD3): 0: 00010000 00000000 00000000 00000000
->   starting CMD7 arg 00010000 flags 00000015
->   req done (CMD7): 0: 00001e00 00000000 00000000 00000000
->   starting CMD52 arg 00000000 flags 00000195
->   req done (CMD52): 0: 00001032 00000000 00000000 00000000
->   [... more CMD52 omitted ...]
->   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
->   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
->   starting CMD52 arg 00000e00 flags 00000195
->   req done (CMD52): 0: 00001000 00000000 00000000 00000000
->   starting CMD52 arg 80000e02 flags 00000195
->   req done (CMD52): 0: 00001002 00000000 00000000 00000000
->   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
->   starting CMD52 arg 00020000 flags 00000195
->   req done (CMD52): 0: 00001007 00000000 00000000 00000000
->   [... more CMD52 omitted ...]
->   new high speed SDIO card at address 0001
->
-> Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
-> Ulf, I consider this non-critical because as long as the meson-mx-sdhc
-> driver is not merged we only have one MMC driver for these platforms.
-> I don't know anybody to prefer SDIO wifi over SD card access, so this
-> can go into -next (in my option at least).
->
 
-Alright, applied for next, thanks!
+On 07/05/2020 11:00, David Laight wrote:
+> From: Mickaël Salaün
+>> Sent: 07 May 2020 09:37
+> ...
+>>> None of that description actually says what the patch actually does.
+>>
+>> "Add support for O_MAYEXEC" "to enable to control script execution".
+>> What is not clear here? This seems well understood by other commenters.
+>> The documentation patch and the talks can also help.
+> 
+> I'm guessing that passing O_MAYEXEC to open() requests the kernel
+> check for execute 'x' permissions (as well as read).
 
-Kind regards
-Uffe
+Yes, but only with openat2().
 
+> 
+> Then kernel policy determines whether 'read' access is actually enough,
+> or whether 'x' access (possibly masked by mount permissions) is needed.
+> 
+> If that is true, two lines say what is does.
 
->
->  drivers/mmc/host/meson-mx-sdio.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-> index 2e58743d83bb..3813b544f571 100644
-> --- a/drivers/mmc/host/meson-mx-sdio.c
-> +++ b/drivers/mmc/host/meson-mx-sdio.c
-> @@ -246,6 +246,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
->
->         mrq = host->mrq;
->
-> +       if (host->cmd->error)
-> +               meson_mx_mmc_soft_reset(host);
-> +
->         host->mrq = NULL;
->         host->cmd = NULL;
->
-> --
-> 2.26.2
->
+The "A simple system-wide security policy" paragraph introduce that, but
+I'll highlight it in the next cover letter. The most important point is
+to understand why it is required, before getting to how it will be
+implemented.
+
+> 
+> Have you ever set a shell script permissions to --x--s--x ?
+> Ends up being executable by everyone except the owner!
+
+In this case the script is indeed executable but it can't be executed
+because the interpreter (i.e. the user) needs to be able to read the
+file. Of course, if the user has CAP_DAC_OVERRIDE (like the root user),
+read is still allowed.
+
+> Having the kernel pass all '#!' files to their interpreters
+> through an open fd might help security.
+
+This is interesting but it doesn't address the current issue: being able
+to have a consistent (script) executability system policy. Maybe its
+this point of view which wasn't clear enough?
+
+> In that case the user doesn't need read access to the file
+> in order to get an interpreter to process it.
+
+Yes, but this brings security issues, because the interpreter (i.e. the
+user) would then be able to read files without read permission.
+
+> (You'd need to stop strace showing the contents to actually
+> hide them.)
+
+It doesn't matter if the process is traced or not, the kernel handles
+impersonation scopes thanks to ptrace_may_access().
