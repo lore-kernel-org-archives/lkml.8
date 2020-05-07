@@ -2,266 +2,159 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB671C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE8C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C43C20575
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4DF20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WevyCnOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgEGQ3L (ORCPT
+        id S1727854AbgEGQaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:29:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726470AbgEGQ3H (ORCPT
+        Thu, 7 May 2020 12:30:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53577 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726308AbgEGQaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:29:07 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047G2i1Q016174;
-        Thu, 7 May 2020 12:29:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8ka3h9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 12:29:03 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047GRC0L140811;
-        Thu, 7 May 2020 12:29:02 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8ka3gt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 12:29:02 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047GQ41m008462;
-        Thu, 7 May 2020 16:29:01 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma05wdc.us.ibm.com with ESMTP id 30s0g736pm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 16:29:01 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047GT1fI14090862
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 16:29:01 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07C5B124054;
-        Thu,  7 May 2020 16:29:01 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA363124052;
-        Thu,  7 May 2020 16:29:00 +0000 (GMT)
-Received: from localhost (unknown [9.65.234.211])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 16:29:00 +0000 (GMT)
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
-        ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com,
-        mpe@ellerman.id.au, irogers@google.com
-Subject: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
-Date:   Thu,  7 May 2020 11:28:58 -0500
-Message-Id: <1588868938-21933-3-git-send-email-pc@us.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
-References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_10:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070125
+        Thu, 7 May 2020 12:30:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588868999;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e7iMCcJ0qsnQwLB3wwMjiGDP/YW9nSq1UVvNlnZHm78=;
+        b=WevyCnOpqs1K2QRjJtvprM91QoQRP2Ow6UlHmTioxFiXeXPd+88GoqFl2PoiZyguoDpaqG
+        xlD6fn8VRT0uqBUJ8fAuFTNf4kXFlatu1NILPS3+RRNew9wmxsw1aFaOEk90MiE8b5dm+V
+        whrdL1tn2JNEPF6t1I8QUw5wq2SJHd0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-_D2I7j4LOeuuVKFW714jXA-1; Thu, 07 May 2020 12:29:57 -0400
+X-MC-Unique: _D2I7j4LOeuuVKFW714jXA-1
+Received: by mail-ed1-f69.google.com with SMTP id x14so2624863edv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:29:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e7iMCcJ0qsnQwLB3wwMjiGDP/YW9nSq1UVvNlnZHm78=;
+        b=mszSMVu6e4K2mSLcw7I86zT3rNZLAs0gEnaVoDq7/0AY1sQvAmdV/PYSPcs05ugfzD
+         561qexuCG3KxVJN1ybWRO6C1GbRXtWp+C5ciyzSWHztTrOsebHnLw7EXxZg9gcH55eqs
+         PIjHj0EXJk1Zq5v+ABboi8C1jMCvmtWiV5n3POfSiespE2nvAmIfBh7B2YoFbYV1e1Cq
+         fTSfo26LIC0/dYhg4JrRyCwHjNh0ItHjzEhawE2gRZpWzRXeXFSrBY1HW3HVB/NuSEAu
+         YvbghwmxVoxQtAU59b6BPCEgdcLmUM+UmiFPGdcXuhMSlC5SndBkPVb29/iV2CaPP9Vy
+         tYSw==
+X-Gm-Message-State: AGi0PuZVLyNCTbBx+K+j1dJ2lWhcPzTn28njDtAZOkwuOqH9tTcQYU3M
+        kRPL2rg0Co9rSiah31bEA7QIU+x8YPfXfy7GmOwdAwIXXw4Rzgcxob2HjcYUgkrDL3OPvMoR4l7
+        /b9ZL0mGlVlBBJxhuD6EQZDHIc+J/O2jkWKMvMT12
+X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr13369331ejb.137.1588868996404;
+        Thu, 07 May 2020 09:29:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI/tAK72ofsR0W7siiARMS+UqHhSIuek7idqi6/W26qVAvJz1p0lEni/R1zsrh7MCp33PsxHvorkj/Tp1DUTxU=
+X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr13369301ejb.137.1588868996149;
+ Thu, 07 May 2020 09:29:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+ <20200312155640.GX3818@techsingularity.net> <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net> <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+ <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
+ <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
+ <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net>
+In-Reply-To: <20200507155422.GD3758@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Thu, 7 May 2020 18:29:44 +0200
+Message-ID: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul A. Clarke" <pc@us.ibm.com>
+Hi Mel,
 
-Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
-- ict_noslot_br_mpred_cpi
-- ict_noslot_br_mpred_icmiss_cpi
-- ict_noslot_cyc_other_cpi
-- ict_noslot_disp_held_cpi
-- ict_noslot_disp_held_hb_full_cpi
-- ict_noslot_disp_held_issq_cpi
-- ict_noslot_disp_held_other_cpi
-- ict_noslot_disp_held_sync_cpi
-- ict_noslot_disp_held_tbegin_cpi
-- ict_noslot_ic_l2_cpi
-- ict_noslot_ic_l3_cpi
-- ict_noslot_ic_l3miss_cpi
-- ict_noslot_ic_miss_cpi
+we are not targeting just OMP applications. We see the performance
+degradation also for other workloads, like SPECjbb2005 and
+SPECjvm2008. Even worse, it also affects a higher number of threads.
+For example, comparing 5.7.0-0.rc2 against 5.6 kernel, on 4 NUMA
+server with 2x AMD 7351 CPU, we see performance degradation 22% for 32
+threads (the system has 64 CPUs in total). We observe this degradation
+only when we run a single SPECjbb binary. When running 4 SPECjbb
+binaries in parallel, there is no change in performance between 5.6
+and 5.7.
 
-Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
----
- .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
- 1 file changed, 78 insertions(+), 65 deletions(-)
+That's why we are asking for the kernel tunable, which we would add to
+the tuned profile. We don't expect users to change this frequently but
+rather to set the performance profile once based on the purpose of the
+server.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-index 811c2a8c1c9e..6169351a72c8 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-@@ -207,6 +207,84 @@
-         "MetricGroup": "cpi_breakdown",
-         "MetricName": "fxu_stall_cpi"
-     },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to branch mispred",
-+        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_br_mpred_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-+        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-+    },
-+    {
-+        "BriefDescription": "ICT other stalls",
-+        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_cyc_other_cpi"
-+    },
-+    {
-+        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-+        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-+        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-+        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_issq_cpi"
-+    },
-+    {
-+        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-+        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_other_cpi"
-+    },
-+    {
-+        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-+        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_sync_cpi"
-+    },
-+    {
-+        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-+        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-+    },
-+    {
-+        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-+        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_ic_l2_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-+        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_ic_l3_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-+        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_ic_l3miss_cpi"
-+    },
-+    {
-+        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-+        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-+        "MetricGroup": "cpi_breakdown",
-+        "MetricName": "ict_noslot_ic_miss_cpi"
-+    },
-     {
-         "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
-         "MetricGroup": "cpi_breakdown",
-@@ -1819,71 +1897,6 @@
-         "MetricExpr": "PM_FXU_IDLE / PM_CYC",
-         "MetricName": "fxu_all_idle"
-     },
--    {
--        "BriefDescription": "Ict empty for this thread due to branch mispred",
--        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_br_mpred_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
--        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
--    },
--    {
--        "BriefDescription": "ICT other stalls",
--        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_cyc_other_cpi"
--    },
--    {
--        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
--        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
--        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
--        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_issq_cpi"
--    },
--    {
--        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
--        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_other_cpi"
--    },
--    {
--        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
--        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_sync_cpi"
--    },
--    {
--        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
--        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
--    },
--    {
--        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
--        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_ic_l2_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
--        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_ic_l3_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
--        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_ic_l3miss_cpi"
--    },
--    {
--        "BriefDescription": "Ict empty for this thread due to Icache Miss",
--        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
--        "MetricName": "ict_noslot_ic_miss_cpi"
--    },
-     {
-         "BriefDescription": "Rate of IERAT reloads from L2",
-         "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
+If you could prepare a patch for us, we would be more than happy to
+test it extensively. Based on the results, we can then evaluate if
+it's the way to go. Thoughts?
+
+Thanks a lot!
+Jirka
+
+On Thu, May 7, 2020 at 5:54 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Thu, May 07, 2020 at 05:24:17PM +0200, Jirka Hladky wrote:
+> > Hi Mel,
+> >
+> > > > Yes, it's indeed OMP.  With low threads count, I mean up to 2x number of
+> > > > NUMA nodes (8 threads on 4 NUMA node servers, 16 threads on 8 NUMA node
+> > > > servers).
+> > >
+> > > Ok, so we know it's within the imbalance threshold where a NUMA node can
+> > > be left idle.
+> >
+> > we have discussed today with my colleagues the performance drop for
+> > some workloads for low threads counts (roughly up to 2x number of NUMA
+> > nodes). We are worried that it can be a severe issue for some use
+> > cases, which require a full memory bandwidth even when only part of
+> > CPUs is used.
+> >
+> > We understand that scheduler cannot distinguish this type of workload
+> > from others automatically. However, there was an idea for a * new
+> > kernel tunable to control the imbalance threshold *. Based on the
+> > purpose of the server, users could set this tunable. See the tuned
+> > project, which allows creating performance profiles [1].
+> >
+>
+> I'm not completely opposed to it but given that the setting is global,
+> I imagine it could have other consequences if two applications ran
+> at different times have different requirements. Given that it's OMP,
+> I would have imagined that an application that really cared about this
+> would specify what was needed using OMP_PLACES. Why would someone prefer
+> kernel tuning or a tuned profile over OMP_PLACES? After all, it requires
+> specific knowledge of the application even to know that a particular
+> tuned profile is needed.
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
+
+
 -- 
-2.18.2
+-Jirka
 
