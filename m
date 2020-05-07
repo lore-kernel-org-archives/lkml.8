@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2FDC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF715C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA03020A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAAF20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588876772;
-	bh=VeEp+7ElE8l0tzoN6UVq725ChaSk6ssE/a/96+hHjLQ=;
+	s=default; t=1588876812;
+	bh=xnkqkpirpIiR0PHAXndz4NhIzmy+AhXuFOqyTl8CJrI=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=lEhqRpeTh1MXvc3oA8rXHNW0eE/ker68/bUr/CexgP2Y/GgBSvsQeuA5N/EdoF2lt
-	 a62Fj+Omf7PQppT5HP8vUZr9b1YFRlGjPDVB+cZTJJz426KANNewh3qSpgcKsfDRov
-	 Y5Wtfq9e0DZHwFC7BTP4Nv+tTe7y1J+3Ge+FgRz4=
+	b=YIyh2SdIoqXWAl4epw1SOlZnP4tx1n4KKX2Ch4hr6YwVSoRiiCyUT9dqjCN3s8x+J
+	 kaUGAchBnAtkx0h/z6NrlC3zJkES8Ll8TPbGs+LYMsYkowUNyCTUjejh6aqqdKYowx
+	 YtaAfS+xkL/3ct3MjBH6Hh42fxwy14vNA3xzIt1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgEGSjb (ORCPT
+        id S1728305AbgEGSkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGSja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:39:30 -0400
+        id S1726320AbgEGSkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:40:11 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F37208E4;
-        Thu,  7 May 2020 18:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D1C2208E4;
+        Thu,  7 May 2020 18:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588876770;
-        bh=VeEp+7ElE8l0tzoN6UVq725ChaSk6ssE/a/96+hHjLQ=;
+        s=default; t=1588876810;
+        bh=xnkqkpirpIiR0PHAXndz4NhIzmy+AhXuFOqyTl8CJrI=;
         h=Date:From:To:Cc:Subject:From;
-        b=Oka4zgLyWhvs9qPh4nStDKAgEnONj2ECf/9F09hkV0Xao548k88iljJT1ngwc+hlE
-         U7s/tIitE60gxPtkPxWqqoqUhrkqocDbfN/yU9A7otmD7UtALJmydj1BohZ+Qnvi1D
-         rmj63SjbJBhNLxg0G5qBL1SKdI4ZBowWz+yc9siM=
-Date:   Thu, 7 May 2020 13:43:56 -0500
+        b=2TLmU3Gw2ZuoH351KHU3IucM4SpM4h9mbDARicptjCTO/2Yd2oZYyBWLEfJpIzzQb
+         seVOB3NajwFIRo9ZTtu3s+fTxKeRR8duRO5jntyMxZipeoe7/qxdo3xNa667+trK6/
+         O1Y+Gc0GNVbh17S3kqmAtXZtDI6MG1bg4kLRrx3Y=
+Date:   Thu, 7 May 2020 13:44:37 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     John Johansen <john.johansen@canonical.com>
+To:     Russell King <linux@armlinux.org.uk>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] apparmor: Replace zero-length array with flexible-array
-Message-ID: <20200507184356.GA13448@embeddedor>
+Subject: [PATCH] ARM: tegra: Replace zero-length array with flexible-array
+Message-ID: <20200507184437.GA13468@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- security/apparmor/apparmorfs.c |    2 +-
+ drivers/amba/tegra-ahb.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 280741fc0f5f..299994ff9168 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -839,7 +839,7 @@ static ssize_t query_label(char *buf, size_t buf_len,
- struct multi_transaction {
- 	struct kref count;
- 	ssize_t size;
--	char data[0];
-+	char data[];
+diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+index 57d3b2e2d007..0b2c20fddb7c 100644
+--- a/drivers/amba/tegra-ahb.c
++++ b/drivers/amba/tegra-ahb.c
+@@ -120,7 +120,7 @@ static const u32 tegra_ahb_gizmo[] = {
+ struct tegra_ahb {
+ 	void __iomem	*regs;
+ 	struct device	*dev;
+-	u32		ctx[0];
++	u32		ctx[];
  };
  
- #define MULTI_TRANSACTION_LIMIT (PAGE_SIZE - sizeof(struct multi_transaction))
+ static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
 
