@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54101C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE8420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276C0208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861755;
-	bh=8hdS+zn0szNmoYXCOAEWvvvEI600objqG6lSWWGUNso=;
+	s=default; t=1588861758;
+	bh=mKuQExT/XtGq4HcwCYsGAbbI38P9Ix+FvVyT7xS0ZcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KtWKl6RHKD8qIDvcCZkeDrxFxakaUgA255diJ3JN1E+gJZqdQEOiK/K1I8fnw7BKd
-	 r3Z5TbnnSGeUm9v4KEjxllRFRQuyy91cVSLI8/J0B5Io3ykiewNlc51H1nHFLf6awU
-	 udgV73d9L972VFPDxuZB3z+lio8JttkOfc/7DjIY=
+	b=dg0/LMPWs90h1BbUOdtwZotF8FdEGALi7ozOOJ4aB2Sd2WeaT91jWbGavL+GWoHtT
+	 V+FCSb/bcpS6xU59d4xG5yVwVkwPpkB5iUFnd6QTk1e6LYettqiZH5XJTCUE2nQblW
+	 iMY0/eupzj7RR/5GV6A6B3gFciKX2Lzq1fWqryqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgEGO3O (ORCPT
+        id S1728500AbgEGO3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728390AbgEGO3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:03 -0400
+        id S1728466AbgEGO3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B195E20838;
-        Thu,  7 May 2020 14:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7929E20A8B;
+        Thu,  7 May 2020 14:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861743;
-        bh=8hdS+zn0szNmoYXCOAEWvvvEI600objqG6lSWWGUNso=;
+        s=default; t=1588861751;
+        bh=mKuQExT/XtGq4HcwCYsGAbbI38P9Ix+FvVyT7xS0ZcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhVCVSZIvXTeLrqmxBV31C6ha7OgozBaalp9siCDHg6wpdwikOCX+tnRIKp6YIbHY
-         JUVksnliMBFw7/C9weZG6uUOa0noK0NK1LF2zn4r3tppel8au95gTB2bbaQoH1TBZ4
-         DXlFgW3if3fckEBzUk5fck1yMyulpMSzGdNpZaP4=
+        b=VszrsqY7GJ0p9HcCzdvI5xI/OIMdMMv6/HWpq/JKxdP9cwBWaSXP8LBlFBtYm9CkK
+         O7CQnzna3jH5GaIwCke8Tx2dMLNKe7Z9swKeRUM3Z17r/dt82LK4mwacU++RODkF2I
+         MuzMwrH9Nw7S1au6+dr466gzX9LVYjgG77puT5cY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/35] SUNRPC: defer slow parts of rpc_free_client() to a workqueue.
-Date:   Thu,  7 May 2020 10:28:20 -0400
-Message-Id: <20200507142830.26239-26-sashal@kernel.org>
+Cc:     ryan_chen <ryan_chen@aspeedtech.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 32/35] i2c: aspeed: Avoid i2c interrupt status clear race condition.
+Date:   Thu,  7 May 2020 10:28:26 -0400
+Message-Id: <20200507142830.26239-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -60,115 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+From: ryan_chen <ryan_chen@aspeedtech.com>
 
-[ Upstream commit 7c4310ff56422ea43418305d22bbc5fe19150ec4 ]
+[ Upstream commit c926c87b8e36dcc0ea5c2a0a0227ed4f32d0516a ]
 
-The rpciod workqueue is on the write-out path for freeing dirty memory,
-so it is important that it never block waiting for memory to be
-allocated - this can lead to a deadlock.
+In AST2600 there have a slow peripheral bus between CPU and i2c
+controller. Therefore GIC i2c interrupt status clear have delay timing,
+when CPU issue write clear i2c controller interrupt status. To avoid
+this issue, the driver need have read after write clear at i2c ISR.
 
-rpc_execute() - which is often called by an rpciod work item - calls
-rcp_task_release_client() which can lead to rpc_free_client().
-
-rpc_free_client() makes two calls which could potentially block wating
-for memory allocation.
-
-rpc_clnt_debugfs_unregister() calls into debugfs and will block while
-any of the debugfs files are being accessed.  In particular it can block
-while any of the 'open' methods are being called and all of these use
-malloc for one thing or another.  So this can deadlock if the memory
-allocation waits for NFS to complete some writes via rpciod.
-
-rpc_clnt_remove_pipedir() can take the inode_lock() and while it isn't
-obvious that memory allocations can happen while the lock it held, it is
-safer to assume they might and to not let rpciod call
-rpc_clnt_remove_pipedir().
-
-So this patch moves these two calls (together with the final kfree() and
-rpciod_down()) into a work-item to be run from the system work-queue.
-rpciod can continue its important work, and the final stages of the free
-can happen whenever they happen.
-
-I have seen this deadlock on a 4.12 based kernel where debugfs used
-synchronize_srcu() when removing objects.  synchronize_srcu() requires a
-workqueue and there were no free workther threads and none could be
-allocated.  While debugsfs no longer uses SRCU, I believe the deadlock
-is still possible.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: f327c686d3ba ("i2c: aspeed: added driver for Aspeed I2C")
+Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+[wsa: added Fixes tag]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sunrpc/clnt.h |  8 +++++++-
- net/sunrpc/clnt.c           | 21 +++++++++++++++++----
- 2 files changed, 24 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/i2c-aspeed.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index abc63bd1be2b5..d99d39d45a494 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -71,7 +71,13 @@ struct rpc_clnt {
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	struct dentry		*cl_debugfs;	/* debugfs directory */
- #endif
--	struct rpc_xprt_iter	cl_xpi;
-+	/* cl_work is only needed after cl_xpi is no longer used,
-+	 * and that are of similar size
-+	 */
-+	union {
-+		struct rpc_xprt_iter	cl_xpi;
-+		struct work_struct	cl_work;
-+	};
- 	const struct cred	*cl_cred;
- };
+diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+index 7b098ff5f5dd3..dad6e432de89f 100644
+--- a/drivers/i2c/busses/i2c-aspeed.c
++++ b/drivers/i2c/busses/i2c-aspeed.c
+@@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+ 	/* Ack all interrupts except for Rx done */
+ 	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+ 	       bus->base + ASPEED_I2C_INTR_STS_REG);
++	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+ 	irq_remaining = irq_received;
  
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index f7f78566be463..a7430b66c7389 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -877,6 +877,20 @@ EXPORT_SYMBOL_GPL(rpc_shutdown_client);
- /*
-  * Free an RPC client
-  */
-+static void rpc_free_client_work(struct work_struct *work)
-+{
-+	struct rpc_clnt *clnt = container_of(work, struct rpc_clnt, cl_work);
-+
-+	/* These might block on processes that might allocate memory,
-+	 * so they cannot be called in rpciod, so they are handled separately
-+	 * here.
-+	 */
-+	rpc_clnt_debugfs_unregister(clnt);
-+	rpc_clnt_remove_pipedir(clnt);
-+
-+	kfree(clnt);
-+	rpciod_down();
-+}
- static struct rpc_clnt *
- rpc_free_client(struct rpc_clnt *clnt)
- {
-@@ -887,17 +901,16 @@ rpc_free_client(struct rpc_clnt *clnt)
- 			rcu_dereference(clnt->cl_xprt)->servername);
- 	if (clnt->cl_parent != clnt)
- 		parent = clnt->cl_parent;
--	rpc_clnt_debugfs_unregister(clnt);
--	rpc_clnt_remove_pipedir(clnt);
- 	rpc_unregister_client(clnt);
- 	rpc_free_iostats(clnt->cl_metrics);
- 	clnt->cl_metrics = NULL;
- 	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
- 	xprt_iter_destroy(&clnt->cl_xpi);
--	rpciod_down();
- 	put_cred(clnt->cl_cred);
- 	rpc_free_clid(clnt);
--	kfree(clnt);
-+
-+	INIT_WORK(&clnt->cl_work, rpc_free_client_work);
-+	schedule_work(&clnt->cl_work);
- 	return parent;
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+@@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+ 			irq_received, irq_handled);
+ 
+ 	/* Ack Rx done */
+-	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
++	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
+ 		writel(ASPEED_I2CD_INTR_RX_DONE,
+ 		       bus->base + ASPEED_I2C_INTR_STS_REG);
++		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
++	}
+ 	spin_unlock(&bus->lock);
+ 	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;
  }
- 
 -- 
 2.20.1
 
