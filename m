@@ -2,283 +2,158 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C27C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24AC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECA1207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588860072;
-	bh=gzrqRuI9GcmfEYiEfi2XuT7v3FFwAUhADme/wD3GYVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NwKGeP/ONkRlKGMNZGXvfFgkrjyAHSX3BS9aBwqtHGNI2afWXEZXvJR+l3uNLSnYR
-	 oK/S+AbuI9To+9bbVLFXNGP3x0Z8ZRBXPIWF+7TRdT6CNgFVu6JL+kPweBzDpu9fS+
-	 k/ZbiPTEfLuhwD8VTBeSmK4HscrfuNHNy/FHSfXU=
+	by mail.kernel.org (Postfix) with ESMTP id 3CE95205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cA2dOUFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgEGOBL (ORCPT
+        id S1726750AbgEGOCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgEGOBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:01:11 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 May 2020 10:02:15 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30719 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725969AbgEGOCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:02:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588860131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YnnUFsND7O7jqtL6msM8nwBMUisTSmUw25RGNt2JJrs=;
+        b=cA2dOUFyzz3xZhTTLdSIVp2NdSKgyvVyjJ7QTDkMFgWT9gTFSDzCrdeUyfPikRSQMu3xGf
+        Mq74s3CzLtsnht/MY5YB3umFiMFUBEIhpmuc16oAZyq+CtENaxIBF23J2auFnsQThh6Tyl
+        aRd0kk9AqCyan2cnxq6EYo9YLniVyaY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-rdP8lYCVMWC9u4yrElCVAQ-1; Thu, 07 May 2020 10:02:03 -0400
+X-MC-Unique: rdP8lYCVMWC9u4yrElCVAQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 281A1205C9;
-        Thu,  7 May 2020 14:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588860070;
-        bh=gzrqRuI9GcmfEYiEfi2XuT7v3FFwAUhADme/wD3GYVs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GGDxg5yLGkmFd6fo2A8wVmpg94TwvFupgACz42aOGVPq9c5cB5UC3/YeXx7jcsfhN
-         fZ5M4xTsrBTfyecJQ0jaB4uKnZfsI88E+TJQCHQdEp1QOxkyNw1vaiK4JLt797657u
-         mI+oyMtSbRMypSovQBoUuCeUlLgyNMl7YTZzhD2o=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jWh5I-00AHZ2-Eo; Thu, 07 May 2020 15:01:08 +0100
-Date:   Thu, 07 May 2020 15:01:07 +0100
-Message-ID: <878si3j13w.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Quentin Perret <qperret@google.com>
-Subject: Re: [PATCH 01/15] arm64: kvm: Unify users of HVC instruction
-In-Reply-To: <20200430144831.59194-2-dbrazdil@google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
-        <20200430144831.59194-2-dbrazdil@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qperret@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4169835B45;
+        Thu,  7 May 2020 14:01:58 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF26260FB9;
+        Thu,  7 May 2020 14:01:40 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v4 00/15] virtio-mem: paravirtualized memory
+Date:   Thu,  7 May 2020 16:01:24 +0200
+Message-Id: <20200507140139.17083-1-david@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 15:48:17 +0100,
-David Brazdil <dbrazdil@google.com> wrote:
-> 
-> From: Quentin Perret <qperret@google.com>
-> 
-> Currently, the arm64 KVM code provides __kvm_call_hyp assembly procedure which
-> does nothing but call the HVC instruction. This is used to call functions by
-> their pointer in EL2 under nVHE, and abused by __cpu_init_hyp_mode to pass
-> a data pointer. The hyp-stub code, on the other hand, has its own assembly
-> procedures for (re)setting hyp vectors.
-> 
-> In preparation for a clean-up of the KVM hypercall interface, unify all HVC
-> users behind __kvm_call_hyp and remove comments about expected meaning of
-> arguments.
+This series is based on v5.7-rc4. The patches are located at:
+    https://github.com/davidhildenbrand/linux.git virtio-mem-v4
 
-But the arguments still have a meaning, don't they? See below.
+This is basically a resend of v3 [1], now based on v5.7-rc4 and restested.
+One patch was reshuffled and two ACKs I missed to add were added. The
+rebase did not require any modifications to patches.
 
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: David Brazdil <dbrazdil@google.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h | 12 ++++++-----
->  arch/arm64/include/asm/virt.h     | 33 ++++++++++++++++++++++++++++--
->  arch/arm64/kernel/hyp-stub.S      | 34 -------------------------------
->  arch/arm64/kvm/hyp.S              | 13 +-----------
->  4 files changed, 39 insertions(+), 53 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 32c8a675e5a4..e61143d6602d 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -25,6 +25,7 @@
->  #include <asm/kvm.h>
->  #include <asm/kvm_asm.h>
->  #include <asm/thread_info.h>
-> +#include <asm/virt.h>
->  
->  #define __KVM_HAVE_ARCH_INTC_INITIALIZED
->  
-> @@ -446,7 +447,8 @@ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
->  void kvm_arm_halt_guest(struct kvm *kvm);
->  void kvm_arm_resume_guest(struct kvm *kvm);
->  
-> -u64 __kvm_call_hyp(void *hypfn, ...);
-> +#define kvm_call_hyp_nvhe(hypfn, ...) \
-> +	__kvm_call_hyp((unsigned long)kvm_ksym_ref(hypfn), ##__VA_ARGS__)
->  
->  /*
->   * The couple of isb() below are there to guarantee the same behaviour
-> @@ -459,7 +461,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
->  			f(__VA_ARGS__);					\
->  			isb();						\
->  		} else {						\
-> -			__kvm_call_hyp(kvm_ksym_ref(f), ##__VA_ARGS__); \
-> +			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
->  		}							\
->  	} while(0)
->  
-> @@ -471,8 +473,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
->  			ret = f(__VA_ARGS__);				\
->  			isb();						\
->  		} else {						\
-> -			ret = __kvm_call_hyp(kvm_ksym_ref(f),		\
-> -					     ##__VA_ARGS__);		\
-> +			ret = kvm_call_hyp_nvhe(f, ##__VA_ARGS__);	\
->  		}							\
->  									\
->  		ret;							\
-> @@ -551,7 +552,8 @@ static inline void __cpu_init_hyp_mode(phys_addr_t pgd_ptr,
->  	 * cpus_have_const_cap() wrapper.
->  	 */
->  	BUG_ON(!system_capabilities_finalized());
-> -	__kvm_call_hyp((void *)pgd_ptr, hyp_stack_ptr, vector_ptr, tpidr_el2);
-> +	__kvm_call_hyp((unsigned long)pgd_ptr, hyp_stack_ptr, vector_ptr,
-> +		       tpidr_el2);
->  
->  	/*
->  	 * Disabling SSBD on a non-VHE system requires us to enable SSBS
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 61fd26752adc..fdc11f819b06 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -62,8 +62,37 @@
->   */
->  extern u32 __boot_cpu_mode[2];
->  
-> -void __hyp_set_vectors(phys_addr_t phys_vector_base);
-> -void __hyp_reset_vectors(void);
-> +/* Make HVC call into the hypervisor. */
-> +extern u64 __kvm_call_hyp(unsigned long arg, ...);
-> +
-> +/*
-> + * __hyp_set_vectors: Call this after boot to set the initial hypervisor
-> + * vectors as part of hypervisor installation.  On an SMP system, this should
-> + * be called on each CPU.
-> + *
-> + * @phys_vector_base must be the physical address of the new vector table, and
-> + * must be 2KB aligned.
-> + *
-> + * Before calling this, you must check that the stub hypervisor is installed
-> + * everywhere, by waiting for any secondary CPUs to be brought up and then
-> + * checking that is_hyp_mode_available() is true.
-> + *
-> + * If not, there is a pre-existing hypervisor, some CPUs failed to boot, or
-> + * something else went wrong... in such cases, trying to install a new
-> + * hypervisor is unlikely to work as desired.
-> + *
-> + * When you call into your shiny new hypervisor, sp_el2 will contain junk,
-> + * so you will need to set that to something sensible at the new hypervisor's
-> + * initialisation entry point.
-> + */
-> +static inline void __hyp_set_vectors(phys_addr_t phys_vector_base)
-> +{
-> +	__kvm_call_hyp(HVC_SET_VECTORS, phys_vector_base);
-> +}
-> +static inline void __hyp_reset_vectors(void)
-> +{
-> +	__kvm_call_hyp(HVC_RESET_VECTORS);
-> +}
->  
->  /* Reports the availability of HYP mode */
->  static inline bool is_hyp_mode_available(void)
-> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> index e473ead806ed..78d4ec5c4290 100644
-> --- a/arch/arm64/kernel/hyp-stub.S
-> +++ b/arch/arm64/kernel/hyp-stub.S
-> @@ -84,37 +84,3 @@ ENDPROC(\label)
->  	invalid_vector	el1_irq_invalid
->  	invalid_vector	el1_fiq_invalid
->  	invalid_vector	el1_error_invalid
-> -
-> -/*
-> - * __hyp_set_vectors: Call this after boot to set the initial hypervisor
-> - * vectors as part of hypervisor installation.  On an SMP system, this should
-> - * be called on each CPU.
-> - *
-> - * x0 must be the physical address of the new vector table, and must be
-> - * 2KB aligned.
-> - *
-> - * Before calling this, you must check that the stub hypervisor is installed
-> - * everywhere, by waiting for any secondary CPUs to be brought up and then
-> - * checking that is_hyp_mode_available() is true.
-> - *
-> - * If not, there is a pre-existing hypervisor, some CPUs failed to boot, or
-> - * something else went wrong... in such cases, trying to install a new
-> - * hypervisor is unlikely to work as desired.
-> - *
-> - * When you call into your shiny new hypervisor, sp_el2 will contain junk,
-> - * so you will need to set that to something sensible at the new hypervisor's
-> - * initialisation entry point.
-> - */
-> -
-> -ENTRY(__hyp_set_vectors)
-> -	mov	x1, x0
-> -	mov	x0, #HVC_SET_VECTORS
-> -	hvc	#0
-> -	ret
-> -ENDPROC(__hyp_set_vectors)
-> -
-> -ENTRY(__hyp_reset_vectors)
-> -	mov	x0, #HVC_RESET_VECTORS
-> -	hvc	#0
-> -	ret
-> -ENDPROC(__hyp_reset_vectors)
-> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-> index 3c79a1124af2..f6c9501ddfc9 100644
-> --- a/arch/arm64/kvm/hyp.S
-> +++ b/arch/arm64/kvm/hyp.S
-> @@ -11,22 +11,11 @@
->  #include <asm/cpufeature.h>
->  
->  /*
-> - * u64 __kvm_call_hyp(void *hypfn, ...);
-> + * u64 __kvm_call_hyp(unsigned long arg, ...);
->   *
->   * This is not really a variadic function in the classic C-way and care must
->   * be taken when calling this to ensure parameters are passed in registers
->   * only, since the stack will change between the caller and the callee.
-> - *
-> - * Call the function with the first argument containing a pointer to the
-> - * function you wish to call in Hyp mode, and subsequent arguments will be
-> - * passed as x0, x1, and x2 (a maximum of 3 arguments in addition to the
-> - * function pointer can be passed).  The function being called must be mapped
-> - * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
-> - * passed in x0.
-> - *
-> - * A function pointer with a value less than 0xfff has a special meaning,
-> - * and is used to implement hyp stubs in the same way as in
-> - * arch/arm64/kernel/hyp_stub.S.
+Details about virtio-mem can be found in the cover letter of v2 [2]. A
+basic QEMU implementation was posted yesterday [3].
 
-I don't think any of this becomes obsolete with this patch (apart from
-the reference to 32bit), and only changes with patch #2. Or am I
-misunderstanding something?
+[1] https://lkml.kernel.org/r/20200507103119.11219-1-david@redhat.com
+[2] https://lkml.kernel.org/r/20200311171422.10484-1-david@redhat.com
+[3] https://lkml.kernel.org/r/20200506094948.76388-1-david@redhat.com
 
->   */
->  SYM_FUNC_START(__kvm_call_hyp)
->  	hvc	#0
-> -- 
-> 2.26.1
-> 
-> 
+v3 -> v4:
+- Move "MAINTAINERS: Add myself as virtio-mem maintainer" to #2
+- Add two ACKs from Andrew (in reply to v2)
+-- "mm: Allow to offline unmovable PageOffline() pages via ..."
+-- "mm/memory_hotplug: Introduce offline_and_remove_memory()"
 
-Thanks,
+v2 -> v3:
+- "virtio-mem: Paravirtualized memory hotplug"
+-- Include "linux/slab.h" to fix build issues
+-- Remember the "region_size", helpful for patch #11
+-- Minor simplifaction in virtio_mem_overlaps_range()
+-- Use notifier_from_errno() instead of notifier_to_errno() in notifier
+-- More reliable check for added memory when unloading the driver
+- "virtio-mem: Allow to specify an ACPI PXM as nid"
+-- Also print the nid
+- Added patch #11-#15
 
-	M.
+David Hildenbrand (15):
+  virtio-mem: Paravirtualized memory hotplug
+  MAINTAINERS: Add myself as virtio-mem maintainer
+  virtio-mem: Allow to specify an ACPI PXM as nid
+  virtio-mem: Paravirtualized memory hotunplug part 1
+  virtio-mem: Paravirtualized memory hotunplug part 2
+  mm: Allow to offline unmovable PageOffline() pages via
+    MEM_GOING_OFFLINE
+  virtio-mem: Allow to offline partially unplugged memory blocks
+  mm/memory_hotplug: Introduce offline_and_remove_memory()
+  virtio-mem: Offline and remove completely unplugged memory blocks
+  virtio-mem: Better retry handling
+  virtio-mem: Add parent resource for all added "System RAM"
+  virtio-mem: Drop manual check for already present memory
+  virtio-mem: Unplug subblocks right-to-left
+  virtio-mem: Use -ETXTBSY as error code if the device is busy
+  virtio-mem: Try to unplug the complete online memory block first
+
+ MAINTAINERS                     |    7 +
+ drivers/acpi/numa/srat.c        |    1 +
+ drivers/virtio/Kconfig          |   17 +
+ drivers/virtio/Makefile         |    1 +
+ drivers/virtio/virtio_mem.c     | 1962 +++++++++++++++++++++++++++++++
+ include/linux/memory_hotplug.h  |    1 +
+ include/linux/page-flags.h      |   10 +
+ include/uapi/linux/virtio_ids.h |    1 +
+ include/uapi/linux/virtio_mem.h |  208 ++++
+ mm/memory_hotplug.c             |   81 +-
+ mm/page_alloc.c                 |   26 +
+ mm/page_isolation.c             |    9 +
+ 12 files changed, 2314 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/virtio/virtio_mem.c
+ create mode 100644 include/uapi/linux/virtio_mem.h
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.25.3
+
