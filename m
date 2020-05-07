@@ -2,141 +2,141 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF90C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A1BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC16D2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmnYQEbY"
+	by mail.kernel.org (Postfix) with ESMTP id 03DCC2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgEGKPc (ORCPT
+        id S1725948AbgEGKTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:15:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58708 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbgEGKPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:15:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588846529;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=A+jh5pN6NKDoDRaUFFxRu2RRzvKqaD7ThAzjRQGAp3Y=;
-        b=hmnYQEbY8s3VmTecUMtKkOmlusl/A/a9eLWDnQkxrJrYsMrQQJebwbo8RwXIuuTBy2BgNH
-        kPiln3sMZYAFTQQVCSlEX8xPg7jIeyYBTqfh+Y7q8pYJd/eSUgJSgT4eaZgICWJDQCgOVL
-        cgsVGJKDA9OSjR8+UkEYtCrx1v5stkM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-hjGq-kPwPFm1R0h_2ZbcTg-1; Thu, 07 May 2020 06:15:25 -0400
-X-MC-Unique: hjGq-kPwPFm1R0h_2ZbcTg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A74745F;
-        Thu,  7 May 2020 10:15:23 +0000 (UTC)
-Received: from krava (unknown [10.40.194.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7893B61100;
-        Thu,  7 May 2020 10:15:20 +0000 (UTC)
-Date:   Thu, 7 May 2020 12:15:17 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@elte.hu>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCHv2] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-ID: <20200507101517.GB2447905@krava>
-References: <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
- <20200414160338.GE208694@krava>
- <20200415090507.GG208694@krava>
- <20200416105506.904b7847a1b621b75463076d@kernel.org>
- <20200416091320.GA322899@krava>
- <20200416224250.7a53fb581e50aa32df75a0cf@kernel.org>
- <20200416143104.GA400699@krava>
- <20200417163810.ffe5c9145eae281fc493932c@kernel.org>
- <20200428213627.GI1476763@krava>
- <20200501110107.bc859c6603704c0bcdb8889a@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501110107.bc859c6603704c0bcdb8889a@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 7 May 2020 06:19:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47652 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgEGKTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:19:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CDAE8AF99;
+        Thu,  7 May 2020 10:19:21 +0000 (UTC)
+Date:   Thu, 07 May 2020 12:19:18 +0200
+Message-ID: <s5hsggc3v4p.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     butt3rflyh4ck <butterflyhuangxx@gmail.com>, security@kernel.org,
+        syzkaller <syzkaller@googlegroups.com>, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+In-Reply-To: <20200507101310.GA1311017@kroah.com>
+References: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+        <20200507082302.GF1024567@kroah.com>
+        <s5h8si45ard.wl-tiwai@suse.de>
+        <20200507101310.GA1311017@kroah.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 11:01:07AM +0900, Masami Hiramatsu wrote:
-> On Tue, 28 Apr 2020 23:36:27 +0200
-> Jiri Olsa <jolsa@redhat.com> wrote:
+On Thu, 07 May 2020 12:13:10 +0200,
+Greg Kroah-Hartman wrote:
 > 
-> > On Fri, Apr 17, 2020 at 04:38:10PM +0900, Masami Hiramatsu wrote:
-> > 
-> > SNIP
-> > 
-> > > > 
-> > > > The code within the kretprobe handler checks for probe reentrancy,
-> > > > so we won't trigger any _raw_spin_lock_irqsave probe in there.
-> > > > 
-> > > > The problem is in outside kprobe_flush_task, where we call:
-> > > > 
-> > > >   kprobe_flush_task
-> > > >     kretprobe_table_lock
-> > > >       raw_spin_lock_irqsave
-> > > >         _raw_spin_lock_irqsave
-> > > > 
-> > > > where _raw_spin_lock_irqsave triggers the kretprobe and installs
-> > > > kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-> > > > 
-> > > > The kretprobe_trampoline handler is then executed with already
-> > > > locked kretprobe_table_locks, and first thing it does is to
-> > > > lock kretprobe_table_locks ;-) the whole lockup path like:
-> > > > 
-> > > >   kprobe_flush_task
-> > > >     kretprobe_table_lock
-> > > >       raw_spin_lock_irqsave
-> > > >         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-> > > > 
-> > > >         ---> kretprobe_table_locks locked
-> > > > 
-> > > >         kretprobe_trampoline
-> > > >           trampoline_handler
-> > > >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-> > > > 
-> > > > Adding kprobe_busy_begin/end helpers that mark code with fake
-> > > > probe installed to prevent triggering of another kprobe within
-> > > > this code.
-> > > > 
-> > > > Using these helpers in kprobe_flush_task, so the probe recursion
-> > > > protection check is hit and the probe is never set to prevent
-> > > > above lockup.
-> > > > 
+> On Thu, May 07, 2020 at 11:56:22AM +0200, Takashi Iwai wrote:
+> > On Thu, 07 May 2020 10:23:02 +0200,
+> > Greg Kroah-Hartman wrote:
 > > > 
-> > > Thanks Jiri!
+> > > On Thu, May 07, 2020 at 04:04:25PM +0800, butt3rflyh4ck wrote:
+> > > > I report a bug (in linux-5.7-rc1) found by syzkaller.
+> > > > 
+> > > > kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/v5.7.0-rc1.config
+> > > > reproducer: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/repro.cprog
+> > > > 
+> > > > I test the reproducer in linux-5.7-rc4 and crash too.
 > > > 
-> > > Ingo, could you pick this up?
+> > > Great, care to create a fix for this and send it to the proper
+> > > maintainers?  That's the best way to get it fixed, otherwise it just
+> > > goes in the file with the rest of the syzbot reports we are burried
+> > > under.
 > > 
-> > Ingo, any chance you could take this one?
+> > Don't worry, I already prepared a fix patch below :)
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> > -- 8< --
+> > From: Takashi Iwai <tiwai@suse.de>
+> > Subject: [PATCH] ALSA: rawmidi: Fix racy buffer resize under concurrent
+> >  accesses
+> > 
+> > The rawmidi core allows user to resize the runtime buffer via ioctl,
+> > and this may lead to UAF when performed during concurrent reads or
+> > writes.
+> > 
+> > This patch fixes the race by introducing a reference counter for the
+> > runtime buffer access and returns -EBUSY error when the resize is
+> > performed concurrently.
+> > 
+> > Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+> > Cc: <stable@vger.kernel.org>
+> > Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > ---
+> >  include/sound/rawmidi.h |  1 +
+> >  sound/core/rawmidi.c    | 29 ++++++++++++++++++++++++++++-
+> >  2 files changed, 29 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+> > index a36b7227a15a..334842daa904 100644
+> > --- a/include/sound/rawmidi.h
+> > +++ b/include/sound/rawmidi.h
+> > @@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+> >  	size_t avail_min;	/* min avail for wakeup */
+> >  	size_t avail;		/* max used buffer for wakeup */
+> >  	size_t xruns;		/* over/underruns counter */
+> > +	int buffer_ref;		/* buffer reference count */
+> >  	/* misc */
+> >  	spinlock_t lock;
+> >  	wait_queue_head_t sleep;
+> > diff --git a/sound/core/rawmidi.c b/sound/core/rawmidi.c
+> > index 20dd08e1f675..4185d9e81e3c 100644
+> > --- a/sound/core/rawmidi.c
+> > +++ b/sound/core/rawmidi.c
+> > @@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work(struct work_struct *work)
+> >  		runtime->event(runtime->substream);
+> >  }
+> >  
+> > +/* buffer refcount management: call with runtime->lock held */
+> > +static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
+> > +{
+> > +	runtime->buffer_ref++;
+> > +}
+> > +
+> > +static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
+> > +{
+> > +	runtime->buffer_ref--;
+> > +}
 > 
-> Hi Ingo,
-> 
-> Should I make a pull request for all kprobes related patches to you?
+> Why not use the reference count structure?
 
-looks like Ingo is offline, Thomas, could you please pull this one?
+The context accessing the buffer is always with the spinlock, so we
+don't need expensive atomic ops there.
+
+Usually this kind of check can be a simple boolean flag, but in this
+case, there is one place that goes out of lock due to
+copy_from/to_user, so a refcount is used in this patch instead.
+
 
 thanks,
-jirka
 
+Takashi
