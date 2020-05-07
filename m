@@ -2,281 +2,402 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ADFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38954C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D88E21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C3821473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uRwdOYWk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXUamm/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEGSVZ (ORCPT
+        id S1727932AbgEGSVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
+        Thu, 7 May 2020 14:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgEGSVZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726367AbgEGSVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:21:25 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93FDC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:21:24 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id h26so5322232lfg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:21:24 -0700 (PDT)
+        Thu, 7 May 2020 14:21:53 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CEFC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:21:51 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id m24so3966374vsq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mHv1m6LwfP89HVSY8eFBB5eZ2PLAcVQZWj8UEAPI95A=;
-        b=uRwdOYWkW1CdUJqiaSg6++KvyTedHprh2g0kMZqq4PkgK49B58kQk3yM+ktdSrqgBG
-         XiyzHdz9C4LlFp9zBp6QU9OqtVKXMi8F1zfdMrvP7CBXa9qYPMUhgIDV+8cw5sZL6J5v
-         yM1k0A0Jr8UvFVUpByuCTx6MHAH0rLPITPzJeMFwfoZ0n+Laif/VxTtBo11lO9opQ0rP
-         unc7xvipDoPGKgVwIeFWVAXd3Y9qUw8XqGR+xlSjFenT74oMEK5hC3skTgJNzxi9JA4U
-         f6lEX3cAnY5n7BYG4AXZMVray+UcwXtDz4FKbrKTpCSXROw03q4dEmjjCxuPUTIdi5wE
-         tSwQ==
+        bh=INyWuTp+yam+hgXXcVZ9YVLTNFA/J6HgpHigw0HwofU=;
+        b=SXUamm/iCKG83pUoAW4ChYrI2qJYlRtrEHOL9tXYLhIvgJZLu5YBJ1491Mqc7ovGi0
+         wfvIVT7TAtVIcN1IlMN1YkjSfumGQ68bQtAp9g/B6ZIdeGR8MAKqtIVoL8GUCA8GfYTh
+         7txEqi2KC0ulnIIHTKctnsrPP/zYsa/Lrj+ukyTHc84gr2m3a8mIYAUfm1/ToR9jKBGG
+         o9512cmUvi8LeAsj95mGpOEeKZsi6FVm5LvaNZItYIrm18bvqMs8ywBlSPFCoRLdla/v
+         w+uDG0FvfuNpRXra4nPiin0JGU5KiL3NUtAv1e83f92kcV+ONlTK+JMl/kGueI2SsABg
+         PgzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mHv1m6LwfP89HVSY8eFBB5eZ2PLAcVQZWj8UEAPI95A=;
-        b=Wog17s9SwZV2eHHR58D69TK/gmAmeH4L0aUoRzmwoozOX6JwyRiP+y96pwiBduBOUs
-         B8Pdw/X938bORRJpXnDooEAE0yTE/Z/xXYPcEFJKJAiNLsRHdgUjsx6mh9Yi1gMaDFxG
-         fVKGcE48nb37uUpqMuhxlp43trRbIb+qvEvJO1FBPNCW8eOK+2dA9rQ8qpxKCMRRUtWw
-         xPcM47Yv+ZEMpga0b/ybLXp5FdyOo0o+KGaYKmuYVJcC0iuyoXslwlS9c3ySxitZSLhn
-         zRwqmRMq32LAVyd9BPoDUuFSoCGTXuopdEn9EhM1IRz4j427TIzj3LNfAyfuBAfT2pRJ
-         kavA==
-X-Gm-Message-State: AGi0PubEyHZHvkN238rniluQKPYIDT/8KSqJjd9g7IDtaDZHx5enFbCF
-        qaLBwvcOqqQdoLTk9KrgVCQq3NDesGnXFUeogBgYtgJX
-X-Google-Smtp-Source: APiQypIMWN/orbVpmSThTuouH+2lZZcRWcvRNWCzQL/APK8sPWnGDUaKU8f+4eCKCn4Skc6VqZ56Q/LxroFsmf00Wdk=
-X-Received: by 2002:ac2:46c1:: with SMTP id p1mr9110467lfo.25.1588875683088;
- Thu, 07 May 2020 11:21:23 -0700 (PDT)
+        bh=INyWuTp+yam+hgXXcVZ9YVLTNFA/J6HgpHigw0HwofU=;
+        b=QVmuXCYvDZkUArpjGLPevIPJpYNetGXJQ0An2t9wiK11d1dlLdYo96u2hm63WqJpWa
+         nYsnj+BToOKX8MPgLa9NC4aznSUbuPYLC9EuXLm7JPJzENtxVLSPd8xNjo3DBt5oaOK4
+         rNsdkWq/5xnVCsvKCsjapzMOZTe81ViKGVStSSvI9P8X8/gLzOSzEp3mDWafFR9QGjk+
+         CK0TDyMg9EDI2fLMwaoHFcv8RZSAEs/tNmXXdqajvUIE5hdHadlV6k035XB7TiaXb8Zs
+         MBwzVW+btMurUsocAll/x1R7U+uCL7Aa00WVzYHKc5Pwv4MuN0FQ3whInphSwOwIpzsd
+         v37w==
+X-Gm-Message-State: AGi0PuYjlSrgQjrB0eFS7QMf+nkjNl+RUJEgsgFSjPeillccX2EwV0g0
+        AxoyEysiFja6Vp1lRtIUNl5bCsXtgedyulqmJ3sMFQ==
+X-Google-Smtp-Source: APiQypIMV2ybpQCgdQp1JcrjDfC58sbE2q3S8foEE0i0Gcsiu92XwDprwnk6BD2LIwQtkzDKo6fwfqcdqqcBgUUbaY8=
+X-Received: by 2002:a67:80d1:: with SMTP id b200mr13434294vsd.76.1588875710564;
+ Thu, 07 May 2020 11:21:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200506141821.GA9773@lorien.usersys.redhat.com>
- <CAKfTPtADSaFmxE_-qtfgYEQw0A90oma2tEwH=XrE7r=qfRVsaA@mail.gmail.com>
- <20200506180521.GC9773@lorien.usersys.redhat.com> <CAKfTPtC6jEJ00YG6DyKOwxxpzuUEBE48ivoi3njKLCEB88U8LQ@mail.gmail.com>
- <20200507180417.GE19331@lorien.usersys.redhat.com>
-In-Reply-To: <20200507180417.GE19331@lorien.usersys.redhat.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 7 May 2020 20:21:11 +0200
-Message-ID: <CAKfTPtD2UegRUuuSDOw735++furT16qMVb1ZxsX7OCq9n_TA0w@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix enqueue_task_fair warning some more
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>
+References: <20200430085105.GF2496467@kroah.com> <1588839055-26677-1-git-send-email-Frankie.Chang@mediatek.com>
+ <1588839055-26677-4-git-send-email-Frankie.Chang@mediatek.com>
+In-Reply-To: <1588839055-26677-4-git-send-email-Frankie.Chang@mediatek.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Thu, 7 May 2020 11:21:38 -0700
+Message-ID: <CAHRSSEwqxiJqbaMHVPMWPPpLiy_raa-Zncr3VBPpcwpRbTzThg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] binder: add transaction latency tracer
+To:     Frankie Chang <Frankie.Chang@mediatek.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 at 20:04, Phil Auld <pauld@redhat.com> wrote:
+On Thu, May 7, 2020 at 1:11 AM Frankie Chang <Frankie.Chang@mediatek.com> wrote:
 >
-> Hi Vincent,
+> From: "Frankie.Chang" <Frankie.Chang@mediatek.com>
 >
-> On Thu, May 07, 2020 at 05:06:29PM +0200 Vincent Guittot wrote:
-> > Hi Phil,
-> >
-> > On Wed, 6 May 2020 at 20:05, Phil Auld <pauld@redhat.com> wrote:
-> > >
-> > > Hi Vincent,
-> > >
-> > > Thanks for taking a look. More below...
-> > >
-> > > On Wed, May 06, 2020 at 06:36:45PM +0200 Vincent Guittot wrote:
-> > > > Hi Phil,
-> > > >
-> > > > - reply to all this time
-> > > >
-> > > > On Wed, 6 May 2020 at 16:18, Phil Auld <pauld@redhat.com> wrote:
-> > > > >
-> > > > > sched/fair: Fix enqueue_task_fair warning some more
-> > > > >
-> > > > > The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
-> > > > > did not fully resolve the issues with the (rq->tmp_alone_branch !=
-> > > > > &rq->leaf_cfs_rq_list) warning in enqueue_task_fair. There is a case where
-> > > > > the first for_each_sched_entity loop exits due to on_rq, having incompletely
-> > > > > updated the list.  In this case the second for_each_sched_entity loop can
-> > > > > further modify se. The later code to fix up the list management fails to do
-> > > >
-> > > > But for the 2nd  for_each_sched_entity, the cfs_rq should already be
-> > > > in the list, isn't it ?
-> > >
-> > > No. In this case we hit the parent not on list case in list_add_leaf_cfs_rq
-> > > which sets rq-tmp_alone_branch to cfs_rq->leaf_cfs_rq_list which is not
-> > > the same. It returns false expecting the parent to be added later.
-> > >
-> > > But then the parent doens't get there because it's on_rq.
-> > >
-> > > >
-> > > > The third for_each_entity loop is there for the throttled case but is
-> > > > useless for other case
-> > > >
-> > >
-> > > There actually is a throttling involved usually. The second loop breaks out
-> > > early because one of the parents is throttled. But not before it advances
-> > > se at least once.
-> >
-> > Ok, that's even because of the throttling that the problem occurs
-> >
-> > >
-> > > Then the 3rd loop doesn't fix the tmp_alone_branch because it doesn't start
-> > > with the right se.
-> > >
-> > > > Could you provide us some details about the use case that creates such
-> > > > a situation ?
-> > > >
-> > >
-> > > I admit I had to add trace_printks to get here. Here's what it showed (sorry
-> > > for the long lines...)
-> > >
-> > > 1)  sh-6271  [044]  1271.322317: bprint: enqueue_task_fair: se 0xffffa085e7e30080 on_rq 0 cfs_rq = 0xffffa085e93da200
-> > > 2)  sh-6271  [044]  1271.322320: bprint: enqueue_entity: Add_leaf_rq: cpu 17: nr_r 2; cfs 0xffffa085e93da200 onlist 0 tmp_a_b = 0xffffa085ef92c868 &rq->l_c_r_l = 0xffffa085ef92c868
-> > > 3)  sh-6271  [044]  1271.322322: bprint: enqueue_entity: Add_leaf_rq: cpu 17: nr_r 2: parent not onlist  Set t_a_branch to 0xffffa085e93da340 rq->l_c_r_l = 0xffffa085ef92c868
-> > > 4)  sh-6271  [044]  1271.322323: bprint: enqueue_task_fair: se 0xffffa085e93d8800 on_rq 1 cfs_rq = 0xffffa085dbfaea00
-> > > 5)  sh-6271  [044]  1271.322324: bprint: enqueue_task_fair: Done enqueues, se=0xffffa085e93d8800, pid=3642
-> > > 6)  sh-6271  [044]  1271.322326: bprint: enqueue_task_fair: update: cfs 0xffffa085e48ce000 throttled, se = 0xffffa085dbfafc00
-> > > 7)  sh-6271  [044]  1271.322326: bprint: enqueue_task_fair: current se = 0xffffa085dbfafc00, orig_se = 0xffffa085e7e30080
-> > > 8)  sh-6271  [044]  1271.322327: bprint: enqueue_task_fair: Add_leaf_rq: cpu 17: nr_r 2; cfs 0xffffa085e48ce000 onlist 1 tmp_a_b = 0xffffa085e93da340 &rq->l_c_r_l = 0xffffa085ef92c868
-> > > 9)  sh-6271  [044]  1271.322328: bprint: enqueue_task_fair: Add_leaf_rq: cpu 17: nr_r 0; cfs 0xffffa085ef92bf80 onlist 1 tmp_a_b = 0xffffa085e93da340 &rq->l_c_r_l = 0xffffa085ef92c868
-> > > 10) sh-6271  [044]  1271.672599: bprint: enqueue_task_fair: cpu 17: rq->tmp_alone_branch = 0xffffa085e93da340 != &rq->leaf_cfs_rq_list = 0xffffa085ef92c868
-> > >
-> > >
-> > > lines 1 and 4 are from the first loop in enqueue_task_fair. Line 2 and 3 are from the
-> > > first call to list_add_leaf_rq with line 2 being at the start and line 3 showing which
-> > > of the 3 cases we hit.
-> > >
-> > > Line 5 is right after the first loop.
-> > >
-> > > Line 6 is the second trip through the 2nd loop and is in the if(throttled) condition.
-> > > Line 7 is right below the enqueue_throttle label.
-> > >
-> > > Lines 8 and 9 are from the fixup loop and since onlist is set for both of these it doesn't
-> > > do anything. But we've left rq->tmp_alone_branch pointing to the cfs_rq->leaf_cfs_rq_list
-> > > from the one call to list_add_leaf_rq that did something and so the cleanup doesn't work.
-> > >
-> > > Based on the comment at the clean up, it looked like it expected the se to be what it was
-> > > when the first loop broke not whatever it was left at after the second loop.  Could have
-> > > been NULL there too I guess but I didn't hit that case.
-> > >
-> > > This is 100% reproducible. And completely gone with the fix. I have a trace showing that.
-> > >
-> > > Does that make more sense?
-> >
-> > Yes, Good catch
-> > And thanks for the detailed explanation.
-> >
-> > >
-> > >
-> > >
-> > > Cheers,
-> > > Phil
-> > >
-> > >
-> > > > > what is needed because se does not point to the sched_entity which broke out
-> > > > > of the first loop.
-> > > > >
-> > > > > Address this issue by saving the se pointer when the first loop exits and
-> > > > > resetting it before doing the fix up, if needed.
-> > > > >
-> > > > > Signed-off-by: Phil Auld <pauld@redhat.com>
-> > > > > Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > > > Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > > Cc: Ingo Molnar <mingo@kernel.org>
-> > > > > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > > > > ---
-> > > > >  kernel/sched/fair.c | 4 ++++
-> > > > >  1 file changed, 4 insertions(+)
-> > > > >
-> > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > > index 02f323b85b6d..719c996317e3 100644
-> > > > > --- a/kernel/sched/fair.c
-> > > > > +++ b/kernel/sched/fair.c
-> > > > > @@ -5432,6 +5432,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > > >  {
-> > > > >         struct cfs_rq *cfs_rq;
-> > > > >         struct sched_entity *se = &p->se;
-> > > > > +       struct sched_entity *saved_se = NULL;
-> > > > >         int idle_h_nr_running = task_has_idle_policy(p);
-> > > > >
-> > > > >         /*
-> > > > > @@ -5466,6 +5467,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > > >                 flags = ENQUEUE_WAKEUP;
-> > > > >         }
-> > > > >
-> > > > > +       saved_se = se;
-> >
-> > TBH, I don't like saving and going back to the saved se and loop one
-> > more time on them
-> >
-> > > > >         for_each_sched_entity(se) {
-> > > > >                 cfs_rq = cfs_rq_of(se);
-> >
-> > Could you add something like below in the 2nd loop instead ?
->
-> This one solves the problem as well with no other visible issues.
->
-> Do you want to spin it into a real patch?
+> Record start/end timestamp for binder transaction.
+> When transaction is completed or transaction is free,
+> it would be checked if transaction latency over threshold (2 sec),
 
-You can respin your patch in a V2 with the proposal.
-A suggested-by from me will be enough
+If this is a hard-coded threshold, provide rationale for why 2 sec is
+the right value and it doesn't need to be tunable
 
-Thanks
-Vincent
+> if yes, printing related information for tracing.
 >
-> You can have my {reported/tested}-by or whatever you need.
+> /* Implement details */
+> - Add latency tracer module to monitor slow transaction.
+>   The trace_binder_free_transaction would not be enabled
+>   by default. Monitoring which transaction is too slow to
+>   cause some of exceptions is important. So we hook the
+>   tracepoint to call the monitor function.
+
+Please add a more complete description. This patch adds a module to
+monitor transaction latency by attaching to new tracepoints introduced
+when transactions are allocated and freed. Describe this in the commit
+message.
+
 >
+> Signed-off-by: Frankie.Chang <Frankie.Chang@mediatek.com>
+> ---
+>  drivers/android/Kconfig                 |    8 +++
+>  drivers/android/Makefile                |    1 +
+>  drivers/android/binder.c                |    2 +
+>  drivers/android/binder_internal.h       |   13 ++++
+>  drivers/android/binder_latency_tracer.c |  105 +++++++++++++++++++++++++++++++
+>  drivers/android/binder_trace.h          |   26 +++++++-
+>  6 files changed, 152 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/android/binder_latency_tracer.c
 >
-> Cheers,
-> Phil
+>  Change from v4:
+>    split up into patch series.
 >
-> >
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -5486,6 +5486,13 @@ enqueue_task_fair(struct rq *rq, struct
-> > task_struct *p, int flags)
-> >                 /* end evaluation on encountering a throttled cfs_rq */
-> >                 if (cfs_rq_throttled(cfs_rq))
-> >                         goto enqueue_throttle;
-> > +
-> > +               /*
-> > +                * One parent has been throttled and cfs_rq removed from the
-> > +                * list. Add it back to not break the leaf list.
-> > +                */
-> > +               if (throttled_hierarchy(cfs_rq))
-> > +                       list_add_leaf_cfs_rq(cfs_rq);
-> >         }
-> >
-> >  enqueue_throttle:
-> >
-> > > > >
-> > > > > @@ -5510,6 +5512,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > > >                  * leaf list maintenance, resulting in triggering the assertion
-> > > > >                  * below.
-> > > > >                  */
-> > > > > +               if (saved_se)
-> > > > > +                       se = saved_se;
-> > > > >                 for_each_sched_entity(se) {
-> > > > >                         cfs_rq = cfs_rq_of(se);
-> > > > >
-> > > > > --
-> > > > > 2.18.0
-> > > > >
-> > > > >
-> > > > > Cheers,
-> > > > > Phil
-> > > > >
-> > > >
-> > >
-> > > --
-> > >
-> >
+>  Change from v3:
+>    use tracepoints for binder_update_info and print_binder_transaction_ext,
+>    instead of custom registration functions.
 >
+>  Change from v2:
+>    create transaction latency module to monitor slow transaction.
+>
+>  Change from v1:
+>    first patchset.
+>
+> diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
+> index 6fdf2ab..7ba80eb 100644
+> --- a/drivers/android/Kconfig
+> +++ b/drivers/android/Kconfig
+> @@ -54,6 +54,14 @@ config ANDROID_BINDER_IPC_SELFTEST
+>           exhaustively with combinations of various buffer sizes and
+>           alignments.
+>
+> +config BINDER_USER_TRACKING
+
+Why not "BINDER_TRANSACTION_LATENCY_TRACKING"?
+
+> +       bool "Android Binder transaction tracking"
+> +       help
+> +         Used for track abnormal binder transaction which is over 2 seconds,
+> +         when the transaction is done or be free, this transaction would be
+> +         checked whether it executed overtime.
+> +         If yes, printing out the detail info about it.
+
+"If yes, print out the detailed info"
+
+> +
+>  endif # if ANDROID
+>
+>  endmenu
+> diff --git a/drivers/android/Makefile b/drivers/android/Makefile
+> index c9d3d0c9..552e8ac 100644
+> --- a/drivers/android/Makefile
+> +++ b/drivers/android/Makefile
+> @@ -4,3 +4,4 @@ ccflags-y += -I$(src)                   # needed for trace events
+>  obj-$(CONFIG_ANDROID_BINDERFS)         += binderfs.o
+>  obj-$(CONFIG_ANDROID_BINDER_IPC)       += binder.o binder_alloc.o
+>  obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) += binder_alloc_selftest.o
+> +obj-$(CONFIG_BINDER_USER_TRACKING)     += binder_latency_tracer.o
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 4c3dd98..b89d75a 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -2657,6 +2657,7 @@ static void binder_transaction(struct binder_proc *proc,
+>                 return_error_line = __LINE__;
+>                 goto err_alloc_t_failed;
+>         }
+> +       trace_binder_update_info(t, e);
+
+Can this be a more descriptive name? Perhaps "trace_binder_txn_create()"
+
+>         INIT_LIST_HEAD(&t->fd_fixups);
+>         binder_stats_created(BINDER_STAT_TRANSACTION);
+>         spin_lock_init(&t->lock);
+> @@ -5145,6 +5146,7 @@ static void print_binder_transaction_ilocked(struct seq_file *m,
+>                    t->to_thread ? t->to_thread->pid : 0,
+>                    t->code, t->flags, t->priority, t->need_reply);
+>         spin_unlock(&t->lock);
+> +       trace_print_binder_transaction_ext(m, t);
+
+Why do you need to trace when dumping out the transaction info?
+
+>
+>         if (proc != to_proc) {
+>                 /*
+> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+> index ed61b3e..24d7beb 100644
+> --- a/drivers/android/binder_internal.h
+> +++ b/drivers/android/binder_internal.h
+> @@ -12,6 +12,11 @@
+>  #include <linux/types.h>
+>  #include <linux/uidgid.h>
+>
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +#include <linux/rtc.h>
+> +#include <linux/time.h>
+> +#endif
+> +
+>  struct binder_context {
+>         struct binder_node *binder_context_mgr_node;
+>         struct mutex context_mgr_node_lock;
+> @@ -131,6 +136,10 @@ struct binder_transaction_log_entry {
+>         uint32_t return_error;
+>         uint32_t return_error_param;
+>         char context_name[BINDERFS_MAX_NAME + 1];
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +       struct timespec timestamp;
+> +       struct timeval tv;
+> +#endif
+>  };
+>
+>  struct binder_transaction_log {
+> @@ -520,6 +529,10 @@ struct binder_transaction {
+>          * during thread teardown
+>          */
+>         spinlock_t lock;
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +       struct timespec timestamp;
+> +       struct timeval tv;
+> +#endif
+>  };
+>
+>  /**
+> diff --git a/drivers/android/binder_latency_tracer.c b/drivers/android/binder_latency_tracer.c
+> new file mode 100644
+> index 0000000..45c14fb
+> --- /dev/null
+> +++ b/drivers/android/binder_latency_tracer.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <uapi/linux/android/binder.h>
+> +#include "binder_alloc.h"
+> +#include "binder_internal.h"
+> +#include "binder_trace.h"
+> +
+> +/*
+> + * probe_binder_free_transaction - Output info of a delay transaction
+> + * @t:          pointer to the over-time transaction
+> + */
+> +void probe_binder_free_transaction(void *ignore, struct binder_transaction *t)
+> +{
+> +       struct rtc_time tm;
+> +       struct timespec *startime;
+> +       struct timespec cur, sub_t;
+> +
+> +       ktime_get_ts(&cur);
+> +       startime = &t->timestamp;
+> +       sub_t = timespec_sub(cur, *startime);
+> +
+> +       /* if transaction time is over than 2 sec,
+> +        * show timeout warning log.
+> +        */
+> +       if (sub_t.tv_sec < 2)
+> +               return;
+> +
+> +       rtc_time_to_tm(t->tv.tv_sec, &tm);
+> +
+> +       spin_lock(&t->lock);
+> +       pr_info_ratelimited("%d: from %d:%d to %d:%d",
+> +                       t->debug_id,
+> +                       t->from ? t->from->proc->pid : 0,
+> +                       t->from ? t->from->pid : 0,
+> +                       t->to_proc ? t->to_proc->pid : 0,
+> +                       t->to_thread ? t->to_thread->pid : 0);
+> +       spin_unlock(&t->lock);
+> +
+> +       pr_info_ratelimited(" total %u.%03ld s code %u start %lu.%03ld android %d-%02d-%02d %02d:%02d:%02d.%03lu\n",
+> +                       (unsigned int)sub_t.tv_sec,
+> +                       (sub_t.tv_nsec / NSEC_PER_MSEC),
+> +                       t->code,
+> +                       (unsigned long)startime->tv_sec,
+> +                       (startime->tv_nsec / NSEC_PER_MSEC),
+> +                       (tm.tm_year + 1900), (tm.tm_mon + 1), tm.tm_mday,
+> +                       tm.tm_hour, tm.tm_min, tm.tm_sec,
+> +                       (unsigned long)(t->tv.tv_usec / USEC_PER_MSEC));
+> +}
+> +
+> +static void probe_binder_update_info(void *ignore, struct binder_transaction *t,
+> +                          struct binder_transaction_log_entry *e)
+> +{
+> +       ktime_get_ts(&e->timestamp);
+> +       do_gettimeofday(&e->tv);
+> +       e->tv.tv_sec -= (sys_tz.tz_minuteswest * 60);
+> +       memcpy(&t->timestamp, &e->timestamp, sizeof(struct timespec));
+> +       memcpy(&t->tv, &e->tv, sizeof(struct timeval));
+> +}
+> +
+> +static void probe_print_binder_transaction_ext(void *ignore, struct seq_file *m,
+> +                                        struct binder_transaction *t)
+> +{
+> +       struct rtc_time tm;
+> +
+> +       rtc_time_to_tm(t->tv.tv_sec, &tm);
+> +       seq_printf(m,
+> +                  " start %lu.%06lu android %d-%02d-%02d %02d:%02d:%02d.%03lu",
+> +                  (unsigned long)t->timestamp.tv_sec,
+> +                  (t->timestamp.tv_nsec / NSEC_PER_USEC),
+> +                  (tm.tm_year + 1900), (tm.tm_mon + 1), tm.tm_mday,
+> +                  tm.tm_hour, tm.tm_min, tm.tm_sec,
+> +                  (unsigned long)(t->tv.tv_usec / USEC_PER_MSEC));
+> +
+> +}
+> +
+> +static int __init init_binder_latency_tracer(void)
+> +{
+> +       register_trace_binder_free_transaction(
+> +                       probe_binder_free_transaction, NULL);
+> +       register_trace_binder_update_info(
+> +                       probe_binder_update_info, NULL);
+> +       register_trace_print_binder_transaction_ext(
+> +                       probe_print_binder_transaction_ext, NULL);
+
+Ah, now the trace in the print path makes sense. Please add a more
+detailed description to the commit message. Also add a comment at the
+trace point that it is for modules to attach to so additional
+information can be printed. Also, make the names of the tracepoints
+more descriptive of what they really are ...something like
+trace_binder_txn_latency_(alloc|info|free)
+
+> +
+> +       return 0;
+> +}
+> +
+> +static void exit_binder_latency_tracer(void)
+> +{
+> +       unregister_trace_binder_free_transaction(
+> +                       probe_binder_free_transaction, NULL);
+> +       unregister_trace_binder_update_info(
+> +                       probe_binder_update_info, NULL);
+> +       unregister_trace_print_binder_transaction_ext(
+> +                       probe_print_binder_transaction_ext, NULL);
+> +}
+> +
+> +module_init(init_binder_latency_tracer);
+> +module_exit(exit_binder_latency_tracer);
+> +
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/android/binder_trace.h b/drivers/android/binder_trace.h
+> index 7acc18d..466993e 100644
+> --- a/drivers/android/binder_trace.h
+> +++ b/drivers/android/binder_trace.h
+> @@ -18,6 +18,7 @@
+>  struct binder_ref_data;
+>  struct binder_thread;
+>  struct binder_transaction;
+> +struct binder_transaction_log_entry;
+>
+>  TRACE_EVENT(binder_ioctl,
+>         TP_PROTO(unsigned int cmd, unsigned long arg),
+> @@ -95,6 +96,18 @@
+>                   __entry->thread_todo)
+>  );
+>
+> +DECLARE_TRACE(binder_update_info,
+> +       TP_PROTO(struct binder_transaction *t,
+> +                struct binder_transaction_log_entry *e),
+> +       TP_ARGS(t, e)
+> +);
+> +
+> +DECLARE_TRACE(print_binder_transaction_ext,
+> +       TP_PROTO(struct seq_file *m,
+> +                struct binder_transaction *t),
+> +       TP_ARGS(m, t)
+> +);
+> +
+>  TRACE_EVENT(binder_free_transaction,
+>         TP_PROTO(struct binder_transaction *t),
+>         TP_ARGS(t),
+> @@ -115,11 +128,18 @@
+>                 __entry->to_thread = t->to_thread ? t->to_thread->pid : 0;
+>                 __entry->code = t->code;
+>                 __entry->flags = t->flags;
+> -       ),
+> -       TP_printk("transaction=%d from %d:%d to %d:%d flags=0x%x code=0x%x",
+> +#ifdef CONFIG_BINDER_USER_TRACKING
+> +               __entry->start_sec = t->timestamp.tv_sec;
+> +               __entry->start_nsec = t->timestamp.tv_nsec / NSEC_PER_MSEC;
+> +#else
+> +               __entry->start_sec = 0;
+> +               __entry->start_nsec = 0;
+> +#endif
+> +       ),
+> +       TP_printk("transaction=%d from %d:%d to %d:%d flags=0x%x code=0x%x start %lu.%03ld",
+>                   __entry->debug_id, __entry->from_proc, __entry->from_thread,
+>                   __entry->to_proc, __entry->to_thread, __entry->code,
+> -                 __entry->flags)
+> +                 __entry->flags, __entry->start_sec, __entry->start_nsec)
+>  );
+>
+>  TRACE_EVENT(binder_transaction,
 > --
->
+> 1.7.9.5
