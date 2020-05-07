@@ -2,111 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA825C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC152C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4F7A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A743208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="r54QaoLh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UxXfzZ7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEGUfF (ORCPT
+        id S1726689AbgEGUgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726218AbgEGUfE (ORCPT
+        Thu, 7 May 2020 16:36:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20655 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726093AbgEGUgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:35:04 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0500EC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:35:06 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b188so7623056qkd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RSDWBO3KlSH7VUaml385yztVrt94O/2spKycJW0cj/0=;
-        b=r54QaoLh54AUaLYcMXfF56LEl3r+ooemYCoqO7ird14qYPBgk+62dOPtF7vzatUcbV
-         TI3dAf4vwvc6fqdSnpT5VVVntfLPsbm7TOVZwgePR0+8l471+2W99dDqiUxzazExetKX
-         2D04O4ZoLBnVFXEgZRHkSXONB2MPOpGWxoxumdV8WAdHwDr1mA7o051gdl5p4kl9iJ0K
-         aRNRtGRMR6m3YiPGHP6X4eXqSXxiJDR3uImh+palqnnsrf1bwQuO/N0Ob+junxtbcIxB
-         eyX0IXQP/lqCC0vmcAy9nERkERqWEpc0q4jOmLMsWsFillX71G0FWZTWqr+V5p9eNMZN
-         PSNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RSDWBO3KlSH7VUaml385yztVrt94O/2spKycJW0cj/0=;
-        b=FWv91soS55DtavNT3imYFGCc+crqSmTd3p+UolmJ/PmfkstqwChXRHbD+0CInVVcYr
-         0StpwgbGu8itgIe5JgPTiQyn7mQ05qTiboMgu8QzXIO/R84hMLPrDc0qWFlm+zKbaMLK
-         Ec82vfywuHQpiXy3ecek+STvUhOOI5bO9jBWgvtoXlncHURxyEZ1V6BWp3gA75frT7F2
-         avL7czDzeP7/PzGB/8K8BL+GrTcU2ED058upx6OXx2tNLMnzy1SzbpcrOflmvnIKhy2t
-         9t46d+w2reXqgMbr3EiIx0RK1Ymw8K1iJG7yIx8k1VpCJ2rIuKzPbPR7NOeYjA8zPeIy
-         I4ig==
-X-Gm-Message-State: AGi0PuZaY3EkaNhfausflsN/yXMNY9YXJvZ4/6f/v+j6R3+JJY+1YYIa
-        91GP/XLO7I81HFd2CxPcFu7G0Q==
-X-Google-Smtp-Source: APiQypJnQGp+W8vdB4wl6qofgeQ17bUrjsLYFEjiibo3uV4je5mhYeTV9b+raRIejY0clyGjHc0k7A==
-X-Received: by 2002:a37:82c1:: with SMTP id e184mr17283899qkd.186.1588883705299;
-        Thu, 07 May 2020 13:35:05 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id 124sm5220016qkn.73.2020.05.07.13.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:35:04 -0700 (PDT)
-Date:   Thu, 7 May 2020 16:34:49 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/19] mm: memcg: prepare for byte-sized vmstat items
-Message-ID: <20200507203449.GB161043@cmpxchg.org>
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-3-guro@fb.com>
+        Thu, 7 May 2020 16:36:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588883781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rv5eIJrZc8+pWBy8rh5T+3XSWyi3D/3uE0M0Vzn71aU=;
+        b=UxXfzZ7E00oQmwdRYp39lQzYovvQ2nsQ+j/4dcUS2fq9KVyUTn+NvOCQA34kLJHAZCL2dR
+        6L+HZqXuOrsE6T3ZNemu2xxCjtumzUx4QYpXaMGljPOAh5WKmjSMOxGfWI4lP5Atm94EsV
+        vFqI5dpWmz9+IyW/gbYF4fAilFZGg3M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-9eW-r02WOXKNDufNhWxvvw-1; Thu, 07 May 2020 16:36:18 -0400
+X-MC-Unique: 9eW-r02WOXKNDufNhWxvvw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21ACE1052508;
+        Thu,  7 May 2020 20:36:17 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-114.phx2.redhat.com [10.3.114.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE3B619C4F;
+        Thu,  7 May 2020 20:36:13 +0000 (UTC)
+Date:   Thu, 7 May 2020 16:36:12 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com
+Subject: Re: [PATCH v2] sched/fair: Fix enqueue_task_fair warning some more
+Message-ID: <20200507203612.GF19331@lorien.usersys.redhat.com>
+References: <20200506141821.GA9773@lorien.usersys.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422204708.2176080-3-guro@fb.com>
+In-Reply-To: <20200506141821.GA9773@lorien.usersys.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:46:51PM -0700, Roman Gushchin wrote:
-> To implement per-object slab memory accounting, we need to
-> convert slab vmstat counters to bytes. Actually, out of
-> 4 levels of counters: global, per-node, per-memcg and per-lruvec
-> only two last levels will require byte-sized counters.
-> It's because global and per-node counters will be counting the
-> number of slab pages, and per-memcg and per-lruvec will be
-> counting the amount of memory taken by charged slab objects.
-> 
-> Converting all vmstat counters to bytes or even all slab
-> counters to bytes would introduce an additional overhead.
-> So instead let's store global and per-node counters
-> in pages, and memcg and lruvec counters in bytes.
-> 
-> To make the API clean all access helpers (both on the read
-> and write sides) are dealing with bytes.
-> 
-> To avoid back-and-forth conversions a new flavor of helpers
-> is introduced, which always returns values in pages:
-> node_page_state_pages() and global_node_page_state_pages().
-> 
-> Actually new helpers are just reading raw values. Old helpers are
-> simple wrappers, which perform a conversion if the vmstat items are
-> in bytes. Because at the moment no one actually need bytes,
-> there are WARN_ON_ONCE() macroses inside to warn about inappropriate
-> use cases.
-> 
-> Thanks to Johannes Weiner for the idea of having the byte-sized API
-> on top of the page-sized internal storage.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+sched/fair: Fix enqueue_task_fair warning some more
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+did not fully resolve the issues with the rq->tmp_alone_branch !=
+&rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
+the first for_each_sched_entity loop exits due to on_rq, having incompletely
+updated the list.  In this case the second for_each_sched_entity loop can
+further modify se. The later code to fix up the list management fails to do
+what is needed because se no longer points to the sched_entity which broke
+out of the first loop.
+
+Address this by calling leaf_add_rq_list if there are throttled parents while
+doing the second for_each_sched_entity loop.
+
+Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+---
+ kernel/sched/fair.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..c6d57c334d51 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5479,6 +5479,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+ 			goto enqueue_throttle;
++
++               /*
++                * One parent has been throttled and cfs_rq removed from the
++                * list. Add it back to not break the leaf list.
++                */
++               if (throttled_hierarchy(cfs_rq))
++                       list_add_leaf_cfs_rq(cfs_rq);
+ 	}
+ 
+ enqueue_throttle:
+-- 
+2.18.0
+
+V2 rework the fix based on Vincent's suggestion. Thanks Vincent.
+
+
+Cheers,
+Phil
+
+-- 
+
