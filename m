@@ -2,105 +2,129 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71A2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2306C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B824B206D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnItiLad"
+	by mail.kernel.org (Postfix) with ESMTP id 9E1DC2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588864497;
+	bh=nH4zzLyFJaaR6EBGr6MwECFJ0OIX3tGLz6Ht3UbWkZM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qugnbDdOrDkQuYt6kToMPxDQF2rCCtgNnuR+WtYi+7eFFjTcrkPVbCqjhvKNUriZT
+	 ImlVfDD8GSChhFBYxtQSpaRMIeYPtHgBnVvPF80ssOKqE8CvUWckPT+qQtfo2hve83
+	 Es6/7dKusblTtc1hP6dOWdf24LLO6N+QmDlUbD+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgEGPNy (ORCPT
+        id S1726863AbgEGPO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727778AbgEGPNw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:13:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C59C05BD43;
-        Thu,  7 May 2020 08:13:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so3133509pfv.8;
-        Thu, 07 May 2020 08:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wCNfAcxLHirtWhA7szQNX73G2LCH8rXx5QD9p4rA8Dk=;
-        b=fnItiLadgw6gVujkCLGxeMWnUOu819/tIkaEKowyFt2g/Nn5mUHkALPznXH/TNOJ79
-         yWdwyURQZlI5T5wZROAv2M29GKPJTD4oUIlR9Ok5e0xh2scXtpiqYk2ZZOlgncX/KnCF
-         a66SYwlNiFizvPuObtEK4h/OXk1dGLhnzVd8zIrpbccuHyqFthc9h3dcasHhv2Jkhphi
-         VgOJXrMFGryLIG39lrJIdtXZf42cY/GDJgUYxFN+VUTWPgBdTBg0ge0Izm2wQvq2Hb5R
-         mPAzY+dbzTO5NnUosx31byzGn1LXlAiN8iDlwoUX0injGUVcIUHfU+XrPHvV3Lk+ucmu
-         JIdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wCNfAcxLHirtWhA7szQNX73G2LCH8rXx5QD9p4rA8Dk=;
-        b=ZbuVrk0lfx11DkBQaBnNQILnO8NJEMZEqfDKgPGHlppZtWjt1eiLuHQUxE+5YxUUbj
-         wZM885am+YdcFVvmNyQ4YCGk2K6S0aXnq/Q28mR2oXpk0MYiNYnRmeyRaqduk4Ubrr1w
-         jmsc4Yf4UHBvyxPTLVREloQUUma5vTLcSQ/tLfgtf4PUcwqZMM/h1R1bhBFcmBARGojt
-         u147TsgMD7Q8z3UwjSE9N97Tfv8RJlp0qyCbYwzWR+feNZS8UE97D3+zQWbTBqU2ivjA
-         rwoV8PfHowLxxYaFg9lmof20RtphNJTOQ0f/NfyYCxKMgpDgumqiETdT1FQUY0l7ZcsF
-         rmlA==
-X-Gm-Message-State: AGi0PuZJIoiHxSYYRDk1G8F75UFHb+Z6OB6YijlJTcOONKv6ojWCqeju
-        o4gTAohAsA1Bk8SfqEzYLD0=
-X-Google-Smtp-Source: APiQypLmdj5NF5BayTeEdUuJYPAeEE4bIXkpQXtR0s8noMzSOLGduyoeZyIGB9WwRTgPXAz0lr3XjA==
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr14474231pfr.36.1588864432467;
-        Thu, 07 May 2020 08:13:52 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id d2sm5118326pfa.164.2020.05.07.08.13.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 08:13:51 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] uio_hv_generic: add missed sysfs_remove_bin_file
-Date:   Thu,  7 May 2020 23:13:43 +0800
-Message-Id: <20200507151343.792816-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 7 May 2020 11:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgEGPO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:14:56 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FEBE207DD;
+        Thu,  7 May 2020 15:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588864496;
+        bh=nH4zzLyFJaaR6EBGr6MwECFJ0OIX3tGLz6Ht3UbWkZM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P/qI5XcxnpOU2JlzciA5QWZCZGmLZfddp8qb5bxXx45rDzjJdI2SqlGqYARDzuB84
+         TnO5gSmseGqu/btra6/WZaf7T3sS1E1uKVzKPJOzReH3MiUYqUUkXonvPEgfpQzHoh
+         1Zn0pmhSYAXfa6as0z/2b2XL/DF+K29mcfG4Pofo=
+Date:   Thu, 7 May 2020 10:19:21 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] carl9170: Replace zero-length array with flexible-array
+Message-ID: <20200507151921.GA5083@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver calls sysfs_create_bin_file() in probe, but forgets to
-call sysfs_remove_bin_file() in remove.
-Add the missed call to fix it.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/uio/uio_hv_generic.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/carl9170/fwcmd.h | 2 +-
+ drivers/net/wireless/ath/carl9170/hw.h    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 3c5169eb23f5..4dae2320b103 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -361,6 +361,7 @@ hv_uio_remove(struct hv_device *dev)
- 	if (!pdata)
- 		return 0;
+diff --git a/drivers/net/wireless/ath/carl9170/fwcmd.h b/drivers/net/wireless/ath/carl9170/fwcmd.h
+index ea1d80f9a50e..56999a3b9d3b 100644
+--- a/drivers/net/wireless/ath/carl9170/fwcmd.h
++++ b/drivers/net/wireless/ath/carl9170/fwcmd.h
+@@ -127,7 +127,7 @@ struct carl9170_write_reg {
+ struct carl9170_write_reg_byte {
+ 	__le32	addr;
+ 	__le32  count;
+-	u8	val[0];
++	u8	val[];
+ } __packed;
  
-+	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
- 	uio_unregister_device(&pdata->info);
- 	hv_uio_cleanup(dev, pdata);
- 	hv_set_drvdata(dev, NULL);
+ #define	CARL9170FW_PHY_HT_ENABLE		0x4
+diff --git a/drivers/net/wireless/ath/carl9170/hw.h b/drivers/net/wireless/ath/carl9170/hw.h
+index 08e0ae9c5836..555ad4975970 100644
+--- a/drivers/net/wireless/ath/carl9170/hw.h
++++ b/drivers/net/wireless/ath/carl9170/hw.h
+@@ -851,7 +851,7 @@ struct ar9170_stream {
+ 	__le16 length;
+ 	__le16 tag;
+ 
+-	u8 payload[0];
++	u8 payload[];
+ } __packed __aligned(4);
+ #define AR9170_STREAM_LEN				4
+ 
 -- 
 2.26.2
 
