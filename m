@@ -2,186 +2,156 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9249AC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0625CC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69538208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Y1cF6TJN"
+	by mail.kernel.org (Postfix) with ESMTP id D4E37208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588887759;
+	bh=gZOWGDSs4sM2Dig1WndPMkJ2m/3bf30r/Xm5K72A8Aw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pr5DISUvwRaCv6wHsrrx40JpSXh3V3xiCWC4d1ZboAx+oDXWcZrAYuqBr638s4XL8
+	 UMFRWZenU/oWS6ZSGud552RbdAO+GXApa8mFHZoTib0npaM5c940NHDMdbggLUapxV
+	 bUQrDHbKgyyYGR7vghB/z6iFI9X8fFIMjXXOVYH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEGVk1 (ORCPT
+        id S1726660AbgEGVmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:40:27 -0400
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:65121
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726320AbgEGVk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:40:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Scv5FnDfuQECC4Ez/7KIJd+PAsiLmXnmqN2udsBAX03bAhjbgnLYMRTNlXfTIcBav5QV537Bd329nXPWS/uZ70bqQ6G3jk62q092grAB2///yT2RXB3JljMdZXO1YQKTCKISVkCwXWKp54VIt/l38uL/r0jqfSBKLECklI9CkS37oji/jSUd6OlBS3R+/Euzoy8K5a6xDJ3QwithZMUZdYLjzaoFtbc+TLTvXVH5ZIIziKavOQzOjTmjMH7wJW0tXy23PofMYZ2gTFJE74hWOk/9txO0fRdsXFUJXjBeZ42ARD14hBbO6lSWe8PUKpFavw8Y+1jI11Y8IFivqE/BlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yun1YcQ5cLj4lSV8n4g0ZQ9usupNhm311sCTmwamL+s=;
- b=MrBx52e5zMnjJ9/yY6YoeH3PGDQ1Ueijfcgy0ov53oQGA8AcKo7GJxILWGR3VrH0DIEawXTZY4ylgyG4qOaQ6Za8FRi3gwWhs10GM0EDE5MKp9D4FrE17lOYrs0pIiYIIxUS7yib3yK4f/1EFxTuOjCrRQ8P/FR4Bym2x1dYBc4m0I4EhxSuhahNDPfNWVI5igYZ6Igd/TKg77S8HiiMCy1A/lF6xiX9KRJsgjuEo9w4zUICt0J7mP6EAW50ZekjZzuapEP6eVFemSMfekyj7l/mGv3qLlEw28kAp4m1jCa1q2PBG/xpbjVkXG5vKTLCoFzn2W+4TFMnswnVzi0uMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yun1YcQ5cLj4lSV8n4g0ZQ9usupNhm311sCTmwamL+s=;
- b=Y1cF6TJN8w/28ekENU+GqN0bBD1sKns7+3SwKC5/lieIFRTAZTVUcQWE6l2Xbng50nO37E2HZ1TbHixARxnxMxkOiq2cGd4DzG51Iyd8BOP1CeNioXkoLBeFVTi0gw+5tHiGq0MNFI1ruJEZnqPYwb5xF4cVDuDR9lSUi5cCabM=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB3342.eurprd05.prod.outlook.com (2603:10a6:802:1d::15)
- by VI1PR05MB4317.eurprd05.prod.outlook.com (2603:10a6:803:41::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 7 May
- 2020 21:40:22 +0000
-Received: from VI1PR05MB3342.eurprd05.prod.outlook.com
- ([fe80::4d4d:706b:9679:b414]) by VI1PR05MB3342.eurprd05.prod.outlook.com
- ([fe80::4d4d:706b:9679:b414%5]) with mapi id 15.20.2979.025; Thu, 7 May 2020
- 21:40:22 +0000
-Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-To:     "Wan, Kaike" <kaike.wan@intel.com>,
-        Divya Indi <divya.indi@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
- <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
- <7572e503-312c-26a8-c8c2-05515f1c4f84@mellanox.com>
- <MW3PR11MB4665120FE43314C22A862324F4A50@MW3PR11MB4665.namprd11.prod.outlook.com>
-From:   Mark Bloch <markb@mellanox.com>
-Message-ID: <b387f32b-c990-614b-c631-b38ddf821757@mellanox.com>
-Date:   Thu, 7 May 2020 14:40:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <MW3PR11MB4665120FE43314C22A862324F4A50@MW3PR11MB4665.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR06CA0057.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::34) To VI1PR05MB3342.eurprd05.prod.outlook.com
- (2603:10a6:802:1d::15)
+        Thu, 7 May 2020 17:42:39 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35839 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbgEGVmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 17:42:38 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k110so5878101otc.2;
+        Thu, 07 May 2020 14:42:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qvVDuz4bfLO8NL9oGVG+1PPxD5bGC8ddxE9BQ+2L6xQ=;
+        b=biKKekN9vqZyy33L1EtC8rmHSlPi5HXKswIrhmBiVkhoj7hGE89ZCA8F2Z4wa8zkZF
+         qD4fiXlHdeCgikDUkehbVgdDJCqJBDKkCwT97bB/GjFmhPotFPnGjmHx4M0O4rUk4yhI
+         wHiEIThhiIG3vTDpBWXpJ1IN62Btu5Nc93ZopPwWrAnsBMwVPIdkvZmIHLHKOnHPPLep
+         VBhyslbFLsM/zyQ1T9PaP9APUovV3TbivCi7f0KmJMpa8WxMFnqhnxpM726h0yS1sh3U
+         p8swabAARdxzMvPQ7ic9msy6kuN2mvO1VAtRN83wbkgblQBC8rdLW7o6R7ftCl43tokb
+         NCmg==
+X-Gm-Message-State: AGi0PuZNF7LtZqFN7eI0168lpk9+n5uJRNaobJto+E7yJTkHzn6GWhKK
+        MeYLv8wont8OVjqD/4IE0w==
+X-Google-Smtp-Source: APiQypIcUGO6HMXtlRrpBNnCJJewagIFAx0MZuDrS3bZb2IzqHQra/dhxokzIcicZ1CdJ+jhasN36g==
+X-Received: by 2002:a05:6830:1dc9:: with SMTP id a9mr12235682otj.264.1588887756226;
+        Thu, 07 May 2020 14:42:36 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q12sm1625569otn.57.2020.05.07.14.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:42:35 -0700 (PDT)
+Received: (nullmailer pid 21913 invoked by uid 1000);
+        Thu, 07 May 2020 21:42:34 -0000
+Date:   Thu, 7 May 2020 16:42:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        ulf.hansson@linaro.org, sebott@linux.ibm.com, efremov@linux.com,
+        vidyas@nvidia.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH] PCI: endpoint: functions/pci-epf-test: Enable picking
+ DMA channel by name
+Message-ID: <20200507214234.GA5449@bogus>
+References: <1588350008-8143-1-git-send-email-alan.mikhak@sifive.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.33] (104.156.100.52) by BYAPR06CA0057.namprd06.prod.outlook.com (2603:10b6:a03:14b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 21:40:19 +0000
-X-Originating-IP: [104.156.100.52]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4dada75f-da15-4084-514f-08d7f2cf3e70
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4317:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB431747FFCBB2DD18DD2AF74BD2A50@VI1PR05MB4317.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03965EFC76
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wZEjLW7gzPYVHPlBtWldSezQpiVZ3sM7LEkp2BSW0RhbCthRJ5FSD8p5VHTFyjY3+dTFAFxo9c/8+pbhoWd6edE18B+Z1FptKMjjxEWXYmTlL/YTJFjadr6XpQl9SD3Ggn4hVYIh2cigwQ0qf24A0NkgfFQ0xqJASrfRjtz4iBnU7V6eqgq2xpwQLPhJ8i45b5CD0SGxaqdqDKh0LPFgcUQggDKrV+w1kR5aQLwkkQ0p2Z5NPfgQ92sv1Vp3i+b2pVaegmOAuSXUIgfye2y/E3+0JsQQ9EdmQY4MR+ftNPlWPL/JuxxoaKF2fGMP6HorO+KMqlMIKMJ0pRZomgMT0RXFm+47Drs171HGHUqQwmb1MndNnV4ULYC0NW2rpL8HQM/4HJrAm8YX47aJYBqPV8+h2gBr2EbCZCZT03ew3yG99nGVNyKm/Q3lCP+gJM4ktZoXysj33OJt2T4f/iMtWs1W8tTKohfSP0mFoS7TetxViDyFcuCZ8fqrT5rw5Xf64mq+c2V4oCyHuCEjuPZMwaxRGOVWzK/tCPPdX8G7IJQlYqyQA9stjGRgYSL0SqO+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB3342.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(33430700001)(956004)(2616005)(53546011)(4326008)(26005)(52116002)(66476007)(66556008)(66946007)(6666004)(2906002)(36756003)(31696002)(31686004)(110136005)(6486002)(33440700001)(5660300002)(86362001)(7416002)(8676002)(8936002)(16576012)(54906003)(186003)(83320400001)(16526019)(83280400001)(83310400001)(83290400001)(66574014)(83300400001)(316002)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ev2INBaz/+w3sjGjE45i14OPJ3ObZckB65jE5VOUR0u0+phoW7BSRe6Vrw3o9pE+XkqtSgQQH186LIj0pLb9VwUx1drLdUNoo2QBOE1bXzBxfXzFAF1u2IhQeIn3dklrqMTf0iTRgX6nFDJ/ay8b4sIfNe6YhXPyGVpdAw4jsLKWA0xo7D29a6FeZnvu0PuRnOfMDZD5JOO817l6iFvf6OxmtScMNARNX7U1jcgBTDf/bfvWWaljIYzGfEEh5XgmZG0fs+9tACvA+fpHiH9d8CLNAUw6Z32biG2pzs0uwlDuzaxb+CkerIPfRzKe/2ge43Y3/OCEOUn7E771qk+LydEPf+xpNwOKpdRyX7Xj4vB+Gpq2trVIU+9j1vUUtwKse3uZWO7t5AJaBWuhuso05pSrn6lhMFThQbjIuE1i/xMZAG7v6XbnwmX4S3ctUx6Quw8dQSCaYWePXn+yVrU+J909xGULnaEtKQJ6aOKpvsmdW1PRzP/NZ0EtuLI+/6GaYrBs+OkTlWvoPkpUQFX7/Dl2etcKHfPuTwUC2yoIWLyJPcUoVBwoDkczPpJ8h7xZ9I5MsppqDyCZT54epkflzMSVYmtC4ColS5Wv2cMTpAqsdAdX0g46fcgYV3bnS4g7YjQlFU7JI7nrW4pJbgVevDp3UjyfPhZG5K0N86QgeA4mwUYUiyP+i3V78hUQacKwAlsgrYcNUjTU0r61nAuAz6R3IY78BwLF4Rghp/x0J1NtfFjisIVXWqbDPfhop4cxX3zsUtMPGsQVs3hHH6Zx4Mgtdq9wzpz9C8iBMWJwG04=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dada75f-da15-4084-514f-08d7f2cf3e70
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 21:40:21.9172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sTd1Dfh7IYtLEaVCjFCN39FMuBCOFpeOWX9HLKA3KimZzqY/ZEmx5iqFyhTJXZyQtnfEF8wUoBXBIV5AjI7w7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4317
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588350008-8143-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 01, 2020 at 09:20:08AM -0700, Alan Mikhak wrote:
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+> 
+> Modify pci_epf_test_init_dma_chan() to call dma_request_channel() with a
+> filter function to pick DMA channel by name, if desired.
+> 
+> Add a new filter function pci_epf_test_pick_dma_chan() which takes a name
+> string as an optional parameter. If desired name is specified, the filter
+> function checks the name of each DMA channel candidate against the desired
+> name. If no match, the filter function rejects the candidate channel.
+> Otherwise, the candidate channel is accepted. If optional name parameter
+> is null or an empty string, filter function picks the first DMA channel
+> candidate, thereby preserving the existing behavior of pci-epf-test.
+> 
+> Currently, pci-epf-test picks the first suitable DMA channel. Adding a
+> filter function enables a developer to modify the optional parameter
+> during debugging by providing the name of a desired DMA channel. This is
+> useful during debugging because it allows different DMA channels to be
+> exercised.
+> 
+> Adding a filter function also takes one step toward modifying pcitest to
+> allow the user to choose a DMA channel by providing a name string at the
+> command line when issuing the -d parameter for DMA transfers.
+
+This mostly looks fine, but needs to be part of a series giving it a 
+user.
+
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 24 ++++++++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 60330f3e3751..043916d3ab5f 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -149,10 +149,26 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>  }
+>  
+>  /**
+> - * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
+> - * @epf_test: the EPF test device that performs data transfer operation
+> + * pci_epf_test_pick_dma_chan() - Filter DMA channel based on desired criteria
+> + * @chan: the DMA channel to examine
+>   *
+> - * Function to initialize EPF test DMA channel.
+> + * Filter DMA channel candidates by matching against an optional desired name.
+> + * Pick first candidate channel if desired name is not specified.
+> + * Reject candidate channel if its name does not match the desired name.
+> + */
+> +static bool pci_epf_test_pick_dma_chan(struct dma_chan *chan, void *name)
+> +{
+> +	if (name && strlen(name) && strcmp(dma_chan_name(chan), name))
+
+Doesn't this cause warning with 'name' being void*?
 
 
-On 5/7/2020 13:16, Wan, Kaike wrote:
-> 
-> 
->> -----Original Message-----
->> From: Mark Bloch <markb@mellanox.com>
->> Sent: Thursday, May 07, 2020 3:36 PM
->> To: Divya Indi <divya.indi@oracle.com>; linux-kernel@vger.kernel.org; linux-
->> rdma@vger.kernel.org; Jason Gunthorpe <jgg@ziepe.ca>; Wan, Kaike
->> <kaike.wan@intel.com>
->> Cc: Gerd Rausch <gerd.rausch@oracle.com>; Håkon Bugge
->> <haakon.bugge@oracle.com>; Srinivas Eeda <srinivas.eeda@oracle.com>;
->> Rama Nichanamatlu <rama.nichanamatlu@oracle.com>; Doug Ledford
->> <dledford@redhat.com>
->> Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
->>
->>
->>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff
->>> *skb,
->>>
->>>  	send_buf = query->mad_buf;
->>>
->>> +	/*
->>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
->>> +	 * processing this query. If flag is not set, query can be accessed in
->>> +	 * another context while setting the flag and processing the query
->> will
->>> +	 * eventually release it causing a possible use-after-free.
->>> +	 */
->>> +	if (unlikely(!ib_sa_nl_query_sent(query))) {
->>
->> Can't there be a race here where you check the flag (it isn't set) and before
->> you call wait_event() the flag is set and wake_up() is called which means you
->> will wait here forever?
-> 
-> Should wait_event() catch that? That is,  if the flag is not set, wait_event() will sleep until the flag is set.
-> 
->  or worse, a timeout will happen the query will be
->> freed and them some other query will call wake_up() and we have again a
->> use-after-free.
-> 
-> The request has been deleted from the request list by this time and therefore the timeout should have no impact here.
-> 
-> 
->>
->>> +		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>> +		wait_event(wait_queue, ib_sa_nl_query_sent(query));
->>
->> What if there are two queries sent to userspace, shouldn't you check and
->> make sure you got woken up by the right one setting the flag?
-> 
-> The wait_event() is conditioned on the specific query (ib_sa_nl_query_sent(query)), not on the wait_queue itself.
-
-Right, missed that this macro is expends into some inline code.
-
-Looking at the code a little more, I think this also fixes another issue.
-Lets say ib_nl_send_msg() returns an error but before we do the list_del() in
-ib_nl_make_request() there is also a timeout, so in ib_nl_request_timeout()
-we will do list_del() and then another one list_del() will be done in ib_nl_make_request().
-
-> 
->>
->> Other than that, the entire solution makes it very complicated to reason with
->> (flags set/checked without locking etc) maybe we should just revert and fix it
->> the other way?
-> 
-> The flag could certainly be set under the lock, which may reduce complications.
-
-Anything that can help here with this.
-For me in ib_nl_make_request() the comment should also explain that not only ib_nl_handle_resolve_resp()
-is waiting for the flag to be set but also ib_nl_request_timeout() and that a timeout can't happen
-before the flag is set.
-
-Mark
- 
-> 
-> Kaike
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +/**
+> + * pci_epf_test_init_dma_chan() - Helper to initialize EPF DMA channel
+> + * @epf: the EPF device that has to perform the data transfer operation
+> + *
+> + * Helper to initialize EPF DMA channel.
+>   */
+>  static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+>  {
+> @@ -165,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_MEMCPY, mask);
+>  
+> -	dma_chan = dma_request_chan_by_mask(&mask);
+> +	dma_chan = dma_request_channel(mask, pci_epf_test_pick_dma_chan, NULL);
+>  	if (IS_ERR(dma_chan)) {
+>  		ret = PTR_ERR(dma_chan);
+>  		if (ret != -EPROBE_DEFER)
+> -- 
+> 2.7.4
 > 
