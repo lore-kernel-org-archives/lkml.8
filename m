@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE227C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32620C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8361320936
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068A32083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862258;
-	bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
+	s=default; t=1588862261;
+	bh=g8MXi/Qh+MMLXU3CQUCfIqQ+603ZewnyD4kz1EXjib0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0wG9axuk8SfVp91V6/ywP50IYqBhuNYi2bovlIYHFn+/zD2O3GGGozCt9K/QNtU5
-	 N701bDVMJ+1Ir9Bh0NIqCKOaHS17iwIZ/RLg+ApEAJOXlcjrVStf9R9f3fdc6zvm6F
-	 HObzmYVH6uO2CzytczBFooUBYdjpToUT9+L+QHiQ=
+	b=fKvR/CXy9B04kIa1+wHx8oSrsEzUrwjPZBzCjqUIuGaPT2rtOvaKiVaR1wfdHzwxx
+	 wPQWgimcCPrEh1L0QDOCKCnGN+JJYXZh68NUZ0YlE7vlh0AWSX1hz7862HWekSzfYF
+	 ompv/jK3mdwl9d5InDSc4a3A49Eo4G0qMy974ZYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgEGO15 (ORCPT
+        id S1728093AbgEGOhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgEGO1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:53 -0400
+        id S1727839AbgEGO14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE18120A8B;
-        Thu,  7 May 2020 14:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2B62084D;
+        Thu,  7 May 2020 14:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861672;
-        bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
+        s=default; t=1588861676;
+        bh=g8MXi/Qh+MMLXU3CQUCfIqQ+603ZewnyD4kz1EXjib0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHpFiZkFcID4GLw7zPYtAHdAttiPSEs4St2oh7N3TtWXYgokJ9t3HN1tZXuvfG2+e
-         RHPMlwF2q6x1voyZZcIldPXjmls8c/4ySjtdXaCkGRiV9D8rtHaF9rQaFN1YBTcifq
-         Jq4xwu8r9L4oY635f5kcna54l+5zVBSaFuCByORA=
+        b=f3IxI38ZB0Bj7ExzarEeFBn2lKOr7d07tq/B/aszBzIql7kbnPvFNzTg29g8HtEzu
+         EAiop2tcx/tveSyfzTa0oGJmGQgrY54dzre5LpLBtdZsFEfx8AxqTotWUh5yYzZzf0
+         82EIUCclqZyY77EX4zUUfEsff+28QGAwZIvn0xGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaodong Yan <Xiaodong.Yan@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 21/50] drm/amd/display: blank dp stream before re-train the link
-Date:   Thu,  7 May 2020 10:26:57 -0400
-Message-Id: <20200507142726.25751-21-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 24/50] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+Date:   Thu,  7 May 2020 10:27:00 -0400
+Message-Id: <20200507142726.25751-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -62,57 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaodong Yan <Xiaodong.Yan@amd.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 718a5569b6fa6e1f49f1ae76a3c18acb4ddb74f1 ]
+[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
 
-[Why]
-When link loss happened, monitor can not light up if only re-train the
-link.
+Make a note of the first time we discover the turbo mode has been
+disabled by the BIOS, as otherwise we complain every time we try to
+update the mode.
 
-[How]
-Blank all the DP streams on this link before re-train the link, and then
-unblank the stream
-
-Signed-off-by: Xiaodong Yan <Xiaodong.Yan@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cpufreq/intel_pstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index fd9e69634c50a..1b6c75a4dd60a 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2885,6 +2885,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
- 					sizeof(hpd_irq_dpcd_data),
- 					"Status: ");
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index c81e1ff290697..b4c014464a208 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1058,7 +1058,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
  
-+		for (i = 0; i < MAX_PIPES; i++) {
-+			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
-+			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-+				link->dc->hwss.blank_stream(pipe_ctx);
-+		}
-+
- 		for (i = 0; i < MAX_PIPES; i++) {
- 			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
- 			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-@@ -2904,6 +2910,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
- 		if (pipe_ctx->stream->signal == SIGNAL_TYPE_DISPLAY_PORT_MST)
- 			dc_link_reallocate_mst_payload(link);
- 
-+		for (i = 0; i < MAX_PIPES; i++) {
-+			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
-+			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-+				link->dc->hwss.unblank_stream(pipe_ctx, &previous_link_settings);
-+		}
-+
- 		status = false;
- 		if (out_link_loss)
- 			*out_link_loss = true;
+ 	update_turbo_state();
+ 	if (global.turbo_disabled) {
+-		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
++		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
+ 		mutex_unlock(&intel_pstate_limits_lock);
+ 		mutex_unlock(&intel_pstate_driver_lock);
+ 		return -EPERM;
 -- 
 2.20.1
 
