@@ -2,144 +2,99 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4000C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC19C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B68C42068E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC3D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOAXfSmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgEGDqT (ORCPT
+        id S1726542AbgEGDri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:46:19 -0400
-Received: from mail-bn8nam11olkn2105.outbound.protection.outlook.com ([40.92.20.105]:3265
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgEGDqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:46:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H6RU40mxfE/ETXWqX7lULOs5+WgvJsquNu8n0tiqmxk6APKMfxqVFXyaeTHEEfsEPgxb5XT22BKI0866Hp0krt8oZs3iBWLAGLdx2I1CBG82ApBdMVCl+Aj3Glc0HppIUzqLcNN4TZhbL6JfDZT5WvB/b6Gt5Q380WkgqMAgLu4L9jtIgY+yyfLjgKXEcD0mYmPItXab41bpnBwoJSA2C6+dKvoT7W3f88S6xeLGr5aAHq5GbF5iyyvjd5hwha0YzBnJlBQ1UBkf0JtF3DHIuVqts7PdU7uTDc073ik7JBJQx7xJcUyhCwpBaLtTHsRHIE1ck4RIdpRfMVjNk2y2+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pmDWlafs14Q6VMNAJHrSpZQMRnRb/5cs5bsIzxKI0cc=;
- b=er0gLHOsKtI6pAE99dPnT+zu5y9nAIy51lLYj3KLgTxGRC7bFQiPe0kBf0Qc8LIQFzeG3fTgiVpGfjcYresH2/PIIdtZTNBl8pAR2ZofG8SeDAOp7ggIlGRtqeHiksJAiv6a1ihSwhxsDIE14xIuZeJ0WTj2g9dHsvz8rejxIM4HOUB9QnrCuajfi+VWhVlvDCvdzOvLgvrEcUBHv89we5VyxAS6/KLR60Oq+PH7ePOlQJN9Qho2TZyKQ51VGtA4KOpaMQ9P8DX6ccl/AZZMocBgISpt8qULShvgXJgMC9a6mPui+ldrnLL3LTZFU6hyMaW5QzIISrlf1GiGGWZrbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM11FT046.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::46) by
- DM6NAM11HT205.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::408)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Thu, 7 May
- 2020 03:46:16 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::50) by DM6NAM11FT046.mail.protection.outlook.com
- (2a01:111:e400:fc4d::121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
- Transport; Thu, 7 May 2020 03:46:16 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:C64A0D1C153867C6508DF9CF4C46FD056C7998A7E745EC5D91E008066963A8B5;UpperCasedChecksum:29CAB8839F0C089A5EBE16CF563B443A6A0F09687527BF45B8C9A99B4AE4A1DB;SizeAsReceived:9673;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 03:46:16 +0000
-Subject: Re: [PATCH 2/5] input: misc: bma150: Conditionally disable bma023
- support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Input <linux-input@vger.kernel.org>
-References: <20200503172206.13782-1-xc-racer2@live.ca>
- <BN6PR04MB0660B420EFA83668BBF4F315A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
- <CACRpkdb3kG=7SQg8RGh1F=8=_mivV6p_zxpodFT=M-f3PmiyYQ@mail.gmail.com>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660BA0E181869F866594E98A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Wed, 6 May 2020 20:46:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <CACRpkdb3kG=7SQg8RGh1F=8=_mivV6p_zxpodFT=M-f3PmiyYQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR19CA0068.namprd19.prod.outlook.com
- (2603:10b6:300:94::30) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <684cc7d2-eb84-d20a-8167-baa9b8481fbd@live.ca>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR19CA0068.namprd19.prod.outlook.com (2603:10b6:300:94::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Thu, 7 May 2020 03:46:14 +0000
-X-Microsoft-Original-Message-ID: <684cc7d2-eb84-d20a-8167-baa9b8481fbd@live.ca>
-X-TMN:  [P1Gdv29WsRGTIvD4UhhxdaGFBX63zmW5MY41hHHiQhJkokaREGIBjHlghwolm+eu]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 058380fa-2608-4b6d-f129-08d7f23931a1
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT205:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FvHprMXW5AZf4lw4xUlHvj/dzwQF8wzAQBST42yfL6gB6BgmFwxxIICX7E6KoLt/U0zPvO0S/ev1iBpuHGvOLxi9PXWGOW0CRliGH0+uaT4oL7OnHFl/m3DD/rU5ptNLu8nyCNtuUVDu0bSYgFcJY2qSvXslAluQfB0Fj/sE7TqW9UCH4cQ/PEIYhdYlftQNnxN70Q/tvrNlixqqt4sRDA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: c6LMankO2Ajf3jUDX00QucY5sdzf2jDTWVo0MxCgQYVWEOxMVcJw39iLvR1NBokYj57WbKwbzpIulozBnFjNlHYNmYrZcilXBj4iUKQm5X+ONTUyn8Js7eS1ddOEvjWhMvOagG0aYWs4OlQj/KdcE4LBCZVNvqt74vc7MRsO14PLUK7Z5ovYobxNZ5B/y+psXOyY26u+0lgOIsA/FOQcQA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 058380fa-2608-4b6d-f129-08d7f23931a1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 03:46:16.0216
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT205
+        Wed, 6 May 2020 23:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbgEGDri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:47:38 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391CDC061A0F;
+        Wed,  6 May 2020 20:47:38 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d184so2296620pfd.4;
+        Wed, 06 May 2020 20:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k42B0v+KyyPwXu1TxJ3NGB+Mz8tcGMWNDg8BOG5X2is=;
+        b=fOAXfSmtHy7lzjwH9nWI5vGd1yHZZPStW3GW1bYOQqGke1WNtouCxNQsSz90iYTS6r
+         Hx8OfIYANa5Rwv5PlUgSvrQ/0VnwKC9cKL+MI/OzYsZAyY+dBDGjRJZtJh5Emr3Rusfy
+         OUqf6q+dKRXE7q4V2035TYzqDG92bHKGqhxvSUWx1ovSBCB+I7t7AmrnXSefkX7HI/oF
+         wRikRHkJJ3m/YhFgBU873E01jRxvqL7r1d8iD6ON46OPz5Y9Y/Emhf/Eh/0VZ+cSc2zw
+         tGL/BMEE+9X5to6tLunbS205C0vyefX/0fgHwVAAnL2Wh8haaB3kRtfE9YiyOWpmOs9F
+         IL4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k42B0v+KyyPwXu1TxJ3NGB+Mz8tcGMWNDg8BOG5X2is=;
+        b=osA0sg1OcpFJVQmCSaJI1IUJgyCFW5rqV1mPUgyj4kRxZ+v3gWmBfKbahLzH0gUPU0
+         7vJPi9ozYPLsvVrkGdjRkay4cI9T2V79+m3GlsXMeSi6j6JUnycRbwPzshxu5cdg2lJU
+         E3hUYhDtMutu7WmSinhbeiGIQIqisktFHRGQ4+OTeqtAGFr8ialwvZItUyh0tNtMsleE
+         YpkwCqKLEiWkdXM1bPRoJHmeYTDOMWj5MT3YBih9tvwZ/vwpqNRRv5+pGsZTv/yS4i4D
+         2kiGcHyTooyR4MkEex3sCU2yRewK2R2xqSEVz/L9YBK6u+GLypgFXpNxVdtDlKaAYWfy
+         DRTA==
+X-Gm-Message-State: AGi0PuYtmY/a5bIiItSZuEeAravr+Yb6qoH0vqMRPYlr+NGSq237DE6E
+        FI1DbTe2E9SHbEZE9gyUBtw=
+X-Google-Smtp-Source: APiQypK4A84ZXMUNrHmbDEQoXCfj0mgTIbuCvHuFZnvKDZjmlLnwqTsib4w28kxI/hDuD805kIO41A==
+X-Received: by 2002:a63:e050:: with SMTP id n16mr9888597pgj.93.1588823257540;
+        Wed, 06 May 2020 20:47:37 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id z5sm3130716pfn.142.2020.05.06.20.47.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 20:47:36 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: sprd: Fix the incorrect pull-up definition
+Date:   Thu,  7 May 2020 11:47:25 +0800
+Message-Id: <e973f8f194ce4cb2639121572e8621b5efa5bfbe.1588823152.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The bits of pull up resistor selection were defined mistakenly,
+thus fix them.
 
-On 2020-05-06 5:46 a.m., Linus Walleij wrote:
-> On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
-> 
->> The bma180 IIO driver has been extended for support for bma023.
->> However, this could cause conflicts with this driver.  Since some
->> setups may depend upon the evdev setup, disable support in this
->> driver for the bma023 only when the IIO driver is being built.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> I would just fix this with KConfig instead, like add mutually
-> exclusive depends on these two drivers.
-> 
-> Set this input driver as:
-> depends on BMA180=n
-> 
-> And the IIO driver as:
-> depends on INPUT_BMA150=n
-> 
-> It's a rough measure but this input driver should anyway
-> go away.
-> 
+Fixes: 41d32cfce1ae ("pinctrl: sprd: Add Spreadtrum pin control driver")
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+ drivers/pinctrl/sprd/pinctrl-sprd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ok, sounds good to me.  If I include a patch removing the input driver, can I just drop this patch entirely?
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index 48cbf2a..08dc193 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -68,8 +68,8 @@
+ #define SLEEP_PULL_UP_MASK		0x1
+ #define SLEEP_PULL_UP_SHIFT		3
+ 
+-#define PULL_UP_20K			(BIT(12) | BIT(7))
+-#define PULL_UP_4_7K			BIT(12)
++#define PULL_UP_4_7K			(BIT(12) | BIT(7))
++#define PULL_UP_20K			BIT(7)
+ #define PULL_UP_MASK			0x21
+ #define PULL_UP_SHIFT			7
+ 
+-- 
+1.9.1
 
-The only in-tree user of the input driver (based on i2c ids) is Intel Mid.  Not sure what the kernel policy on dropping drivers is.
-
-> Yours,
-> Linus Walleij
-> 
-
-Thanks,
-Jonathan
