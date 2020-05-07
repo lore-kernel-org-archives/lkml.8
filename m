@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EABC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE227C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51CAE2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8361320936
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862254;
-	bh=fFjPDlSYqtZsiNtwI2hwcFmM5WH27agQGBfvGvrioZI=;
+	s=default; t=1588862258;
+	bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5s3hvMm7D4tXkybHwr92hVP0AS5R+D7DhHP1iE7jEIGu0e814smaJzOyzlBCS11J
-	 d7JMOCBJukzUdqP+rrho39dkgU/xftRc0i7doOjqA2ChZv6OnL7oK5WiXJRkdZt+ow
-	 bcus3FBvanKNL30mWFhX1w3wYY/3V+WLlSZKflwA=
+	b=t0wG9axuk8SfVp91V6/ywP50IYqBhuNYi2bovlIYHFn+/zD2O3GGGozCt9K/QNtU5
+	 N701bDVMJ+1Ir9Bh0NIqCKOaHS17iwIZ/RLg+ApEAJOXlcjrVStf9R9f3fdc6zvm6F
+	 HObzmYVH6uO2CzytczBFooUBYdjpToUT9+L+QHiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEGO17 (ORCPT
+        id S1727852AbgEGO15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgEGO1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:55 -0400
+        id S1727815AbgEGO1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4925A215A4;
-        Thu,  7 May 2020 14:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE18120A8B;
+        Thu,  7 May 2020 14:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861675;
-        bh=fFjPDlSYqtZsiNtwI2hwcFmM5WH27agQGBfvGvrioZI=;
+        s=default; t=1588861672;
+        bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eNapZzGt+QBZNoGi1313IquHPl94YEhPMSm2lEZvQHTQoCrmdwJrClXb6kGdNnH6a
-         t11m+u7DRwtMTBDoMyKouH/02WMQZoLZ7jZCn1ZF5UYA+bpMWIE2oPo8kZnzhI3MiS
-         mlu0CDoFSTlU1INTJcREE5sAi0xB41kAma4KzC1s=
+        b=EHpFiZkFcID4GLw7zPYtAHdAttiPSEs4St2oh7N3TtWXYgokJ9t3HN1tZXuvfG2+e
+         RHPMlwF2q6x1voyZZcIldPXjmls8c/4ySjtdXaCkGRiV9D8rtHaF9rQaFN1YBTcifq
+         Jq4xwu8r9L4oY635f5kcna54l+5zVBSaFuCByORA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 23/50] RDMA/core: Fix race between destroy and release FD object
-Date:   Thu,  7 May 2020 10:26:59 -0400
-Message-Id: <20200507142726.25751-23-sashal@kernel.org>
+Cc:     Xiaodong Yan <Xiaodong.Yan@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 21/50] drm/amd/display: blank dp stream before re-train the link
+Date:   Thu,  7 May 2020 10:26:57 -0400
+Message-Id: <20200507142726.25751-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -59,57 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Xiaodong Yan <Xiaodong.Yan@amd.com>
 
-[ Upstream commit f0abc761bbb9418876cc4d1ebc473e4ea6352e42 ]
+[ Upstream commit 718a5569b6fa6e1f49f1ae76a3c18acb4ddb74f1 ]
 
-The call to ->lookup_put() was too early and it caused an unlock of the
-read/write protection of the uobject after the FD was put. This allows a
-race:
+[Why]
+When link loss happened, monitor can not light up if only re-train the
+link.
 
-     CPU1                                 CPU2
- rdma_lookup_put_uobject()
-   lookup_put_fd_uobject()
-     fput()
-				   fput()
-				     uverbs_uobject_fd_release()
-				       WARN_ON(uverbs_try_lock_object(uobj,
-					       UVERBS_LOOKUP_WRITE));
-   atomic_dec(usecnt)
+[How]
+Blank all the DP streams on this link before re-train the link, and then
+unblank the stream
 
-Fix the code by changing the order, first unlock and call to
-->lookup_put() after that.
-
-Fixes: 3832125624b7 ("IB/core: Add support for idr types")
-Link: https://lore.kernel.org/r/20200423060122.6182-1-leon@kernel.org
-Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Xiaodong Yan <Xiaodong.Yan@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/rdma_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
-index 2947f4f83561d..177333d8bcdae 100644
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -678,7 +678,6 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
- 			     enum rdma_lookup_mode mode)
- {
- 	assert_uverbs_usecnt(uobj, mode);
--	uobj->uapi_object->type_class->lookup_put(uobj, mode);
- 	/*
- 	 * In order to unlock an object, either decrease its usecnt for
- 	 * read access or zero it in case of exclusive access. See
-@@ -695,6 +694,7 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
- 		break;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index fd9e69634c50a..1b6c75a4dd60a 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2885,6 +2885,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
+ 					sizeof(hpd_irq_dpcd_data),
+ 					"Status: ");
  
-+	uobj->uapi_object->type_class->lookup_put(uobj, mode);
- 	/* Pairs with the kref obtained by type->lookup_get */
- 	uverbs_uobject_put(uobj);
- }
++		for (i = 0; i < MAX_PIPES; i++) {
++			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
++			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
++				link->dc->hwss.blank_stream(pipe_ctx);
++		}
++
+ 		for (i = 0; i < MAX_PIPES; i++) {
+ 			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
+ 			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
+@@ -2904,6 +2910,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
+ 		if (pipe_ctx->stream->signal == SIGNAL_TYPE_DISPLAY_PORT_MST)
+ 			dc_link_reallocate_mst_payload(link);
+ 
++		for (i = 0; i < MAX_PIPES; i++) {
++			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
++			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
++				link->dc->hwss.unblank_stream(pipe_ctx, &previous_link_settings);
++		}
++
+ 		status = false;
+ 		if (out_link_loss)
+ 			*out_link_loss = true;
 -- 
 2.20.1
 
