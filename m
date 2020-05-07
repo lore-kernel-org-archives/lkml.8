@@ -2,123 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1620CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FF5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01F8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4DD5208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p67mYIkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGSll (ORCPT
+        id S1728309AbgEGSnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:41:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7254 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGSll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:41:41 -0400
-IronPort-SDR: 3OmsZvWetR45zOQbsJ8b3yJDuOwkLT9qrvZyaTd3iDvs7IgVqUNID31tinG7fFWoQBTjFB0v3X
- HAczm/TOAy9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 11:41:40 -0700
-IronPort-SDR: VEZfRswUS/KVAU8v0krBpSBjk+yroyuqK7k44DkO5wcStSykjoRRbBKB/pBMrKzTWimB/4jVyW
- VXbfE0ZEUOSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="249375814"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga007.jf.intel.com with ESMTP; 07 May 2020 11:41:39 -0700
-Message-ID: <605779b67af22009111aa9eda287026327d070d0.camel@intel.com>
-Subject: Re: [PATCH] x86/fpu/xstate: Clear uninitialized xstate areas in
- core dump
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     sam <sunhaoyl@outlook.com>, Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Date:   Thu, 07 May 2020 11:41:43 -0700
-In-Reply-To: <87lfm3ehbd.fsf@nanos.tec.linutronix.de>
-References: <20200507164904.26927-1-yu-cheng.yu@intel.com>
-         <87lfm3ehbd.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 7 May 2020 14:43:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46476 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGSnR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:43:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047IbgcN004211;
+        Thu, 7 May 2020 18:42:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=mEDzEEDSb5jTK1bCppRO0q98+bzWMLYtdC4AbIqeGDQ=;
+ b=p67mYIkdiwJsmnC7ru/mh2/Yfh7z9rNBCXeRFzXgPFjCOGcc6I/jf3cI3t6jZOTbWonM
+ nrcSzlCIQt+vCOOmQ/QHgtwcbiTxDxYwCMIRsCfZg9MO/a2lQzY2bzVgx0RBUj9W7WR4
+ WoXDElaGKcpiCo0hEvUgaktAI5Hm931tQRG3DGXkUcl15yZqquCGX7wNaqqTAh6RNGwp
+ roIaOjY0Q8kbCj8TBaOv7qBq0ccyMZ0+dsll3Io87z1wQ08LfzFH9Uq74xr2J0iYjz+t
+ pKvSm6/u3weJp62HWoSStAEc9eR/JZCV8uDuCKATw4q2+0vtEYn3HjHH6uRkJLw5jOHm sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30vhvyj79h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 18:42:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047IavNE026231;
+        Thu, 7 May 2020 18:42:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30sjdyq2v8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 18:42:00 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047IfuCW023296;
+        Thu, 7 May 2020 18:41:56 GMT
+Received: from [10.154.153.82] (/10.154.153.82)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 May 2020 11:41:55 -0700
+Subject: Re: [RFC 21/43] x86/KASLR: PKRAM: support physical kaslr
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
+        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
+        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
+        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
+        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
+        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
+        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
+        hannes@cmpxchg.org, minchan@kernel.org, mhocko@kernel.org,
+        ying.huang@intel.com, yang.shi@linux.alibaba.com,
+        gustavo@embeddedor.com, ziqian.lzq@antfin.com,
+        vdavydov.dev@gmail.com, jason.zeng@intel.com, kevin.tian@intel.com,
+        zhiyuan.lv@intel.com, lei.l.li@intel.com, paul.c.lai@intel.com,
+        ashok.raj@intel.com, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kexec@lists.infradead.org
+References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
+ <1588812129-8596-22-git-send-email-anthony.yznaga@oracle.com>
+ <202005071049.2D0939137D@keescook>
+From:   Anthony Yznaga <anthony.yznaga@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <62a1c002-ad7b-a364-5797-6d7f5545d5cf@oracle.com>
+Date:   Thu, 7 May 2020 11:41:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <202005071049.2D0939137D@keescook>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
+ spamscore=0 phishscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 20:22 +0200, Thomas Gleixner wrote:
-> Yu-cheng Yu <yu-cheng.yu@intel.com> writes:
-> > @@ -983,6 +983,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
-> >  {
-> >  	unsigned int offset, size;
-> >  	struct xstate_header header;
-> > +	int last_off;
-> >  	int i;
-> >  
-> >  	/*
-> > @@ -1006,7 +1007,17 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
-> >  
-> >  	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
-> >  
-> > +	last_off = 0;
-> > +
-> >  	for (i = 0; i < XFEATURE_MAX; i++) {
-> > +		/*
-> > +		 * Clear uninitialized area before XSAVE header.
-> > +		 */
-> > +		if (i == FIRST_EXTENDED_XFEATURE) {
-> > +			memset(kbuf + last_off, 0, XSAVE_HDR_OFFSET - last_off);
-> > +			last_off = XSAVE_HDR_OFFSET + XSAVE_HDR_SIZE;
-> > +		}
-> > +
-> >  		/*
-> >  		 * Copy only in-use xstates:
-> >  		 */
-> > @@ -1020,11 +1031,16 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
-> >  			if (offset + size > size_total)
-> >  				break;
-> >  
-> > +			memset(kbuf + last_off, 0, offset - last_off);
-> > +			last_off = offset + size;
-> > +
-> >  			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
-> >  		}
-> >  
-> >  	}
-> >  
-> > +	memset(kbuf + last_off, 0, size_total - last_off);
-> 
-> Why doing all this partial zeroing? There is absolutely no point.
-> 
-> Either the caller clears the buffer or this function clears it right at
-> the beginning with:
-> 
->     memset(kbuf, 0, min(size_total, XSAVE_MAX_SIZE));
 
-I was concerned that the XSAVES buffer can be large, but this is not in a
-performance-critical path.  Yes, clear it in the beginning is simpler.
 
-Yu-cheng
+On 5/7/20 10:51 AM, Kees Cook wrote:
+> On Wed, May 06, 2020 at 05:41:47PM -0700, Anthony Yznaga wrote:
+>> Avoid regions of memory that contain preserved pages when computing
+>> slots used to select where to put the decompressed kernel.
+> This is changing the slot-walking code instead of updating
+> mem_avoid_overlap() -- that's where the check for a "reserved" memory
+> area should live.
+>
+> For example, this is how both mem_avoid_memmap() and the setup_data
+> memory areas are handled.
+>
+> Is there a reason mem_avoid_overlap() can't be used here?
+>
 
+I was thinking it would be more efficient to process just
+the regions that did not contain preserved pages rather
+than checking for preserved pages in mem_avoid_overlap(),
+but I see that may just be adding unnecessary complexity.
+I'll investigate modifying mem_avoid_overlap().
+Thank you for the comments!
+
+Anthony
