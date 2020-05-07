@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B03C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52A2C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE932073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9CA2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862096;
-	bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
+	s=default; t=1588862100;
+	bh=VRow/RYNyGiN/xbCnoVo/KMBjw3N6M1fbQIfSiFNdYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rN21Qf1XAjonGutKV5zShQnvxivDlVFJp1FgW0OsSyVKZeauHOLVcDpkQ57u6hPLs
-	 aQYApP/AkQ2zg6d7p84L5ZrWq8r22tRVY1QunGC9PzxRFNO93k+EhSFZhSpwJ57z7G
-	 WLZKp49PDZ4TnZcm5gEbMgznTDM03A9jtkyG57mY=
+	b=l20KQLvg0rpXSxP78p9o2unN5ghCUV6Tekc0PZA74isfp3fklesg+3+F2XlZrL1rJ
+	 PlXogvTw3LuP/wfj9G9ozhnLyHR0VvjCeBEpWEirqK6q6f+8vNKG19xzBh75OZ2LEr
+	 bkUFDhLzPwyuFZadeSL2/OYuR5b0SydOCjynTlws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEGO25 (ORCPT
+        id S1727930AbgEGOfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgEGO2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:51 -0400
+        id S1728333AbgEGO24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535B5208D6;
-        Thu,  7 May 2020 14:28:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9839B2145D;
+        Thu,  7 May 2020 14:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861731;
-        bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
+        s=default; t=1588861736;
+        bh=VRow/RYNyGiN/xbCnoVo/KMBjw3N6M1fbQIfSiFNdYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Du0CY9RZOX4UpdXgSmS6ANPwQWpGat/WIbch+cE2jdcsnFebeyPL3gTG0DtsH0XM0
-         sx5h5QEKaqWM8zvIIZdiRkRA0rSMHqhkKnBxNcsfowgh/mRaB/gGhU9kdlOHO0KoV0
-         ZbqyNDIZzHEwF2QtcpYsgM1TmEOeQDGDUbWGKG0o=
+        b=sMOtloB1Vj/iLrat/qx83zfLISbcs/2vqsMRC0XTiYWj6ickjNRXL7T9GsNI6j3IY
+         3H523iKlse0jhKhpoaG2d0n9G3/bBcaEIpatP8i4ft9LbbUsxms9Jkvvh8m+LMVUmn
+         BMhDjaTYySnH330XD9zjOZwPG77UlA2O+zfSEz0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 16/35] selftests/ftrace: Check the first record for kprobe_args_type.tc
-Date:   Thu,  7 May 2020 10:28:10 -0400
-Message-Id: <20200507142830.26239-16-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 20/35] nvme: prevent double free in nvme_alloc_ns() error handling
+Date:   Thu,  7 May 2020 10:28:14 -0400
+Message-Id: <20200507142830.26239-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -61,47 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Niklas Cassel <niklas.cassel@wdc.com>
 
-[ Upstream commit f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba ]
+[ Upstream commit 132be62387c7a72a38872676c18b0dfae264adb8 ]
 
-It is possible to get multiple records from trace during test and then more
-than 4 arguments are assigned to ARGS.  This situation results in the failure
-of kprobe_args_type.tc.  For example:
------------------------------------------------------------
-grep testprobe trace
-   ftracetest-5902  [001] d... 111195.682227: testprobe: (_do_fork+0x0/0x460) arg1=334823024 arg2=334823024 arg3=0x13f4fe70 arg4=7
-     pmlogger-5949  [000] d... 111195.709898: testprobe: (_do_fork+0x0/0x460) arg1=345308784 arg2=345308784 arg3=0x1494fe70 arg4=7
- grep testprobe trace
- sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'
-ARGS='334823024 334823024 0x13f4fe70 7
-345308784 345308784 0x1494fe70 7'
------------------------------------------------------------
+When jumping to the out_put_disk label, we will call put_disk(), which will
+trigger a call to disk_release(), which calls blk_put_queue().
 
-We don't care which process calls do_fork so just check the first record to
-fix the issue.
+Later in the cleanup code, we do blk_cleanup_queue(), which will also call
+blk_put_queue().
 
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Putting the queue twice is incorrect, and will generate a KASAN splat.
+
+Set the disk->queue pointer to NULL, before calling put_disk(), so that the
+first call to blk_put_queue() will not free the queue.
+
+The second call to blk_put_queue() uses another pointer to the same queue,
+so this call will still free the queue.
+
+Fixes: 85136c010285 ("lightnvm: simplify geometry enumeration")
+Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-index 1bcb67dcae267..81490ecaaa927 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-@@ -38,7 +38,7 @@ for width in 64 32 16 8; do
-   echo 0 > events/kprobes/testprobe/enable
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index f97c48fd3edae..31b7dcd791c20 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3566,6 +3566,8 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
  
-   : "Confirm the arguments is recorded in given types correctly"
--  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
-+  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
-   check_types $ARGS $width
- 
-   : "Clear event for next loop"
+ 	return 0;
+  out_put_disk:
++	/* prevent double queue cleanup */
++	ns->disk->queue = NULL;
+ 	put_disk(ns->disk);
+  out_unlink_ns:
+ 	mutex_lock(&ctrl->subsys->lock);
 -- 
 2.20.1
 
