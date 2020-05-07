@@ -2,91 +2,222 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43DFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DD0C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3E362495B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA7D2495C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588877465;
+	bh=dVZVU3NDS8wD8l/CPk72dFvVmkwIyU9kfIuksk0czLo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=svHtPnWnkbvxk5b+Dfg72SXQxMbxa++TT7WX+u75Gfy2gTDGCVzkNiZMwsUjOIa+2
+	 VQutxd5vwvuUu5tLlKdceLlI9SjjeBL56pa4FRimnACZ1wUVgSzHfDuIkY56Xjm9tn
+	 6iac81CFIfO+13Xot2GU+Ij9+NspLZ83mA0wBxbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgEGSuz (ORCPT
+        id S1728511AbgEGSvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:50:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46055 "EHLO mga03.intel.com"
+        Thu, 7 May 2020 14:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgEGSuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:50:54 -0400
-IronPort-SDR: m3NdPX7ZhuJowXKNRc2tFiGhVMKd3WIAz8+kGtFVW02AU+/oaLnHYPLjfMr87tqB8rxrqyAdSU
- 3KH1MpmcHZeg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 11:50:53 -0700
-IronPort-SDR: UACRTPXn+b0AiDXLKLxCAcGmJZLWvGDpLJk/+lzMBmtQOodi3YbLbiEBDE4gY5kGbYwTIVgn6n
- UGnv/1ucefmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="251590916"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga008.fm.intel.com with ESMTP; 07 May 2020 11:50:53 -0700
-Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 May 2020 11:50:52 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 7 May 2020 21:50:50 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Thu, 7 May 2020 21:50:50 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     =?utf-8?B?5Lq/5LiA?= <teroincn@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [BUG]is there a refcount leak in function mei_me_cl_rm_by_uuid?
-Thread-Topic: [BUG]is there a refcount leak in function mei_me_cl_rm_by_uuid?
-Thread-Index: AQHWI7UxQx9KZrk2hEaieKucEHXx86ic9l4g
-Date:   Thu, 7 May 2020 18:50:50 +0000
-Message-ID: <06ef12d05af446e8bc8cc674c68cecf7@intel.com>
-References: <CANTwqXAwbiGwd3-6ShQw-kvnwNPk6Ev2Sc1yMTVH4+1=mxRQsA@mail.gmail.com>
-In-Reply-To: <CANTwqXAwbiGwd3-6ShQw-kvnwNPk6Ev2Sc1yMTVH4+1=mxRQsA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726515AbgEGSvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:51:04 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC93A2495A;
+        Thu,  7 May 2020 18:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588877463;
+        bh=dVZVU3NDS8wD8l/CPk72dFvVmkwIyU9kfIuksk0czLo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DxyNfXLQfIx4viNfDXKjhhEIfNqpgB/PyqZZY+EwpuAeOlvfzztXwgjnVuOeuscTz
+         ha5VrAl0RAQqW0DfsE+U7Scq4YEWRLEqvRYY8iQa/5w1zUFxoti8LvZ5mUBnmrdjJJ
+         R7fqGE8CpVnqEPDap9DpskCQ/+J0Li4dHVogac60=
+Date:   Thu, 7 May 2020 13:55:29 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanislaw Gruszka <stf_xl@wp.pl>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlegacy: Replace zero-length array with flexible-array
+Message-ID: <20200507185529.GA14639@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTog5Lq/5LiAIDx0ZXJvaW5j
-bkBnbWFpbC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgTWF5IDA2LCAyMDIwIDE3OjQ3DQo+IFRv
-OiBXaW5rbGVyLCBUb21hcyA8dG9tYXMud2lua2xlckBpbnRlbC5jb20+DQo+IENjOiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtCVUddaXMgdGhlcmUgYSByZWZjb3Vu
-dCBsZWFrIGluIGZ1bmN0aW9uIG1laV9tZV9jbF9ybV9ieV91dWlkPw0KDQpVbmZvcnR1bmF0ZWx5
-IHlvdSBhcmUgY29ycmVjdCwgIGJ1dCBjdXJyZW50bHkgaXQgaXMgdmVyeSBoYXJkIHRvIGhpdCB0
-aGUgaXNzdWUgaW4gcmVhbCBsaWZlLg0KVGhlIHBhdGNoIGlzIGNvbWluZy4gDQpUaGFua3MNClRv
-bWFzDQoNCg0KPiANCj4gSEksIGFsbA0KPiBXaGVuIHJldmlld2luZyBmdW5jdGlvbiBtZWlfbWVf
-Y2xfcm1fYnlfdXVpZO+8jCBJIG5vdGljZSB0aGF0IGZ1bmN0aW9uDQo+IF9fbWVpX21lX2NsX2J5
-X3V1aWQgaW5jcmVhc2VzIG1lX2NsIHJlZmNvdW50IGFuZCBmdW5jdGlvbiBfbWVpX21lX2NsX2Rl
-bA0KPiBkZWxldGUgYSBsaXN0IG5vZGUgd2l0aCBkZWNyZW1lbnQgbWVfY2wgcmVmY291bnQgLCBh
-Y3R1YWxseSBoZXJlIGNhdXNlIGENCj4gcmVmY291bnQgbGVhayBhcyB3ZSBoYXZlbid0IHJlbGVh
-c2UgdGhlIHJlZmNvdW50IGJ5IF9fbWVpX21lX2NsX2J5X3V1aWQgID8NCj4gc2ltaWxhciBpc3N1
-ZSBoYXBwZW5zIGluIG1laV9tZV9jbF9ybV9ieV91dWlkX2lkIHRvby4NCj4gDQo+IHZvaWQgbWVp
-X21lX2NsX3JtX2J5X3V1aWQoc3RydWN0IG1laV9kZXZpY2UgKmRldiwgY29uc3QgdXVpZF9sZSAq
-dXVpZCkgew0KPiAgICAgc3RydWN0IG1laV9tZV9jbGllbnQgKm1lX2NsOw0KPiANCj4gICAgIGRl
-dl9kYmcoZGV2LT5kZXYsICJyZW1vdmUgJXBVbFxuIiwgdXVpZCk7DQo+IA0KPiAgICAgZG93bl93
-cml0ZSgmZGV2LT5tZV9jbGllbnRzX3J3c2VtKTsNCj4gICAgIG1lX2NsID0gX19tZWlfbWVfY2xf
-YnlfdXVpZChkZXYsIHV1aWQpOyAvKiBpbmNyZWFzZSBhIHJlZmNvdW50ICovDQo+ICAgICBfX21l
-aV9tZV9jbF9kZWwoZGV2LCBtZV9jbCk7IC8qIHJlbGVhc2UgdGhlIHJlZmNvdW50IHdpdGggYSBs
-aXN0IG5vZGUgZGV0ZWxlZA0KPiAqLw0KPiAgICAgdXBfd3JpdGUoJmRldi0+bWVfY2xpZW50c19y
-d3NlbSk7DQo+IH0NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gDQo+IExpbiBZaS4NCg==
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/intel/iwlegacy/commands.h     |   22 ++++++++++-----------
+ drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h |    4 +--
+ 2 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index dd744135c956..89c6671b32bc 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -203,7 +203,7 @@ struct il_cmd_header {
+ 	__le16 sequence;
+ 
+ 	/* command or response/notification data follows immediately */
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /**
+@@ -1112,7 +1112,7 @@ struct il_wep_cmd {
+ 	u8 global_key_type;
+ 	u8 flags;
+ 	u8 reserved;
+-	struct il_wep_key key[0];
++	struct il_wep_key key[];
+ } __packed;
+ 
+ #define WEP_KEY_WEP_TYPE 1
+@@ -1166,7 +1166,7 @@ struct il3945_rx_frame_stats {
+ 	u8 agc;
+ 	__le16 sig_avg;
+ 	__le16 noise_diff;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct il3945_rx_frame_hdr {
+@@ -1175,7 +1175,7 @@ struct il3945_rx_frame_hdr {
+ 	u8 reserved1;
+ 	u8 rate;
+ 	__le16 len;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct il3945_rx_frame_end {
+@@ -1211,7 +1211,7 @@ struct il4965_rx_non_cfg_phy {
+ 	__le16 ant_selection;	/* ant A bit 4, ant B bit 5, ant C bit 6 */
+ 	__le16 agc_info;	/* agc code 0:6, agc dB 7:13, reserved 14:15 */
+ 	u8 rssi_info[6];	/* we use even entries, 0/2/4 for A/B/C rssi */
+-	u8 pad[0];
++	u8 pad[];
+ } __packed;
+ 
+ /*
+@@ -1409,7 +1409,7 @@ struct il3945_tx_cmd {
+ 	 * length is 26 or 30 bytes, followed by payload data
+ 	 */
+ 	u8 payload[0];
+-	struct ieee80211_hdr hdr[0];
++	struct ieee80211_hdr hdr[];
+ } __packed;
+ 
+ /*
+@@ -1511,7 +1511,7 @@ struct il_tx_cmd {
+ 	 * length is 26 or 30 bytes, followed by payload data
+ 	 */
+ 	u8 payload[0];
+-	struct ieee80211_hdr hdr[0];
++	struct ieee80211_hdr hdr[];
+ } __packed;
+ 
+ /* TX command response is sent after *3945* transmission attempts.
+@@ -2520,7 +2520,7 @@ struct il3945_scan_cmd {
+ 	 * for one scan to complete (i.e. receive N_SCAN_COMPLETE)
+ 	 * before requesting another scan.
+ 	 */
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct il_scan_cmd {
+@@ -2564,7 +2564,7 @@ struct il_scan_cmd {
+ 	 * for one scan to complete (i.e. receive N_SCAN_COMPLETE)
+ 	 * before requesting another scan.
+ 	 */
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /* Can abort will notify by complete notification with abort status. */
+@@ -2664,7 +2664,7 @@ struct il3945_tx_beacon_cmd {
+ 	__le16 tim_idx;
+ 	u8 tim_size;
+ 	u8 reserved1;
+-	struct ieee80211_hdr frame[0];	/* beacon frame */
++	struct ieee80211_hdr frame[];	/* beacon frame */
+ } __packed;
+ 
+ struct il_tx_beacon_cmd {
+@@ -2672,7 +2672,7 @@ struct il_tx_beacon_cmd {
+ 	__le16 tim_idx;
+ 	u8 tim_size;
+ 	u8 reserved1;
+-	struct ieee80211_hdr frame[0];	/* beacon frame */
++	struct ieee80211_hdr frame[];	/* beacon frame */
+ } __packed;
+ 
+ /******************************************************************************
+diff --git a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
+index a3b490501a70..1e8ab704dbfb 100644
+--- a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
++++ b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
+@@ -53,7 +53,7 @@ struct ieee80211_measurement_params {
+ struct ieee80211_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct ieee80211_measurement_request {
+@@ -61,7 +61,7 @@ struct ieee80211_measurement_request {
+ 	u8 token;
+ 	u8 mode;
+ 	u8 type;
+-	struct ieee80211_measurement_params params[0];
++	struct ieee80211_measurement_params params[];
+ } __packed;
+ 
+ struct ieee80211_measurement_report {
+
