@@ -2,173 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77DEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FDBC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4922063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1032A208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588856045;
+	bh=ejai9cTPU/wXSWdxchfGt1itA5yy8fQdOCXV1pCVHB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mCGsq1gr45vI4yqRhTSuvK8kZIhd0IvhdfW7VaQYI83kTEfl2ZEE5TKT15DFuAqxH
+	 I3w4w8ThToiY1Pb+HrfRJTtOhBKlLIGrGNr+YoJya18x4l5wbLmemVjEkMvzpD7WRc
+	 zzocV/D6G4z9U+2wv5m+dD8orCzHlXKmeA8W0c+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEGMx4 (ORCPT
+        id S1726975AbgEGMyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725947AbgEGMxz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:53:55 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B097EC05BD43;
-        Thu,  7 May 2020 05:53:55 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWg23-0000cQ-4P; Thu, 07 May 2020 14:53:43 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 685F5102652; Thu,  7 May 2020 14:53:41 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200507121850.GB85463@otc-nc-03>
-References: <20200501184326.GA17961@araj-mobl1.jf.intel.com> <878si6rx7f.fsf@nanos.tec.linutronix.de> <20200505201616.GA15481@otc-nc-03> <875zdarr4h.fsf@nanos.tec.linutronix.de> <20200507121850.GB85463@otc-nc-03>
-Date:   Thu, 07 May 2020 14:53:41 +0200
-Message-ID: <87wo5nj48a.fsf@nanos.tec.linutronix.de>
+        Thu, 7 May 2020 08:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbgEGMyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:54:03 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE472082E;
+        Thu,  7 May 2020 12:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588856043;
+        bh=ejai9cTPU/wXSWdxchfGt1itA5yy8fQdOCXV1pCVHB8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RQWnluLJiArcmPu9fOV36aetvJ89LlV4OkXKlOag7m8wEFYv8k8CmgXArbDzu6Wsq
+         pswbvEeTfFU5iF88PS7C3PtcspXniovK40FRu2E7ppNmm6cyjd3Iso9XksHltSy6+K
+         p+BGlBgqY06MAoY6CKRIfJ85jBPtzde5OXgykwOI=
+Date:   Thu, 7 May 2020 13:53:58 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+Message-ID: <20200507125357.GA31783@willie-the-truck>
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+ <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
+ <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ashok,
+On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
+> On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
+> > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> > > Add stall implementation hook to enable stalling
+> > > faults on QCOM platforms which supports it without
+> > > causing any kind of hardware mishaps. Without this
+> > > on QCOM platforms, GPU faults can cause unrelated
+> > > GPU memory accesses to return zeroes. This has the
+> > > unfortunate result of command-stream reads from CP
+> > > getting invalid data, causing a cascade of fail.
+> 
+> I think this came up before, but something about this rationale doesn't add
+> up - we're not *using* stalls at all, we're still terminating faulting
+> transactions unconditionally; we're just using CFCFG to terminate them with
+> a slight delay, rather than immediately. It's really not clear how or why
+> that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
+> (or even a documented workaround for something), or might things start
+> blowing up again if any other behaviour subtly changes? I'm not dead set
+> against adding this, but I'd *really* like to have a lot more confidence in
+> it.
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
+Rob mentioned something about the "bus returning zeroes" before, but I agree
+that we need more information so that we can reason about this and maintain
+the code as the driver continues to change. That needs to be a comment in
+the driver, and I don't think "but android seems to work" is a good enough
+justification. There was some interaction with HUPCF as well.
 
-> We did a bit more tracing and it looks like the IRR check is actually
-> not happening on the right cpu. See below.
+As a template, I'd suggest:
 
-What?
+> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > index 8d1cd54d82a6..d5134e0d5cce 100644
+> > > --- a/drivers/iommu/arm-smmu.h
+> > > +++ b/drivers/iommu/arm-smmu.h
+> > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
+> > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
+> > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+> > >               int status);
 
-> On Tue, May 05, 2020 at 11:47:26PM +0200, Thomas Gleixner wrote:
->> >
->> > msi_set_affinit ()
->> > {
->> > ....
->> >         unlock_vector_lock();
->> >
->> >         /*
->> >          * Check whether the transition raced with a device interrupt and
->> >          * is pending in the local APICs IRR. It is safe to do this outside
->> >          * of vector lock as the irq_desc::lock of this interrupt is still
->> >          * held and interrupts are disabled: The check is not accessing the
->> >          * underlying vector store. It's just checking the local APIC's
->> >          * IRR.
->> >          */
->> >         if (lapic_vector_set_in_irr(cfg->vector))
->> >                 irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
->> 
->> No. This catches the transitional interrupt to the new vector on the
->> original CPU, i.e. the one which is running that code.
->
-> Mathias added some trace to his xhci driver when the isr is called.
->
-> Below is the tail of my trace with last two times xhci_irq isr is called:
->
->     <idle>-0     [003] d.h.   200.277971: xhci_irq: xhci irq
->     <idle>-0     [003] d.h.   200.278052: xhci_irq: xhci irq
->
-> Just trying to follow your steps below with traces. The traces follow
-> the same comments in the source.
->
->> 
->> Again the steps are:
->> 
->>  1) Allocate new vector on new CPU
->
->         /* Allocate a new target vector */
->         ret = parent->chip->irq_set_affinity(parent, mask, force);
->
-> migration/3-24    [003] d..1   200.283012: msi_set_affinity: msi_set_affinity: quirk: 1: new vector allocated, new cpu = 0
->
->> 
->>  2) Set new vector on original CPU
->
->         /* Redirect it to the new vector on the local CPU temporarily */
->         old_cfg.vector = cfg->vector;
->         irq_msi_update_msg(irqd, &old_cfg);
->
-> migration/3-24    [003] d..1   200.283033: msi_set_affinity: msi_set_affinity: Redirect to new vector 33 on old cpu 6
+/*
+ * Stall transactions on a context fault, where they will be terminated
+ * in response to the resulting IRQ rather than immediately. This should
+ * pretty much always be set to "false" as stalling can introduce the
+ * potential for deadlock in most SoCs, however it is needed on Qualcomm
+ * XXXX because YYYY.
+ */
 
-On old CPU 6? This runs on CPU 3 which is wrong to begin with.
+> > > +    bool stall;
 
->>  3) Set new vector on new CPU
->
->         /* Now transition it to the target CPU */
->         irq_msi_update_msg(irqd, cfg);
->
->      migration/3-24    [003] d..1   200.283044: msi_set_affinity: msi_set_affinity: Transition to new target cpu 0 vector 33
->
->
->
->      if (lapic_vector_set_in_irr(cfg->vector))
-> 	irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
->
->
-> migration/3-24    [003] d..1   200.283046: msi_set_affinity: msi_set_affinity: Update Done [IRR 0]: irq 123 localsw: Nvec 33 Napic 0
->
->> 
->> So we have 3 points where an interrupt can fire:
->> 
->>  A) Before #2
->> 
->>  B) After #2 and before #3
->> 
->>  C) After #3
->> 
->> #A is hitting the old vector which is still valid on the old CPU and
->>    will be handled once interrupts are enabled with the correct irq
->>    descriptor - Normal operation (same as with maskable MSI)
->> 
->> #B This must be checked in the IRR because the there is no valid vector
->>    on the old CPU.
->
-> The check for IRR seems like on a random cpu3 vs checking for the new vector 33
-> on old cpu 6?
+Hmm, the more I think about this, the more I think this is an erratum
+workaround in disguise, in which case this could be better named...
 
-The whole sequence runs on CPU 3. If old CPU was 6 then this should
-never run on CPU 3.
-
-> This is the place when we force the retrigger without the IRR check things seem to fix itself.
-
-It's not fixing it. It's papering over the root cause.
-
-> Did we miss something? 
-
-Yes, you missed to analyze why this runs on CPU3 when old CPU is 6. But
-the last interrupt actually was on CPU3.
-
->     <idle>-0     [003] d.h.   200.278052: xhci_irq: xhci irq
-
-Can you please provide the full trace and the patch you used to generate
-it?
-
-Thanks,
-
-        tglx
+Will
