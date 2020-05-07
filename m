@@ -2,202 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52040C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6378BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28428205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khDXSpGw"
+	by mail.kernel.org (Postfix) with ESMTP id 3B06F20936
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEGOGn (ORCPT
+        id S1726807AbgEGOH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
+        Thu, 7 May 2020 10:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgEGOGn (ORCPT
+        with ESMTP id S1725964AbgEGOH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:06:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A048CC05BD43;
-        Thu,  7 May 2020 07:06:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so6994561wmh.0;
-        Thu, 07 May 2020 07:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+aQ+iWJtTlzvsD3O2ITCsYtNNFRLe3AecxY3imabsd8=;
-        b=khDXSpGwapNMmlhylLz/6Mk+CnEra5lCL0OPUi5q+Cnsa2lM8MXNpd1HZmI8dFLYaG
-         tcoQ/F+JUev7CrL6JmDD59WWH+9bI4xjyVlHnJTicHX4gkS/n6UmmE/w30RUVEkh+ldr
-         Oj1VBZjIapPdI1MVHLg0zxJAsHPrv+KcQdkVgs59fvqvvCd7jmH2cHVYV3VNGOxE0REO
-         NA3sk0pReUia0BZCdo8JLIemI6UoHAdkPJHE3E5SkFRVygRsdL2xdrqNUbQusyAjH7iB
-         N7mu3/YcHm6ae+ttcfv2c2ZH6AY/YaBywSUHBZrCfWRwf5e4Agv4DCLtViaPIXGX33X9
-         Uiog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+aQ+iWJtTlzvsD3O2ITCsYtNNFRLe3AecxY3imabsd8=;
-        b=tvSt6gzj+SPs2kME9TpUQwPwyKTVG896A+alTD1wK+3QLFbPx6w3UgN6QpJdcsIo4a
-         XiRDARq4UogPiP0rRwTjz+KbJmNr1w3HY8Iu6zOHhSNhEnl/K2q8dvNYX5JTwQKyGMA1
-         fRSTNjCHKMrIt57eZFJX5/bsMYkcUw5OzyskBQNRlCZEMAsSPhJT4BXU1yKxvAKUvLMa
-         X2Tuy2hbQvF2agQPWqDfSAbfgp1uHkNTHPL08NZOvMSlhI7JAbet63OM7aPtKCfwnben
-         v9MaUqxvDPZM3DrORbzaVGJCN6CKTEEjL4R/OHl+limG6b0e7f87gQxucJiryQ7T4ggb
-         H+Jw==
-X-Gm-Message-State: AGi0PuZLnDYyILcRcGZaPH6SDHgboBx8KONcQkKUUgI2a1DqJSdmcTXZ
-        LsH+dJpLlL3xY5aAWOuli1yMIS1qyKLIr1aSNKUFHATZefg=
-X-Google-Smtp-Source: APiQypKh6M97mrJpLTUKpwAL4sa3NeR7OHWBIyL14CIeMc/Pa4lvzDLFMKSILqEgHY89bJSU4fGGd1iEywdfPQ3wbco=
-X-Received: by 2002:a1c:7f91:: with SMTP id a139mr10008195wmd.164.1588860401319;
- Thu, 07 May 2020 07:06:41 -0700 (PDT)
+        Thu, 7 May 2020 10:07:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEBCC05BD09;
+        Thu,  7 May 2020 07:07:25 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWhBJ-00026W-EE; Thu, 07 May 2020 16:07:21 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 030861C001A;
+        Thu,  7 May 2020 16:07:21 +0200 (CEST)
+Date:   Thu, 07 May 2020 14:07:20 -0000
+From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/platform] x86/platform/uv: Remove the unused
+ _uv_cpu_blade_processor_id() macro
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Russ Anderson <rja@hpe.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200504171527.2845224-12-hch@lst.de>
+References: <20200504171527.2845224-12-hch@lst.de>
 MIME-Version: 1.0
-References: <20200507140139.17083-1-david@redhat.com> <20200507140139.17083-12-david@redhat.com>
-In-Reply-To: <20200507140139.17083-12-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 7 May 2020 16:06:30 +0200
-Message-ID: <CAM9Jb+jXy6Adhg=GstpMZN3roo1uQuikj2hpsxGj6-JUQU3oGA@mail.gmail.com>
-Subject: Re: [PATCH v4 11/15] virtio-mem: Add parent resource for all added
- "System RAM"
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158886044085.8414.3230257919361138994.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Let's add a parent resource, named after the virtio device (inspired by
-> drivers/dax/kmem.c). This allows user space to identify which memory
-> belongs to which virtio-mem device.
->
-> With this change and two virtio-mem devices:
->         :/# cat /proc/iomem
->         00000000-00000fff : Reserved
->         00001000-0009fbff : System RAM
->         [...]
->         140000000-333ffffff : virtio0
->           140000000-147ffffff : System RAM
->           148000000-14fffffff : System RAM
->           150000000-157ffffff : System RAM
->         [...]
->         334000000-3033ffffff : virtio1
->           338000000-33fffffff : System RAM
->           340000000-347ffffff : System RAM
->           348000000-34fffffff : System RAM
->         [...]
->
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/virtio/virtio_mem.c | 52 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-> index eb4c16d634e0..80cdb9e6b3c4 100644
-> --- a/drivers/virtio/virtio_mem.c
-> +++ b/drivers/virtio/virtio_mem.c
-> @@ -99,6 +99,9 @@ struct virtio_mem {
->         /* Id of the next memory bock to prepare when needed. */
->         unsigned long next_mb_id;
->
-> +       /* The parent resource for all memory added via this device. */
-> +       struct resource *parent_resource;
-> +
->         /* Summary of all memory block states. */
->         unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
->  #define VIRTIO_MEM_NB_OFFLINE_THRESHOLD                10
-> @@ -1741,6 +1744,44 @@ static int virtio_mem_init(struct virtio_mem *vm)
->         return 0;
->  }
->
-> +static int virtio_mem_create_resource(struct virtio_mem *vm)
-> +{
-> +       /*
-> +        * When force-unloading the driver and removing the device, we
-> +        * could have a garbage pointer. Duplicate the string.
-> +        */
-> +       const char *name = kstrdup(dev_name(&vm->vdev->dev), GFP_KERNEL);
-> +
-> +       if (!name)
-> +               return -ENOMEM;
-> +
-> +       vm->parent_resource = __request_mem_region(vm->addr, vm->region_size,
-> +                                                  name, IORESOURCE_SYSTEM_RAM);
-> +       if (!vm->parent_resource) {
-> +               kfree(name);
-> +               dev_warn(&vm->vdev->dev, "could not reserve device region\n");
-> +               return -EBUSY;
-> +       }
-> +
-> +       /* The memory is not actually busy - make add_memory() work. */
-> +       vm->parent_resource->flags &= ~IORESOURCE_BUSY;
-> +       return 0;
-> +}
-> +
-> +static void virtio_mem_delete_resource(struct virtio_mem *vm)
-> +{
-> +       const char *name;
-> +
-> +       if (!vm->parent_resource)
-> +               return;
-> +
-> +       name = vm->parent_resource->name;
-> +       release_resource(vm->parent_resource);
-> +       kfree(vm->parent_resource);
-> +       kfree(name);
-> +       vm->parent_resource = NULL;
-> +}
-> +
->  static int virtio_mem_probe(struct virtio_device *vdev)
->  {
->         struct virtio_mem *vm;
-> @@ -1770,11 +1811,16 @@ static int virtio_mem_probe(struct virtio_device *vdev)
->         if (rc)
->                 goto out_del_vq;
->
-> +       /* create the parent resource for all memory */
-> +       rc = virtio_mem_create_resource(vm);
-> +       if (rc)
-> +               goto out_del_vq;
-> +
->         /* register callbacks */
->         vm->memory_notifier.notifier_call = virtio_mem_memory_notifier_cb;
->         rc = register_memory_notifier(&vm->memory_notifier);
->         if (rc)
-> -               goto out_del_vq;
-> +               goto out_del_resource;
->         rc = register_virtio_mem_device(vm);
->         if (rc)
->                 goto out_unreg_mem;
-> @@ -1788,6 +1834,8 @@ static int virtio_mem_probe(struct virtio_device *vdev)
->         return 0;
->  out_unreg_mem:
->         unregister_memory_notifier(&vm->memory_notifier);
-> +out_del_resource:
-> +       virtio_mem_delete_resource(vm);
->  out_del_vq:
->         vdev->config->del_vqs(vdev);
->  out_free_vm:
-> @@ -1848,6 +1896,8 @@ static void virtio_mem_remove(struct virtio_device *vdev)
->             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
->             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
->                 dev_warn(&vdev->dev, "device still has system memory added\n");
-> +       else
-> +               virtio_mem_delete_resource(vm);
->
->         /* remove all tracking data - no locking needed */
->         vfree(vm->mb_state);
-> --
+The following commit has been merged into the x86/platform branch of tip:
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Commit-ID:     2981cf836127c2d2d68399d456d2c22688d520b2
+Gitweb:        https://git.kernel.org/tip/2981cf836127c2d2d68399d456d2c22688d520b2
+Author:        Christoph Hellwig <hch@lst.de>
+AuthorDate:    Mon, 04 May 2020 19:15:27 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 07 May 2020 15:32:23 +02:00
+
+x86/platform/uv: Remove the unused _uv_cpu_blade_processor_id() macro
+
+No users anywhere in the kernel tree.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Not-acked-by:  Dimitri Sivanich <sivanich@hpe.com>
+Cc: Russ Anderson <rja@hpe.com>
+Link: https://lkml.kernel.org/r/20200504171527.2845224-12-hch@lst.de
+
+---
+ arch/x86/include/asm/uv/uv_hub.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
+index 9eabd7e..60ca0af 100644
+--- a/arch/x86/include/asm/uv/uv_hub.h
++++ b/arch/x86/include/asm/uv/uv_hub.h
+@@ -659,7 +659,6 @@ static inline int uv_cpu_blade_processor_id(int cpu)
+ {
+ 	return uv_cpu_info_per(cpu)->blade_cpu_id;
+ }
+-#define _uv_cpu_blade_processor_id 1	/* indicate function available */
+ 
+ /* Blade number to Node number (UV1..UV4 is 1:1) */
+ static inline int uv_blade_to_node(int blade)
