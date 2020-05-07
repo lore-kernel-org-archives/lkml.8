@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDBBC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCF8C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58C820CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE2321582
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588845074;
-	bh=TGIxpS1LinEbb5t9ldAwJgUFNFzGnm2VJ+9sF7EG9xw=;
+	s=default; t=1588845078;
+	bh=EKVb6V3gl8eY0vRZrnNqm70DOyW4IWovVYgpATdS4L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0yobSrZk4f8mhhnNiv6f2h9rrpW/SV3H6inVbmDSPYLctKZ3+sIMNqLmw8GLE2/yI
-	 Y78xp99hwe8OXR9LoiPAlBqwwVyaj9Mhk8PkD57ggBziTxE/QQ6ITGeEufUfCwstdh
-	 7S578J3/fRDBnqv/IiJpO7U9IkSKfU7BK8MTJGMA=
+	b=xvAPHe19ZFLBhvDbEy5lEdyO5MlASlEh76rxREnlvJfiLHk5Kf8muxd3PNPMgdxod
+	 y0wBRZo41dYRYubRH86y0xwUgkHnIjeHVf6XFIbpg3XCEPp+tKoSNxc20oVLOSwSap
+	 u7VPmhRc1Uf5A72blg8gYshjl6169Y/4/hCZ3v2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgEGJvN convert rfc822-to-8bit (ORCPT
+        id S1726825AbgEGJvR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:51:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27095 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725893AbgEGJvN (ORCPT
+        Thu, 7 May 2020 05:51:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32953 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgEGJvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:51:13 -0400
+        Thu, 7 May 2020 05:51:16 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-hJDBiqwANdixxF7KGMlaSg-1; Thu, 07 May 2020 05:51:04 -0400
-X-MC-Unique: hJDBiqwANdixxF7KGMlaSg-1
+ us-mta-8-LUyIP0opP-Oqd82D9mY13w-1; Thu, 07 May 2020 05:51:07 -0400
+X-MC-Unique: LUyIP0opP-Oqd82D9mY13w-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BED7801503;
-        Thu,  7 May 2020 09:51:03 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC293462;
+        Thu,  7 May 2020 09:51:05 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.194.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0B64100164D;
-        Thu,  7 May 2020 09:51:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2C110013BD;
+        Thu,  7 May 2020 09:51:03 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -48,14 +48,14 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>,
         Ian Rogers <irogers@google.com>, Paul Khuong <pvk@pvk.ca>
-Subject: [PATCH 4/5] perf tools: Setup callchain properly in pipe mode
-Date:   Thu,  7 May 2020 11:50:23 +0200
-Message-Id: <20200507095024.2789147-5-jolsa@kernel.org>
+Subject: [PATCH 5/5] perf script: Enable IP fields for callchains
+Date:   Thu,  7 May 2020 11:50:24 +0200
+Message-Id: <20200507095024.2789147-6-jolsa@kernel.org>
 In-Reply-To: <20200507095024.2789147-1-jolsa@kernel.org>
 References: <20200507095024.2789147-1-jolsa@kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 3
+X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: kernel.org
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
@@ -64,150 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Callchains are automatically initialized by checking
-on event's sample_type. For pipe mode we need to put
-this check into attr event code.
+In case the callchains were deleted in pipe mode,
+we need to ensure that the IP fields are enabled,
+otherwise the callchain is not displayed.
 
-Moving the callchains setup code into callchain_param_setup
-function and calling it from attr event process code.
-
-This enables pipe output having callchains, like:
-
-  # perf record -g -e 'raw_syscalls:sys_enter' true | perf script
-  # perf record -g -e 'raw_syscalls:sys_enter' true | perf report
+Enabling IP and SYM, which should be enough for
+callchains.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/builtin-report.c | 33 ++++++++++++++++++++++-----------
- tools/perf/builtin-script.c | 14 ++++++++++++--
- tools/perf/util/callchain.c | 14 ++++++++++++++
- tools/perf/util/callchain.h |  1 +
- 4 files changed, 49 insertions(+), 13 deletions(-)
+ tools/perf/builtin-script.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index ba63390246c2..5b7c6db4c930 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -402,16 +402,7 @@ static int report__setup_sample_type(struct report *rep)
- 		}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 5c4a580c048a..ecc8bd4c5e57 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2118,8 +2118,6 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+ 			return 0;
  	}
  
--	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
--		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
--		    (sample_type & PERF_SAMPLE_STACK_USER)) {
--			callchain_param.record_mode = CALLCHAIN_DWARF;
--			dwarf_callchain_users = true;
--		} else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
--			callchain_param.record_mode = CALLCHAIN_LBR;
--		else
--			callchain_param.record_mode = CALLCHAIN_FP;
--	}
-+	callchain_param_setup(sample_type);
- 
- 	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
- 		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-@@ -1090,6 +1081,26 @@ parse_percent_limit(const struct option *opt, const char *str,
+-	set_print_ip_opts(&evsel->core.attr);
+-
+ 	if (evsel->core.attr.sample_type) {
+ 		err = perf_evsel__check_attr(evsel, scr->session);
+ 		if (err)
+@@ -2132,6 +2130,13 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+ 	 */
+ 	sample_type = perf_evlist__combined_sample_type(evlist);
+ 	callchain_param_setup(sample_type);
++
++	/* Enable fields for callchain entries, if it got enabled. */
++	if (callchain_param.record_mode != CALLCHAIN_NONE) {
++		output[output_type(evsel->core.attr.type)].fields |= PERF_OUTPUT_IP |
++								     PERF_OUTPUT_SYM;
++	}
++	set_print_ip_opts(&evsel->core.attr);
  	return 0;
  }
  
-+static int process_attr(struct perf_tool *tool __maybe_unused,
-+			union perf_event *event,
-+			struct evlist **pevlist)
-+{
-+	u64 sample_type;
-+	int err;
-+
-+	err = perf_event__process_attr(tool, event, pevlist);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Check if we need to enable callchains based
-+	 * on events sample_type.
-+	 */
-+	sample_type = perf_evlist__combined_sample_type(*pevlist);
-+	callchain_param_setup(sample_type);
-+	return 0;
-+}
-+
- int cmd_report(int argc, const char **argv)
- {
- 	struct perf_session *session;
-@@ -1120,7 +1131,7 @@ int cmd_report(int argc, const char **argv)
- 			.fork		 = perf_event__process_fork,
- 			.lost		 = perf_event__process_lost,
- 			.read		 = process_read_event,
--			.attr		 = perf_event__process_attr,
-+			.attr		 = process_attr,
- 			.tracing_data	 = perf_event__process_tracing_data,
- 			.build_id	 = perf_event__process_build_id,
- 			.id_index	 = perf_event__process_id_index,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 56d7bcd12671..5c4a580c048a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2085,6 +2085,7 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 	struct perf_script *scr = container_of(tool, struct perf_script, tool);
- 	struct evlist *evlist;
- 	struct evsel *evsel, *pos;
-+	u64 sample_type;
- 	int err;
- 	static struct evsel_script *es;
- 
-@@ -2119,10 +2120,19 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 
- 	set_print_ip_opts(&evsel->core.attr);
- 
--	if (evsel->core.attr.sample_type)
-+	if (evsel->core.attr.sample_type) {
- 		err = perf_evsel__check_attr(evsel, scr->session);
-+		if (err)
-+			return err;
-+	}
- 
--	return err;
-+	/*
-+	 * Check if we need to enable callchains based
-+	 * on events sample_type.
-+	 */
-+	sample_type = perf_evlist__combined_sample_type(evlist);
-+	callchain_param_setup(sample_type);
-+	return 0;
- }
- 
- static int print_event_with_time(struct perf_tool *tool,
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 818aa4efd386..2775b752f2fa 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1599,3 +1599,17 @@ void callchain_cursor_reset(struct callchain_cursor *cursor)
- 	for (node = cursor->first; node != NULL; node = node->next)
- 		map__zput(node->ms.map);
- }
-+
-+void callchain_param_setup(u64 sample_type)
-+{
-+	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
-+		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
-+		    (sample_type & PERF_SAMPLE_STACK_USER)) {
-+			callchain_param.record_mode = CALLCHAIN_DWARF;
-+			dwarf_callchain_users = true;
-+		} else if (sample_type & PERF_SAMPLE_BRANCH_STACK)
-+			callchain_param.record_mode = CALLCHAIN_LBR;
-+		else
-+			callchain_param.record_mode = CALLCHAIN_FP;
-+	}
-+}
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 8f668ee29f25..fe36a9e5ccd1 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -297,4 +297,5 @@ int callchain_branch_counts(struct callchain_root *root,
- 			    u64 *branch_count, u64 *predicted_count,
- 			    u64 *abort_count, u64 *cycles_count);
- 
-+void callchain_param_setup(u64 sample_type);
- #endif	/* __PERF_CALLCHAIN_H */
 -- 
 2.25.4
 
