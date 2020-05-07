@@ -2,160 +2,161 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C8C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0E1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55D9208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA2D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PGQWXT6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgEGGPb (ORCPT
+        id S1726678AbgEGGQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:15:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45575 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgEGGPa (ORCPT
+        Thu, 7 May 2020 02:16:01 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:25172 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbgEGGQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:15:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h4so4976036ljg.12;
-        Wed, 06 May 2020 23:15:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3qIvzDxmqP7D/AjiF6m94r9Ud+ISzBYrfJ2jwWGrV6Y=;
-        b=X5HvGVeh/rgZSeBajdcu4qGP6d9fXGV55Jm5lrcDq4vakQiAboS5GMpfXZSqSiYYsU
-         YBcp7/IxJXGAhtnURfPGIVg7PjkMx2bHx2Vtp596oPRvMPjfE3wJBHU9PHpC/AgnsdUM
-         zs6U4x7BV3ToYHR86VWkWa1Ot7YQP4OxgsA+c6ZpitXQGIKnwI2i2NqNlN8zHtaaUcQT
-         aJDRTvAmViwq8qqryHd8NsJMuc8IgifHN/fCQOsxnMLSuj3UQdfs5PKVKIEDQIRMr1vB
-         AJuaNRQvJCzz2yVWQudKOx6WrhG4qj7UNjKOWml6pn59RQLxK63rusSSzn62yU7JkR1e
-         69Mg==
-X-Gm-Message-State: AGi0PubWt3p9lsHn2A6RxMZMcKaTABxCOSloFOikmIxR0oOR6sEJRDJe
-        xsQlZ76KyfWdnBPcKqEAksMrM6Ya8B8=
-X-Google-Smtp-Source: APiQypLkOvmovG4cIaecZOEuvMIPHiLdmTXwYpc2/bd6cZKqZpXPwhOh9Asch3vzQ1WDMdBIU6h37w==
-X-Received: by 2002:a2e:6c16:: with SMTP id h22mr6745374ljc.30.1588832127833;
-        Wed, 06 May 2020 23:15:27 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id 25sm3062447lfr.92.2020.05.06.23.15.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 23:15:26 -0700 (PDT)
-Date:   Thu, 7 May 2020 09:14:41 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 10/11] power: supply: Fix Kconfig help text indentiation
-Message-ID: <de722e2031eb01bb26cba8bb1e72dffb6ac26865.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 7 May 2020 02:16:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588832160; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=8tdYvc/Ysg+HCDbSIsv9tXxZGN5x8N74gSEsCb6EWiw=; b=PGQWXT6lV5wZ8DpwCFxRe79vTLmpCpGM0Kgl2rtW5Gd5fK3IU9bHDH1T8lL5h64V0eLnFnEv
+ kT7cp9eRD/EpAFmIP+D7pLybeLmpg2T8q/7/pYVWiRIdQ82Kzedd9NlfOldNjpUyMjyQ/0DC
+ 58Lv8i+kr+xFXQ4nq8VA+QrqNW4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb3a794.7f2214f54260-smtp-out-n01;
+ Thu, 07 May 2020 06:15:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F1B21C433D2; Thu,  7 May 2020 06:15:47 +0000 (UTC)
+Received: from Pillair (unknown [183.83.68.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6CE2AC433F2;
+        Thu,  7 May 2020 06:15:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6CE2AC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Kalle Valo'" <kvalo@codeaurora.org>
+Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1588667015-25490-1-git-send-email-pillair@codeaurora.org> <875zd88ei8.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <875zd88ei8.fsf@kamboji.qca.qualcomm.com>
+Subject: RE: [PATCH v2] ath10k: Remove msdu from idr when management pkt send fails
+Date:   Thu, 7 May 2020 11:45:42 +0530
+Message-ID: <000001d62436$f253f230$d6fbd690$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJNqVSadgw8XSq3avDEjUfHwl9lpQGgpyrrp6AVlFA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indent the help text as explained in
-Documentation/process/coding-style.rst
+Hi Kalle,
+Yes, The change you did is correct and better.
+So should I be sending a v3 for this patch ?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Thanks,
+Rakesh Pillai.
 
----
-
-I just learned the help text in Kconfigs should be indented by two
-spaces. I fixed this for BD99954 as suggested by Randy and decided
-that I could do this for few other entries as well while I was at
-it anyways.
----
- drivers/power/supply/Kconfig | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 436680ee8523..ec028e47c3c2 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -415,7 +415,7 @@ config CHARGER_PCF50633
- 	tristate "NXP PCF50633 MBC"
- 	depends on MFD_PCF50633
- 	help
--	 Say Y to include support for NXP PCF50633 Main Battery Charger.
-+	  Say Y to include support for NXP PCF50633 Main Battery Charger.
- 
- config BATTERY_RX51
- 	tristate "Nokia RX-51 (N900) battery driver"
-@@ -609,15 +609,15 @@ config CHARGER_TPS65090
- 	tristate "TPS65090 battery charger driver"
- 	depends on MFD_TPS65090
- 	help
--	 Say Y here to enable support for battery charging with TPS65090
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65090
-+	  PMIC chips.
- 
- config CHARGER_TPS65217
- 	tristate "TPS65217 battery charger driver"
- 	depends on MFD_TPS65217
- 	help
--	 Say Y here to enable support for battery charging with TPS65217
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65217
-+	  PMIC chips.
- 
- config BATTERY_GAUGE_LTC2941
- 	tristate "LTC2941/LTC2943 Battery Gauge Driver"
-@@ -671,16 +671,16 @@ config CHARGER_SC2731
- 	tristate "Spreadtrum SC2731 charger driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	help
--	 Say Y here to enable support for battery charging with SC2731
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with SC2731
-+	  PMIC chips.
- 
- config FUEL_GAUGE_SC27XX
- 	tristate "Spreadtrum SC27XX fuel gauge driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	depends on IIO
- 	help
--	 Say Y here to enable support for fuel gauge with SC27XX
--	 PMIC chips.
-+	  Say Y here to enable support for fuel gauge with SC27XX
-+	  PMIC chips.
- 
- config CHARGER_UCS1002
- 	tristate "Microchip UCS1002 USB Port Power Controller"
-@@ -698,9 +698,9 @@ config CHARGER_BD70528
- 	select LINEAR_RANGES
- 	default n
- 	help
--	 Say Y here to enable support for getting battery status
--	 information and altering charger configurations from charger
--	 block of the ROHM BD70528 Power Management IC.
-+	  Say Y here to enable support for getting battery status
-+	  information and altering charger configurations from charger
-+	  block of the ROHM BD70528 Power Management IC.
- 
- config CHARGER_BD99954
- 	tristate "ROHM bd99954 charger driver"
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> -----Original Message-----
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Sent: Thursday, May 7, 2020 11:37 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v2] ath10k: Remove msdu from idr when management
+> pkt send fails
+> 
+> Rakesh Pillai <pillair@codeaurora.org> writes:
+> 
+> > Currently when the sending of any management pkt
+> > via wmi command fails, the packet is being unmapped
+> > freed in the error handling. But the idr entry added,
+> > which is used to track these packet is not getting removed.
+> >
+> > Hence, during unload, in wmi cleanup, all the entries
+> > in IDR are removed and the corresponding buffer is
+> > attempted to be freed. This can cause a situation where
+> > one packet is attempted to be freed twice.
+> >
+> > Fix this error by rmeoving the msdu from the idr
+> > list when the sending of a management packet over
+> > wmi fails.
+> >
+> > Tested HW: WCN3990
+> > Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+> >
+> > Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference
+> support over wmi")
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> 
+> [...]
+> 
+> > --- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
+> > +++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+> > @@ -133,6 +133,7 @@ struct wmi_ops {
+> >  	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
+> >  					    struct sk_buff *skb,
+> >  					    dma_addr_t paddr);
+> > +	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff
+> *msdu);
+> >  	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64
+> module_enable,
+> >  					  u32 log_level);
+> >  	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
+> > @@ -442,6 +443,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k
+> *ar)
+> >  }
+> >
+> >  static inline int
+> > +ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff
+> *msdu)
+> > +{
+> > +	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
+> > +}
+> > +
+> > +static inline int
+> >  ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+> >  			dma_addr_t paddr)
+> >  {
+> > @@ -457,8 +467,11 @@ ath10k_wmi_mgmt_tx_send(struct ath10k *ar,
+> struct sk_buff *msdu,
+> >
+> >  	ret = ath10k_wmi_cmd_send(ar, skb,
+> >  				  ar->wmi.cmd->mgmt_tx_send_cmdid);
+> > -	if (ret)
+> > +	if (ret) {
+> > +		/* remove this msdu from idr tracking */
+> > +		ath10k_wmi_cleanup_mgmt_tx_send(ar, msdu);
+> >  		return ret;
+> > +	}
+> 
+> I missed that this call was in wmi-ops.h, but the idea is that file
+> should be just a dumb wrapper and not have any logic. So I moved this to
+> mac.c, the functionality should be the same but please do check my
+> changes:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=m
+> aster-pending&id=71195d2244ed812c73dc617f7536566400f7ce87
+> 
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingp
+> atches
