@@ -2,122 +2,97 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE1C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E102C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4599120CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588852803;
-	bh=502Ul+a2/6OmlVb0BNU7TBluq6gsIGbxeAbFD6GE7rI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=h9PXv+5gh5DI8TvyUPM1zPgOePfROMhULhXAsRNM392uWPp76gP2LC9N2HlMLp1zX
-	 cVEpNq4/GE1nadOT5ZehrSP2Eyt0mKae71Ou/8DRBRomC3pOlDut+QTwyO1c0PgWbZ
-	 +eg9jaDMLlYSaKJjk0Blg90WZ6fYz3u21ImoSVN0=
+	by mail.kernel.org (Postfix) with ESMTP id 6A8222073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEGMAC (ORCPT
+        id S1726267AbgEGMCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:00:02 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:59303 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgEGMAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:00:01 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 047BxZnW010264
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 20:59:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 047BxZnW010264
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588852776;
-        bh=j4LkJg3zKDbaOFanIYOCN8uuF9BCJkHkX+OsK2l2XCA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R6FOOqjvXOsQYhZ8gtX+NLCSBXg0SHK/NAYiESCKRB4zwboLy5N4pkaRYOH0s7AJh
-         HeUgAmNJqegNdHYrD0lFj1Nz1aS+jjkQeCWOrLQ3qzuwel7lYvgW2f6f2BLaxbih5O
-         Zp+BZyxlWdRuU/R6N/OzkiPPQua3I8WT1TVDIHqayVIKRxlKaQ7CoGkAxrchoGMd6i
-         hXmRPEeztWSo+6s0OPtQA9slMeM47EPLbsdAMNQ1onkv2DPDri0KxOW31Jbp4KPk8l
-         TK38tkcOKGGhoHvuat2Ad5FjlUg8RwXkYQmt/OZK98ctiTdZESVz5TN9dpI1sH2vA2
-         FwoO4cHnpFSYA==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id t8so1742196uap.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 04:59:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY8iKFSQPpUObmTlR+Bw8dYK7PdR8AkmqRYtRjBTCvH5ss+nPbN
-        Oqanvb7IRK1db9e2HXj3rCwR9/1Gy8mDPx+/Uhs=
-X-Google-Smtp-Source: APiQypKRsRsnVT72sxg4UnhV0a253ssOTjtRUOfZJ91/QLO6o71hIL0zLqtgGpDxMTYevcWC5JpstADh+lZ4NPZyLnQ=
-X-Received: by 2002:ab0:69c9:: with SMTP id u9mr11294872uaq.121.1588852774837;
- Thu, 07 May 2020 04:59:34 -0700 (PDT)
+        Thu, 7 May 2020 08:02:06 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60252 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725910AbgEGMCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:02:06 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9E3C1AA775AA1C6E44FB;
+        Thu,  7 May 2020 20:02:04 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 20:01:57 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
+        <irogers@google.com>, <robin.murphy@arm.com>,
+        <zhangshaokun@hisilicon.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH RFC v3 03/12] perf vendor events arm64: Relocate hip08 events
+Date:   Thu, 7 May 2020 19:57:42 +0800
+Message-ID: <1588852671-61996-4-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
+References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-References: <1588250972-8507-1-git-send-email-maninder1.s@samsung.com>
- <1588250972-8507-4-git-send-email-maninder1.s@samsung.com>
- <CGME20200430125001epcas5p2a6f02e9888481cef96f32ba14450bc63@epcms5p5>
- <CAK7LNASf687MLf1oWqrUiOHtw=p9Ug02bi1r-KevsxnFtQni2g@mail.gmail.com> <20200507105122epcms5p543853209caaec4c3b031d64f916f9ccc@epcms5p5>
-In-Reply-To: <20200507105122epcms5p543853209caaec4c3b031d64f916f9ccc@epcms5p5>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 20:58:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATkW08MPhiZ4c1ScdZwQ1bu5TnLsj+Tcu1QP7KdmXgNsQ@mail.gmail.com>
-Message-ID: <CAK7LNATkW08MPhiZ4c1ScdZwQ1bu5TnLsj+Tcu1QP7KdmXgNsQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] scripts/checkstack.pl: fix arm sp regex
-To:     Maninder Singh <maninder1.s@samsung.com>
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        Vaneet Narang <v.narang@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 8:43 PM Maninder Singh <maninder1.s@samsung.com> wrote:
->
-> Hi Masahiro,
->
-> Thanks for review.
-> We will integrate your review comements and send v2.
->
-> >>
->
-> >> so making regex $re for ARM similar to aarch64
-> >>
-> >> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
-> >> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> >
-> >
-> >This looks good to me, and it is a bug fix.
-> >
-> >Just a question about the SOB.
-> >
-> >
-> >Maninder Singh is the author and also the submitter, right?
-> >
-> >What does "Signed-off-by: Vaneet Narang <v.narang@samsung.com>" mean?
-> >
-> >Co-developed-by or something else?
->
-> Yes All 4 patches are co-developed by Vaneet and me.
-> we were checking stack usage for arm and AARCH64 and found
-> some changes in scrips which can help others also.
->
+Relocate the core events JSONs to match to future structure, which will
+have separate folders for CPU and system events.
 
-OK. Then,
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ .../pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/core-imp-def.json   | 0
+ .../pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-ddrc.json    | 0
+ .../pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-hha.json     | 0
+ .../pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-l3c.json     | 0
+ tools/perf/pmu-events/arch/arm64/mapfile.csv                            | 2 +-
+ 5 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/core-imp-def.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-ddrc.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-hha.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/hisilicon/hip08/{ => cpu}/uncore-l3c.json (100%)
 
-Co-developed-by: Vaneet Narang <v.narang@samsung.com>
-
-is the correct tag.
-
-
-Signed-off-by is added when the patch is forwarded by
-somebody else. This is not the case.
-
-
-
-
-
-
-
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/core-imp-def.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+rename to tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/core-imp-def.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-ddrc.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+rename to tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-ddrc.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-hha.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+rename to tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-hha.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-l3c.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+rename to tools/perf/pmu-events/arch/arm64/hisilicon/hip08/cpu/uncore-l3c.json
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index 0d609149b82a..c92cb3b519fc 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -20,5 +20,5 @@
+ 0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+-0x00000000480fd010,v1,hisilicon/hip08,core
++0x00000000480fd010,v1,hisilicon/hip08/cpu,core
+ 0x00000000500f0000,v1,ampere/emag,core
 -- 
-Best Regards
-Masahiro Yamada
+2.16.4
+
