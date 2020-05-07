@@ -2,128 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEC4C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B0DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A890720735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RF5u0D9b"
+	by mail.kernel.org (Postfix) with ESMTP id 5516520708
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgEGBA1 (ORCPT
+        id S1728298AbgEGBCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 21:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgEGBA0 (ORCPT
+        Wed, 6 May 2020 21:02:40 -0400
+Received: from smtprelay0245.hostedemail.com ([216.40.44.245]:44924 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726129AbgEGBCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 21:00:26 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C198C061A0F;
-        Wed,  6 May 2020 18:00:26 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h26so2986630lfg.6;
-        Wed, 06 May 2020 18:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x/pZlFx1RwiUZJoCBeew19ILHCP9+NjHgoBLA53ee50=;
-        b=RF5u0D9bm1d9Lcf9cSby+XZ8opBSg/msSDr4EVmmJrI/xH8FWeWHoBpoGXaO82LAqv
-         Y9JXHttF/5uWtCrvohiqWxX/WyuOwHxnNp2Uz0TF6djsp1KobJmXNB1H+4hR8hRQVWV8
-         oM91RdaofZA2D4im2+2y+PVuM+MK7LfVARlZtnP8de27BBUdQrV71xklp2XxIM7lEF6U
-         9ckQtqgQdXLUd42FoBqdWEW67Z1FNq32TQJozxZUrCpzKD0x4JWPQ6iObv5KpwZ/SQxl
-         XD3V5BbP1IaM9V6BFhvqX2SVlmzjbuQe8ljTXrRh+vRE3LsLDKvftOS+JxXA/MOgKTG6
-         9NlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x/pZlFx1RwiUZJoCBeew19ILHCP9+NjHgoBLA53ee50=;
-        b=Sf8WgT//PP5U13iWOVZPExExwcaalDGyyZ4Uu8sfKzvdZcWupKHVBLayy30IMsTDce
-         BzoCIfHZsQZl/ZvNmbq/qmOlxuhGN/YhWsiJZzrrUYZDNikVxHUmLv411KoYFF1jTViF
-         yBVCE973WjtDCVXhaNMa6SDwnxCpeRKNXGTdWkauqeTbez13JhRyv7f82XTSGo30WdCQ
-         ALUlN4p5yQWvzs2VXp9OqQd/D+hX5+ndmnJzhiVpHoGd+irudEgzcFmV+rKO5utG2cOn
-         kzeAW3dHEmiXsIigSBsr+Bhmzw7AF3qEfF4HrsXpkQm5S5F1fypDVqOkmFTthNqY4VTe
-         3J9A==
-X-Gm-Message-State: AGi0PuZfwXsFaTI5jL3czjFKSeQlN7ihY7EmKo9UfUBkrrciFWIaeYqy
-        bGMYWWiEUr9h9rx5xVRmNXksKzCo
-X-Google-Smtp-Source: APiQypIWbwmS6V3GGTaAw2KeMRv/gzBqIq6q9uK4P3B+ValQqQwAUDA9fZyUzDluN1edCymwlzGmnA==
-X-Received: by 2002:ac2:5282:: with SMTP id q2mr5720769lfm.100.1588813224087;
-        Wed, 06 May 2020 18:00:24 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t13sm2288000ljd.38.2020.05.06.18.00.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 18:00:23 -0700 (PDT)
-Subject: Re: [PATCH RE-SEND v1] PM / devfreq: Replace strncpy with strscpy
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200227170854.9949-1-digetx@gmail.com>
- <CGME20200417140545epcas1p38cdc6cc5e6059437e611cf7e771d0dbd@epcas1p3.samsung.com>
- <09712864-01a5-e2f9-b55f-e822169d30fc@gmail.com>
- <41092ded-8bb6-726f-6986-fee62a8a1325@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0cd53502-e876-b26d-5a48-092707395509@gmail.com>
-Date:   Thu, 7 May 2020 04:00:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 6 May 2020 21:02:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8377E180A7339;
+        Thu,  7 May 2020 01:02:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fear98_341a2ebcbb61a
+X-Filterd-Recvd-Size: 2824
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 May 2020 01:02:37 +0000 (UTC)
+Message-ID: <63f58a1c334d8d44ddf1788091be9b2232054b03.camel@perches.com>
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+From:   Joe Perches <joe@perches.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 06 May 2020 18:02:36 -0700
+In-Reply-To: <0d513c80-8c8e-17b6-5b9c-73c7bca77252@i-love.sakura.ne.jp>
+References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
+         <20200425004609.GE8982@jagdpanzerIV.localdomain>
+         <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
+         <20200427062117.GC486@jagdpanzerIV.localdomain>
+         <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+         <344199f1-639b-ee93-2388-57b0549641f9@i-love.sakura.ne.jp>
+         <dfe10cb0359c37dff46c93dfacf909dd33b2593f.camel@perches.com>
+         <0d513c80-8c8e-17b6-5b9c-73c7bca77252@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <41092ded-8bb6-726f-6986-fee62a8a1325@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.05.2020 03:02, Chanwoo Choi пишет:
-> Hi Dmitry,
+On Thu, 2020-05-07 at 09:50 +0900, Tetsuo Handa wrote:
+> On 2020/05/07 0:26, Joe Perches wrote:
+> > On Wed, 2020-05-06 at 18:45 +0900, Tetsuo Handa wrote:
+> > > On 2020/04/28 20:33, Tetsuo Handa wrote:
+> > > > On 2020/04/27 15:21, Sergey Senozhatsky wrote:
+> > > > > > KERN_NO_CONSOLES is for type of messages where "saved for later analysis" is
+> > > > > > important but "printed for immediate notification" is not important.
+> > > > > > In other words, KERN_NO_CONSOLES is NOT for dying messages where "printed for
+> > > > > > immediate notification" is important.
+> > > > > 
+> > > > > per-console loglevel is a user configurable parameter.
+> > > > > KERN_NO_CONSOLES is a hard-coded policy.
+> > > > 
+> > > > But given that whether to use KERN_NO_CONSOLES is configurable via e.g. sysctl,
+> > > > KERN_NO_CONSOLES will become a user configurable parameter. What's still wrong?
+> > > > 
+> > > 
+> > > Any problems remaining?
+> > 
+> > printk_get_level / printk_skip_level and the various
+> > uses of %pV using printk_get_level
+> > 
 > 
-> On 4/17/20 11:04 PM, Dmitry Osipenko wrote:
->> 27.02.2020 20:08, Dmitry Osipenko пишет:
->>> GCC produces this warning when kernel compiled using `make W=1`:
->>>
->>>   warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
->>>   772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
->>>
->>> The strncpy doesn't take care of NULL-termination of the destination
->>> buffer, while the strscpy does.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/devfreq/devfreq.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index 8494c5f05a73..2011f64bfa3a 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->>>  	devfreq->dev.release = devfreq_dev_release;
->>>  	INIT_LIST_HEAD(&devfreq->node);
->>>  	devfreq->profile = profile;
->>> -	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
->>> +	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
->>>  	devfreq->previous_freq = profile->initial_freq;
->>>  	devfreq->last_status.current_frequency = profile->initial_freq;
->>>  	devfreq->data = data;
->>>
->>
->> Hello Chanwoo,
->>
->> Do you have any objections to this patch?
->>
+> Excuse me, but what do you mean?
 > 
-> I'm sorry for late reply. I applied it for v5.8-rc1.
-> Thanks.
+> I wish printk() accepts "loglevel" argument detached from "fmt" argument (e.g.
 
-No problems, thank you :)
+I think that's a bad idea as it would expand
+_every_ use of printk with another argument
+and overall code size would increase for very
+little value.
+
+And do look at the code and uses of printk_get_level.
+
+
