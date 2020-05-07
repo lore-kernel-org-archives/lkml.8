@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1EEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA7BC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3528621BE5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B1E208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879231;
-	bh=3VqhG5M9IiE8DSTOrbitM36BDnGXR2Iy8OLFUl4M59Q=;
+	s=default; t=1588879236;
+	bh=uXi39PQvaKDfT68j1+BxFLuUBBa53fIwGeidQwFDQog=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=v45Ut87BBVilfhBCegGQ9R5EdcMSt9NpIy2bjZIKp9SyLbAw7+tdCyhcnqQGnusgd
-	 4b0+cyGF6VHC1EiNFXN+VEza8LwyYmv1wkVDRbLr4qHaSFhCN+3GSCmrX+YG2b07i8
-	 b82SEpODH7sGeBaCBCwA/WOdMCjGtZJ101q9NE8s=
+	b=KDyFnuBC+M4MsZeQO5dOLOb9IcE5mFmyFuseW1d8gmtJioCvwfHjoDoofdN2afgeP
+	 MY0+L7S1bfHxRrtV28hFPOByYSDc8CuLAMo2gcCMmmXSM6Erz2caTYIgHaIGwZDWqL
+	 ve1lNcA6dP+13UIq94wqNqcfDU3XTO9FGKlT+cL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgEGTUa (ORCPT
+        id S1728468AbgEGTUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgEGTUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:20:30 -0400
+        id S1728391AbgEGTUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:20:35 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733A3208E4;
-        Thu,  7 May 2020 19:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B785F208D6;
+        Thu,  7 May 2020 19:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879229;
-        bh=3VqhG5M9IiE8DSTOrbitM36BDnGXR2Iy8OLFUl4M59Q=;
+        s=default; t=1588879235;
+        bh=uXi39PQvaKDfT68j1+BxFLuUBBa53fIwGeidQwFDQog=;
         h=Date:From:To:Cc:Subject:From;
-        b=xD71iI2IjdTHLJYeGoxqKBldpBQWeW/WJpA5U9keYgnlXf/QsA2Jms9ppHXu2v0Ar
-         xsI/teVQTCoRj67T9UHhrqT5WOpVWcbMeGQi6yJsWU1DY3/ezfZ5j+d6Sr3dAe+AFV
-         SMHiOmHfCK/V3qXlozjdQNIvI6jByOKJG+ARXYNs=
-Date:   Thu, 7 May 2020 14:24:56 -0500
+        b=GnfrXSO3O3Uth1ANWH7AgHHNxrQE6cvAFWkKtM6gDk0xlsOGOGzMAE1kp+iDksEMn
+         +3l/CRAN2t0sGhoKkYSGCCS7kQrWA/6i9fsgmlNFEdvLaMTnF8XqK0fXXA7wQAmtS9
+         ihdBaO3F0X7VkPiVE4WRC9MJUaS/8hWtf6dJJQQI=
+Date:   Thu, 7 May 2020 14:25:01 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Sam Creasey <sammy@sammy.net>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ethernet: i825xx: sun3_82586: Replace zero-length array with
- flexible-array
-Message-ID: <20200507192456.GA16458@embeddedor>
+Subject: [PATCH] stm class: Replace zero-length array with flexible-array
+Message-ID: <20200507192501.GA16491@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,20 +91,43 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/i825xx/sun3_82586.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/stm/policy.c |    2 +-
+ drivers/hwtracing/stm/stm.h    |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/i825xx/sun3_82586.h b/drivers/net/ethernet/i825xx/sun3_82586.h
-index 79aef681ac85..451cb3d26cb5 100644
---- a/drivers/net/ethernet/i825xx/sun3_82586.h
-+++ b/drivers/net/ethernet/i825xx/sun3_82586.h
-@@ -250,7 +250,7 @@ struct mcsetup_cmd_struct
-   unsigned short cmd_cmd;
-   unsigned short cmd_link;
-   unsigned short mc_cnt;		/* number of bytes in the MC-List */
--  unsigned char  mc_list[0][6];  	/* pointer to 6 bytes entries */
-+  unsigned char  mc_list[][6];  	/* pointer to 6 bytes entries */
+diff --git a/drivers/hwtracing/stm/policy.c b/drivers/hwtracing/stm/policy.c
+index 4f932a419752..603b4a9969d3 100644
+--- a/drivers/hwtracing/stm/policy.c
++++ b/drivers/hwtracing/stm/policy.c
+@@ -34,7 +34,7 @@ struct stp_policy_node {
+ 	unsigned int		first_channel;
+ 	unsigned int		last_channel;
+ 	/* this is the one that's exposed to the attributes */
+-	unsigned char		priv[0];
++	unsigned char		priv[];
  };
  
- /*
+ void *stp_policy_node_priv(struct stp_policy_node *pn)
+diff --git a/drivers/hwtracing/stm/stm.h b/drivers/hwtracing/stm/stm.h
+index 3569439d53bb..a9be49fc7a6b 100644
+--- a/drivers/hwtracing/stm/stm.h
++++ b/drivers/hwtracing/stm/stm.h
+@@ -23,7 +23,7 @@ void *stp_policy_node_priv(struct stp_policy_node *pn);
+ 
+ struct stp_master {
+ 	unsigned int	nr_free;
+-	unsigned long	chan_map[0];
++	unsigned long	chan_map[];
+ };
+ 
+ struct stm_device {
+@@ -42,7 +42,7 @@ struct stm_device {
+ 	const struct config_item_type		*pdrv_node_type;
+ 	/* master allocation */
+ 	spinlock_t		mc_lock;
+-	struct stp_master	*masters[0];
++	struct stp_master	*masters[];
+ };
+ 
+ #define to_stm_device(_d)				\
 
