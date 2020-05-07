@@ -2,191 +2,163 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F1CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A214D2080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588840184;
-	bh=hK4s7mEp4L2i0jjI+ufAP/Prw7BRv28xeZTRcDf03Eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qYbysHodLuJV6yB/ycNmJtZGpYioIN9rK2cu9LIzHV7eOb7O6zZDiPzxnTcqk6P8f
-	 ASg4N1CBf+7rXHzRthCoBXonlTcXcd/eBSFSj5aGf2GOa20IrBH04s3Tl6QRMxcI9x
-	 hQv84GqH76JY0IjSBew1j5UJpEsx2nkE4QicJo0g=
+	by mail.kernel.org (Postfix) with ESMTP id CB99E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgEGI3n (ORCPT
+        id S1726509AbgEGIap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgEGI3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:29:43 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36B12073A;
-        Thu,  7 May 2020 08:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588840182;
-        bh=hK4s7mEp4L2i0jjI+ufAP/Prw7BRv28xeZTRcDf03Eg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xzoti7dxVqALMsVIV2N4lTmSzLlIUeq/4U2hHwg93tjPc7sx3TcKSjiPPdwPjXq2I
-         3NnhnGou2CFRLCWozH1qgD/HTlfDuw8TMVQk6lSkQ65uamVTMRemsxhsz62eOzJIuZ
-         qZrkOjIc9kn/OiEE5EGDRZRlbeMTF9nzl6XUT5Ww=
-Date:   Thu, 7 May 2020 09:29:35 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Thu, 7 May 2020 04:30:45 -0400
+Received: from smtp-8faa.mail.infomaniak.ch ([83.166.143.170]:51411 "EHLO
+        smtp-8faa.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgEGIao (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:30:44 -0400
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49HmqS2fKzzlj47t;
+        Thu,  7 May 2020 10:30:12 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49HmqJ429fzlpk1S;
+        Thu,  7 May 2020 10:30:04 +0200 (CEST)
+Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
+To:     "Lev R. Oshvang ." <levonshe@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
- 32-bit logical immediates
-Message-ID: <20200507082934.GA28215@willie-the-truck>
-References: <20200507010504.26352-1-luke.r.nels@gmail.com>
- <20200507010504.26352-2-luke.r.nels@gmail.com>
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+References: <20200505153156.925111-1-mic@digikod.net>
+ <d4616bc0-39df-5d6c-9f5b-d84cf6e65960@digikod.net>
+ <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <db3c1f05-11d4-077e-4574-03ecb585bc21@digikod.net>
+Date:   Thu, 7 May 2020 10:30:04 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507010504.26352-2-luke.r.nels@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAP22eLHres_shVWEC+2=wcKXRsQzfNKDAnyRd8yuO_gJ3Wi_JA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luke,
 
-Thanks for the patches.
-
-On Wed, May 06, 2020 at 06:05:01PM -0700, Luke Nelson wrote:
-> This patch fixes two issues present in the current function for encoding
-> arm64 logical immediates when using the 32-bit variants of instructions.
+On 06/05/2020 15:58, Lev R. Oshvang . wrote:
+> On Tue, May 5, 2020 at 6:36 PM Mickaël Salaün <mic@digikod.net> wrote:
+>>
+>>
+>> On 05/05/2020 17:31, Mickaël Salaün wrote:
+>>> Hi,
+>>>
+>>> This fifth patch series add new kernel configurations (OMAYEXEC_STATIC,
+>>> OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
+>>> configure the security policy at kernel build time.  As requested by
+>>> Mimi Zohar, I completed the series with one of her patches for IMA.
+>>>
+>>> The goal of this patch series is to enable to control script execution
+>>> with interpreters help.  A new O_MAYEXEC flag, usable through
+>>> openat2(2), is added to enable userspace script interpreter to delegate
+>>> to the kernel (and thus the system security policy) the permission to
+>>> interpret/execute scripts or other files containing what can be seen as
+>>> commands.
+>>>
+>>> A simple system-wide security policy can be enforced by the system
+>>> administrator through a sysctl configuration consistent with the mount
+>>> points or the file access rights.  The documentation patch explains the
+>>> prerequisites.
+>>>
+>>> Furthermore, the security policy can also be delegated to an LSM, either
+>>> a MAC system or an integrity system.  For instance, the new kernel
+>>> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
+>>> integrity gap by bringing the ability to check the use of scripts [1].
+>>> Other uses are expected, such as for openat2(2) [2], SGX integration
+>>> [3], bpffs [4] or IPE [5].
+>>>
+>>> Userspace needs to adapt to take advantage of this new feature.  For
+>>> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
+>>> extended with policy enforcement points related to code interpretation,
+>>> which can be used to align with the PowerShell audit features.
+>>> Additional Python security improvements (e.g. a limited interpreter
+>>> withou -c, stdin piping of code) are on their way.
+>>>
+>>> The initial idea come from CLIP OS 4 and the original implementation has
+>>> been used for more than 12 years:
+>>> https://github.com/clipos-archive/clipos4_doc
+>>>
+>>> An introduction to O_MAYEXEC was given at the Linux Security Summit
+>>> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
+>>> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
+>>> The "write xor execute" principle was explained at Kernel Recipes 2018 -
+>>> CLIP OS: a defense-in-depth OS:
+>>> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
+>>>
+>>> This patch series can be applied on top of v5.7-rc4.  This can be tested
+>>> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
+>>> this patch series.
+>>>
+>>> Previous version:
+>>> https://lore.kernel.org/lkml/20200428175129.634352-1-mic@digikod.net/
+>>
+>> The previous version (v4) is
+>> https://lore.kernel.org/lkml/20200430132320.699508-1-mic@digikod.net/
 > 
-> First, the code does not correctly reject an all-ones 32-bit immediate
-> and returns an undefined instruction encoding, which can crash the kernel.
-> The fix is to add a check for this case.
 > 
-> Second, the code incorrectly rejects some 32-bit immediates that are
-> actually encodable as logical immediates. The root cause is that the code
-> uses a default mask of 64-bit all-ones, even for 32-bit immediates. This
-> causes an issue later on when the mask is used to fill the top bits of
-> the immediate with ones, shown here:
+> Hi Michael
 > 
->   /*
->    * Pattern: 0..01..10..01..1
->    *
->    * Fill the unused top bits with ones, and check if
->    * the result is a valid immediate (all ones with a
->    * contiguous ranges of zeroes).
->    */
->   imm |= ~mask;
->   if (!range_of_ones(~imm))
->           return AARCH64_BREAK_FAULT;
+> I have couple of question
+> 1. Why you did not add O_MAYEXEC to open()?
+> Some time ago (around v4.14) open() did not return EINVAL when
+> VALID_OPEN_FLAGS check failed.
+> Now it does, so I do not see a problem that interpreter will use
+> simple open(),  ( Although that path might be manipulated, but file
+> contents will be verified by IMA)
+
+Aleksa replied to this.
+
+> 2. When you apply a new flag to mount, it means that IMA will check
+> all files under this mount and it does not matter whether the file in
+> question is a script or not.
+> IMHO it is too hard overhead for performance reasons.
+
+This patch series doesn't change the way IMA handles mount points.
+
 > 
-> To see the problem, consider an immediate of the form 0..01..10..01..1,
-> where the upper 32 bits are zero, such as 0x80000001. The code checks
-> if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
-> 1..10..01..10..0, which fails the check; the correct mask yields
-> 0..01..10..0, which succeeds.
+> Regards,
+> LEv
 > 
-> The fix is to use a 32-bit all-ones default mask for 32-bit immediates.
-> 
-> Currently, the only user of this function is in
-> arch/arm64/kvm/va_layout.c, which uses 64-bit immediates and won't
-> trigger these bugs.
-
-Ah, so this isn't a fix or a bpf patch ;)
-
-I can queue it via arm64 for 5.8, along with the bpf patches since there
-are some other small changes pending in the arm64 bpf backend for BTI.
-
-> We tested the new code against llvm-mc with all 1,302 encodable 32-bit
-> logical immediates and all 5,334 encodable 64-bit logical immediates.
-> 
-> Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
-> Co-developed-by: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-> ---
->  arch/arm64/kernel/insn.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
-> index 4a9e773a177f..42fad79546bb 100644
-> --- a/arch/arm64/kernel/insn.c
-> +++ b/arch/arm64/kernel/insn.c
-> @@ -1535,7 +1535,7 @@ static u32 aarch64_encode_immediate(u64 imm,
->  				    u32 insn)
->  {
->  	unsigned int immr, imms, n, ones, ror, esz, tmp;
-> -	u64 mask = ~0UL;
-> +	u64 mask;
->  
->  	/* Can't encode full zeroes or full ones */
->  	if (!imm || !~imm)
-
-It's a bit grotty spreading the checks out now. How about we tweak things
-slightly along the lines of:
-
-
-diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
-index 4a9e773a177f..60ec788eaf33 100644
---- a/arch/arm64/kernel/insn.c
-+++ b/arch/arm64/kernel/insn.c
-@@ -1535,16 +1535,10 @@ static u32 aarch64_encode_immediate(u64 imm,
- 				    u32 insn)
- {
- 	unsigned int immr, imms, n, ones, ror, esz, tmp;
--	u64 mask = ~0UL;
--
--	/* Can't encode full zeroes or full ones */
--	if (!imm || !~imm)
--		return AARCH64_BREAK_FAULT;
-+	u64 mask;
- 
- 	switch (variant) {
- 	case AARCH64_INSN_VARIANT_32BIT:
--		if (upper_32_bits(imm))
--			return AARCH64_BREAK_FAULT;
- 		esz = 32;
- 		break;
- 	case AARCH64_INSN_VARIANT_64BIT:
-@@ -1556,6 +1550,12 @@ static u32 aarch64_encode_immediate(u64 imm,
- 		return AARCH64_BREAK_FAULT;
- 	}
- 
-+	mask = GENMASK(esz - 1, 0);
-+
-+	/* Can't encode full zeroes or full ones */
-+	if (imm & ~mask || !imm || imm == mask)
-+		return AARCH64_BREAK_FAULT;
-+
- 	/*
- 	 * Inverse of Replicate(). Try to spot a repeating pattern
- 	 * with a pow2 stride.
-
-
-What do you think?
-
-Will
