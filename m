@@ -2,114 +2,144 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F50C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1CCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1DD206B9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573B02073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V9JDVXPj"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hikBo6eX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgEGL6l (ORCPT
+        id S1726558AbgEGL7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:58:41 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58409 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725903AbgEGL6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:58:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588852719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yiPqmyXt2urT2VSeZ8MvHvwecfn5nr3uxgLaKR1t8OI=;
-        b=V9JDVXPjNIacWy1fzUjRnsQ3thNdE73vdsh3PJvn7ZOECkg8CjFX3o0gSqcTXUAZFHvwI/
-        aZ7AHEawNGxPhWzyy0zHflOgm+/o8cNDc2tfU8q6hBfxMB7gSkZ5fKt2o0jSs21W/0FN0t
-        QNZgq7YesQF08OYpzDMiEQZiHJyZn+U=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-HhJxR_W2OTWRacctIHmApg-1; Thu, 07 May 2020 07:58:38 -0400
-X-MC-Unique: HhJxR_W2OTWRacctIHmApg-1
-Received: by mail-wr1-f70.google.com with SMTP id q13so3291978wrn.14
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 04:58:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yiPqmyXt2urT2VSeZ8MvHvwecfn5nr3uxgLaKR1t8OI=;
-        b=PEmZv0Ls51v0a10N9CKYe+U5+7R+NMc118C7khVNYOwA7di4pTedB+4v59ph//J4Cr
-         Fey8KipkWaPtzlAFMZDi3ORBmJ+vJhZgBWB5UzVgaL+8yIYxR4p7YSbOFj15Z2FUUiug
-         dsLY33NBmFE7jIxQSibTtnrtKuTCsh73y+qH3cXFR39fRIejklXyqwXa58dVms268W2X
-         1lu628d5KRAEdyt1S5BOnURxo8GVHsNs9J4lFz21HjRe3C7XaGIwSNFSCOP/OXg9kMhF
-         b50BSufDnfjWMl1MD1YstT4r4g/do3lluK8rLwsdyjtxz1URze8OLj7KVOcQXfuzg0o9
-         6WNA==
-X-Gm-Message-State: AGi0PuaY4nP5SlyHtHrejaiN7Cwdw6ggdr8BY99QyI7OJz+4fIH65PgK
-        /bmlAf4kLRi+goeJIoCqPvTqo/aRBHgM/NU0nfVRCKyVjBs+/m249BiyKfGvlLE45GyXxmrFe1A
-        xSmBavpKVQh/0iDcfZK8I8HO8
-X-Received: by 2002:a5d:69c3:: with SMTP id s3mr14667098wrw.305.1588852716397;
-        Thu, 07 May 2020 04:58:36 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKzVix44sPWmS0TD7/0MINztaLpqYGgLdl9qHxVJpBT4xptKl3C4qytYcX122+5P0GjR+9v+g==
-X-Received: by 2002:a5d:69c3:: with SMTP id s3mr14667077wrw.305.1588852716097;
-        Thu, 07 May 2020 04:58:36 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8d3e:39e5:cd88:13cc? ([2001:b07:6468:f312:8d3e:39e5:cd88:13cc])
-        by smtp.gmail.com with ESMTPSA id e17sm7455415wrr.32.2020.05.07.04.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 04:58:35 -0700 (PDT)
-Subject: Re: [PATCH 0/2] KVM: nVMX: Skip IPBP on nested VMCS switch
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200506235850.22600-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0cc08cc0-252c-378e-15b3-6d9639ee5552@redhat.com>
-Date:   Thu, 7 May 2020 13:58:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 07:59:44 -0400
+Received: from mail-eopbgr750079.outbound.protection.outlook.com ([40.107.75.79]:29590
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbgEGL7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:59:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S4DQNQG8B/n5C/z1FW7+rE8RG78au61c+3ahZ6xq5aXkCU+PvMOahQTuRswFAV+kXXzXXao7ERHXYDge9pJWzd2ZvfUI301THkSf7F81TZhTqfxaJtP9qm8JO2d3p7xm9kQa50DSfXWt8xChunkBYKnI1aWKf4XoGJOp7IFLvHh1QwFCgThOdEP1PQlO/NOA9VnhxyjJNKkafBFkKKhUnVnm2LmlzNQqctfo1TpC10A9S4vnOG5T29jMxoB2V29w3WyfqqzWLcR2o7MQfJivT6vlTX8BS1FLUPgyS0f9oGwUkLY+M/PosjSfK9egocQmCo2z4C/Z1/yKNHfaDw6YrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ip4pGvK3wOFNUxUA/CfLA8r2aqEcFAy61eQ3BEWSWOY=;
+ b=NbEu0Bra6HYbfa6ilOe/UYMqvZZHwZGZj+AFJFtTsiT1CL5COQ9UWRkd3MSO1py1fT/2PF0AIPO+kueQ+xUryAvhJY4jRBt+o+6OCwm1M7w55m9zGMdtBJ6Cwynzmp0UuevyX6dC2wq++i0877jcU7GHZqjVZr0D7vXZYUsyRlpdYFNzxL1hGcUn/hMUAnuey5I97ZQXtN9NWnnKmgbu5uoYYv82ncYz5EEkWl02QEfdmgq3Ea7LJtTwiqZiXrFXCWZLVAoFLx8b5ur+z1dYICIcmj3NPH2OuzrZdFOyPv0Resod7jElHIl9jB6b8tZgdDBTJkTVi89WoOrbZBz4SQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ip4pGvK3wOFNUxUA/CfLA8r2aqEcFAy61eQ3BEWSWOY=;
+ b=hikBo6eXAAcVPBn+0+p8dbvq0n0Boy+KW38zvc0ltDW42dWLmqUtwxdpCPSbdn2fv4YJHF+kXqmodg7etxEGsfJp5CRFjGz5hzhSBAeokCXuF1QP30P1ZCXTrep4Ah19fNHKXQZCh/zLe6KGd0Bfbomqipvg0RZbg7pxndSq2Hk=
+Received: from CY4PR2201CA0010.namprd22.prod.outlook.com
+ (2603:10b6:910:5f::20) by BYAPR02MB4725.namprd02.prod.outlook.com
+ (2603:10b6:a03:4e::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Thu, 7 May
+ 2020 11:59:40 +0000
+Received: from CY1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:910:5f:cafe::9a) by CY4PR2201CA0010.outlook.office365.com
+ (2603:10b6:910:5f::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
+ Transport; Thu, 7 May 2020 11:59:40 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT061.mail.protection.outlook.com (10.152.75.30) with Microsoft SMTP
+ Server id 15.20.2979.29 via Frontend Transport; Thu, 7 May 2020 11:59:39
+ +0000
+Received: from [149.199.38.66] (port=60023 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jWfBZ-0004yO-WE; Thu, 07 May 2020 04:59:30 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jWfBj-00082j-Gk; Thu, 07 May 2020 04:59:39 -0700
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 047BxU5D028291;
+        Thu, 7 May 2020 04:59:30 -0700
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jWfBZ-00081d-UD; Thu, 07 May 2020 04:59:30 -0700
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
+        rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v7 0/2] Adding support for Versal CPM as Root Port driver
+Date:   Thu,  7 May 2020 17:28:34 +0530
+Message-Id: <1588852716-23132-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(136003)(39860400002)(376002)(46966005)(33430700001)(478600001)(5660300002)(8676002)(82310400002)(186003)(336012)(70206006)(316002)(426003)(356005)(36756003)(4326008)(33440700001)(82740400003)(47076004)(8936002)(81166007)(70586007)(2616005)(7696005)(107886003)(26005)(9786002)(2906002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-In-Reply-To: <20200506235850.22600-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f0fb02f1-932a-4879-d56b-08d7f27e1f18
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4725:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BYAPR02MB4725A14D48E8D69F064FBDCFA5A50@BYAPR02MB4725.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 03965EFC76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3+qh2q5/M0pSwYgAwzAMkgfXaC2VBPXn4I2ICXcw3MIJtkryDQRZQHYlsed+8f241T6zKbrO882fFa9qMbR4XDSzAtf6d4o0lEHsU8YhlBinOUCVgDDjOwd9sb5QnEJsIv5T6IKr1c2E1jbiCvW426lnuOxF2hFF7C51WX+8vvQOS+yKrhdClkgK6YY/i8yO9k/ulW2vjBMfnQTblKgfGwz1Q9rh/Huq+NxDi/M5jLWZJF+CXP/OsApzq7x7J2As9BAAuYiPd0+mMladaaDs3LGBfucP3AYxxOc04R9RQIK8kvMeC6Xye5Nr+eAHTfrMWHPKkgsxqmZrgkARAuPNsgK+m7yfnB9OLnkp3ubUn/PHDT0OQA3zmv8GIIkTM0yuT1NAznysLfjcVVfzOAD0WqpCVMd0AfxFq+bYNs5hIMH7aV+GPrlyv76Oo+tgb4tnXil0CF4KZufMLADVSy3Nb9Lu6gwcwCrZ2itUMvHWANRiIKesN08fN37mfU4mOw8gQUgs+vLPLVJFbTc8Xh7A02qDyC1wn2r4VrSg+aIVCFUdq8eijetidG9ne0ipb6JZoPrPMNFRpTXVLBXcX15QUA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 11:59:39.7656
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0fb02f1-932a-4879-d56b-08d7f27e1f18
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4725
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/20 01:58, Sean Christopherson wrote:
-> Or as Jim would say, "Really skip IPBP on nested VMCS switch" :-D
-> 
-> Patch 1 is the delta between kvm/queue and v3 of the original patch[*],
-> i.e. I just cherry-picked v3 and fixed the conflicts.
-> 
-> Patch 2 applies the "no IPBP" logic to copy_vmcs02_to_vmcs12_rare().
-> 
-> Feel free to sqaush both of these to commit 7407a52f23732 ("KVM: nVMX:
-> Skip IBPB when switching between vmcs01 and vmcs02") if you so desire.
+- Adding support for Versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in Versal CPM are handled using
+  Versal CPM specific interrupt line.
 
-I squashed patch 1 and applied patch 2 separately.  Thanks!
+Changes for v7:
+- Adding device tree documentation as schema.
+- Using pci_host_probe for registering bridge.
 
-Paolo
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Add YAML schemas for Versal CPM Root Port
+  PCI: xilinx-cpm: Add Versal CPM Root Port driver
 
-> [*] https://lkml.kernel.org/r/20200505044644.16563-1-sean.j.christopherson@intel.com
-> 
-> Sean Christopherson (2):
->   KVM: nVMX: Refactor IBPB handling on VMCS switch to genericize code
->   KVM: nVMX: Skip IPBP when switching between vmcs01 and vmcs02, redux
-> 
->  arch/x86/kvm/vmx/nested.c | 13 +++----------
->  arch/x86/kvm/vmx/vmx.c    | 19 ++++++++++++++-----
->  arch/x86/kvm/vmx/vmx.h    |  4 ++--
->  3 files changed, 19 insertions(+), 17 deletions(-)
-> 
+ .../devicetree/bindings/pci/xilinx-versal-cpm.yaml | 105 +++++
+ drivers/pci/controller/Kconfig                     |   9 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 506 +++++++++++++++++++++
+ 4 files changed, 621 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+
+-- 
+2.7.4
 
