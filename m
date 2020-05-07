@@ -2,92 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46935C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D7C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257D3208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A91920870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgEGNEq (ORCPT
+        id S1726712AbgEGNE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:04:46 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58059 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725914AbgEGNEq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:04:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TxqomBt_1588856677;
-Received: from 30.27.116.247(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TxqomBt_1588856677)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 07 May 2020 21:04:38 +0800
-Subject: Re: [PATCH v4 2/7] KVM: arm64: clean up redundant 'kvm_run'
- parameters
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
- <35eb095a344b4192b912385bc02c54e6@kernel.org>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <f093f6cf-4892-7c8f-d3aa-e908d5740cba@linux.alibaba.com>
-Date:   Thu, 7 May 2020 21:04:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 7 May 2020 09:04:58 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3844 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbgEGNE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:04:57 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 59812306F6222C6274D5;
+        Thu,  7 May 2020 21:04:52 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.93) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
+ 21:04:44 +0800
+Subject: Re: [RFC PATCH] cpufreq: add support for HiSilicon SoC HIP09
+To:     Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Sudeep Holla <Sudeep.Holla@arm.com>
+CC:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "john.garry@huawei.com" <john.garry@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
+ <20200430095559.GB28579@bogus>
+ <3ba950dd-4065-e4a5-d406-dc5c6c1781a7@huawei.com>
+ <20200506124932.GA20426@bogus> <028166CD-55C8-4FC6-AEBB-C190D20290D5@arm.com>
+ <DBBPR08MB4790CF20D2CA65BC314C937882A40@DBBPR08MB4790.eurprd08.prod.outlook.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <e94f4d3e-a420-c27a-b70f-8029e2113f3c@huawei.com>
+Date:   Thu, 7 May 2020 21:04:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <35eb095a344b4192b912385bc02c54e6@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <DBBPR08MB4790CF20D2CA65BC314C937882A40@DBBPR08MB4790.eurprd08.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.93]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thanu, Souvik, Sudeep,
 
+Thanks a lot for the prompt reply, and it clarify a lot for
+us, comment inline below.
 
-On 2020/5/5 16:39, Marc Zyngier wrote:
-> Hi Tianjia,
+On 2020/5/6 22:57, Souvik Chakravarty wrote:
+> Hi,
 > 
-> On 2020-04-27 05:35, Tianjia Zhang wrote:
->> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->> structure. For historical reasons, many kvm-related function parameters
->> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
->> patch does a unified cleanup of these remaining redundant parameters.
+>> From: Thanu Rangarajan <Thanu.Rangarajan@arm.com>
+>> Sent: Wednesday, May 6, 2020 1:58 PM
 >>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> Hi,
+>> ACPI CPPC already supports the notion of boost. Not sure we need any
+>> enhancements there.
+>>
+>> Regards,
+>> Thanu
+>>
+>> ﻿On 06/05/2020, 18:19, "Sudeep Holla" <sudeep.holla@arm.com> wrote:
+>>
+>>      + Thanu, Souvik who work with ASWG
+>>
+>>      On Wed, May 06, 2020 at 05:36:51PM +0800, Hanjun Guo wrote:
+>>      > Hi Sudeep,
+>>      >
+>>      > On 2020/4/30 17:55, Sudeep Holla wrote:
+>>      > > On Thu, Apr 30, 2020 at 02:19:59PM +0800, Xiongfeng Wang wrote:
+>>      > > > HiSilicon SoC has a separate System Control Processor(SCP)
+>> dedicated for
+>>      > > > clock frequency adjustment and has been using the cpufreq driver
+>>      > > > 'cppc-cpufreq'. New HiSilicon SoC HIP09 add support for CPU Boost,
+>> but
+>>      > > > ACPI CPPC doesn't support this. In HiSilicon SoC HIP09, each core has
+>>      > > > its own clock domain. It is better for the core itself to adjust its
+>>      > > > frequency when we require fast response. In this patch, we add a
+>>      > > > separate cpufreq driver for HiSilicon SoC HIP09.
+>>      > > >
+>>      > >
+>>      > > I disagree with this approach unless you have tried to extend the CPPC
+>>      > > in ACPI to accommodate this boost feature you need. Until you show
+>> those
+>>      > > efforts and disagreement to do that from ASWG, I am NACKing this
+>> approach.
+>>      >
+>>      > Unfortunately we are not in ASWG at now, could you please give some
+>>      > help about extending CPPC in ACPI to support boost feature?
+>>      >
+>>
+>>      You may have to provide more details than the commit log for sure as I
+>>      haven't understood the boost feature and what is missing in ACPI CPPC.
 > 
-> On the face of it, this looks OK, but I haven't tried to run the
-> resulting kernel. I'm not opposed to taking this patch *if* there
-> is an agreement across architectures to take the series (I value
-> consistency over the janitorial exercise).
-> 
-> Another thing is that this is going to conflict with the set of
-> patches that move the KVM/arm code back where it belongs (arch/arm64/kvm),
-> so I'd probably cherry-pick that one directly.
-> 
-> Thanks,
-> 
->          M.
-> 
+> I would agree with Thanu here regarding the ACPI spec part - everything is already there.
 
-Do I need to submit this set of patches separately for each 
-architecture? Could it be merged at once, if necessary, I will
-resubmit based on the latest mainline.
+I take another detail read of the spec and as you said,
+everything is already there,thanks!. I was misleading by the
+CPPC code which it's using the 'Highest Performance' as
+the max performance not the 'Nominal Performance', so seems
+that 'Highest Performance' is the normal max performance but
+not the boost performance.
 
-Thanks,
-Tianjia
+> 
+> It seems to me that the .set_boost is today not handled in cppc_cpufreq.c. In fact if a platform provides a value for Highest Performance which is different than Nominal Performance, then the entire range of performance is always requested, which works well for platforms which do boost enable/disable selection at hardware/firmware level.
+
+Yes, so for now, the CPPC code will enable the boost feature in
+default if the firmware provides a value for Highest Performance
+which is different than Nominal Performance.
+
+> 
+> .boost hook could potentially be useful in cppc_cpufreq.c for platforms which would manage the boost selection in software. But it would be good to keep a common implementation which can choose between "software-triggered or auto-boost" selection for different platforms.
+
+Thanks for the clarify, it helps a lot, Xiongfeng prepared
+some patches to enable .boost hook, but needs to set the
+'Nominal Performance' as the max performance, and
+'Highest Performance' is the max boost performance, will
+send out for comments.
+
+Best Regards,
+Hanjun
+
