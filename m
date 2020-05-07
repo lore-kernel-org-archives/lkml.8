@@ -2,177 +2,110 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACD5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01414C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34F020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFC020870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588857758;
+	bh=dU2Zo4Cy68Npnqp73m+WYREuX5FjtiM6YUcFyZ5Glks=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JcDiOJl17F/QdK1AEK1zoYGHe8feCwt3XvkD2lSy8zhbhxrMIQMImEXNl4EK6wJ2c
+	 vnUirSHti91f2do2L8q7psLOHn9kavg2YO1/zc8wmt8b4hQ9yjjlv34C+tgv08umIe
+	 PxOhMhinaGjfqN0T9Y1rRI4/Kw4Y9OEDkTiF0Las=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEGNSL (ORCPT
+        id S1726598AbgEGNWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 09:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgEGNSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:18:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726235AbgEGNWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:22:37 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BA720708;
-        Thu,  7 May 2020 13:18:09 +0000 (UTC)
-Date:   Thu, 7 May 2020 09:18:07 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some
- kconfigs
-Message-ID: <20200507091807.0a789fbd@gandalf.local.home>
-In-Reply-To: <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
-References: <20200503001141.9647-1-changbin.du@gmail.com>
-        <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A5920838;
+        Thu,  7 May 2020 13:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588857756;
+        bh=dU2Zo4Cy68Npnqp73m+WYREuX5FjtiM6YUcFyZ5Glks=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mvxv/k6N6eZhza7DRddP/HQFLzYxG1sOPRTBagBbVSX+mWQuvMoyOdQz41Z3PkSNw
+         oY9IRopODgKsVRXGmEjvlVkYEpRPYzNoS/8IeFzGzM6Pg/zSJNlzRW/nwfHqf6AByO
+         2H9Y99Vq60RECr/Ej/t+r3afxre/15Nkp/hfXcXo=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jWgTz-00AGtt-4Z; Thu, 07 May 2020 14:22:35 +0100
+Date:   Thu, 07 May 2020 14:22:34 +0100
+Message-ID: <87blmzj2w5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/15] arm64: kvm: Fix symbol dependency in __hyp_call_panic_nvhe
+In-Reply-To: <20200430144831.59194-4-dbrazdil@google.com>
+References: <20200430144831.59194-1-dbrazdil@google.com>
+        <20200430144831.59194-4-dbrazdil@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 12:19:57 +0900
-Masahiro Yamada <masahiroy@kernel.org> wrote:
-
-> On Sun, May 3, 2020 at 9:11 AM Changbin Du <changbin.du@gmail.com> wrote:
-> >
-> > Sometimes it is useful to preserve batches of configs when making
-> > localmodconfig. For example, I usually don't want any usb and fs
-> > modules to be disabled. Now we can do it by:
-> >
-> >  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
-> >
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> >
-> > ---
-> > v4: fix typo.
-> > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-> > v2: fix typo in documentation. (Randy Dunlap)
-> > ---  
+On Thu, 30 Apr 2020 15:48:19 +0100,
+David Brazdil <dbrazdil@google.com> wrote:
 > 
+> __hyp_call_panic_nvhe contains inline assembly which did not declare
+> its dependency on the __hyp_panic_string symbol.
 > 
-> Personally, I do not mind the long LOCALMODCONFIG_PRESERVE,
-
-Perhasp we allow both? ;-)
-
-And just have one set to the other.
-
-> but this tends to be bike-sheding.
-> I do not have a strong opinion.
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/kvm/hyp/switch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> >  Documentation/admin-guide/README.rst |  8 +++++++-
-> >  scripts/kconfig/Makefile             |  1 +
-> >  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
-> >  3 files changed, 31 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> > index cc6151fc0845..1371deab8bc7 100644
-> > --- a/Documentation/admin-guide/README.rst
-> > +++ b/Documentation/admin-guide/README.rst
-> > @@ -209,10 +209,16 @@ Configuring the kernel
-> >                             store the lsmod of that machine into a file
-> >                             and pass it in as a LSMOD parameter.
-> >
-> > +                           Also, you can preserve modules in certain folders
-> > +                           or kconfig files by specifying their paths in
-> > +                           parameter LMC_KEEP.
-> > +
-> >                     target$ lsmod > /tmp/mylsmod
-> >                     target$ scp /tmp/mylsmod host:/tmp
-> >
-> > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> > +                   host$ make LSMOD=/tmp/mylsmod \
-> > +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \  
-> 
-> 
-> This might be another bike-sheding item, but
-> can you use a space for the delimiter?
-> 
-> 
-> LMC_KEEP="drivers/usb drivers/gpu fs"
-> 
-> If you pass multiple directories,
-> you will need to surround them with double-quotes.
-
-I agree that spaces look better.
-
-> 
-> 
-> 
-> 
-> > +                           localmodconfig
-> >
-> >                             The above also works when cross compiling.
-> >
-> > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> > index c9d0a4a8efb3..e0abbf5805f5 100644
-> > --- a/scripts/kconfig/Makefile
-> > +++ b/scripts/kconfig/Makefile
-> > @@ -123,6 +123,7 @@ help:
-> >         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
-> >         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
-> >         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
-> > +       @echo  '                    except those preserved by LMC_KEEP environment variable'
-> >         @echo  '  localyesconfig  - Update current config converting local mods to core'
-> >         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
-> >         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-> > diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> > index e2f8504f5a2d..d26543a807c9 100755
-> > --- a/scripts/kconfig/streamline_config.pl
-> > +++ b/scripts/kconfig/streamline_config.pl
-> > @@ -143,6 +143,7 @@ my %depends;
-> >  my %selects;
-> >  my %prompts;
-> >  my %objects;
-> > +my %config2kfile;
-> >  my $var;
-> >  my $iflevel = 0;
-> >  my @ifdeps;
-> > @@ -201,6 +202,7 @@ sub read_kconfig {
-> >         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
-> >             $state = "NEW";
-> >             $config = $2;
-> > +           $config2kfile{"CONFIG_$config"} = $kconfig;
-> >
-> >             # Add depends for 'if' nesting
-> >             for (my $i = 0; $i < $iflevel; $i++) {
-> > @@ -592,6 +594,22 @@ while ($repeat) {
-> >
-> >  my %setconfigs;
-> >
-> > +my @preserved_kconfigs;
-> > +@preserved_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));  
-> 
-> Maybe, you can do 'my' declaration and the assignment
-> in a single line?
-> 
-> Can you drop the 'if ...' conditional?
-> 
-> 
-> Does this work for you?
-> 
-> my @preserved_kconfigs = split(/;/,$ENV{LMC_KEEP});
+> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+> index 8a1e81a400e0..7a7c08029d81 100644
+> --- a/arch/arm64/kvm/hyp/switch.c
+> +++ b/arch/arm64/kvm/hyp/switch.c
+> @@ -836,7 +836,7 @@ static void __hyp_text __hyp_call_panic_nvhe(u64 spsr, u64 elr, u64 par,
+>  	 * making sure it is a kernel address and not a PC-relative
+>  	 * reference.
+>  	 */
+> -	asm volatile("ldr %0, =__hyp_panic_string" : "=r" (str_va));
+> +	asm volatile("ldr %0, =%1" : "=r" (str_va) : "S" (__hyp_panic_string));
+>  
+>  	__hyp_do_panic(str_va,
+>  		       spsr, elr,
+> -- 
+> 2.26.1
 > 
 > 
 
-Will an undefined warning happen if LMC_KEEP isn't defined?
+What breaks without this constraint? Is it a fix that should go in
+early? Otherwise looks good.
 
--- Steve
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
