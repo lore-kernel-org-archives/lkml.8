@@ -2,60 +2,62 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7D7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C61DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B96C62192A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F86720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgEGUSM (ORCPT
+        id S1728486AbgEGUSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        Thu, 7 May 2020 16:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgEGUSL (ORCPT
+        by vger.kernel.org with ESMTP id S1726320AbgEGUSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:18:11 -0400
+        Thu, 7 May 2020 16:18:35 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55083C05BD43;
-        Thu,  7 May 2020 13:18:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19781C05BD43;
+        Thu,  7 May 2020 13:18:35 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D54361195050E;
-        Thu,  7 May 2020 13:18:10 -0700 (PDT)
-Date:   Thu, 07 May 2020 13:18:10 -0700 (PDT)
-Message-Id: <20200507.131810.1223197596910994375.davem@davemloft.net>
-To:     geert+renesas@glider.be
-Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
-        huangdaode@hisilicon.com, liguozhu@huawei.com, arnd@arndb.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: hisilicon: Make CONFIG_HNS invisible
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9E68C1195050E;
+        Thu,  7 May 2020 13:18:34 -0700 (PDT)
+Date:   Thu, 07 May 2020 13:18:34 -0700 (PDT)
+Message-Id: <20200507.131834.1517984934609648952.davem@davemloft.net>
+To:     tangbin@cmss.chinamobile.com
+Cc:     saeedm@mellanox.com, leon@kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhangshengju@cmss.chinamobile.com
+Subject: Re: [PATCH] net/mlx5e: Use IS_ERR() to check and simplify code
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200507114511.24835-1-geert+renesas@glider.be>
-References: <20200507114511.24835-1-geert+renesas@glider.be>
+In-Reply-To: <20200507115010.10380-1-tangbin@cmss.chinamobile.com>
+References: <20200507115010.10380-1-tangbin@cmss.chinamobile.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 13:18:11 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 13:18:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu,  7 May 2020 13:45:11 +0200
+From: Tang Bin <tangbin@cmss.chinamobile.com>
+Date: Thu,  7 May 2020 19:50:10 +0800
 
-> The HNS config symbol enables the framework support for the Hisilicon
-> Network Subsystem.  It is already selected by all of its users, so there
-> is no reason to make it visible.
+> Use IS_ERR() and PTR_ERR() instead of PTR_ZRR_OR_ZERO()
+> to simplify code, avoid redundant judgements.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-Applied, thanks.
+Saeed, please pick this up.
+
+Thank you.
