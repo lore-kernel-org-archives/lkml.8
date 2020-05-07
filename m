@@ -2,185 +2,187 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9CEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73C0C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF95207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBAD2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tbjCYpXW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdg9wP5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEGRBV (ORCPT
+        id S1727953AbgEGRBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:01:21 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28878 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726778AbgEGRBV (ORCPT
+        Thu, 7 May 2020 13:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgEGRBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:01:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588870880; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Q6e681XAMJUtZBJD87mrFbPc1YIIh9lR85Q2LRLTHXs=; b=tbjCYpXWd3B4rTtKkTy9rQoaBI3PC2bDM+5sxnNNqaNO5erikTnvl424MWF2i1uew4/Tv+aS
- xKCjPEhpiTEmetCaMJW6bnV/piP97Lw2OZDbyRHQpjcEQ5TmyKTid/ARXrTQjR18Y1fw+7N5
- 3DyWRNwifqxsBUgI0KCPuFaixHU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb43ec2.7fc2d7a710a0-smtp-out-n03;
- Thu, 07 May 2020 17:00:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B138FC432C2; Thu,  7 May 2020 17:00:49 +0000 (UTC)
-Received: from [10.131.209.195] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5532C433D2;
-        Thu,  7 May 2020 17:00:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5532C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 2/6] spi: spi-geni-qcom: Use OPP API to set clk/perf
- state
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
- <1588507469-31889-3-git-send-email-rnayak@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <acc7baf9-86a3-6c78-4d62-99d4b1baa12e@codeaurora.org>
-Date:   Thu, 7 May 2020 22:30:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 7 May 2020 13:01:41 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E51C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:01:40 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l18so959397qtp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ILKrToxO+UBNmlrxuLlUxDvNDWnweAkbzoOMkJWXLME=;
+        b=pdg9wP5KM7ZKV6dTvbkxLX3E5WWxtoAKqOdgnUp79WQEFK3CHDxR4QtQEct9xHdBNF
+         BmpV/j0aXlde6ywVj9Vdri42sws2oDBmsIYhBjBWUJ6nl4twjVUgz3HTGky/QEE2Izzo
+         Arx/H2kss/diOf4Nuq9VJCUyWnLFdWbz355iSwRRZR4xK27I5hPN28m2EI4NfSH6EHHs
+         xqq/TeL9wX6la1DRoSAHm70bzS/guDghkv1Rx3DsH8trV08ErcOH9tXqqFFA8HQ23lpl
+         s1sFfXqdWK8Typ/XkU1c3pZtHx9WN07FYJaGVkcnG1moQ0CnORcm3eEbR8QscHRDHU8F
+         4QBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ILKrToxO+UBNmlrxuLlUxDvNDWnweAkbzoOMkJWXLME=;
+        b=ZjC9cJJLsbhaZ9a7D2z50C0+27PoUKGN5HDw41+EjS5sakD7FN2sSFlhr8ERB3J16w
+         nyY3TsMsZMDRrVIFdUYlygJFvnkwtR5aph0vUzS4y73b1fcBnFL5mfaAUzB3b9SZGhwv
+         F5holUFgVQqYJyHCE0L47iHuYqF5c9lnL0S9FYLIXdXMaqHUG1A2hIq0km+oaYMA2hFW
+         TrNM44YO+hnu/OH9ofPCswt5xsFsZSDCvbE0BYaYqspP0MXJCaoYdkuBQ0BfjQ6YDW2y
+         N8YHSuzhZLNYuaHw1yVeerwwZjMdA29QoQiMnYxilZtBgllyWEFOffCUt1qKYBXHR/03
+         b01Q==
+X-Gm-Message-State: AGi0Pua7rVptEyV/UrUXS7yToHoZvMWzHemf0ILXLoCRtPN1lW4wuXio
+        vh6Nn4u5ZDF5zVBnoG7XuEdbO8LE4UnZGw==
+X-Google-Smtp-Source: APiQypIvs3QSh6QL9FnLcOAcr3fZGwrzXIlLdpM4dVBNAAJaMrEz6bn/rd5qBhcyWdRsRhBuGWgh0A==
+X-Received: by 2002:ac8:44aa:: with SMTP id a10mr15648997qto.230.1588870899027;
+        Thu, 07 May 2020 10:01:39 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id g11sm4508711qkk.106.2020.05.07.10.01.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 10:01:38 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3F77A40AFD; Thu,  7 May 2020 14:01:36 -0300 (-03)
+Date:   Thu, 7 May 2020 14:01:36 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/11] perf evlist: implement control command handling
+ functions
+Message-ID: <20200507170136.GG31109@kernel.org>
+References: <d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com>
+ <142da58d-7ff1-ea73-89e0-30342a710aab@linux.intel.com>
+ <20200506202138.GF9893@kernel.org>
+ <68696671-50f7-7602-fc64-7802a8eab29a@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1588507469-31889-3-git-send-email-rnayak@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68696671-50f7-7602-fc64-7802a8eab29a@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, May 07, 2020 at 11:32:53AM +0300, Alexey Budankov escreveu:
+> 
+> On 06.05.2020 23:21, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, May 06, 2020 at 09:19:22PM +0300, Alexey Budankov escreveu:
+> >>
+> >> Implement functions of initialization, finalization and processing
+> >> of control commands coming from control file descriptors.
+> >>
+> >> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> >> ---
+> >>  tools/perf/util/evlist.c | 100 +++++++++++++++++++++++++++++++++++++++
+> >>  tools/perf/util/evlist.h |  12 +++++
+> >>  2 files changed, 112 insertions(+)
+> 
+> <SNIP>
+> 
+> >> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> >> index 62f259d89b41..84386850c290 100644
+> >> --- a/tools/perf/util/evlist.h
+> >> +++ b/tools/perf/util/evlist.h
+> >> @@ -358,4 +358,16 @@ void perf_evlist__force_leader(struct evlist *evlist);
+> >>  struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
+> >>  						 struct evsel *evsel,
+> >>  						bool close);
+> >> +
+> >> +enum evlist_ctl_cmd {
+> >> +	CTL_CMD_UNSUPPORTED = 0,
+> >> +	CTL_CMD_ENABLE = 'e',
+> >> +	CTL_CMD_DISABLE = 'd',
+> >> +	CTL_CMD_ACK = 'a'
+> >> +};
+> > 
+> > Can we make this a string, I think we'll eventually ask for lots more
+> 
+> Like this?
+> 
+> #define EVLIST__CTL_CMD_ENABLE	"enable"
+> #define EVLIST__CTL_CMD_DISABLE	"disable"
+> #define EVLIST__CTL_CMD_ACK	"ack"
 
-On 5/3/2020 5:34 PM, Rajendra Nayak wrote:
-> geni spi needs to express a perforamnce state requirement on CX
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
+Yeah
+ 
+> > stuff, like asking for a --switch-output snapshot with --overwrite,
+> > reconfiguring events to increase/decrease frequency, etc, interfacing
+> > with PERF_EVENT_IOC_MODIFY_ATTRIBUTES, PERF_EVENT_IOC_SET_FILTER, etc.
+> > 
+> > This will also allow us to have parameters, etc, wdyt?
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
-> This patch has a dependency on the 'PATCH 1/6' in this series,
-> due to the changes in include/linux/qcom-geni-se.h
-> Its ideal if this and the previous patch gets merged via the
-> msm tree (once reviewed and ack'ed)
-> Greg has already responded he is fine with it for serial.
+> Being a part of this patch the extension will implement configurability
+> that potentially could never be used.
+> 
+> Switch from int to string commands of variable length belongs to
+> the patches also implementing usage of that string commands.
 
-Mark, would you be able to review/ack this patch so it can be
-taken in via the msm tree? 'PATCH 1/6' is Ack'd by Greg, and its
-going to land via the msm tree as well.
+Well, at that point we would have to support both, i.e. the way you're
+doing now with integers, and as strings, otherwise 3rd party tooling
+(vtune? :)) using this interface would break.
 
+I.e. this is like the syscall interface.
+
+So if we have "enable" now we can go ahead and forever understand that
+as "please enable this evlist", but in the future we can extend it and
+pass parameters to it, to control how that enablement will take place,
+perhaps with a delay, etc.
+
+> > Also please since these are events that deal with 'struct evlist', name
+> > them with the evlist__ prefix, not the perf_evlist__ one, as those
+> > should be used with 'struct perf_evlist', i.e. the one in libperf
+> > (tools/lib/perf/).
 > 
->   drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
->   1 file changed, 23 insertions(+), 3 deletions(-)
+> Accepted in v3.
 > 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c397242..bc2916f 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -7,6 +7,7 @@
->   #include <linux/log2.h>
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/qcom-geni-se.h>
->   #include <linux/spi/spi.h>
-> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->   {
->   	unsigned long sclk_freq;
->   	unsigned int actual_hz;
-> -	struct geni_se *se = &mas->se;
->   	int ret;
->   
->   	ret = geni_se_clk_freq_match(&mas->se,
-> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->   
->   	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
->   				actual_hz, sclk_freq, *clk_idx, *clk_div);
-> -	ret = clk_set_rate(se->clk, sclk_freq);
-> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
->   	if (ret)
-> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
-> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
->   	return ret;
->   }
->   
-> @@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
->   	mas->se.wrapper = dev_get_drvdata(dev->parent);
->   	mas->se.base = base;
->   	mas->se.clk = clk;
-> +	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	if (IS_ERR(mas->se.opp_table))
-> +		return PTR_ERR(mas->se.opp_table);
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		mas->se.has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-> +		return ret;
-> +	}
->   
->   	spi->bus_num = -1;
->   	spi->dev.of_node = dev->of_node;
-> @@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
->   spi_geni_probe_runtime_disable:
->   	pm_runtime_disable(dev);
->   	spi_master_put(spi);
-> +	if (mas->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(mas->se.opp_table);
->   	return ret;
->   }
->   
-> @@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
->   	struct spi_master *spi = platform_get_drvdata(pdev);
->   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
->   
-> +	if (mas->se.has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(mas->se.opp_table);
->   	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
->   	spi_unregister_master(spi);
->   
-> @@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
->   	struct spi_master *spi = dev_get_drvdata(dev);
->   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
->   
-> +	/* Drop the performance state vote */
-> +	dev_pm_opp_set_rate(dev, 0);
-> +
->   	return geni_se_resources_off(&mas->se);
->   }
->   
-> 
+> > 
+> > Right now this is inconsistent, we did it that way to minimize
+> > disruption of the codebase when moving things from tools/perf/ to
+> > tools/lib/perf/, but this confuses things and I just did a
+> > s/perf_evsel__/evsel__) for things dealing with 'struct evsel', so lets
+> > not add new ones with the wrong prefix, eventually we'll have perf_ only
+> > for things in libperf.
+> > 
+> >> +
+> >> +int perf_evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+> >> +int perf_evlist__finalize_ctlfd(struct evlist *evlist);
+> >> +int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
+> >> +
+> >>  #endif /* __PERF_EVLIST_H */
+> >> -- 
+> >> 2.24.1
+> >>
+> >>
+> > 
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+- Arnaldo
