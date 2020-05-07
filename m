@@ -2,128 +2,217 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB7AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A4C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153AF2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVxUpNAU"
+	by mail.kernel.org (Postfix) with ESMTP id B0508207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588842751;
+	bh=WN/1Sfxv+V0tvhxdgTlgCeCg1I6pk09fr+Q2outjLYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VCt1bYGca3q0R53kvY4lI1IDpkkAPDIwgzPr5x45UygNnerm4Xwbd6O1sbAMr3tv+
+	 TneEzKeYvmNvI/qBofv0mPunQ1l5pF5tJRVUBX5i9xoVppv0Gju+TiKNvrEV+zO503
+	 uPsfRoSNN3ivDYQMqAB9TzFn9KQ4FNrQ0ws/medU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGJLB (ORCPT
+        id S1726464AbgEGJMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:11:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgEGJLA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:11:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE05C061A10;
-        Thu,  7 May 2020 02:11:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so1830978pls.8;
-        Thu, 07 May 2020 02:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JBT6KrKPDV5CjqbR8NDCy7mpTcDdeEp7C5NBrNvcrDY=;
-        b=kVxUpNAU2X5gF8L0wi+DyBySR80rdREgOTCndFcxAxZ5o1/ZAGVfUqtsWKwLF0Pa/u
-         5VlziewE/8fe6NnCkGc3Ph2U6L2/oSl/f8uR72qd3yHNwaqdpv2dvNMAW1V6ZK6GmZpF
-         XufJCfMyHxhC43y07FPPo6k6b4e6UWM1L9UIseHpeJakHL2EDV8nuqNy1lOlb7/Lvovx
-         +Qr8DuTQ62XSzBiO9K+0Sy9zPbrwHFV3jEPKUwqIHxZfJQ6mIwmROmv/B8yYWXUa1+Hd
-         afZ9rgolKYC6b4dwrtUFVeaOonYWK/bbkkYwAxSkHn4eQ5RuvJlmrbmxTSe3vpUhlwXO
-         i/9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JBT6KrKPDV5CjqbR8NDCy7mpTcDdeEp7C5NBrNvcrDY=;
-        b=mKk58xCj7IrgyFPzlX4HP0/1UQ6jAl4gS3mGosze9G5sR1uZeD1PUBQnBF2WwnQEqO
-         ohTdy693f95D52qms3rIreJhdaml6/nLBabmw7IbHCGJyYV8CI1RFCLllXRnMOfp6q5s
-         9XBIHF31rQxYMCypBjcxUJlAT5QUmTRG6CKCSxfXD2HJi50kgHR/3sDr81dsc3rO96YM
-         Qi9cAodITc1BqfNmcWElFvgAHzlV/NT0PSgaJZEwLNi4UsEqAmQVNiHZ+MGqpH/yQwUU
-         5AEArHZJ9QPll3uy7mfhIhAxT8mHMU4y5VwY3CjkYZodgDnXbEnC5741KUeFcxPLyf8g
-         jr4g==
-X-Gm-Message-State: AGi0Pubt88k8/P26Bs2QGLaij4qRkB0W5jV4afOfG+rn+dI0oiShJZN4
-        6HdH2pYkC/06F0iaZWrFOPCScPBZe6cEkGdT88g=
-X-Google-Smtp-Source: APiQypLSmUDlB8+hESCKFexeV6yOLtQ3+jQd1hZaeXg3Qh7fHvakmbggZLIgn4AzvrXWYYT9Q3xQHb/UA6E5FX3UzOE=
-X-Received: by 2002:a17:90a:340c:: with SMTP id o12mr13739254pjb.22.1588842660053;
- Thu, 07 May 2020 02:11:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-6-calvin.johnson@oss.nxp.com> <CAHp75VfOcQiACsOcfWyJSP1dzdYpaCa-_KKf==4YCkaM_Wk3Tg@mail.gmail.com>
- <20200507074435.GA10296@lsv03152.swis.in-blr01.nxp.com>
-In-Reply-To: <20200507074435.GA10296@lsv03152.swis.in-blr01.nxp.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 May 2020 12:10:48 +0300
-Message-ID: <CAHp75VeFCzJ97c7AZD8ksA-r3C-XyM24Rt30+Obw6tCaR4xprA@mail.gmail.com>
-Subject: Re: [net-next PATCH v3 5/5] net: mdiobus: Introduce fwnode_mdiobus_register_phy()
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Thu, 7 May 2020 05:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgEGJMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 05:12:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3690D2075E;
+        Thu,  7 May 2020 09:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588842749;
+        bh=WN/1Sfxv+V0tvhxdgTlgCeCg1I6pk09fr+Q2outjLYM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xEn4xIitw6ljx3iphcAnTBS31J7adH7kGvMPZJBOtI/6et/4t8DGm63fxk7kQrs7q
+         UuGTT3EctUZW7OUyCjY0UECsdWn69vdO5YuMqKC6pIEWJ3dOlSyvWnwFKg2J1Mq3Fm
+         whXDqqPBteH4/ScOh7LlQImwViU5JqS+qqE1CHUM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jWcZu-00ACrT-U4; Thu, 07 May 2020 10:12:27 +0100
+Date:   Thu, 7 May 2020 10:12:24 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
+ 32-bit logical immediates
+Message-ID: <20200507101224.33a44d71@why>
+In-Reply-To: <20200507082934.GA28215@willie-the-truck>
+References: <20200507010504.26352-1-luke.r.nels@gmail.com>
+        <20200507010504.26352-2-luke.r.nels@gmail.com>
+        <20200507082934.GA28215@willie-the-truck>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: will@kernel.org, lukenels@cs.washington.edu, bpf@vger.kernel.org, luke.r.nels@gmail.com, xi.wang@gmail.com, catalin.marinas@arm.com, daniel@iogearbox.net, ast@kernel.org, zlim.lnx@gmail.com, kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 10:44 AM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
->
-> On Tue, May 05, 2020 at 05:22:00PM +0300, Andy Shevchenko wrote:
-> > On Tue, May 5, 2020 at 4:30 PM Calvin Johnson
-> > <calvin.johnson@oss.nxp.com> wrote:
+On Thu, 7 May 2020 09:29:35 +0100
+Will Deacon <will@kernel.org> wrote:
 
-...
+Hi Will,
 
-> > > +       bool is_c45 = false;
-> >
-> > Redundant assignment, see below.
-> >
-> > > +       const char *cp;
-> > > +       u32 phy_id;
-> > > +       int rc;
+> Hi Luke,
+> 
+> Thanks for the patches.
+> 
+> On Wed, May 06, 2020 at 06:05:01PM -0700, Luke Nelson wrote:
+> > This patch fixes two issues present in the current function for encoding
+> > arm64 logical immediates when using the 32-bit variants of instructions.
+> > 
+> > First, the code does not correctly reject an all-ones 32-bit immediate
+> > and returns an undefined instruction encoding, which can crash the kernel.
+> > The fix is to add a check for this case.
+> > 
+> > Second, the code incorrectly rejects some 32-bit immediates that are
+> > actually encodable as logical immediates. The root cause is that the code
+> > uses a default mask of 64-bit all-ones, even for 32-bit immediates. This
+> > causes an issue later on when the mask is used to fill the top bits of
+> > the immediate with ones, shown here:
+> > 
+> >   /*
+> >    * Pattern: 0..01..10..01..1
+> >    *
+> >    * Fill the unused top bits with ones, and check if
+> >    * the result is a valid immediate (all ones with a
+> >    * contiguous ranges of zeroes).
+> >    */
+> >   imm |= ~mask;
+> >   if (!range_of_ones(~imm))
+> >           return AARCH64_BREAK_FAULT;
+> > 
+> > To see the problem, consider an immediate of the form 0..01..10..01..1,
+> > where the upper 32 bits are zero, such as 0x80000001. The code checks
+> > if ~(imm | ~mask) contains a range of ones: the incorrect mask yields
+> > 1..10..01..10..0, which fails the check; the correct mask yields
+> > 0..01..10..0, which succeeds.
+> > 
+> > The fix is to use a 32-bit all-ones default mask for 32-bit immediates.
+> > 
+> > Currently, the only user of this function is in
+> > arch/arm64/kvm/va_layout.c, which uses 64-bit immediates and won't
+> > trigger these bugs.  
+> 
+> Ah, so this isn't a fix or a bpf patch ;)
+> 
+> I can queue it via arm64 for 5.8, along with the bpf patches since there
+> are some other small changes pending in the arm64 bpf backend for BTI.
+> 
+> > We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+> > logical immediates and all 5,334 encodable 64-bit logical immediates.
+> > 
+> > Fixes: ef3935eeebff ("arm64: insn: Add encoder for bitwise operations using literals")
+> > Co-developed-by: Xi Wang <xi.wang@gmail.com>
+> > Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> > Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+> > ---
+> >  arch/arm64/kernel/insn.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+> > index 4a9e773a177f..42fad79546bb 100644
+> > --- a/arch/arm64/kernel/insn.c
+> > +++ b/arch/arm64/kernel/insn.c
+> > @@ -1535,7 +1535,7 @@ static u32 aarch64_encode_immediate(u64 imm,
+> >  				    u32 insn)
+> >  {
+> >  	unsigned int immr, imms, n, ones, ror, esz, tmp;
+> > -	u64 mask = ~0UL;
+> > +	u64 mask;
+> >  
+> >  	/* Can't encode full zeroes or full ones */
+> >  	if (!imm || !~imm)  
+> 
+> It's a bit grotty spreading the checks out now. How about we tweak things
+> slightly along the lines of:
+> 
+> 
+> diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+> index 4a9e773a177f..60ec788eaf33 100644
+> --- a/arch/arm64/kernel/insn.c
+> +++ b/arch/arm64/kernel/insn.c
+> @@ -1535,16 +1535,10 @@ static u32 aarch64_encode_immediate(u64 imm,
+>  				    u32 insn)
+>  {
+>  	unsigned int immr, imms, n, ones, ror, esz, tmp;
+> -	u64 mask = ~0UL;
+> -
+> -	/* Can't encode full zeroes or full ones */
+> -	if (!imm || !~imm)
+> -		return AARCH64_BREAK_FAULT;
+> +	u64 mask;
+>  
+>  	switch (variant) {
+>  	case AARCH64_INSN_VARIANT_32BIT:
+> -		if (upper_32_bits(imm))
+> -			return AARCH64_BREAK_FAULT;
+>  		esz = 32;
+>  		break;
+>  	case AARCH64_INSN_VARIANT_64BIT:
+> @@ -1556,6 +1550,12 @@ static u32 aarch64_encode_immediate(u64 imm,
+>  		return AARCH64_BREAK_FAULT;
+>  	}
+>  
+> +	mask = GENMASK(esz - 1, 0);
+> +
+> +	/* Can't encode full zeroes or full ones */
 
-> > > +       fwnode_property_read_string(child, "compatible", &cp);
-> >
-> > Consider rc = ...; otherwise you will have UB below.
-> >
-> > > +       if (!strcmp(cp, "ethernet-phy-ieee802.3-c45"))
-> >
-> > UB!
->
-> Thanks for the comments! I've considered all of them.
-> What is UB, by the way? :)-
+... nor a value wider than the mask.
 
-Undefined Behaviour.
+> +	if (imm & ~mask || !imm || imm == mask)
+> +		return AARCH64_BREAK_FAULT;
+> +
+>  	/*
+>  	 * Inverse of Replicate(). Try to spot a repeating pattern
+>  	 * with a pow2 stride.
+> 
+> 
+> What do you think?
 
+I'd be pretty happy with that.
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+Thanks,
+
+	M.
 -- 
-With Best Regards,
-Andy Shevchenko
+Jazz is not dead. It just smells funny...
