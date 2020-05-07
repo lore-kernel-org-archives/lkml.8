@@ -2,120 +2,145 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CF6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8E9C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A1520643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB7820643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jMl9lDyl"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c0pBgE0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgEGOt0 (ORCPT
+        id S1726807AbgEGOug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:49:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53246 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgEGOtZ (ORCPT
+        Thu, 7 May 2020 10:50:36 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:26085 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgEGOug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:49:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047ElqGc063504;
-        Thu, 7 May 2020 14:48:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=G4o/7pUilrGA7IJ5EnhZsfRq8nVUlelBWIssB3B1+2k=;
- b=jMl9lDylIXxHMgIVKhF9KQ8AJN3J/bIAgPtH+pqTkHQfFoYhSPuRxXQiailLZYuVfOnT
- 7WF/unfDo4rHICl6R9ggcMXJM4muNlmQffS6gVmQDWCnv4cKxBw398i3Jv+79Q45dPev
- UaPSDOuEQb8jQ43G1GV0nFxGSLz3BGCT1pyrDIffhyZa6isBxantS/PYOkm9ReJ3YmYb
- 48QE7WAN9FI2JrhK1pu6nDcND1BzwM+rPO5Qk5xR+2ishNa7IQDJMDS807Oygf74uUWn
- zciEQwaZ1HEwPP8HnWd8ozj74IsxSNbcARpb6iG90lJ24bEcKjg+DheGk+RgG7TA8FHw 9A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30veckhxwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 14:48:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047EksQc148252;
-        Thu, 7 May 2020 14:48:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30sjdy80ws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 14:48:29 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 047EmQlT010501;
-        Thu, 7 May 2020 14:48:26 GMT
-Received: from linux-1.home (/92.157.36.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 07:48:26 -0700
-Subject: Re: [patch V4 part 2 18/18] x86/kvm/svm: Move guest enter/exit into
- .noinstr.text
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134112.272268764@linutronix.de>
- <20200505134341.873785437@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <76c25d4d-77d3-81fa-78d3-d01bb8bb44a9@oracle.com>
-Date:   Thu, 7 May 2020 16:47:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 10:50:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588863036; x=1620399036;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=cOjgL/jMx8rHyMgvqTEou7i+VZW8+Cxs08hf8UQgltw=;
+  b=c0pBgE0VwNaiMuMry2ech0/S6on3kIdPvXk6m5kMQOaOSRnTrqzD++V4
+   YTCvunpoTmLEzmXrhgHKbM9FXonyrPs38OqxaYlYNHOARZG5HhL/KB3Y4
+   1Ykp/bKCDATLEkGArn1ehcv1+LdqPZ18DK75ZjMRNS84j6YBuFp3YikLV
+   Y=;
+IronPort-SDR: 0uVSjiXyhIU30m7upXEMtOp86557IdWtNGWxMKw2DZFI1UvuTbLePPijzkPL3WJCXPcu67T2jQ
+ IbzhSx6RseXw==
+X-IronPort-AV: E=Sophos;i="5.73,364,1583193600"; 
+   d="scan'208";a="41896565"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 May 2020 14:50:34 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 8C2CEA1B98;
+        Thu,  7 May 2020 14:50:31 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 7 May 2020 14:50:31 +0000
+Received: from uf25486d27d2d5b.ant.amazon.com (10.43.162.200) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 7 May 2020 14:50:21 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <talel@amazon.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <eitan@amazon.com>
+Subject: [PATCH v7 0/2] Amazon's Annapurna Labs Memory Controller EDAC
+Date:   Thu, 7 May 2020 17:50:00 +0300
+Message-ID: <20200507145002.22010-1-talel@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200505134341.873785437@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 bulkscore=0
- spamscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070120
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.200]
+X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series introduces support for Amazon's Annapurna Labs Memory
+Controller EDAC driver.
 
-On 5/5/20 3:41 PM, Thomas Gleixner wrote:
-> Move the functions which are inside the RCU off region into the
-> non-instrumentable text section.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   arch/x86/kvm/svm/svm.c     |  102 ++++++++++++++++++++++++---------------------
->   arch/x86/kvm/svm/vmenter.S |    2
->   2 files changed, 57 insertions(+), 47 deletions(-)
-> 
+Changes since v6:
+=================
+- removed unused defines
+- user-visible strings changed to capital
+- removed static function names prefix from internal functions (external
+  used function, such as devm/interrupts-handlers/probe, left with the
+  prefix to allow stack trace visibility)
+- sorted function local variables declaration in a reverse Christmas tree order
+- fixed use of wrong syndrome defines
+- added a comment to interrupts handling (polling mode with interrupt mode)
+- added grain definition
+- appended "or BSD-2-Clause" to dt binding SPDX
 
-I have reviewed this series and only sent minor comments. So for
-all patches of part 2:
+Changes since v5:
+=================
+- rebased and retested for tag Linux 5.6-rc2
+- added Reviewed-By for dt-binding (Rob Herring <robh@kernel.org>)
+- added Reviewed-By for driver (James Morse <james.morse@arm.com>)
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Changes since v4:
+=================
+- fixed dt-binding interrupt to have min of 1
+- updated dt-binding GPL-2.0 to GPL-2.0-only
+- changed writel to relaxed flavor
+- added managed device driver unwind
 
-alex.
+Changes since v3:
+=================
+- removed quotation marks and hyphen from compatible dt-binding
+- added interrupts and interrupt-names description to dt-binding
+- added missing include to dt-binding
+
+Changes since v2:
+=================
+- added missing includes
+- aggregated variables to same line
+- removed ranks read
+- added spinlock to mc reporting
+- made irq handler clearer
+- freed irq before freeing device memory
+- changed Kconfig to tristate
+- added COMPILE_TEST to Kconfig
+- converted dt binding to new scheme
+- used devm_platform_ioremap_resource instead of get&ioremap
+
+Changes since v1:
+=================
+- updated dt binding node name and added Rob Reviewed-By
+- removed auto selecting of this driver
+
+
+Talel Shenhar (2):
+  dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory
+    Controller EDAC
+  EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs Memory Controller
+    EDAC
+
+ .../bindings/edac/amazon,al-mc-edac.yaml      |  52 +++
+ MAINTAINERS                                   |   7 +
+ drivers/edac/Kconfig                          |   7 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/al_mc_edac.c                     | 354 ++++++++++++++++++
+ 5 files changed, 421 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+ create mode 100644 drivers/edac/al_mc_edac.c
+
+-- 
+2.17.1
+
