@@ -6,38 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB01C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE0EC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC35024958
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EDE2495C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgEGRjo (ORCPT
+        id S1728224AbgEGRjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35774 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 13:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgEGRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727834AbgEGRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 13:39:30 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58A02218AC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9987624956;
         Thu,  7 May 2020 17:39:30 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jWkUb-000DoE-7b; Thu, 07 May 2020 13:39:29 -0400
-Message-ID: <20200507173929.118079761@goodmis.org>
+        id 1jWkUb-000DpG-H3; Thu, 07 May 2020 13:39:29 -0400
+Message-ID: <20200507173929.409881472@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 07 May 2020 13:39:10 -0400
+Date:   Thu, 07 May 2020 13:39:12 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [for-linus][PATCH 6/9] tracing: Add a vmalloc_sync_mappings() for safe measure
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [for-linus][PATCH 8/9] tracing: Fix doc mistakes in trace sample
 References: <20200507173904.729935165@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,61 +44,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Wei Yang <richard.weiyang@gmail.com>
 
-x86_64 lazily maps in the vmalloc pages, and the way this works with per_cpu
-areas can be complex, to say the least. Mappings may happen at boot up, and
-if nothing synchronizes the page tables, those page mappings may not be
-synced till they are used. This causes issues for anything that might touch
-one of those mappings in the path of the page fault handler. When one of
-those unmapped mappings is touched in the page fault handler, it will cause
-another page fault, which in turn will cause a page fault, and leave us in
-a loop of page faults.
+As the example below shows, DECLARE_EVENT_CLASS() is used instead of
+DEFINE_EVENT_CLASS().
 
-Commit 763802b53a42 ("x86/mm: split vmalloc_sync_all()") split
-vmalloc_sync_all() into vmalloc_sync_unmappings() and
-vmalloc_sync_mappings(), as on system exit, it did not need to do a full
-sync on x86_64 (although it still needed to be done on x86_32). By chance,
-the vmalloc_sync_all() would synchronize the page mappings done at boot up
-and prevent the per cpu area from being a problem for tracing in the page
-fault handler. But when that synchronization in the exit of a task became a
-nop, it caused the problem to appear.
+Link: http://lkml.kernel.org/r/20200428214959.11259-1-richard.weiyang@gmail.com
 
-Link: https://lore.kernel.org/r/20200429054857.66e8e333@oasis.local.home
-
-Cc: stable@vger.kernel.org
-Fixes: 737223fbca3b1 ("tracing: Consolidate buffer allocation code")
-Reported-by: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Suggested-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ samples/trace_events/trace-events-sample.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8d2b98812625..9ed6d92768af 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8525,6 +8525,19 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 	 */
- 	allocate_snapshot = false;
- #endif
-+
-+	/*
-+	 * Because of some magic with the way alloc_percpu() works on
-+	 * x86_64, we need to synchronize the pgd of all the tables,
-+	 * otherwise the trace events that happen in x86_64 page fault
-+	 * handlers can't cope with accessing the chance that a
-+	 * alloc_percpu()'d memory might be touched in the page fault trace
-+	 * event. Oh, and we need to audit all other alloc_percpu() and vmalloc()
-+	 * calls in tracing, because something might get triggered within a
-+	 * page fault trace event!
-+	 */
-+	vmalloc_sync_mappings();
-+
- 	return 0;
- }
- 
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 80b4a70315b6..13a35f7cbe66 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -416,7 +416,7 @@ TRACE_EVENT_FN(foo_bar_with_fn,
+  * Note, TRACE_EVENT() itself is simply defined as:
+  *
+  * #define TRACE_EVENT(name, proto, args, tstruct, assign, printk)  \
+- *  DEFINE_EVENT_CLASS(name, proto, args, tstruct, assign, printk); \
++ *  DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, printk); \
+  *  DEFINE_EVENT(name, name, proto, args)
+  *
+  * The DEFINE_EVENT() also can be declared with conditions and reg functions:
 -- 
 2.26.2
 
