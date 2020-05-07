@@ -2,51 +2,53 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2532AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B03C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E570E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE932073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862093;
-	bh=mEmtLHs1NDv9zuIsYLPG4t4VA1VthP+g89wF5PD8Z2A=;
+	s=default; t=1588862096;
+	bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=unDWB1zo0tP8ngnY5H/XpucvVLvqmkDyAnNUlZzHR2ejx4kNoKE9df6zQc52eUXa5
-	 OBNtRNqrGCI7febRUe7d2hPliPFsUlnvpJH8xLI9z0ExptXS7kFyvFMhWEsgEvFzec
-	 96Lj9mhzo0retzIUWaCcs3yVl0+UKmIiVN5wWTos=
+	b=rN21Qf1XAjonGutKV5zShQnvxivDlVFJp1FgW0OsSyVKZeauHOLVcDpkQ57u6hPLs
+	 aQYApP/AkQ2zg6d7p84L5ZrWq8r22tRVY1QunGC9PzxRFNO93k+EhSFZhSpwJ57z7G
+	 WLZKp49PDZ4TnZcm5gEbMgznTDM03A9jtkyG57mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgEGOev (ORCPT
+        id S1728341AbgEGO25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgEGO3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:00 -0400
+        id S1728300AbgEGO2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DDCE20870;
-        Thu,  7 May 2020 14:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535B5208D6;
+        Thu,  7 May 2020 14:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861739;
-        bh=mEmtLHs1NDv9zuIsYLPG4t4VA1VthP+g89wF5PD8Z2A=;
+        s=default; t=1588861731;
+        bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1P6sq5A4z+Zo9QMcYEJD//9oaTBxeGzEE97IivzEMF/hYRy8WV53bTzsbtVsfe4fW
-         gyBzCvUGN0LB8K9i/J8JgNJ1s+rOKUhUdADrw2xzMKyJC79T8RhWuS29myOUCokk4m
-         EQjHDf+Gfh9QLEgo/YnHrYc9sdJ0+BlEAOO570zA=
+        b=Du0CY9RZOX4UpdXgSmS6ANPwQWpGat/WIbch+cE2jdcsnFebeyPL3gTG0DtsH0XM0
+         sx5h5QEKaqWM8zvIIZdiRkRA0rSMHqhkKnBxNcsfowgh/mRaB/gGhU9kdlOHO0KoV0
+         ZbqyNDIZzHEwF2QtcpYsgM1TmEOeQDGDUbWGKG0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 23/35] ALSA: hda/hdmi: fix race in monitor detection during probe
-Date:   Thu,  7 May 2020 10:28:17 -0400
-Message-Id: <20200507142830.26239-23-sashal@kernel.org>
+Cc:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 16/35] selftests/ftrace: Check the first record for kprobe_args_type.tc
+Date:   Thu,  7 May 2020 10:28:10 -0400
+Message-Id: <20200507142830.26239-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -59,47 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-[ Upstream commit ca76282b6faffc83601c25bd2a95f635c03503ef ]
+[ Upstream commit f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba ]
 
-A race exists between build_pcms() and build_controls() phases of codec
-setup. Build_pcms() sets up notifier for jack events. If a monitor event
-is received before build_controls() is run, the initial jack state is
-lost and never reported via mixer controls.
+It is possible to get multiple records from trace during test and then more
+than 4 arguments are assigned to ARGS.  This situation results in the failure
+of kprobe_args_type.tc.  For example:
+-----------------------------------------------------------
+grep testprobe trace
+   ftracetest-5902  [001] d... 111195.682227: testprobe: (_do_fork+0x0/0x460) arg1=334823024 arg2=334823024 arg3=0x13f4fe70 arg4=7
+     pmlogger-5949  [000] d... 111195.709898: testprobe: (_do_fork+0x0/0x460) arg1=345308784 arg2=345308784 arg3=0x1494fe70 arg4=7
+ grep testprobe trace
+ sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'
+ARGS='334823024 334823024 0x13f4fe70 7
+345308784 345308784 0x1494fe70 7'
+-----------------------------------------------------------
 
-The problem can be hit at least with SOF as the controller driver. SOF
-calls snd_hda_codec_build_controls() in its workqueue-based probe and
-this can be delayed enough to hit the race condition.
+We don't care which process calls do_fork so just check the first record to
+fix the issue.
 
-Fix the issue by invalidating the per-pin ELD information when
-build_controls() is called. The existing call to hdmi_present_sense()
-will update the ELD contents. This ensures initial monitor state is
-correctly reflected via mixer controls.
-
-BugLink: https://github.com/thesofproject/linux/issues/1687
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200428123836.24512-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index f1febfc47ba60..4493427f324e4 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2232,7 +2232,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+index 1bcb67dcae267..81490ecaaa927 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+@@ -38,7 +38,7 @@ for width in 64 32 16 8; do
+   echo 0 > events/kprobes/testprobe/enable
  
- 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
- 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-+		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
+   : "Confirm the arguments is recorded in given types correctly"
+-  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
++  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+   check_types $ARGS $width
  
-+		pin_eld->eld_valid = false;
- 		hdmi_present_sense(per_pin, 0);
- 	}
- 
+   : "Clear event for next loop"
 -- 
 2.20.1
 
