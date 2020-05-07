@@ -2,122 +2,89 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26046C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFF7C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EE4218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF1B215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wiQ1w0Y6"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IAWbyeeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgEGR2k (ORCPT
+        id S1727993AbgEGR3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:28:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46044 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgEGR2j (ORCPT
+        Thu, 7 May 2020 13:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727904AbgEGR3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:28:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HRhk9088401;
-        Thu, 7 May 2020 17:28:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=KEw0jB4mu0JbwkEdmOt9aiMeM3LJb3HoOgTnR5MijrI=;
- b=wiQ1w0Y6QiwmaWoz2lxTL09p6pVFMUiCX14mjp/3mO/q97r0ExDqmsilY8TUgrbnYgCm
- dCJvlGa5Ca5FFZr8fs/7SBQAtYotbPFmw46Bxdjewn2hWucJxFIwjbOOCZ29evDTyANA
- 7lsVsWLK9+jqNFZ0kp6VfTIKzF0ieuUPhGUjmXsvVZP8aJ93BGjNEan+ndATkxJ6x2ib
- C87gXIanoccW6CmJDXMofRV0FmVys4CzMpGIcdk4j8Kz/px6WQ7ipWs3koyrq1BJy3RV
- FXfuYg51UmoB4xFX99xSDcacFXZGE+0JtmBsiU6Sjt7TGWrK73sXMvDs6VhplyVMyo5e xQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30vhvyhucu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 17:28:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047HHnfm193355;
-        Thu, 7 May 2020 17:26:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30t1rb492u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 17:26:35 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047HQYYh014236;
-        Thu, 7 May 2020 17:26:34 GMT
-Received: from [192.168.1.33] (/70.114.128.235)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 10:26:34 -0700
-Subject: Re: [PATCH] MAINTAINER: Update my email address
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-References: <20200507161229.31448-1-himanshu.madhani@oracle.com>
- <f83a2eb7013d203eab4be27f27ca0d996bbc5b47.camel@perches.com>
- <0c9af33d-0101-119b-4512-7838a0e0e9a0@oracle.com>
- <acb0794c5ba71b4d6ddc0b6a71252a4dfbfd497d.camel@perches.com>
-From:   Himanshu Madhani <himanshu.madhani@oracle.com>
-Message-ID: <a6524759-ac3d-836b-0e81-02037c8b4f94@oracle.com>
-Date:   Thu, 7 May 2020 12:26:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <acb0794c5ba71b4d6ddc0b6a71252a4dfbfd497d.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 phishscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070142
+        Thu, 7 May 2020 13:29:08 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15A8C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:29:06 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id p13so3045018qvt.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=bMOaygytaavUP+3oXmRtBKd6QdpGHoNfPxDGHrJDoho=;
+        b=IAWbyeeUHvkBMoYNzo44CNsvAtPLJtb6pI954PKHBckQft4I2EW0SJ1CkgznjDz3a1
+         oUENBjemKejGoMt8nuW7lQU5bMi0dUJbfUcPPJ8/pfINMWh1hUVpxABmDJbd4tA4QTeM
+         gAAohzYy5f6BGgpQdDhIDAk7SpihQpmF6bIfC6OZ58ZVoZmWI1dKHecJhSWuMgqyi7B6
+         ETtgdqCiHJ8aG83NAYYCHvXoYDsD64SQQzwBS+RFSccPUyYoTg0FOMACaOqHuTpXAENM
+         U5QSM9cFpSyQi+R+kXVXIOUMCDYuItpbmcNHl67k84/2cF3R4QSjZU/sVYoYq6cY0Y5C
+         m8Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=bMOaygytaavUP+3oXmRtBKd6QdpGHoNfPxDGHrJDoho=;
+        b=Vj/j3NULjlcs8Wnl0tnvWo3B9Z+i/fVwO++xos1a7cyyQt/ECcKkoYdxs+dHpHgke2
+         7LDaZn5Gbmis7IRx+V3wbh38H+4hTqCLlLZfL8xxUX9I2VAzpueM7Dwj4lSV4VCswHZn
+         EWroSYD5fbwE2a/L0O5UUYyYAc4ZCa5M/PMbr4Nsbs554gF/RSgtJZ0sf6Gt2L71RAht
+         XJ62CqGdF6HgAWd7RDr/9tg6AsJ86prStmK/Qtx9Bjoqk1yD6aMPKbF4oY7Js/CiKUHX
+         SN7mZn2LLpTHjJvR6Fg6W8J2V0TEsakZy/Pcv4y7GtyuaIT0wWxfpGDzNSs7QWqKTdtC
+         JkBA==
+X-Gm-Message-State: AGi0Pub2bRfS1NeKqJU1DLtY6JgxZYIDsJVSF8bLkVrws50VkSHHNlTl
+        jmVlMm91T2Tq1EAuyVwNA1AQfw==
+X-Google-Smtp-Source: APiQypK2y+suGLYML/+oWo2pLhvykG6idqATlpGsx4Cksh/5yVouQrtGlxihrZcxPMP3VpS71oY0BA==
+X-Received: by 2002:a0c:ea28:: with SMTP id t8mr13693929qvp.174.1588872546164;
+        Thu, 07 May 2020 10:29:06 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id a12sm3935981qko.103.2020.05.07.10.29.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 10:29:05 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: Kmemleak infrastructure improvement for task_struct leaks and call_rcu()
+Date:   Thu, 7 May 2020 13:29:04 -0400
+Message-Id: <40B2408F-05DD-4A82-BF97-372EA09FA873@lca.pw>
+References: <20200507171607.GD3180@gaia>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+In-Reply-To: <20200507171607.GD3180@gaia>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/7/20 12:23 PM, Joe Perches wrote:
-> On Thu, 2020-05-07 at 12:08 -0500, himanshu.madhani@oracle.com wrote:
->> On 5/7/20 11:57 AM, Joe Perches wrote:
->>> On Thu, 2020-05-07 at 11:12 -0500, Himanshu Madhani wrote:
->>>> I do not have access to my @marvell.com email ID anymore.
->>>> Lets map my new email address correctly in .mailmap
->>> Bad patch subject, this is a .mailmap patch.
->>>
->>> Maybe [PATCH] .mailmap: Update address of Himanshu Madhani
->>>
->> Okay. Thanks for pointing that out. I noticed that most of the patches
->> submitted for .mailmap had MAINTAINER in there so i used that. I will
->> repost with updated patch subject.
-> That's because those patches also generally update MAINTAINERS
-> entries and update .mailmap at the same time.
-Agree.  sent v2 with correct patch subject.
-> cheers, Joe
->
->>>> Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
->>>> ---
->>>>    .mailmap | 2 ++
->>>>    1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/.mailmap b/.mailmap
->>>> index db3754a41018..30d8c3f10ca7 100644
->>>> --- a/.mailmap
->>>> +++ b/.mailmap
->>>> @@ -99,6 +99,8 @@ Henk Vergonet <Henk.Vergonet@gmail.com>
->>>>    Henrik Kretzschmar <henne@nachtwindheim.de>
->>>>    Henrik Rydberg <rydberg@bitmath.org>
->>>>    Herbert Xu <herbert@gondor.apana.org.au>
->>>> +Himanshu Madhani <himanshu.madhani@oracle.com>
->>>> +Himanshu Madhani <hmadhani2024@gmail.com>
->>>>    Jacob Shin <Jacob.Shin@amd.com>
->>>>    Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
->>>>    Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
+
+> On May 7, 2020, at 1:16 PM, Catalin Marinas <catalin.marinas@arm.com> wrot=
+e:
+>=20
+> I don't mind adding additional tracking info if it helps with debugging.
+> But if it's for improving false positives, I'd prefer to look deeper
+> into figure out why the pointer reference graph tracking failed.
+
+No, the task struct leaks are real leaks. It is just painful to figure out t=
+he missing or misplaced put_task_struct() from the kmemleak reports at the m=
+oment.=
