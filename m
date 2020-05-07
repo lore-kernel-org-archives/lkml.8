@@ -2,388 +2,223 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F258DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D79C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1B4208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3463620A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="lCCF6lz6";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Jt2cxCWb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MjMZ+p0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgEGLZv (ORCPT
+        id S1727092AbgEGLZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:25:51 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:50702 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbgEGLZq (ORCPT
+        Thu, 7 May 2020 07:25:53 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25273 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726908AbgEGLZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:25:46 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047BLL0l009756;
-        Thu, 7 May 2020 04:25:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=fU7PkqbSdezDm5c48vMS2SmN6B7FNmKGB72WXm19Elo=;
- b=lCCF6lz6hyanXVhtSQIS3fUQWzIrJUwUNcjqwB7+LBHZ9wTdxMI3tjTkMw0sJUcRDKhC
- vKxTVwCGkNhdN5i8UZF6k76dJjLnxxPq+9ERVSfZtsz3xUoMjOzv87VwNWieTnlAjci6
- FGfmv2Y8xVVNLFbpLp0qE3bQ06G6gILQq+QzHYZIsOwGhIjOFZJIQRdHwa47zi6V6sSb
- lQpGMMEJldD6xN1e5GhlfuKW4dBV2ZP7PFLXL3PkgwLHI22AzIhvzEnFHCx0Nd/3jjKR
- c7//qPKWnEapG6ptNtVZEOM3AIwQdbrQVfXPoUuCRUdm0KkWuI+eTUteiyWevbqQLSgd FQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 30urytwynb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 04:25:37 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 7 May
- 2020 04:25:35 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Thu, 7 May 2020 04:25:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mW8pe6Kzv6ORyo9Wbh91ezYg7MRba57h++VPlzrnbQZbWGdaJALHT/Y6IpkpbdOgmzW+e6lWqR5Kr6uJIlqEi1QNhv2hRBBtAAOyC2iSwJkYBav0m7XZZ1xtQmUdHhwucQQZhG6vwW32mO03m/NE0FuHD3ueyz1MjMKcg2uV0Vh/3NbWtZU1/gOKTwUWH4oIcG6lMk493pb/xk22t/ZfPFDgFzWHXclU1RowKOoi4bQXKs/3y9tyahNdD4dh8zJTHKDMTTkTBssEtmcTA0QIKEYlueUwW3SboNTc+5pbiy+Xbkzwr0WkHEsx7E37sguxmWSh4+/Q4IZ8Pe5YwVP4LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fU7PkqbSdezDm5c48vMS2SmN6B7FNmKGB72WXm19Elo=;
- b=Sfabu1LFK6yZtuc2RhF3paZlMEOT481gVN7pUzOqgyT29MiK6Nim1ABpNTsZhk3XvRwQ70bb/dLakmNuWghtE65AmW4+VRN/F/JxiN+cc2pYo7htKlE8caiUcY0BQidLokuppwNXA+6DTi+m8HD/yQ/0jbz0Z4DQZnhp/LapZvADwlgC64lr1H4cMavZJIo0NEK6pl7XwxEWxcpt7Uf1XujRhPwp2wYNWWsoOs1xY7Erxo1dbgoQaWaHOkAJKoKnrFCmwV5gw90pB1snWjaFQnxCtrULy7dERufqvcR7c2i6CPA9+KSzGL1bCoyJFWqKFadCA5KMWcwS0Q8alOO3Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fU7PkqbSdezDm5c48vMS2SmN6B7FNmKGB72WXm19Elo=;
- b=Jt2cxCWbWDtIo6oftUU2NJ6fzIUdnU3Zs7lfYdXKT3UsWnd2VMebtPSeGqSZiSIGpageGyVGB16yEMo/EvwjkAOzKDVQUJDwDHMX6VgbmJxbsC/bzIU6bSzPuF7hkRM1+VZkIeG+CyKRpRL7hi3iqYo/lgPXveE3IuqGUKIvwt0=
-Received: from MWHPR1801MB1966.namprd18.prod.outlook.com
- (2603:10b6:301:66::20) by MWHPR1801MB1901.namprd18.prod.outlook.com
- (2603:10b6:301:61::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.30; Thu, 7 May
- 2020 11:24:33 +0000
-Received: from MWHPR1801MB1966.namprd18.prod.outlook.com
- ([fe80::6028:eab:73:829d]) by MWHPR1801MB1966.namprd18.prod.outlook.com
- ([fe80::6028:eab:73:829d%3]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 11:24:33 +0000
-From:   Bharat Bhushan <bbhushan2@marvell.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-Subject: RE: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap supported
- by endpoint
-Thread-Topic: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap
- supported by endpoint
-Thread-Index: AQHWIr/tb/HaX8dazk+c9DNGI+wgB6iaM2OAgAC462A=
-Date:   Thu, 7 May 2020 11:24:29 +0000
-Message-ID: <MWHPR1801MB19669FA26D44E1C31DF89BDBE3A50@MWHPR1801MB1966.namprd18.prod.outlook.com>
-References: <20200505093004.1935-1-bbhushan2@marvell.com>
- <20200505200659-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200505200659-mutt-send-email-mst@kernel.org>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=marvell.com;
-x-originating-ip: [122.179.57.224]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4397964d-17c9-48e3-e852-08d7f27937b8
-x-ms-traffictypediagnostic: MWHPR1801MB1901:
-x-microsoft-antispam-prvs: <MWHPR1801MB1901C1F5DFC409359172A9BEE3A50@MWHPR1801MB1901.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gYaimAs1vOvTFKomosXu3yby8k8EPnuR3qxsUhvRq1MTkmcjwHcVoEcT24k4eCnHcuBjWXDTlh7Oz8fjsLTJq2el810S9QayzZuq6yEO834xHARuD01WM5eHaL/cHIHd/FwH1CkOYn1u8QiS8r/qg98pBz0g3ObWL8fD+HoYe9lQBf21l1rXGFjSTDeoGgjFHkIcAfNOrN0JKFeja3PtEo9fJgozH9D0FSNQw9vPM2NFe7YyxA1gukdpvLzuc08GEmSpyC1zjEoe4KU6kbeRz+kO/ShyFOB+I+6k/sECDvTQPigNvFLe1Jnmh0yjaF1spfkfTfvTj+Av6SJE7dIoOWLOA61LUs7yRoayuA4MNhLPCkqbQCCye94qZ9OZpl6gXCxl1fzHMcpV72w4tyHbHRmuZQqpljC03LZ4CoDj/BwflgNl9KRmIP/skbc3l277LbYGrxCW/e4BKulBIXxCVuGr9XGtOYCGu9UsMYSDon4flfYWRdLcV2gesSsfQNGszBhL5DDocnVy0iDiTsYgIO/lO7//jgjDLzy2t2l0UGJg/R7o36ew2RZnX/uWeUe/hqyjZm0pFpEv2TLALXOhv9tUEsWT4vTt/DCs2l7PPSE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1801MB1966.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(33430700001)(64756008)(6916009)(55016002)(7696005)(66556008)(66476007)(316002)(5660300002)(6666004)(54906003)(26005)(186003)(966005)(33440700001)(8936002)(8676002)(66446008)(71200400001)(2906002)(9686003)(83310400001)(83280400001)(52536014)(76116006)(83290400001)(83300400001)(83320400001)(4326008)(53546011)(86362001)(6506007)(66946007)(478600001)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: kcfUp9dNmu/24/kJKutrSqF8chGEGrPzpuQ2sFYhr+TLFUJnJgQDY2afQLFevgasrD3kMjhXJx85+mMnRIByamhTNHhVKng/7yvi1S6d9k0tYnsTlBOhY8g6D/6h2hi1U9Bu0TNd17asrfRf5Ys/ItYuIfh4rCCbPrV9v1pK27QdIbatkulVI2QQz5e7Vl2kEvjt2AuxzXUdOjnODS0CCxFvTPOdzR4Zr66MzWoP/Nujyyd9L62xm4QDztjLwfoeuKUKPNZGIvSPtvDdzCemUDKz9GHaX+cregjsZ+gVb4EjDo25mQ23DNKN9O49T0TDbMpGASLYU2Gd4oeKpCS7AQdaOVCozdg6YyCQP8ul+rjHtt43g8gstT7vcOdsxFJZm0G0mSGxVImkD470yFFLV6BcVThGUYn+mlEYJIe/znmyI4/HA2L28EQDdCgdiaDhRqBID4PqQ0e4AmNNUtPBgaktj9NlmFi+uolSh5NPKmEz0jFzLyM/rwEsUxL049irv3wtR9hbHc9m7bkl4zFoXt4lbae3/IVEAEyYfQ8mQWXrnAT+Hd3p8JUTu/3FOF1c+2D7PTCP9e6TFhW8R5osHvrIC1vFYyG0leIbkvoMIowLaFGWN2Fhsh2mKvZtAun91JpjTxTC8sxQ0GycA97+uJO3ZpF0FDIZXd2hHJgHijnMz8gRkjup1JwxS0GcTNTc5Ge36yOw7YtONqsycWyhrw0g9CD+zKvWuMn3+a7ILX02qOo0tXfqZ1WQjt1SBwnbq00vaNl7U99u4LM5aYvI8IuNo2pMbht3x75H/b/1feY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 May 2020 07:25:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588850745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=okJLc56HxgwRQ3pAUVl+d+At6cmSRE2fHfdVLfqeU9E=;
+        b=MjMZ+p0S8dPw5ntZrZgV5n5Z0DfFwxmNEP4n4b7ktpnumulFBis0EAe93HEvWE2QFH/keo
+        mgCsQjn9vI2QQIMLYS6L9oBCxt3fwdPL12p7vlBqrLI1DjQerC+HXBGX65lsqDEtna8NlN
+        ZsNDHxVygtUWfSRwsZgWRjFHLD1kJ+E=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-cQZ-xpn5NyCgQm7T3-42kg-1; Thu, 07 May 2020 07:25:42 -0400
+X-MC-Unique: cQZ-xpn5NyCgQm7T3-42kg-1
+Received: by mail-wm1-f70.google.com with SMTP id o74so806561wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 04:25:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=okJLc56HxgwRQ3pAUVl+d+At6cmSRE2fHfdVLfqeU9E=;
+        b=pwx2osOtrDsFg3WZ1eD0JL1C0EX5HMYBppA0XLAvXEu1AlTPQTdUgiRRoR3rMywL7Y
+         4lDUT3/C9gfDOF3+zpMG4fpwCDTOIabRkU380QCbQpWJhlzbo8tURYfnI2aLF31b3DPh
+         YbSCiTdBy3aMAvRS1dFkVPpH2Ga+/mnx8bLxB7U4on1sXsocV+PiX2LlxQdbBITwLaRG
+         srzGoCLdn/3C45obCp9ZK4K5SvZrNjU+2tqglgKLFzQR5IDRAmnqx6Rrgxc8JUUeYGBK
+         PWZZFI2o9/5S0ic1NYWkobcOit0CyloVhsAEI8GmqiZnYDt1j4vxrMnt8PB/7NQSTcf8
+         HXcQ==
+X-Gm-Message-State: AGi0PuZLQeZdjeUlFRLbVAdofLxUpV9QXdiWjpeeIuNZ4WasXSRgmYCQ
+        Wq/LHyi+b5RvWGo7L/f5YpilGjUSaotrN113Vc5sax1Ve6V6mkf3tCheQvQU5MBqIR3AdF20diN
+        lYvEPX/hIELDkCZNi6eBhBeQI
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr15287566wrl.308.1588850740428;
+        Thu, 07 May 2020 04:25:40 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJNANnxsVsnNOEDgu94fgMKk/XWfA1Fdjv1VV703EFoHeL4+phgQNEomnmqNuXDRae/SyMmxA==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr15287547wrl.308.1588850740181;
+        Thu, 07 May 2020 04:25:40 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id n9sm7412749wrv.43.2020.05.07.04.25.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 04:25:39 -0700 (PDT)
+Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+ switch on "Detachable" and "Portable" chassis-types
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200502182951.114231-1-hdegoede@redhat.com>
+ <20200502182951.114231-5-hdegoede@redhat.com>
+ <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
+ <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
+ <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
+ <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ca5e5db1-eac5-358b-7d85-95d62e87b6f0@redhat.com>
+Date:   Thu, 7 May 2020 13:25:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4397964d-17c9-48e3-e852-08d7f27937b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 11:24:29.4498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T6ZQ7GAqLa6xeUpEu+miBky1UciJf58aP8163UvUuiVTO0GPgnc845hPeWSCiS6ijYbiyNAnSqjAW9vdM37gLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1801MB1901
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_06:2020-05-07,2020-05-07 signatures=0
+In-Reply-To: <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 5/5/20 4:27 PM, Andy Shevchenko wrote:
+> On Tue, May 5, 2020 at 5:22 PM <Mario.Limonciello@dell.com> wrote:
+>>
+>>> -----Original Message-----
+>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>>> owner@vger.kernel.org> On Behalf Of Hans de Goede
+>>> Sent: Tuesday, May 5, 2020 4:06 AM
+>>> To: Limonciello, Mario; dvhart@infradead.org; andy@infradead.org
+>>> Cc: linux-acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+>>> kernel@vger.kernel.org
+>>> Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+>>> switch on "Detachable" and "Portable" chassis-types
+>>>
+>>>
+>>> [EXTERNAL EMAIL]
+>>>
+>>> Hi,
+>>>
+>>> On 5/4/20 5:37 PM, Mario.Limonciello@dell.com wrote:
+>>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: Hans de Goede <hdegoede@redhat.com>
+>>>>> Sent: Saturday, May 2, 2020 1:30 PM
+>>>>> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
+>>>>> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
+>>>>> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>>>>> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+>>> switch
+>>>>> on "Detachable" and "Portable" chassis-types
+>>>>>
+>>>>>
+>>>>> [EXTERNAL EMAIL]
+>>>>>
+>>>>> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+>>>>> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+>>>>> reporting SW_TABLET_MODE = 1 to userspace on laptops.
+>>>>>
+>>>>> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+>>>>> interface to report if they are in tablet mode (keyboard detached) or not,
+>>>>> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
+>>>>>
+>>>>> Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+>>>>> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+>>>>> The Dell Venue 11 Pro 7130 is an example of this.
+>>>>>
+>>>>> Extend the DMI chassis-type check to also accept Portables and Detachables
+>>>>> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+>>>>>
+>>>>> Note the chassis-type check was originally added to avoid a false-positive
+>>>>> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+>>>>> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+>>>>> we still ignore the tablet-switch for that chassis-type.
+>>>>
+>>>> Yes that's correct.
+>>>>
+>>>>>
+>>>>> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+>>>>> switch on 2-in-1's")
+>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>>> ---
+>>>>> Looking at the Microsoft Windows documentation for tablet-mode reporting:
+>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
+>>>>> implementation
+>>>>>
+>>>>> Then the presence of a tablet-mode switch is indicated by the presence
+>>>>> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this device
+>>>>> can report the tablet-mode. 1. Directly providing a GpioInt resource inside
+>>>>> the PNP0C60 device, 2. Through injecting events from a Windows driver.
+>>>>>
+>>>>> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
+>>>>> of Intel's generic solution for the case where the tablet-mode comes from
+>>>>> the embedded-controller and needs to be "injected".
+>>>>>
+>>>>> This all suggests that it might be better to replace the chassis-type
+>>>>> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
+>>>>>
+>>>>> Mario, can you provide an acpidump and alsa-info.sh output for the
+>>>>> Dell XPS 9360, so that I can check if that might help with the issue
+>>>>> there, and thus is a potential candidate to replace the chassis-type
+>>>>> check?
+>>>>
+>>>> Unfortunately with WFH right now, I don't have access to a XPS 9630 to
+>>>> double check the patch series.
+>>>>
+>>>> However I do agree this should be a good approach.
+>>>
+>>> Ok, so lets stick with the chassis-type check (as amended by this patch)
+>>> for now then. Then once you are able to go to your office again, we
+>>> can examine the acpi_dev_present("PNP0C60", NULL, -1) alternative.
+>>
+>> I know XPS 13's are pretty popular, perhaps someone on the mailing list who has
+>> one can share ACPI dump in the interim.
+> 
+> https://github.com/intel/dptfxtract/issues/13
 
-> -----Original Message-----
-> From: Michael S. Tsirkin <mst@redhat.com>
-> Sent: Wednesday, May 6, 2020 5:53 AM
-> To: Bharat Bhushan <bbhushan2@marvell.com>
-> Cc: jean-philippe@linaro.org; joro@8bytes.org; jasowang@redhat.com;
-> virtualization@lists.linux-foundation.org; iommu@lists.linux-foundation.o=
-rg;
-> linux-kernel@vger.kernel.org; eric.auger.pro@gmail.com; eric.auger@redhat=
-.com
-> Subject: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap supporte=
-d by
-> endpoint
->=20
-> External Email
->=20
-> ----------------------------------------------------------------------
-> On Tue, May 05, 2020 at 03:00:04PM +0530, Bharat Bhushan wrote:
-> > Different endpoint can support different page size, probe endpoint if
-> > it supports specific page size otherwise use global page sizes.
-> >
-> > Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
-> > ---
-> > v4->v5:
-> >  - Rebase to Linux v5.7-rc4
-> >
-> > v3->v4:
-> >  - Fix whitespace error
-> >
-> > v2->v3:
-> >  - Fixed error return for incompatible endpoint
-> >  - __u64 changed to __le64 in header file
-> >
-> >  drivers/iommu/virtio-iommu.c      | 48 ++++++++++++++++++++++++++++---
-> >  include/uapi/linux/virtio_iommu.h |  7 +++++
-> >  2 files changed, 51 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iommu/virtio-iommu.c
-> > b/drivers/iommu/virtio-iommu.c index d5cac4f46ca5..9513d2ab819e 100644
-> > --- a/drivers/iommu/virtio-iommu.c
-> > +++ b/drivers/iommu/virtio-iommu.c
-> > @@ -78,6 +78,7 @@ struct viommu_endpoint {
-> >  	struct viommu_dev		*viommu;
-> >  	struct viommu_domain		*vdomain;
-> >  	struct list_head		resv_regions;
-> > +	u64				pgsize_bitmap;
-> >  };
-> >
-> >  struct viommu_request {
-> > @@ -415,6 +416,19 @@ static int viommu_replay_mappings(struct
-> viommu_domain *vdomain)
-> >  	return ret;
-> >  }
-> >
-> > +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-> > +				    struct virtio_iommu_probe_pgsize_mask *mask,
-> > +				    size_t len)
-> > +{
-> > +	u64 pgsize_bitmap =3D le64_to_cpu(mask->pgsize_bitmap);
-> > +
-> > +	if (len < sizeof(*mask))
->=20
-> This is too late to validate length, you have dereferenced it already.
-> do it before the read pls.
+Good one.
 
-Yes, Will change here and other places as well
+So this has:
 
->=20
-> > +		return -EINVAL;
->=20
-> OK but note that guest will then just proceed to ignore the property. Is =
-that really
-> OK? Wouldn't host want to know?
+         Device (CIND)
+         {
+             Name (_HID, "INT33D3" /* Intel GPIO Buttons */)  // _HID: Hardware I
+             Name (_CID, "PNP0C60" /* Display Sensor Device */)  // _CID: Compati
+             Method (_STA, 0, Serialized)  // _STA: Status
+             {
+                 If ((OSYS >= 0x07DC))
+                 {
+                     Return (0x0F)
+                 }
 
+                 Return (Zero)
+             }
+         }
 
-Guest need to be in sync with device, so yes seems like guest need to tell =
-device which page-size-mask it is using.
+And OSYS >= 0x07DC checks for "Windows 2012" which Linux does advertise,
+so despite not having a tablet-mode(switch) the XPS 9360 still has a
+PNP0C60 ACPI device and will report 0xf (present) as status for it,
+so a acpi_dev_present("PNP0C60", NULL, -1) check will succeed on it.
 
-Corresponding spec change patch (https://www.mail-archive.com/virtio-dev@li=
-sts.oasis-open.org/msg06214.html)
+Conclusion: such a check is not a valid alternative for checking DMI
+chassis-types (and from that pov this series thus is ready for merging).
 
-Would like Jean/Eric to comment here as well.
+Regards,
 
->=20
->=20
-> > +
-> > +	vdev->pgsize_bitmap =3D pgsize_bitmap;
->=20
-> what if bitmap is 0? Is that a valid size? I see a bunch of BUG_ON with t=
-hat value ...
-
-As per spec proposed device is supposed to set at-least one bit.
-Will add a bug_on her.
-Should we add bug_on or switch to global config page-size mask if this is z=
-ero (notify device which page-size-mask it is using).
-
->=20
-> I also see a bunch of code like e.g. this:
->=20
->         pg_size =3D 1UL << __ffs(pgsize_bitmap);
->=20
-> which probably won't DTRT on a 32 bit guest if the bitmap has bits set in=
- the high
-> word.
->=20
-
-My thought is that in that case viommu_domain_finalise() will fail, do not =
-proceed.
-
->=20
->=20
-> > +	return 0;
-> > +}
-> > +
-> >  static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
-> >  			       struct virtio_iommu_probe_resv_mem *mem,
-> >  			       size_t len)
-> > @@ -499,6 +513,9 @@ static int viommu_probe_endpoint(struct viommu_dev
-> *viommu, struct device *dev)
-> >  		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
-> >  			ret =3D viommu_add_resv_mem(vdev, (void *)prop, len);
-> >  			break;
-> > +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-> > +			ret =3D viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-> > +			break;
-> >  		default:
-> >  			dev_err(dev, "unknown viommu prop 0x%x\n", type);
-> >  		}
-> > @@ -630,7 +647,7 @@ static int viommu_domain_finalise(struct
-> > viommu_endpoint *vdev,
-> >
-> >  	vdomain->id		=3D (unsigned int)ret;
-> >
-> > -	domain->pgsize_bitmap	=3D viommu->pgsize_bitmap;
-> > +	domain->pgsize_bitmap	=3D vdev->pgsize_bitmap;
-> >  	domain->geometry	=3D viommu->geometry;
-> >
-> >  	vdomain->map_flags	=3D viommu->map_flags;
-> > @@ -654,6 +671,29 @@ static void viommu_domain_free(struct iommu_domain
-> *domain)
-> >  	kfree(vdomain);
-> >  }
-> >
-> > +/*
-> > + * Check whether the endpoint's capabilities are compatible with
-> > +other
-> > + * endpoints in the domain. Report any inconsistency.
-> > + */
-> > +static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev=
-,
-> > +					  struct viommu_domain *vdomain) {
-> > +	struct device *dev =3D vdev->dev;
-> > +
-> > +	if (vdomain->viommu !=3D vdev->viommu) {
-> > +		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	if (vdomain->domain.pgsize_bitmap !=3D vdev->pgsize_bitmap) {
-> > +		dev_err(dev, "incompatible domain bitmap 0x%lx !=3D 0x%llx\n",
-> > +			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-> > +		return false;
-> > +	}
->=20
-> I'm confused by this. So let's assume host supports pages sizes of 4k, 2M=
-, 1G. It
-> signals this in the properties. Nice.
-> Now domain supports 4k, 2M and that's all. Why is that a problem?
-> Just don't use 1G ...
-
-Is not it too to change the existing domain properties, for devices already=
- attached to domain? New devices must match to domain page-size.
-
->=20
->=20
-> > +
-> > +	return true;
-> > +}
-> > +
-> >  static int viommu_attach_dev(struct iommu_domain *domain, struct
-> > device *dev)  {
-> >  	int i;
-> > @@ -670,9 +710,8 @@ static int viommu_attach_dev(struct iommu_domain
-> *domain, struct device *dev)
-> >  		 * owns it.
-> >  		 */
-> >  		ret =3D viommu_domain_finalise(vdev, domain);
-> > -	} else if (vdomain->viommu !=3D vdev->viommu) {
-> > -		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-> > -		ret =3D -EXDEV;
-> > +	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-> > +		ret =3D -EINVAL;
-> >  	}
-> >  	mutex_unlock(&vdomain->mutex);
-> >
-> > @@ -886,6 +925,7 @@ static int viommu_add_device(struct device *dev)
-> >
-> >  	vdev->dev =3D dev;
-> >  	vdev->viommu =3D viommu;
-> > +	vdev->pgsize_bitmap =3D viommu->pgsize_bitmap;
-> >  	INIT_LIST_HEAD(&vdev->resv_regions);
-> >  	dev_iommu_priv_set(dev, vdev);
-> >
-> > diff --git a/include/uapi/linux/virtio_iommu.h
-> > b/include/uapi/linux/virtio_iommu.h
-> > index 48e3c29223b5..2cced7accc99 100644
-> > --- a/include/uapi/linux/virtio_iommu.h
-> > +++ b/include/uapi/linux/virtio_iommu.h
->=20
-> As any virtio UAPI change, you need to copy virtio TC at some point befor=
-e this is
-> merged ...
-
-Jean already send patch for same
-https://www.mail-archive.com/virtio-dev@lists.oasis-open.org/msg06214.html
-
-Do we need to do anything additional?
-
->=20
-> > @@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
-> >
-> >  #define VIRTIO_IOMMU_PROBE_T_NONE		0
-> >  #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-> > +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
-> >
-> >  #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
-> >
->=20
-> Does host need to know that guest will ignore the page size mask?
-> Maybe we need a feature bit.
->=20
-> > @@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
-> >  	__le16					length;
-> >  };
-> >
-> > +struct virtio_iommu_probe_pgsize_mask {
-> > +	struct virtio_iommu_probe_property	head;
-> > +	__u8					reserved[4];
-> > +	__le64					pgsize_bitmap;
-> > +};
-> > +
->=20
-> This is UAPI. Document the format of pgsize_bitmap please.
-
-Ok,
-
-Thanks
--Bharat
-
->=20
->=20
-> >  #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
-> >  #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
-> >
-> > --
-> > 2.17.1
+Hans
 
