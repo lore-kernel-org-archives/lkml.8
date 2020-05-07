@@ -2,121 +2,62 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC901C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E613D206B9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66522082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEGP2k (ORCPT
+        id S1726712AbgEGP3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725914AbgEGP2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:28:39 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A92C05BD43;
-        Thu,  7 May 2020 08:28:39 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWiRs-00057R-3f; Thu, 07 May 2020 17:28:32 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABB061C001A;
-        Thu,  7 May 2020 17:28:31 +0200 (CEST)
-Date:   Thu, 07 May 2020 15:28:31 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool: Fix infinite loop in find_jump_table()
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com>
-References: <378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com>
+        Thu, 7 May 2020 11:29:09 -0400
+Received: from verein.lst.de ([213.95.11.211]:47391 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgEGP3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:29:09 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A33A868B05; Thu,  7 May 2020 17:29:06 +0200 (CEST)
+Date:   Thu, 7 May 2020 17:29:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
+Message-ID: <20200507152906.GA31257@lst.de>
+References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com> <20200506045258.GB9846@lst.de> <10918cd1-a4a9-7872-9672-efcd28ef0751@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158886531158.8414.1142535737378207630.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10918cd1-a4a9-7872-9672-efcd28ef0751@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/urgent branch of tip:
+On Thu, May 07, 2020 at 05:22:28PM +0200, Stefan Haberland wrote:
+> OK, just thought again about your suggestion and also that
+> you have already been talking about a symbol lookup I just
+> have written a prototype that took your first two patches
+> as base, exports the symbol of dasd_biodasdinfo and in
+> ibm.c I do a kallsyms_lookup_name("dasd_biodasdinfo").
+> 
+> So I would not have to define a structure twice or rely on
+> MAJORs. Also we would not have to define an own file
+> operation only for DASD devices.
+> 
+> What do you think about this? If you agree I will polish
+> the patches, test them and send them for review.
 
-Commit-ID:     1119d265bc20226c241e5540fc8a246d9e30b272
-Gitweb:        https://git.kernel.org/tip/1119d265bc20226c241e5540fc8a246d9e30b272
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Tue, 28 Apr 2020 16:45:16 -05:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 07 May 2020 17:22:31 +02:00
-
-objtool: Fix infinite loop in find_jump_table()
-
-Kristen found a hang in objtool when building with -ffunction-sections.
-
-It was caused by evergreen_pcie_gen2_enable.cold() being laid out
-immediately before evergreen_pcie_gen2_enable().  Since their "pfunc" is
-always the same, find_jump_table() got into an infinite loop because it
-didn't recognize the boundary between the two functions.
-
-Fix that with a new prev_insn_same_sym() helper, which doesn't cross
-subfunction boundaries.
-
-Reported-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com
----
- tools/objtool/check.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4b170fd..0e8f9a3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -72,6 +72,17 @@ static struct instruction *next_insn_same_func(struct objtool_file *file,
- 	return find_insn(file, func->cfunc->sec, func->cfunc->offset);
- }
- 
-+static struct instruction *prev_insn_same_sym(struct objtool_file *file,
-+					       struct instruction *insn)
-+{
-+	struct instruction *prev = list_prev_entry(insn, list);
-+
-+	if (&prev->list != &file->insn_list && prev->func == insn->func)
-+		return prev;
-+
-+	return NULL;
-+}
-+
- #define func_for_each_insn(file, func, insn)				\
- 	for (insn = find_insn(file, func->sec, func->offset);		\
- 	     insn;							\
-@@ -1050,8 +1061,8 @@ static struct rela *find_jump_table(struct objtool_file *file,
- 	 * it.
- 	 */
- 	for (;
--	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
--	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
-+	     insn && insn->func && insn->func->pfunc == func;
-+	     insn = insn->first_jump_src ?: prev_insn_same_sym(file, insn)) {
- 
- 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
- 			break;
+How do you figure out a given gendisk is a DASD device?  I guess
+dasd_biodasdinfo could just check the block_device_operations
+pointer first thing.  That's still a little ugly, but seems the
+least bad idea so far, so please at least post it for discussion.
