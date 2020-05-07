@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26FEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614CAC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0902083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3550B2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861896;
-	bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
+	s=default; t=1588861899;
+	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQU+pcu+SQE/r8bmjdd5/cyLCkAI9T2HZ76FTVn5G12hA7U1eBlIQYuhivzNpRmEe
-	 /rO5xQuFeRYPmrey/ptKn+oMm3jKP1gbs2vZlCXOu4Do7D/PGnFksvYYQSHkk3zBJB
-	 3J6bMrYpOy86ydqYoc6d4pTC4Q34oLuser3NSsPM=
+	b=ymEuqsRB5XfB7Dv0VisY+rwoamdYFHZ1DEe6StRwhRIACVOQ7Scq4oDOW9nFNmJAG
+	 S1suBxpq99WsN/vW1qql1mymqFOBUwyQ3k2wmHWNKnd1oLEA0xB+TUkXQRSsPAnMFR
+	 EaO3SrGI8Y498txyo8mWcqnmf7D/yirj3v1HdgRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgEGObf (ORCPT
+        id S1728317AbgEGOaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgEGOaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:23 -0400
+        id S1728732AbgEGO37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCEA520870;
-        Thu,  7 May 2020 14:30:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11B7A208D6;
+        Thu,  7 May 2020 14:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861823;
-        bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
+        s=default; t=1588861798;
+        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BTWAEzNO1ijs+w1fX2iipVJJvHGxdVWnXQAvTfhbb6GenJGugfFDBdvggZyWnxVAG
-         2zdEiOUmt8YfWJ79OaeHisYKVw2oxl1Wvcb6g8QDzfphMkCweVHtEnoe8xf6IMtXDz
-         s/KTTP6UEmGSI2iq/Agh9fmLplvMKcFD1gpLj19A=
+        b=ifOHW/Zp0NW4F1Nv1eATP4yvTdU9o4YgrCojaXdpfFohw8Jd6K76EDkT/tS1+CuP/
+         iUmswj56pTF15bMgG16bSKgaRFPYU10M3AT+8CDDTAIn0GWsLv+27lLSlgsYcMnnNY
+         aBUfG5U7495JxU3IALTpCp7BjC6hpmdQvkAHYzy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 4/9] dmaengine: mmp_tdma: Reset channel error on release
-Date:   Thu,  7 May 2020 10:30:13 -0400
-Message-Id: <20200507143018.27195-4-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 13/16] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+Date:   Thu,  7 May 2020 10:29:40 -0400
+Message-Id: <20200507142943.26848-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
-References: <20200507143018.27195-1-sashal@kernel.org>
+In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
+References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,39 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
+[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
 
-When a channel configuration fails, the status of the channel is set to
-DEV_ERROR so that an attempt to submit it fails. However, this status
-sticks until the heat end of the universe, making it impossible to
-recover from the error.
+v2: removed TODO reminder
 
-Let's reset it when the channel is released so that further use of the
-channel with correct configuration is not impacted.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mmp_tdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 3df0422607d59..ac9aede1bfbec 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -364,6 +364,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
- 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
- 				size);
- 	tdmac->desc_arr = NULL;
-+	if (tdmac->status == DMA_ERROR)
-+		tdmac->status = DMA_COMPLETE;
- 
- 	return;
- }
+diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
+index 7fbcc35e8ad35..c89c10055641e 100644
+--- a/drivers/gpu/drm/qxl/qxl_image.c
++++ b/drivers/gpu/drm/qxl/qxl_image.c
+@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
+ 		break;
+ 	default:
+ 		DRM_ERROR("unsupported image bit depth\n");
+-		return -EINVAL; /* TODO: cleanup */
++		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
++		return -EINVAL;
+ 	}
+ 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
+ 	image->u.bitmap.x = width;
 -- 
 2.20.1
 
