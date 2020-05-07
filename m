@@ -2,197 +2,151 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E672C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B870C54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E79852075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F218E20936
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Bu1qIIMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGGUi (ORCPT
+        id S1726480AbgEGGUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:20:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:52160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgEGGUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:20:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E224D1FB;
-        Wed,  6 May 2020 23:20:36 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.73.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E6D923F71F;
-        Wed,  6 May 2020 23:20:33 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/cpufeature: Verify KVM capabilities during CPU hotplug
-Date:   Thu,  7 May 2020 11:49:47 +0530
-Message-Id: <1588832387-8489-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 7 May 2020 02:20:43 -0400
+Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:45398
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725763AbgEGGUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:20:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gHjXJKxVFgdqNn50SuUaTxcd82sNXxbG3mx3KQgxNOFuNvY/Xt8gaYmqLJCzO0IqWrg+fcUte+YFdqlXP3P8NgEnG44d5xz/v3psIKyCtwm28q6Wv8CEOLEEh3GxGouY97V1eYdrlAnEhxMEyAEwIpYdjdkhpREGw2EqzPUR8NxfTScwP77Jdo7eOV0miLWc7txLaSUDA+n1F222whtP7GdKnDLar0SqkV0T925hH14VpxJVDyJ/Zj2U5uJkBiBjFkQfIFyhEEDgDmOkazoYDjhhq64jjNW3cngxvF1AXx8VBTKrq+grgZcUkoKTlNhw30uBwG8fiysmU1+7ODqiow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HyO2yXujx74N8FgysyCNeJX8kOSCOAdmsqVABZLKcZA=;
+ b=A+Xs/RDCYglNyLtL6PX1DDY9L65qEi03idF+zT60Oy0bcH7uAPb3ZgRIIco9+w/3eZ4FS3nX04jfDnv3nis4fjttK1Fq8jdDhwkB3bqiz1L7stAqI2rSsICKVzPEhJ4QM/iuKCYYDDuEK3UknwYoLKFXvO49CF7k9Ix6wgbkE2afwmETPgMG/INUBLqHBXkTNV/WhMR6tQArOU4b1uMajy89Nqe4PW3oA63URA5z4vjh/e9lZeq7eHBLYJrhPTvAChhmZ24J+eWY0a1bABbj5irtrm9rch3v/FLgcYk3QNQX88J0b5jEsPp/wgww85Mdl0vHVXJvkMjfthrJJ5MRJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HyO2yXujx74N8FgysyCNeJX8kOSCOAdmsqVABZLKcZA=;
+ b=Bu1qIIMJ5O+WYX2PmxVYPHBMC7ttfvgSTEpSJ1OR+NZeE4tjoUvf4TFkh7E8mhuZWk0JsMBqbRiVxj2mIv20KUh+GY3SjOjcmbNYAI+/UfeN0sZVGhpKhnHnea2G4c0s1srpxKomdAyWzjV5ob/zVN5/Z6WqnDjhwjmodGjlywM=
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22)
+ by DBBPR04MB6170.eurprd04.prod.outlook.com (2603:10a6:10:c9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
+ 2020 06:20:37 +0000
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::107d:2130:2140:23ec]) by DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::107d:2130:2140:23ec%5]) with mapi id 15.20.2958.033; Thu, 7 May 2020
+ 06:20:37 +0000
+From:   Andy Tang <andy.tang@nxp.com>
+To:     Andy Tang <andy.tang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
+Thread-Topic: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
+Thread-Index: AQHWE9T1oBx+6VlpcEKikHBaKEggH6icR4Wg
+Date:   Thu, 7 May 2020 06:20:37 +0000
+Message-ID: <DBBPR04MB60904584EBDB9E2577C5016CF3A50@DBBPR04MB6090.eurprd04.prod.outlook.com>
+References: <20200416093940.34371-1-andy.tang@nxp.com>
+In-Reply-To: <20200416093940.34371-1-andy.tang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cffdac0d-8e90-4970-bfb9-08d7f24ec260
+x-ms-traffictypediagnostic: DBBPR04MB6170:|DBBPR04MB6170:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBBPR04MB617088C3DAD3DFF0C075DFC0F3A50@DBBPR04MB6170.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hkLggWFWXO8G4gnJDsb//sYJ1YRpfH1sqHWxH9fHku+dlMHpq47PA3PIWvBKkYdu4tvCuMjZPpy4rDbUlQ+NZnLsestduy3iyQHWnYRgLkmgarF4IQ2TkwLq1UiWHQUflZFeknaZgWAktdUepOIH1jCuKwS7XdRKjVAEZd1c2EwNxfornTBkT1StD+cOtgldYAvn+gVVZ5hCS8X7akaMJMWSZnNLJFoFJx7nkk0+MoZ+oxb7lKorWg4+z4CBdIwZz1KUaONEKAgNlz5Byuc+w1YEBXhd2r7dwXQjQdSPusSEDRJh2h+enGGmjkqYI29m/DF1WqgIzKmyRYpVAVlCml8Wpp9hPdvhsM8guNS1sn4KRLkAFc0+Iw1RFLz03XfJdGqCHdMc4j3umTc+y6TLJj7mabktvUH8af8WvuTTkiiYSS/PigsJY7MeiWFVM0WHXsV/zCow8msIcmaG0yo2X3SS1MOP8MjAvf0ZmxK7GjFukurAXizKwSi58H8sITCCDtyiBm+yU3d5PVtr9vh25Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB6090.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(33430700001)(9686003)(15650500001)(33656002)(52536014)(66556008)(53546011)(6506007)(26005)(64756008)(7696005)(186003)(4326008)(66946007)(66446008)(2906002)(66476007)(8676002)(55016002)(76116006)(5660300002)(44832011)(478600001)(8936002)(33440700001)(54906003)(110136005)(71200400001)(86362001)(316002)(83280400001)(83320400001)(83300400001)(83290400001)(83310400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: S0ALT9fVD4XBAhoOJTN7wzVlWgkTK1veQ0tPSWjHQi8kAYiFGyoFrX8hWhNk0wKYnyvKlsywTAL5mjUcXMqs66HYjOC73odlaJAgHlKYMAoPfl5Pkhf9cL1TTS6HdsyyWEFbGguLhlq+1nJMFl3OJtn1AUunTdSiuRLCuMNlEsiNE4a71LxRsIuYenAgaoShzhXpeG4qBdkAl/qnyT3a1jxbs+a9lYknU7wbI461WYYhSuxvsp4AIja3JFIe91pBW+1Hp1GnE7XtDolXrUayas8Cm8l+3XNJbuhqP7hHil9HUYIxZgQneczSX3SJqfTeUgx19G7DwjOcF+Fqykb7cYOyNG/6JCbOqu8LcfODwGzX7DhWEJ+qe3IiG2I+agkp42b6vYDWo30tOS/xNgEpwxBIs4M9xOs1ZYgAjMjKOx08ljfcS2E74QTKguL6En6GGEKYwBHnZ8c6K1s/ooy4QTgsHgNPOLw/dIYAB+5XtUrXAUFcWC5AnygZ+3m+JbXJTIZKQ9nvt9CtHXYZgclYbXIh6bRycDOoCXF2E5qJUbm/APIsCQFsf0ehg5h8oBrEHHfgbeG+Kfyjz0YfZgC3b9P3IGA/sXHMNOgiOkHYw4/cIx4fMHtSYcC0YUFYsOkh8p/PDu80ZDbvptTz4la2xvIZUeZEIk9kkCvBkHsThRrYiFb+rIDVmOAzcz0sRbWLTpkZiBICG83lGwBopkYPuUQ2wS0nUypGUn9BFdot2v+IoPCDLpQSVgleeWfFXEi6Bnd/i40Uqjsw3uunFM84JYSPgZyzhOfEHY+Y+SDYOYs=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cffdac0d-8e90-4970-bfb9-08d7f24ec260
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 06:20:37.7946
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fIvO0qDCqru1mSJKdGzjUWhZPVpBIHFvaq7xew9W8g+lK1whx/DP61eRNbvYEXHjOZW8cA1stXDmbxjAb+3QCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB6170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This validates KVM capabilities like VMID width, IPA range for hotplug CPU
-against system finalized values. While here, it factors out get_vmid_bits()
-for general use and also defines ID_AA64MMFR0_PARANGE_MASK.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: kvmarm@lists.cs.columbia.edu
-Cc: linux-kernel@vger.kernel.org
-
-Suggested-by: Suzuki Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/cpufeature.h | 22 +++++++++++++++++++
- arch/arm64/include/asm/kvm_mmu.h    |  2 +-
- arch/arm64/include/asm/sysreg.h     |  1 +
- arch/arm64/kernel/cpufeature.c      |  2 ++
- arch/arm64/kvm/reset.c              | 33 +++++++++++++++++++++++++++--
- 5 files changed, 57 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index afe08251ff95..6808a2091de4 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -745,6 +745,28 @@ static inline bool cpu_has_hw_af(void)
- extern bool cpu_has_amu_feat(int cpu);
- #endif
- 
-+static inline unsigned int get_vmid_bits(u64 mmfr1)
-+{
-+	int vmid_bits;
-+
-+	vmid_bits = cpuid_feature_extract_unsigned_field(mmfr1,
-+						ID_AA64MMFR1_VMIDBITS_SHIFT);
-+	if (vmid_bits == ID_AA64MMFR1_VMIDBITS_16)
-+		return 16;
-+
-+	/*
-+	 * Return the default here even if any reserved
-+	 * value is fetched from the system register.
-+	 */
-+	return 8;
-+}
-+
-+#ifdef CONFIG_KVM_ARM_HOST
-+void verify_kvm_capabilities(void);
-+#else
-+static inline void verify_kvm_capabilities(void) { }
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index 30b0e8d6b895..a7137e144b97 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -416,7 +416,7 @@ static inline unsigned int kvm_get_vmid_bits(void)
- {
- 	int reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
- 
--	return (cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR1_VMIDBITS_SHIFT) == 2) ? 16 : 8;
-+	return get_vmid_bits(reg);
- }
- 
- /*
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index c4ac0ac25a00..3510a4668970 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -705,6 +705,7 @@
- #define ID_AA64MMFR0_TGRAN16_SUPPORTED	0x1
- #define ID_AA64MMFR0_PARANGE_48		0x5
- #define ID_AA64MMFR0_PARANGE_52		0x6
-+#define ID_AA64MMFR0_PARANGE_MASK	0x7
- 
- #ifdef CONFIG_ARM64_PA_BITS_52
- #define ID_AA64MMFR0_PARANGE_MAX	ID_AA64MMFR0_PARANGE_52
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fac745aa7bb..041dd610b0f8 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2206,6 +2206,8 @@ static void verify_local_cpu_capabilities(void)
- 
- 	if (system_supports_sve())
- 		verify_sve_features();
-+
-+	verify_kvm_capabilities();
- }
- 
- void check_local_cpu_capabilities(void)
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 30b7ea680f66..1eebcc2a8396 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -340,11 +340,39 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 	return ret;
- }
- 
-+void verify_kvm_capabilities(void)
-+{
-+	u64 safe_mmfr1, mmfr0, mmfr1;
-+	int parange, ipa_max;
-+	unsigned int safe_vmid_bits, vmid_bits;
-+
-+	safe_mmfr1 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
-+	mmfr0 = read_cpuid(ID_AA64MMFR0_EL1);
-+	mmfr1 = read_cpuid(ID_AA64MMFR1_EL1);
-+
-+	/* Verify VMID bits */
-+	safe_vmid_bits = get_vmid_bits(safe_mmfr1);
-+	vmid_bits = get_vmid_bits(mmfr1);
-+	if (vmid_bits < safe_vmid_bits) {
-+		pr_crit("CPU%d: VMID width mismatch\n", smp_processor_id());
-+		cpu_die_early();
-+	}
-+
-+	/* Verify IPA range */
-+	parange = mmfr0 & ID_AA64MMFR0_PARANGE_MASK;
-+	ipa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
-+	if (ipa_max < kvm_ipa_limit) {
-+		pr_crit("CPU%d: IPA range mismatch\n", smp_processor_id());
-+		cpu_die_early();
-+	}
-+}
-+
- void kvm_set_ipa_limit(void)
- {
- 	unsigned int ipa_max, pa_max, va_max, parange;
- 
--	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 0x7;
-+	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) &
-+						ID_AA64MMFR0_PARANGE_MASK;
- 	pa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
- 
- 	/* Clamp the IPA limit to the PA size supported by the kernel */
-@@ -406,7 +434,8 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
- 		phys_shift = KVM_PHYS_SHIFT;
- 	}
- 
--	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 7;
-+	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) &
-+						ID_AA64MMFR0_PARANGE_MASK;
- 	if (parange > ID_AA64MMFR0_PARANGE_MAX)
- 		parange = ID_AA64MMFR0_PARANGE_MAX;
- 	vtcr |= parange << VTCR_EL2_PS_SHIFT;
--- 
-2.20.1
-
+UElORy4NCg0KQlIsDQpBbmR5DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
+bTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IFNlbnQ6IDIwMjDE6jTUwjE2
+yNUgMTc6NDANCj4gVG86IHJ1aS56aGFuZ0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207
+IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmcNCj4gQ2M6IGxpbnV4LXBtQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBUYW5nDQo+IDxhbmR5LnRhbmdA
+bnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHYyXSB0aGVybWFsOiBxb3JpcTogVXBkYXRlIHRo
+ZSBzZXR0aW5ncyBmb3IgVE1VdjINCj4gDQo+IEZvciBUTVUgdjIsIFRNU0FSIHJlZ2lzdGVycyBu
+ZWVkIHRvIGJlIHNldCBwcm9wZXJseSB0byBnZXQgdGhlIGFjY3VyYXRlDQo+IHRlbXBlcmF0dXJl
+IHZhbHVlcy4NCj4gQWxzbyB0ZW1wZXJhdHVyZSByZWFkaW5nIG5lZWRzIHRvIGNvbnZlcnQgdG8g
+ZGVncmVlIENlbHNpdXMgc2luY2UgaXQgaXMgaW4NCj4gZGVncmVlcyBLZWx2aW4uDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gLS0tDQo+
+IHYyOg0KPiAJLSBjaGFuZ2UgdGhlIHRlbXAgaW4gbWlsbGljZWxzaXVzDQo+IA0KPiAgZHJpdmVy
+cy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYyB8IDE1ICsrKysrKysrKysrKysrLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+IGIvZHJpdmVycy90aGVybWFs
+L3FvcmlxX3RoZXJtYWwuYyBpbmRleCAwMjhhNmJiZjc1ZGMuLmY2MzcxMTI3ZjcwNw0KPiAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYw0KPiArKysgYi9kcml2
+ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+IEBAIC0yMyw2ICsyMyw3IEBADQo+ICAjZGVm
+aW5lIFRNVE1JUl9ERUZBVUxUCTB4MDAwMDAwMGYNCj4gICNkZWZpbmUgVElFUl9ESVNBQkxFCTB4
+MA0KPiAgI2RlZmluZSBURVVNUjBfVjIJCTB4NTEwMDljMDANCj4gKyNkZWZpbmUgVE1TQVJBX1Yy
+CQkweGUNCj4gICNkZWZpbmUgVE1VX1ZFUjEJCTB4MQ0KPiAgI2RlZmluZSBUTVVfVkVSMgkJMHgy
+DQo+IA0KPiBAQCAtNTAsNiArNTEsOSBAQA0KPiAgCQkJCQkgICAgKiBTaXRlIFJlZ2lzdGVyDQo+
+ICAJCQkJCSAgICAqLw0KPiAgI2RlZmluZSBUUklUU1JfVglCSVQoMzEpDQo+ICsjZGVmaW5lIFJF
+R1NfVjJfVE1TQVIobikJKDB4MzA0ICsgMTYgKiAobikpCS8qIFRNVSBtb25pdG9yaW5nDQo+ICsJ
+CQkJCQkqIHNpdGUgYWRqdXN0bWVudCByZWdpc3Rlcg0KPiArCQkJCQkJKi8NCj4gICNkZWZpbmUg
+UkVHU19UVFJuQ1IobikJKDB4ZjEwICsgNCAqIChuKSkgLyogVGVtcGVyYXR1cmUgUmFuZ2Ugbg0K
+PiAgCQkJCQkgICAqIENvbnRyb2wgUmVnaXN0ZXINCj4gIAkJCQkJICAgKi8NCj4gQEAgLTEwMCw3
+ICsxMDQsMTEgQEAgc3RhdGljIGludCB0bXVfZ2V0X3RlbXAodm9pZCAqcCwgaW50ICp0ZW1wKQ0K
+PiAgCQkJCSAgICAgMTAgKiBVU0VDX1BFUl9NU0VDKSkNCj4gIAkJcmV0dXJuIC1FTk9EQVRBOw0K
+PiANCj4gLQkqdGVtcCA9ICh2YWwgJiAweGZmKSAqIDEwMDA7DQo+ICsJLyogRm9yIFRNVXYyLCB0
+ZW1wZXJhdHVyZSByZWFkaW5nIGluIGRlZ3JlZXMgS2VsdmluICovDQo+ICsJaWYgKHFkYXRhLT52
+ZXIgPT0gVE1VX1ZFUjEpDQo+ICsJCSp0ZW1wID0gKHZhbCAmIDB4ZmYpICogMTAwMDsNCj4gKwll
+bHNlDQo+ICsJCSp0ZW1wID0gKCh2YWwgJiAweDFmZikgLSAyNzMpICogMTAwMDsNCj4gDQo+ICAJ
+cmV0dXJuIDA7DQo+ICB9DQo+IEBAIC0xOTIsNiArMjAwLDggQEAgc3RhdGljIGludCBxb3JpcV90
+bXVfY2FsaWJyYXRpb24oc3RydWN0IGRldmljZSAqZGV2LA0KPiANCj4gIHN0YXRpYyB2b2lkIHFv
+cmlxX3RtdV9pbml0X2RldmljZShzdHJ1Y3QgcW9yaXFfdG11X2RhdGEgKmRhdGEpICB7DQo+ICsJ
+aW50IGk7DQo+ICsNCj4gIAkvKiBEaXNhYmxlIGludGVycnVwdCwgdXNpbmcgcG9sbGluZyBpbnN0
+ZWFkICovDQo+ICAJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgUkVHU19USUVSLCBUSUVSX0RJ
+U0FCTEUpOw0KPiANCj4gQEAgLTIwMiw2ICsyMTIsOCBAQCBzdGF0aWMgdm9pZCBxb3JpcV90bXVf
+aW5pdF9kZXZpY2Uoc3RydWN0DQo+IHFvcmlxX3RtdV9kYXRhICpkYXRhKQ0KPiAgCX0gZWxzZSB7
+DQo+ICAJCXJlZ21hcF93cml0ZShkYXRhLT5yZWdtYXAsIFJFR1NfVjJfVE1UTUlSLA0KPiBUTVRN
+SVJfREVGQVVMVCk7DQo+ICAJCXJlZ21hcF93cml0ZShkYXRhLT5yZWdtYXAsIFJFR1NfVjJfVEVV
+TVIoMCksIFRFVU1SMF9WMik7DQo+ICsJCWZvciAoaSA9IDA7IGkgPCA3OyBpKyspDQo+ICsJCQly
+ZWdtYXBfd3JpdGUoZGF0YS0+cmVnbWFwLCBSRUdTX1YyX1RNU0FSKGkpLA0KPiBUTVNBUkFfVjIp
+Ow0KPiAgCX0NCj4gDQo+ICAJLyogRGlzYWJsZSBtb25pdG9yaW5nICovDQo+IEBAIC0yMTIsNiAr
+MjI0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfcmFuZ2UgcW9yaXFfeWVzX3Jhbmdl
+c1tdDQo+ID0gew0KPiAgCXJlZ21hcF9yZWdfcmFuZ2UoUkVHU19UTVIsIFJFR1NfVFNDRkdSKSwN
+Cj4gIAlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfVFRSbkNSKDApLCBSRUdTX1RUUm5DUigzKSksDQo+
+ICAJcmVnbWFwX3JlZ19yYW5nZShSRUdTX1YyX1RFVU1SKDApLCBSRUdTX1YyX1RFVU1SKDIpKSwN
+Cj4gKwlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfVjJfVE1TQVIoMCksIFJFR1NfVjJfVE1TQVIoMTUp
+KSwNCj4gIAlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfSVBCUlIoMCksIFJFR1NfSVBCUlIoMSkpLA0K
+PiAgCS8qIFJlYWQgb25seSByZWdpc3RlcnMgYmVsb3cgKi8NCj4gIAlyZWdtYXBfcmVnX3Jhbmdl
+KFJFR1NfVFJJVFNSKDApLCBSRUdTX1RSSVRTUigxNSkpLA0KPiAtLQ0KPiAyLjE3LjENCg0K
