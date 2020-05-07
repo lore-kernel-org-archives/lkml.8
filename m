@@ -2,166 +2,123 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6611C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05556C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C3020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRJdY9jA"
+	by mail.kernel.org (Postfix) with ESMTP id D98CD208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgEGQvA (ORCPT
+        id S1726641AbgEGQxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbgEGQvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:51:00 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34460C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:51:00 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id t199so5797008oif.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kMWnRRDjjsl8pcwIzMkXZpSdECOOZg3cVfKKxGE9IxU=;
-        b=dRJdY9jA+xNPFSRPPjeN/lm3++Ov86g8r/vn3O7ODiV3PQfGdKJ5FakS1sLEu+fQBT
-         29yv5RduYMLG2LOH6TcwA96XBs+ctHUAl/KeTIW60QJD4J0Co6397LQHc861Ek5yBeP7
-         Y75wMHIerqbMmwWmuXKjhFsCTn+QTBiEzzPew51QZIKyvjjWtuJFwwcm9HlvKv8Rqxu8
-         gKEVKBGdE9/J6QuoZF1rsgInmlrf/YhYcV2Gpuo45HlgFwHIS7Y2WZuhPTKybLxYjGvL
-         GciCFvU/SJmDby3zsUoeD/+RBR6ndKLKoAKQwHUv9fSqwVkzFmTcItKulo6eor1cy4EC
-         oEng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kMWnRRDjjsl8pcwIzMkXZpSdECOOZg3cVfKKxGE9IxU=;
-        b=OLlxEi3psc61ahsC459Gooy6lk4UxlMhZ+CqBu/SK//RzhV3qjTILlMeeNmT2KWX5U
-         +QRhurpzZQo3Or6gZsvPx+0hVwNQQCYfCGMMt7WEuOz7QeGxfpXfXjnDqm5k19P4t8/m
-         j97AqDRb6vaWYxE8gli6hFfiIozwTA5HZ87JbAa1tRT+aZG2EogmQyeGQe+HxfKann6c
-         T8bhnKfKxbpD6ZtbwbL1uYXO8i0uHf2FGNuEbVNBjUTfZb1PKkyE+TwDorbkHdMptCGk
-         iOyngdprQin2xUg91jPr5n/jK/hwlZgLxwOs9BhPOZkeVVf7yvCPuZeHiOXUfEf79U9D
-         NnLA==
-X-Gm-Message-State: AGi0PuZB9ZIn1Hw2yYzYlscYiRLlrFgbCbREwJKx8Kr+ToZbuOb2iMCs
-        dkgX96dtUe9QvIPWrqFefjPutfyLpeRWOoIm7ReE5A==
-X-Google-Smtp-Source: APiQypJImJ49afgLk0pP4NB8LDfNUhM5qhGqPYLHutBzFRxjQ6Ry0xTvAFLNn/pBw2LLCXTKqdRft+Ws1iZ8QR0rvxA=
-X-Received: by 2002:aca:1c08:: with SMTP id c8mr7227783oic.172.1588870259205;
- Thu, 07 May 2020 09:50:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANpmjNPCZ2r9V7t50_yy+F_-roBWJdiQWgmvvcqTFxzdzOwKhg@mail.gmail.com>
- <20200507162617.2472578-1-arnd@arndb.de>
-In-Reply-To: <20200507162617.2472578-1-arnd@arndb.de>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 7 May 2020 18:50:47 +0200
-Message-ID: <CANpmjNObn6aXUe95e9UpuVwxHQ5ubMx_n3LLEgh=pe4rJd-Qyw@mail.gmail.com>
-Subject: Re: [PATCH] [v2] ubsan, kcsan: don't combine sanitizer with kcov on clang
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Thu, 7 May 2020 12:53:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43527 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgEGQw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:52:59 -0400
+IronPort-SDR: mOgI0+lRci/oUz6lgEtuLvQiIVHQVo2Yo5UO8L/381/aeY49pKpl7vKBBW62J/lepX2gHru3Qt
+ 31digtVa+zDg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:52:58 -0700
+IronPort-SDR: lc/qQ79+FD528A/gHDimcl5MAfkqBPRU491WaiSksdw2yyAVX43vjq/Ci+Ysi4cyPZ6bwmuxEP
+ xAw7frp6iEOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="263999220"
+Received: from smericks-mobl.amr.corp.intel.com (HELO [10.252.140.100]) ([10.252.140.100])
+  by orsmga006.jf.intel.com with ESMTP; 07 May 2020 09:52:57 -0700
+Subject: Re: [PATCH] x86/fpu/xstate: Clear uninitialized xstate areas in core
+ dump
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     sam <sunhaoyl@outlook.com>, Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
+References: <20200507164904.26927-1-yu-cheng.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <c26a39cc-1387-b55c-ec45-ec0e2357dd47@intel.com>
+Date:   Thu, 7 May 2020 09:52:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200507164904.26927-1-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 at 18:26, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
-> with -fsanitize=bounds or with ubsan:
->
-> clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
-> clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
->
-> To avoid the warning, check whether clang can handle this correctly
-> or disallow ubsan and kcsan when kcov is enabled.
->
-> Link: https://bugs.llvm.org/show_bug.cgi?id=45831
-> Link: https://lore.kernel.org/lkml/20200505142341.1096942-1-arnd@arndb.de
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: this implements Marco's suggestion to check what the compiler
-> actually supports, and references the bug report I now opened.
->
-> Let's wait for replies on that bug report before this gets applied,
-> in case the feedback there changes the conclusion.
+On 5/7/20 9:49 AM, Yu-cheng Yu wrote:
+> In a core dump, copy_xstate_to_kernel() copies only enabled user xfeatures
+> to a kernel buffer without touching areas for disabled xfeatures.  However,
+> those uninitialized areas may contain random data, which is then written to
+> the core dump file and can be read by a non-privileged user.
+> 
+> Fix it by clearing uninitialized areas.
 
-Waiting makes sense, if this is not very urgent.
-
-Acked-by: Marco Elver <elver@google.com>
-
-Thank you!
-
-> ---
->  lib/Kconfig.kcsan | 11 +++++++++++
->  lib/Kconfig.ubsan | 11 +++++++++++
->  2 files changed, 22 insertions(+)
->
-> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> index ea28245c6c1d..a7276035ca0d 100644
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -3,9 +3,20 @@
->  config HAVE_ARCH_KCSAN
->         bool
->
-> +config KCSAN_KCOV_BROKEN
-> +       def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
-> +       depends on CC_IS_CLANG
-> +       depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=thread -fsanitize-coverage=trace-pc)
-> +       help
-> +         Some versions of clang support either KCSAN and KCOV but not the
-> +         combination of the two.
-> +         See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
-> +         in newer releases.
-> +
->  menuconfig KCSAN
->         bool "KCSAN: dynamic data race detector"
->         depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
-> +       depends on !KCSAN_KCOV_BROKEN
->         select STACKTRACE
->         help
->           The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 929211039bac..a5ba2fd51823 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -26,9 +26,20 @@ config UBSAN_TRAP
->           the system. For some system builders this is an acceptable
->           trade-off.
->
-> +config UBSAN_KCOV_BROKEN
-> +       def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
-> +       depends on CC_IS_CLANG
-> +       depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=bounds -fsanitize-coverage=trace-pc)
-> +       help
-> +         Some versions of clang support either UBSAN or KCOV but not the
-> +         combination of the two.
-> +         See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
-> +         in newer releases.
-> +
->  config UBSAN_BOUNDS
->         bool "Perform array index bounds checking"
->         default UBSAN
-> +       depends on !UBSAN_KCOV_BROKEN
->         help
->           This option enables detection of directly indexed out of bounds
->           array accesses, where the array size is known at compile time.
-> --
-> 2.26.0
->
+Do you have a Fixes: tag for this, or some background on where this
+issue originated that might be helpful for backports?
