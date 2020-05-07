@@ -2,186 +2,189 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34D6C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B631C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2BD207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E0F21841
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abEqiduR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgEGKc1 (ORCPT
+        id S1726809AbgEGKca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:32:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46313 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgEGKcW (ORCPT
+        Thu, 7 May 2020 06:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726683AbgEGKc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:32:22 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jWdpC-0007oF-Oi; Thu, 07 May 2020 10:32:18 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Christian Kellner <christian@kellner.me>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Arnd Bergmann <arnd@arndb.de>, Serge Hallyn <serge@hallyn.com>,
-        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        Florian Weimer <fw@deneb.enyo.de>, libc-alpha@sourceware.org,
-        stable@vger.kernel.org
-Subject: [PATCH v2] fork: prevent accidental access to clone3 features
-Date:   Thu,  7 May 2020 12:32:14 +0200
-Message-Id: <20200507103214.77218-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 7 May 2020 06:32:26 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBB6C061A10;
+        Thu,  7 May 2020 03:32:26 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so5735320ljg.5;
+        Thu, 07 May 2020 03:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lxR8iUX+nq/8LE2/542OxQ8ktlSJ6cXRsEzWoH8lfzA=;
+        b=abEqiduRP5XA93Rx8i0WKwGEH53+CCt70vEpJwG+coIZSFwLyoUVgyzxNQnhjSMrhr
+         6zKwL9MZfH+5sx9PZfTjosjryBVs8a7aq6aXudAxh15XVqz6iPDDQSVO08IHWKbBZFhH
+         CYQgB0X/jVcaIR/7aGSsp0v7BTgC1XfXRGaRSP+5nSf409yP6qAEQupO9gEmqRFwLcEe
+         H0pnccwikFJtaFyj3dxp7wVF9McYQ8TKb9l/rbtyEudKRCSQDWTnnKv9kipYQ+rsuQFD
+         CS+QGZ/zIXq6iK4F2JEY1s6tyYuYIM07mjId6iMVZCrPXuWYp4/siWmeNVpn7W+WWJCx
+         t9tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lxR8iUX+nq/8LE2/542OxQ8ktlSJ6cXRsEzWoH8lfzA=;
+        b=nv57GHHrL58/4wW7PIU/UyrG4IC1izrEB1e3g/QqleKYfazlwByHivX5WTeeJWUXy+
+         Hta+zuOQn2lJvoHZ9glWsKkfDhgSf6Dt/zzxYVhmmuFJq3Lg11lHzfVVHhSyQKNUt1q4
+         GBqViQG+QfJmHr+/RKFYMayyVf9T9Obp+AOIVMEEGG+VTpxjgXlFYXVaq9QM5rLFyt/g
+         3jmbJrli66hsnUuI2EyayHwO8FHSC0Ywpt9j1FcS3D6INN1LD6o+kK7i8Vw4Go0ZfcDb
+         6IDIWEboHOUI67JD223ieH1Q3Fjlozm4KWYDSAF29nFhQ2i03QRBydQJbjmespb8TNTw
+         SPQA==
+X-Gm-Message-State: AGi0PuY2tXRnf8H/+jegyhYwkoU42eIhwArRUhBjM3SdzsjmFDhv4o8s
+        CPCcOj7ZKuLqfH8b75YlAU6hZcbRdTpKpGnsJAQ=
+X-Google-Smtp-Source: APiQypLqntGlzwMTPnOwy1h5uEIH4hExzJxYqIPLwFHTltoybWYvpOoMaGdS9r61zRjkIUO9oVrCQTWqJErRd8MJv5U=
+X-Received: by 2002:a2e:7613:: with SMTP id r19mr7726906ljc.29.1588847542720;
+ Thu, 07 May 2020 03:32:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
+ <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com> <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
+ <20200506100649.GI17863@quack2.suse.cz> <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
+ <20200506125930.GJ17863@quack2.suse.cz> <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
+ <20200507101322.GB30922@quack2.suse.cz>
+In-Reply-To: <20200507101322.GB30922@quack2.suse.cz>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Thu, 7 May 2020 16:02:10 +0530
+Message-ID: <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
+Subject: Re: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>, benchan@chromium.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        santosh.shilimkar@oracle.com,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        tee-dev@lists.linaro.org, Linux-MM <linux-mm@kvack.org>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jan reported an issue where an interaction between sign-extending clone's
-flag argument on ppc64le and the new CLONE_INTO_CGROUP feature causes
-clone() to consistently fail with EBADF.
+On Thu, May 7, 2020 at 3:43 PM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 06-05-20 21:38:40, Souptick Joarder wrote:
+> > On Wed, May 6, 2020 at 6:29 PM Jan Kara <jack@suse.cz> wrote:
+> > >
+> > > On Wed 06-05-20 17:51:39, Souptick Joarder wrote:
+> > > > On Wed, May 6, 2020 at 3:36 PM Jan Kara <jack@suse.cz> wrote:
+> > > > >
+> > > > > On Wed 06-05-20 02:06:56, Souptick Joarder wrote:
+> > > > > > On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
+> > > > > > >
+> > > > > > > On 2020-05-05 12:14, Souptick Joarder wrote:
+> > > > > > > > Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
+> > > > > > > > and no of pinned pages. The only case where these two functions will
+> > > > > > > > return 0, is for nr_pages <= 0, which doesn't find a valid use case.
+> > > > > > > > But if at all any, then a -ERRNO will be returned instead of 0, which
+> > > > > > > > means {get|pin}_user_pages_fast() will have 2 return values -errno &
+> > > > > > > > no of pinned pages.
+> > > > > > > >
+> > > > > > > > Update all the callers which deals with return value 0 accordingly.
+> > > > > > >
+> > > > > > > Hmmm, seems a little shaky. In order to do this safely, I'd recommend
+> > > > > > > first changing gup_fast/pup_fast so so that they return -EINVAL if
+> > > > > > > the caller specified nr_pages==0, and of course auditing all callers,
+> > > > > > > to ensure that this won't cause problems.
+> > > > > >
+> > > > > > While auditing it was figured out, there are 5 callers which cares for
+> > > > > > return value
+> > > > > > 0 of gup_fast/pup_fast. What problem it might cause if we change
+> > > > > > gup_fast/pup_fast
+> > > > > > to return -EINVAL and update all the callers in a single commit ?
+> > > > >
+> > > > > Well, first I'd ask a different question: Why do you want to change the
+> > > > > current behavior? It's not like the current behavior is confusing.  Callers
+> > > > > that pass >0 pages can happily rely on the simple behavior of < 0 return on
+> > > > > error or > 0 return if we mapped some pages. Callers that can possibly ask
+> > > > > to map 0 pages can get 0 pages back - kind of expected - and I don't see
+> > > > > any benefit in trying to rewrite these callers to handle -EINVAL instead...
+> > > >
+> > > > Callers with a request to map 0 pages doesn't have a valid use case. But if any
+> > > > caller end up doing it mistakenly, -errno should be returned to caller
+> > > > rather than 0
+> > > > which will indicate more precisely that map 0 pages is not a valid
+> > > > request from caller.
+> > >
+> > > Well, I believe this depends on the point of view. Similarly as reading 0
+> > > bytes is successful, we could consider mapping 0 pages successful as well.
+> > > And there can be valid cases where number of pages to map is computed from
+> > > some input and when 0 pages should be mapped, it is not a problem and your
+> > > change would force such callers to special case this with explicitely
+> > > checking for 0 pages to map and not calling GUP in that case at all.
+> > >
+> > > I'm not saying what you propose is necessarily bad, I just say I don't find
+> > > it any better than the current behavior and so IMO it's not worth the
+> > > churn. Now if you can come up with some examples of current in-kernel users
+> > > who indeed do get the handling of the return value wrong, I could be
+> > > convinced otherwise.
+> >
+> > There are 5 callers of {get|pin}_user_pages_fast().
+>
+> Oh, there are *much* more callers that 5. It's more like 70. Just grep the
+> source... And then you have all other {get|pin}_user_pages() variants that
+> need to be kept consistent. So overall we have over 200 calls to some
+> variant of GUP.
 
-The whole story is a little longer. The legacy clone() syscall is odd in a
-bunch of ways and here two things interact. First, legacy clone's flag
-argument is word-size dependent, i.e. it's an unsigned long whereas most
-system calls with flag arguments use int or unsigned int. Second, legacy
-clone() ignores unknown and deprecated flags. The two of them taken
-together means that users on 64bit systems can pass garbage for the upper
-32bit of the clone() syscall since forever and things would just work fine.
-Just try this on a 64bit kernel prior to v5.7-rc1 where this will succeed
-and on v5.7-rc1 where this will fail with EBADF:
+Sorry, I mean, there are 5 callers of {get|pin}_user_pages_fast() who
+have interest in
+return value 0, out of total 42.
 
-int main(int argc, char *argv[])
-{
-        pid_t pid;
+>
+> > arch/ia64/kernel/err_inject.c#L145
+> > staging/gasket/gasket_page_table.c#L489
+> >
+> > Checking return value 0 doesn't make sense for above 2.
+> >
+> > drivers/platform/goldfish/goldfish_pipe.c#L277
+> > net/rds/rdma.c#L165
+> > drivers/tee/tee_shm.c#L262
+> >
+> > These 3 callers have calculated the no of pages value before passing it to
+> > {get|pin}_user_pages_fast(). But if they end up passing nr_pages <= 0, a return
+> > value of either 0 or -EINVAL doesn't going to harm any existing
+> > behavior of callers.
+> >
+> > IMO, it is safe to return -errno for nr_pages <= 0, for
+> > {get|pin}_user_pages_fast().
+>
+> OK, so no real problem with any of these callers. I still don't see a
+> justification for the churn you suggest... Auditting all those code sites
+> is going to be pretty tedious.
 
-        /* Note that legacy clone() has different argument ordering on
-         * different architectures so this won't work everywhere.
-         *
-         * Only set the upper 32 bits.
-         */
-        pid = syscall(__NR_clone, 0xffffffff00000000 | SIGCHLD,
-                      NULL, NULL, NULL, NULL);
-        if (pid < 0)
-                exit(EXIT_FAILURE);
-        if (pid == 0)
-                exit(EXIT_SUCCESS);
-        if (wait(NULL) != pid)
-                exit(EXIT_FAILURE);
+I try to audit all 42 callers of {get|pin}_user_pages_fast() and
+figure out these 5 callers
+which need to be updated and I think, other callers of
+{get|pin}_user_pages_fast() will not be
+effected.
 
-        exit(EXIT_SUCCESS);
-}
-
-Since legacy clone() couldn't be extended this was not a problem so far and
-nobody really noticed or cared since nothing in the kernel ever bothered to
-look at the upper 32 bits.
-
-But once we introduced clone3() and expanded the flag argument in struct
-clone_args to 64 bit we opened this can of worms. With the first flag-based
-extension to clone3() making use of the upper 32 bits of the flag argument
-we've effectively made it possible for the legacy clone() syscall to reach
-clone3() only flags. The sign extension scenario is just the odd
-corner-case that we needed to figure this out.
-
-The reason we just realized this now and not already when we introduced
-CLONE_CLEAR_SIGHAND was that CLONE_INTO_CGROUP assumes that a valid cgroup
-file descriptor has been given. So the sign extension (or the user
-accidently passing garbage for the upper 32 bits) caused the
-CLONE_INTO_CGROUP bit to be raised and the kernel to error out when it
-didn't find a valid cgroup file descriptor.
-
-Let's fix this by always capping the upper 32 bits for all codepaths that
-are not aware of clone3() features. This ensures that we can't reach
-clone3() only features by accident via legacy clone as with the sign
-extension case and also that legacy clone() works exactly like before, i.e.
-ignoring any unknown flags.  This solution risks no regressions and is also
-pretty clean.
-
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Florian Weimer <fw@deneb.enyo.de>
-Cc: libc-alpha@sourceware.org
-Link: https://sourceware.org/pipermail/libc-alpha/2020-May/113596.html
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Fixes: ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
-Cc: stable@vger.kernel.org # 5.3+
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Joe Perches <joe@perches.com>:
-  - Use lower_32_bit() macro.
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Cap flag argument to 32 bits in every place that is not clone3()
-    feature aware.
-  - Cc stable.
----
- kernel/fork.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 8c700f881d92..48ed22774efa 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2486,11 +2486,11 @@ long do_fork(unsigned long clone_flags,
- 	      int __user *child_tidptr)
- {
- 	struct kernel_clone_args args = {
--		.flags		= (clone_flags & ~CSIGNAL),
-+		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
- 		.pidfd		= parent_tidptr,
- 		.child_tid	= child_tidptr,
- 		.parent_tid	= parent_tidptr,
--		.exit_signal	= (clone_flags & CSIGNAL),
-+		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
- 		.stack		= stack_start,
- 		.stack_size	= stack_size,
- 	};
-@@ -2508,8 +2508,9 @@ long do_fork(unsigned long clone_flags,
- pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
- {
- 	struct kernel_clone_args args = {
--		.flags		= ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
--		.exit_signal	= (flags & CSIGNAL),
-+		.flags		= ((lower_32_bits(flags) | CLONE_VM |
-+				    CLONE_UNTRACED) & ~CSIGNAL),
-+		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
- 		.stack		= (unsigned long)fn,
- 		.stack_size	= (unsigned long)arg,
- 	};
-@@ -2570,11 +2571,11 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- #endif
- {
- 	struct kernel_clone_args args = {
--		.flags		= (clone_flags & ~CSIGNAL),
-+		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
- 		.pidfd		= parent_tidptr,
- 		.child_tid	= child_tidptr,
- 		.parent_tid	= parent_tidptr,
--		.exit_signal	= (clone_flags & CSIGNAL),
-+		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
- 		.stack		= newsp,
- 		.tls		= tls,
- 	};
-
-base-commit: 0e698dfa282211e414076f9dc7e83c1c288314fd
--- 
-2.26.2
-
+But I didn't go through other variants of gup/pup except
+{get|pin}_user_pages_fast().
