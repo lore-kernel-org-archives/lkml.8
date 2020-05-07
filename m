@@ -2,108 +2,134 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8813BC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF43C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 553322083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588868069;
-	bh=8HvqfHRaVO5yJWy7fUI7q2iYjd5DvqQ13nBuDCLnDVQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ttuRlVc0TrwBlDgv4zd/qDywnMqKeLYV44kC4ub4XBjfZW19EfcxspZg+81SozjMX
-	 Sk/8jL5mtdDY3agrVKmAcGMrFMLW9AsrH0LcnnW05IycX3Q1cW0RD+L1AxYNGOFmbl
-	 YR2B/C4+KeYPnL12MyF0Jsv72494yoa6CjIBWYxM=
+	by mail.kernel.org (Postfix) with ESMTP id 7F0962083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kpvqOcI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgEGQO3 (ORCPT
+        id S1726860AbgEGQQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:14:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40922 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgEGQO2 (ORCPT
+        Thu, 7 May 2020 12:16:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58671 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726521AbgEGQQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:14:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j21so3010462pgb.7;
-        Thu, 07 May 2020 09:14:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=K01c3myVTwjqfRxKpVK6bNm+Qr9pA/B7t1+trJLymis=;
-        b=WWV3b/EVnkoNXWxzBtcEpdeJiFWToeVF1t4lbaF6eQV4UN4jEC76qzn0vgROPmxpLz
-         46fPU3kkxxfKnw07/RVwW2S61eyVW+lOPicf9VtSRG0Miu7+EIZk3EPwsLLCR7BALxcY
-         XYgwbk3NLHmQGZHEFuDXr+zc7ZZ2HQEeWkO+RGnLjBD0UxJSjkabbAWCbW4RImlKEqrq
-         AU9IFAnnMIEkZp0xfSTD9B3QnPG6fSr0RBBZBQhv7T9APuM9NIhfn+YWgC77ApKsYeaC
-         k4RRmcfXj0pCOFnoO6RuLADmM7lCiKyptETItrR5grAqIV/4NhFc3grCPbWzJD6dymqT
-         u/sA==
-X-Gm-Message-State: AGi0PuZLEA8PccP4Lq1UNW4PAQKDmC6YD+Qd1hpPjuDhNOnqRChFOgQt
-        LXLfxzhtLnWPqm6DFfw6L+MtkfrFUmI=
-X-Google-Smtp-Source: APiQypJlK3bEqBCOWQ9A1P7qBNuXOr+1NhJTCNPPunzRaibPtjOJ3Mug/c0efwn5onWc1A+geXg7uQ==
-X-Received: by 2002:a62:343:: with SMTP id 64mr14719426pfd.47.1588868067667;
-        Thu, 07 May 2020 09:14:27 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x193sm5626460pfd.54.2020.05.07.09.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 09:14:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D578A403EA; Thu,  7 May 2020 16:14:25 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     cl@linux.com, akpm@linux-foundation.org
-Cc:     arnd@arndb.de, willy@infradead.org, aquini@redhat.com,
-        keescook@chromium.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2] mm: expand documentation over __read_mostly
-Date:   Thu,  7 May 2020 16:14:24 +0000
-Message-Id: <20200507161424.2584-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 7 May 2020 12:16:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588868161; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=w5NiSQ77D5gTRpc269gInIopQbtzyb+mp/b4/2QKUDE=; b=kpvqOcI0j4jOI36NeBW5oCyLGR2nhN40gAIZKl/rCZNbhTJTCysf6M0OypTBHkYAEsGynvyZ
+ BxHB4JEj6mEQ5QGTNrdfHTFKEq1dzJ6SboxghByaoBZvHfPRTxTsYTRGfnGGqKmgZ6cU4HyP
+ pbMwjIK6hlEJ/+2FtMvkdtkC+Wg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb43438.7f2b80073570-smtp-out-n04;
+ Thu, 07 May 2020 16:15:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7F4DAC44793; Thu,  7 May 2020 16:15:51 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D35DC433F2;
+        Thu,  7 May 2020 16:15:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D35DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Sarthak Garg <sartgarg@codeaurora.org>,
+        <stable@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andreas Koop <andreas.koop@zf.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH V2] mmc: core: Fix recursive locking issue in CQE recovery path
+Date:   Thu,  7 May 2020 21:45:33 +0530
+Message-Id: <1588868135-31783-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
+References: <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__read_mostly can easily be misused by folks, its not meant for
-just read-only data. There are performance reasons for using it, but
-we also don't provide any guidance about its use. Provide a bit more
-guidance over its use.
+From: Sarthak Garg <sartgarg@codeaurora.org>
 
-Acked-by: Christoph Lameter <cl@linux.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Consider the following stack trace
+
+-001|raw_spin_lock_irqsave
+-002|mmc_blk_cqe_complete_rq
+-003|__blk_mq_complete_request(inline)
+-003|blk_mq_complete_request(rq)
+-004|mmc_cqe_timed_out(inline)
+-004|mmc_mq_timed_out
+
+mmc_mq_timed_out acquires the queue_lock for the first
+time. The mmc_blk_cqe_complete_rq function also tries to acquire
+the same queue lock resulting in recursive locking where the task
+is spinning for the same lock which it has already acquired leading
+to watchdog bark.
+
+Fix this issue with the lock only for the required critical section.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
 ---
+ drivers/mmc/core/queue.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-This v2 just has a few spelling fixes.
-
- include/linux/cache.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/cache.h b/include/linux/cache.h
-index 750621e41d1c..8106fb304fa7 100644
---- a/include/linux/cache.h
-+++ b/include/linux/cache.h
-@@ -15,8 +15,14 @@
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index 25bee3d..b5fd3bc 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -107,7 +107,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
+ 	case MMC_ISSUE_DCMD:
+ 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
+ 			if (recovery_needed)
+-				__mmc_cqe_recovery_notifier(mq);
++				mmc_cqe_recovery_notifier(mrq);
+ 			return BLK_EH_RESET_TIMER;
+ 		}
+ 		/* No timeout (XXX: huh? comment doesn't make much sense) */
+@@ -127,18 +127,13 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
+ 	struct mmc_card *card = mq->card;
+ 	struct mmc_host *host = card->host;
+ 	unsigned long flags;
+-	int ret;
++	bool ignore_tout;
  
- /*
-  * __read_mostly is used to keep rarely changing variables out of frequently
-- * updated cachelines. If an architecture doesn't support it, ignore the
-- * hint.
-+ * updated cachelines. Its use should be reserved for data that is used
-+ * frequently in hot paths. Performance traces can help decide when to use
-+ * this. You want __read_mostly data to be tightly packed, so that in the
-+ * best case multiple frequently read variables for a hot path will be next
-+ * to each other in order to reduce the number of cachelines needed to
-+ * execute a critical path. We should be mindful and selective of its use.
-+ * ie: if you're going to use it please supply a *good* justification in your
-+ * commit log
-  */
- #ifndef __read_mostly
- #define __read_mostly
+ 	spin_lock_irqsave(&mq->lock, flags);
+-
+-	if (mq->recovery_needed || !mq->use_cqe || host->hsq_enabled)
+-		ret = BLK_EH_RESET_TIMER;
+-	else
+-		ret = mmc_cqe_timed_out(req);
+-
++	ignore_tout = mq->recovery_needed || !mq->use_cqe || host->hsq_enabled;
+ 	spin_unlock_irqrestore(&mq->lock, flags);
+ 
+-	return ret;
++	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
+ }
+ 
+ static void mmc_mq_recovery_handler(struct work_struct *work)
 -- 
-2.25.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
