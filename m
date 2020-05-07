@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6E9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72D1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD562173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCAF021835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588878028;
-	bh=R5UAo0X2wUIkcPu2bAHYaMr9+zALVRcFirsDyRQuvAA=;
+	s=default; t=1588878033;
+	bh=vqJy/QdKw35OLtNYsWencYwBw6xfJHLkvdoR1KZvG2Y=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=eK8sukP9kkFw9KEMzcKj9r5Cfnp3yZvrZipvQaaihnyzSevjylya6jD6rSZnV5E68
-	 n08YfCTXxbevUJntpC09NJI6YBDSt7IrtAinId71Bi5OBgAVvtzqXR797kRXGnNlwN
-	 iWK/reS45d9sLiqLLgDSydCdPxDlh1YA8SVEa2cg=
+	b=BsQkTavVBwtSegHHa81Ry6FR2k2nb/GBuNVgprxL4aBCws+9ifcfOW2ii7ZGsQcwp
+	 z/XkJdVlPKDFbWnvl3bbhmgrsk1eOpisEl2EK22sODkdu5b7Reetmg4cFCgeEW29g6
+	 /2PhotPS+CvwR/uaCweA6zEZMDPz2T5SsQoUthBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgEGTA1 (ORCPT
+        id S1728110AbgEGTAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60418 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGTA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:00:26 -0400
+        id S1726320AbgEGTAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:00:32 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672612083B;
-        Thu,  7 May 2020 19:00:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29A82083B;
+        Thu,  7 May 2020 19:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588878025;
-        bh=R5UAo0X2wUIkcPu2bAHYaMr9+zALVRcFirsDyRQuvAA=;
+        s=default; t=1588878032;
+        bh=vqJy/QdKw35OLtNYsWencYwBw6xfJHLkvdoR1KZvG2Y=;
         h=Date:From:To:Cc:Subject:From;
-        b=qn6cRKwYPaaWKY02MVF/8V8omrkz4xrVRvn2mw1GgLEW7gI9lUssG9pLlKKk2VhXv
-         5lnk1EO5WSRyv2MHzvSJVPLTRNEPsu7qB/FSmbaEWWBcjh6O7k+szJmk8I8vkNwwhZ
-         wlNH83fi8M3q2rmCoHlvy3jMpsr/dYfz/ln8iMIc=
-Date:   Thu, 7 May 2020 14:04:52 -0500
+        b=njVHXHugzubO28Cq9yVWXC+p3zNNWfcdhlqsxU7Kj7RN4RhwpOIzMoj0+F3acc6Wz
+         bvZ5oSljRbdqy/yQvoaOnmcrVD0qgAvHLrG4UX89b0u1NvCYAfimzyOXPeAWS3VRU4
+         Ja5/DwrnsboW5B9geywoVFa4H0dM9WFtAckEkAY0=
+Date:   Thu, 7 May 2020 14:04:58 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
+To:     James Smart <james.smart@broadcom.com>
 Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] lightnvm: Replace zero-length array with flexible-array
-Message-ID: <20200507190452.GA15449@embeddedor>
+Subject: [PATCH] nvme-fc: Replace zero-length array with flexible-array
+Message-ID: <20200507190458.GA15557@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,34 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/nvme/host/lightnvm.c |    2 +-
- include/linux/nvme.h         |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/fc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
-index ec46693f6b64..3002bf972c6b 100644
---- a/drivers/nvme/host/lightnvm.c
-+++ b/drivers/nvme/host/lightnvm.c
-@@ -171,7 +171,7 @@ struct nvme_nvm_bb_tbl {
- 	__le32	tdresv;
- 	__le32	thresv;
- 	__le32	rsvd2[8];
--	__u8	blk[0];
-+	__u8	blk[];
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 7dfc4a2ecf1e..887537d1243f 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -96,7 +96,7 @@ struct nvme_fc_fcp_op {
+ struct nvme_fcp_op_w_sgl {
+ 	struct nvme_fc_fcp_op	op;
+ 	struct scatterlist	sgl[NVME_INLINE_SG_CNT];
+-	uint8_t			priv[0];
++	uint8_t			priv[];
  };
  
- struct nvme_nvm_id20_addrf {
-diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index 3d5189f46cb1..6ee80a44ed4f 100644
---- a/include/linux/nvme.h
-+++ b/include/linux/nvme.h
-@@ -1177,7 +1177,7 @@ struct nvmf_disc_rsp_page_hdr {
- 	__le64		numrec;
- 	__le16		recfmt;
- 	__u8		resv14[1006];
--	struct nvmf_disc_rsp_page_entry entries[0];
-+	struct nvmf_disc_rsp_page_entry entries[];
- };
- 
- enum {
+ struct nvme_fc_lport {
 
