@@ -2,101 +2,122 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327A2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920C0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E5D2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683C72084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A9iO505k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HFevCgtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgEGQTi (ORCPT
+        id S1727956AbgEGQTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:19:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45100 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgEGQTh (ORCPT
+        Thu, 7 May 2020 12:19:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42697 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbgEGQTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:19:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GHu8I159445
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 16:19:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=QNiQ2cJrAHPXydkPG/OgMeHAMqbodlGYYbU1zlcJSgU=;
- b=A9iO505k7i8riCkv3kitniTMgG5KS1Qr171Ql3x+ck5AvQzJHQhNZK+wlhhm3y4nTmND
- ytKxvX+EUAvuycwSBNuccN9bSS5rKHPqwupmFS8K59EFn9sc3cS2tgWHL5Z/QCG2nIBY
- BWv3APZGU0llcmP5QXt7Qsd+s47jWBLND3QKCaRZ6SIGkZSg9+6RElXXs0/kId2WDgUk
- GHBFVibFFk3yIhQh7a5oA/d25bYvmKp/VsyV4juippD3GmH/qioIOP8GB0y3rlp9cQ6n
- PL+t6Wa1dkUR6MFjVsAy34kYaSWbRKxjf+xn0nQe3RgsAQ2NU232kNpA+P7zY4lhOe8x 5Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30vhvyhf89-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:19:36 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047GHXX0105550
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 16:17:36 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 30sjnptfkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:17:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 047GCUCH004059
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 16:12:31 GMT
-Received: from localhost.localdomain (/70.114.128.235)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 09:12:30 -0700
-From:   Himanshu Madhani <himanshu.madhani@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Himanshu Madhani <himanshu.madhani@oracle.com>
-Subject: [PATCH] MAINTAINER: Update my email address
-Date:   Thu,  7 May 2020 11:12:29 -0500
-Message-Id: <20200507161229.31448-1-himanshu.madhani@oracle.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 phishscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- malwarescore=0 mlxscore=0 adultscore=0 suspectscore=1 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070132
+        Thu, 7 May 2020 12:19:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588868391; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=sUMLkHN8s8HSlHYFjwFPv/7eTnfMzsw+sp7Uz/sbxUI=; b=HFevCgtLxVsohDWszmB73jil3DxMEohJyOtVyVqI2YubF51etU8CUQNJetQHQHxuGEhQulXY
+ TNGtGGEz81iCuXSOILRIPHIzdFIL6XREvFryzWhRsBC1jtZvqdvT36s+L+2Wv/R8nC9B2WYw
+ JWkzCfH/zhvieOD0xEHBo7tXz+s=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb43526.7fbc621d7ca8-smtp-out-n05;
+ Thu, 07 May 2020 16:19:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2757BC433D2; Thu,  7 May 2020 16:19:50 +0000 (UTC)
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49755C433F2;
+        Thu,  7 May 2020 16:19:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49755C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org
+Cc:     bbhatt@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v4] bus: mhi: core: Handle syserr during power_up
+Date:   Thu,  7 May 2020 10:19:31 -0600
+Message-Id: <1588868371-8365-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do not have access to my @marvell.com email ID anymore.
-Lets map my new email address correctly in .mailmap
+The MHI device may be in the syserr state when we attempt to init it in
+power_up().  Since we have no local state, the handling is simple -
+reset the device and wait for it to transition out of the reset state.
 
-Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/.mailmap b/.mailmap
-index db3754a41018..30d8c3f10ca7 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -99,6 +99,8 @@ Henk Vergonet <Henk.Vergonet@gmail.com>
- Henrik Kretzschmar <henne@nachtwindheim.de>
- Henrik Rydberg <rydberg@bitmath.org>
- Herbert Xu <herbert@gondor.apana.org.au>
-+Himanshu Madhani <himanshu.madhani@oracle.com>
-+Himanshu Madhani <hmadhani2024@gmail.com>
- Jacob Shin <Jacob.Shin@amd.com>
- Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@google.com>
- Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
+v4:
+-Implemented Hemant's suggested solution from v2.  The spec will be amended
+to indicate the intvec interrupt will be triggered for the reset state change
+which matches the current implementations and enables Hemant's solution to
+be used, which is cleaner.
+
+ drivers/bus/mhi/core/pm.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index dc83d65..ddef693 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -760,6 +760,7 @@ static void mhi_deassert_dev_wake(struct mhi_controller *mhi_cntrl,
+ 
+ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ {
++	enum mhi_state state;
+ 	enum mhi_ee_type current_ee;
+ 	enum dev_st_transition next_state;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+@@ -829,6 +830,32 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ 		goto error_bhi_offset;
+ 	}
+ 
++	state = mhi_get_mhi_state(mhi_cntrl);
++	if (state == MHI_STATE_SYS_ERR) {
++		mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
++		ret = wait_event_timeout(mhi_cntrl->state_event,
++				MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
++					mhi_read_reg_field(mhi_cntrl,
++							   mhi_cntrl->regs,
++							   MHICTRL,
++							   MHICTRL_RESET_MASK,
++							   MHICTRL_RESET_SHIFT,
++							   &val) ||
++					!val,
++				msecs_to_jiffies(mhi_cntrl->timeout_ms));
++		if (ret) {
++			ret = -EIO;
++			dev_info(dev, "Failed to reset MHI due to syserr state\n");
++			goto error_bhi_offset;
++		}
++
++		/*
++		 * device cleares INTVEC as part of RESET processing,
++		 * re-program it
++		 */
++		mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
++	}
++
+ 	/* Transition to next state */
+ 	next_state = MHI_IN_PBL(current_ee) ?
+ 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
 -- 
-2.26.2
-
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
