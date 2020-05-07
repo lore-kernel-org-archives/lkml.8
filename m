@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67324C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C075C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3946821835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E573221F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879055;
-	bh=TZeZW0+jfLlh4ZcEbv2LeoEqpPZMjTCgCitS0tjDun8=;
+	s=default; t=1588879060;
+	bh=2vhh4CWf1qAP4IS40XgtchAprraO0Zj46YURZXgZFxA=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sZZIppRCgQgJL3/MDvUei38ECjW1u7p2zSXh90jt+hPGDr5bxmSMtqdaOZ3gwV3Em
-	 RNw24rNhct4kcIOueGzxYSBc5veHlnHVmexdZdbrpMHGvlc+xXFQjaY4kqwdwwMH6C
-	 nIQos5Hh75T6Xv4ZAAP7/4qQuoeej8qqSTUt6EOA=
+	b=cktsLF0yTPKxi9aU6cOEcH/GX2XB4+wfOSh3sVAfCJysTJiGw3E8qGhAcR4oOZ7nK
+	 33TJFowpv8ZKmPmHuD+cn3cel/z/fy7745pC5iyS7clyXGZReLeWTuBCe8TOgzBFaF
+	 TQC/WIUoiY49wCzJvUmR7U1v8BQ5jVu51tW+UQHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgEGTRe (ORCPT
+        id S1728632AbgEGTRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:17:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgEGTRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:17:33 -0400
+        id S1726367AbgEGTRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:17:38 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C32A21835;
-        Thu,  7 May 2020 19:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA96F21835;
+        Thu,  7 May 2020 19:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879052;
-        bh=TZeZW0+jfLlh4ZcEbv2LeoEqpPZMjTCgCitS0tjDun8=;
+        s=default; t=1588879058;
+        bh=2vhh4CWf1qAP4IS40XgtchAprraO0Zj46YURZXgZFxA=;
         h=Date:From:To:Cc:Subject:From;
-        b=BOuwfW0y3gjqHMtue8yu0YfM2wr9KuUYdQ3Ijgzdyg0YG0Bh4kArsZPf/Q0JfZTnz
-         j3qBjujXHQFDfHMYW9J1OghpLwKiwHEqdjhgBPEgWGP7xXMM09hKEkHO4ahQ5m8T01
-         CQmAzxBNFcoFdP5bbOLUAxk0NounFW1Qjqw3f4a4=
-Date:   Thu, 7 May 2020 14:21:59 -0500
+        b=qtcvF+cDY/ipaTvvUakxHaYOOOaLgEwR9HV2QmMIlhIR8wkeEVlREwC4/m9YLnpft
+         XUg3iDrYlcwaHkUM01QM7nxWmLwBhWKL3XSCKnQ7vLzN+RM4UHK7fkrd3MLhQu59Q5
+         6/yuMeKWhbTEuuN8BZs5eR0etQ7bh6DWI1umxTsY=
+Date:   Thu, 7 May 2020 14:22:04 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ima: Replace zero-length array with flexible-array
-Message-ID: <20200507192159.GA16250@embeddedor>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] slab: Replace zero-length array with flexible-array
+Message-ID: <20200507192204.GA16270@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,29 +95,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- security/integrity/integrity.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/slab.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 298b73794d8b..16c1894c29bb 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -107,7 +107,7 @@ struct ima_digest_data {
- 		} ng;
- 		u8 data[2];
- 	} xattr;
--	u8 digest[0];
-+	u8 digest[];
- } __packed;
+diff --git a/mm/slab.h b/mm/slab.h
+index 207c83ef6e06..815e4e9a94cd 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -34,7 +34,7 @@ struct kmem_cache {
+ 
+ struct memcg_cache_array {
+ 	struct rcu_head rcu;
+-	struct kmem_cache *entries[0];
++	struct kmem_cache *entries[];
+ };
  
  /*
-@@ -119,7 +119,7 @@ struct signature_v2_hdr {
- 	uint8_t	hash_algo;	/* Digest algorithm [enum hash_algo] */
- 	__be32 keyid;		/* IMA key identifier - not X509/PGP specific */
- 	__be16 sig_size;	/* signature size */
--	uint8_t sig[0];		/* signature payload */
-+	uint8_t sig[];		/* signature payload */
- } __packed;
- 
- /* integrity data associated with an inode */
 
