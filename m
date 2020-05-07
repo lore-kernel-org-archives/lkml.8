@@ -2,168 +2,147 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA71FC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC74C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E702080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C03920753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hxVZJcBD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZrsDrHZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgEGH5Q (ORCPT
+        id S1726509AbgEGH7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:57:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27891 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725845AbgEGH5P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:57:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588838233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=y9mwxyuCup0Q6hGGVaVop/Mcsx5sPEES6xR+JKy3xlE=;
-        b=hxVZJcBDiF9XWNz0ur4Dun5BEo26R1Mqd9OOf6LqmMDwvkOiQXSjIa7Scy5z9nom661t+P
-        ozshqaEWv1joaVwX3Z9X238YK3DAglLfRNTgLFpxz2T5r27C6wTpb9ymJFk0JiZ7j+wXvj
-        GWQQpTSS77H4JkK3bJDSNTSOVoKRpGw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-YsvCxeH0NlScWpa0CkhEVg-1; Thu, 07 May 2020 03:57:10 -0400
-X-MC-Unique: YsvCxeH0NlScWpa0CkhEVg-1
-Received: by mail-wr1-f70.google.com with SMTP id a12so2940348wrv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:57:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y9mwxyuCup0Q6hGGVaVop/Mcsx5sPEES6xR+JKy3xlE=;
-        b=JnwxzLjIQoQjf56D/bwF4P1tHP2B45vumieJzHuJXsV8deP/ayVEikckTs8/nZ8Ni5
-         EaYub18vytmDk99RcSVRIg2fzgSNNJ0dG3n9YSRRHT+3lMJQuWzACUiETNIOB9Qr4LGc
-         wkKJXKjCZYgI/lHxDgNBmcm/k8e7z77lJCUGZFcJRjSbKUUnWCFPAyCdN4xuOHwI/yBq
-         IrFRq7k1qtpMXhlSidGP5cfVCk1GZ6patZgL6iePCKgeY9v1sccWzMCXnt6lfQkKldBf
-         3EUIi0FSgfa97ETji4ESbz+fNset8eOEol7REfGDgyVdtZOWlJAnhsRMwSktTQW6mSOA
-         rVsg==
-X-Gm-Message-State: AGi0PuYxj3mePhbONPP2klHC0I/gfuWFrpA4/4JCgxmVHY0APmKogK12
-        Wz0qzdBebdy5843taQynqbF//2LHOS/yMT/wUWASW60bKCokIv+0XtBD8A7mm/E7y4cg51k0SeS
-        jUY6eOynJT0wUcSskW3aySbW2
-X-Received: by 2002:a1c:3206:: with SMTP id y6mr8660128wmy.111.1588838228718;
-        Thu, 07 May 2020 00:57:08 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ1HGj369geDqMTet3EHW3ra3/6X7k36PjWNlzfDZu8OSHXRqpZOWKYn7h+nDpGIM9yv2dipw==
-X-Received: by 2002:a1c:3206:: with SMTP id y6mr8660098wmy.111.1588838228397;
-        Thu, 07 May 2020 00:57:08 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8d3e:39e5:cd88:13cc? ([2001:b07:6468:f312:8d3e:39e5:cd88:13cc])
-        by smtp.gmail.com with ESMTPSA id m15sm6619827wmc.35.2020.05.07.00.57.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 00:57:07 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: x86/pmu: Support full width counting
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200507021452.174646-1-like.xu@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3fb56700-7f0b-59e1-527a-f8eb601185b1@redhat.com>
-Date:   Thu, 7 May 2020 09:57:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200507021452.174646-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 7 May 2020 03:59:23 -0400
+Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:24388
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbgEGH7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:59:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G9TDtcdnMgyHYNPgRvBt378ri8LSOJKelLECLKKXd+KXrn8ua78rsWVijVcko4PaCDE7qdutjM2R1fuktLA61GIh7NtPNlqViQkRE8jnuxsw2aYOrvkh/jVjpw534SiIeLZKlE/K8MMkCm9iHZZEHmhv3QBuDb7vNE/EzwtHbxjRR9LQXjd3F+zYUqpERnSO5W6mrEtIJnR9M1LH8yQEOflZksOAG0XVPfonLFPAhfFLnrJxoSUE5RYUjdX/mszNdUzA8hbXeE7zsR1k9j2HFxmGU6dh8NdouciN74YnJq5u1fHKsGckUtRfjQmSqZ7cdGYG0bUB3jxI7suXOywvXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jaOrgQm0xXmvTxz58JiLZJpIQMN6Zz7unOrhYkVwjSM=;
+ b=TQL9md5Iowl/aPPg605eSN/vBUa8soQvKpdbjOV4rk4j94wRfEfYFkilEqb+AnGCbWqjdauK+DzxsNtDjMfKrWL6UXJxIqIx3RJHujCt2O9uZMAqcB0t0jb2FxBRbTNDo2i1DQrGNs1yUK9GNPyyplznATgQ2XxnhDkvx1kNF/AsSKMwCjr1Y/iSnNTrEzaHvQnre2GsrYKP+PauZVh0hbcIMrdEst7JCqtqNstO05pHDK8EsTVTl35x2Qn5SAnr+MxskLn+T1CBPdmm/phEIDWBhKC9B33UyLBvOEtWRq+IoN83a7mQC/js+LzrjUmH7apqNbxhH6K19MFbUoWdew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jaOrgQm0xXmvTxz58JiLZJpIQMN6Zz7unOrhYkVwjSM=;
+ b=ZrsDrHZG/YaskWWrE5VzNaAi7tDHDdgUCHfRMRwM3GyGgJu1KknLdUTDYmldD1AfrNnw/veivUQLRaHbw2S8Fe9tQn+5qM9Xbibze6VVwUqq7SS83sJgAlfOv+G94SM21a2BqHjt9CbnS4584+QrNxMEQ4pwCmFuqz2pS5RHqyM=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2693.eurprd04.prod.outlook.com (2603:10a6:4:96::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.21; Thu, 7 May
+ 2020 07:59:16 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 07:59:16 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH V3 10/10] clk: imx8mp: mark memrepair clock as critical
+Thread-Topic: [PATCH V3 10/10] clk: imx8mp: mark memrepair clock as critical
+Thread-Index: AQHWJDWgVEWA8do9pU6mEfVx7buCsaicMdIAgAAKi/A=
+Date:   Thu, 7 May 2020 07:59:16 +0000
+Message-ID: <DB6PR0402MB27605B486262D073D2D1C87E88A50@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <1588830979-11586-1-git-send-email-peng.fan@nxp.com>
+ <1588830979-11586-11-git-send-email-peng.fan@nxp.com>
+ <AM6PR04MB49662BE27D52DC539B615B9180A50@AM6PR04MB4966.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB49662BE27D52DC539B615B9180A50@AM6PR04MB4966.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 719ae3ea-319e-4141-9018-08d7f25c8a55
+x-ms-traffictypediagnostic: DB6PR0402MB2693:|DB6PR0402MB2693:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB2693AD3A29AF329392EE466088A50@DB6PR0402MB2693.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +1ke3gkCDRl/4acNVhab5/dyPQzMUM4oGvFdDSekH7GrpGCJXVIOLiXMFffEMb+rsKJqY65uh310PnYGE+wsRO0nWaQFLprM8ux76rKYHWiAa0DSBypPcD4O5ddltP7UiCwg4M+zUZN/srQheIPZqGfG3t0nT9oc5nKeBMRzrhjH6H6QaGCDsgKh1r/QZurelhZck0EqTT1TK73NgCQhZIZ49JRw6oraDM0WOLLGb+wmqu9Zk8nmewu+4/kApHF+vkudfL+X1ToTWYtwq9/A2WW6iYHfglGSGt3BDu74S/6luvHc2uRBW9TdiO/+0xBxQdFpenUzTOoVzyMnyYeMi0R4AhEYujQjOrDf/50Qk+fiwK40ly2if/imWqocgtNLHUiWIccmRtfwnWpaVhGwP+23I+V7nkboClXy/k2FUYHUpbbChtihMPmXr/91yxoW2DD/RZxUmr6O0whkRJcOxptrw15UUtJZhKyZvE9xnKP1s6hPkAvzYeOhmfKN2RpPrWrly6tTm/U1nBdi1DIM3FVK7gAgLpFtJ8RdhWbrDGS0dJP5xAYaBzoCpHYASVsL
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(33430700001)(8676002)(6636002)(8936002)(7696005)(66556008)(71200400001)(66446008)(64756008)(86362001)(66476007)(83290400001)(83310400001)(83300400001)(2906002)(83320400001)(33440700001)(83280400001)(76116006)(5660300002)(66946007)(478600001)(4326008)(52536014)(186003)(26005)(6506007)(316002)(33656002)(44832011)(54906003)(110136005)(55016002)(9686003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: r6DAEZKgoJrvDx5g1j7zDQxcxaG8YBVbyjq2OYnN+9eNNu4hsKbjC8vrML3xDp4TvFGHkjKuVSsLDBAF5h3dnUgzHyEy5xVJU1HFN+OWComrygpc/+rmi+hhq3pxqGztqG6wYfAj/V8EJJ28hDPXwSNmrYiMVcmsmtMmmE4wLz4pIjWDUsGWy/1JBwgeqrS39zZ4964bwnvR6wICF8jOGlquPMBkZmAfX4zltApgD7CE6RRNrI3XxQMI9XS9QBzStS1/0xXyXKd7Lq3BNWumfnEzXpidi/XgVQ+T273WvQqKFa2h1m0I5u8fa+5wnulRaBqgFD0zPnkgC4JGG9FwHUv9cRIkKZUoXXUyciMIlJjv+XnyQtLAI6NvTA7DxYdQr1QnjhPmHsZecbm0iQPk4FgeJXN2BUP4628WAI/Hi234CE0r1zJQfTDuxrapDncgFAtVLoXe7oi/9LlJXOKbhFdk/zycZ6Rj4JRomo+wafdQtXkm4qCpfHPYkM50kwJDXlCfZtPjUbguhJcLVVyYcJfX/anAScFi2oOpfeCdUbq9/rQ2iucmxc3BF2ilJitjXYrPg6KrFau7BZiFYmh58qxE/d166gBzlFbINZWHAIPRud8cHt/B5LCiX5Iq5JRj5bWulsW862BCyDwhLJ6zxOfI+yMOD5FHTb5t65kOh5o6m0E2QRvv/+jgEoh4Xm5M30LHY+/yOMyVCGcpJmHQVOuG0bHIN3ExzR1Bt7uGl3/4HzBCQb5jpaRI9ozgWTj3HODCccpeGJi0gPVSgHdHXKjuR8gUhS6ykp3McZOOd/I=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 719ae3ea-319e-4141-9018-08d7f25c8a55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 07:59:16.5761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2uoR4gVeeAf3m6G5egvIHK7FE+mGjiDhXT7IVMfpneFRQU4+0cGA/MNxZ4sP7mSvaPDf3jc+FME39l7yPBz96A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2693
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/20 04:14, Like Xu wrote:
-> +static inline u64 vmx_get_perf_capabilities(void)
-> +{
-> +	u64 perf_cap = 0;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_PDCM))
-> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
-> +
-> +	/* Currently, KVM only supports Full-Width Writes. */
-> +	perf_cap &= PMU_CAP_FW_WRITES;
-> +
-> +	return perf_cap;
-> +}
-> +
-
-Since counters are virtualized, it seems to me that you can support
-PMU_CAP_FW_WRITES unconditionally, even if the host lacks it.  So just
-return PMU_CAP_FW_WRITES from this function.
-
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +		return 1; /* RO MSR */
->  	default:
-
-You need to allow writes from the host if (data &
-~vmx_get_perf_capabilities()) == 0.
-
-> -			if (!msr_info->host_initiated)
-> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
-> +			(pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
-> +			if (data & ~pmu->counter_bitmask[KVM_PMC_GP])
-> +				return 1;
-> +			if (!fw_writes_is_enabled(pmu))
->  				data = (s64)(s32)data;
-
-
-You are dropping the test on msr_info->host_initiated here, you should
-keep it otherwise you allow full-width write to MSR_IA32_PERFCTR0 as
-well.  So:
-
-#define MSR_PMC_FULL_WIDTH_BIT      (MSR_IA32_PMC0 - MSR_IA32_PERFCTR0)
-
-	if (!msr_info->host_initiated && !(msr & MSR_PMC_FULL_WIDTH_BIT))
-		data = (s64)(s32)data;
-
-> +	case MSR_IA32_PERF_CAPABILITIES:
-> +		if (!nested)
-> +			return 1;
-> +		msr->data = vmx_get_perf_capabilities();
-> +		return 0;
-
-The !nested check is wrong.
-
-> 
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1220,6 +1220,13 @@ static const u32 msrs_to_save_all[] = {
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
-> +
-> +	MSR_IA32_PMC0, MSR_IA32_PMC0 + 1, MSR_IA32_PMC0 + 2,
-> +	MSR_IA32_PMC0 + 3, MSR_IA32_PMC0 + 4, MSR_IA32_PMC0 + 5,
-> +	MSR_IA32_PMC0 + 6, MSR_IA32_PMC0 + 7, MSR_IA32_PMC0 + 8,
-> +	MSR_IA32_PMC0 + 9, MSR_IA32_PMC0 + 10, MSR_IA32_PMC0 + 11,
-> +	MSR_IA32_PMC0 + 12, MSR_IA32_PMC0 + 13, MSR_IA32_PMC0 + 14,
-> +	MSR_IA32_PMC0 + 15, MSR_IA32_PMC0 + 16, MSR_IA32_PMC0 + 17,
->  };
-
-This is not needed because the full-width content is already accessible
-from the host via MSR_IA32_PERFCTRn.
-
-Given the bugs, it is clear that you should also modify the pmu.c
-testcase for kvm-unit-tests to cover full-width writes (and especially
-the non-full-width write behavior of MSR_IA32_PERFCTRn).  Even before
-the QEMU side is begin worked on, you can test it with "-cpu
-host,migratable=off".
-
-Thanks,
-
-Paolo
-
+PiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDEwLzEwXSBjbGs6IGlteDhtcDogbWFyayBtZW1yZXBh
+aXIgY2xvY2sgYXMgY3JpdGljYWwNCj4gDQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
+cC5jb20+DQo+ID4gU2VudDogVGh1cnNkYXksIE1heSA3LCAyMDIwIDE6NTYgUE0NCj4gPg0KPiA+
+IElmIG1lbXJlcGFpciByb290IGNsb2NrIGluIENDTSBpcyBkaXNhYmxlZCwgdGhlIG1lbW9yeSBy
+ZXBhaXIgbG9naWMgaW4NCj4gPiBIRE1JTUlYIGNhbuKAmXQgd29yay4gU28gbGV0J3MgbWFyayBp
+dCBhcyBjcml0aWNhbCBjbG9jay4NCj4gDQo+IEEgc21hbGwgcXVlc3Rpb24gaGVyZToNCj4gSXMg
+dGhpcyBjbG9jayBjcml0aWNhbCBmb3IgdGhlIHdob2xlIHN5c3RlbSBvciBvbmx5IGZvciBIRE1J
+TUlYPw0KPiBXaGF0IGlmIEhETUlJWCBpcyBub3QgZW5hYmxlZD8NCg0KSXQgaXMgbm90IG9ubHkg
+Zm9yIEhETUksIGJ1dCBmb3IgTGludXggcnVudGltZSwgaXQgb25seSBhZmZlY3QgSERNSSBmb3Ig
+bm93DQpwZXIgbXkgdW5kZXJzdGFuZGluZywgc28NCkxldCdzIGRyb3AgdGhpcyBwYXRjaCBmcm9t
+IHRoaXMgcGF0Y2hzZXQgZm9yIG5vdy4NCg0KU2hhd24sDQogIFNpbmNlIGp1c3QgZHJvcCB0aGlz
+IHBhdGNoIDEwIGZyb20gdjMsIHRoZXJlIGlzIG5vIG5lZWQgZm9yIG1lIHRvIHNlbmQgdjQ/DQoN
+ClRoYW5rcywNClBlbmcuDQoNCj4gDQo+IFJlZ2FyZHMNCj4gQWlzaGVuZw0KPiANCj4gPg0KPiA+
+IFJldmlld2VkLWJ5OiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+IC0tLQ0K
+PiA+ICBkcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtcC5jIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtcC5jDQo+ID4gYi9kcml2ZXJzL2Nsay9pbXgvY2xr
+LWlteDhtcC5jIGluZGV4IGI0ZDlkYjlkNWJmMS4uYTdjNTlkN2E0MGRlDQo+IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1wLmMNCj4gPiArKysgYi9kcml2ZXJzL2Ns
+ay9pbXgvY2xrLWlteDhtcC5jDQo+ID4gQEAgLTU5MCw3ICs1OTAsNyBAQCBzdGF0aWMgaW50IGlt
+eDhtcF9jbG9ja3NfcHJvYmUoc3RydWN0DQo+ID4gcGxhdGZvcm1fZGV2aWNlDQo+ID4gKnBkZXYp
+DQo+ID4gIAlod3NbSU1YOE1QX0NMS19WUFVfRzJdID0gaW14OG1fY2xrX2h3X2NvbXBvc2l0ZSgi
+dnB1X2cyIiwNCj4gPiBpbXg4bXBfdnB1X2cyX3NlbHMsIGNjbV9iYXNlICsgMHhhMTgwKTsNCj4g
+PiAgCWh3c1tJTVg4TVBfQ0xLX0NBTjFdID0gaW14OG1fY2xrX2h3X2NvbXBvc2l0ZSgiY2FuMSIs
+DQo+ID4gaW14OG1wX2NhbjFfc2VscywgY2NtX2Jhc2UgKyAweGEyMDApOw0KPiA+ICAJaHdzW0lN
+WDhNUF9DTEtfQ0FOMl0gPSBpbXg4bV9jbGtfaHdfY29tcG9zaXRlKCJjYW4yIiwNCj4gPiBpbXg4
+bXBfY2FuMl9zZWxzLCBjY21fYmFzZSArIDB4YTI4MCk7DQo+ID4gLQlod3NbSU1YOE1QX0NMS19N
+RU1SRVBBSVJdID0NCj4gPiBpbXg4bV9jbGtfaHdfY29tcG9zaXRlKCJtZW1yZXBhaXIiLCBpbXg4
+bXBfbWVtcmVwYWlyX3NlbHMsDQo+IGNjbV9iYXNlICsNCj4gPiAweGEzMDApOw0KPiA+ICsJaHdz
+W0lNWDhNUF9DTEtfTUVNUkVQQUlSXSA9DQo+ID4gK2lteDhtX2Nsa19od19jb21wb3NpdGVfY3Jp
+dGljYWwoIm1lbXJlcGFpciIsDQo+IGlteDhtcF9tZW1yZXBhaXJfc2VscywNCj4gPiArY2NtX2Jh
+c2UgKyAweGEzMDApOw0KPiA+ICAJaHdzW0lNWDhNUF9DTEtfUENJRV9QSFldID0gaW14OG1fY2xr
+X2h3X2NvbXBvc2l0ZSgicGNpZV9waHkiLA0KPiA+IGlteDhtcF9wY2llX3BoeV9zZWxzLCBjY21f
+YmFzZSArIDB4YTM4MCk7DQo+ID4gIAlod3NbSU1YOE1QX0NMS19QQ0lFX0FVWF0gPSBpbXg4bV9j
+bGtfaHdfY29tcG9zaXRlKCJwY2llX2F1eCIsDQo+ID4gaW14OG1wX3BjaWVfYXV4X3NlbHMsIGNj
+bV9iYXNlICsgMHhhNDAwKTsNCj4gPiAgCWh3c1tJTVg4TVBfQ0xLX0kyQzVdID0gaW14OG1fY2xr
+X2h3X2NvbXBvc2l0ZSgiaTJjNSIsDQo+ID4gaW14OG1wX2kyYzVfc2VscywgY2NtX2Jhc2UgKyAw
+eGE0ODApOw0KPiA+IC0tDQo+ID4gMi4xNi40DQoNCg==
