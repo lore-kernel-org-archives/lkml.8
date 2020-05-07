@@ -2,276 +2,128 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7FAC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E641CC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B10620838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21DD207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b29sjrhZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R1v9bA5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgEGAMu (ORCPT
+        id S1728198AbgEGANm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:12:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34304 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728018AbgEGAMt (ORCPT
+        Wed, 6 May 2020 20:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbgEGANl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:12:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588810366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j18yRlSXVs1XqMRPrr5TnxCcuMHcdiu23/tkanH5yhs=;
-        b=b29sjrhZ20F15QP4rKf70BRLJS/WJFdFoR4e3v3zw2luCbOCJDU/rQVSJqc9AsVkJd4qAL
-        W8jvOnOabN9v2ixqnISooYdDZg10SN3yfyF8A1Mi3MnU9DvYBtpYmpbTpxWe1pxRYRJLtI
-        nTm+CKftVB1Nx7IfKgk79aHD+pKhNCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-tcjYHgQDNJK05e6TfCAeUQ-1; Wed, 06 May 2020 20:12:44 -0400
-X-MC-Unique: tcjYHgQDNJK05e6TfCAeUQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83FEE107ACCA;
-        Thu,  7 May 2020 00:12:42 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F133260FB9;
-        Thu,  7 May 2020 00:12:36 +0000 (UTC)
-Date:   Wed, 6 May 2020 20:12:33 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw
-Subject: Re: [PATCH] kernel: add panic_on_taint
-Message-ID: <20200507001233.GD205881@optiplex-lnx>
-References: <20200506222815.274570-1-aquini@redhat.com>
- <20200506232447.GW11244@42.do-not-panic.com>
+        Wed, 6 May 2020 20:13:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D887C061A0F;
+        Wed,  6 May 2020 17:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=jIXCMyIbImO8rm+oSDaQ2NCQ0Osl596aq9/e8JwCpJ8=; b=R1v9bA5VIwE6ZoPd5DtaIU67FX
+        FqrIiDLQQ8dMAf8/BA9c6R5+asnL12HNe0AUUseNBpor9jJ42IYTpkrpcXKhfIF4mvfK9HeoJncnb
+        n25fF5aTQ7OWtl1/85tTQqY6XGfl26WHHO09KZPqw4wyOblOQKn63h6ip0j3QaapLfYpLEj6CZ4JT
+        V1cfXjjPrIY3G2lM/z7CM7yDQEDFEiN16oH2Icmb9czMh2cDaS/bTnd6tlKibeVXbJE2lr/cUGDuW
+        yyAPLYhnachD/h9GclpcjhpubwTiPDBoaVoaeqmAEhELJdl7tVOrRogQQlAfEwpXIXcH+BrMqTOtO
+        ewppQ04w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWUAX-0004mp-6l; Thu, 07 May 2020 00:13:41 +0000
+Subject: Re: linux-next: Tree for Apr 14 (objtool crazy)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20200414123900.4f97a83f@canb.auug.org.au>
+ <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
+ <20200414221914.hbvp4dvh47at4nlg@treble>
+ <20200507085011.6d2edf32@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9c7ce0f6-b15d-5205-352f-f82bfbcf7f29@infradead.org>
+Date:   Wed, 6 May 2020 17:13:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506232447.GW11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200507085011.6d2edf32@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 11:24:48PM +0000, Luis Chamberlain wrote:
-> On Wed, May 06, 2020 at 06:28:15PM -0400, Rafael Aquini wrote:
-> > Analogously to the introduction of panic_on_warn, this patch
-> > introduces a kernel option named panic_on_taint in order to
-> > provide a simple and generic way to stop execution and catch
-> > a coredump when the kernel gets tainted by any given taint flag.
-> > 
-> > This is useful for debugging sessions as it avoids rebuilding
-> > the kernel to explicitly add calls to panic() or BUG() into
-> > code sites that introduce the taint flags of interest.
-> > Another, perhaps less frequent, use for this option would be
-> > as a mean for assuring a security policy (in paranoid mode)
-> > case where no single taint is allowed for the running system.
-> > 
-> > Suggested-by: Qian Cai <cai@lca.pw>
-> > Signed-off-by: Rafael Aquini <aquini@redhat.com>
-> > ---
-> >  Documentation/admin-guide/kdump/kdump.rst     | 10 ++++++
-> >  .../admin-guide/kernel-parameters.txt         |  3 ++
-> >  Documentation/admin-guide/sysctl/kernel.rst   | 36 +++++++++++++++++++
-> >  include/linux/kernel.h                        |  1 +
-> >  kernel/panic.c                                |  7 ++++
-> >  kernel/sysctl.c                               |  7 ++++
-> >  6 files changed, 64 insertions(+)
-> > 
-> > diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> > index ac7e131d2935..de3cf6d377cc 100644
-> > --- a/Documentation/admin-guide/kdump/kdump.rst
-> > +++ b/Documentation/admin-guide/kdump/kdump.rst
-> > @@ -521,6 +521,16 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
-> >  to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
-> >  to achieve the same behaviour.
-> >  
-> > +Trigger Kdump on add_taint()
-> > +============================
-> > +
-> > +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
-> > +whenever the value set in this bitmask matches with the bit flag being set
-> > +by add_taint(). This will cause a kdump to occur at the panic() call.
-> > +In cases where a user wants to specify this during runtime,
-> > +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
-> > +to achieve the same behaviour.
-> > +
-> >  Contact
-> >  =======
-> >  
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 7bc83f3d9bdf..75c02c1841b2 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -3404,6 +3404,9 @@
-> >  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
-> >  			on a WARN().
-> >  
-> > +	panic_on_taint	panic() when the kernel gets tainted, if the taint
-> > +			flag being set matches with the assigned bitmask.
-> > +
-> >  	crash_kexec_post_notifiers
-> >  			Run kdump after running panic-notifiers and dumping
-> >  			kmsg. This only for the users who doubt kdump always
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> > index 0d427fd10941..5b880102f2e3 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -658,6 +658,42 @@ a kernel rebuild when attempting to kdump at the location of a WARN().
-> >  = ================================================
-> >  
-> >  
-> > +panic_on_taint
-> > +==============
-> > +
-> > +Bitmask for calling panic() in the add_taint() path.
-> > +This is useful to avoid a kernel rebuild when attempting to
-> > +kdump at the insertion of any specific TAINT flags.
-> > +When set to 0 (default) add_taint() default behavior is maintained.
-> > +
-> > +====== ============================
-> > +bit  0 TAINT_PROPRIETARY_MODULE
-> > +bit  1 TAINT_FORCED_MODULE
-> > +bit  2 TAINT_CPU_OUT_OF_SPEC
-> > +bit  3 TAINT_FORCED_RMMOD
-> > +bit  4 TAINT_MACHINE_CHECK
-> > +bit  5 TAINT_BAD_PAGE
-> > +bit  6 TAINT_USER
-> > +bit  7 TAINT_DIE
-> > +bit  8 TAINT_OVERRIDDEN_ACPI_TABLE
-> > +bit  9 TAINT_WARN
-> > +bit 10 TAINT_CRAP
-> > +bit 11 TAINT_FIRMWARE_WORKAROUND
-> > +bit 12 TAINT_OOT_MODULE
-> > +bit 13 TAINT_UNSIGNED_MODULE
-> > +bit 14 TAINT_SOFTLOCKUP
-> > +bit 15 TAINT_LIVEPATCH
-> > +bit 16 TAINT_AUX
-> > +bit 17 TAINT_RANDSTRUCT
-> > +bit 18 TAINT_FLAGS_COUNT
-> > +====== ============================
-> > +
-> > +So, for example, to panic if the kernel gets tainted due to
-> > +occurrences of bad pages and/or machine check errors, a user can::
-> > +
-> > +  echo 48 > /proc/sys/kernel/panic_on_taint
-> > +
-> > +
-> >  panic_print
-> >  ===========
-> >  
-> > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> > index 9b7a8d74a9d6..518b9fd381c2 100644
-> > --- a/include/linux/kernel.h
-> > +++ b/include/linux/kernel.h
-> > @@ -528,6 +528,7 @@ extern int panic_on_oops;
-> >  extern int panic_on_unrecovered_nmi;
-> >  extern int panic_on_io_nmi;
-> >  extern int panic_on_warn;
-> > +extern unsigned long panic_on_taint;
-> >  extern int sysctl_panic_on_rcu_stall;
-> >  extern int sysctl_panic_on_stackoverflow;
-> >  
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index b69ee9e76cb2..e2d4771ab911 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -44,6 +44,7 @@ static int pause_on_oops_flag;
-> >  static DEFINE_SPINLOCK(pause_on_oops_lock);
-> >  bool crash_kexec_post_notifiers;
-> >  int panic_on_warn __read_mostly;
-> > +unsigned long panic_on_taint __read_mostly;
+On 5/6/20 3:50 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> What justification do we have for using __read_mostly here?
-> See patch I just sent out, hope that helps.
->
+> On Tue, 14 Apr 2020 17:19:14 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>>
+>> On Tue, Apr 14, 2020 at 06:50:15AM -0700, Randy Dunlap wrote:
+>>> On 4/13/20 7:39 PM, Stephen Rothwell wrote:  
+>>>> Hi all,
+>>>>
+>>>> Changes since 20200413:
+>>>>   
+>>>
+>>>
+>>> I killed objtool after 49 minutes of CPU time:
+>>>
+>>>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND    
+>>>  6159 rdunlap   30  10   42756   8028      0 R 100.0 0.099  49:19.02 objtool 
+>>>
+>>>
+>>> /bin/sh: line 1:  6159 Terminated              ./tools/objtool/objtool orc generate --no-fp --no-unreachable --uaccess drivers/i2c/busses/i2c-parport.o  
+>>
+>> I took an initial look at this one.  I can dig more tomorrow unless
+>> Peter beats me to it.
+>>
+>> (gdb) bt
+>> #0  0x000000000040df55 in sec_offset_hash (sec=0xc30930, offset=4334561216) at elf.h:104
+>> #1  0x000000000040e907 in find_rela_by_dest_range (elf=0x7ffff64a4010, sec=0xc30930, offset=18446744073709551608, len=1) at elf.c:227
+>> #2  0x000000000040ea67 in find_rela_by_dest (elf=0x7ffff64a4010, sec=0xc30710, offset=18446744073709551608) at elf.c:246
+>> #3  0x0000000000408038 in find_jump_table (file=0x427620 <file>, func=0xc32bf0, insn=0xc4f840) at check.c:1118
+>> #4  0x0000000000408242 in mark_func_jump_tables (file=0x427620 <file>, func=0xc32bf0) at check.c:1170
+>> #5  0x00000000004083b6 in add_jump_table_alts (file=0x427620 <file>) at check.c:1215
+>> #6  0x0000000000408b95 in decode_sections (file=0x427620 <file>) at check.c:1413
+>> #7  0x000000000040bf44 in check (_objname=0x7fffffffceff "drivers/i2c/busses/i2c-parport.o", orc=true) at check.c:2508
+>> #8  0x0000000000405580 in cmd_orc (argc=1, argv=0x7fffffffc9d8) at builtin-orc.c:41
+>> #9  0x0000000000411297 in handle_internal_command (argc=6, argv=0x7fffffffc9d0) at objtool.c:96
+>> #10 0x0000000000411349 in main (argc=6, argv=0x7fffffffc9d0) at objtool.c:119
+>>
+>> It's an infinite loop in find_rela_by_dest_range() because offset is -8.
+>> That comes from find_jump_table():
+>>
+>>   table_offset = text_rela->addend;
+>>   table_sec = text_rela->sym->sec;
+>>   ...
+>>   table_rela = find_rela_by_dest(file->elf, table_sec, table_offset);
+>>
+>> which comes from this gem:
+>>
+>> 00000000000001fd <line_set>:
+>>  1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
+>>  204:	00 00 00 
+>> 			1ff: R_X86_64_64	.rodata-0x8
+>>
+>> So objtool is getting confused by that -0x8 rela addend.
+> 
+> Did this get fixed?
+> 
 
-Given the rationale on the hint usage (from your re-sent patch)
-this one should not be hinted. I'll get rid of the hint.
-
- 
-> >  int panic_timeout = CONFIG_PANIC_TIMEOUT;
-> >  EXPORT_SYMBOL_GPL(panic_timeout);
-> > @@ -434,6 +435,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
-> >  		pr_warn("Disabling lock debugging due to kernel taint\n");
-> >  
-> >  	set_bit(flag, &tainted_mask);
-> > +
-> > +	if (unlikely(tainted_mask & panic_on_taint)) {
-> 
-> unlikely() is telling the merit may not be that strong?
-> 
-> > +		panic_on_taint = 0;
-> > +		panic("panic_on_taint set ...");
-> > +	}
-> >  }
-> >  EXPORT_SYMBOL(add_taint);
-> >  
-> > @@ -675,6 +681,7 @@ core_param(panic, panic_timeout, int, 0644);
-> >  core_param(panic_print, panic_print, ulong, 0644);
-> >  core_param(pause_on_oops, pause_on_oops, int, 0644);
-> >  core_param(panic_on_warn, panic_on_warn, int, 0644);
-> > +core_param(panic_on_taint, panic_on_taint, ulong, 0644);
-> >  core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
-> >  
-> >  static int __init oops_setup(char *s)
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index 8a176d8727a3..b80ab660d727 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
-> >  		.extra1		= SYSCTL_ZERO,
-> >  		.extra2		= SYSCTL_ONE,
-> >  	},
-> > +	{
-> > +		.procname	= "panic_on_taint",
-> > +		.data		= &panic_on_taint,
-> > +		.maxlen		= sizeof(unsigned long),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= proc_doulongvec_minmax,
-> 
-> proc_doulongvec_minmax supports a min and max, do we want to
-> set it so that we have a sanity check for values used? To see
-> an example, refer to the file-max entry.
->
-It didn't seem necessary to declare the range limits here, as
-albeit he current set of taint flags would cause tainted_mask
-to strecth all the way from 0 (none set) to ULONG_MAX (all set), 
-that's its valid range given the usage. 
-That's why I didn't declare the extra values for range-checking.
-I can do it, though, if you rather have it that way.
+Yes.  It's here:
+https://lore.kernel.org/lkml/02b719674b031800b61e33c30b2e823183627c19.1587842122.git.jpoimboe@redhat.com/
 
 
- 
-> That would allow for example to error our if a value was
-> tried but it is a taint flag which we don't support on an older
-> kernel.
-> 
-> You know what would be *really* useful as well, is a way to
-> cat out our current taint, and perhaps another that spits it
-> out in English. This can allow scripts to check that for
-> validity, instead of scraping kernel logs.
-> 
-> For instance, I would love to easily just check if TAIN_WARN
-> was hit on some tests I am working on, but I don't want to scrape
-> the kernel log for this, as I think this is overkill.
-> 
-I can definitely take a look into these suggestions for a later 
-patch, as I think they're nice but they don't look as a deal-breaker 
-for the simple feature being proposed here.
-
-Thanks for your feedback!
--- Rafael
+-- 
+~Randy
 
