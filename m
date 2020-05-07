@@ -2,271 +2,292 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CACEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEC1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5145721BE5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AEB20735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Votr8nl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgEGRhP convert rfc822-to-8bit (ORCPT
+        id S1727030AbgEGRiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:37:15 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:57297 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgEGRhO (ORCPT
+        Thu, 7 May 2020 13:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726308AbgEGRiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:37:14 -0400
-Received: from [192.168.1.164] ([37.4.249.134]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MY60L-1jcVcR2G5N-00YOAq; Thu, 07 May 2020 19:36:54 +0200
-Subject: Re: [PATCH v2 89/91] drm/vc4: hdmi: Support the BCM2711 HDMI
- controllers
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <92ccd154d49ea2bb319589404ddf6045f5372f70.1587742492.git-series.maxime@cerno.tech>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
- CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
- bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
- TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
- NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
- MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
- by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
- MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
- VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
- aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
- OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
- bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
- Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
- ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
- bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
- dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
- QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
- UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
- SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
- VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
- akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
- NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
- RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
- QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
- ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
- cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
- R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
- aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
- NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
- SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
- TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
- TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
- NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
- YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
- SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
- KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
- ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
- VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
- SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
- d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
- UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
- c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
- a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
- anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
- WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
- Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
- QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
- Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
- K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
- aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
- dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
- TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
- SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
- U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
- VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
- OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
- Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
- eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
- MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
- SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
- Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
- WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
- Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
- OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
- TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
- eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
- WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
- cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
- QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
- Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
- RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
- SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
- cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
- dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
- RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
- SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
- WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
- VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
- am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
- OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
- L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
- aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
- cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
- WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
- MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
- RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
- RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
- TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
- SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
- M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
- VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
- MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
- bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
- NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
- ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
- Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
- eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
- QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
- TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
- dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
- S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
- VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
- QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
- ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
- UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
- SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
- UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
- N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
- dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
- MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
- d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
- WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
- MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
- MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
- TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
- NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
- MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
- RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
- VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
- WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
- ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
- SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
- MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
- M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
- dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
- CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
- VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
- bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
- LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-Message-ID: <ef66c2ac-380a-ebcf-a168-099f1ff709a6@i2se.com>
-Date:   Thu, 7 May 2020 19:36:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 13:38:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7302C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n5mjLFDb+NrtLDddCccm+fztHrQsxq8ChXyJ4Wzve8g=; b=Votr8nl+rVBfcuh9UtPOzR540G
+        ebgHhXEzimi5RxYt1QUQn09cwREF23gwvMpoBEB9I6ZmFaOai3pze5DGO77dGZGpezNlvax2flT5Z
+        Kil421xbjo8EOkcOCXCmUKtkIOILl2IzzunhGCTIt4l+jaG+BJEAS7+Akqm2or9/0jwZzi6F+w5dj
+        YPNEPpbPhudKf/SM85ibsseUwQkpnC5A6JeEXLyHUboyi0D8hqb1aj3nHM4gCDNuMVH38G2QKuc5r
+        DMGXsdVuZ37UpkoqGOQdwh4ObZ20TRyUiWC042KiOWaxtgwBUWSc3EHqbJ55fP3JB0NSBEb8VwuLD
+        qGmekd0A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWkTL-00015t-Pw; Thu, 07 May 2020 17:38:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 643A8301E02;
+        Thu,  7 May 2020 19:38:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4EECB29BBDE49; Thu,  7 May 2020 19:38:09 +0200 (CEST)
+Date:   Thu, 7 May 2020 19:38:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de
+Cc:     jpoimboe@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        luto@kernel.org
+Subject: Re: [RFC][PATCH 3/3] x86/entry, ORC: Teach objtool/unwind_orc about
+ stack irq swizzles
+Message-ID: <20200507173809.GK5298@hirez.programming.kicks-ass.net>
+References: <20200507161020.783541450@infradead.org>
+ <20200507161828.801097834@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <92ccd154d49ea2bb319589404ddf6045f5372f70.1587742492.git-series.maxime@cerno.tech>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Provags-ID: V03:K1:ShyLV08/cgkmHFo95q6BJOoxPMAWPfmRNb5Ryauds2XOC2hEg2x
- 40MxJ9nizX2/2z0Q9tm4aQauhtE24fotyBvCQaQQKR+IHS+dGs4hvjyIRdgj/FibN/KUpMk
- qgUGu6/69vQqgx+aZjculwlf+yTdL0YwOXNEf9rlLIiFDnYQww7vSaxfoLYuxK2QvAQ/wXE
- UVycuINNVOreMdR+zcMhA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wvoGlqZpvug=:6KrAE9G1zZnW55NtWpsIgo
- rqykdFMU2cz1eycfDK1Yk2Yqe/DlUrNkRiz76/8xovfuXxZaNMLqQJIapXYLXWz94veh/7l6d
- IqD9FnaQWikRF6WUtko/ueumZXHdRWya3yzNLjwbfLbspEZSQj7OdfCluEn18Y0U37LrbEde+
- ywQOgxgeYIns3C9w8vOAjjVvj3ejkjMrOPgOdFgFShmZhCq3RXDx/1k4Y0nLP4uUNIE195BEL
- cFUKIHIKwwo4Mf4ddrS8c+6HSIHOgg6hc9j8v85l78jhAyqwbasl32dg4pXvBJ1CGv1TMyJ/3
- r2tIMErDZ67lnmqlNmui3rKQSKrKcDLjySDqB0q09nd3DXDvW9Fd2ehVmJ5QNb5wg4nx1GnMu
- SZw7dG5raYGiJpN13WCUOrruTwISHKZEyUewLex23ZaRMt323lRTZ2ezUHWAzAizBkX4aP6cI
- dHe0xiaW8WiTl+wFybfXIasNliuuwvV0apBWIsL1SoBCLgHOEqHLpWiFGPhMOn8/CoXGeOM6U
- TANch7YXWnvS8gz36/qZUrHFWRo+2lHJOU2MPTXLyMIKsIQ3sbL18+vGbHELfIzPnIaJCSlTo
- OZ1uALDoBn+jANqYTOTfnrUT8ayuJY1ujmNaemwJGNRVWG7WLTyzJW7QMEUcyJLIW+u7Pcq8d
- ib6k+HrY/gTgcBFQO7N6LirmJQSAQUdGLlgBycbSm7TsZcj5O5o5hV+ehM9of0GyZN6e+yN+s
- ym1hJt9QH5NGQ7q9OTrrY/c8EQp8Y0jKTPsGU56VXF+PUt4/+xIN0mMOBzzFSbzI6xXXUNSpz
- aD1KcpZnn2pSMwu0i8W4iFjt4R6OMRTzhKL8D9d2UD4AfcSl3cCTFeIstRaAwxekR5WZyq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507161828.801097834@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
-
-Am 24.04.20 um 17:35 schrieb Maxime Ripard:
-> Now that the driver is ready for it, let's bring in the HDMI controllers
-> variants for the BCM2711.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+On Thu, May 07, 2020 at 06:10:23PM +0200, Peter Zijlstra wrote:
+> Thomas would very much like objtool to understand and generate correct
+> ORC unwind information for the minimal stack swizzle sequence:
+> 
+> 	mov %rsp, (%[ts])
+> 	mov %[ts], %rsp
+> 	...
+> 	pop %rsp
+> 
+> This sequence works for the fp and guess unwinders -- all they need is
+> that top-of-stack link set up by the first instruction.
+> 
+> The previous entry_64.S code worked with "UNWIND_HINT_REGS indirect=1"
+> hints to inform the unwinder about the stack-swizzle, but because
+> we've now already entered C, we can no longer point to a REGS. In
+> fact, due to being in C we don't even have a reliable sp_offset to
+> anything.
+> 
+> None of the existing UNWIND_HINT() functionality is quite sufficient
+> to generate the right thing, but SP_INDIRECT is still the closest, so
+> extend it.
+> 
+> When SP_INDIRECT is combined with .end=1 (which is otherwise unused,
+> except for sp_reg == UNDEFINED):
+> 
+>  - change it from (sp+sp_offset) to (sp)+sp_offset
+>  - have objtool preserve sp_offset from the previous state
+>  - change "pop %rsp" handling to restore the CFI state from before the
+>    hint.
+> 
+> NOTES:
+> 
+>  - We now have an instruction with stackops and a hint; make hint take
+>    precedence over stackops.
+> 
+>  - Due to the reverse search in "pop %rsp" we must
+>    fill_alternative_cfi() before validate_branch().
+> 
+>  - This all isn't really pretty, but it works and gets Thomas the code
+>    sequence he wants.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c      | 276 +++++++++++++++++-
->  drivers/gpu/drm/vc4/vc4_hdmi.h      |  35 ++-
->  drivers/gpu/drm/vc4/vc4_hdmi_phy.c  | 468 +++++++++++++++++++++++++++++-
->  drivers/gpu/drm/vc4/vc4_hdmi_regs.h | 201 ++++++++++++-
->  4 files changed, 980 insertions(+)
-...
-> +
-> +#define VC4_HDMI_RM_FORMAT_SHIFT_SHIFT			24
-> +#define VC4_HDMI_RM_FORMAT_SHIFT_MASK			VC4_MASK(25, 24)
-> +
-> +#define OSCILLATOR_FREQUENCY	54000000
-Just want to mention that the oscillator frequency of the BCM2711 is
-available via bcm2711.dtsi
-> +
->  void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi, struct drm_display_mode *mode)
->  {
->  	/* PHY should be in reset, like
-> @@ -38,3 +155,354 @@ void vc4_hdmi_phy_rng_disable(struct vc4_hdmi *vc4_hdmi)
->  		   HDMI_READ(HDMI_TX_PHY_CTL_0) |
->  		   VC4_HDMI_TX_PHY_RNG_PWRDN);
->  }
-> +
-> +static unsigned long long
-> +phy_get_vco_freq(unsigned long long clock, u8 *vco_sel, u8 *vco_div)
-> +{
-> +	unsigned long long vco_freq = clock;
-> +	unsigned int _vco_div = 0;
-> +	unsigned int _vco_sel = 0;
-> +
-> +	while (vco_freq < 3000000000ULL) {
-> +		_vco_div++;
-> +		vco_freq = clock * _vco_div * 10;
-> +	}
-> +
-> +	if (vco_freq > 4500000000ULL)
-> +		_vco_sel = 1;
-> +
-> +	*vco_sel = _vco_sel;
-> +	*vco_div = _vco_div;
-> +
-> +	return vco_freq;
-> +}
-> +
-> +static u8 phy_get_cp_current(unsigned long vco_freq)
-> +{
-> +	if (vco_freq < 3700000000ULL)
-> +		return 0x1c;
-> +
-> +	return 0xc8;
 
-The vendor tree contains a patch [1] for this return value, which said
-that the value is a typo and causes warnings because the value must be 6
-bit.
+Much simpler, also works.
 
-Btw that my tests with Raspberry Pi 3 and 4 were good so far.
-
-[1] -
-https://github.com/raspberrypi/linux/commit/71d5db1b342097fa4dc561202837beb934648b25
-
-> +}
-> +
-
+---
+--- a/arch/x86/include/asm/irq_stack.h
++++ b/arch/x86/include/asm/irq_stack.h
+@@ -23,6 +23,7 @@ do {									\
+ 	__this_cpu_add(irq_count, 1);					\
+ 	asm volatile(							\
+ 		"movq	%%rsp, (%[ts])				\n"	\
++		UNWIND_HINT_INDIRECT					\
+ 		"movq	%[ts], %%rsp				\n"	\
+ 		ASM_INSTR_BEGIN						\
+ 		_asm "                                          \n"	\
+--- a/arch/x86/include/asm/unwind_hints.h
++++ b/arch/x86/include/asm/unwind_hints.h
+@@ -95,6 +95,47 @@
+ 	UNWIND_HINT type=UNWIND_HINT_TYPE_RET_OFFSET sp_offset=\sp_offset
+ .endm
+ 
++#else
++
++#define UNWIND_HINT(sp_reg, sp_offset, type, end)		\
++	"987: \n\t"						\
++	".pushsection .discard.unwind_hints\n\t"		\
++	/* struct unwind_hint */				\
++	".long 987b - .\n\t"					\
++	".short " __stringify(sp_offset) "\n\t"			\
++	".byte " __stringify(sp_reg) "\n\t"			\
++	".byte " __stringify(type) "\n\t"			\
++	".byte " __stringify(end) "\n\t"			\
++	".balign 4 \n\t"					\
++	".popsection\n\t"
++
++/*
++ * Stack swizzling vs objtool/ORC:
++ *
++ * The canonical way of swizzling stack is:
++ *
++ * 1:	mov %%rsp, (%[ts])
++ * 2:	mov %[ts], %%rsp
++ *	...
++ * 3:	pop %%rsp
++ *
++ * Where:
++ *
++ * 1 - places a pointer to the previous stack at the top of the new stack;
++ *     also see the unwinders.
++ *
++ * 2 - switches to the new stack, but to avoid hitting the CFA_UNDEFINED case,
++ *     we need to tell objtool the stack pointer can be found at (%%rsp),
++ *     UNWIND_HINT_INDIRECT does so.
++ *
++ * 3 - restores the previous stack by popping the value stored by 1 into %%rsp,
++ *     ....
++ *
++ * See arch/x86/include/asm/irq_stack.h
++ */
++#define UNWIND_HINT_INDIRECT \
++	UNWIND_HINT(ORC_REG_SP_INDIRECT, 0, ORC_TYPE_CALL, 0)
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_X86_UNWIND_HINTS_H */
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -435,12 +435,12 @@ bool unwind_next_frame(struct unwind_sta
+ 		break;
+ 
+ 	case ORC_REG_SP_INDIRECT:
+-		sp = state->sp + orc->sp_offset;
++		sp = state->sp;
+ 		indirect = true;
+ 		break;
+ 
+ 	case ORC_REG_BP_INDIRECT:
+-		sp = state->bp + orc->sp_offset;
++		sp = state->bp;
+ 		indirect = true;
+ 		break;
+ 
+@@ -489,6 +489,8 @@ bool unwind_next_frame(struct unwind_sta
+ 	if (indirect) {
+ 		if (!deref_stack_reg(state, sp, &sp))
+ 			goto err;
++
++		sp += orc->sp_offset;
+ 	}
+ 
+ 	/* Find IP, SP and possibly regs: */
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1720,8 +1720,7 @@ static void restore_reg(struct cfi_state
+  *   41 5d			pop    %r13
+  *   c3				retq
+  */
+-static int update_cfi_state(struct instruction *insn, struct cfi_state *cfi,
+-			     struct stack_op *op)
++static int update_cfi_state(struct instruction *insn, struct cfi_state *cfi, struct stack_op *op)
+ {
+ 	struct cfi_reg *cfa = &cfi->cfa;
+ 	struct cfi_reg *regs = cfi->regs;
+@@ -1898,6 +1897,13 @@ static int update_cfi_state(struct instr
+ 
+ 		case OP_SRC_POP:
+ 		case OP_SRC_POPF:
++			if (op->dest.reg == CFI_SP && cfa->base == CFI_SP_INDIRECT) {
++
++				/* pop %rsp from a stack swizzle */
++				cfa->base = CFI_SP;
++				break;
++			}
++
+ 			if (!cfi->drap && op->dest.reg == cfa->base) {
+ 
+ 				/* pop %rbp */
+@@ -2085,9 +2091,11 @@ static int handle_insn_ops(struct instru
+ 			return -1;
+ 		}
+ 
+-		res = update_cfi_state(insn, &state->cfi, op);
+-		if (res)
+-			return res;
++		if (!insn->hint) {
++			res = update_cfi_state(insn, &state->cfi, op);
++			if (res)
++				return res;
++		}
+ 
+ 		if (op->dest.type == OP_DEST_PUSHF) {
+ 			if (!state->uaccess_stack) {
+@@ -2319,16 +2327,25 @@ static int validate_branch(struct objtoo
+ 		if (state.noinstr)
+ 			state.instr += insn->instr;
+ 
+-		if (insn->hint)
+-			state.cfi = insn->cfi;
+-		else
++		if (insn->hint) {
++			if (insn->cfi.cfa.base == CFI_SP_INDIRECT) {
++				state.cfi.cfa.base = CFI_SP_INDIRECT;
++				insn->cfi = state.cfi;
++			} else {
++				state.cfi = insn->cfi;
++			}
++		} else {
+ 			insn->cfi = state.cfi;
++		}
+ 
+ 		insn->visited |= visited;
+ 
+ 		if (!insn->ignore_alts && !list_empty(&insn->alts)) {
+ 			bool skip_orig = false;
+ 
++			if (insn->alt_group)
++				fill_alternative_cfi(file, insn);
++
+ 			list_for_each_entry(alt, &insn->alts, list) {
+ 				if (alt->skip_orig)
+ 					skip_orig = true;
+@@ -2341,9 +2358,6 @@ static int validate_branch(struct objtoo
+ 				}
+ 			}
+ 
+-			if (insn->alt_group)
+-				fill_alternative_cfi(file, insn);
+-
+ 			if (skip_orig)
+ 				return 0;
+ 		}
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -50,9 +50,9 @@ static const char *orc_type_name(unsigne
+ static void print_reg(unsigned int reg, int offset)
+ {
+ 	if (reg == ORC_REG_BP_INDIRECT)
+-		printf("(bp%+d)", offset);
++		printf("(bp)%+d", offset);
+ 	else if (reg == ORC_REG_SP_INDIRECT)
+-		printf("(sp%+d)", offset);
++		printf("(sp)%+d", offset);
+ 	else if (reg == ORC_REG_UNDEFINED)
+ 		printf("(und)");
+ 	else
