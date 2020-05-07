@@ -2,134 +2,153 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2809C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADDBC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4272082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588858613;
-	bh=LzQDOyhUPzaN/QEmH/5Zc/cFyUE1+mfVuXz0rvZ8LqA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UYdlqxNMzGFQ53Mo7tgRDODDvxuLy0afqCmNLM0ls3jMxNXT/QR6FIWjSG5sovyJI
-	 o810Vg8v1siufHKkFLtF/CO+lgt3xGay83l9Ebaj6ve+MFxPnz+EAcP51w6G2G56rP
-	 uvGcKKbM82goKlg/g357InTFZLKA+R+O8Dw2L+KA=
+	by mail.kernel.org (Postfix) with ESMTP id 70A4520643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bpu/bzKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgEGNgw (ORCPT
+        id S1726771AbgEGNhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgEGNgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:36:52 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 May 2020 09:37:16 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28806 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725879AbgEGNhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:37:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588858635;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=O3AKRuRPzjJT+CpU5kRHKo5Cn8muPZpj6Vd3OBhKeIM=;
+        b=Bpu/bzKjF61qbb0sEEjA3pxNLM38Ru+PvqVUEvEoOVjeXWQWurKIm/ODKLI60qLZNCa3Oe
+        /37AvNGYRmlz2/7jP7ACFW32U1v2f2daDguc4bTZWMjKECQ/dzFTi2yYIQrS7J9YAcc78e
+        fkOa5zBTyt5OS9T/2Seio7GlltoiRl0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-E11N9G6-PR-QtmuWiG1amA-1; Thu, 07 May 2020 09:37:10 -0400
+X-MC-Unique: E11N9G6-PR-QtmuWiG1amA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F100B20643;
-        Thu,  7 May 2020 13:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588858611;
-        bh=LzQDOyhUPzaN/QEmH/5Zc/cFyUE1+mfVuXz0rvZ8LqA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=eStuCrUmYvOzkkb/b4gwo9EssNgSWMvVXNQfMmAmE3/4XYZlvs7S40Q9uCK3FyII/
-         ZUug+OReaOaXNuqa34GONmSGK97EHYDBrdlFU/G7dNy+eRUj4oFGLGIdAGWICWyr8+
-         a4mkZ7utRJPgqiGk8/ZqsQ1Uz8FrYTdz2jtWB8y8=
-Date:   Thu, 7 May 2020 15:36:48 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v4 05/11] s390: Change s390_kernel_write() return type
- to match memcpy()
-In-Reply-To: <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
-Message-ID: <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
-References: <cover.1588173720.git.jpoimboe@redhat.com> <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DC7F1005510;
+        Thu,  7 May 2020 13:37:09 +0000 (UTC)
+Received: from lszubowi.redhat.com (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 575CC649A9;
+        Thu,  7 May 2020 13:37:08 +0000 (UTC)
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+To:     ardb@kernel.org, eric.snowberg@oracle.com, mingo@kernel.org,
+        nivedita@alum.mit.edu, tglx@linutronix.de,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
+Date:   Thu,  7 May 2020 09:37:07 -0400
+Message-Id: <20200507133707.7123-1-lszubowi@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
+In allocate_e820(), call the EFI get_memory_map() service directly
+instead of indirectly via efi_get_memory_map(). This avoids allocation
+of a buffer and return of the full EFI memory map, which is not needed
+here and would otherwise need to be freed.
 
-> s390_kernel_write()'s function type is almost identical to memcpy().
-> Change its return type to "void *" so they can be used interchangeably.
-> 
-> Cc: linux-s390@vger.kernel.org
-> Cc: heiko.carstens@de.ibm.com
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-> Acked-by: Miroslav Benes <mbenes@suse.cz>
+Routine allocate_e820() only needs to know how many EFI memory
+descriptors there are in the map to allocate an adequately sized
+e820ext buffer, if it's needed. Note that since efi_get_memory_map()
+returns a memory map buffer sized with extra headroom, allocate_e820()
+now needs to explicitly factor that into the e820ext size calculation.
 
-Also for this one -- s390 folks, could you please provide your Ack for 
-taking things through livepatching.git as part of this series?
+Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+--
+v2:
+  - Instead of freeing the EFI memory map buffer allocated by
+    efi_get_memory_map(), avoid the allocation in the first place.
 
-Thanks.
+  - Changed the title of the patch because the v1 title no longer
+    applies. v1 ref:
+    https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
+--
+---
+ drivers/firmware/efi/libstub/efistub.h  |  2 ++
+ drivers/firmware/efi/libstub/mem.c      |  5 +++++
+ drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
-> ---
->  arch/s390/include/asm/uaccess.h | 2 +-
->  arch/s390/mm/maccess.c          | 9 ++++++---
->  2 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-> index a470f1fa9f2a..324438889fe1 100644
-> --- a/arch/s390/include/asm/uaccess.h
-> +++ b/arch/s390/include/asm/uaccess.h
-> @@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(void __user *to, unsigned lo
->  }
->  
->  int copy_to_user_real(void __user *dest, void *src, unsigned long count);
-> -void s390_kernel_write(void *dst, const void *src, size_t size);
-> +void *s390_kernel_write(void *dst, const void *src, size_t size);
->  
->  #endif /* __S390_UACCESS_H */
-> diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-> index de7ca4b6718f..22a0be655f27 100644
-> --- a/arch/s390/mm/maccess.c
-> +++ b/arch/s390/mm/maccess.c
-> @@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, const void *src, size_t siz
->   */
->  static DEFINE_SPINLOCK(s390_kernel_write_lock);
->  
-> -void notrace s390_kernel_write(void *dst, const void *src, size_t size)
-> +notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
->  {
-> +	void *tmp = dst;
->  	unsigned long flags;
->  	long copied;
->  
->  	spin_lock_irqsave(&s390_kernel_write_lock, flags);
->  	while (size) {
-> -		copied = s390_kernel_write_odd(dst, src, size);
-> -		dst += copied;
-> +		copied = s390_kernel_write_odd(tmp, src, size);
-> +		tmp += copied;
->  		src += copied;
->  		size -= copied;
->  	}
->  	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
-> +
-> +	return dst;
->  }
->  
->  static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
-> -- 
-> 2.21.1
-> 
-
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 67d26949fd26..191468b771b6 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -616,6 +616,8 @@ void efi_printk(char *str);
+ 
+ void efi_free(unsigned long size, unsigned long addr);
+ 
++unsigned int efi_get_mmap_nr_slack_slots(void);
++
+ char *efi_convert_cmdline(efi_loaded_image_t *image, int *cmd_line_len,
+ 			  unsigned long max_addr);
+ 
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
+index 869a79c8946f..fc8b4fb08505 100644
+--- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -7,6 +7,11 @@
+ 
+ #define EFI_MMAP_NR_SLACK_SLOTS	8
+ 
++unsigned int efi_get_mmap_nr_slack_slots(void)
++{
++	return EFI_MMAP_NR_SLACK_SLOTS;
++}
++
+ static inline bool mmap_has_headroom(unsigned long buff_size,
+ 				     unsigned long map_size,
+ 				     unsigned long desc_size)
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 05ccb229fb45..9a5ee0678434 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
+ 				  struct setup_data **e820ext,
+ 				  u32 *e820ext_size)
+ {
+-	unsigned long map_size, desc_size, buff_size;
+-	struct efi_boot_memmap boot_map;
+-	efi_memory_desc_t *map;
++	unsigned long map_size, desc_size;
+ 	efi_status_t status;
+ 	__u32 nr_desc;
+ 
+-	boot_map.map		= &map;
+-	boot_map.map_size	= &map_size;
+-	boot_map.desc_size	= &desc_size;
+-	boot_map.desc_ver	= NULL;
+-	boot_map.key_ptr	= NULL;
+-	boot_map.buff_size	= &buff_size;
++	/* Only need the size of the mem map and size of each mem descriptor */
++	map_size = 0;
++	status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
++			     &desc_size, NULL);
++	if (status != EFI_BUFFER_TOO_SMALL)
++		return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
+ 
+-	status = efi_get_memory_map(&boot_map);
+-	if (status != EFI_SUCCESS)
+-		return status;
+-
+-	nr_desc = buff_size / desc_size;
++	nr_desc = map_size / desc_size + efi_get_mmap_nr_slack_slots();
+ 
+ 	if (nr_desc > ARRAY_SIZE(params->e820_table)) {
+ 		u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
 -- 
-Jiri Kosina
-SUSE Labs
+2.18.4
 
