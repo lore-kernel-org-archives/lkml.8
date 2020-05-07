@@ -2,52 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ACFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC1AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23FD207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD18C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588866366;
+	bh=MtT1K1QhdR93RnKXEINbJSy9JalbcJDWOmF/snclf4U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mqCK6lCNwMkSeVV2WHrwvqPC2Re0sDM0SLUvN6k6I+O2D6dOm5KOtuuKlgele4i87
+	 1RURnX0gdtyudzccbI8j0EWrE6Cc/P20DSjqB3qRZ7t7u+A1/hgHIFcK00dCxBM2xH
+	 d/FEAYyoeTrfubZo438bHnHPl/bE6CaH6ikndzI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgEGPp6 (ORCPT
+        id S1727769AbgEGPqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:45:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:47463 "EHLO verein.lst.de"
+        Thu, 7 May 2020 11:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgEGPp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:45:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id F2D2D68B05; Thu,  7 May 2020 17:45:54 +0200 (CEST)
-Date:   Thu, 7 May 2020 17:45:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-kernel@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
-Message-ID: <20200507154554.GA32006@lst.de>
-References: <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com> <20200506045258.GB9846@lst.de> <10918cd1-a4a9-7872-9672-efcd28ef0751@linux.ibm.com> <20200507152906.GA31257@lst.de> <35ee027b-7892-23ab-c31d-7c17750da8f4@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35ee027b-7892-23ab-c31d-7c17750da8f4@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1727086AbgEGPqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:46:04 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A94A0207DD;
+        Thu,  7 May 2020 15:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588866364;
+        bh=MtT1K1QhdR93RnKXEINbJSy9JalbcJDWOmF/snclf4U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ImqSVH0/sYKWxb69Pox8SY+3RRS3M0o9prJxmrXYt8yg5zRTmmeBZywK3+SkqtrL6
+         E/vnxRTB860fUDJ2IjcmXxXHAZtW7XsQ6S5pE/G3KhhSWAPa9YAoxBy66VhyVAX51N
+         bX1AZ3994AOUMkgIZt+6mf9rmrCoRDcawwBU0ZGQ=
+Date:   Fri, 8 May 2020 00:45:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Yonghong Song <yhs@fb.com>, bpf <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Wang Nan <wangnan0@huawei.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 1/3] x86/kprobes: Support nested kprobes
+Message-Id: <20200508004556.d968ee87b91dc7940ac161f2@kernel.org>
+In-Reply-To: <158884559505.12656.1357851132314046716.stgit@devnote2>
+References: <158884558272.12656.7654266361809594662.stgit@devnote2>
+        <158884559505.12656.1357851132314046716.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:43:40PM +0200, Stefan Haberland wrote:
-> Not checked till now. I just was thinking about the basicapproach.
-> 
-> I could either check the block_device_operations like you suggested
-> or I could verify that the gendisk pointer is already in our devmap
-> and therefor belongs to the DASD driver.
+On Thu,  7 May 2020 18:59:55 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-The ops pointer check is simpler and cheaper, so I'd suggest that.
+> Make kprobes to accept 1-level nesting instead of
+> diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
+> index 681a4b36e9bb..b695c2e118f8 100644
+> --- a/arch/x86/kernel/kprobes/ftrace.c
+> +++ b/arch/x86/kernel/kprobes/ftrace.c
+> @@ -25,13 +25,15 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>  		return;
+>  
+>  	kcb = get_kprobe_ctlblk();
+> -	if (kprobe_running()) {
+> +	if (!kprobe_can_nest()) {
+
+Oops, something wrong. this kprobe_can_nest() requires kcb for
+the parameter. I'll fix this.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
