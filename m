@@ -2,89 +2,109 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB32EC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0A9C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B975C208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F6C2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgEGTMa (ORCPT
+        id S1728385AbgEGTNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728273AbgEGTM3 (ORCPT
+        Thu, 7 May 2020 15:13:49 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38258 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgEGTNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:12:29 -0400
-X-Greylist: delayed 651 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 07 May 2020 12:12:28 PDT
-Received: from nibbler.cm4all.net (nibbler.cm4all.net [IPv6:2001:8d8:970:e500:82:165:145:151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D21C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:12:28 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by nibbler.cm4all.net (Postfix) with ESMTP id 99C4EC0225
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 21:12:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
-Received: from nibbler.cm4all.net ([127.0.0.1])
-        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id monGuX-xYEi4 for <linux-kernel@vger.kernel.org>;
-        Thu,  7 May 2020 21:12:27 +0200 (CEST)
-Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
-        by nibbler.cm4all.net (Postfix) with SMTP id 7A805C01D4
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 21:12:27 +0200 (CEST)
-Received: (qmail 3684 invoked from network); 7 May 2020 22:28:44 +0200
-Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
-  by zero.intern.cm-ag with SMTP; 7 May 2020 22:28:44 +0200
-Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
-        id 4E1C8461450; Thu,  7 May 2020 21:12:27 +0200 (CEST)
-Date:   Thu, 7 May 2020 21:12:27 +0200
-From:   Max Kellermann <mk@cm4all.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Max Kellermann <mk@cm4all.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] fs/io_uring: fix O_PATH fds in openat, openat2, statx
-Message-ID: <20200507191227.GA16101@rabbit.intern.cm-ag>
-References: <20200507185725.15840-1-mk@cm4all.com>
- <20200507190131.GF23230@ZenIV.linux.org.uk>
- <4cac0e53-656c-50f0-3766-ae3cc6c0310a@kernel.dk>
+        Thu, 7 May 2020 15:13:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 590F2803087B;
+        Thu,  7 May 2020 19:13:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7gxrh3JYj9Az; Thu,  7 May 2020 22:13:38 +0300 (MSK)
+Date:   Thu, 7 May 2020 22:13:37 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
+Message-ID: <20200507191337.la6z476myszqethj@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
+ <20200507110951.GD11616@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <4cac0e53-656c-50f0-3766-ae3cc6c0310a@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200507110951.GD11616@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/07 21:05, Jens Axboe <axboe@kernel.dk> wrote:
-> On 5/7/20 1:01 PM, Al Viro wrote:
-> > On Thu, May 07, 2020 at 08:57:25PM +0200, Max Kellermann wrote:
-> >> If an operation's flag `needs_file` is set, the function
-> >> io_req_set_file() calls io_file_get() to obtain a `struct file*`.
-> >>
-> >> This fails for `O_PATH` file descriptors, because those have no
-> >> `struct file*`
+On Thu, May 07, 2020 at 01:09:51PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > 
-> > O_PATH descriptors most certainly *do* have that.  What the hell
-> > are you talking about?
+> > Indeed according to the P5600/P6000 manual the MAAR pair register
+> > address field either takes [12:31] bits for 32-bits non-XPA systems
+> > and [12:35] otherwise. In any case the current address mask is just
+> > wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
+> > value. This shall cover the 64-bits architecture and systems with XPA
+> > enabled, and won't cause any problem for non-XPA 32-bit systems, since
+> > the value will be just truncated when written to the 32-bits register.
 > 
-> Yeah, hence I was interested in the test case. Since this is
-> bypassing that part, was assuming we'd have some logic error
-> that attempted a file grab for a case where we shouldn't.
+> according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
+> ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
 
-Reproduce this by patching liburing/test/lfs-openat.c:
+> Does the wider mask cause any problems ?
 
--       int dfd = open("/tmp", O_RDONLY | O_DIRECTORY);
-+       int dfd = open("/tmp", O_PATH);
+No, it won't. Bits written to the [40:62] range will be just ignored,
+while reading from there should return zeros. Setting GENMASK_ULL(55, 12)
+would also work. Though this solution is a bit workarounding because
+MIPS_MAAR_ADDR wouldn't reflect the real mask of the ADDR field. Something
+like the next macro would work better:
 
- $ ./test/lfs-openat
- io_uring openat failed: Bad file descriptor
++#define MIPS_MAAR_ADDR							\
++({									\
++	u64 __mask;							\
++									\
++	if (cpu_has_lpa && read_c0_pagegrain() & PG_ELPA) {		\
++		__mask = GENMASK_ULL(55, 12);				\
++	else								\
++		__mask = GENMASK_ULL(31, 12);				\
++									\
++	__mask;								\
++})
 
-GH PR: https://github.com/axboe/liburing/pull/130
+What do you think? What is better: the macro above or setting
+GENMASK_ULL(55, 12)?
 
-Max
+BTW I've just figured out, that since XPA is currently only supported by
+kernels with CPU_MIPS32x config enabled, then only MIPS32 may have extended
+physical addressing of 2^60 bytes if CONFIG_XPA is enabled. Generic MIPS64
+doesn't support the extended phys addressing so only 2^36 bytes are available
+on such platforms. (Loongson64 doesn't count, the platform code sets the
+PG_ELPA bit manually in kernel-entry-init.h)
+
+-Sergey
+
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
