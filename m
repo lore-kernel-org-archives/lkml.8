@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B39DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76433C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414EF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547032083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861867;
-	bh=0pS+i0Ixr68HNWXXzQPsLMW2+ywCYwWogyt2MvpScbQ=;
+	s=default; t=1588861870;
+	bh=LeHCs5TUDusUjeNEfndr0UAM6RWKmcCX6pSKfwjK5ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bX80Gnb8QKOUX1iF8mwpIDvptXyMkYhTr5opGxclbosJAMbyBWS8TUZJhBpoZn0pS
-	 wWkUETfPzw8cBRFA3RFRw3WyRS8NEzZe2/zAHk1pRFdHxKlfMu0j54U9Ol6+3SduTY
-	 FvlvKT6/Mgi6dEiLXH8/2J8VhwzN30B+JXiopYPI=
+	b=heTjiH0roTtjDcuUGBGGur9QdLC9xBsE+c53B1nW10oEgnT+NBa8QdCwIbj+FBr7C
+	 /RA0Z5zy8Sy4sVG4z5M3bSZSPgvkLg805YkybMR+TH9Dd61Cyoy+bEvjsAAZa5hOci
+	 pdM54MU0V6wCI28K3UR7GMQi/0w9xKdgOyzQ2iOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgEGOa4 (ORCPT
+        id S1728887AbgEGOau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728828AbgEGOa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:26 -0400
+        id S1728812AbgEGOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBBE620B1F;
-        Thu,  7 May 2020 14:30:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5A72083B;
+        Thu,  7 May 2020 14:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861825;
-        bh=0pS+i0Ixr68HNWXXzQPsLMW2+ywCYwWogyt2MvpScbQ=;
+        s=default; t=1588861821;
+        bh=LeHCs5TUDusUjeNEfndr0UAM6RWKmcCX6pSKfwjK5ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfHz3ELyb8RrCZ9c1Jy0ssQjoupDOQYrJ0XXccoQnIs0X116IWtPUTBV++hSSQCJ2
-         o3+4ljbsKpxjmJoJqYQ8if12D3KAcooKWnlCj9P35PtqqHr2vbid2FdFmudT/kadYI
-         kukd6iFVhNwbBsFLyM+XvBnZvOxFveMH/Jfw5BNY=
+        b=PGPN1iZAYAVC4qJkLUBmGhlUaHyM+Bx8uDp+OFlForWUcOPNoP4t3mFtwc902h+ee
+         Knt0bgXpNqYiDgz+eoTncw7owwv7jFtaodu4Sa6ZMDNUL8ELoM8J2wIBUIGffNP+JY
+         TAi+6VJ01GCH1jM0Uojgmr25aMFT/4JEK336jCdU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 6/9] ALSA: hda: Match both PCI ID and SSID for driver blacklist
-Date:   Thu,  7 May 2020 10:30:15 -0400
-Message-Id: <20200507143018.27195-6-sashal@kernel.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 2/9] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Thu,  7 May 2020 10:30:11 -0400
+Message-Id: <20200507143018.27195-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
 References: <20200507143018.27195-1-sashal@kernel.org>
@@ -58,56 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 977dfef40c8996b69afe23a9094d184049efb7bb ]
+[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-Since the empty codec problem appear on the certain AMD platform (PCI
-ID 1022:1487), this patch changes the blacklist matching to both PCI
-ID and SSID using pci_match_id().  Also, the entry that was removed by
-the previous fix for ASUS ROG Zenigh II is re-added.
-
-Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index da9f6749b3be2..8dd6cf0b8939b 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1977,9 +1977,10 @@ static const struct hdac_io_ops pci_hda_io_ops = {
-  * some HD-audio PCI entries are exposed without any codecs, and such devices
-  * should be ignored from the beginning.
-  */
--static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
--	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+static const struct pci_device_id driver_blacklist[] = {
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
- 	{}
- };
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index 1ebe2fc7cda27..05c697d5b4779 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -213,37 +213,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
  
-@@ -2002,7 +2003,7 @@ static int azx_probe(struct pci_dev *pci,
- 	bool schedule_probe;
- 	int err;
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ {
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
  
--	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+	if (pci_match_id(driver_blacklist, pci)) {
- 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
- 		return -ENODEV;
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
+ 
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
+ 			break;
+ 		}
  	}
+ 
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
+ }
+ 
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 -- 
 2.20.1
 
