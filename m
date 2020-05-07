@@ -2,126 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDACBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7059FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16D8208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C2E20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:58:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cz71TAgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgEGV6F (ORCPT
+        id S1726797AbgEGV6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:58:05 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38116 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEGV6F (ORCPT
+        Thu, 7 May 2020 17:58:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52315 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726437AbgEGV6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:58:05 -0400
-Received: by mail-il1-f194.google.com with SMTP id c18so6804683ile.5;
-        Thu, 07 May 2020 14:58:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GI7tbDeUUOEa56ks8zKfYc4C3uORKh3Rq+YHa4B8fIs=;
-        b=lp5r0bNPyWv3GAesA97nDseDd3FliLrzwb/rNcOECzveb5UExPmBt7/cVbULtfoaln
-         ucmtdQG/+jF4pLZc+T77beljpmyvFQo7bkXmh/pVWQMM7KX7mUbuEfTcSgJOtCD9T9jp
-         +qAjSj7F4tEKvNG4KFUQ8QXeNH3+4AoKQviQNVBTzrlRFa/llrJvY65EjmOCz3mvyQom
-         dYEFe2Jt6yy4VhinChDTi1TyRcRixL2sPMHX4/9Hz0PirI54f4RtYvyLwjYNDjRt+cmv
-         twaZjeYLmD0ETkpah+IxWNz1dM51QXKEL4Ybvuzs5rxgPE2OsLR9ORLuL20t0KCLdlLn
-         JiFg==
-X-Gm-Message-State: AGi0PubJ2vc4y+Jkl2ZdWcAueoVF0hbld2VIxB06VTpakXOwgbEnLNLE
-        QA8OoVcU+4jnvSMFD2qydNc5EMvPO1I=
-X-Google-Smtp-Source: APiQypI+iDElsr2p1ZHpOctO/W21HEtkb++o96IuKTURr/XhzdkfhcqL3CM10Waq1sixCES6+TeJTg==
-X-Received: by 2002:a92:1d4e:: with SMTP id d75mr10484005ild.235.1588888683969;
-        Thu, 07 May 2020 14:58:03 -0700 (PDT)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
-        by smtp.gmail.com with ESMTPSA id 7sm847683ion.52.2020.05.07.14.58.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 14:58:03 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id j8so2243161iog.13;
-        Thu, 07 May 2020 14:58:03 -0700 (PDT)
-X-Received: by 2002:a02:cebb:: with SMTP id z27mr16202135jaq.32.1588888683009;
- Thu, 07 May 2020 14:58:03 -0700 (PDT)
+        Thu, 7 May 2020 17:58:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588888708;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YIdhd/O6VYCCThTyaA6We9R20n/Ae/tFi2XoFVio1ws=;
+        b=cz71TAguzSLFarGW6WObXNFwT+SyzAJhNN4PSTRa/Ifq4te4z+TvXdSLDhL4BNCrsEch4L
+        Ee47yNAGCL6+2N5pSON13KIpeJJpFMtKWzJGB9Z0647NlzHu0WM2FwxUTXW8n1s/nRyrFt
+        XtA2Eit8XN5xOlwT4j+Bd0mkwLTOj8U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-tmgfVTAMOJGL0jzKrrXf8g-1; Thu, 07 May 2020 17:58:23 -0400
+X-MC-Unique: tmgfVTAMOJGL0jzKrrXf8g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B38718B649E;
+        Thu,  7 May 2020 21:58:22 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D00B21001B07;
+        Thu,  7 May 2020 21:58:15 +0000 (UTC)
+Date:   Thu, 7 May 2020 17:58:13 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] audit: Replace zero-length array with flexible-array
+Message-ID: <20200507215812.ksvwcykfged7ye2a@madcap2.tricolour.ca>
+References: <20200507185041.GA13930@embeddedor>
 MIME-Version: 1.0
-References: <20200507112955.23520-1-geert+renesas@glider.be>
-In-Reply-To: <20200507112955.23520-1-geert+renesas@glider.be>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Thu, 7 May 2020 16:57:51 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
-Message-ID: <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] qoriq: Add platform dependencies
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507185041.GA13930@embeddedor>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 6:31 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->         Hi all,
->
-> Several QorIQ blocks are only present on Freescale or NXP SoCs.
-> This series adds platform dependencies to the corresponding config
-> ymbols, to avoid asking the user about them when configuring a kernel
-> without support for these SoCs.
->
-> Most patches in this series are independent, but the third patch may
-> cause some Kconfig warnings when applied before the second patch, and
-> enabling the QorIQ CPU frequency scaling driver in a non-Layerscape
-> kernel.
->
-> Thanks for your comments!
+On 2020-05-07 13:50, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thanks.  The series looks good to me.
+Sounds reasonable to me.  There's another in include/uapi/linux/audit.h
+in struct audit_rule_data buf[0].  This alert also helped me fix another
+one in a patchset I'm about to post (and will probably cause a merge
+conflict but we can figure that out).
 
-Are we trying to merge them through the various driver subsystems or I
-can also pull them in through the fsl-soc tree.  If we want to go
-through driver subsystems:
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
-
->
-> Geert Uytterhoeven (4):
->   ahci: qoriq: Add platform dependencies
->   cpufreq: qoriq: Add platform dependencies
->   clk: qoriq: Add platform dependencies
->   thermal: qoriq: Add platform dependencies
->
->  drivers/ata/Kconfig     | 1 +
->  drivers/clk/Kconfig     | 3 ++-
->  drivers/cpufreq/Kconfig | 3 ++-
->  drivers/thermal/Kconfig | 4 ++--
->  4 files changed, 7 insertions(+), 4 deletions(-)
->
+> ---
+>  include/linux/audit.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index f9ceae57ca8d..2b63aee6e9fa 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -19,7 +19,7 @@
+>  struct audit_sig_info {
+>  	uid_t		uid;
+>  	pid_t		pid;
+> -	char		ctx[0];
+> +	char		ctx[];
+>  };
+>  
+>  struct audit_buffer;
+> 
+> 
 > --
-> 2.17.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+> Linux-audit mailing list
+> Linux-audit@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-audit
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
