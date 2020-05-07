@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D51C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC3EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 059842078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B982078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgEGHft (ORCPT
+        id S1726678AbgEGHgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:35:49 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40454 "EHLO inva020.nxp.com"
+        Thu, 7 May 2020 03:36:05 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40484 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgEGHfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:35:47 -0400
+        id S1726393AbgEGHft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:35:49 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 44E7B1A0FDA;
-        Thu,  7 May 2020 09:35:45 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F1FC1A0FBD;
+        Thu,  7 May 2020 09:35:47 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 38AE81A0F14;
-        Thu,  7 May 2020 09:35:45 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 923F91A0F14;
+        Thu,  7 May 2020 09:35:47 +0200 (CEST)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E558B203C5;
-        Thu,  7 May 2020 09:35:44 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 43F69203C5;
+        Thu,  7 May 2020 09:35:47 +0200 (CEST)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     laurentiu.tudor@nxp.com, stuyoder@gmail.com, leoyang.li@nxp.com,
         linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
         Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: [PATCH v2 05/12] bus/fsl-mc: Cache the DPRC API version
-Date:   Thu,  7 May 2020 10:34:24 +0300
-Message-Id: <20200507073431.2710-6-diana.craciun@oss.nxp.com>
+Subject: [PATCH v2 11/12] bus/fsl-mc: Export IRQ pool handling functions to be used by VFIO
+Date:   Thu,  7 May 2020 10:34:30 +0300
+Message-Id: <20200507073431.2710-12-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200507073431.2710-1-diana.craciun@oss.nxp.com>
 References: <20200507073431.2710-1-diana.craciun@oss.nxp.com>
@@ -45,88 +45,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are already firmware API commands that have multiple
-versions. For each multiple version command, another command
-to retrieve the API version is issued. This may introduce an important
-overhead. The version does not change while the system is running,
-so the DPRC API version can be safely cached.
+The IRQ pool handling functions can be used by both DPRC
+driver and VFIO. Adapt and export those functions.
 
 Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 ---
- drivers/bus/fsl-mc/dprc.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/bus/fsl-mc/dprc-driver.c      |  7 +++----
+ drivers/bus/fsl-mc/fsl-mc-allocator.c | 12 ++++++++----
+ drivers/bus/fsl-mc/fsl-mc-private.h   | 10 ----------
+ include/linux/fsl/mc.h                | 11 +++++++++++
+ 4 files changed, 22 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/bus/fsl-mc/dprc.c b/drivers/bus/fsl-mc/dprc.c
-index 602f030d84eb..01bf41743efc 100644
---- a/drivers/bus/fsl-mc/dprc.c
-+++ b/drivers/bus/fsl-mc/dprc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
- /*
-  * Copyright 2013-2016 Freescale Semiconductor Inc.
-+ * Copyright 2020 NXP
-  *
-  */
- #include <linux/kernel.h>
-@@ -8,6 +9,13 @@
+diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
+index ec44d025f623..75a53c38bcd8 100644
+--- a/drivers/bus/fsl-mc/dprc-driver.c
++++ b/drivers/bus/fsl-mc/dprc-driver.c
+@@ -303,8 +303,8 @@ static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
+ 		}
  
- #include "fsl-mc-private.h"
+ 		if (alloc_interrupts && !mc_bus->irq_resources) {
+-			error = fsl_mc_populate_irq_pool(mc_bus,
+-				FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
++			error = fsl_mc_populate_irq_pool(mc_bus_dev,
++					 FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
+ 			if (error < 0)
+ 				return error;
+ 		}
+@@ -758,7 +758,6 @@ static void dprc_teardown_irq(struct fsl_mc_device *mc_dev)
+ int dprc_cleanup(struct fsl_mc_device *mc_dev)
+ {
+ 	int error;
+-	struct fsl_mc_bus *mc_bus = to_fsl_mc_bus(mc_dev);
+ 
+ 	if (!is_fsl_mc_bus_dprc(mc_dev))
+ 		return -EINVAL;
+@@ -767,7 +766,7 @@ int dprc_cleanup(struct fsl_mc_device *mc_dev)
+ 		return -EINVAL;
+ 
+ 	if (dev_get_msi_domain(&mc_dev->dev)) {
+-		fsl_mc_cleanup_irq_pool(mc_bus);
++		fsl_mc_cleanup_irq_pool(mc_dev);
+ 		dev_set_msi_domain(&mc_dev->dev, NULL);
+ 	}
+ 
+diff --git a/drivers/bus/fsl-mc/fsl-mc-allocator.c b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+index cc7bb900f524..e71a6f52ea0c 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-allocator.c
++++ b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+@@ -344,7 +344,7 @@ EXPORT_SYMBOL_GPL(fsl_mc_object_free);
+  * Initialize the interrupt pool associated with an fsl-mc bus.
+  * It allocates a block of IRQs from the GIC-ITS.
+  */
+-int fsl_mc_populate_irq_pool(struct fsl_mc_bus *mc_bus,
++int fsl_mc_populate_irq_pool(struct fsl_mc_device *mc_bus_dev,
+ 			     unsigned int irq_count)
+ {
+ 	unsigned int i;
+@@ -352,10 +352,14 @@ int fsl_mc_populate_irq_pool(struct fsl_mc_bus *mc_bus,
+ 	struct fsl_mc_device_irq *irq_resources;
+ 	struct fsl_mc_device_irq *mc_dev_irq;
+ 	int error;
+-	struct fsl_mc_device *mc_bus_dev = &mc_bus->mc_dev;
++	struct fsl_mc_bus *mc_bus = to_fsl_mc_bus(mc_bus_dev);
+ 	struct fsl_mc_resource_pool *res_pool =
+ 			&mc_bus->resource_pools[FSL_MC_POOL_IRQ];
+ 
++	/* do nothing if the IRQ pool is already populated */
++	if (mc_bus->irq_resources)
++		return 0;
++
+ 	if (irq_count == 0 ||
+ 	    irq_count > FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS)
+ 		return -EINVAL;
+@@ -407,9 +411,9 @@ EXPORT_SYMBOL_GPL(fsl_mc_populate_irq_pool);
+  * Teardown the interrupt pool associated with an fsl-mc bus.
+  * It frees the IRQs that were allocated to the pool, back to the GIC-ITS.
+  */
+-void fsl_mc_cleanup_irq_pool(struct fsl_mc_bus *mc_bus)
++void fsl_mc_cleanup_irq_pool(struct fsl_mc_device *mc_bus_dev)
+ {
+-	struct fsl_mc_device *mc_bus_dev = &mc_bus->mc_dev;
++	struct fsl_mc_bus *mc_bus = to_fsl_mc_bus(mc_bus_dev);
+ 	struct fsl_mc_resource_pool *res_pool =
+ 			&mc_bus->resource_pools[FSL_MC_POOL_IRQ];
+ 
+diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
+index fdd9e9aa6701..48255e8944bd 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-private.h
++++ b/drivers/bus/fsl-mc/fsl-mc-private.h
+@@ -519,11 +519,6 @@ struct dpcon_cmd_set_notification {
+ 	__le64 user_ctx;
+ };
+ 
+-/**
+- * Maximum number of total IRQs that can be pre-allocated for an MC bus'
+- * IRQ pool
+- */
+-#define FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS	256
+ 
+ /**
+  * struct fsl_mc_resource_pool - Pool of MC resources of a given
+@@ -599,11 +594,6 @@ void fsl_mc_msi_domain_free_irqs(struct device *dev);
+ int fsl_mc_find_msi_domain(struct device *mc_platform_dev,
+ 			   struct irq_domain **mc_msi_domain);
+ 
+-int fsl_mc_populate_irq_pool(struct fsl_mc_bus *mc_bus,
+-			     unsigned int irq_count);
+-
+-void fsl_mc_cleanup_irq_pool(struct fsl_mc_bus *mc_bus);
+-
+ int __must_check fsl_create_mc_io(struct device *dev,
+ 				  phys_addr_t mc_portal_phys_addr,
+ 				  u32 mc_portal_size,
+diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+index df4a9bbae0f0..648ad06f58eb 100644
+--- a/include/linux/fsl/mc.h
++++ b/include/linux/fsl/mc.h
+@@ -500,6 +500,17 @@ int dprc_cleanup(struct fsl_mc_device *mc_dev);
+ 
+ int dprc_setup(struct fsl_mc_device *mc_dev);
  
 +/**
-+ * cache the DPRC version to reduce the number of commands
-+ * towards the mc firmware
++ * Maximum number of total IRQs that can be pre-allocated for an MC bus'
++ * IRQ pool
 + */
-+static u16 dprc_major_ver;
-+static u16 dprc_minor_ver;
++#define FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS	256
 +
- /**
-  * dprc_open() - Open DPRC object for use
-  * @mc_io:	Pointer to MC portal's I/O object
-@@ -443,15 +451,19 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
- 	struct fsl_mc_command cmd = { 0 };
- 	struct dprc_cmd_get_obj_region *cmd_params;
- 	struct dprc_rsp_get_obj_region *rsp_params;
--	u16 major_ver, minor_ver;
- 	int err;
- 
--	/* prepare command */
--	err = dprc_get_api_version(mc_io, 0,
--				     &major_ver,
--				     &minor_ver);
--	if (err)
--		return err;
-+    /**
-+     * If the DPRC object version was not yet cached, cache it now.
-+     * Otherwise use the already cached value.
-+     */
-+	if (!dprc_major_ver && !dprc_minor_ver) {
-+		err = dprc_get_api_version(mc_io, 0,
-+				      &dprc_major_ver,
-+				      &dprc_minor_ver);
-+		if (err)
-+			return err;
-+	}
- 
- 	/**
- 	 * MC API version 6.3 introduced a new field to the region
-@@ -459,7 +471,7 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
- 	 * address is set to zero to indicate it needs to be obtained elsewhere
- 	 * (typically the device tree).
- 	 */
--	if (major_ver > 6 || (major_ver == 6 && minor_ver >= 3))
-+	if (dprc_major_ver > 6 || (dprc_major_ver == 6 && dprc_minor_ver >= 3))
- 		cmd.header =
- 			mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG_V2,
- 					     cmd_flags, token);
-@@ -483,7 +495,7 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
- 	rsp_params = (struct dprc_rsp_get_obj_region *)cmd.params;
- 	region_desc->base_offset = le64_to_cpu(rsp_params->base_offset);
- 	region_desc->size = le32_to_cpu(rsp_params->size);
--	if (major_ver > 6 || (major_ver == 6 && minor_ver >= 3))
-+	if (dprc_major_ver > 6 || (dprc_major_ver == 6 && dprc_minor_ver >= 3))
- 		region_desc->base_address = le64_to_cpu(rsp_params->base_addr);
- 	else
- 		region_desc->base_address = 0;
++int fsl_mc_populate_irq_pool(struct fsl_mc_device *mc_bus_dev,
++			     unsigned int irq_count);
++
++void fsl_mc_cleanup_irq_pool(struct fsl_mc_device *mc_bus_dev);
++
+ /*
+  * Data Path Buffer Pool (DPBP) API
+  * Contains initialization APIs and runtime control APIs for DPBP
 -- 
 2.17.1
 
