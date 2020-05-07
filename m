@@ -2,183 +2,168 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7511C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2614DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8102A20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0242021473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588869686;
+	bh=DSUTjCCxNm3sP/U59GvleaC+aqqLrMMiFJPUPPM3rNg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NyT+u7FP7VHmrkxw2YeOWBUJVIJ/GbP93NeHc9lBClfbmuzxjQydWChRuHXWRsISc
+	 aCet6LYqT483ChDNjcZiaq/fzlUETqWAVFNsKuB2ilJm88G1HKJqOIOzAs8YfpaswD
+	 F6nXkDel3kY3OrEduY9zhzRW4TYZP4hMhU0pNrvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgEGQlB (ORCPT
+        id S1726885AbgEGQlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:41:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21292 "EHLO mga18.intel.com"
+        Thu, 7 May 2020 12:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgEGQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:41:01 -0400
-IronPort-SDR: V+EVhH54npwUFooFSyBXESkwVRG1IV/ZUbtx9PuskHbq5ySbJf3W9vTlFNTzY0wYYsad+tWjz4
- PiHm4gSFQPoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:41:00 -0700
-IronPort-SDR: y/fdpHUpuRWavjaCIWw/VG9lnFOMSx4/mDNd/RiY3KqeeUtX9aU7JBbcyzHWw5kNUzNIfcmL29
- 7V3gnCOklWRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="407699732"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga004.jf.intel.com with ESMTP; 07 May 2020 09:40:59 -0700
-Date:   Thu, 7 May 2020 09:47:06 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 2/5] iommu/vt-d: debugfs: Add support to show inv
- queue internals
-Message-ID: <20200507094706.6f6a605f@jacob-builder>
-In-Reply-To: <20200507005534.3080-3-baolu.lu@linux.intel.com>
-References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
-        <20200507005534.3080-3-baolu.lu@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726308AbgEGQlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:41:24 -0400
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D708020B1F;
+        Thu,  7 May 2020 16:41:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588869683;
+        bh=DSUTjCCxNm3sP/U59GvleaC+aqqLrMMiFJPUPPM3rNg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rKqfVrO+PGON4u2l06umNYir1hgHA7wHRVwuBwBfI+d0VGPqQUAhEmABQ9jN/7jQP
+         60F28/aaTaB4x1Rpogvd60KSPhW8osb7/zIRmn5DnohVSeaaZ8ctYellWiYlCAAoeq
+         k6biTonvn/T1nILLNowzIeHnO+vq8CpRQ/LclJNc=
+Received: by mail-il1-f176.google.com with SMTP id c16so1848295ilr.3;
+        Thu, 07 May 2020 09:41:23 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYbQkdm+OJXI+nnGKIkjw/1zMe1ofwDeeJDgUHOXfcj+ziUFErj
+        RtMbI0VMfjXDow6lPgg4lCIm/Z0/ujcEOvQlLG4=
+X-Google-Smtp-Source: APiQypIj0KSdZxFox1BHJ/6cE4G6Uxkcc+tq2R3E3HWKuTRfFFPT2U4mqxVz355oahAkQQdP9Rj6pDgE7UpnhtQCCnU=
+X-Received: by 2002:a92:3c55:: with SMTP id j82mr16149345ila.258.1588869683281;
+ Thu, 07 May 2020 09:41:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200507133707.7123-1-lszubowi@redhat.com>
+In-Reply-To: <20200507133707.7123-1-lszubowi@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 7 May 2020 18:41:12 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG69bsC-WCHhS1zturX0AuAJwMnfeNCEM5HXrRfkXjjPg@mail.gmail.com>
+Message-ID: <CAMj1kXG69bsC-WCHhS1zturX0AuAJwMnfeNCEM5HXrRfkXjjPg@mail.gmail.com>
+Subject: Re: [PATCH V2] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
+To:     Lenny Szubowicz <lszubowi@redhat.com>
+Cc:     eric.snowberg@oracle.com, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
-
-Very helpful feature, thanks for doing this. Just a small suggestion.
-
-On Thu,  7 May 2020 08:55:31 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
-
-> Export invalidation queue internals of each iommu device through the
-> debugfs.
-> 
-> Example of such dump on a Skylake machine:
-> 
-> $ sudo cat /sys/kernel/debug/iommu/intel/invalidation_queue
-> Invalidation queue on IOMMU: dmar1
->  Base: 0x1672c9000      Head: 80        Tail: 80
-> Index           qw0                     qw1                     status
->     0   0000000000000004        0000000000000000
-> 0000000000000000 1   0000000200000025        00000001672be804
-> 0000000000000000 2   0000000000000011        0000000000000000
-> 0000000000000000 3   0000000200000025        00000001672be80c
-> 0000000000000000 4   00000000000000d2        0000000000000000
-> 0000000000000000 5   0000000200000025        00000001672be814
-> 0000000000000000 6   0000000000000014        0000000000000000
-> 0000000000000000 7   0000000200000025        00000001672be81c
-> 0000000000000000 8   0000000000000014        0000000000000000
-> 0000000000000000 9   0000000200000025        00000001672be824
-> 0000000000000000
-> 
-Head and Tail shows the offset, and queue is dump with index. Would it
-be nice to mark where the Head and Tail is in the list?
-In your example, the queue is empty (H=T), would be nice to see where
-the previous entry is if there were any faults.
-
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+On Thu, 7 May 2020 at 15:37, Lenny Szubowicz <lszubowi@redhat.com> wrote:
+>
+> In allocate_e820(), call the EFI get_memory_map() service directly
+> instead of indirectly via efi_get_memory_map(). This avoids allocation
+> of a buffer and return of the full EFI memory map, which is not needed
+> here and would otherwise need to be freed.
+>
+> Routine allocate_e820() only needs to know how many EFI memory
+> descriptors there are in the map to allocate an adequately sized
+> e820ext buffer, if it's needed. Note that since efi_get_memory_map()
+> returns a memory map buffer sized with extra headroom, allocate_e820()
+> now needs to explicitly factor that into the e820ext size calculation.
+>
+> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> --
+> v2:
+>   - Instead of freeing the EFI memory map buffer allocated by
+>     efi_get_memory_map(), avoid the allocation in the first place.
+>
+>   - Changed the title of the patch because the v1 title no longer
+>     applies. v1 ref:
+>     https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
+> --
 > ---
->  drivers/iommu/intel-iommu-debugfs.c | 62
-> +++++++++++++++++++++++++++++ 1 file changed, 62 insertions(+)
-> 
-> diff --git a/drivers/iommu/intel-iommu-debugfs.c
-> b/drivers/iommu/intel-iommu-debugfs.c index
-> 3eb1fe240fb0..e3089865b8f3 100644 ---
-> a/drivers/iommu/intel-iommu-debugfs.c +++
-> b/drivers/iommu/intel-iommu-debugfs.c @@ -372,6 +372,66 @@ static int
-> domain_translation_struct_show(struct seq_file *m, void *unused) }
->  DEFINE_SHOW_ATTRIBUTE(domain_translation_struct);
->  
-> +static void invalidation_queue_entry_show(struct seq_file *m,
-> +					  struct intel_iommu *iommu)
+>  drivers/firmware/efi/libstub/efistub.h  |  2 ++
+>  drivers/firmware/efi/libstub/mem.c      |  5 +++++
+>  drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
+>  3 files changed, 15 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index 67d26949fd26..191468b771b6 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -616,6 +616,8 @@ void efi_printk(char *str);
+>
+>  void efi_free(unsigned long size, unsigned long addr);
+>
+> +unsigned int efi_get_mmap_nr_slack_slots(void);
+> +
+>  char *efi_convert_cmdline(efi_loaded_image_t *image, int *cmd_line_len,
+>                           unsigned long max_addr);
+>
+> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
+> index 869a79c8946f..fc8b4fb08505 100644
+> --- a/drivers/firmware/efi/libstub/mem.c
+> +++ b/drivers/firmware/efi/libstub/mem.c
+> @@ -7,6 +7,11 @@
+>
+>  #define EFI_MMAP_NR_SLACK_SLOTS        8
+>
+> +unsigned int efi_get_mmap_nr_slack_slots(void)
 > +{
-> +	int index, shift = qi_shift(iommu);
-> +	struct qi_desc *desc;
-> +	int offset;
-> +
-> +	if (ecap_smts(iommu->ecap))
-> +		seq_puts(m,
-> "Index\t\tqw0\t\t\tqw1\t\t\tqw2\t\t\tqw3\t\t\tstatus\n");
-> +	else
-> +		seq_puts(m, "Index\t\tqw0\t\t\tqw1\t\t\tstatus\n");
-> +
-> +	for (index = 0; index < QI_LENGTH; index++) {
-> +		offset = index << shift;
-> +		desc = iommu->qi->desc + offset;
-> +		if (ecap_smts(iommu->ecap))
-> +			seq_printf(m,
-> "%5d\t%016llx\t%016llx\t%016llx\t%016llx\t%016x\n",
-> +				   index, desc->qw0, desc->qw1,
-> +				   desc->qw2, desc->qw3,
-> +				   iommu->qi->desc_status[index]);
-> +		else
-> +			seq_printf(m,
-> "%5d\t%016llx\t%016llx\t%016x\n",
-> +				   index, desc->qw0, desc->qw1,
-> +				   iommu->qi->desc_status[index]);
-> +	}
+> +       return EFI_MMAP_NR_SLACK_SLOTS;
 > +}
 > +
-> +static int invalidation_queue_show(struct seq_file *m, void *unused)
-> +{
-> +	struct dmar_drhd_unit *drhd;
-> +	struct intel_iommu *iommu;
-> +	unsigned long flags;
-> +	struct q_inval *qi;
-> +	int shift;
-> +
-> +	rcu_read_lock();
-> +	for_each_active_iommu(iommu, drhd) {
-> +		qi = iommu->qi;
-> +		shift = qi_shift(iommu);
-> +
-> +		if (!qi || !ecap_qis(iommu->ecap))
-> +			continue;
-> +
-> +		seq_printf(m, "Invalidation queue on IOMMU: %s\n",
-> iommu->name); +
-> +		raw_spin_lock_irqsave(&qi->q_lock, flags);
-> +		seq_printf(m, " Base: 0x%llx\tHead: %lld\tTail:
-> %lld\n",
-> +			   virt_to_phys(qi->desc),
-> +			   dmar_readq(iommu->reg + DMAR_IQH_REG) >>
-> shift,
-> +			   dmar_readq(iommu->reg + DMAR_IQT_REG) >>
-> shift);
-> +		invalidation_queue_entry_show(m, iommu);
-> +		raw_spin_unlock_irqrestore(&qi->q_lock, flags);
-> +		seq_putc(m, '\n');
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(invalidation_queue);
-> +
->  #ifdef CONFIG_IRQ_REMAP
->  static void ir_tbl_remap_entry_show(struct seq_file *m,
->  				    struct intel_iommu *iommu)
-> @@ -490,6 +550,8 @@ void __init intel_iommu_debugfs_init(void)
->  	debugfs_create_file("domain_translation_struct", 0444,
->  			    intel_iommu_debug, NULL,
->  			    &domain_translation_struct_fops);
-> +	debugfs_create_file("invalidation_queue", 0444,
-> intel_iommu_debug,
-> +			    NULL, &invalidation_queue_fops);
->  #ifdef CONFIG_IRQ_REMAP
->  	debugfs_create_file("ir_translation_struct", 0444,
-> intel_iommu_debug, NULL, &ir_translation_struct_fops);
 
-[Jacob Pan]
+Can we just move this #define to efistub.h and use it directly?
+
+>  static inline bool mmap_has_headroom(unsigned long buff_size,
+>                                      unsigned long map_size,
+>                                      unsigned long desc_size)
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 05ccb229fb45..9a5ee0678434 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
+>                                   struct setup_data **e820ext,
+>                                   u32 *e820ext_size)
+>  {
+> -       unsigned long map_size, desc_size, buff_size;
+> -       struct efi_boot_memmap boot_map;
+> -       efi_memory_desc_t *map;
+> +       unsigned long map_size, desc_size;
+>         efi_status_t status;
+>         __u32 nr_desc;
+>
+> -       boot_map.map            = &map;
+> -       boot_map.map_size       = &map_size;
+> -       boot_map.desc_size      = &desc_size;
+> -       boot_map.desc_ver       = NULL;
+> -       boot_map.key_ptr        = NULL;
+> -       boot_map.buff_size      = &buff_size;
+> +       /* Only need the size of the mem map and size of each mem descriptor */
+> +       map_size = 0;
+> +       status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
+> +                            &desc_size, NULL);
+> +       if (status != EFI_BUFFER_TOO_SMALL)
+> +               return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
+>
+> -       status = efi_get_memory_map(&boot_map);
+> -       if (status != EFI_SUCCESS)
+> -               return status;
+> -
+> -       nr_desc = buff_size / desc_size;
+> +       nr_desc = map_size / desc_size + efi_get_mmap_nr_slack_slots();
+>
+>         if (nr_desc > ARRAY_SIZE(params->e820_table)) {
+>                 u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
+> --
+> 2.18.4
+>
