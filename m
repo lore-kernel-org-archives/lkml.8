@@ -2,142 +2,125 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A001C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8BAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA23320A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D782084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o613vzDn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fPnf4qH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgEGQTB (ORCPT
+        id S1727898AbgEGQTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726393AbgEGQTB (ORCPT
+        Thu, 7 May 2020 12:19:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58411 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727845AbgEGQTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:19:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC12C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=0p5WulZR7umMf1/umKKJlS4alO76V1BmJ7qJ4B9RAmw=; b=o613vzDnwS5qP+TGmhrpOZc+Wb
-        NfKKI2c90WIkZ8TGkvCgjES174G0G0cTPOL9R/721kb4NzT2x20luJc2RQAG549yFRKJ0qJY8h1YK
-        VKfneLxTD510KJ+Al/OFPa+sdcqVKXMtZiqXjf4Pe/evC7n9O1ufaLDwxqmsVycOIeZ5by+w631zp
-        LG7RTok0Glq/ii1p3mXL3gceiBxzW5URasRrAfDdsPWsDmhnK47WkoT80umgfFzeEpcHOq1XPNxRZ
-        gsWI0mCirm+VJY2ArNviRRFMwKAihXXyCqa6SFPfH/ajJSr60gxHbEt9q3KMoaID8uwJKCD0SO1SX
-        vWfNuQ2A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWjEf-0003RE-Q5; Thu, 07 May 2020 16:18:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 61F81301EFB;
-        Thu,  7 May 2020 18:18:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 4F2512038FB67; Thu,  7 May 2020 18:18:55 +0200 (CEST)
-Message-Id: <20200507161828.741881602@infradead.org>
-User-Agent: quilt/0.65
-Date:   Thu, 07 May 2020 18:10:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de
-Cc:     jpoimboe@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        luto@kernel.org, peterz@infradead.org
-Subject: [RFC][PATCH 2/3] x86/entry: Provide ASM_INSTR_{BEGIN,END}
-References: <20200507161020.783541450@infradead.org>
+        Thu, 7 May 2020 12:19:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588868345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WPWPHe3pgTIBihcXGk8hJCaqBjbGv2lpjNArereGrgk=;
+        b=fPnf4qH7qFk0fu7Y05MwVO7zfoT0G63u2FOHKHfg77J+A/o0B5VTta6HHaAqGJgKOhSUZd
+        GZiCxvneLUCZQJdBs7oBDYkUBfjBC9QJivE6jkb+F6UVmTucHJDUn+M3mabzgkM7WZ61mi
+        E5ObdqfgYpGuCHO8lW9rTwQAHBc8Bzg=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-_9kMBvvbMsGUNyybba33Ag-1; Thu, 07 May 2020 12:18:57 -0400
+X-MC-Unique: _9kMBvvbMsGUNyybba33Ag-1
+Received: by mail-qk1-f200.google.com with SMTP id x5so6277794qkn.20
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:18:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WPWPHe3pgTIBihcXGk8hJCaqBjbGv2lpjNArereGrgk=;
+        b=ZoQDKirMVqFEZDm+YlE4H+c3zY426W6wmO24DQ/Ey6O/3TGk9OJV2tsrrm0mqhvuND
+         Lp/bMSiwyUflZCpU6sl8aYiIcfzv/eU3a3ach2Bg1cCY2q67+73inegdMaqpyXvTdey7
+         5Ues98b3U6jf9CtOe6gTMvdSeR64md2IYg83WqX2+Dg6k+oDzX8HKhjQdppQB6EGph5E
+         /OCTavqTzMvNuRTu+a2mBITY9jGCfvwBEMXiR+VnZQgwZpDHv3sm+mMmYVOEgGvgsg8N
+         cLsqEspakig94AsZegj5tMszjpfP4xcC8wbPLRhvf6LtEGKBPb9uI/R5g1JmrkFCH8Hz
+         Z7LQ==
+X-Gm-Message-State: AGi0Pub4uTZWPt2fSgqrEtnrBaR5BMBPL75hb+knp7ImeTfhnwkPX3oe
+        ZmNsVllX3SNZ4tB7AaqfbR5L/7JYac+WQCbWEet6AW2wMeL3L4weMVm60fTDfx4oJ4tAgBBRj/i
+        7TDNONzSymHU+yxe2KgOI1Z9g
+X-Received: by 2002:ac8:5057:: with SMTP id h23mr14783766qtm.287.1588868336833;
+        Thu, 07 May 2020 09:18:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKMXRz+2RdT4/NUmlbtskmTYfoso9urd97IW1y5qNWjs9Os8BEJwCtLJ++jqbfn/vjqoo8YLg==
+X-Received: by 2002:ac8:5057:: with SMTP id h23mr14783733qtm.287.1588868336490;
+        Thu, 07 May 2020 09:18:56 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id i43sm2874675qte.37.2020.05.07.09.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 09:18:55 -0700 (PDT)
+Date:   Thu, 7 May 2020 12:18:54 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 9/9] KVM: VMX: pass correct DR6 for GD userspace exit
+Message-ID: <20200507161854.GF228260@xz-x1>
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-10-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200507115011.494562-10-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To reduce clutter.
+On Thu, May 07, 2020 at 07:50:11AM -0400, Paolo Bonzini wrote:
+> When KVM_EXIT_DEBUG is raised for the disabled-breakpoints case (DR7.GD),
+> DR6 was incorrectly copied from the value in the VM.  Instead,
+> DR6.BD should be set in order to catch this case.
+> 
+> On AMD this does not need any special code because the processor triggers
+> a #DB exception that is intercepted.  However, the testcase would fail
+> without the previous patch because both DR6.BS and DR6.BD would be set.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c                        |  2 +-
+>  .../testing/selftests/kvm/x86_64/debug_regs.c | 24 ++++++++++++++++++-
+>  2 files changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index e2b71b0cdfce..e45cf89c5821 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4927,7 +4927,7 @@ static int handle_dr(struct kvm_vcpu *vcpu)
+>  		 * guest debugging itself.
+>  		 */
+>  		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) {
+> -			vcpu->run->debug.arch.dr6 = vcpu->arch.dr6;
+> +			vcpu->run->debug.arch.dr6 = DR6_BD | DR6_RTM | DR6_FIXED_1;
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/irq_stack.h |   10 ++--------
- arch/x86/include/asm/kvm_host.h  |   10 ++--------
- include/linux/compiler.h         |   14 ++++++++++++++
- 3 files changed, 18 insertions(+), 16 deletions(-)
+After a second thought I'm thinking whether it would be okay to have BS set in
+that test case.  I just remembered there's a test case in the kvm-unit-test
+that checks explicitly against BS leftover as long as dr6 is not cleared
+explicitly by the guest code, while the spec seems to have no explicit
+description on this case.
 
---- a/arch/x86/include/asm/irq_stack.h
-+++ b/arch/x86/include/asm/irq_stack.h
-@@ -24,15 +24,9 @@ do {									\
- 	asm volatile(							\
- 		"movq	%%rsp, (%[ts])				\n"	\
- 		"movq	%[ts], %%rsp				\n"	\
--		"1:						\n"	\
--		"	.pushsection .discard.instr_begin	\n"	\
--		"	.long 1b - .				\n"	\
--		"	.popsection				\n"	\
-+		ASM_INSTR_BEGIN						\
- 		_asm "                                          \n"	\
--		"2:						\n"	\
--		"	.pushsection .discard.instr_end		\n"	\
--		"	.long 2b - .				\n"	\
--		"	.popsection				\n"	\
-+		ASM_INSTR_END						\
- 		"popq	%%rsp					\n"	\
- 		:							\
- 		: [ts] "r" (tos), ##__VA_ARGS__				\
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1601,15 +1601,9 @@ asmlinkage void kvm_spurious_fault(void)
- 	insn "\n\t"							\
- 	"jmp	668f \n\t"						\
- 	"667: \n\t"							\
--	"1: \n\t"							\
--	".pushsection .discard.instr_begin \n\t"			\
--	".long 1b - . \n\t"						\
--	".popsection \n\t"						\
-+	ASM_INSTR_BEGIN							\
- 	"call	kvm_spurious_fault \n\t"				\
--	"1: \n\t"							\
--	".pushsection .discard.instr_end \n\t"				\
--	".long 1b - . \n\t"						\
--	".popsection \n\t"						\
-+	ASM_INSTR_END							\
- 	"668: \n\t"							\
- 	_ASM_EXTABLE(666b, 667b)
- 
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -135,12 +135,26 @@ void ftrace_likely_update(struct ftrace_
- 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
- })
- 
-+#define ASM_INSTR_BEGIN							\
-+	"999:\n\t"							\
-+	".pushsection .discard.instr_begin\n\t"				\
-+	".long 999b - .\n\t"						\
-+	".popsection\n\t"
-+
-+#define ASM_INSTR_END							\
-+	"999:\n\t"							\
-+	".pushsection .discard.instr_end\n\t"				\
-+	".long 999b - .\n\t"						\
-+	".popsection\n\t"
-+
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
- #define instr_begin()		do { } while(0)
- #define instr_end()		do { } while(0)
-+#define ASM_INSTR_BEGIN
-+#define ASM_INSTR_END
- #endif
- 
- #ifndef ASM_UNREACHABLE
+Intead of above, I'm thinking whether we should allow the userspace to also
+change dr6 with the KVM_SET_GUEST_DEBUG ioctl when they wanted to (right now
+iiuc dr6 from userspace is completely ignored), instead of offering a fake dr6.
+Or to make it simple, maybe we can just check BD bit only?
 
+Thanks,
+
+>  			vcpu->run->debug.arch.dr7 = dr7;
+>  			vcpu->run->debug.arch.pc = kvm_get_linear_rip(vcpu);
+>  			vcpu->run->debug.arch.exception = DB_VECTOR;
+
+-- 
+Peter Xu
 
