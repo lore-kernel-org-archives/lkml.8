@@ -2,102 +2,120 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933AAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7FEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB2120870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682DA208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XVrhA0AL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="in7uHajW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgEGVrv (ORCPT
+        id S1727910AbgEGVry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:47:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35155 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgEGVrv (ORCPT
+        Thu, 7 May 2020 17:47:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47425 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726480AbgEGVrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:47:51 -0400
+        Thu, 7 May 2020 17:47:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588888070;
+        s=mimecast20190719; t=1588888071;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V5idkJrYxhm5CKR6p7Gbs2X4uJl1eZjYfow+72g1gg4=;
-        b=XVrhA0ALlpy/yMAnnpT/QFcqbFP3QwHejk3D4ONU1ABAoc3F6nnTBwqPo1sx8kdGtmdrtU
-        6xyZ1yZLdOeA8/lQLF5fIkivGIVFi5i2Csvwd9nQjYua9B+K3cdigJbq+U/FWYQHzLyrGO
-        0sTlC/ZUcqO9+p0yPV1RlICBargEP+0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-118-Ia2e86xtMJCrar6YxxQUNw-1; Thu, 07 May 2020 17:47:48 -0400
-X-MC-Unique: Ia2e86xtMJCrar6YxxQUNw-1
-Received: by mail-qt1-f200.google.com with SMTP id x56so8754400qtc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:47:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V5idkJrYxhm5CKR6p7Gbs2X4uJl1eZjYfow+72g1gg4=;
-        b=aoAmlUjeJpjmHeJybfmFxVGtKvuztUhcEYBMoPECaVQZPr8E0b58v6M7vg/rdYWhYr
-         wt65IRtMcZ6m9tEWNwK2kKNrvK+jZ1Gd0+2fUiW99KA4TM2IpI+Ja+klc5w6FUHVlzjL
-         mQcSXHfaKMBrG/efBLw2UYuoQBMYkHLH7IMoIa2kbju+tbG2TbbN8sWtPNiaH6m0xpMx
-         uWxEpvC+nqcj/6mdvWro61BmUl88EjNV74TFwuR/5heV+A5MaE1auN7Vif3euBl4icES
-         9KbXg6s0PMQY3bmHhJuD7W8vuHXgUgbqZemi9ZDq+uKHF0WEQfqiTgAFFsrL+f6a5mPY
-         ZHIg==
-X-Gm-Message-State: AGi0PuZR53q6MZGAZIopl8SqgvOePeEFjes+lUEF6g2wpw3sNFU3yayT
-        I49i8CTpopnkwJAyOthcXAzWiyApzFtmMoedc4I384xiiq9pwiura1WlhbsotnwHCo0EcjY9ATY
-        v1Bp1gm5clsPdBBpDb0yDkq5W
-X-Received: by 2002:ac8:6f52:: with SMTP id n18mr1046852qtv.239.1588888067431;
-        Thu, 07 May 2020 14:47:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKU8dHnF+0R9W7NWKvWqdYptCothy11u6hec6e2fkEn81AVH/NON7Vco4MKd/Vk4uGjBvtn/Q==
-X-Received: by 2002:ac8:6f52:: with SMTP id n18mr1046826qtv.239.1588888066982;
-        Thu, 07 May 2020 14:47:46 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id t67sm5214265qka.17.2020.05.07.14.47.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:47:45 -0700 (PDT)
-Date:   Thu, 7 May 2020 17:47:44 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
+        bh=8NimXLPwW2cXlIec0hrGIyPRgpSOxgyz6NjChAU7LBg=;
+        b=in7uHajWViHgTF0tEe6VQYIAbqcpYAnZYcEa1L5/WrkEzEXpPZt1LahSXoRcf0u/4j6VWu
+        d22UKaOHsu8CdwPZXJNhckJygqcxChPKMLq9mtPIt/JiGH3NwVjmn00lOVEfbLD/wi8fsv
+        1Xl3J4RgBeej5UyyKC82JQYYPio5t/w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-aA9z9tkCP-SlVA92l8C7MA-1; Thu, 07 May 2020 17:47:49 -0400
+X-MC-Unique: aA9z9tkCP-SlVA92l8C7MA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6055680058A;
+        Thu,  7 May 2020 21:47:48 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 244065D9C5;
+        Thu,  7 May 2020 21:47:44 +0000 (UTC)
+Date:   Thu, 7 May 2020 15:47:43 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         cohuck@redhat.com, jgg@ziepe.ca
-Subject: Re: [PATCH v2 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Message-ID: <20200507214744.GP228260@xz-x1>
+Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200507154743.306d2f3e@x1.home>
+In-Reply-To: <20200507212443.GO228260@xz-x1>
 References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
- <158871569380.15589.16950418949340311053.stgit@gimli.home>
+        <158871568480.15589.17339878308143043906.stgit@gimli.home>
+        <20200507212443.GO228260@xz-x1>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <158871569380.15589.16950418949340311053.stgit@gimli.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Alex,
+On Thu, 7 May 2020 17:24:43 -0400
+Peter Xu <peterx@redhat.com> wrote:
 
-On Tue, May 05, 2020 at 03:54:53PM -0600, Alex Williamson wrote:
-> +/*
-> + * Zap mmaps on open so that we can fault them in on access and therefore
-> + * our vma_list only tracks mappings accessed since last zap.
-> + */
-> +static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-> +{
-> +	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
+> On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
+> > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> > the range being faulted into the vma.  Add support to manually provide
+> > that, in the same way as done on KVM with hva_to_pfn_remapped().
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+> >  1 file changed, 33 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index cc1d64765ce7..4a4cb7cd86b2 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+> >  	return 0;
+> >  }
+> >  
+> > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> > +			    unsigned long vaddr, unsigned long *pfn,
+> > +			    bool write_fault)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = follow_pfn(vma, vaddr, pfn);
+> > +	if (ret) {
+> > +		bool unlocked = false;
+> > +
+> > +		ret = fixup_user_fault(NULL, mm, vaddr,
+> > +				       FAULT_FLAG_REMOTE |
+> > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> > +				       &unlocked);
+> > +		if (unlocked)
+> > +			return -EAGAIN;  
+> 
+> Hi, Alex,
+> 
+> IIUC this retry is not needed too because fixup_user_fault() will guarantee the
+> fault-in is done correctly with the valid PTE as long as ret==0, even if
+> unlocked==true.
+> 
+> Note: there's another patch just removed the similar retry in kvm:
+> 
+> https://lore.kernel.org/kvm/20200416155906.267462-1-peterx@redhat.com/
 
-A pure question: is this only a safety-belt or it is required in some known
-scenarios?
+Great, I was basing this on that kvm code, so I can make essentially an
+identical fix.  Thanks!
 
-In all cases:
-
-Reviewed-by: Peter Xu <peterx@redhat.com>
-
-Thanks,
-
--- 
-Peter Xu
+Alex
 
