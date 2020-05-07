@@ -2,114 +2,156 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3908EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA9BC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194A02063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588874870;
-	bh=yb+FPE2eEoS5NbKFFn78P8Cvo23kfYX2WXO7kzTofLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V0BtHhfbCEz1hmGPjh5QmgDTqHY3D4mCaVprquNqUTVORpgSo+A7+D6p0pHa2DJGZ
-	 QWnN3jNQODK6r0BxId4R8LvETCk6hXSDjhJb1nxG/Vq85CsZTscR3wIy06ka/n84CI
-	 3GPTi906EBbGugLzK/qc1tJ68VvjLDP9fAMPAMnI=
+	by mail.kernel.org (Postfix) with ESMTP id 9D2662145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phup02Xy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgEGSHt (ORCPT
+        id S1726761AbgEGSKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:07:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46617 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgEGSHs (ORCPT
+        Thu, 7 May 2020 14:10:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgEGSKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:07:48 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c124so5823802oib.13;
-        Thu, 07 May 2020 11:07:47 -0700 (PDT)
+        Thu, 7 May 2020 14:10:17 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C7BC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:16 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id r14so7935095ybk.21
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sjWkrGrnU/EJtxPoXRaoT1xpbM/x0feZVAsuk0CdGxM=;
+        b=phup02XyRX5qCSTgfWJ0IuC3rFaKoFAIRCaVT1BxerHyNi3c5nNxAsm0xyzl3q8+u8
+         lzsrqa5sjNgVN6EpoK4iXtC8qaLxcT2DwbMO2+5W+pjNhPSXjGhZ5cdy+zouEP1AnoFx
+         nrd6KrtLXXDw5LZPjtm4DXQ4VAe4WiCeS0CrDW19m0i2TMrnFz1gvJ8Hzb5VJo8Iud8t
+         nsPyZX1HlbVSwXoqDacSL7QZyxwHLHD9ZATTRtRN+JMREoDoYPDvIBrsROnipw7sMaKD
+         vkxRcsEqxa+89keD+o4y002kAz2t+ID92iyiWydARX6TDXVQYFHtF9l+DkkJb2YVoYfW
+         c7Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LAuIZE+9tBbQreQAUqWIU1efH733gN4PuPelENzqY/E=;
-        b=FsfLLKHeg6cjO+gJ/cB3aab7njnPOllcIg1KoShH8y5zX6s3aKbzT/x1DXzQAndSrp
-         TnVP9VAa8iMsK85nPYSw7eALlQXQBVWSamI7eQep2DzUvxgRj38+uuewCpg52Qn6FU9s
-         mFjP8tXIbg4avf3KIA9UuDHIXniLY2IG88kcL4VwjRccCYP0/zkxM4jQl1x+4sh/gK6G
-         kw+HwsJKKw4vbfD/t9PCgh5NYj+Q3sadDG+u/L57hpUZ6LIiPHP7o7et5BvYPzlRTf0/
-         mC/eV0l7kQf2f4FbYCJ74aaiwRh5VuVvRU1EoIgqSqX6MEvXk0oQnt2scj5IVVRE1sYT
-         XZqg==
-X-Gm-Message-State: AGi0PuZ36rQoL80bs13XjRU8QT8tWVbuBXt5q0+5Y5PI0Q4a9uBRvBOo
-        LavQbTe7QX1xXh+BGzzAgw==
-X-Google-Smtp-Source: APiQypLQMvGNIQhG4s1tkZMxpT9DVRT4GUyEp3fBPRNGGOeKQihYNc95wXho7TdFHmK0qtz1U6kbVw==
-X-Received: by 2002:a05:6808:3b7:: with SMTP id n23mr250477oie.168.1588874866696;
-        Thu, 07 May 2020 11:07:46 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c25sm1494388otp.50.2020.05.07.11.07.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:07:46 -0700 (PDT)
-Received: (nullmailer pid 14721 invoked by uid 1000);
-        Thu, 07 May 2020 18:07:43 -0000
-Date:   Thu, 7 May 2020 13:07:43 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/11] PCI: qcom: introduce qcom_clear_and_set_dword
-Message-ID: <20200507180743.GA2255@bogus>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-7-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-7-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sjWkrGrnU/EJtxPoXRaoT1xpbM/x0feZVAsuk0CdGxM=;
+        b=HVm7G7cL8dhsWd7aDaRG9tpfDIfzqO6DfIzJTseuNK76KnnL2VBBE0fRAtxdBmFSkr
+         cfBPDX++1Cos/s4clTDRMES0B11HvREw1UtzKKGSk/dND01Z/mAaxclbijx7aE3ojJjO
+         kUMfW0A2uAaQkMfk6otit2CGQSFePhQkcifx7YF2WauHeSBsySUoOUFghzgc4MjBF8qo
+         4xHDEOoZp8oXmPtdQOI0endqymKu5DXf0PjX5n0TqjODx3BLxmfGYhU9ege25Cm1B+3W
+         AtqJZjUt7tdgsBcHRQeOKldPqfPrSSMVMQBGp3cbJYpO2LZ5IpVSl+DkGZ1z7kGQ86fq
+         8TMQ==
+X-Gm-Message-State: AGi0PuZRyd7+lFfDSpnAvqrASkAkb5kB3LYQvRHtj0E7YALiD7bafVLu
+        IoJpXGNmBA9uADKvXspbLbXLDQoc8bJv3W6VvgEEiWr08KBmUcLvnH+S+h37adqMMQFArKmMGJm
+        vwCKnD2/fYxRYQiXsCPURXHUkeD/9wXlUuSBghrwDK6OKsXGEKO0+m8nCKLOBYkRHI7WmPe2f
+X-Google-Smtp-Source: APiQypLF514pacRtQ1a7I3HJKFHx78pHnwzf2OvlWcJDi5aN+FX+pzeg47Q4KMrBdLGN9MtVa+GMZ0pbEecv
+X-Received: by 2002:a25:12c1:: with SMTP id 184mr24597001ybs.162.1588875014916;
+ Thu, 07 May 2020 11:10:14 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:09:58 +0100
+Message-Id: <20200507181012.29791-1-qperret@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH 00/14] Modularize schedutil
+From:   Quentin Perret <qperret@google.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com, qperret@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:06:13AM +0200, Ansuel Smith wrote:
-> Use qcom_clear_and_set_dword instead of use the same code many times in
-> the entire driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 108 ++++++++++---------------
->  1 file changed, 41 insertions(+), 67 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 921030a64bab..a4fd5baada34 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -184,6 +184,16 @@ struct qcom_pcie {
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
->  
-> +static void qcom_clear_and_set_dword(void __iomem *addr, u32 clear_mask,
-> +				     u32 set_mask)
-> +{
-> +	u32 val = readl(addr);
-> +
-> +	val &= ~clear_mask;
-> +	val |= set_mask;
-> +	writel(val, addr);
-> +}
+Android is trying very hard to use a single kernel image (commonly
+called Generic Kernel Image, or GKI), closely aligned with mainline, to
+run on all Android devices regardless of the vendor.
 
-If we wanted this kind of register accessor in the kernel, then we'd 
-have common ones. We don't because it hides the possible need for 
-locking on a RMW sequence.
+The GKI project intends to not only improve the status quo for Android
+users directly (less fragmentation simplifies updatability), but also
+to benefit upstream by forcing all vendors to agree on one common
+kernel, that we push hard to be aligned with mainline.
 
-Also, not a fix. Don't mix refactoring with fixes.
+One challenge to implement GKI is to avoid bloating the kernel by
+compiling too many things in, especially given that different devices
+need different things. As such, anything that can be turned into a
+module helps GKI, by offering an alternative to having that component
+built-in. This is true for pretty much anything that can be made
+modular, including drivers as well as other kernel components, such as
+CPUFreq governors.
 
-Rob
+Indeed, in practice, Android devices often ship with only one CPUFreq
+governor enabled, and don't require any other that would simply waste
+memory for no benefits. All CPUFreq governors can already be built as
+modules with one notable exception: schedutil. Though popular in
+Android, some devices do not use schedutil, which is why it would be
+preferable to not have it unconditionally built in GKI. This series is
+an attempt to solve this problem, by making schedutil tristate.
+
+While modularization is usually not something we want to see near the
+scheduler, it appeared to me as I wrote those patches that the
+particular case of schedutil was actually not too bad to implement.
+We already have to support switching governors at run-time, simply
+because userspace is free to do that, so the infrastructure for turning
+sugov on and off dynamically is already there. Loading the code a little
+later doesn't seem to make that a lot worse.
+
+Patches 01-05 refactor some code to break the few dependencies on
+schedutil being builtin (notably EAS). Patches 06-12 export various
+symbols that schedutil needs when compiled as a module. And finally,
+patches 13-14 finish off the work by making the Kconfig tristate.
+
+---
+The series is based on Peter's sched/fifo [1] branch (because sugov
+uses sched_setscheduler_nocheck()).
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=sched/fifo
+
+Quentin Perret (14):
+  sched: Provide sched_set_deadline()
+  sched: cpufreq: Use sched_set_deadline() from sugov
+  sched: cpufreq: Introduce 'want_eas' governor flag
+  sched: cpufreq: Move sched_cpufreq_governor_change()
+  sched: cpufreq: Move schedutil_cpu_util()
+  arch_topology: Export cpu_scale per-cpu array
+  kthread: Export kthread_bind_mask()
+  sched/core: Export runqueues per-cpu array
+  sched/cpufreq: Export cpufreq_this_cpu_can_update()
+  sched/fair: Export cpu_util_freq()
+  tick/sched: Export tick_nohz_get_idle_calls_cpu
+  x86: Export arch_scale_freq_key
+  sched: cpufreq: Use IS_ENABLED() for schedutil
+  sched: cpufreq: Modularize schedutil
+
+ arch/x86/kernel/smpboot.c        |   1 +
+ drivers/base/arch_topology.c     |   1 +
+ drivers/cpufreq/Kconfig          |   2 +-
+ include/linux/cpufreq.h          |   6 +-
+ include/linux/sched.h            |   2 +
+ include/linux/sched/sysctl.h     |   2 +-
+ kernel/kthread.c                 |   1 +
+ kernel/sched/core.c              |  18 ++++
+ kernel/sched/cpufreq.c           |  34 ++++++
+ kernel/sched/cpufreq_schedutil.c | 176 +++----------------------------
+ kernel/sched/fair.c              | 119 ++++++++++++++++++++-
+ kernel/sched/sched.h             |  36 ++-----
+ kernel/sched/topology.c          |  16 +--
+ kernel/sysctl.c                  |   2 +-
+ kernel/time/tick-sched.c         |   1 +
+ 15 files changed, 212 insertions(+), 205 deletions(-)
+
+-- 
+2.26.2.526.g744177e7f7-goog
+
