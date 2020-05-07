@@ -2,66 +2,68 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9223C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E791C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBA62075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E686F21473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgEGNf7 (ORCPT
+        id S1726774AbgEGNgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:35:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3845 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725939AbgEGNf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:35:59 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 98D68EC751636B2B238B;
-        Thu,  7 May 2020 21:35:55 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 21:35:48 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <elder@kernel.org>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH -next] net: ipa: remove duplicate headers
-Date:   Thu, 7 May 2020 21:39:45 +0800
-Message-ID: <20200507133945.25601-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 May 2020 09:36:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44669 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgEGNgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:36:08 -0400
+IronPort-SDR: L5CnpK4QsITrNNZJOnHTkQKTuE5ZUQdG1D0+q/36HjR+1nWJyfDd5ba3PSRSG+ahx1crdwMeOc
+ JwIzEcljPSUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 06:36:07 -0700
+IronPort-SDR: 4D9yhjnF2nW6Y3BL3kWuHnrvdfW8DzzsX/kZnk451XCMyQ1n9KmGJB5KoAScE6dr3xb8vfufHw
+ UENGE2wDJ0Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="305121240"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 May 2020 06:36:05 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jWgh6-005DkF-Vr; Thu, 07 May 2020 16:36:08 +0300
+Date:   Thu, 7 May 2020 16:36:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     akpm@linux-foundation.org, keescook@chromium.org,
+        peterz@infradead.org, gpiccoli@canonical.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] kernel.h: remove duplicate headers
+Message-ID: <20200507133608.GV185537@smile.fi.intel.com>
+References: <20200507131608.63373-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507131608.63373-1-chenzhou10@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicate headers which are included twice.
+On Thu, May 07, 2020 at 09:16:08PM +0800, Chen Zhou wrote:
+> Remove duplicate headers which are included twice.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/ipa/ipa_mem.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks, this is included in my patch set to split out some parts of this header
+to new headers.
 
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index aa8f6b0f3d50..3ef814119aab 100644
---- a/drivers/net/ipa/ipa_mem.c
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -17,7 +17,6 @@
- #include "ipa_data.h"
- #include "ipa_cmd.h"
- #include "ipa_mem.h"
--#include "ipa_data.h"
- #include "ipa_table.h"
- #include "gsi_trans.h"
- 
+(It basically removes all occurrences of div64.h)
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
