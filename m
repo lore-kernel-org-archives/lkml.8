@@ -2,107 +2,79 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D08C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C3C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADA424959
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EDD24959
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgEGUWU (ORCPT
+        id S1728774AbgEGUWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:22:20 -0400
-Received: from www62.your-server.de ([213.133.104.62]:34222 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbgEGUWT (ORCPT
+        Thu, 7 May 2020 16:22:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41398 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgEGUWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:22:19 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jWn26-0001Dl-GF; Thu, 07 May 2020 22:22:14 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jWn21-0002Yj-BR; Thu, 07 May 2020 22:22:09 +0200
-Subject: Re: [RFC PATCH bpf-next 3/3] bpf, arm64: Optimize ADD,SUB,JMP BPF_K
- using arm64 add/sub immediates
-To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Enrico Weigelt <info@metux.net>, Torsten Duwe <duwe@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200507010504.26352-1-luke.r.nels@gmail.com>
- <20200507010504.26352-4-luke.r.nels@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <f93a921e-58d2-b7c4-0d3f-b76091c6b208@iogearbox.net>
-Date:   Thu, 7 May 2020 22:22:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 7 May 2020 16:22:43 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jWn2T-0006Hm-Hp; Thu, 07 May 2020 20:22:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/exynos: remove redundant initialization to variable 'start'
+Date:   Thu,  7 May 2020 21:22:37 +0100
+Message-Id: <20200507202237.64350-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200507010504.26352-4-luke.r.nels@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25805/Thu May  7 14:14:46 2020)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 3:05 AM, Luke Nelson wrote:
-> The current code for BPF_{ADD,SUB} BPF_K loads the BPF immediate to a
-> temporary register before performing the addition/subtraction. Similarly,
-> BPF_JMP BPF_K cases load the immediate to a temporary register before
-> comparison.
-> 
-> This patch introduces optimizations that use arm64 immediate add, sub,
-> cmn, or cmp instructions when the BPF immediate fits. If the immediate
-> does not fit, it falls back to using a temporary register.
-> 
-> Example of generated code for BPF_ALU64_IMM(BPF_ADD, R0, 2):
-> 
-> without optimization:
-> 
->    24: mov x10, #0x2
->    28: add x7, x7, x10
-> 
-> with optimization:
-> 
->    24: add x7, x7, #0x2
-> 
-> The code could use A64_{ADD,SUB}_I directly and check if it returns
-> AARCH64_BREAK_FAULT, similar to how logical immediates are handled.
-> However, aarch64_insn_gen_add_sub_imm from insn.c prints error messages
-> when the immediate does not fit, and it's simpler to check if the
-> immediate fits ahead of time.
-> 
-> Co-developed-by: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Same here:
+The variable 'start' is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 902938d2568f..b0b9cb1ec18f 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1150,7 +1150,7 @@ static bool exynos_dsi_transfer_finish(struct exynos_dsi *dsi)
+ {
+ 	struct exynos_dsi_transfer *xfer;
+ 	unsigned long flags;
+-	bool start = true;
++	bool start;
+ 
+ 	spin_lock_irqsave(&dsi->transfer_lock, flags);
+ 
+-- 
+2.25.1
+
