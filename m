@@ -2,49 +2,49 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0EFC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4402C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99EEE205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FBB205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hIw+3k9U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYjVGAmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEGODj (ORCPT
+        id S1727903AbgEGODn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:03:39 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26179 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727853AbgEGODg (ORCPT
+        Thu, 7 May 2020 10:03:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58675 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727835AbgEGODm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:03:36 -0400
+        Thu, 7 May 2020 10:03:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860213;
+        s=mimecast20190719; t=1588860220;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=13CBXUgFaROppSBpwCabjmSoPoTrMXx78+A8AjTRtPc=;
-        b=hIw+3k9UO45A2TyeNMdWjLBmMHcD2AlotIuSfqbzg9ineo0jhGShfqXTa2eiwNN8rNU5yH
-        t3anOxV13hXQwtYicsJObfKboNsuZuXAAz6VosEj29ZLkqFZoMGeHpIBzth6D1U2R2D0CQ
-        avhhAeuuzbS/i7gnZwdAG2Zo+Dp28fs=
+        bh=vdxcxGx7SFVn0D0LAwJ67gF+eYTXzdSapCaeVtSsCtE=;
+        b=cYjVGAmSZusXBfMrICFra5lXKeP1JnalvsJhBc2K27CW6nQDmnHE1pUueZKywIuA9TkZzI
+        KfgXZitj+7kULjFwCz3MSJKh6qEtXrqEX9VsYW1FfWty5mlkkb5pkN84V9/fRQi1kdHJEo
+        YYf1JR2rUHDQ9vv2Df71JJatwY7+cCg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-aATx9xwONgiOsdZL0sO6iA-1; Thu, 07 May 2020 10:03:28 -0400
-X-MC-Unique: aATx9xwONgiOsdZL0sO6iA-1
+ us-mta-386-lxBhMOqPN9WKvoonpKCTZQ-1; Thu, 07 May 2020 10:03:38 -0400
+X-MC-Unique: lxBhMOqPN9WKvoonpKCTZQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F3858BF624;
-        Thu,  7 May 2020 14:03:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80EC9107ACCD;
+        Thu,  7 May 2020 14:03:36 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 77E936109E;
-        Thu,  7 May 2020 14:03:20 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E53F60BEC;
+        Thu,  7 May 2020 14:03:34 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
@@ -53,18 +53,10 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S . Tsirkin" <mst@redhat.com>,
         David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v4 10/15] virtio-mem: Better retry handling
-Date:   Thu,  7 May 2020 16:01:34 +0200
-Message-Id: <20200507140139.17083-11-david@redhat.com>
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: [PATCH v4 12/15] virtio-mem: Drop manual check for already present memory
+Date:   Thu,  7 May 2020 16:01:36 +0200
+Message-Id: <20200507140139.17083-13-david@redhat.com>
 In-Reply-To: <20200507140139.17083-1-david@redhat.com>
 References: <20200507140139.17083-1-david@redhat.com>
 MIME-Version: 1.0
@@ -75,82 +67,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's start with a retry interval of 5 seconds and double the time until
-we reach 5 minutes, in case we keep getting errors. Reset the retry
-interval in case we succeeded.
+Registering our parent resource will fail if any memory is still present
+(e.g., because somebody unloaded the driver and tries to reload it). No
+need for the manual check.
 
-The two main reasons for having to retry are
-- The hypervisor is busy and cannot process our request
-- We cannot reach the desired requested_size (esp., not enough memory can
-  get unplugged because we can't allocate any subblocks).
+Move our "unplug all" handling to after registering the resource.
 
-Tested-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Igor Mammedov <imammedo@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/virtio/virtio_mem.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/virtio/virtio_mem.c | 55 ++++++++-----------------------------
+ 1 file changed, 12 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index a2edb87e5ed8..eb4c16d634e0 100644
+index 80cdb9e6b3c4..8dd57b61b09b 100644
 --- a/drivers/virtio/virtio_mem.c
 +++ b/drivers/virtio/virtio_mem.c
-@@ -141,7 +141,9 @@ struct virtio_mem {
- 
- 	/* Timer for retrying to plug/unplug memory. */
- 	struct hrtimer retry_timer;
--#define VIRTIO_MEM_RETRY_TIMER_MS		30000
-+	unsigned int retry_timer_ms;
-+#define VIRTIO_MEM_RETRY_TIMER_MIN_MS		50000
-+#define VIRTIO_MEM_RETRY_TIMER_MAX_MS		300000
- 
- 	/* Memory notifier (online/offline events). */
- 	struct notifier_block memory_notifier;
-@@ -1550,6 +1552,7 @@ static void virtio_mem_run_wq(struct work_struct *work)
- 
- 	switch (rc) {
- 	case 0:
-+		vm->retry_timer_ms = VIRTIO_MEM_RETRY_TIMER_MIN_MS;
- 		break;
- 	case -ENOSPC:
- 		/*
-@@ -1565,8 +1568,7 @@ static void virtio_mem_run_wq(struct work_struct *work)
- 		 */
- 	case -ENOMEM:
- 		/* Out of memory, try again later. */
--		hrtimer_start(&vm->retry_timer,
--			      ms_to_ktime(VIRTIO_MEM_RETRY_TIMER_MS),
-+		hrtimer_start(&vm->retry_timer, ms_to_ktime(vm->retry_timer_ms),
- 			      HRTIMER_MODE_REL);
- 		break;
- 	case -EAGAIN:
-@@ -1586,6 +1588,8 @@ static enum hrtimer_restart virtio_mem_timer_expired(struct hrtimer *timer)
- 					     retry_timer);
- 
- 	virtio_mem_retry(vm);
-+	vm->retry_timer_ms = min_t(unsigned int, vm->retry_timer_ms * 2,
-+				   VIRTIO_MEM_RETRY_TIMER_MAX_MS);
- 	return HRTIMER_NORESTART;
+@@ -1616,23 +1616,6 @@ static int virtio_mem_init_vq(struct virtio_mem *vm)
+ 	return 0;
  }
  
-@@ -1754,6 +1758,7 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	spin_lock_init(&vm->removal_lock);
- 	hrtimer_init(&vm->retry_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	vm->retry_timer.function = virtio_mem_timer_expired;
-+	vm->retry_timer_ms = VIRTIO_MEM_RETRY_TIMER_MIN_MS;
+-/*
+- * Test if any memory in the range is present in Linux.
+- */
+-static bool virtio_mem_any_memory_present(unsigned long start,
+-					  unsigned long size)
+-{
+-	const unsigned long start_pfn = PFN_DOWN(start);
+-	const unsigned long end_pfn = PFN_UP(start + size);
+-	unsigned long pfn;
+-
+-	for (pfn = start_pfn; pfn != end_pfn; pfn++)
+-		if (present_section_nr(pfn_to_section_nr(pfn)))
+-			return true;
+-
+-	return false;
+-}
+-
+ static int virtio_mem_init(struct virtio_mem *vm)
+ {
+ 	const uint64_t phys_limit = 1UL << MAX_PHYSMEM_BITS;
+@@ -1664,32 +1647,6 @@ static int virtio_mem_init(struct virtio_mem *vm)
+ 	virtio_cread(vm->vdev, struct virtio_mem_config, region_size,
+ 		     &vm->region_size);
  
- 	/* register the virtqueue */
- 	rc = virtio_mem_init_vq(vm);
+-	/*
+-	 * If we still have memory plugged, we might have to unplug all
+-	 * memory first. However, if somebody simply unloaded the driver
+-	 * we would have to reinitialize the old state - something we don't
+-	 * support yet. Detect if we have any memory in the area present.
+-	 */
+-	if (vm->plugged_size) {
+-		uint64_t usable_region_size;
+-
+-		virtio_cread(vm->vdev, struct virtio_mem_config,
+-			     usable_region_size, &usable_region_size);
+-
+-		if (virtio_mem_any_memory_present(vm->addr,
+-						  usable_region_size)) {
+-			dev_err(&vm->vdev->dev,
+-				"reloading the driver is not supported\n");
+-			return -EINVAL;
+-		}
+-		/*
+-		 * Note: it might happen that the device is busy and
+-		 * unplugging all memory might take some time.
+-		 */
+-		dev_info(&vm->vdev->dev, "unplugging all memory required\n");
+-		vm->unplug_all_required = 1;
+-	}
+-
+ 	/*
+ 	 * We always hotplug memory in memory block granularity. This way,
+ 	 * we have to wait for exactly one memory block to online.
+@@ -1760,6 +1717,8 @@ static int virtio_mem_create_resource(struct virtio_mem *vm)
+ 	if (!vm->parent_resource) {
+ 		kfree(name);
+ 		dev_warn(&vm->vdev->dev, "could not reserve device region\n");
++		dev_info(&vm->vdev->dev,
++			 "reloading the driver is not supported\n");
+ 		return -EBUSY;
+ 	}
+ 
+@@ -1816,6 +1775,16 @@ static int virtio_mem_probe(struct virtio_device *vdev)
+ 	if (rc)
+ 		goto out_del_vq;
+ 
++	/*
++	 * If we still have memory plugged, we have to unplug all memory first.
++	 * Registering our parent resource makes sure that this memory isn't
++	 * actually in use (e.g., trying to reload the driver).
++	 */
++	if (vm->plugged_size) {
++		vm->unplug_all_required = 1;
++		dev_info(&vm->vdev->dev, "unplugging all memory is required\n");
++	}
++
+ 	/* register callbacks */
+ 	vm->memory_notifier.notifier_call = virtio_mem_memory_notifier_cb;
+ 	rc = register_memory_notifier(&vm->memory_notifier);
 -- 
 2.25.3
 
