@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0338C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703CEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC50E2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE062073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862038;
-	bh=NEygi/XkXXH5h0c3mz86KPqt0SxdHMUDq3aHUMqj2T8=;
+	s=default; t=1588862048;
+	bh=7MP8dOvGoboeGuCIoqthEgIp6BxobZuNk6QpcuAufpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IekuY391cpIG9OeQapnpLUDY5jevY657FWRlG5YwcL7+K9ONWH7Ie9pLdtk3iSGHV
-	 abNA2BU5QWKlL2b4VNsc3U+HhoDjMA/rm9+cI+MjJ6TwsQNGIoezYza6/1MRIQRgSg
-	 VpVWeuB/EtQvzdzLo3g8fEqlUyWiqjlEmryi0FkA=
+	b=X3/9CLA/9feoaO+L4Y3KuEhkJyAdu4zxahrKOFrIos3ZnFAjD6Uvs1VBFUYA0WITg
+	 91ofwU5surFDqqlDGSLNRXuCZNFVRKdFSdS9fZ6qnQlQSvIykww7kgqHk+B0avoy90
+	 txTpXHiD9K7u+wSRYb7jWtb2SFaZ5G3z2FM5hncs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgEGOd5 (ORCPT
+        id S1728329AbgEGOeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57152 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbgEGO31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:27 -0400
+        id S1728534AbgEGO3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B3D2073A;
-        Thu,  7 May 2020 14:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75AFA20936;
+        Thu,  7 May 2020 14:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861766;
-        bh=NEygi/XkXXH5h0c3mz86KPqt0SxdHMUDq3aHUMqj2T8=;
+        s=default; t=1588861764;
+        bh=7MP8dOvGoboeGuCIoqthEgIp6BxobZuNk6QpcuAufpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGDtKRHrQME6ptzIQbnFgQBsK/f70wMmAJbXXpc4QzH5O29a8u14jjCOpe4PsK0vA
-         M3ngVUNBvjwzFo5vHqug7XQG263oRo7dUELZ4qglTx0PanTUbtVfyUIo/bOqMuYcLO
-         GBqZZ4uJOq8PD4d9L5nuojLM7ng8oC9P7j7lf4JE=
+        b=lxfIYwoRpt25BT2XWH3BnFCeVgD3MHPxOMom0WR6NUXvMUDaOlM/BXuJbA+6SZf75
+         ZX7T+QiQeNgn7FHFsMmiuP4EGmbCRHXz1l+drjXzJhighiqhUpO7k9FslZCeyOgx4r
+         B+uQlX8YF+cy+ks7s/VCHtn0LRwySl2aws3TIfg0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/20] RDMA/mlx5: Set GRH fields in query QP on RoCE
-Date:   Thu,  7 May 2020 10:29:03 -0400
-Message-Id: <20200507142917.26612-7-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/20] scsi: qla2xxx: check UNLOADING before posting async work
+Date:   Thu,  7 May 2020 10:29:01 -0400
+Message-Id: <20200507142917.26612-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142917.26612-1-sashal@kernel.org>
 References: <20200507142917.26612-1-sashal@kernel.org>
@@ -61,45 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 ]
+[ Upstream commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 ]
 
-GRH fields such as sgid_index, hop limit, et. are set in the QP context
-when QP is created/modified.
+qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
+completion of these async commands. If UNLOADING is set, this is doomed to
+timeout, because the async logout command will never complete.
 
-Currently, when query QP is performed, we fill the GRH fields only if the
-GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
-the check so we will set all relevant data for the RoCE too.
+The only way to avoid waiting pointlessly is to fail posting these commands
+in the first place if the driver is in UNLOADING state.  In general,
+posting any command should be avoided when the driver is UNLOADING.
 
-Since this data is returned to userspace, the below is an ABI regression.
+With this patch, "rmmod qla2xxx" completes without noticeable delay.
 
-Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
-Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Acked-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index 4fc9278d0ddec..10f6ae4f8f3ff 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -4887,7 +4887,9 @@ static void to_rdma_ah_attr(struct mlx5_ib_dev *ibdev,
- 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
- 	rdma_ah_set_static_rate(ah_attr,
- 				path->static_rate ? path->static_rate - 5 : 0);
--	if (path->grh_mlid & (1 << 7)) {
-+
-+	if (path->grh_mlid & (1 << 7) ||
-+	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
- 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index fff20a3707677..d08635203c8a4 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4647,6 +4647,9 @@ qla2x00_alloc_work(struct scsi_qla_host *vha, enum qla_work_type type)
+ 	struct qla_work_evt *e;
+ 	uint8_t bail;
  
- 		rdma_ah_set_grh(ah_attr, NULL,
++	if (test_bit(UNLOADING, &vha->dpc_flags))
++		return NULL;
++
+ 	QLA_VHA_MARK_BUSY(vha, bail);
+ 	if (bail)
+ 		return NULL;
 -- 
 2.20.1
 
