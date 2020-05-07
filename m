@@ -2,186 +2,68 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5EDC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC025C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950612082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81912082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588824288;
-	bh=GnLUxgmdXtnzY66D3hGDvqn+bBMebpp1lc+6hwlGfAo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tn0PbEmNyQbADN+lWkdJjiXSppKE0MmRaYFl5TwA3waktltuz6FWgctGyvtM7tRaW
-	 EnE71075rglY5E2aLsut4pmBQ5OgWDeTOu0HUXauK4qfj4VwKa8uPEDO3lmvWiCpYZ
-	 EYgOCrwQczl/qBzRrB693lzOxT83wCHyT4M5kDVw=
+	s=default; t=1588824305;
+	bh=zR6eET3bphOeSZcysi3IrmzpPhYrELY85eVha97LOyo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=LJvKgyh/m5HeAkyah0x2bztQCQsHnDMH7ZHUSA96bG0bs1qBQUzmNxxGWtD/cz5Hz
+	 7WZiu0MmuwosA7Ko6N142o/+KXgs/Kb60HPJ7suay7sKVbOtC/vOEzKq4j5LaBgez8
+	 nKFRykGItPBvo2E6Ltw1ZOL193v5etAi2YJWh4Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEGEEs (ORCPT
+        id S1727029AbgEGEFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 00:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45776 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 00:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgEGEEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 00:04:47 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87BA207DD;
-        Thu,  7 May 2020 04:04:45 +0000 (UTC)
+        id S1725446AbgEGEFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 00:05:04 -0400
+Subject: Re: [GIT] Networking
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588824286;
-        bh=GnLUxgmdXtnzY66D3hGDvqn+bBMebpp1lc+6hwlGfAo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ARhYmz2v+xSNYnTjr+O0bRqASsMPYHF68/hkeORs0hdYuJpIGt6+5S+XBbMJxInm0
-         fXVi6sK25p7Q7O9Me3ZaGCcKlv+MHDwpZ/cxELS/ewgC+/pcIENDfv/ukf9rw90M8B
-         ux2C56xh1pcJrsZxCW+7lg8KF2cXVlyicH+HBn1U=
-Date:   Wed, 6 May 2020 23:09:12 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
- flexible-array member
-Message-ID: <20200507040912.GA31382@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        s=default; t=1588824304;
+        bh=zR6eET3bphOeSZcysi3IrmzpPhYrELY85eVha97LOyo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=giY/MpGPhIfcsIbyF9/Lzmn+YTqfhUy9Xrdv5EYQNcx9A6+fAccmwkKfvMa5wXRQ/
+         DRzTkAYJPijIJSzpgTYUj2ZJcOQQPFcw9hRzeko7Dn5QPNsUoD28d4e+JQpkunZu2Q
+         KEFtcainv5tgHeElK/zAK3muploVM/xR6lkRKKtA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200506.204039.425872525231159617.davem@davemloft.net>
+References: <20200506.204039.425872525231159617.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200506.204039.425872525231159617.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: 16f8036086a929694c3c62f577bb5925fe4fd607
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a811c1fa0a02c062555b54651065899437bacdbe
+Message-Id: <158882430420.24952.15328615514936952931.pr-tracker-bot@kernel.org>
+Date:   Thu, 07 May 2020 04:05:04 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+The pull request you sent on Wed, 06 May 2020 20:40:39 -0700 (PDT):
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a811c1fa0a02c062555b54651065899437bacdbe
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Thank you!
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-Also, the following issue shows up due to the flexible-array member
-having incomplete type[4]:
-
-drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_bios_measurements_start’:
-drivers/char/tpm/eventlog/tpm2.c:54:46: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
-   54 |  size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
-      |                                              ^
-drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_bios_measurements_next’:
-drivers/char/tpm/eventlog/tpm2.c:102:10: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
-  102 |    sizeof(event_header->event) + event_header->event_size;
-      |          ^
-drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_binary_bios_measurements_show’:
-drivers/char/tpm/eventlog/tpm2.c:140:10: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
-  140 |    sizeof(event_header->event) + event_header->event_size;
-      |          ^
-scripts/Makefile.build:266: recipe for target 'drivers/char/tpm/eventlog/tpm2.o' failed
-make[3]: *** [drivers/char/tpm/eventlog/tpm2.o] Error 1
-
-As mentioned above: "Flexible array members have incomplete type, and
-so the sizeof operator may not be applied. As a quirk of the original
-implementation of zero-length arrays, sizeof evaluates to zero."[1] So,
-the sizeof(flexible-array) can be safely removed to fix the error above.
-
-Lastly, prefer sizeof(*ptr) over sizeof(struct foo).
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-[4] https://github.com/KSPP/linux/issues/43
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Hi,
-
-I'm resending this because LKML is eating some messages, recently.
-Sorry for the noise in case you've already received this patch.
-
-Thanks
-
- drivers/char/tpm/eventlog/tpm2.c | 10 +++-------
- include/linux/tpm_eventlog.h     |  2 +-
- 2 files changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
-index e741b1157525..351a2989b3c6 100644
---- a/drivers/char/tpm/eventlog/tpm2.c
-+++ b/drivers/char/tpm/eventlog/tpm2.c
-@@ -51,8 +51,7 @@ static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
- 	int i;
- 
- 	event_header = addr;
--	size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
--		+ event_header->event_size;
-+	size = sizeof(*event_header) + event_header->event_size;
- 
- 	if (*pos == 0) {
- 		if (addr + size < limit) {
-@@ -98,8 +97,7 @@ static void *tpm2_bios_measurements_next(struct seq_file *m, void *v,
- 	event_header = log->bios_event_log;
- 
- 	if (v == SEQ_START_TOKEN) {
--		event_size = sizeof(struct tcg_pcr_event) -
--			sizeof(event_header->event) + event_header->event_size;
-+		event_size = sizeof(*event_header) + event_header->event_size;
- 		marker = event_header;
- 	} else {
- 		event = v;
-@@ -136,9 +134,7 @@ static int tpm2_binary_bios_measurements_show(struct seq_file *m, void *v)
- 	size_t size;
- 
- 	if (v == SEQ_START_TOKEN) {
--		size = sizeof(struct tcg_pcr_event) -
--			sizeof(event_header->event) + event_header->event_size;
--
-+		size = sizeof(*event_header) + event_header->event_size;
- 		temp_ptr = event_header;
- 
- 		if (size > 0)
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index c253461b1c4e..4f8c90c93c29 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -97,7 +97,7 @@ struct tcg_pcr_event {
- 	u32 event_type;
- 	u8 digest[20];
- 	u32 event_size;
--	u8 event[0];
-+	u8 event[];
- } __packed;
- 
- struct tcg_event_field {
 -- 
-2.26.2
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
