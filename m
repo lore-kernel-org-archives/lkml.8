@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D3DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC07F215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE6A20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861789;
-	bh=NJnIPsUNgepc+7l9lgm1dKrdXXcK8bic9NjDWIBu+Uo=;
+	s=default; t=1588861800;
+	bh=hhGZnsy/UqyqfE1YGceDVAiV5IZvAu1HD1paBAx4yfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewvGs3LGlbgxqJujAdeEvXJuc5xZEgCZgVKNz3xrtvtvx3z4zUry3HyG0aIoAtWba
-	 XTHHjlOjW60ZYrlgqIWjnCaaOFcp6NGkn+UP5qdz1q3fSdvmOuAghY6Dq0IPuIlXxn
-	 Kqh5moM6EfBsMYllPhlqDmyS4/IifxQtI2snKtns=
+	b=y3X2x+JTCTS88aGQDqcOmfW/4smqn0mwkc2u221DfmcQocaoIHAempJcO0iRSxG5F
+	 IdFCihFuX22mZhYbi/vEEHqWwx+OyzidWnapBKE9+2alY3qyMYmvVnn/3qA7UUGsLh
+	 zwBxVZLctFvye9G39ImeY/8xX1XW2PYKi6+PH4gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgEGO3s (ORCPT
+        id S1728733AbgEGO37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57434 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbgEGO3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:36 -0400
+        id S1728679AbgEGO3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59312073A;
-        Thu,  7 May 2020 14:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22AD52073A;
+        Thu,  7 May 2020 14:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861775;
-        bh=NJnIPsUNgepc+7l9lgm1dKrdXXcK8bic9NjDWIBu+Uo=;
+        s=default; t=1588861790;
+        bh=hhGZnsy/UqyqfE1YGceDVAiV5IZvAu1HD1paBAx4yfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MlGKB68ooxY/0xvGX2kFDA8wUuI4EL78qIYF5m5z9in+YP9z/3sjI7C+ca/DQ2i/t
-         7yjD6VBx72eeoAciKZT27rBBAjAIh5NZo6NMIgTvSgpVtmqorvC/neReDrQ8UZu9jU
-         Ye6YNZcxQRq9nlc6SsVJIBzB851JxkTEEdC3WYVo=
+        b=jWnfe13n1IgmYul6y2S53/dXoiDIrxi9Cc29hsot0TdJ9uSWccaJZaPW0toWYYA0V
+         tqQBAeUtBg3gJbIP3Tg7DffIPq2MErkwAijJpS2MCMpfogiY+c/3BE7VsXMhvqXurc
+         GuJwt0URajvBmxcFJwo7xDRY7E63WpkIX2tqKYcY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/20] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Thu,  7 May 2020 10:29:11 -0400
-Message-Id: <20200507142917.26612-15-sashal@kernel.org>
+Cc:     Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/16] RDMA/mlx5: Set GRH fields in query QP on RoCE
+Date:   Thu,  7 May 2020 10:29:32 -0400
+Message-Id: <20200507142943.26848-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142917.26612-1-sashal@kernel.org>
-References: <20200507142917.26612-1-sashal@kernel.org>
+In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
+References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,63 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit b9f960201249f20deea586b4ec814669b4c6b1c0 ]
+[ Upstream commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 ]
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+GRH fields such as sgid_index, hop limit, et. are set in the QP context
+when QP is created/modified.
 
-	grep -H . /sys/module/dmatest/parameters/*
+Currently, when query QP is performed, we fill the GRH fields only if the
+GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
+the check so we will set all relevant data for the RoCE too.
 
-the iterations parameter is not respected and test is going on and on until
-user gives
+Since this data is returned to userspace, the below is an ABI regression.
 
-	echo 0 > /sys/module/dmatest/parameters/run
-
-This is not what expected.
-
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
-
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
-
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
-
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
+Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 7b7fba0c92532..e38a653dd208f 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -567,8 +567,8 @@ static int dmatest_func(void *data)
- 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 0cb60072c82f3..d835ef2ce23c0 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -4362,7 +4362,9 @@ static void to_rdma_ah_attr(struct mlx5_ib_dev *ibdev,
+ 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
+ 	rdma_ah_set_static_rate(ah_attr,
+ 				path->static_rate ? path->static_rate - 5 : 0);
+-	if (path->grh_mlid & (1 << 7)) {
++
++	if (path->grh_mlid & (1 << 7) ||
++	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
+ 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t *dsts;
+ 		rdma_ah_set_grh(ah_attr, NULL,
 -- 
 2.20.1
 
