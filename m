@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0887C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A42EC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2E92073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6C420659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862103;
-	bh=ArCnMaJ2+sBqpCNTshjMt72aPj/mxeONg96DdATXufU=;
+	s=default; t=1588862113;
+	bh=oPYa4mGFQqu4Mr9qc87Q9R80YXItQ+Gvzchp6QANak0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sYtN5zq7fdOVNb3UE8g6Ehp8mCVgLm6GMQvb1+lg9p9OMpTz1+W/dwOwSIkmGke8s
-	 2i4ecL0CcBWaxPQOJtLBe/m4nt3M5JBrJhxi/9XnKmMUktDZsV7oGRe2lb9cBpii3Q
-	 Prf3c561mnhXHPpEOrw9iMvEgJRe8WXFuKbmEDyQ=
+	b=hZ4tNcYdzwjvoVfUiM+wqarfpLoPXcktdVYBm2jacoCEM0ORRp39KAX3dk/wVPjY4
+	 uEvCF+pgHJRoTi8PliQBRyQOpUPWZMLPZaGHtAXRis+lwPUNqj5LQCQKEncYAWwhXA
+	 +/+z5fnEw6Df/ZMEUpaFb2U6VTLN12JJ8NfDKL5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgEGOfD (ORCPT
+        id S1728097AbgEGOfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55882 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbgEGO2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:53 -0400
+        id S1728294AbgEGO2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9362E20870;
-        Thu,  7 May 2020 14:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549392145D;
+        Thu,  7 May 2020 14:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861733;
-        bh=ArCnMaJ2+sBqpCNTshjMt72aPj/mxeONg96DdATXufU=;
+        s=default; t=1588861729;
+        bh=oPYa4mGFQqu4Mr9qc87Q9R80YXItQ+Gvzchp6QANak0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcV0jzyqj6zhyTsyWoTHIWSBvWugC83Fzr6BNfHg9l+0CQXjGG+PzSqHuPOEzPzUM
-         Pem2HGHimiUqRPJRpPd8usdiycEb6zXcDKAghlvVlLTsVaQGymfX5endVwjn5pGcMp
-         PqrTm2a0/DRvp+BFoF+qHqr3PTTTxGj1CAMJwYOE=
+        b=ZBTFOdxrkO7Biw2cr0RyIN/z33ScBDcOEe4kVUg+BJWeajC9Kxn3FQ60DNAcKx6mD
+         hJ982dyvHYJ77fJ/5KnGRX6ozWT/IZ8eC0LgBD1fCesqQanFzQQ920BYJCx15sUgtQ
+         2j+BGAzFUtXzhk3W2AAKo9mZAQzn8K4MjuRcNyEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/35] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
-Date:   Thu,  7 May 2020 10:28:12 -0400
-Message-Id: <20200507142830.26239-18-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 15/35] ALSA: hda: Match both PCI ID and SSID for driver blacklist
+Date:   Thu,  7 May 2020 10:28:09 -0400
+Message-Id: <20200507142830.26239-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -59,34 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
+[ Upstream commit 977dfef40c8996b69afe23a9094d184049efb7bb ]
 
-Make a note of the first time we discover the turbo mode has been
-disabled by the BIOS, as otherwise we complain every time we try to
-update the mode.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Since the empty codec problem appear on the certain AMD platform (PCI
+ID 1022:1487), this patch changes the blacklist matching to both PCI
+ID and SSID using pci_match_id().  Also, the entry that was removed by
+the previous fix for ASUS ROG Zenigh II is re-added.
+
+Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 45499e0b9f2f3..d3d7c4ef7d045 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1058,7 +1058,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 1673479b4eef3..612441508e80a 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2023,9 +2023,10 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
  
- 	update_turbo_state();
- 	if (global.turbo_disabled) {
--		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
-+		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
- 		mutex_unlock(&intel_pstate_limits_lock);
- 		mutex_unlock(&intel_pstate_driver_lock);
- 		return -EPERM;
+@@ -2064,7 +2065,7 @@ static int azx_probe(struct pci_dev *pci,
+ 	bool schedule_probe;
+ 	int err;
+ 
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
 -- 
 2.20.1
 
