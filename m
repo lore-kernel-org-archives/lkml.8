@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C95C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0F3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DE42192A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B13D21841
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:33:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOu2Ds7o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ew2Hx3F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgEGKdV (ORCPT
+        id S1727805AbgEGKd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:33:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54982 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727113AbgEGKdM (ORCPT
+        Thu, 7 May 2020 06:33:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50166 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727794AbgEGKdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:33:12 -0400
+        Thu, 7 May 2020 06:33:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588847586;
+        s=mimecast20190719; t=1588847600;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LfKs05RuoTQVAkleaDqaXa4vjxynrDAbg0h7VJOtKyY=;
-        b=UOu2Ds7owDyR0kyOjYjVZ7iJ3ztzUx4OM9cUFK1bD8z4AngfTFqiDzsBv8BIzEiskYoZyI
-        qsMivQVK3Pvw21oMJN+HI6kdua1gNH6yTHSVwapVbw5gry9Cg0SGUwxAK0U1ZncNLVQ+NT
-        65b+3Rpp4qTBUaUKRKnIa5/wnpAxPBg=
+        bh=CeHzMmu7MwOrs5WjHHH6v/xc0aAfahem/qU8YFo2Z7g=;
+        b=Ew2Hx3F90HvZX52lrx0Ij1GB+JSPigJsI85Iv3w+s1dfG4DG6Ucbr7gtiP4mVAOIgb6MFi
+        m9f3d1ndKqaYrOOF1akTicphWDbUa7si08AXyLJie46zPBB4wV+PYtZ++LqaEgZfnLl6aX
+        tjVasErp0mVeXTVlJbSLxin/sWDbQCk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-CMkwtfsPM12pJ7l3auCYKg-1; Thu, 07 May 2020 06:33:02 -0400
-X-MC-Unique: CMkwtfsPM12pJ7l3auCYKg-1
+ us-mta-408-9Slv2ln_MAewsJz0kKSRcw-1; Thu, 07 May 2020 06:33:17 -0400
+X-MC-Unique: 9Slv2ln_MAewsJz0kKSRcw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18828107ACF3;
-        Thu,  7 May 2020 10:33:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59E958015D1;
+        Thu,  7 May 2020 10:33:15 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 820BC5D9C5;
-        Thu,  7 May 2020 10:32:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 193E85D9C5;
+        Thu,  7 May 2020 10:33:03 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
@@ -53,15 +53,18 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S . Tsirkin" <mst@redhat.com>,
         David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-Subject: [PATCH v3 07/15] mm/memory_hotplug: Introduce offline_and_remove_memory()
-Date:   Thu,  7 May 2020 12:31:11 +0200
-Message-Id: <20200507103119.11219-8-david@redhat.com>
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v3 09/15] virtio-mem: Better retry handling
+Date:   Thu,  7 May 2020 12:31:13 +0200
+Message-Id: <20200507103119.11219-10-david@redhat.com>
 In-Reply-To: <20200507103119.11219-1-david@redhat.com>
 References: <20200507103119.11219-1-david@redhat.com>
 MIME-Version: 1.0
@@ -72,99 +75,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio-mem wants to offline and remove a memory block once it unplugged
-all subblocks (e.g., using alloc_contig_range()). Let's provide
-an interface to do that from a driver. virtio-mem already supports to
-offline partially unplugged memory blocks. Offlining a fully unplugged
-memory block will not require to migrate any pages. All unplugged
-subblocks are PageOffline() and have a reference count of 0 - so
-offlining code will simply skip them.
+Let's start with a retry interval of 5 seconds and double the time until
+we reach 5 minutes, in case we keep getting errors. Reset the retry
+interval in case we succeeded.
 
-All we need is an interface to offline and remove the memory from kernel
-module context, where we don't have access to the memory block devices
-(esp. find_memory_block() and device_offline()) and the device hotplug
-lock.
+The two main reasons for having to retry are
+- The hypervisor is busy and cannot process our request
+- We cannot reach the desired requested_size (esp., not enough memory can
+  get unplugged because we can't allocate any subblocks).
 
-To keep things simple, allow to only work on a single memory block.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
 Tested-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Qian Cai <cai@lca.pw>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/memory_hotplug.h |  1 +
- mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ drivers/virtio/virtio_mem.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
-g.h
-index 7dca9cd6076b..d641828e5596 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -318,6 +318,7 @@ extern void try_offline_node(int nid);
- extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages=
-);
- extern int remove_memory(int nid, u64 start, u64 size);
- extern void __remove_memory(int nid, u64 start, u64 size);
-+extern int offline_and_remove_memory(int nid, u64 start, u64 size);
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index a2edb87e5ed8..eb4c16d634e0 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -141,7 +141,9 @@ struct virtio_mem {
 =20
- #else
- static inline void try_offline_node(int nid) {}
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 936bfe208a6e..bf1941f02a60 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1748,4 +1748,41 @@ int remove_memory(int nid, u64 start, u64 size)
- 	return rc;
+ 	/* Timer for retrying to plug/unplug memory. */
+ 	struct hrtimer retry_timer;
+-#define VIRTIO_MEM_RETRY_TIMER_MS		30000
++	unsigned int retry_timer_ms;
++#define VIRTIO_MEM_RETRY_TIMER_MIN_MS		50000
++#define VIRTIO_MEM_RETRY_TIMER_MAX_MS		300000
+=20
+ 	/* Memory notifier (online/offline events). */
+ 	struct notifier_block memory_notifier;
+@@ -1550,6 +1552,7 @@ static void virtio_mem_run_wq(struct work_struct *w=
+ork)
+=20
+ 	switch (rc) {
+ 	case 0:
++		vm->retry_timer_ms =3D VIRTIO_MEM_RETRY_TIMER_MIN_MS;
+ 		break;
+ 	case -ENOSPC:
+ 		/*
+@@ -1565,8 +1568,7 @@ static void virtio_mem_run_wq(struct work_struct *w=
+ork)
+ 		 */
+ 	case -ENOMEM:
+ 		/* Out of memory, try again later. */
+-		hrtimer_start(&vm->retry_timer,
+-			      ms_to_ktime(VIRTIO_MEM_RETRY_TIMER_MS),
++		hrtimer_start(&vm->retry_timer, ms_to_ktime(vm->retry_timer_ms),
+ 			      HRTIMER_MODE_REL);
+ 		break;
+ 	case -EAGAIN:
+@@ -1586,6 +1588,8 @@ static enum hrtimer_restart virtio_mem_timer_expire=
+d(struct hrtimer *timer)
+ 					     retry_timer);
+=20
+ 	virtio_mem_retry(vm);
++	vm->retry_timer_ms =3D min_t(unsigned int, vm->retry_timer_ms * 2,
++				   VIRTIO_MEM_RETRY_TIMER_MAX_MS);
+ 	return HRTIMER_NORESTART;
  }
- EXPORT_SYMBOL_GPL(remove_memory);
-+
-+/*
-+ * Try to offline and remove a memory block. Might take a long time to
-+ * finish in case memory is still in use. Primarily useful for memory de=
-vices
-+ * that logically unplugged all memory (so it's no longer in use) and wa=
-nt to
-+ * offline + remove the memory block.
-+ */
-+int offline_and_remove_memory(int nid, u64 start, u64 size)
-+{
-+	struct memory_block *mem;
-+	int rc =3D -EINVAL;
-+
-+	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
-+	    size !=3D memory_block_size_bytes())
-+		return rc;
-+
-+	lock_device_hotplug();
-+	mem =3D find_memory_block(__pfn_to_section(PFN_DOWN(start)));
-+	if (mem)
-+		rc =3D device_offline(&mem->dev);
-+	/* Ignore if the device is already offline. */
-+	if (rc > 0)
-+		rc =3D 0;
-+
-+	/*
-+	 * In case we succeeded to offline the memory block, remove it.
-+	 * This cannot fail as it cannot get onlined in the meantime.
-+	 */
-+	if (!rc) {
-+		rc =3D try_remove_memory(nid, start, size);
-+		WARN_ON_ONCE(rc);
-+	}
-+	unlock_device_hotplug();
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(offline_and_remove_memory);
- #endif /* CONFIG_MEMORY_HOTREMOVE */
+=20
+@@ -1754,6 +1758,7 @@ static int virtio_mem_probe(struct virtio_device *v=
+dev)
+ 	spin_lock_init(&vm->removal_lock);
+ 	hrtimer_init(&vm->retry_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	vm->retry_timer.function =3D virtio_mem_timer_expired;
++	vm->retry_timer_ms =3D VIRTIO_MEM_RETRY_TIMER_MIN_MS;
+=20
+ 	/* register the virtqueue */
+ 	rc =3D virtio_mem_init_vq(vm);
 --=20
 2.25.3
 
