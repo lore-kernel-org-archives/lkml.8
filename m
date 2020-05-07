@@ -2,96 +2,162 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97459C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2042C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 687032083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588853903;
-	bh=I5hKmcE5mcDLVhZaWDRwI64U3QpiZUFmJdDuCE+vXmE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Pgkvy3cC6Hy/qgoWPSoBn+a+vdNq7rt5oBUrrwIsRZUDlU8D1xPv59/E1yUXrbnLe
-	 pyAqmZoC75wlRQfhuyep2vesdqu9IzSy0KoEcTPndX8hb1vVrr+iE6vlnICoIDHnor
-	 2IFzuxYRoHRAtnLsl8Djn7CplKFo7F2tSshSWgDo=
+	by mail.kernel.org (Postfix) with ESMTP id D66E020736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEGMSW (ORCPT
+        id S1726612AbgEGMSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44946 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 08:18:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39815 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgEGMSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:18:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618C320CC7;
-        Thu,  7 May 2020 12:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588853901;
-        bh=I5hKmcE5mcDLVhZaWDRwI64U3QpiZUFmJdDuCE+vXmE=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=fwpyh3Lq9mAdWayXxnmENOvUYSaL7jTt72sbM3RezkaGAhPeWB5n+kBGgYIECnHHg
-         rhiZgbOKFBvTWslJBreJjVlcVftxMHR2R4WhmM/Nw82hu5LE/J7/Urhwcxr4qSjXac
-         6D73eceh/8FZ9DbaTnhzg6b6Wmx87GdNx1gwhibg=
-Date:   Thu, 07 May 2020 13:18:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-In-Reply-To: <20200507094335.14302-1-weiyongjun1@huawei.com>
-References: <20200507094335.14302-1-weiyongjun1@huawei.com>
-Subject: Re: [PATCH -next] ASoC: rt5677: Use devm_snd_soc_register_component()
-Message-Id: <158885389338.38935.14311915230086603146.b4-ty@kernel.org>
+        id S1725857AbgEGMSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:18:51 -0400
+IronPort-SDR: 41dXBmJOV9kcgTQ+bbyKhRt22aKTJ2y++QJZ//5aJGDRNf3Mnmc9iNSHtOOrFBPR5znEJNi6b6
+ +TuJVpZTiTMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 05:18:50 -0700
+IronPort-SDR: 7YPBFVxB2W7VTq0T8bMYyvETuExKzSIsCjuvpzvkT0DLPLeRORYAY3lIcO/qcU+pZzokMDfPuh
+ fRFvCG2IH1tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="284975859"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga004.fm.intel.com with ESMTP; 07 May 2020 05:18:50 -0700
+Date:   Thu, 7 May 2020 05:18:50 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+Message-ID: <20200507121850.GB85463@otc-nc-03>
+References: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
+ <878si6rx7f.fsf@nanos.tec.linutronix.de>
+ <20200505201616.GA15481@otc-nc-03>
+ <875zdarr4h.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zdarr4h.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 09:43:35 +0000, Wei Yongjun wrote:
-> Using devm_snd_soc_register_component() can make the code
-> shorter and cleaner.
+Hi Thomas
+
+We did a bit more tracing and it looks like the IRR check is actually
+not happening on the right cpu. See below.
+
+On Tue, May 05, 2020 at 11:47:26PM +0200, Thomas Gleixner wrote:
+> >
+> > msi_set_affinit ()
+> > {
+> > ....
+> >         unlock_vector_lock();
+> >
+> >         /*
+> >          * Check whether the transition raced with a device interrupt and
+> >          * is pending in the local APICs IRR. It is safe to do this outside
+> >          * of vector lock as the irq_desc::lock of this interrupt is still
+> >          * held and interrupts are disabled: The check is not accessing the
+> >          * underlying vector store. It's just checking the local APIC's
+> >          * IRR.
+> >          */
+> >         if (lapic_vector_set_in_irr(cfg->vector))
+> >                 irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
 > 
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  sound/soc/codecs/rt5677-spi.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
+> No. This catches the transitional interrupt to the new vector on the
+> original CPU, i.e. the one which is running that code.
+
+Mathias added some trace to his xhci driver when the isr is called.
+
+Below is the tail of my trace with last two times xhci_irq isr is called:
+
+    <idle>-0     [003] d.h.   200.277971: xhci_irq: xhci irq
+    <idle>-0     [003] d.h.   200.278052: xhci_irq: xhci irq
+
+Just trying to follow your steps below with traces. The traces follow
+the same comments in the source.
+
 > 
-> [...]
+> Again the steps are:
+> 
+>  1) Allocate new vector on new CPU
 
-Applied to
+        /* Allocate a new target vector */
+        ret = parent->chip->irq_set_affinity(parent, mask, force);
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+migration/3-24    [003] d..1   200.283012: msi_set_affinity: msi_set_affinity: quirk: 1: new vector allocated, new cpu = 0
 
-Thanks!
+> 
+>  2) Set new vector on original CPU
 
-[1/1] ASoC: rt5677: Use devm_snd_soc_register_component()
-      commit: 9558ad215509b75c72c84f4f7691f1bd80fda42a
+        /* Redirect it to the new vector on the local CPU temporarily */
+        old_cfg.vector = cfg->vector;
+        irq_msi_update_msg(irqd, &old_cfg);
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+migration/3-24    [003] d..1   200.283033: msi_set_affinity: msi_set_affinity: Redirect to new vector 33 on old cpu 6
+> 
+>  3) Set new vector on new CPU
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+        /* Now transition it to the target CPU */
+        irq_msi_update_msg(irqd, cfg);
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+     migration/3-24    [003] d..1   200.283044: msi_set_affinity: msi_set_affinity: Transition to new target cpu 0 vector 33
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+
+     if (lapic_vector_set_in_irr(cfg->vector))
+	irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
+
+
+migration/3-24    [003] d..1   200.283046: msi_set_affinity: msi_set_affinity: Update Done [IRR 0]: irq 123 localsw: Nvec 33 Napic 0
+
+> 
+> So we have 3 points where an interrupt can fire:
+> 
+>  A) Before #2
+> 
+>  B) After #2 and before #3
+> 
+>  C) After #3
+> 
+> #A is hitting the old vector which is still valid on the old CPU and
+>    will be handled once interrupts are enabled with the correct irq
+>    descriptor - Normal operation (same as with maskable MSI)
+> 
+> #B This must be checked in the IRR because the there is no valid vector
+>    on the old CPU.
+
+The check for IRR seems like on a random cpu3 vs checking for the new vector 33
+on old cpu 6?
+
+This is the place when we force the retrigger without the IRR check things seem to fix itself.
+
+> 
+> #C is handled on the new vector on the new CPU
+> 
+
+
+Did we miss something? 
+
+Cheers,
+Ashok
