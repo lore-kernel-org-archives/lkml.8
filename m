@@ -2,99 +2,161 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6588EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAACEC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37AB020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D662087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m4+31SmW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQH6RfxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgEGDEh (ORCPT
+        id S1727993AbgEGDIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
+        Wed, 6 May 2020 23:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgEGDEh (ORCPT
+        by vger.kernel.org with ESMTP id S1725879AbgEGDIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:04:37 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352BAC061A0F;
-        Wed,  6 May 2020 20:04:37 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hdbk5Nd1z9sRf;
-        Thu,  7 May 2020 13:04:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588820675;
-        bh=a+F66NvecwiCtPS7aubjUnfdcDz9hKUlOuxsLFVVZdA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=m4+31SmWOo9CFW7NN0hyV4U94NU1otuQbA4aEKKNVNToudihSgAnTSl9nAXwSa0Ab
-         sDKyEUiAu/3vwW6motWQNJ86hAjKOIEBw7kjBD+bB95EIugtAYubXUEPqk92NfwsZU
-         Hcqv+xCL5Fp8EIWg8Mmu9dquBGmfZNNvU15fakfvZNK0r2Cq0fw9Gfcr8ddOVoLdJZ
-         AetFpXdAr4v44InTbC6zZP73CPnbTeFgfjuXHTo9bihhg74wr6NVbE3BPk95RR+nIj
-         jD1yBYYgzssU5ZRfraY83MsVH4feAMUXzI+hhEvcT0vwW18pUh7wymm4EfPgrj3RIt
-         wMjZ978XFhPCw==
-Date:   Thu, 7 May 2020 13:04:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: build warning after merge of the drm-misc tree
-Message-ID: <20200507130433.27955b1f@canb.auug.org.au>
+        Wed, 6 May 2020 23:08:16 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C17BC061A0F;
+        Wed,  6 May 2020 20:08:16 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id b6so1346113uak.6;
+        Wed, 06 May 2020 20:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
+        b=nQH6RfxU7ceNQuXYXgG9OZlSHcATWEnjnhVkzSi1Bop+6sQlFdf2KboXe+5MRiTOPZ
+         wXed/hWDipbbakcaTpb+kOKIbF7MLdB84XNqIhkkaPvWP3L2PD8d6D+Y6W+3gClHxG+H
+         K8qib7WZguDpYxSbhB1djNjEJZks9oM9+/cMA+5mNycHbJfDzz+2S9eJ3vHO6jeQwId0
+         0+m05MEFgioXDWBnkBJ4z8D1JeUYmsRs3wYGcbtrU9O1SkQVJQkFFR6PVHEai0Tx5iK7
+         05Htbwrt6jmfcrguLgsyCehN71Ydh/PPSJsZoDLUibLmLwScZdvQU1ISgYZZKzOzc+4h
+         AfJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
+        b=re5YeSuedIfPEN5jqxu2c6gGTtNBVJrqTEeXsp3pCNxKanjqE6l99v+ioBEJ9kjs0M
+         hLZ1oLfmNbs0tz8KJtO55PNuWD5e6hZoCBn7pkECFydliFJJgYvGBw5DtYDdC0HwxIU3
+         ndMY3BMfIyC8MSNlTUruowsZ2saGhRLDZzTnC5EJfrT138ZnANYoXaSqSjxZ/cZRrenS
+         n/EcZw9YJpG2elSTJ6kVNb/hvYC+RUopsDr+yPE/z30faMBuuyEnPzAMVJ5mdMMzo+O4
+         ET3gNiTGuoJGiPekpZZllJDuSFq30QYi2hEMF7Jr7KQjInlkupKHqO0Xx/T3WC0ZohAT
+         ezug==
+X-Gm-Message-State: AGi0PuYg2sQClTF1dkkeINThCeZWotKQ0UlVTcn+T3T3f2AMtFK8I4Uz
+        pdJxx99gKeHwwGydY1mNQG8H6VrNpbqyEZanB/nxBknI
+X-Google-Smtp-Source: APiQypLy2gZGyrB2039SyMEF5+hQSLSHuFESjGbmWh7/XJ2Fxp/FeHdyAqmT6q9hnYF5XM72W3uT7UPzgl0MM0NuEqg=
+X-Received: by 2002:ab0:375a:: with SMTP id i26mr9842013uat.120.1588820895622;
+ Wed, 06 May 2020 20:08:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IMMi3Hd2LSA7IcZxxDM+k=7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
+ <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
+ <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
+In-Reply-To: <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
+From:   Jun Li <lijun.kernel@gmail.com>
+Date:   Thu, 7 May 2020 11:08:04 +0800
+Message-ID: <CAKgpwJU7VDx90STE7bhx9VZ5p1jtqCyyLavmhXfpaicyDAYt_g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by
+ device controller
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IMMi3Hd2LSA7IcZxxDM+k=7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+John Stultz <john.stultz@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=E6=
+=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:27=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, May 6, 2020 at 2:00 AM Jun Li <lijun.kernel@gmail.com> wrote:
+> > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=883=
+0=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=EF=BC=
+=9A
+> > > On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote=
+:
+> > > > John Stultz <john.stultz@linaro.org> writes:
+> > > > > From: Yu Chen <chenyu56@huawei.com>
+> > > > >
+> > > > > It needs more time for the device controller to clear the CmdAct =
+of
+> > > > > DEPCMD on Hisilicon Kirin Soc.
+> > > >
+> > > > Why does it need more time? Why is it so that no other platform nee=
+ds
+> > > > more time, only this one? And which command, specifically, causes
+> > > > problem?
+> >
+> > Sorry for my back to this so late.
+> >
+> > This change is required on my dwc3 based HW too, I gave a check
+> > and the reason is suspend_clk is used in case the PIPE phy is at P3,
+> > this slow clock makes my EP command below timeout.
+> >
+> > dwc3_gadget_ep_cmd: ep0out: cmd 'Set Endpoint Configuration' [401]
+> > params 00001000 00000500 00000000 --> status: Timed Out
+> >
+> > Success case takes about 400us to complete, see below trace(44.286278
+> > - 44.285897 =3D 0.000381):
+> >
+> > configfs_acm.sh-822   [000] d..1    44.285896: dwc3_writel: addr
+> > 000000006d59aae1 value 00000401
+> > configfs_acm.sh-822   [000] d..1    44.285897: dwc3_readl: addr
+> > 000000006d59aae1 value 00000401
+> > ... ...
+> > configfs_acm.sh-822   [000] d..1    44.286278: dwc3_readl: addr
+> > 000000006d59aae1 value 00000001
+> > configfs_acm.sh-822   [000] d..1    44.286279: dwc3_gadget_ep_cmd:
+> > ep0out: cmd 'Set Endpoint Configuration' [401] params 00001000
+> > 00000500 00000000 --> status: Successful
+> >
+> > Hi John,
+> >
+> > Do you still have this problem? if yes, What's the value of
+> > USBLNKST[21:18] when the timeout happens?
+>
+> Sorry. As I mentioned, I was working to upstream a patchset that I
+> hadn't created, so the context I had was limited. As I couldn't
+> reproduce an issue without the change on the device I had, I figured
+> it would be best to drop it.
 
-Hi all,
+That was fine.
+>
+> However, as you have some analysis and rational for why such a change
+> would be needed, I don't have an objection to it. Do you want to
+> resubmit the patch with your explanation and detailed log above in the
+> commit message?
 
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Sure, I will resubmit the patch with my explanation added in commit message=
+.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-v=
-isionox-rm69299.o
-see include/linux/module.h for more information
-
-Introduced by commit
-
-  c7f66d32dd43 ("drm/panel: add support for rm69299 visionox panel")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IMMi3Hd2LSA7IcZxxDM+k=7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zesEACgkQAVBC80lX
-0GyMmggAn1kCCD1zMQkWORF0w7eNpngLumwm2QsWsEBC54XP6OTKJnQWsAImgxaq
-Y0BeHLUvNygFlhlcOCwSgBNgEU4V/Xe5oyvEk/G1wwF79VtvUCSj6lnqVPhbwgZ3
-rZALNBjk1uK5izQLc6WTszEF/1QhkAKzombsaJQXVIk1f5DpdNLZ8GdBZ1Cp/Hlq
-9EWsw0COE3tDvQY+l+4H/NC8qKIftJkOMQmb8vtyGSyVlqOixW6ojrvQb7vNxR+O
-lGJMFf7vMP5I83En+tD7cE4eCeStSxiIv6enrpyqodeehYXj5/tfD0Wk3jg38NUe
-DVaIGkYGb/qP02vl9NBQfDffHQUrEA==
-=MdCf
------END PGP SIGNATURE-----
-
---Sig_/IMMi3Hd2LSA7IcZxxDM+k=7--
+thanks
+Li Jun
+>
+> thanks
+> -john
