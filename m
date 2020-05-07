@@ -2,209 +2,112 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADFC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44433C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAA42075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1282075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DxHTfuWi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bqxfo24A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgEGHqM (ORCPT
+        id S1726367AbgEGHq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:46:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34566 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725834AbgEGHqL (ORCPT
+        Thu, 7 May 2020 03:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbgEGHqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:46:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588837569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R/fSRFrdrjSnuIOxHUSCOfP/3ESQFRE1q+R9NH0xsQg=;
-        b=DxHTfuWi4gjUIsFr1aiImOH5dsuvTzIlZA5ADNth2nhxmvlcQyXEhnOV8yMl3BjAFrYjxI
-        2Of633Xk/+VNCsxyR0RjxjhB+kh6YvivgXNg2ur9xNLgU/DCtOKP55ZJ+LZ7EO9v+9mY5e
-        0jc6O1Ow1nHzPC0umddZcrzxG4mXAh8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-cVJMtdwgMcyLqQcpvcN9Qg-1; Thu, 07 May 2020 03:46:05 -0400
-X-MC-Unique: cVJMtdwgMcyLqQcpvcN9Qg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCF618015CF;
-        Thu,  7 May 2020 07:46:02 +0000 (UTC)
-Received: from [10.36.114.214] (ovpn-114-214.ams2.redhat.com [10.36.114.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47DEB5C1B0;
-        Thu,  7 May 2020 07:45:52 +0000 (UTC)
-Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "will@kernel.org" <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "tn@semihalf.com" <tn@semihalf.com>,
-        "bbhushan2@marvell.com" <bbhushan2@marvell.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
- <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
- <06fe02f7-2556-8986-2f1e-dcdf59773b8c@redhat.com>
- <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <21e162a0-b29f-94a4-8371-7e3ac2743539@redhat.com>
-Date:   Thu, 7 May 2020 09:45:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 May 2020 03:46:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFB7C061A10
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 00:46:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d184so2617281pfd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cweRr9cAyY6zAkbWBKWMpZ4+w4vWexg4Pp5+tOHzveM=;
+        b=Bqxfo24AfFYXWhsN8GHnujLuoVkBpk+oLN5n/pKhY1B/kTAZsV4QlTI/+64OgJd7me
+         /3GbM2TCKbKKs5H0kBqmM/lnyfr9O1RVWszihBOglb3thtIhJhcsvO0cuaevmIsigXdc
+         AvG+O3NOWCh8NEyKHb9rrPLijMLpT2UVpR3OtJax9CXsSrfustfDX6lSjq7KY+lxg8aH
+         cRYpX6Ay58EqICKpIAqzfQGh+rA6W3MSlwo/Gl8PisC8qnqo5nBQPZ6Vs295kRAD8EEu
+         ru29YLo93QVo76QU8igeajEgubBaI0bCFrxP9vYIm1WQw+gIC21E0CRyu41/mtzKfcMM
+         c0mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cweRr9cAyY6zAkbWBKWMpZ4+w4vWexg4Pp5+tOHzveM=;
+        b=QgHKpEQzLLAJOP7AJYKNN0KcYDidKuhSKVtdp+qRevx13FIzLOn0ElReAp85hQBl+J
+         mGaU0+AOf5vtSnBtegWrlGLnFb0bWbYvUBmaTsivbaVEJooIklOvWpe4HF8rjylzi2jJ
+         hyTvopMYhurXhd2kyEouuSlJBLBvLnYc7p3nyVzpEA2E+aniYewkAF6cUnUYyjGHgNo2
+         Og8K7gMDHVOQgCcjt1WIHK0Da6MsrnvbkHlOjYyJfLj/ataTIteAb8Axo828ir3oqvkG
+         j+rwsgFzBn18jIppR7R+XTIsnqG4i5GjP8arnmjMxH+VN+7U956dH+JI2DhzriO3RbUy
+         lncQ==
+X-Gm-Message-State: AGi0PuY7SmqbtvwS6cp4VebSFjEuTL3HtWIMXDJ7jkB5S7ToSPrm4r/Q
+        gqLG4YxNdD2AaPmL5JBLOHY=
+X-Google-Smtp-Source: APiQypI8VrY230e+hhO68sFDKpYBvjJ1jP2UrGvK+1FaFovSdhtxYdf0l+gaPRquhoaquZMZUdgkeQ==
+X-Received: by 2002:aa7:9429:: with SMTP id y9mr13001101pfo.8.1588837613949;
+        Thu, 07 May 2020 00:46:53 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id r26sm4127943pfq.75.2020.05.07.00.46.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 00:46:53 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        philippe.schenker@toradex.com
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH 1/4] ARM: dts: stm32: add I2C3 support on STM32F429 SoC
+Date:   Thu,  7 May 2020 15:46:43 +0800
+Message-Id: <1588837603-14206-2-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588837603-14206-1-git-send-email-dillon.minfei@gmail.com>
+References: <1588837603-14206-1-git-send-email-dillon.minfei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
+From: dillon min <dillon.minfei@gmail.com>
 
-On 5/7/20 8:59 AM, Shameerali Kolothum Thodi wrote:
-> Hi Eric,
->=20
->> -----Original Message-----
->> From: Shameerali Kolothum Thodi
->> Sent: 30 April 2020 10:38
->> To: 'Auger Eric' <eric.auger@redhat.com>; Zhangfei Gao
->> <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
->> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
->> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
->> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
->> Cc: jean-philippe@linaro.org; alex.williamson@redhat.com;
->> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linar=
-o.org;
->> tn@semihalf.com; bbhushan2@marvell.com
->> Subject: RE: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
->>
->> Hi Eric,
->>
->>> -----Original Message-----
->>> From: Auger Eric [mailto:eric.auger@redhat.com]
->>> Sent: 16 April 2020 08:45
->>> To: Zhangfei Gao <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
->>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
->>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
->>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
->>> Cc: jean-philippe@linaro.org; Shameerali Kolothum Thodi
->>> <shameerali.kolothum.thodi@huawei.com>; alex.williamson@redhat.com;
->>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@lina=
-ro.org;
->>> tn@semihalf.com; bbhushan2@marvell.com
->>> Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
->>>
->>> Hi Zhangfei,
->>>
->>> On 4/16/20 6:25 AM, Zhangfei Gao wrote:
->>>>
->>>>
->>>> On 2020/4/14 =E4=B8=8B=E5=8D=8811:05, Eric Auger wrote:
->>>>> This version fixes an issue observed by Shameer on an SMMU 3.2,
->>>>> when moving from dual stage config to stage 1 only config.
->>>>> The 2 high 64b of the STE now get reset. Otherwise, leaving the
->>>>> S2TTB set may cause a C_BAD_STE error.
->>>>>
->>>>> This series can be found at:
->>>>> https://github.com/eauger/linux/tree/v5.6-2stage-v11_10.1
->>>>> (including the VFIO part)
->>>>> The QEMU fellow series still can be found at:
->>>>> https://github.com/eauger/qemu/tree/v4.2.0-2stage-rfcv6
->>>>>
->>>>> Users have expressed interest in that work and tested v9/v10:
->>>>> - https://patchwork.kernel.org/cover/11039995/#23012381
->>>>> - https://patchwork.kernel.org/cover/11039995/#23197235
->>>>>
->>>>> Background:
->>>>>
->>>>> This series brings the IOMMU part of HW nested paging support
->>>>> in the SMMUv3. The VFIO part is submitted separately.
->>>>>
->>>>> The IOMMU API is extended to support 2 new API functionalities:
->>>>> 1) pass the guest stage 1 configuration
->>>>> 2) pass stage 1 MSI bindings
->>>>>
->>>>> Then those capabilities gets implemented in the SMMUv3 driver.
->>>>>
->>>>> The virtualizer passes information through the VFIO user API
->>>>> which cascades them to the iommu subsystem. This allows the guest
->>>>> to own stage 1 tables and context descriptors (so-called PASID
->>>>> table) while the host owns stage 2 tables and main configuration
->>>>> structures (STE).
->>>>>
->>>>>
->>>>
->>>> Thanks Eric
->>>>
->>>> Tested v11 on Hisilicon kunpeng920 board via hardware zip accelerato=
-r.
->>>> 1. no-sva works, where guest app directly use physical address via i=
-octl.
->>> Thank you for the testing. Glad it works for you.
->>>> 2. vSVA still not work, same as v10,
->>> Yes that's normal this series is not meant to support vSVM at this st=
-age.
->>>
->>> I intend to add the missing pieces during the next weeks.
->>
->> Thanks for that. I have made an attempt to add the vSVA based on
->> your v10 + JPBs sva patches. The host kernel and Qemu changes can
->> be found here[1][2].
->>
->> This basically adds multiple pasid support on top of your changes.
->> I have done some basic sanity testing and we have some initial success
->> with the zip vf dev on our D06 platform. Please note that the STALL ev=
-ent is
->> not yet supported though, but works fine if we mlock() guest usr mem.
->=20
-> I have added STALL support for our vSVA prototype and it seems to be
-> working(on our hardware). I have updated the kernel and qemu branches w=
-ith
-> the same[1][2]. I should warn you though that these are prototype code =
-and I am pretty
-> much re-using the VFIO_IOMMU_SET_PASID_TABLE interface for almost every=
-thing.
-> But thought of sharing, in case if it is useful somehow!.
+This patch adds I2C3 instances of the STM32F429 SoC
 
-Thank you very much for your work. I intend to look at your additions by
-beginning of next week.
+Signed-off-by: dillon min <dillon.minfei@gmail.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Best Regards
-
-Eric
->=20
-> Thanks,
-> Shameer
->=20
-> [1]https://github.com/hisilicon/kernel-dev/commits/vsva-prototype-host-=
-v1
->=20
-> [2]https://github.com/hisilicon/qemu/tree/v4.2.0-2stage-rfcv6-vsva-prot=
-otype-v1
->=20
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index d777069..257b843 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -402,6 +402,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2c3: i2c@40005c00 {
++			compatible = "st,stm32f4-i2c";
++			reg = <0x40005c00 0x400>;
++			interrupts = <72>,
++				     <73>;
++			resets = <&rcc STM32F4_APB1_RESET(I2C3)>;
++			clocks = <&rcc 0 STM32F4_APB1_CLOCK(I2C3)>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		dac: dac@40007400 {
+ 			compatible = "st,stm32f4-dac-core";
+ 			reg = <0x40007400 0x400>;
+-- 
+2.7.4
 
