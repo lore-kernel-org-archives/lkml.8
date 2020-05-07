@@ -2,76 +2,117 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57370C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470FB207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B8D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:22:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZEvqhDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEGDVb (ORCPT
+        id S1726644AbgEGDWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:21:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3874 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726542AbgEGDVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:21:31 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5F3E26763DC8128E49C9;
-        Thu,  7 May 2020 11:19:54 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
- 11:19:40 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <pierre-louis.bossart@linux.intel.com>, <lgirdwood@gmail.com>,
-        <ranjani.sridharan@linux.intel.com>,
-        <kai.vehmanen@linux.intel.com>, <daniel.baluta@nxp.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>
-CC:     <sound-open-firmware@alsa-project.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: SOF: Intel: Mark cht_debugfs as __maybe_unused
-Date:   Thu, 7 May 2020 11:19:11 +0800
-Message-ID: <20200507031911.38644-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 6 May 2020 23:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgEGDWT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:22:19 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2144EC061A10
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:22:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so6397133wma.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kk0ta8CJJvK0axV2H19B2ID8CRr84BT0Md+eQfI6e4I=;
+        b=lZEvqhDsVUxY8Nmk6q2BTqJ/Mt6WMu3RQjTMotZz/9xzTGG3LPuhtCYs6hOSnbgZI0
+         RVgpQo7Y4gTJK9Bztt3RTbbdz8565pTtzOUGubDfeXBrkqEsXX7b6VeZwFr5BF3XEDbE
+         JhV28t+iZyxO34zVhZPu0T8ZVYntytXi0ws4ozQXB+PfMU3gLvU4bPHzfd8GYvkVZonW
+         ShlB1q0h7Cpuj8JjCh9Do1LotWLqUgcLNHFc2gxKNBfK/8IuPIVYwndjwc29ApwMZ3hw
+         IjwrTXACc7i4gaol3bPpPkO2ezHZ0x5eqXoeGIwZ7CFwZQjTcEwYIllGeQbjqIRGHzxl
+         HelA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kk0ta8CJJvK0axV2H19B2ID8CRr84BT0Md+eQfI6e4I=;
+        b=hFP/ylySlovzedFKzRQ5iFfdBtg88tw7fpFVBIcP/J96PMaaZ13KHI1/8X5JCNnu+3
+         JtEo+hFxsQOI8w7/JBxOrHMDM2/WUpvKwMLfgHhQyMTD7wtX3MtMnO/CdAzUQEQysZJD
+         RYFaBjnzBul9gxL/969hiEPV9EiNX/DQfA6xFKTXaJQzAHecHbOO2qWI9wSNwECSsxNE
+         JNX4gE5ZdQ2w3opuyQuEGlz0pAvGEkPl2VhL9JJGHlZEwDh5MxSkgLBMuU4tazVEie/r
+         VcvgpnDt9pdjS4QYfuzFk/YiAHiHibVP15CBX8Vxqq9onrP+JDKmJZXR+hJVYmTGNFw1
+         XX0g==
+X-Gm-Message-State: AGi0PuYLfEmvithj81G5jg1CRWIpDsfkeb7gU7/RIHj728t2iIV4dNEf
+        ORw+uXdZx2N1GccTUNPyQSvQ4/wcaW2i5RetAcvYXQ==
+X-Google-Smtp-Source: APiQypJ6aSj9BKwlVBZ0o9gg8R+aiyiIYoBAFgLJpU/RXRGlmuWTFs+zjhfrm/JzN3rUGsKBSDtJSh5OA5wP1QTyWAg=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr7610574wme.138.1588821737544;
+ Wed, 06 May 2020 20:22:17 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200505102723.8120-1-anders.roxell@linaro.org>
+In-Reply-To: <20200505102723.8120-1-anders.roxell@linaro.org>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 7 May 2020 11:22:06 +0800
+Message-ID: <CABVgOS==HEaYybfRTy4a9-hxGbLa_upE3WycVZ5PueOOvUOQuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] fs: ext4: default KUNIT_* fragments to KUNIT_RUN_ALL
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        =linux-kselftest@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Marco Elver <elver@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_SND_SOC_SOF_BAYTRAIL is not set, gcc warns:
+On Tue, May 5, 2020 at 6:27 PM Anders Roxell <anders.roxell@linaro.org> wrote:
+>
+> This makes it easier to enable all KUnit fragments.
+>
+> Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
+> someone wants that even though KUNIT_RUN_ALL is enabled.
 
-sound/soc/sof/intel/byt.c:85:41: warning: ‘cht_debugfs’ defined but not used [-Wunused-const-variable=]
- static const struct snd_sof_debugfs_map cht_debugfs[] = {
-                                         ^~~~~~~~~~~
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/sof/intel/byt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As with the others, "test"->"tests", and "of"->"off".
 
-diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
-index f872bb1f2682..1c75e4220e9d 100644
---- a/sound/soc/sof/intel/byt.c
-+++ b/sound/soc/sof/intel/byt.c
-@@ -82,7 +82,7 @@ static const struct snd_sof_debugfs_map byt_debugfs[] = {
- 	 SOF_DEBUGFS_ACCESS_ALWAYS},
- };
- 
--static const struct snd_sof_debugfs_map cht_debugfs[] = {
-+static const struct snd_sof_debugfs_map __maybe_unused cht_debugfs[] = {
- 	{"dmac0", BYT_DSP_BAR, DMAC0_OFFSET, DMAC_SIZE,
- 	 SOF_DEBUGFS_ACCESS_ALWAYS},
- 	{"dmac1", BYT_DSP_BAR,  DMAC1_OFFSET, DMAC_SIZE,
--- 
-2.17.1
+>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
+Reviewed-by: David Gow <davidgow@google.com>
 
+> ---
+>  fs/ext4/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+> index 2a592e38cdfe..76785143259d 100644
+> --- a/fs/ext4/Kconfig
+> +++ b/fs/ext4/Kconfig
+> @@ -103,9 +103,10 @@ config EXT4_DEBUG
+>                 echo 1 > /sys/module/ext4/parameters/mballoc_debug
+>
+>  config EXT4_KUNIT_TESTS
+> -       tristate "KUnit tests for ext4"
+> +       tristate "KUnit tests for ext4" if !KUNIT_RUN_ALL
+>         select EXT4_FS
+>         depends on KUNIT
+> +       default KUNIT_RUN_ALL
+>         help
+>           This builds the ext4 KUnit tests.
+>
+> --
+> 2.20.1
+>
