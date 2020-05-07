@@ -2,75 +2,135 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C94DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A392C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E741220CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588892781;
-	bh=HAilGWe4lV9oUELeIOkLoxMN5NMr+o3TPnQtyqGETY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cZT5HD4wdac2Jl2PpyQ8abG3/gHz9TfWImiOJnZJJMlJ30kRL9gdBmBQJTnZqiSgR
-	 D0/Qzhe2ex4rHdTo/cOymF9o2Zd35jZjg+UWjfWaS+aZyINTLZnut/rYU0UfS1jtNg
-	 1iB/2tADDies+5NzjqNa9DaYsIUl+uPunRHn3jyE=
+	by mail.kernel.org (Postfix) with ESMTP id 6124F21473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgEGXGU (ORCPT
+        id S1727811AbgEGXHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:06:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgEGXGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:06:20 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FFC3208D6;
-        Thu,  7 May 2020 23:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588892779;
-        bh=HAilGWe4lV9oUELeIOkLoxMN5NMr+o3TPnQtyqGETY4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QQMh0MejIC3msVJ9Mc0Vp4sql4itOWA1pUrx0ZwApVELQEAwDpfiMzam77C31caYN
-         pIz3jTKcKsduV3DgmQiI4p+NYGVTPM0QaTknaUdLT2KvSVAtHrNUD9kI5Azml5xP1p
-         3fofpirtshBXkSU3cHNb9wbZlP09cV+p9Gfe6dQ0=
-Date:   Thu, 7 May 2020 16:06:18 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        keescook@chromium.org, yzaikin@google.com, mcgrof@kernel.org,
-        vbabka@suse.cz, kernel@gpiccoli.net
-Subject: Re: [PATCH] kernel/watchdog.c: convert {soft/hard}lockup boot
- parameters to sysctl aliases
-Message-Id: <20200507160618.43c2825e49dec1df8db30429@linux-foundation.org>
-In-Reply-To: <20200507214624.21911-1-gpiccoli@canonical.com>
-References: <20200507214624.21911-1-gpiccoli@canonical.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 7 May 2020 19:07:18 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39192 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgEGXHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 19:07:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 12EEF803087B;
+        Thu,  7 May 2020 23:07:15 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id molr0_Og1NvB; Fri,  8 May 2020 02:07:13 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        <linux-mips@vger.kernel.org>, <soc@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] memory: Add Baikal-T1 L2-cache driver
+Date:   Fri, 8 May 2020 02:07:02 +0300
+Message-ID: <20200507230705.6468-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130731.938808030702@mail.baikalelectronics.ru>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 May 2020 18:46:24 -0300 "Guilherme G. Piccoli" <gpiccoli@canonical.com> wrote:
+Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
+system controller provides a MIPS P5600 CM2 L2-cache tuning block.
+It is responsible for the setting up the Tag/Data/WS L2-to-RAM latencies.
+This small patchset provides a driver and DT-schema-based binding for the
+described device. So that the latencies can be tuned up by means of
+dedicated DT properties and sysfs nodes.
 
-> After a recent change introduced by Vlastimil's series [0], kernel is
-> able now to handle sysctl parameters on kernel command line; also, the
-> series introduced a simple infrastructure to convert legacy boot
-> parameters (that duplicate sysctls) into sysctl aliases.
-> 
-> This patch converts the watchdog parameters softlockup_panic and
-> {hard,soft}lockup_all_cpu_backtrace to use the new alias infrastructure.
-> It fixes the documentation too, since the alias only accepts values 0
-> or 1, not the full range of integers. We also took the opportunity here
-> to improve the documentation of the previously converted hung_task_panic
-> (see the patch series [0]) and put the alias table in alphabetical order.
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-We have a lot of sysctls.  What is the motivation for converting these
-particular ones?
+Note initially the driver was a part of the patchset created to reside in
+the kernel soc subsystem. But after a short discussion with Arnd:
+https://lkml.org/lkml/2020/3/6/422
+we decided to move it here.
+
+New vendor prefix will be added in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
+
+Changelog v2:
+- Fix some commit message and Kconfig help text spelling.
+- Move the driver to the memory subsystem.
+- Assign dual GPL/BSD license to the DT binding.
+- Use single lined copyright header in the binding.
+- Discard reg property and syscon compatible string.
+- Move "allOf" restrictions to the root level of the properties.
+- The DT node is supposed to be a child of the Baikal-T1 system controller
+  node. So regmap will be fetched from there.
+- Use generic FIELD_{GET,PREP} macro.
+- Remove probe-status info string printout.
+- Since the driver depends on the OF config we can remove of_match_ptr()
+  macro utilization.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mips@vger.kernel.org
+Cc: soc@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (2):
+  dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
+  memory: Add Baikal-T1 L2-cache Control Block driver
+
+ .../memory-controllers/baikal,bt1-l2-ctl.yaml |  59 ++++
+ drivers/memory/Kconfig                        |  11 +
+ drivers/memory/Makefile                       |   1 +
+ drivers/memory/bt1-l2-ctl.c                   | 322 ++++++++++++++++++
+ 4 files changed, 393 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+ create mode 100644 drivers/memory/bt1-l2-ctl.c
+
+-- 
+2.25.1
+
