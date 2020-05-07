@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7704C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD6E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AC92082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qftf80dq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EkuVilh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgEGOJb (ORCPT
+        id S1728436AbgEGOJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46182 "EHLO
+        Thu, 7 May 2020 10:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbgEGOJH (ORCPT
+        with ESMTP id S1728245AbgEGOJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:09:07 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7265C05BD15
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:09:03 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id y31so6859615qta.16
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:09:03 -0700 (PDT)
+        Thu, 7 May 2020 10:09:06 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF15C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:09:05 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z1so3337906ybm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sCS1jCtEUZLDql23q/lHeTg7GUDYj0iuw701FY6e4C0=;
-        b=qftf80dqY2OXb3xONvddbfejzztaLTIjQEIwPKcM6ty5NoFp+S0rNSk4kKOzA7ZEYy
-         iWsbeqBvLRmjyugkJ6q/uTvgAPpyhStAcT+/iKqo4IIkfWCvQG9cPYB/o6Hny2LiMhRS
-         XKgiUYWbcGhqKNs8rwh7NrOxVx52tGj8ZiHE5rlHy7vi6Xw22t3hLYi/xW5htypWnahh
-         +rrJDNYr3peJ3FkroPEHttaLXJJ4P9FEnNFMIk8Edr78k6xohiY+Oz/cGsO+8YX4e39y
-         OFvcdnfqEGMqf8sT8dQahr0FzrEKxal+eqWfJvT807dcBZwOl+AS1TxYf8fJ/lPkJNqf
-         UCOQ==
+        bh=37IhcnJ8/vjmrEBEbWQ5EKKAlYXyNL6TpEjB8zoBU+I=;
+        b=EkuVilh9AmFXC3HpM+g1JVFE/YiLk2H9zDSDHs4rsZVdSYf0ZYS73iyFXwUgWgSu82
+         QyUlZcOC1uk650y9TCYYPzENRfelJkos/eEoAi7FdJ1gTpXaA7dKBa5xposcjk0T46WA
+         Eas0pEFm2fJjKH5ekMVAFZhAAmBb0Epl4Ipk5PctQTBbQzmBQdzhtJffM8F4yIo0HAem
+         oxrRg5fQX8XwD5ezbWOx78Yd0T3JZYFXlxeQF5/fEqm5/dvySJ6YOEYs2Kc3YeTpf0Mp
+         PSXVKXE9/s9UOThUIDJtdUZ1GJoKk/ym/60XbdgSIVCoU5lu7/ZbbM2DgpzeN4RitTCF
+         M7/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sCS1jCtEUZLDql23q/lHeTg7GUDYj0iuw701FY6e4C0=;
-        b=H8heABEQoCqh1iIi87lV+Aof5CfQPGGMujl7+pjLGcGllJhrQeWHX6GFfmF8sdzJUG
-         poisQmFt9my/DWhqmq4eZhQQabs/nneOl8J49sBdwRRVfcZs75rBjjLrYKCnwbOXgJBt
-         v3drKhjgYTFVRzrzSuyNMuVYy5cjFE3FIGSIKy30+rdVXxqyhWyvGSbwWXcKrKwtoSn6
-         atynMtY2mtmcgp7d0RatPCG5aFyLcF8IfxARoUEYbMjRVTGR364VDHib1RM+LTvB7lDJ
-         hvlC77V0q37GtGQhCYERFBCsnW1tB4fqMhpv1dr935Ul2b74zrtorEbMJi8427gSCus/
-         RCNg==
-X-Gm-Message-State: AGi0PuZZc78aPSx60QfwRYXhhJy/jS3lCY2Qc6RlK5jd7aaUW03slvcZ
-        +p3Wwm37VZLso4J4Q6Vlmbh78337/QvA
-X-Google-Smtp-Source: APiQypIVs1B8xC7PMmjnevHbOmOMRAmBnKmkx6u4qCCQevmlbcqOwlqULz1G9bUo7lrQ3XUBv0tl1j46ihsA
-X-Received: by 2002:ad4:4d06:: with SMTP id l6mr13819775qvl.34.1588860543022;
- Thu, 07 May 2020 07:09:03 -0700 (PDT)
-Date:   Thu,  7 May 2020 07:08:16 -0700
+        bh=37IhcnJ8/vjmrEBEbWQ5EKKAlYXyNL6TpEjB8zoBU+I=;
+        b=Db9IT1H4b70GUVa+v9mkG0vvt9OvByC80x/fnH51tUYinUkcee8iuvAdTZYLqdDZz/
+         7EAHNalbUPmVTBoxEVa3MXzVQ1V2zznETZyhY/RA6CnNrstt9QsroapYmQOHK74/0eQs
+         19Y/Usxa9jVn6X1SQ01wlFuArCArsMBeGWmrDFItaZlbYVlhgqE+wf80aaexLyoFcHl5
+         TpTOPHSCBrGOieBPK/Pi4F41GW2K+9g/woMysMbfod/NgHpuijw/UDzSJUaqgbsyOXRP
+         ibcbn9ptusAO1MFpwLSC3F2PJ2yqx+fDQBBeXPhyt1+RWvX2grNB3SW45oPPLUvg8vRL
+         af4Q==
+X-Gm-Message-State: AGi0Pubb89GLVSvIhfDtq9LLh0TBWJCvwqjuj4VOj+0H8+Q1pYQu/6+r
+        3VJ7wzpdK6Di7GzCA3LYStMgm7xUiLMY
+X-Google-Smtp-Source: APiQypI+kE8+9TaK+MPhl7ecJ7TGimRuXG1CdkjPVyquiC9PvV3bNOhLRbsQRbAaRq1MFzkROoqcVorTCLxy
+X-Received: by 2002:a25:9c47:: with SMTP id x7mr22370139ybo.258.1588860544978;
+ Thu, 07 May 2020 07:09:04 -0700 (PDT)
+Date:   Thu,  7 May 2020 07:08:17 -0700
 In-Reply-To: <20200507140819.126960-1-irogers@google.com>
-Message-Id: <20200507140819.126960-21-irogers@google.com>
+Message-Id: <20200507140819.126960-22-irogers@google.com>
 Mime-Version: 1.0
 References: <20200507140819.126960-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH v2 20/23] perf metricgroup: always place duration_time last
+Subject: [RFC PATCH v2 21/23] perf metricgroup: delay events string creation
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,59 +95,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a metric contains the duration_time event then the event is placed
-outside of the metric's group of events. Rather than split the group,
-make it so the duration_time is immediately after the group.
+Currently event groups are placed into groups_list at the same time as
+the events string containing the events is built. Separate these two
+operations and build the groups_list first, then the event string from
+the groups_list. This adds an ability to reorder the groups_list that
+will be used in a later patch.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/util/metricgroup.c | 38 +++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 2356dda92a07..48d0143b4b0c 100644
+index 48d0143b4b0c..0a00c0f87872 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -421,8 +421,8 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
- 					       struct expr_parse_ctx *ctx)
- {
- 	struct hashmap_entry *cur;
--	size_t bkt, i = 0;
--	bool no_group = false;
-+	size_t bkt;
-+	bool no_group = true, has_duration = false;
+@@ -90,6 +90,7 @@ struct egroup {
+ 	const char *metric_expr;
+ 	const char *metric_unit;
+ 	int runtime;
++	bool has_constraint;
+ };
  
- 	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
- 		pr_debug("found event %s\n", (const char*)cur->key);
-@@ -432,20 +432,20 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
- 		 * group.
- 		 */
- 		if (!strcmp(cur->key, "duration_time")) {
--			if (i > 0)
--				strbuf_addf(events, "}:W,");
--			strbuf_addf(events, "duration_time");
--			no_group = true;
-+			has_duration = true;
- 			continue;
- 		}
- 		strbuf_addf(events, "%s%s",
--			i == 0 || no_group ? "{" : ",",
-+			no_group ? "{" : ",",
- 			(const char*)cur->key);
- 		no_group = false;
--		i++;
- 	}
--	if (!no_group)
--		strbuf_addf(events, "}:W");
-+	if (!no_group) {
-+                strbuf_addf(events, "}:W");
-+		if (has_duration)
-+			strbuf_addf(events, ",duration_time");
-+	} else if (has_duration)
-+		strbuf_addf(events, "duration_time");
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+@@ -496,8 +497,8 @@ int __weak arch_get_runtimeparam(void)
+ 	return 1;
  }
  
- static void metricgroup__add_metric_non_group(struct strbuf *events,
+-static int __metricgroup__add_metric(struct strbuf *events,
+-		struct list_head *group_list, struct pmu_event *pe, int runtime)
++static int __metricgroup__add_metric(struct list_head *group_list,
++				     struct pmu_event *pe, int runtime)
+ {
+ 	struct egroup *eg;
+ 
+@@ -510,6 +511,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 	eg->metric_expr = pe->metric_expr;
+ 	eg->metric_unit = pe->unit;
+ 	eg->runtime = runtime;
++	eg->has_constraint = metricgroup__has_constraint(pe);
+ 
+ 	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+ 		expr__ctx_clear(&eg->pctx);
+@@ -517,14 +519,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (events->len > 0)
+-		strbuf_addf(events, ",");
+-
+-	if (metricgroup__has_constraint(pe))
+-		metricgroup__add_metric_non_group(events, &eg->pctx);
+-	else
+-		metricgroup__add_metric_weak_group(events, &eg->pctx);
+-
+ 	list_add_tail(&eg->nd, group_list);
+ 
+ 	return 0;
+@@ -535,6 +529,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ {
+ 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
+ 	struct pmu_event *pe;
++	struct egroup *eg;
+ 	int i, ret = -EINVAL;
+ 
+ 	if (!map)
+@@ -553,7 +548,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+ 			if (!strstr(pe->metric_expr, "?")) {
+-				ret = __metricgroup__add_metric(events, group_list, pe, 1);
++				ret = __metricgroup__add_metric(group_list,
++								pe, 1);
+ 			} else {
+ 				int j, count;
+ 
+@@ -564,13 +560,29 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				 * those events to group_list.
+ 				 */
+ 
+-				for (j = 0; j < count; j++)
+-					ret = __metricgroup__add_metric(events, group_list, pe, j);
++				for (j = 0; j < count; j++) {
++					ret = __metricgroup__add_metric(
++						group_list, pe, j);
++				}
+ 			}
+ 			if (ret == -ENOMEM)
+ 				break;
+ 		}
+ 	}
++	if (!ret) {
++		list_for_each_entry (eg, group_list, nd) {
++			if (events->len > 0)
++				strbuf_addf(events, ",");
++
++			if (eg->has_constraint) {
++				metricgroup__add_metric_non_group(events,
++								  &eg->pctx);
++			} else {
++				metricgroup__add_metric_weak_group(events,
++								   &eg->pctx);
++			}
++		}
++	}
+ 	return ret;
+ }
+ 
 -- 
 2.26.2.526.g744177e7f7-goog
 
