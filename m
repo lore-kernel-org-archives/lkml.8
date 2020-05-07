@@ -2,158 +2,102 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C47C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F99C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE9F22075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02A32075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgEGKVm (ORCPT
+        id S1726308AbgEGKXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:21:42 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2162 "EHLO huawei.com"
+        Thu, 7 May 2020 06:23:17 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:46302 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725857AbgEGKVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:21:41 -0400
-Received: from lhreml716-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id A05E31662E4C4547931E;
-        Thu,  7 May 2020 11:21:38 +0100 (IST)
-Received: from fraeml712-chm.china.huawei.com (10.206.15.61) by
- lhreml716-chm.china.huawei.com (10.201.108.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 7 May 2020 11:21:38 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 7 May 2020 12:21:38 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Thu, 7 May 2020 12:21:37 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "mjg59@google.com" <mjg59@google.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
- portable signatures
-Thread-Topic: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
- portable signatures
-Thread-Index: AQHWF772Ra31Za7Rnki0v4dh4iikmaiHEPYAgAEEbgCAFGpBIA==
-Date:   Thu, 7 May 2020 10:21:37 +0000
-Message-ID: <1e206d0da3dd485b90f88ba07dfdf140@huawei.com>
-References: <20200421092418.25151-1-roberto.sassu@huawei.com>
- <1587675102.5610.66.camel@linux.ibm.com>
- <735d0814399f430a8809af8c28b1a62d@huawei.com>
-In-Reply-To: <735d0814399f430a8809af8c28b1a62d@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.65.97]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725879AbgEGKXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:23:16 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH9+E4bNeQ6sxAA--.3S3;
+        Thu, 07 May 2020 18:23:02 +0800 (CST)
+Subject: Re: [PATCH v6] MIPS: Loongson: Add DMA support for LS7A
+To:     Huacai Chen <chenhc@lemote.com>,
+        Christoph Hellwig <hch@infradead.org>
+References: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H5QBOnrqVbMfGf7H5vJ6UMhUxhkCqAzZiwRFn_VwTQHpA@mail.gmail.com>
+ <7d7f6211-f6bc-daae-5b13-b54092e762a1@loongson.cn>
+ <CAAhV-H7jX9uVwb+GnaKXHPBsBQY35YKccbDedLrmfp8-hveVfw@mail.gmail.com>
+ <20200506144208.GD27643@infradead.org>
+ <CAAhV-H4Mmu2LJx9crUTkOirH2RGr8XfHW7RCUmaT5T4mmYcaKg@mail.gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <940d5632-825b-510e-bc4d-1e8de22ccd60@loongson.cn>
+Date:   Thu, 7 May 2020 18:23:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAAhV-H4Mmu2LJx9crUTkOirH2RGr8XfHW7RCUmaT5T4mmYcaKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxH9+E4bNeQ6sxAA--.3S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Xw1UCrWUCFyrXry5Jw1xGrg_yoW8Jr1rpa
+        yYqa13JF4Dtr10k397Aw18Wr48Zw43Xr9xKrZ8KrWrZasYq3Z8trsxt3WvqF97XFWfGr1j
+        vw42yFyIyF1Y9FDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5sjjDU
+        UUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
-Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBSb2JlcnRvIFNhc3N1DQo+IFNlbnQ6IEZyaWRheSwg
-QXByaWwgMjQsIDIwMjAgMTI6NDAgUE0NCj4gVG86IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4Lmli
-bS5jb20+OyBtamc1OUBnb29nbGUuY29tDQo+IENjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTaWx2aXUgVmxhc2NlYW51DQo+IDxTaWx2aXUuVmxhc2Nl
-YW51QGh1YXdlaS5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIGltYTogQWxsb3cgaW1hc2ln
-IHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieSBFVk0NCj4gcG9ydGFibGUgc2lnbmF0dXJl
-cw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IE1pbWkgWm9o
-YXIgW21haWx0bzp6b2hhckBsaW51eC5pYm0uY29tXQ0KPiA+IFNlbnQ6IFRodXJzZGF5LCBBcHJp
-bCAyMywgMjAyMCAxMDo1MiBQTQ0KPiA+IFRvOiBSb2JlcnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1
-QGh1YXdlaS5jb20+OyBtamc1OUBnb29nbGUuY29tDQo+ID4gQ2M6IGxpbnV4LWludGVncml0eUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LQ0KPiBtb2R1bGVAdmdlci5rZXJuZWwub3Jn
-Ow0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4g
-PiA8U2lsdml1LlZsYXNjZWFudUBodWF3ZWkuY29tPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
-IGltYTogQWxsb3cgaW1hc2lnIHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieQ0KPiBFVk0N
-Cj4gPiBwb3J0YWJsZSBzaWduYXR1cmVzDQo+ID4NCj4gPiBPbiBUdWUsIDIwMjAtMDQtMjEgYXQg
-MTE6MjQgKzAyMDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPiBTeXN0ZW0gYWRtaW5pc3Ry
-YXRvcnMgY2FuIHJlcXVpcmUgdGhhdCBhbGwgYWNjZXNzZWQgZmlsZXMgaGF2ZSBhIHNpZ25hdHVy
-ZQ0KPiA+ID4gYnkgc3BlY2lmeWluZyBhcHByYWlzZV90eXBlPWltYXNpZyBpbiBhIHBvbGljeSBy
-dWxlLg0KPiA+ID4NCj4gPiA+IEN1cnJlbnRseSwgb25seSBJTUEgc2lnbmF0dXJlcyBzYXRpc2Z5
-IHRoaXMgcmVxdWlyZW1lbnQuIEhvd2V2ZXIsIGFsc28NCj4gPiBFVk0NCj4gPiA+IHBvcnRhYmxl
-IHNpZ25hdHVyZXMgY2FuIHNhdGlzZnkgaXQuIE1ldGFkYXRhLCBpbmNsdWRpbmcgc2VjdXJpdHku
-aW1hLCBhcmUNCj4gPiA+IHNpZ25lZCBhbmQgY2Fubm90IGNoYW5nZS4NCj4gPg0KPiA+IFBsZWFz
-ZSBleHBhbmQgdGhpcyBwYXJhZ3JhcGggd2l0aCBhIHNob3J0IGNvbXBhcmlzb24gb2YgdGhlIHNl
-Y3VyaXR5DQo+ID4gZ3VhcmFudGVlcyBwcm92aWRlZCBieSBFVk0gaW1tdXRhYmxlLCBwb3J0YWJs
-ZSBzaWduYXR1cmVzIHZlcnN1cyBpbWEtDQo+ID4gc2lnLg0KPiA+DQo+ID4gPg0KPiA+ID4gVGhp
-cyBwYXRjaCBoZWxwcyBpbiB0aGUgc2NlbmFyaW9zIHdoZXJlIHN5c3RlbSBhZG1pbmlzdHJhdG9y
-cyB3YW50IHRvDQo+ID4gPiBlbmZvcmNlIHRoaXMgcmVzdHJpY3Rpb24gYnV0IG9ubHkgRVZNIHBv
-cnRhYmxlIHNpZ25hdHVyZXMgYXJlIGF2YWlsYWJsZS4NCj4gPg0KPiA+IFllcywgSSBhZ3JlZSBp
-dCAiaGVscHMiLCBidXQgd2Ugc3RpbGwgbmVlZCB0byBhZGRyZXNzIHRoZSBhYmlsaXR5IG9mDQo+
-ID4gc2V0dGluZy9yZW1vdmluZyBzZWN1cml0eS5pbWEsIHdoaWNoIGlzbid0IHBvc3NpYmxlIHdp
-dGggYW4gSU1BDQo+ID4gc2lnbmF0dXJlLiDCoFRoaXMgc291bmRzIGxpa2Ugd2UgbmVlZCB0byBk
-ZWZpbmUgYW4gaW1tdXRhYmxlIGZpbGUgaGFzaC4NCj4gDQo+IEkgZGlkbid0IHVuZGVyc3RhbmQu
-IENhbiB5b3UgZXhwbGFpbiBiZXR0ZXI/DQoNCk9rLCBnb3QgaXQuDQoNCkkgd291bGRuJ3QgZ3Jh
-bnQgYWNjZXNzIHRvIG5ldyBmaWxlIGRlcGVuZGluZyBvbiB0aGUgc2VjdXJpdHkuaW1hIHR5cGUN
-CmJ1dCBkZXBlbmRpbmcgb24gdGhlIElNQV9ESUdTSUcgYml0LiBJbiBib3RoIGNhc2VzLCBJTUEg
-c2lnbmF0dXJlIGFuZA0KRVZNIHBvcnRhYmxlIHNpZ25hdHVyZSwgdGhlIGJpdCBpcyBzZXQuDQoN
-ClRoZXJlIGlzIG9uZSByZW1haW5pbmcgaXNzdWUuIE1heWJlIHRoZSBzaWduYXR1cmUgaXMgcG9y
-dGFibGUsIGJ1dCB5b3UNCmRvbid0IGdldCBpdCBmcm9tIGV2bV92ZXJpZnl4YXR0cigpIGlmIHZl
-cmlmaWNhdGlvbiBmYWlscy4gVGhlcmUgaXMgYSBsZWdpdGltYXRlDQpjYXNlIHdoZW4gaXQgaGFw
-cGVucywgd2hpY2ggaXMgd2hlbiB5b3UgZXh0cmFjdCBhIGZpbGUgd2l0aCBhIHBvcnRhYmxlDQpz
-aWduYXR1cmUgd2l0aCB0YXIsIGFuZCB0aGUgaW5vZGUgdWlkL2dpZCBhcmUgbm90IHlldCBjb3Jy
-ZWN0IChmY2hvd24oKSBpcw0KY2FsbGVkIGxhdGVyIGFmdGVyIHRoZSBvcGVuKCkpLiBJbiB0aGlz
-IGNhc2UsIElNQV9ESUdTSUcgaXMgbm90IHNldCBhbmQgdGhlDQpvcGVuKCkgZmFpbHMuDQoNClRv
-IGF2b2lkIHRoaXMgaXNzdWUgSSB3b3VsZCBpbnRyb2R1Y2UgdGhlIG5ldyBzdGF0dXMgSU5URUdS
-SVRZX0ZBSUxfSU1NVVRBQkxFLA0Kc28gdGhhdCBJTUFfRElHU0lHIGlzIHNldCBldmVuIGlmIHRo
-ZSB2ZXJpZmljYXRpb24gb2YgdGhlIHBvcnRhYmxlIHNpZ25hdHVyZQ0KZmFpbHMuDQoNClJvYmVy
-dG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1h
-bmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg0KDQo+IFRoYW5r
-cw0KPiANCj4gUm9iZXJ0bw0KPiANCj4gSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBH
-bWJILCBIUkIgNTYwNjMNCj4gTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExpIEppYW4sIFNo
-aSBZYW5saQ0KPiANCj4gDQo+ID4gwqBXaGF0IGRvIHlvdSB0aGluaz8NCj4gPg0KPiA+ID4gVGhl
-IHBhdGNoIG1ha2VzIHRoZSBmb2xsb3dpbmcgY2hhbmdlczoNCj4gPiA+DQo+ID4gPiBmaWxlIHhh
-dHRyIHR5cGVzOg0KPiA+ID4gc2VjdXJpdHkuaW1hOiBJTUFfWEFUVFJfRElHRVNUL0lNQV9YQVRU
-Ul9ESUdFU1RfTkcNCj4gPiA+IHNlY3VyaXR5LmV2bTogRVZNX1hBVFRSX1BPUlRBQkxFX0RJR1NJ
-Rw0KPiA+ID4NCj4gPiA+IGV4ZWN2ZSgpLCBtbWFwKCksIG9wZW4oKSBiZWhhdmlvciAod2l0aCBh
-cHByYWlzZV90eXBlPWltYXNpZyk6DQo+ID4gPiBiZWZvcmU6IGRlbmllZCAoZmlsZSB3aXRob3V0
-IElNQSBzaWduYXR1cmUsIGltYXNpZyByZXF1aXJlbWVudCBub3QgbWV0KQ0KPiA+ID4gYWZ0ZXI6
-IGFsbG93ZWQgKGZpbGUgd2l0aCBFVk0gcG9ydGFibGUgc2lnbmF0dXJlLCBpbWFzaWcgcmVxdWly
-ZW1lbnQNCj4gbWV0KQ0KPiA+ID4NCj4gPiA+IG9wZW4oT19XUk9OTFkpIGJlaGF2aW9yICh3aXRo
-b3V0IGFwcHJhaXNlX3R5cGU9aW1hc2lnKToNCj4gPiA+IGJlZm9yZTogYWxsb3dlZCAoZmlsZSB3
-aXRob3V0IElNQSBzaWduYXR1cmUsIG5vdCBpbW11dGFibGUpDQo+ID4gPiBhZnRlcjogZGVuaWVk
-IChmaWxlIHdpdGggRVZNIHBvcnRhYmxlIHNpZ25hdHVyZSwgaW1tdXRhYmxlKQ0KPiA+ID4NCj4g
-PiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNv
-bT4NCj4gPiA+IC0tLQ0KPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2FwcHJhaXNl
-LmMgfCAxNCArKysrKysrKystLS0tLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlv
-bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5
-L2ludGVncml0eS9pbWEvaW1hX2FwcHJhaXNlLmMNCj4gPiBiL3NlY3VyaXR5L2ludGVncml0eS9p
-bWEvaW1hX2FwcHJhaXNlLmMNCj4gPiA+IGluZGV4IGE5NjQ5YjA0YjlmMS4uNjlhNmE5NThmODEx
-IDEwMDY0NA0KPiA+ID4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBwcmFpc2Uu
-Yw0KPiA+ID4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBwcmFpc2UuYw0KPiA+
-ID4gQEAgLTIxOSwxMiArMjE5LDE2IEBAIHN0YXRpYyBpbnQgeGF0dHJfdmVyaWZ5KGVudW0gaW1h
-X2hvb2tzIGZ1bmMsDQo+ID4gc3RydWN0IGludGVncml0eV9paW50X2NhY2hlICppaW50LA0KPiA+
-ID4gIAkJaGFzaF9zdGFydCA9IDE7DQo+ID4gPiAgCQkvKiBmYWxsIHRocm91Z2ggKi8NCj4gPiA+
-ICAJY2FzZSBJTUFfWEFUVFJfRElHRVNUOg0KPiA+ID4gLQkJaWYgKGlpbnQtPmZsYWdzICYgSU1B
-X0RJR1NJR19SRVFVSVJFRCkgew0KPiA+ID4gLQkJCSpjYXVzZSA9ICJJTUEtc2lnbmF0dXJlLXJl
-cXVpcmVkIjsNCj4gPiA+IC0JCQkqc3RhdHVzID0gSU5URUdSSVRZX0ZBSUw7DQo+ID4gPiAtCQkJ
-YnJlYWs7DQo+ID4gPiArCQlpZiAoKnN0YXR1cyAhPSBJTlRFR1JJVFlfUEFTU19JTU1VVEFCTEUp
-IHsNCj4gPiA+ICsJCQlpZiAoaWludC0+ZmxhZ3MgJiBJTUFfRElHU0lHX1JFUVVJUkVEKSB7DQo+
-ID4gPiArCQkJCSpjYXVzZSA9ICJJTUEtc2lnbmF0dXJlLXJlcXVpcmVkIjsNCj4gPiA+ICsJCQkJ
-KnN0YXR1cyA9IElOVEVHUklUWV9GQUlMOw0KPiA+ID4gKwkJCQlicmVhazsNCj4gPiA+ICsJCQl9
-DQo+ID4gPiArCQkJY2xlYXJfYml0KElNQV9ESUdTSUcsICZpaW50LT5hdG9taWNfZmxhZ3MpOw0K
-PiA+ID4gKwkJfSBlbHNlIHsNCj4gPiA+ICsJCQlzZXRfYml0KElNQV9ESUdTSUcsICZpaW50LT5h
-dG9taWNfZmxhZ3MpOw0KPiA+ID4gIAkJfQ0KPiA+ID4gLQkJY2xlYXJfYml0KElNQV9ESUdTSUcs
-ICZpaW50LT5hdG9taWNfZmxhZ3MpOw0KPiA+ID4gIAkJaWYgKHhhdHRyX2xlbiAtIHNpemVvZih4
-YXR0cl92YWx1ZS0+dHlwZSkgLSBoYXNoX3N0YXJ0ID49DQo+ID4gPiAgCQkJCWlpbnQtPmltYV9o
-YXNoLT5sZW5ndGgpDQo+ID4gPiAgCQkJLyoNCj4gPg0KPiA+IE5pY2UhDQo+ID4NCj4gPiBNaW1p
-DQoNCg==
+On 05/07/2020 09:41 AM, Huacai Chen wrote:
+> Hi, Christoph,
+>
+> On Wed, May 6, 2020 at 10:44 PM Christoph Hellwig <hch@infradead.org> wrote:
+>> On Wed, May 06, 2020 at 04:47:30PM +0800, Huacai Chen wrote:
+>>>> For the above reasons, I think what you are concerned is not a
+>>>> big deal.
+>>> I don't think so, this is obviously a regression. If we can accept a
+>>> regression of RS780E, why we still maintain Loongson-2EF rather than
+>>> simply drop them?
+>> While I much prefer to use the default, regression an otherwise
+>> working platform seems like a bad idea.  I don't really know much
+>> about the Loongson platforms, do they all boot using the same kernel
+>> image?
+> All Loongson-3 machines (with LS7A bridge or RS780 bridge) use the
+> same kernel image.
+
+Hi Christoph, Huacai and Jiaxun,
+
+Thank you very much for your reviews and discussions.
+
+If you agree to use the platform dependent implementation
+of __phys_to_dma() and __dma_to_phys(), I will make a slight
+modification based on the v4 patch [1] to put ls7a things
+before rs780e things, and then send v7 as soon as possible.
+
+If anyone has any objections, please let me know.
+
+[1] https://lore.kernel.org/patchwork/patch/1220010/
+
+Thanks,
+Tiezhu Yang
+
