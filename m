@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FA9C54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F460C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 896C7208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAAA21473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861692;
-	bh=JpMqNa6KjjZACMc14JpRz2Qlsk+u9kAyVz8DlBvFEG0=;
+	s=default; t=1588861694;
+	bh=b1s7I7MQRORTqaB8/KOfE25r43ZKqozH8LCVeScbEHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcgbkaD3jOqq2i05cAb2vAMF3y4LrR4kSupaCV4F1MR8Ms2pMnvAaqtCsiBUsxy27
-	 nQ9xkIP9u6xfJa0RFJi30ouPYZE3Hr1P4D6XG9JdFO8Y5k+u1ISJOixaFLMW8dft9E
-	 qdc2X8V+7OmL7le929Fn/xPp/of7M0JsyKPIrjmU=
+	b=xOSIaE80Uh1CnW6ogrU1YiBWFD4rjEOQAXzdd43UOc6ELOLdfBUkuogH4AEt47Njd
+	 WMW9ClND5fpVGcWLGjQ/7o5FahX7XGEah4tzaFtA1zuGHyp/RWj4qdPtv0EqEeorw+
+	 72wekGXjP1F3LW0XlrGkPAclK64GMRSdEiLVakS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgEGO2L (ORCPT
+        id S1728004AbgEGO2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54194 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgEGO2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:03 -0400
+        id S1727945AbgEGO2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DAAD2084D;
-        Thu,  7 May 2020 14:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3FDE20936;
+        Thu,  7 May 2020 14:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861683;
-        bh=JpMqNa6KjjZACMc14JpRz2Qlsk+u9kAyVz8DlBvFEG0=;
+        s=default; t=1588861685;
+        bh=b1s7I7MQRORTqaB8/KOfE25r43ZKqozH8LCVeScbEHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B//tsRXIep6Gf8/h90s+PRqDFmRSBnsVLvHOXzzIJ6LNnzxPAH+dCX4bAMif71Z1Y
-         fhEs6zcG0t3TyW0Dk4T3R5F6t6BGPAISnT7pW1RGYRsGnxqSNcHqeAa5i8H/LV3NzO
-         skYpq4VxIzqkf3fWF3RuiYeHK6u5iajtjwF+lVTY=
+        b=s5J0jykQaT6xmLnZIHfqVaIpyDmB9ThbHV10MDtAAPLU4GfM9VuNuOWHqZ/QRFZt8
+         amh1AGwF0oGfKrEVFxQyNPHuLKokDmUYx96UyeCP8aU7kGP8MNf7SPQK2/mBNJVTVm
+         ex1RfDPEt0Mms69gWGxC1edNq6hPW/U/kYhQF2So=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 29/50] i2c: iproc: generate stop event for slave writes
-Date:   Thu,  7 May 2020 10:27:05 -0400
-Message-Id: <20200507142726.25751-29-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Seraj Alijan <seraj.alijan@sondrel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 31/50] dmaengine: dmatest: Fix process hang when reading 'wait' parameter
+Date:   Thu,  7 May 2020 10:27:07 -0400
+Message-Id: <20200507142726.25751-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -60,35 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 068143a8195fb0fdeea1f3ca430b3db0f6d04a53 ]
+[ Upstream commit aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca ]
 
-When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
-event to i2c_client.
+If we do
 
-Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+  % echo 1 > /sys/module/dmatest/parameters/run
+  [  115.851124] dmatest: Could not start test, no channels configured
+
+  % echo dma8chan7 > /sys/module/dmatest/parameters/channel
+  [  127.563872] dmatest: Added 1 threads using dma8chan7
+
+  % cat /sys/module/dmatest/parameters/wait
+  ... !!! HANG !!! ...
+
+The culprit is the commit 6138f967bccc
+
+  ("dmaengine: dmatest: Use fixed point div to calculate iops")
+
+which makes threads not to run, but pending and being kicked off by writing
+to the 'run' node. However, it forgot to consider 'wait' routine to avoid
+above mentioned case.
+
+In order to fix this, check for really running threads, i.e. with pending
+and done flags unset.
+
+It's pity the culprit commit hadn't updated documentation and tested all
+possible scenarios.
+
+Fixes: 6138f967bccc ("dmaengine: dmatest: Use fixed point div to calculate iops")
+Cc: Seraj Alijan <seraj.alijan@sondrel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200428113518.70620-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-bcm-iproc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/dmatest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 30efb7913b2e1..b58224b7ba791 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -360,6 +360,9 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
- 			i2c_slave_event(iproc_i2c->slave,
- 					I2C_SLAVE_WRITE_RECEIVED, &value);
-+			if (rx_status == I2C_SLAVE_RX_END)
-+				i2c_slave_event(iproc_i2c->slave,
-+						I2C_SLAVE_STOP, &value);
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 4993e3e5c5b01..364dd34799d45 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -240,7 +240,7 @@ static bool is_threaded_test_run(struct dmatest_info *info)
+ 		struct dmatest_thread *thread;
+ 
+ 		list_for_each_entry(thread, &dtc->threads, node) {
+-			if (!thread->done)
++			if (!thread->done && !thread->pending)
+ 				return true;
  		}
- 	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
- 		/* Master read other than start */
+ 	}
 -- 
 2.20.1
 
