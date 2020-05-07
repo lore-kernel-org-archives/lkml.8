@@ -2,156 +2,197 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B258CC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5715EC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919022075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588812162;
-	bh=VEI854Q0jqWSBxoyqtP2NIfRzRKCknFu7oWHhakYfCE=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=dz3fb7Us1DRwDSX/xnfq9OtgKBImkRNIS3Ji8hfPJlKMs0XCZD2TELQKP00MlEJk1
-	 XFHFHft5AQzkqjnD9vIECDmE07dSDwxF4XV3QHV81PDgAGTD/vf+fH4mQT+/EuMIYL
-	 HNBFR4U3Tn85oUvlBXAQGiMnBlkDx2z/tko0nK3Q=
+	by mail.kernel.org (Postfix) with ESMTP id 345EA2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x757WWre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEGAml (ORCPT
+        id S1728124AbgEGAnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgEGAml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:42:41 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B2C120747;
-        Thu,  7 May 2020 00:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588812161;
-        bh=VEI854Q0jqWSBxoyqtP2NIfRzRKCknFu7oWHhakYfCE=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=tYHNI2NlbDC1XkagfD9+Knn9y1j41ZnMofxiQCeHm19Cv1MAxKvkmd/8K3h7GWWJl
-         8rxa2j3ZR3lgTPyQkNUqWD6LElOqZXxlLYURhfh0m60xBJa/Ja8gEVZLyhEfdhEDP4
-         vaQjiHdRm/g1yfmVkVhK+6OmrTMtlDUx+xsomsk8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E3335352269D; Wed,  6 May 2020 17:42:40 -0700 (PDT)
-Date:   Wed, 6 May 2020 17:42:40 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        viro@zeniv.linux.org.uk, hannes@cmpxchg.org
-Subject: [PATCH RFC tip/core/rcu] Add shrinker to shift to fast/inefficient
- GP mode
-Message-ID: <20200507004240.GA9156@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 6 May 2020 20:43:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38068 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbgEGAnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 20:43:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bkiG092912;
+        Thu, 7 May 2020 00:42:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=qc+w0ITasi/mb3MmcnJ1ObIG7dFmjPsfgIFkmHA89sE=;
+ b=x757WWreLpSB8OokJRHyKcsAINaoS+wAlmyXFSB5WEnR7/JytDBoYA7fVffl1/WaJZzM
+ WTvFlN1X5a/646jzBQUqhGzpB9f0DZV2bi9G7kcHYqylAFS57UXN8/Sz4VqeTNwenOWO
+ 6f11GKt6IayaGa1ho5jyAdW8h5XY9zARuGZtvrmYfFT+Io56pR5TxYWKKzFCkfdWJt1H
+ o9PItYjbOF0Z71naBcabV3cYuFQG6nIJb4V6Kkbb9mcoRU/PQzwi5dNe4OkNmepnwBD6
+ WS+bIC1qLe1lJ057ydC4DAm0ogInMTJfg8eQ/jk7G+KtujXjrSrHf+EB2NHGa9ltZHZQ OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30s1gnd8hs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 00:42:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bUDY098699;
+        Thu, 7 May 2020 00:42:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30sjnma12g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 May 2020 00:42:42 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470gfnn019681;
+        Thu, 7 May 2020 00:42:41 GMT
+Received: from ayz-linux.localdomain (/68.7.158.207)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 May 2020 17:42:41 -0700
+From:   Anthony Yznaga <anthony.yznaga@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
+        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
+        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
+        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
+        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
+        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
+        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, minchan@kernel.org,
+        mhocko@kernel.org, ying.huang@intel.com,
+        yang.shi@linux.alibaba.com, gustavo@embeddedor.com,
+        ziqian.lzq@antfin.com, vdavydov.dev@gmail.com,
+        jason.zeng@intel.com, kevin.tian@intel.com, zhiyuan.lv@intel.com,
+        lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: [RFC 07/43] mm: PKRAM: link nodes by pfn before reboot
+Date:   Wed,  6 May 2020 17:41:33 -0700
+Message-Id: <1588812129-8596-8-git-send-email-anthony.yznaga@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
+References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds a shrinker so as to inform RCU when memory is scarce.
-RCU responds by shifting into the same fast and inefficient mode that is
-used in the presence of excessive numbers of RCU callbacks.  RCU remains
-in this state for one-tenth of a second, though this time window can be
-extended by another call to the shrinker.
+Since page structs are used for linking PKRAM nodes and cleared
+on boot, organize all PKRAM nodes into a list singly-linked by pfns
+before reboot to facilitate the node list restore in the new kernel.
 
-If it proves feasible, a later commit might add a function call directly
-indicating the end of the period of scarce memory.
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+---
+ mm/pkram.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index b0fe32f..76d148d 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2368,8 +2368,15 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 06b471eea0b0..44fadb70acf6 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -2,12 +2,16 @@
+ #include <linux/err.h>
+ #include <linux/gfp.h>
+ #include <linux/highmem.h>
++#include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/mm.h>
++#include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/notifier.h>
+ #include <linux/pkram.h>
++#include <linux/reboot.h>
+ #include <linux/sched.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -58,11 +62,15 @@ struct pkram_obj {
+  * singly-linked list of PKRAM link structures (see above), the node has a
+  * pointer to the head of.
+  *
++ * To facilitate data restore in the new kernel, before reboot all PKRAM nodes
++ * are organized into a list singly-linked by pfn's (see pkram_reboot()).
++ *
+  * The structure occupies a memory page.
+  */
+ struct pkram_node {
+ 	__u32	flags;
+ 	__u64	obj_pfn;	/* points to the first obj of the node */
++	__u64	node_pfn;	/* points to the next node in the node list */
  
--	rcu_state.cbovld = rcu_state.cbovldnext;
-+	// Load .oomovld before .oomovldend, pairing with .oomovld set.
-+	rcu_state.cbovld = smp_load_acquire(&rcu_state.oomovld) || // ^^^
-+			   rcu_state.cbovldnext;
- 	rcu_state.cbovldnext = false;
-+	if (READ_ONCE(rcu_state.oomovld) &&
-+	    time_after(jiffies, READ_ONCE(rcu_state.oomovldend))) {
-+		WRITE_ONCE(rcu_state.oomovld, false);
-+		pr_info("%s: Ending OOM-mode grace periods.\n", __func__);
-+	}
- 	rcu_for_each_leaf_node(rnp) {
- 		cond_resched_tasks_rcu_qs();
- 		mask = 0;
-@@ -2697,6 +2704,35 @@ static void check_cb_ovld(struct rcu_data *rdp)
- 	raw_spin_unlock_rcu_node(rnp);
+ 	__u8	name[PKRAM_NAME_MAX];
+ };
+@@ -71,6 +79,10 @@ struct pkram_node {
+ #define PKRAM_LOAD		2
+ #define PKRAM_ACCMODE_MASK	3
+ 
++/*
++ * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
++ * connected through the lru field of the page struct.
++ */
+ static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
+ static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
+ 
+@@ -679,3 +691,41 @@ size_t pkram_read(struct pkram_stream *ps, void *buf, size_t count)
+ 
+ 	return copy_count;
  }
- 
-+/* Return a rough count of the RCU callbacks outstanding. */
-+static unsigned long rcu_oom_count(struct shrinker *unused1,
-+				   struct shrink_control *unused2)
-+{
-+	int cpu;
-+	unsigned long ncbs = 0;
 +
-+	for_each_possible_cpu(cpu)
-+		ncbs += rcu_get_n_cbs_cpu(cpu);
-+	return ncbs;
++/*
++ * Build the list of PKRAM nodes.
++ */
++static void __pkram_reboot(void)
++{
++	struct page *page;
++	struct pkram_node *node;
++	unsigned long node_pfn = 0;
++
++	list_for_each_entry_reverse(page, &pkram_nodes, lru) {
++		node = page_address(page);
++		if (WARN_ON(node->flags & PKRAM_ACCMODE_MASK))
++			continue;
++		node->node_pfn = node_pfn;
++		node_pfn = page_to_pfn(page);
++	}
 +}
 +
-+/* Start up an interval of fast high-overhead grace periods. */
-+static unsigned long rcu_oom_scan(struct shrinker *unused1,
-+				  struct shrink_control *unused2)
++static int pkram_reboot(struct notifier_block *notifier,
++		       unsigned long val, void *v)
 +{
-+	pr_info("%s: Starting OOM-mode grace periods.\n", __func__);
-+	WRITE_ONCE(rcu_state.oomovldend, jiffies + HZ / 10);
-+	smp_store_release(&rcu_state.oomovld, true); // After .oomovldend
-+	rcu_force_quiescent_state();  // Kick grace period
-+	return 0;  // We haven't actually reclaimed anything yet.
++	if (val != SYS_RESTART)
++		return NOTIFY_DONE;
++	__pkram_reboot();
++	return NOTIFY_OK;
 +}
 +
-+static struct shrinker rcu_shrinker = {
-+	.count_objects = rcu_oom_count,
-+	.scan_objects = rcu_oom_scan,
-+	.seeks = DEFAULT_SEEKS,
++static struct notifier_block pkram_reboot_notifier = {
++	.notifier_call = pkram_reboot,
 +};
 +
- /* Helper function for call_rcu() and friends.  */
- static void
- __call_rcu(struct rcu_head *head, rcu_callback_t func)
-@@ -4146,6 +4182,7 @@ void __init rcu_init(void)
- 		qovld_calc = DEFAULT_RCU_QOVLD_MULT * qhimark;
- 	else
- 		qovld_calc = qovld;
-+	WARN_ON(register_shrinker(&rcu_shrinker));
- }
- 
- #include "tree_stall.h"
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 2d7fcb9..c4d8e96 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -326,6 +326,8 @@ struct rcu_state {
- 	int ncpus_snap;				/* # CPUs seen last time. */
- 	u8 cbovld;				/* Callback overload now? */
- 	u8 cbovldnext;				/* ^        ^  next time? */
-+	u8 oomovld;				/* OOM overload? */
-+	unsigned long oomovldend;		/* OOM ovld end, jiffies. */
- 
- 	unsigned long jiffies_force_qs;		/* Time at which to invoke */
- 						/*  force_quiescent_state(). */
++static int __init pkram_init(void)
++{
++	register_reboot_notifier(&pkram_reboot_notifier);
++	return 0;
++}
++module_init(pkram_init);
+-- 
+2.13.3
+
