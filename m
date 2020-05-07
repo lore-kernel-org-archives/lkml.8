@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD54AC54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF385C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9454A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EADF2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861945;
-	bh=fkiihqvs3l6pEIs158rIwq8LwXoqIKl9fUbmIrZefK0=;
+	s=default; t=1588861948;
+	bh=o4IiigD2Jk5p91BBpPHwUpc39b0yMW8rQoupf9HplT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ElUmJs/PNfD6OSmbVMfpp1auo5iJLnrdeLPtEZ2qxQ+7lky9QM/DInrGsoHJXW89V
-	 8EjNEQwELYeYNT3UelzAUQC418hrAo6jxUvSO144TzHw8htqUcH1OUQFAj+m6CGx4m
-	 B+IvgUMjhAurS0V1+rb8HGbBFCXyI96l4k5og7yY=
+	b=k03xkJNKJviDy6HOzAEkwkJN/iSWMwslER6C9jVTGu4SyCFtpGQTlDBCeAN2NnIRC
+	 08mVWmSZaSLOPl4xeApUWgaezsWTd6kojUw1cix3VXKIvEnYt2xnr8fpRRPlVqmEmo
+	 G8XPf1fXNhE54PdfQo3W5M2VKGMwr9kh+ZnHsxV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgEGO3y (ORCPT
+        id S1728940AbgEGOc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57546 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgEGO3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:40 -0400
+        id S1728703AbgEGO3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80CC3208D6;
-        Thu,  7 May 2020 14:29:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A725C20870;
+        Thu,  7 May 2020 14:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861780;
-        bh=fkiihqvs3l6pEIs158rIwq8LwXoqIKl9fUbmIrZefK0=;
+        s=default; t=1588861794;
+        bh=o4IiigD2Jk5p91BBpPHwUpc39b0yMW8rQoupf9HplT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukA1YBjXab11nqDNIfuMw0nGMxbpd0X6oDtsaLPdQ2qDK+IQvHlhNEWmAAXna6cfZ
-         cGTSg0v4TXR9ls7m/ctvYmTiCtLdP+qTwlsbYVHXw/3fV8n1NuI/ng2PS+Tc743+Fl
-         qalWGFWtj4/aXUqMG6e+rulCYG2tbYbO8hUT1NwQ=
+        b=uAeh8gzzF6WV1aoNDFPU4rNbWhZYqdGMnF9u3HkDGbjCwlwwcalvO47AYjCBfaK/T
+         NQ8u2WFGfJ6OVPUvbeWb22smLbUDtEPY//ZmWV1GoH4XYm4NFb/sjz9/7fSvaP0QPw
+         +qsA9M7YNWPa3Dmdk8DdmpzyoL9RRX+XIJgbJTVw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 19/20] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-Date:   Thu,  7 May 2020 10:29:15 -0400
-Message-Id: <20200507142917.26612-19-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 09/16] ALSA: hda: Match both PCI ID and SSID for driver blacklist
+Date:   Thu,  7 May 2020 10:29:36 -0400
+Message-Id: <20200507142943.26848-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142917.26612-1-sashal@kernel.org>
-References: <20200507142917.26612-1-sashal@kernel.org>
+In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
+References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 ]
+[ Upstream commit 977dfef40c8996b69afe23a9094d184049efb7bb ]
 
-Currently, system fails to boot because the legacy interrupt remapping
-mode does not enable 128-bit IRTE (GA), which is required for x2APIC
-support.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
-kernel option amd_iommu_intr=legacy instead. The initialization
-logic will check GASup and automatically fallback to using
-AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
+Since the empty codec problem appear on the certain AMD platform (PCI
+ID 1022:1487), this patch changes the blacklist matching to both PCI
+ID and SSID using pci_match_id().  Also, the entry that was removed by
+the previous fix for ASUS ROG Zenigh II is re-added.
 
-Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 465f28a7844c2..2557ed112bc24 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2836,7 +2836,7 @@ static int __init parse_amd_iommu_intr(char *str)
- {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "legacy", 6) == 0) {
--			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-+			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
- 			break;
- 		}
- 		if (strncmp(str, "vapic", 5) == 0) {
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 46670da047074..7779f54607156 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2172,9 +2172,10 @@ static const struct hdac_io_ops pci_hda_io_ops = {
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
+ 
+@@ -2197,7 +2198,7 @@ static int azx_probe(struct pci_dev *pci,
+ 	bool schedule_probe;
+ 	int err;
+ 
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
 -- 
 2.20.1
 
