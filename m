@@ -2,105 +2,141 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F49C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D627C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E54420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7282075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgEGJMg (ORCPT
+        id S1726558AbgEGJN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:12:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60428 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbgEGJMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:12:34 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A8AD12FAB35445FAE711;
-        Thu,  7 May 2020 17:12:31 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
- 17:12:23 +0800
-Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-References: <20200116.042722.153124126288244814.davem@davemloft.net>
- <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
- <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
- <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
- <20200117123253.GC14879@hirez.programming.kicks-ass.net>
- <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com>
- <20200117180324.GA2623847@rani.riverdale.lan>
- <94573cea-a833-9b48-6581-8cc5cdd19b89@gmail.com>
- <20200117183800.GA2649345@rani.riverdale.lan>
- <45224c36-9941-aae5-aca4-e2c8e3723355@gmail.com>
- <20200120081858.GI14879@hirez.programming.kicks-ass.net>
-CC:     Arvind Sankar <nivedita@alum.mit.edu>,
-        David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jinyuqi@huawei.com>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <edumazet@google.com>, <guoyang2@huawei.com>,
-        Will Deacon <will@kernel.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <39ddacf9-adbe-c3f5-45a8-9c5280ef11bb@hisilicon.com>
-Date:   Thu, 7 May 2020 17:12:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Thu, 7 May 2020 05:13:27 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:27804 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgEGJN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 05:13:27 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.122])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id EC5C5482B05;
+        Thu,  7 May 2020 17:13:20 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Ori Messinger <Ori.Messinger@amd.com>,
+        Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+Subject: [PATCH v2] drm/amd/amdgpu: cleanup coding style a bit
+Date:   Thu,  7 May 2020 02:13:05 -0700
+Message-Id: <20200507091311.10898-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200120081858.GI14879@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VPTklLS0tKT0pKT0hDWVdZKFlBSE
+        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ojo6HQw*KDg9Pz88Pws#KgEC
+        NT4KCjFVSlVKTkNDQ09JQ0tPSUJDVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSUlZV1kIAVlBT05ITDcG
+X-HM-Tid: 0a71ee69284893bakuwsec5c5482b05
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter/Eric,
+There is DEVICE_ATTR mechanism in separate attribute define.
+So this change is to use attr array, also use
+sysfs_create_files in init function & sysfs_remove_files in
+fini function.
+This maybe make the code a bit readable.
 
-Shall we use atomic_add_return() unconditionally and add some comments? Or I missed
-something.
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
 
-Thanks,
-Shaokun
+Changes since V1:
+*Use DEVICE_ATTR mechanism
 
-On 2020/1/20 16:18, Peter Zijlstra wrote:
-> On Fri, Jan 17, 2020 at 10:48:19AM -0800, Eric Dumazet wrote:
->>
->>
->> On 1/17/20 10:38 AM, Arvind Sankar wrote:
->>> On Fri, Jan 17, 2020 at 10:16:45AM -0800, Eric Dumazet wrote:
->>>> Wasńt it the case back in 2016 already for linux-4.8 ?
->>>>
->>>> What will prevent someone to send another report to netdev/lkml ?
->>>>
->>>>  -fno-strict-overflow support is not a prereq for CONFIG_UBSAN.
->>>>
->>>> Fact that we kept in lib/ubsan.c and lib/test_ubsan.c code for 
->>>> test_ubsan_add_overflow() and test_ubsan_sub_overflow() is disturbing.
->>>>
->>>
->>> No, it was bumped in 2018 in commit cafa0010cd51 ("Raise the minimum
->>> required gcc version to 4.6"). That raised it from 3.2 -> 4.6.
->>>
->>
->> This seems good to me, for gcc at least.
->>
->> Maybe it is time to enfore -fno-strict-overflow in KBUILD_CFLAGS 
->> instead of making it conditional.
-> 
-> IIRC there was a bug in UBSAN vs -fwrapv/-fno-strict-overflow that was
-> only fixed in gcc-8 or 9 or so.
-> 
-> So while the -fwrapv/-fno-strict-overflow flag has been correctly
-> supported since like forever, UBSAN was buggy until quite recent when
-> used in conjustion with that flag.
-> 
-> .
-> 
+Link for V1:
+*https://lore.kernel.org/patchwork/patch/1228076/
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 43 ++++++--------------
+ 1 file changed, 13 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+index 82a3299e53c0..57bbc70662ff 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+@@ -148,6 +148,15 @@ static DEVICE_ATTR(mem_info_vis_vram_used, S_IRUGO,
+ static DEVICE_ATTR(mem_info_vram_vendor, S_IRUGO,
+ 		   amdgpu_mem_info_vram_vendor, NULL);
+ 
++static struct attribute *amdgpu_vram_mgr_attributes[] = {
++	&dev_attr_mem_info_vram_total.attr,
++	&dev_attr_mem_info_vis_vram_total.attr,
++	&dev_attr_mem_info_vram_used.attr,
++	&dev_attr_mem_info_vis_vram_used.attr,
++	&dev_attr_mem_info_vram_vendor.attr,
++	NULL
++};
++
+ /**
+  * amdgpu_vram_mgr_init - init VRAM manager and DRM MM
+  *
+@@ -172,31 +181,9 @@ static int amdgpu_vram_mgr_init(struct ttm_mem_type_manager *man,
+ 	man->priv = mgr;
+ 
+ 	/* Add the two VRAM-related sysfs files */
+-	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_total);
+-	if (ret) {
+-		DRM_ERROR("Failed to create device file mem_info_vram_total\n");
+-		return ret;
+-	}
+-	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+-	if (ret) {
+-		DRM_ERROR("Failed to create device file mem_info_vis_vram_total\n");
+-		return ret;
+-	}
+-	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_used);
+-	if (ret) {
+-		DRM_ERROR("Failed to create device file mem_info_vram_used\n");
+-		return ret;
+-	}
+-	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+-	if (ret) {
+-		DRM_ERROR("Failed to create device file mem_info_vis_vram_used\n");
+-		return ret;
+-	}
+-	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_vendor);
+-	if (ret) {
+-		DRM_ERROR("Failed to create device file mem_info_vram_vendor\n");
+-		return ret;
+-	}
++	ret = sysfs_create_files(&adev->dev->kobj, amdgpu_vram_mgr_attributes);
++	if (ret)
++		DRM_ERROR("Failed to register sysfs\n");
+ 
+ 	return 0;
+ }
+@@ -219,11 +206,7 @@ static int amdgpu_vram_mgr_fini(struct ttm_mem_type_manager *man)
+ 	spin_unlock(&mgr->lock);
+ 	kfree(mgr);
+ 	man->priv = NULL;
+-	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
+-	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+-	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
+-	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+-	device_remove_file(adev->dev, &dev_attr_mem_info_vram_vendor);
++	sysfs_remove_files(&adev->dev->kobj, amdgpu_vram_mgr_attributes);
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
 
