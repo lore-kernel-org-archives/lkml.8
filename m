@@ -2,139 +2,77 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957E0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7603420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861831;
-	bh=y6xNY4FUPfwME4g40KTEXsNeJ2mHn/jJnx4h7P1rEgA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJuHiOegufpdQBqscI3OnNBcd9b64d9obxo5Kktt1uMtqD8/FFE14DObz2PIwb6U+
-	 TgIDWQP62+AR5yAIcI6tzXKrK98UvSvkSlU7/SgarvB3xM6opH6MV93qLfUGYYfAYs
-	 6UqAnDm/NLXkO44DFtKHAa4T9SsNMR1C2QCdhVdw=
+	by mail.kernel.org (Postfix) with ESMTP id 0B19C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STC8zExZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgEGOa3 (ORCPT
+        id S1728853AbgEGOac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgEGOaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 7 May 2020 10:30:32 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49475 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728767AbgEGOaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588861806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rj5kOWwabzY7Fn7PlvPr8yLZoyzAXjgTM69IXu1oI44=;
+        b=STC8zExZjayDbyGAYOoJbJG7K3uWyKggGkMsr6DYRijFu8kw8En09KWwX+7RjefgErK8NH
+        ZVKq1hyjvlovGiASfuwIq0kIrM/oo43C6nn0i8FvV1H7M3qtlAt3U6wPhhRCF6mBZSmE5N
+        hQR8d+JRFi1V3hGvCQ1L4Ng4phTiSgA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-9L22ZqmFO1-qQl2tFhXbWQ-1; Thu, 07 May 2020 10:30:03 -0400
+X-MC-Unique: 9L22ZqmFO1-qQl2tFhXbWQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1082D2073A;
-        Thu,  7 May 2020 14:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861806;
-        bh=y6xNY4FUPfwME4g40KTEXsNeJ2mHn/jJnx4h7P1rEgA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W2Imevlvt4REE5IRFqYvU3rNeM+4OoFt9T1zh+4KilkgGU94+KtxMO3nqpsdVqt/V
-         d9AR0rrGZHpcV9M3y9qhNXGUbehpSfFckcjC+DmDIv6mpsf4XwmqY1OAgGISlzpTF9
-         aP2b63DcHISJFgydgrtc3Mlu9RoMP3a7HhpSsGus=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/11] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Thu,  7 May 2020 10:29:54 -0400
-Message-Id: <20200507143003.27047-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143003.27047-1-sashal@kernel.org>
-References: <20200507143003.27047-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57915107ACF3;
+        Thu,  7 May 2020 14:30:02 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 597E7707A9;
+        Thu,  7 May 2020 14:29:59 +0000 (UTC)
+Date:   Thu, 7 May 2020 10:29:58 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Samuel Zou <zou_wei@huawei.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] dm mpath: Remove unused variable ret
+Message-ID: <20200507142958.GA12032@redhat.com>
+References: <1588854412-19301-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588854412-19301-1-git-send-email-zou_wei@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+On Thu, May 07 2020 at  8:26am -0400,
+Samuel Zou <zou_wei@huawei.com> wrote:
 
-[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
+> This patch fixes below warning reported by coccicheck:
+> 
+> drivers/md/dm-historical-service-time.c:240:14-16: Unneeded variable: "sz". Return "0" on line 261
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Nack.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index 720d92f5abfb8..6c378435fa291 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -252,37 +252,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
- 
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
--- 
-2.20.1
+DMEMIT() uses the local sz variable.
 
