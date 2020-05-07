@@ -2,116 +2,68 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568C5C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D885C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26011215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fw6712JF"
+	by mail.kernel.org (Postfix) with ESMTP id 0A7E620A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgEGR1w (ORCPT
+        id S1727826AbgEGR2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbgEGR1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:27:52 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6C4C05BD43;
-        Thu,  7 May 2020 10:27:51 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id v63so3307695pfb.10;
-        Thu, 07 May 2020 10:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sI6MW+ENUHkNJh2ieEfqb2bnhAZ3RCNTWxJcYdnJPQ0=;
-        b=fw6712JF9/XP6LQunEFLYb0L3Hu5ZvOjiwZaYjUOYARWSTU6cUpPwT1mREY73Q0lcz
-         Ux/KeXELOEUHJXhu+fQdD2m+PvZLEgLRXD9LHp5MtiJP9eimFksIXjI/cy3nfvc3vo6c
-         EnHUBiCI3w93ddm9j9zO6dnfk9CkchHGY/+2IAZNTQoXNwBPgeZyh71Spr8dvDJIyw/+
-         UbXKl1uzTrdWUsPYYMIzS4tnSCKePPqGcXUK7g5HcX9zheTZs6yjaODjo8LMj7+RYfuG
-         Z0ayJgokLlO3FWlitIERjSFHHzD510h8OGBamTktyIiycyrQAc/XdIxYy0AJQpUE4o6R
-         lJSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sI6MW+ENUHkNJh2ieEfqb2bnhAZ3RCNTWxJcYdnJPQ0=;
-        b=Fo3tyPYzLH09wk65N029Gl23MuTtFwe8juh7+QRzBV/XCGrV7fKqG5oS5JbAznQAMp
-         4XziOia+nCLZsOUOZYgPxpglTHhWpmalCuhCZXmMq1eMw+z4XMjUHcLokSk8YaOaZAGd
-         hqWp71FWc/2dA8bgEyBNNzGxvM1E+hvR08Q1+Xt6u67lNKt7c+HY7g8Q8EhVoPSa/Vze
-         Aqrov8i7lr9OsjYA0B51R1WVW9MrWHnwQU8MPwT2LJA4JZb/Q7/sh8U/r4iHCTwkkLJw
-         kUqYXzjOJ7PlvkV/vS1Pa1d1CLHo25RWIfCWSzhaxE4wMF2LKNcEVg4mkpE5d+jndaMD
-         kLWQ==
-X-Gm-Message-State: AGi0PubCWR604p4UBy0gWOgsAc6ZasAqwacVQbQg+lreVLPLWTx2XNdA
-        +n5IymJZKAU7qvFsz+GI8yGSlHxGJjgzsllOYG4=
-X-Google-Smtp-Source: APiQypI7YgiQ9vvHBaf8ZcHCNpabxiuE+6U2dZsbLwFTkafu86kfC64HTxUYw0xpEU0ELMf7TkAsxj3N30X42MNPPSc=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr15059528pfr.36.1588872471304;
- Thu, 07 May 2020 10:27:51 -0700 (PDT)
+        Thu, 7 May 2020 13:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgEGR2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:28:30 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01E6216FD;
+        Thu,  7 May 2020 17:28:29 +0000 (UTC)
+Date:   Thu, 7 May 2020 13:28:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Jason Yan <yanaijie@huawei.com>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Return true,false in
+ voluntary_active_balance()
+Message-ID: <20200507132828.1af39b80@gandalf.local.home>
+In-Reply-To: <jhjpnbg6lkf.mognet@arm.com>
+References: <20200507110625.37254-1-yanaijie@huawei.com>
+        <jhjpnbg6lkf.mognet@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com> <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
-In-Reply-To: <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 May 2020 20:27:44 +0300
-Message-ID: <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 4:26 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
-> On 5/5/20 8:29 AM, Calvin Johnson wrote:
+On Thu, 07 May 2020 12:17:36 +0100
+Valentin Schneider <valentin.schneider@arm.com> wrote:
 
-> > +             if (sscanf(cp, "ethernet-phy-id%4x.%4x",
-> > +                        &upper, &lower) == 2) {
-> > +                     *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
-> > +                     return 0;
-> > +             }
+> On 07/05/20 12:06, Jason Yan wrote:
+> > Fix the following coccicheck warning:
+> >
+> > kernel/sched/fair.c:9375:9-10: WARNING: return of 0/1 in function
+> > 'voluntary_active_balance' with return type bool
+> >  
+> 
+> It's perfectly safe to return 0/1 in a boolean function; that said seeing
+> as this is the second attempt at "fixing" this I'm tempted to say we should
+> pick it up...
+> 
 
-> Isn't the ACPI _CID() conceptually similar to the DT compatible
-> property?
+Actually, I disagree. We should push back on the check to not warn on 0/1
+of boolean. Why is this a warning?
 
-Where?
+Fixes like this just add noise to the git history.
 
-> It even appears to be getting used in a similar way to
-> identify particular phy drivers in this case.
-
-_CID() is a string. It can't be used as pure number.
-
--- 
-With Best Regards,
-Andy Shevchenko
+-- Steve
