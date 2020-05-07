@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35809C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320D5C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0850020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EC220736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="paQStL8P"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Osuou/V5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgEGAoI (ORCPT
+        id S1728412AbgEGAoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:44:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47530 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbgEGAoA (ORCPT
+        Wed, 6 May 2020 20:44:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728318AbgEGAoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:44:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470befE064522;
-        Thu, 7 May 2020 00:43:03 GMT
+        Wed, 6 May 2020 20:44:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bkGi092899;
+        Thu, 7 May 2020 00:43:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=FB0OnNXJ4i/M/+h8LQO56pQ0/rOm3gP03sALm2dSqQ0=;
- b=paQStL8PTEqfO6fbwWpdX7ph/jPw52JforzGHSJy6xCRA7TlKE9rgam/ENPCfzk9euum
- Sjd0h3Kq+5hyYIizY1UV95kGxFr+kUjwBRtlGE4dS7wKcTc0MDxI6AzPRy4S9H0BboZy
- 5iyq/+JtZKfXzfHVOfgd+OWjF9iP3dp2S51nbUcp2Lap+ah4HcaANnmMG5tIByCXDrDg
- jSvr9T9OLTgKIAumWEar+p656nFRq3XoHKoFhZheviqy0x9jOx9nPubeqQtSS20gUILr
- sjlSGRAXqdqABm8PE4bcPxPY0UbZwgKgKtirZ85i6jjBkT88h9WOuaYwwNoAmBmKdN3G Tg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30s09rdf7e-1
+ bh=Y+m+s4ZCNURBXj766gTT4gE1Fj6SOZhPn+YCjxoGrp4=;
+ b=Osuou/V5BI3MblqKTJFUzzNZy5OpWrI3Z+5ocCwhhrXYW+JJzCx0NkO8086TAGBTLoYT
+ s3fYplzuOKAnB5WqFvph6yEsPcA060kp2bvo4eNFLyiTYAFZ7ZUw63SqJFZoVX0Dl8h1
+ dMwjlznlZQAijOgiMVgOoPPt7hnNh0xZfB+dxRn7N285j88JFRLnI3jeBeo9l1g2S41n
+ AlJwLFakJc4Ic1WhMIhDiwJtwuOc0bYX90EdYdetzBpWkKcNwTSOgGJYDuqG/Vky1+GZ
+ rvMIc9aZLxizoWSytjjXotor/lxxqCB9KUE5nSF+Zf7EAwKsQeT0gNJwbUTt9nDHf6t8 TA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gnd8kv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:43:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bTMj098599;
-        Thu, 7 May 2020 00:43:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30sjnma1ty-1
+        Thu, 07 May 2020 00:43:15 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470auqu170921;
+        Thu, 7 May 2020 00:43:14 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30us7p2ma0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:43:02 +0000
+        Thu, 07 May 2020 00:43:14 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470h1VZ019957;
-        Thu, 7 May 2020 00:43:01 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470hB01025731;
+        Thu, 7 May 2020 00:43:11 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:43:01 -0700
+        with ESMTP ; Wed, 06 May 2020 17:43:11 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,194 +71,98 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 13/43] mm: PKRAM: free preserved pages pagetable
-Date:   Wed,  6 May 2020 17:41:39 -0700
-Message-Id: <1588812129-8596-14-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 16/43] kexec: PKRAM: prevent kexec clobbering preserved pages in some cases
+Date:   Wed,  6 May 2020 17:41:42 -0700
+Message-Id: <1588812129-8596-17-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=2
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=2
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070001
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the page ranges in the pagetable have been reserved the pagetable
-is no longer needed.  Rather than free it during early boot by unreserving
-page-sized blocks which can be inefficient when dealing with a large number
-of blocks, wait until the page structs have been initialized and free them
-as pages.
+When loading a kernel for kexec, dynamically update the list of physical
+ranges that are not to be used for storing preserved pages with the ranges
+where kexec segments will be copied to on reboot. This ensures no pages
+preserved after the new kernel has been loaded will reside in these ranges
+on reboot.
+
+Not yet handled is the case where pages have been preserved before a
+kexec kernel is loaded.  This will be covered by a later patch.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- arch/x86/mm/init_64.c |  1 +
- include/linux/pkram.h |  3 ++
- mm/pkram.c            | 11 +++++++
- mm/pkram_pagetable.c  | 82 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 97 insertions(+)
+ kernel/kexec.c      |  9 +++++++++
+ kernel/kexec_file.c | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index ae569ef6bd7d..72662615977b 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1245,6 +1245,7 @@ void __init mem_init(void)
- 	after_bootmem = 1;
- 	x86_init.hyper.init_after_bootmem();
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index f977786fe498..c44598fc42a1 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -16,6 +16,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
+ #include <linux/slab.h>
++#include <linux/pkram.h>
  
-+	pkram_free_pgt();
- 	totalram_pages_add(pkram_reserved_pages);
+ #include "kexec_internal.h"
+ 
+@@ -163,6 +164,14 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 	if (ret)
+ 		goto out;
+ 
++	for (i = 0; i < nr_segments; i++) {
++		unsigned long mem = image->segment[i].mem;
++		size_t memsz = image->segment[i].memsz;
++
++		if (memsz)
++			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
++	}
++
+ 	/* Install the new kernel and uninstall the old */
+ 	image = xchg(dest_image, image);
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index faa74d5f6941..f57f72237859 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -26,6 +26,8 @@
+ #include <linux/kernel.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
++#include <linux/pkram.h>
++
+ #include "kexec_internal.h"
+ 
+ static int kexec_calculate_store_digests(struct kimage *image);
+@@ -445,6 +447,14 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	if (ret)
+ 		goto out;
+ 
++	for (i = 0; i < image->nr_segments; i++) {
++		unsigned long mem = image->segment[i].mem;
++		size_t memsz = image->segment[i].memsz;
++
++		if (memsz)
++			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
++	}
++
  	/*
- 	 * Must be done after boot memory is put on freelist, because here we
-diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index 1b475f6e1598..edc5d8bef9d3 100644
---- a/include/linux/pkram.h
-+++ b/include/linux/pkram.h
-@@ -39,6 +39,7 @@ struct pkram_pg_state {
- };
- 
- void pkram_walk_pgt_rev(struct pkram_pg_state *st, pgd_t *pgd);
-+void pkram_free_pgt_walk_pgd(pgd_t *pgd);
- 
- int pkram_prepare_save(struct pkram_stream *ps, const char *name,
- 		       gfp_t gfp_mask);
-@@ -64,9 +65,11 @@ size_t pkram_read(struct pkram_stream *ps, void *buf, size_t count);
- #ifdef CONFIG_PKRAM
- extern unsigned long pkram_reserved_pages;
- void pkram_reserve(void);
-+void pkram_free_pgt(void);
- #else
- #define pkram_reserved_pages 0UL
- static inline void pkram_reserve(void) { }
-+static inline void pkram_free_pgt(void) { }
- #endif
- 
- #endif /* _LINUX_PKRAM_H */
-diff --git a/mm/pkram.c b/mm/pkram.c
-index 2c323154df76..dd3c89614010 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -1227,3 +1227,14 @@ static int __init pkram_reserve_page_ranges(pgd_t *pgd)
- 
- 	return err;
- }
-+
-+void pkram_free_pgt(void)
-+{
-+	if (!pkram_pgd)
-+		return;
-+
-+	pkram_free_pgt_walk_pgd(pkram_pgd);
-+
-+	__free_pages_core(virt_to_page(pkram_pgd), 0);
-+	pkram_pgd = NULL;
-+}
-diff --git a/mm/pkram_pagetable.c b/mm/pkram_pagetable.c
-index d31aa36207ba..7033e9b1c47f 100644
---- a/mm/pkram_pagetable.c
-+++ b/mm/pkram_pagetable.c
-@@ -3,6 +3,8 @@
- #include <asm/pgtable.h>
- #include <linux/pkram.h>
- 
-+#include "internal.h"
-+
- #define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
- 
- static int note_page_rev(struct pkram_pg_state *st, unsigned long curr_size, bool present)
-@@ -167,3 +169,83 @@ void pkram_walk_pgt_rev(struct pkram_pg_state *st, pgd_t *pgd)
- 			break;
- 	}
- }
-+
-+static void pkram_free_pgt_walk_pmd(pud_t addr)
-+{
-+	unsigned long bitmap_pa;
-+	struct page *page;
-+	pmd_t *start;
-+	int i;
-+
-+	start = (pmd_t *)pud_page_vaddr(addr);
-+	for (i = 0; i < PTRS_PER_PMD; i++, start++) {
-+		if (!pmd_none(*start)) {
-+			bitmap_pa = pte_val(pte_clrhuge(*(pte_t *)start));
-+			if (pmd_large(*start) && !bitmap_pa)
-+				continue;
-+			page = virt_to_page(__va(bitmap_pa));
-+			__free_pages_core(page, 0);
-+		}
-+	}
-+}
-+
-+static void pkram_free_pgt_walk_pud(p4d_t addr)
-+{
-+	struct page *page;
-+	pud_t *start;
-+	int i;
-+
-+	start = (pud_t *)p4d_page_vaddr(addr);
-+	for (i = 0; i < PTRS_PER_PUD; i++, start++) {
-+		if (!pud_none(*start)) {
-+			if (pud_large(*start)) {
-+				WARN_ONCE(1, "PKRAM: unexpected pud hugepage\n");
-+				continue;
-+			}
-+			pkram_free_pgt_walk_pmd(*start);
-+			page = virt_to_page(__va(pud_val(*start)));
-+			__free_pages_core(page, 0);
-+		}
-+	}
-+}
-+
-+static void pkram_free_pgt_walk_p4d(pgd_t addr)
-+{
-+	struct page *page;
-+	p4d_t *start;
-+	int i;
-+
-+	if (PTRS_PER_P4D == 1)
-+		return pkram_free_pgt_walk_pud(__p4d(pgd_val(addr)));
-+
-+	start = (p4d_t *)pgd_page_vaddr(addr);
-+	for (i = 0; i < PTRS_PER_P4D; i++, start++) {
-+		if (!p4d_none(*start)) {
-+			if (p4d_large(*start)) {
-+				WARN_ONCE(1, "PKRAM: unexpected p4d hugepage\n");
-+				continue;
-+			}
-+			pkram_free_pgt_walk_pud(*start);
-+			page = virt_to_page(__va(p4d_val(*start)));
-+			__free_pages_core(page, 0);
-+		}
-+	}
-+}
-+
-+/*
-+ * Free the pagetable passed from the previous boot.
-+ */
-+void pkram_free_pgt_walk_pgd(pgd_t *pgd)
-+{
-+	pgd_t *start = pgd;
-+	struct page *page;
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PGD; i++, start++) {
-+		if (!pgd_none(*start)) {
-+			pkram_free_pgt_walk_p4d(*start);
-+			page = virt_to_page(__va(pgd_val(*start)));
-+			__free_pages_core(page, 0);
-+		}
-+	}
-+}
+ 	 * Free up any temporary buffers allocated which are not needed
+ 	 * after image has been loaded
 -- 
 2.13.3
 
