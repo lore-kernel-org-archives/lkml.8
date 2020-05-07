@@ -2,254 +2,109 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE68C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DCC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C03C208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E9B20725
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgEGGNX (ORCPT
+        id S1726579AbgEGGNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:13:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33124 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgEGGNW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:13:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w20so5010110ljj.0;
-        Wed, 06 May 2020 23:13:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dqDX7b2iqbZDIpWTEutcYFF8HbnjuiI5rNqLj6XolHE=;
-        b=DCjlUucwJxCBvN+v/e72rKvY2i8PTz+HtwNRW3fv2aZHPwVarpkXHgc2fwD01kXbZe
-         CDdgcFPc4mqOOE73bO9JD3L5TTQrSI1AzEIeEmZl1iIR9Lbgl6MjklLeXIBy0jEfLp2c
-         DH8mgM6WRlLqoSwGOrqaSlRmcfqd7+PBMISnmLiZbHh7IYhd/pd2mlV3CUJ1XGVciJjj
-         0xs5BnUNrpUptOUr3+d6A6CcIywhjqmKoCY5Et/GMcwrtj6QgGjLdJSTp/b2PCB1ezdZ
-         20ZDNYNwEyPwQtB/86DbygE/66Q1qyip3t5dlJVtNex2cF8pejm59iOFLyHSDbnDsOQe
-         OP2w==
-X-Gm-Message-State: AGi0PuZW2Gi1U6RlupDGKnT80wnlE/uHu+W+grVJ6WqoEpJob6x4RzvQ
-        Nam4bCLElEyiaSNDJ1PjYuo=
-X-Google-Smtp-Source: APiQypJXJ8If869oRpwzulLIcqG3xRcsShH0+BkxT8U1KInhQ5fwlnYxdo0ZXyUW7aGsOYH+O+LURg==
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr7508268ljc.234.1588831999227;
-        Wed, 06 May 2020 23:13:19 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id h22sm2654246ljb.65.2020.05.06.23.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 23:13:18 -0700 (PDT)
-Date:   Thu, 7 May 2020 09:12:32 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 08/11] dt_bindings: ROHM BD99954 Charger
-Message-ID: <fc4a8d819b5e352e9b86c35f23ef5900c730d0fc.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 7 May 2020 02:13:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63528 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgEGGNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:13:50 -0400
+IronPort-SDR: LydA99ryZxQLh0RMUfB4y4FrgAGl18jo1hGWMEnBd8YMi4EGYgKKHWJrf5puCD38spAAjZUegY
+ n4NUhvr9SDmA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 23:13:49 -0700
+IronPort-SDR: 3pDNn0r5IGGk0SnSXaAW1JDk8AxJKKpW3Zm5csAz/Jifn4GP0vN9jsiLVbHHZTvsyxe4CTgvya
+ EI8JlTgeEQPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
+   d="scan'208";a="260423999"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 23:13:47 -0700
+Received: from [10.213.151.174] (vramuthx-MOBL1.gar.corp.intel.com [10.213.151.174])
+        by linux.intel.com (Postfix) with ESMTP id 695D9580378;
+        Wed,  6 May 2020 23:13:43 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507072831.1bf7f784@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+Date:   Thu, 7 May 2020 14:13:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200507072831.1bf7f784@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-secondary battery. Intended to be used in space-constraint equipment such
-as Low profile Notebook PC, Tablets and other applications. BD99954
-provides a Dual-source Battery Charger, two port BC1.2 detection and a
-Battery Monitor.
+Hi Boris,
 
-Document the DT bindings for BD99954
+    Thank you very much for the review comments and your time...
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- .../bindings/power/supply/rohm,bd99954.yaml   | 155 ++++++++++++++++++
- 1 file changed, 155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+On 7/5/2020 1:28 pm, Boris Brezillon wrote:
+> On Thu,  7 May 2020 08:15:37 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+>> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+>> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
+>> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+> 
+> Seriously, did you really think I would not notice what you're doing
+> here?
+Yes , I know that you have very good understanding about this.
+  You're reading the previous value which either contains a default
+> mapping or has the mapping set by the bootloader, and write it back to
+> the register along with a new mask and the REGEN bit set (which
+> BTW is wrong since you don't mask out other fields before updating
+> them).
+There is no other field get overwritten
+  This confirms that this Core -> FPI address translation exists
+> and has to be set properly, so please stop lying about that.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
-new file mode 100644
-index 000000000000..7e0f73a898c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/rohm,bd99954.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD99954 Battery charger
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+  - Markus Laine <markus.laine@fi.rohmeurope.com>
-+  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-+
-+description: |
-+  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-+  secondary battery intended to be used in space-constraint equipment such
-+  as Low profile Notebook PC, Tablets and other applications. BD99954
-+  provides a Dual-source Battery Charger, two port BC1.2 detection and a
-+  Battery Monitor.
-+
-+
-+properties:
-+  compatible:
-+    const: rohm,bd99954
-+#
-+#    The battery charging profile of BD99954.
-+#
-+#    Curve (1) represents charging current.
-+#    Curve (2) represents battery voltage.
-+#
-+#    The BD99954 data sheet divides charging to three phases.
-+#    a) Trickle-charge with constant current (8).
-+#    b) pre-charge with constant current (6)
-+#    c) fast-charge with:
-+#       First a constant current (5) phase (CC)
-+#       Then constant voltage (CV) phase (after the battery voltage has reached
-+#       target level - until charging current has dropped to termination
-+#       level (7)
-+#
-+#     V ^                                                        ^ I
-+#       .                                                        .
-+#       .                                                        .
-+# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
-+#       .                            /                           .
-+#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
-+#       .                     +    /  +                          .
-+#       .                     +   -   --                         .
-+#       .                     +  -     +                         .
-+#       .                     +.-      -:                        .
-+#       .                    .+         +`                       .
-+#       .                  .- +       | `/                       .
-+#       .               .."   +          .:                      .
-+#       .             -"      +           --                     .
-+#       .    (2)  ..."        +       |    :-                    .
-+#       .    ...""            +             -:                   .
-+# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
-+#       .             +                       `:.                .
-+#       .             +               |         -:               .
-+#       .             +                           -:             .
-+#       .             +                             ..           .
-+#       .   (1)       +               |               "+++- - - -.- - (7)
-+#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
-+#       .                                                +       -
-+#       -------------------------------------------------+++++++++-->
-+#       |             |       |   CC   |      CV         |
-+#       | --trickle-- | -pre- | ---------fast----------- |
-+#
-+#   The charger uses the following battery properties
-+# - trickle-charge-current-microamp:
-+#     Current used at trickle-charge phase (8 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - precharge-current-microamp:
-+#     Current used at pre-charge phase (6 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - constant-charge-current-max-microamp
-+#     Current used at fast charge constant current phase (5 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - constant-charge-voltage-max-microvolt
-+#     The constant voltage used in fast charging phase (4 in above chart)
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+# - precharge-upper-limit-microvolt
-+#     charging mode is changed from trickle charging to pre-charging
-+#     when battery voltage exceeds this limit voltage (3 in above chart)
-+#     minimum: 2048000
-+#     maximum: 19200000
-+#     multipleOf: 64000
-+# - re-charge-voltage-microvolt
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+#     re-charging is automatically started when battry has been discharging
-+#     to the point where the battery voltage drops below this limit
-+# - over-voltage-threshold-microvolt
-+#     battery is expected to be faulty if battery voltage exceeds this limit.
-+#     Charger will then enter to a "battery faulty" -state
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+# - charge-term-current-microamp
-+#     minimum: 0
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+#     a charge cycle terminates when the battery voltage is above recharge
-+#     threshold, and the current is below this setting (7 in above chart)
-+#   See also Documentation/devicetree/bindings/power/supply/battery.txt
-+
-+  monitored-battery:
-+    description:
-+      phandle of battery characteristics devicetree node
-+
-+  rohm,vsys-regulation-microvolt:
-+    description: system specific lower limit for system voltage.
-+    minimum: 2560000
-+    maximum: 19200000
-+    multipleOf: 64000
-+
-+  rohm,vbus-input-current-limit-microamp:
-+    description: system specific VBUS input current limit (in microamps).
-+    minimum: 32000
-+    maximum: 16352000
-+    multipleOf: 32000
-+
-+  rohm,vcc-input-current-limit-microamp:
-+    description: system specific VCC/VACP input current limit (in microamps).
-+    minimum: 32000
-+    maximum: 16352000
-+    multipleOf: 32000
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        charger@9 {
-+            compatible = "rohm,bd99954";
-+            monitored-battery = <&battery>;
-+            reg = <0x9>;
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 8>;
-+            rohm,vsys-regulation-microvolt = <8960000>;
-+            rohm,vbus-input-current-limit-microamp = <1472000>;
-+            rohm,vcc-input-current-limit-microamp = <1472000>;
-+        };
-+    };
--- 
-2.21.0
+Sorry, there is no SW translation, as I have mentioned that it's 
+optional only, for safer side , reading and writing the default values.
+The memory region to enabled that's my concern so written the same 
+register values.
+
+This will not be impact other fields, so please see below for reference
+
+The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 establish 
+and control memory regions for external accesses.
+
+Reset Value: 17400001H
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Regards
+Vadivel
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> 
