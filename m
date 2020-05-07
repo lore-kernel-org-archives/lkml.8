@@ -2,218 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29F2C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B5C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C192075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2955720838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGDbZ (ORCPT
+        id S1726480AbgEGDdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:31:25 -0400
-Received: from mo-csw1114.securemx.jp ([210.130.202.156]:48660 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEGDbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:31:25 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 0473V11k016859; Thu, 7 May 2020 12:31:01 +0900
-X-Iguazu-Qid: 2wHHidEfDYx9vilE7l
-X-Iguazu-QSIG: v=2; s=0; t=1588822261; q=2wHHidEfDYx9vilE7l; m=6BRE7ZphtOumFxP7lJTmXQeCwrfuLxBXJdfkmmJii4E=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1113) id 0473UwSB030330;
-        Thu, 7 May 2020 12:30:59 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 0473UwHP018679;
-        Thu, 7 May 2020 12:30:58 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 0473Uv3g003704;
-        Thu, 7 May 2020 12:30:58 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>, linux-acpi@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH] efi: cper: Add support for printing Firmware Error Record Reference
-References: <20200427085242.2380614-1-punit1.agrawal@toshiba.co.jp>
-        <CAMj1kXFvaA0k7fZmWcWrjDEPu3rKUt2SM6y3pdROLQztjPKM=A@mail.gmail.com>
-Date:   Thu, 07 May 2020 12:30:56 +0900
-In-Reply-To: <CAMj1kXFvaA0k7fZmWcWrjDEPu3rKUt2SM6y3pdROLQztjPKM=A@mail.gmail.com>
-        (Ard Biesheuvel's message of "Thu, 30 Apr 2020 14:08:08 +0200")
-X-TSB-HOP: ON
-Message-ID: <877dxos9ov.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 6 May 2020 23:33:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39002 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725879AbgEGDdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:33:08 -0400
+IronPort-SDR: u+O5SXq0D1d4fJWDlUkBF7LDa2FoDuSaWGjvk7otAcJE7dehVbK9m3DLCKKe2ovvtkQ4ppDVDN
+ Z3mQRouwUD1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 20:33:07 -0700
+IronPort-SDR: LLROTNw6PCNmZ27qFr0GAJ7AKDnxWByT4e3Rr6GTwB3Wk51WQBWovidx+E4jbvLYFQvQt1OPOH
+ EpiFc/4YKy+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
+   d="scan'208";a="249967520"
+Received: from cchia2-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.255.230.47])
+  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 20:33:06 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for non-hotplug capable devices
+Date:   Wed,  6 May 2020 20:32:59 -0700
+Message-Id: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <18609.1588812972@famine>
+References: <18609.1588812972@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Ard Biesheuvel <ardb@kernel.org> writes:
+If there are non-hotplug capable devices connected to a given
+port, then during the fatal error recovery(triggered by DPC or
+AER), after calling reset_link() function, we cannot rely on
+hotplug handler to detach and re-enumerate the device drivers
+in the affected bus. Instead, we will have to let the error
+recovery handler call report_slot_reset() for all devices in
+the bus to notify about the reset operation. Although this is
+only required for non hot-plug capable devices, doing it for
+hotplug capable devices should not affect the functionality.
 
-> Hello Punit,
->
-> On Mon, 27 Apr 2020 at 11:03, Punit Agrawal
-> <punit1.agrawal@toshiba.co.jp> wrote:
->>
->> While debugging a boot failure, the following unknown error record was
->> seen in the boot logs.
->>
->>     <...>
->>     BERT: Error records from previous boot:
->>     [Hardware Error]: event severity: fatal
->>     [Hardware Error]:  Error 0, type: fatal
->>     [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
->>     [Hardware Error]:   section length: 0x290
->>     [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
->>     [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
->>     [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
->>     [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
->>     <...>
->>
->> On further investigation, it was found that the error record with
->> UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
->> UEFI Specification at least since v2.4 and has recently had additional
->> fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
->>
->> Add support for parsing and printing the defined fields to give users
->> a chance to figure out what's went wrong.
->>
->> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: linux-acpi@vger.kernel.org
->> Cc: linux-efi@vger.kernel.org
+Along with above issue, this fix also applicable to following
+issue.
 
-[...]
+Commit 6d2c89441571 ("PCI/ERR: Update error status after
+reset_link()") added support to store status of reset_link()
+call. Although this fixed the error recovery issue observed if
+the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+result from report_frozen_detected. This can cause a failure to
+recover if _NEED_RESET is returned by report_frozen_detected and
+report_slot_reset is not invoked.
 
->>  drivers/firmware/efi/cper.c | 49 +++++++++++++++++++++++++++++++++++++
->>  include/linux/cper.h        | 11 +++++++++
->>  2 files changed, 60 insertions(+)
->>
->> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
->> index 9d2512913d25..153b95257e23 100644
->> --- a/drivers/firmware/efi/cper.c
->> +++ b/drivers/firmware/efi/cper.c
->> @@ -407,6 +407,46 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
->>         }
->>  }
->>
->> +static const char * const fw_err_rec_type_strs[] = {
->> +       "IPF SAL Error Record",
->> +       "SOC Firmware Error Record Type1 (Legacy CrashLog Support)",
->> +       "SOC Firmware Error Record Type2",
->> +};
->> +
->> +static void cper_print_fw_err(const char *pfx,
->> +                             struct acpi_hest_generic_data *gdata,
->> +                             const struct cper_sec_fw_err_rec_ref *fw_err)
->> +{
->> +       void *buf = acpi_hest_get_payload(gdata);
->> +       u32 offset, length = gdata->error_data_length;
->> +
->> +       printk("%s""Firmware Error Record Type: %s\n", pfx,
->> +              fw_err->record_type < ARRAY_SIZE(fw_err_rec_type_strs) ?
->> +              fw_err_rec_type_strs[fw_err->record_type] : "unknown");
->> +
->> +       /* Record Type based on UEFI 2.7 */
->> +       if (fw_err->revision == 0)
->> +               printk("%s""Record Identifier: %08llx\n", pfx,
->> +                      fw_err->record_identifier);
->> +       else if (fw_err->revision == 2)
->> +               printk("%s""Record Identifier: %pUl\n", pfx,
->> +                      &fw_err->record_identifier_guid);
->> +
->
-> Please use {} for multi-line statements between the ifs
->
->> +       if (fw_err->revision == 0)
->> +               offset = offsetof(struct cper_sec_fw_err_rec_ref,
->> +                                 record_identifier_guid);
->> +       else if (fw_err->revision == 1)
->> +               offset = offsetof(struct cper_sec_fw_err_rec_ref,
->> +                                 record_identifier);
->> +       else
->> +               offset = sizeof(*fw_err);
->> +
->
-> This logic is slightly confusing, so it could do with a comment
-> regarding which part of the structure is being dumped and why.
->
->
->> +       buf += offset;
->> +       length -= offset;
->> +
->> +       print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, buf, length, true);
->> +}
->> +
->>  static void cper_print_tstamp(const char *pfx,
->>                                    struct acpi_hest_generic_data_v300 *gdata)
->>  {
->> @@ -494,6 +534,15 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
->>                 else
->>                         goto err_section_too_small;
->>  #endif
->> +       } else if (guid_equal(sec_type, &CPER_SEC_FW_ERR_REC_REF)) {
->> +               struct cper_sec_fw_err_rec_ref *fw_err = acpi_hest_get_payload(gdata);
->> +
->> +               printk("%ssection_type: Firmware Error Record Reference\n",
->> +                      newpfx);
->> +               if (gdata->error_data_length >= sizeof(*fw_err))
->> +                       cper_print_fw_err(newpfx, gdata, fw_err);
->
-> This doesn't work for revision 0 structures unless they happen to have
-> some trailing data, which is not necessarily the case, right?
+Such an event can be induced for testing purposes by reducing the
+Max_Payload_Size of a PCIe bridge to less than that of a device
+downstream from the bridge, and then initiating I/O through the
+device, resulting in oversize transactions.  In the presence of DPC,
+this results in a containment event and attempted reset and recovery
+via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+invoked, and the device does not recover.
 
-Good catch. I will re-work this to avoid skipping revision 0 record.
+[original patch is from jay.vosburgh@canonical.com]
+[original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/pcie/err.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
->> +               else
->> +                       goto err_section_too_small;
->>         } else {
->>                 const void *err = acpi_hest_get_payload(gdata);
->>
->> diff --git a/include/linux/cper.h b/include/linux/cper.h
->> index 4f005d95ce88..5cb57e69df70 100644
->> --- a/include/linux/cper.h
->> +++ b/include/linux/cper.h
->> @@ -521,6 +521,17 @@ struct cper_sec_pcie {
->>         u8      aer_info[96];
->>  };
->>
->> +/* Firmware Error Record Reference, UEFI v2.7 sec N.2.10  */
->> +struct cper_sec_fw_err_rec_ref {
->> +       u8 record_type;
->> +       union {
->> +               u8 revision;
->> +               u8 reserved[7];
->> +       };
->
-> Even though the spec is slightly silly here, I think we can avoid the
-> union, and just have
->
->   u8 record_type;
->   u8 revision;
->   u8 reserved[6];
->
-> as the leading fields.
-
-That's a better interpretation of the spec. I will follow your
-suggestion and send a new version incorporating this and other
-suggestions.
-
-Thanks for taking a look.
-
-Punit
-
-[...]
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 14bb8f54723e..db80e1ecb2dc 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(dev, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
+-		status = reset_link(dev);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		status = PCI_ERS_RESULT_NEED_RESET;
++	} else {
++		pci_walk_bus(bus, report_normal_detected, &status);
++	}
++
++	if (status == PCI_ERS_RESULT_NEED_RESET) {
++		if (reset_link) {
++			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
++				status = PCI_ERS_RESULT_DISCONNECT;
++		} else {
++			if (pci_bus_error_reset(dev))
++				status = PCI_ERS_RESULT_DISCONNECT;
++		}
++
++		if (status == PCI_ERS_RESULT_DISCONNECT) {
+ 			pci_warn(dev, "link reset failed\n");
+ 			goto failed;
+ 		}
+-	} else {
+-		pci_walk_bus(bus, report_normal_detected, &status);
+ 	}
+ 
+ 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+-- 
+2.17.1
 
