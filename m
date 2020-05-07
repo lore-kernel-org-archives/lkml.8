@@ -2,124 +2,114 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F82DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C9DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6FA208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491A9208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umE8GfA+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3o3rbnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEGT1X (ORCPT
+        id S1728282AbgEGT2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGT1W (ORCPT
+        Thu, 7 May 2020 15:28:16 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35976 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgEGT2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:27:22 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EDFC05BD43;
-        Thu,  7 May 2020 12:27:22 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y3so7796270wrt.1;
-        Thu, 07 May 2020 12:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=juyJ9lwzr2janjOSEHzVoFlAFrc9APYn5GdZLAkVqVc=;
-        b=umE8GfA+bHenXOWvcmjiP+45bDgfaYbTvHQ/hacGGjWxmK3hRlnoqycD0UKK8jGCko
-         iak/Jv50S+X4+ZAowstqq4ZYxe+Sb85eqR/7LYk+6gczJv6Cw7RVzJIGRwjyOX792eWb
-         H2hzes4pJSXnXI4G/r099kpqo8cmEvLbpHeXDKWXnQO6R6N1lrP0w6Ki2blPG7Fd/JQV
-         HQ+j1Sxs07V71UwwHqbHwX7gfPZq4LgA1JXbbES1asXVyMd4bz60Zn3YR515FeR8+k/Q
-         I0NvNscwlFH4PENJZoRJny3fQqYODqROOzsGUjbZfyCTBCUO6E3onx5hZnPiEsj1Ovpk
-         T52w==
+        Thu, 7 May 2020 15:28:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588879694;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t9obrI+I5ySmag9Pa2ybFm1Lh3tAlP9Wg1QXo7JHVYM=;
+        b=Y3o3rbnzf7mPu1EQGYeWPRg1C8Qgz/rSHXPkgwL7jAj31/VK0oZmaqzU5MjekJi4vJNXVq
+        tt7WX+7kF+bIZL/Z1OlkeJenZibv4kW9AVA3HClgbaLfUfNS2PIdJa4UvaYaqfwJnO4boX
+        C0W2QQaqUE+Bl+EJqrHw0kHN/uh3WYw=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-126-Ks9XDQMiNdGgVmj6UVtq7A-1; Thu, 07 May 2020 15:28:11 -0400
+X-MC-Unique: Ks9XDQMiNdGgVmj6UVtq7A-1
+Received: by mail-qt1-f198.google.com with SMTP id w6so7927409qtt.21
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:28:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=juyJ9lwzr2janjOSEHzVoFlAFrc9APYn5GdZLAkVqVc=;
-        b=eSak8UyTxcacLXEJWxL/np5AFcW/1IcdRW6Z+QkSY9k/RhrGui4APEOSWERcLeBK2s
-         qYmWpw7LqkRQgcCOa5OqqKhoXyDo9e0mVNDsItOhJGIpMP3olwqwKxANT40AjMObxR0y
-         MmqW1QPopoBQWZ15AKTAmn1plIg7XKhkEZUzNjSo7T61m3jQjTFssnqO9uvk6fN+TH7A
-         T6TFuiUC35nBbQ92XSk/FiLEM1eHmOC3TtZ4koBpRBLubwTZt0QX3AO5QKv84RPGcu9G
-         DHMw9HTwYaWg40mnQ9tJyfsh7mE2Z6JhiDvWC3abcv9eQjJrszicD9SUN5wX2UprIlDT
-         uKmQ==
-X-Gm-Message-State: AGi0PuZJ9M/vDi7Aasf/HEsbaWuSzZqI4ATVL3QV7k0oGsI6WKGt0+5b
-        QQp0DANUl5tQjO+GSq3ZxIY=
-X-Google-Smtp-Source: APiQypJOZABF8JKClO8579wnGqVXB4heq+mJNVis4yMmBNkvzyrxD3cHqfWEUirjY8quYem3/WrGeg==
-X-Received: by 2002:adf:d0d1:: with SMTP id z17mr17076474wrh.295.1588879640019;
-        Thu, 07 May 2020 12:27:20 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id w11sm9184361wmi.32.2020.05.07.12.27.17
+         :mime-version:content-disposition:in-reply-to;
+        bh=t9obrI+I5ySmag9Pa2ybFm1Lh3tAlP9Wg1QXo7JHVYM=;
+        b=X73DQ8S7nVkD9Gq/m2UQDwQ87220vsjbD9InZqH93hyJ/l2kxx+DhgkYv0fekbTrZW
+         Ri2io0KothGdNOwyjwr24+9ryKOYiLVlWbNzTXXv4Ukm/PoERmG6nfRvAAFcE/Zgfpky
+         t3HEjZfRgsdNbpj/IYeE/IRuCuJ0rma62NYLpaidmWOvLJAfP5SHKXMTjC+soAZHmOZ+
+         lFf4HFRuvfqsfwZ1i61Mtf9H/3bBkkxxmDaRVIeUmm5mGbO6dAUgkdwcULCn0dUizhT2
+         PzXL4SmzPd2BNQM9wCBOrTubC/F7QT/Vio7OqvvlzDM/6dQlCArCqlT8vpoDjTABEEPf
+         /gbw==
+X-Gm-Message-State: AGi0PuZLGXekRgChtDtIXtXzScoosX/j+x5eDpPeRcyWNxlGqoprfqAG
+        8pjcXgQRYRsjSG5f0OUmoX8XkOMFQNL0iazTTQjDlLBQe8HPWhnmjg4JLWCZGiTGYaUM5El7x0y
+        xBmN1jOClhaUwPm3/v2OYjtZc
+X-Received: by 2002:ac8:27b4:: with SMTP id w49mr11286824qtw.111.1588879691164;
+        Thu, 07 May 2020 12:28:11 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJpH33jmgoLRBXKHI5mRYHl+RR5ikyN0bvOn1bz5L/I4wON5UkdlgUfdaK8Jrk2hZUurzzYGQ==
+X-Received: by 2002:ac8:27b4:: with SMTP id w49mr11286802qtw.111.1588879690866;
+        Thu, 07 May 2020 12:28:10 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id q6sm5111564qte.72.2020.05.07.12.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:27:18 -0700 (PDT)
-Date:   Thu, 7 May 2020 21:27:17 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] memory: tegra: Fix an error handling path in
- 'tegra186_emc_probe()'
-Message-ID: <20200507192717.GA2905961@ulmo>
-References: <20200506200907.195502-1-christophe.jaillet@wanadoo.fr>
+        Thu, 07 May 2020 12:28:09 -0700 (PDT)
+Date:   Thu, 7 May 2020 15:28:08 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
+ vmcb->save.dr6
+Message-ID: <20200507192808.GK228260@xz-x1>
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-9-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200506200907.195502-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200507115011.494562-9-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 07, 2020 at 07:50:10AM -0400, Paolo Bonzini wrote:
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 1a547e3ac0e5..9a2a62e5afeb 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -633,10 +633,18 @@ static int nested_svm_intercept_db(struct vcpu_svm *svm)
+>  
+>  reflected_db:
+>  	/*
+> -	 * Synchronize guest DR6 here just like in db_interception; it will
+> -	 * be moved into the nested VMCB by nested_svm_vmexit.
+> +	 * Synchronize guest DR6 here just like in kvm_deliver_exception_payload;
+> +	 * it will be moved into the nested VMCB by nested_svm_vmexit.  Once
+> +	 * exceptions will be moved to svm_check_nested_events, all this stuff
+> +	 * will just go away and we could just return NESTED_EXIT_HOST
+> +	 * unconditionally.  db_interception will queue the exception, which
+> +	 * will be processed by svm_check_nested_events if a nested vmexit is
+> +	 * required, and we will just use kvm_deliver_exception_payload to copy
+> +	 * the payload to DR6 before vmexit.
+>  	 */
+> -	svm->vcpu.arch.dr6 = dr6;
+> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I failed to figure out what the above calculation is going to do...  E.g., I
+think the old "BT|BS|BD" bits in the old arch.dr6 cache will be leftover even
+if none of them is set in save.dr6, while we shouldn't?
 
-On Wed, May 06, 2020 at 10:09:07PM +0200, Christophe JAILLET wrote:
-> The call to 'tegra_bpmp_get()' must be balanced by a call to
-> 'tegra_bpmp_put()' in case of error, as already done in the remove
-> function.
->=20
-> Add an error handling path and corresponding goto.
->=20
-> Fixes: 52d15dd23f0b ("memory: tegra: Support DVFS on Tegra186 and later")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/memory/tegra/tegra186-emc.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+Thanks,
 
-Applied to for-5.8/memory, thanks.
+-- 
+Peter Xu
 
-Thierry
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl60YRIACgkQ3SOs138+
-s6E0uhAArwnuPlgr7H/3NTv0vER3Av5CqoabBWqcHkdalDEoowrpcAIKG7Y+J3yp
-teJ8yCVlGPVPQp5P3peK+ABdZCVVtLx6FnRfuiIlEFih8xJwfLmUukabewO3+sC6
-TE0QZtJl7q4R9aXRHHvi2lv/Wl2X4j7A3ucZEVYcB4fEHI7GCWJaGluR6/B6QRS6
-D7ad5FQOPbDKWr7vg8ePm+mfypMs8Fes739f8JDnBCnS9Ol3s6Z83xnBc7BTlcUl
-hxqY8YRBbyiyWIjTbo5jjg1UGYdKdt0c42YIvmnMpRfxMpwlyyIYDZDirLGo+cF9
-ZjJ4p9cVyTTgL9J3CR4LUA2Klxsa6iaLC2lzZ/bUq4zLzxBtWVQinN2z/j8Lav24
-54dW1UqhW7VLFxOWqZNa8X7vHTI7LF/gxiaop6J6o/+vYVpIkwHIftEyJz7Na2VO
-rfS5Njj9WgYAlNYP4mq1kZigXZOpW5s8ahOpoVA6q0Qbcas11eR8oU8QvwiYQ4c3
-v/tDrG/IqehyIpEdvmz7Xr63j45QQmxWH0hYDd1gBRWCzWfB/dM1e41LQe0sOTes
-HhWd0qmmj9Ld0XvnYEZvwRTA0nQkuPAH9pr5PdHedUyB/EpKtOnZYM+VQZ/8JAEA
-/5X/ZuRMs5hrKgT8XsVTrtnVo+dMxclmYN7CtSizt4LjMumBIH8=
-=jPaV
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
