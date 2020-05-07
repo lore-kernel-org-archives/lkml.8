@@ -2,189 +2,272 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B631C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB27C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18E0F21841
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AB321582
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abEqiduR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CLfFWkjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgEGKca (ORCPT
+        id S1726678AbgEGKc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726683AbgEGKc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 06:32:26 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBB6C061A10;
-        Thu,  7 May 2020 03:32:26 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so5735320ljg.5;
-        Thu, 07 May 2020 03:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lxR8iUX+nq/8LE2/542OxQ8ktlSJ6cXRsEzWoH8lfzA=;
-        b=abEqiduRP5XA93Rx8i0WKwGEH53+CCt70vEpJwG+coIZSFwLyoUVgyzxNQnhjSMrhr
-         6zKwL9MZfH+5sx9PZfTjosjryBVs8a7aq6aXudAxh15XVqz6iPDDQSVO08IHWKbBZFhH
-         CYQgB0X/jVcaIR/7aGSsp0v7BTgC1XfXRGaRSP+5nSf409yP6qAEQupO9gEmqRFwLcEe
-         H0pnccwikFJtaFyj3dxp7wVF9McYQ8TKb9l/rbtyEudKRCSQDWTnnKv9kipYQ+rsuQFD
-         CS+QGZ/zIXq6iK4F2JEY1s6tyYuYIM07mjId6iMVZCrPXuWYp4/siWmeNVpn7W+WWJCx
-         t9tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lxR8iUX+nq/8LE2/542OxQ8ktlSJ6cXRsEzWoH8lfzA=;
-        b=nv57GHHrL58/4wW7PIU/UyrG4IC1izrEB1e3g/QqleKYfazlwByHivX5WTeeJWUXy+
-         Hta+zuOQn2lJvoHZ9glWsKkfDhgSf6Dt/zzxYVhmmuFJq3Lg11lHzfVVHhSyQKNUt1q4
-         GBqViQG+QfJmHr+/RKFYMayyVf9T9Obp+AOIVMEEGG+VTpxjgXlFYXVaq9QM5rLFyt/g
-         3jmbJrli66hsnUuI2EyayHwO8FHSC0Ywpt9j1FcS3D6INN1LD6o+kK7i8Vw4Go0ZfcDb
-         6IDIWEboHOUI67JD223ieH1Q3Fjlozm4KWYDSAF29nFhQ2i03QRBydQJbjmespb8TNTw
-         SPQA==
-X-Gm-Message-State: AGi0PuY2tXRnf8H/+jegyhYwkoU42eIhwArRUhBjM3SdzsjmFDhv4o8s
-        CPCcOj7ZKuLqfH8b75YlAU6hZcbRdTpKpGnsJAQ=
-X-Google-Smtp-Source: APiQypLqntGlzwMTPnOwy1h5uEIH4hExzJxYqIPLwFHTltoybWYvpOoMaGdS9r61zRjkIUO9oVrCQTWqJErRd8MJv5U=
-X-Received: by 2002:a2e:7613:: with SMTP id r19mr7726906ljc.29.1588847542720;
- Thu, 07 May 2020 03:32:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
- <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com> <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
- <20200506100649.GI17863@quack2.suse.cz> <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
- <20200506125930.GJ17863@quack2.suse.cz> <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
- <20200507101322.GB30922@quack2.suse.cz>
-In-Reply-To: <20200507101322.GB30922@quack2.suse.cz>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Thu, 7 May 2020 16:02:10 +0530
-Message-ID: <CAFqt6zZ2pj_6q=5kf9dxOsSkHc7vJEHgCjuRmSELQF9KnoKCxA@mail.gmail.com>
-Subject: Re: [RFC] mm/gup.c: Updated return value of {get|pin}_user_pages_fast()
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>, benchan@chromium.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52676 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbgEGKcT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:32:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588847538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rWXWkv8vN9fjpn9UiZGTDZqowsNGIfPpltO1Iw80T6Y=;
+        b=CLfFWkjPgRDzOOF7afMUaG6mR1FB+Duj27Bvm1UNbW2lC1JqLAnefuvX8qj+yWpTcRVsCj
+        ErTs149j0MF3CQyYPjbIoMDighFNzhfbvebpzQ00P8ihhRIgaYmVorRGFl3N176uP3LwvH
+        RFSJmDk0NUsJLWMZyPQogvt6rsWAH9s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-V5a1ZtF1MwmggBgERMnwKw-1; Thu, 07 May 2020 06:32:14 -0400
+X-MC-Unique: V5a1ZtF1MwmggBgERMnwKw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79C7F19200C1;
+        Thu,  7 May 2020 10:32:12 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A2155D9C5;
+        Thu,  7 May 2020 10:32:05 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        santosh.shilimkar@oracle.com,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        tee-dev@lists.linaro.org, Linux-MM <linux-mm@kvack.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com
-Content-Type: text/plain; charset="UTF-8"
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v3 02/15] virtio-mem: Allow to specify an ACPI PXM as nid
+Date:   Thu,  7 May 2020 12:31:06 +0200
+Message-Id: <20200507103119.11219-3-david@redhat.com>
+In-Reply-To: <20200507103119.11219-1-david@redhat.com>
+References: <20200507103119.11219-1-david@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 3:43 PM Jan Kara <jack@suse.cz> wrote:
->
-> On Wed 06-05-20 21:38:40, Souptick Joarder wrote:
-> > On Wed, May 6, 2020 at 6:29 PM Jan Kara <jack@suse.cz> wrote:
-> > >
-> > > On Wed 06-05-20 17:51:39, Souptick Joarder wrote:
-> > > > On Wed, May 6, 2020 at 3:36 PM Jan Kara <jack@suse.cz> wrote:
-> > > > >
-> > > > > On Wed 06-05-20 02:06:56, Souptick Joarder wrote:
-> > > > > > On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
-> > > > > > >
-> > > > > > > On 2020-05-05 12:14, Souptick Joarder wrote:
-> > > > > > > > Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
-> > > > > > > > and no of pinned pages. The only case where these two functions will
-> > > > > > > > return 0, is for nr_pages <= 0, which doesn't find a valid use case.
-> > > > > > > > But if at all any, then a -ERRNO will be returned instead of 0, which
-> > > > > > > > means {get|pin}_user_pages_fast() will have 2 return values -errno &
-> > > > > > > > no of pinned pages.
-> > > > > > > >
-> > > > > > > > Update all the callers which deals with return value 0 accordingly.
-> > > > > > >
-> > > > > > > Hmmm, seems a little shaky. In order to do this safely, I'd recommend
-> > > > > > > first changing gup_fast/pup_fast so so that they return -EINVAL if
-> > > > > > > the caller specified nr_pages==0, and of course auditing all callers,
-> > > > > > > to ensure that this won't cause problems.
-> > > > > >
-> > > > > > While auditing it was figured out, there are 5 callers which cares for
-> > > > > > return value
-> > > > > > 0 of gup_fast/pup_fast. What problem it might cause if we change
-> > > > > > gup_fast/pup_fast
-> > > > > > to return -EINVAL and update all the callers in a single commit ?
-> > > > >
-> > > > > Well, first I'd ask a different question: Why do you want to change the
-> > > > > current behavior? It's not like the current behavior is confusing.  Callers
-> > > > > that pass >0 pages can happily rely on the simple behavior of < 0 return on
-> > > > > error or > 0 return if we mapped some pages. Callers that can possibly ask
-> > > > > to map 0 pages can get 0 pages back - kind of expected - and I don't see
-> > > > > any benefit in trying to rewrite these callers to handle -EINVAL instead...
-> > > >
-> > > > Callers with a request to map 0 pages doesn't have a valid use case. But if any
-> > > > caller end up doing it mistakenly, -errno should be returned to caller
-> > > > rather than 0
-> > > > which will indicate more precisely that map 0 pages is not a valid
-> > > > request from caller.
-> > >
-> > > Well, I believe this depends on the point of view. Similarly as reading 0
-> > > bytes is successful, we could consider mapping 0 pages successful as well.
-> > > And there can be valid cases where number of pages to map is computed from
-> > > some input and when 0 pages should be mapped, it is not a problem and your
-> > > change would force such callers to special case this with explicitely
-> > > checking for 0 pages to map and not calling GUP in that case at all.
-> > >
-> > > I'm not saying what you propose is necessarily bad, I just say I don't find
-> > > it any better than the current behavior and so IMO it's not worth the
-> > > churn. Now if you can come up with some examples of current in-kernel users
-> > > who indeed do get the handling of the return value wrong, I could be
-> > > convinced otherwise.
-> >
-> > There are 5 callers of {get|pin}_user_pages_fast().
->
-> Oh, there are *much* more callers that 5. It's more like 70. Just grep the
-> source... And then you have all other {get|pin}_user_pages() variants that
-> need to be kept consistent. So overall we have over 200 calls to some
-> variant of GUP.
+We want to allow to specify (similar as for a DIMM), to which node a
+virtio-mem device (and, therefore, its memory) belongs. Add a new
+virtio-mem feature flag and export pxm_to_node, so it can be used in kern=
+el
+module context.
 
-Sorry, I mean, there are 5 callers of {get|pin}_user_pages_fast() who
-have interest in
-return value 0, out of total 42.
+Acked-by: Michal Hocko <mhocko@suse.com> # for the export
+Acked-by: "Rafael J. Wysocki" <rafael@kernel.org> # for the export
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Tested-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/acpi/numa/srat.c        |  1 +
+ drivers/virtio/virtio_mem.c     | 39 +++++++++++++++++++++++++++++++--
+ include/uapi/linux/virtio_mem.h | 10 ++++++++-
+ 3 files changed, 47 insertions(+), 3 deletions(-)
 
->
-> > arch/ia64/kernel/err_inject.c#L145
-> > staging/gasket/gasket_page_table.c#L489
-> >
-> > Checking return value 0 doesn't make sense for above 2.
-> >
-> > drivers/platform/goldfish/goldfish_pipe.c#L277
-> > net/rds/rdma.c#L165
-> > drivers/tee/tee_shm.c#L262
-> >
-> > These 3 callers have calculated the no of pages value before passing it to
-> > {get|pin}_user_pages_fast(). But if they end up passing nr_pages <= 0, a return
-> > value of either 0 or -EINVAL doesn't going to harm any existing
-> > behavior of callers.
-> >
-> > IMO, it is safe to return -errno for nr_pages <= 0, for
-> > {get|pin}_user_pages_fast().
->
-> OK, so no real problem with any of these callers. I still don't see a
-> justification for the churn you suggest... Auditting all those code sites
-> is going to be pretty tedious.
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index 47b4969d9b93..5be5a977da1b 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -35,6 +35,7 @@ int pxm_to_node(int pxm)
+ 		return NUMA_NO_NODE;
+ 	return pxm_to_node_map[pxm];
+ }
++EXPORT_SYMBOL(pxm_to_node);
+=20
+ int node_to_pxm(int node)
+ {
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 5d1dcaa6fc42..270ddeaec059 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -21,6 +21,8 @@
+ #include <linux/bitmap.h>
+ #include <linux/lockdep.h>
+=20
++#include <acpi/acpi_numa.h>
++
+ enum virtio_mem_mb_state {
+ 	/* Unplugged, not added to Linux. Can be reused later. */
+ 	VIRTIO_MEM_MB_STATE_UNUSED =3D 0,
+@@ -72,6 +74,8 @@ struct virtio_mem {
+=20
+ 	/* The device block size (for communicating with the device). */
+ 	uint32_t device_block_size;
++	/* The translated node id. NUMA_NO_NODE in case not specified. */
++	int nid;
+ 	/* Physical start address of the memory region. */
+ 	uint64_t addr;
+ 	/* Maximum region size in bytes. */
+@@ -389,7 +393,10 @@ static int virtio_mem_sb_bitmap_prepare_next_mb(stru=
+ct virtio_mem *vm)
+ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+ {
+ 	const uint64_t addr =3D virtio_mem_mb_id_to_phys(mb_id);
+-	int nid =3D memory_add_physaddr_to_nid(addr);
++	int nid =3D vm->nid;
++
++	if (nid =3D=3D NUMA_NO_NODE)
++		nid =3D memory_add_physaddr_to_nid(addr);
+=20
+ 	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
+ 	return add_memory(nid, addr, memory_block_size_bytes());
+@@ -407,7 +414,10 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, =
+unsigned long mb_id)
+ static int virtio_mem_mb_remove(struct virtio_mem *vm, unsigned long mb_=
+id)
+ {
+ 	const uint64_t addr =3D virtio_mem_mb_id_to_phys(mb_id);
+-	int nid =3D memory_add_physaddr_to_nid(addr);
++	int nid =3D vm->nid;
++
++	if (nid =3D=3D NUMA_NO_NODE)
++		nid =3D memory_add_physaddr_to_nid(addr);
+=20
+ 	dev_dbg(&vm->vdev->dev, "removing memory block: %lu\n", mb_id);
+ 	return remove_memory(nid, addr, memory_block_size_bytes());
+@@ -426,6 +436,17 @@ static void virtio_mem_retry(struct virtio_mem *vm)
+ 	spin_unlock_irqrestore(&vm->removal_lock, flags);
+ }
+=20
++static int virtio_mem_translate_node_id(struct virtio_mem *vm, uint16_t =
+node_id)
++{
++	int node =3D NUMA_NO_NODE;
++
++#if defined(CONFIG_ACPI_NUMA)
++	if (virtio_has_feature(vm->vdev, VIRTIO_MEM_F_ACPI_PXM))
++		node =3D pxm_to_node(node_id);
++#endif
++	return node;
++}
++
+ /*
+  * Test if a virtio-mem device overlaps with the given range. Can be cal=
+led
+  * from (notifier) callbacks lockless.
+@@ -1267,6 +1288,7 @@ static bool virtio_mem_any_memory_present(unsigned =
+long start,
+ static int virtio_mem_init(struct virtio_mem *vm)
+ {
+ 	const uint64_t phys_limit =3D 1UL << MAX_PHYSMEM_BITS;
++	uint16_t node_id;
+=20
+ 	if (!vm->vdev->config->get) {
+ 		dev_err(&vm->vdev->dev, "config access disabled\n");
+@@ -1287,6 +1309,9 @@ static int virtio_mem_init(struct virtio_mem *vm)
+ 		     &vm->plugged_size);
+ 	virtio_cread(vm->vdev, struct virtio_mem_config, block_size,
+ 		     &vm->device_block_size);
++	virtio_cread(vm->vdev, struct virtio_mem_config, node_id,
++		     &node_id);
++	vm->nid =3D virtio_mem_translate_node_id(vm, node_id);
+ 	virtio_cread(vm->vdev, struct virtio_mem_config, addr, &vm->addr);
+ 	virtio_cread(vm->vdev, struct virtio_mem_config, region_size,
+ 		     &vm->region_size);
+@@ -1365,6 +1390,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
+ 		 memory_block_size_bytes());
+ 	dev_info(&vm->vdev->dev, "subblock size: 0x%x",
+ 		 vm->subblock_size);
++	if (vm->nid !=3D NUMA_NO_NODE)
++		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
+=20
+ 	return 0;
+ }
+@@ -1508,12 +1535,20 @@ static int virtio_mem_restore(struct virtio_devic=
+e *vdev)
+ }
+ #endif
+=20
++static unsigned int virtio_mem_features[] =3D {
++#if defined(CONFIG_NUMA) && defined(CONFIG_ACPI_NUMA)
++	VIRTIO_MEM_F_ACPI_PXM,
++#endif
++};
++
+ static struct virtio_device_id virtio_mem_id_table[] =3D {
+ 	{ VIRTIO_ID_MEM, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
+=20
+ static struct virtio_driver virtio_mem_driver =3D {
++	.feature_table =3D virtio_mem_features,
++	.feature_table_size =3D ARRAY_SIZE(virtio_mem_features),
+ 	.driver.name =3D KBUILD_MODNAME,
+ 	.driver.owner =3D THIS_MODULE,
+ 	.id_table =3D virtio_mem_id_table,
+diff --git a/include/uapi/linux/virtio_mem.h b/include/uapi/linux/virtio_=
+mem.h
+index 1bfade78bdfd..e0a9dc7397c3 100644
+--- a/include/uapi/linux/virtio_mem.h
++++ b/include/uapi/linux/virtio_mem.h
+@@ -83,6 +83,12 @@
+  * device is busy.
+  */
+=20
++/* --- virtio-mem: feature bits --- */
++
++/* node_id is an ACPI PXM and is valid */
++#define VIRTIO_MEM_F_ACPI_PXM		0
++
++
+ /* --- virtio-mem: guest -> host requests --- */
+=20
+ /* request to plug memory blocks */
+@@ -177,7 +183,9 @@ struct virtio_mem_resp {
+ struct virtio_mem_config {
+ 	/* Block size and alignment. Cannot change. */
+ 	__u32 block_size;
+-	__u32 padding;
++	/* Valid with VIRTIO_MEM_F_ACPI_PXM. Cannot change. */
++	__u16 node_id;
++	__u16 padding;
+ 	/* Start address of the memory region. Cannot change. */
+ 	__u64 addr;
+ 	/* Region size (maximum). Cannot change. */
+--=20
+2.25.3
 
-I try to audit all 42 callers of {get|pin}_user_pages_fast() and
-figure out these 5 callers
-which need to be updated and I think, other callers of
-{get|pin}_user_pages_fast() will not be
-effected.
-
-But I didn't go through other variants of gup/pup except
-{get|pin}_user_pages_fast().
