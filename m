@@ -2,153 +2,167 @@ Return-Path: <SRS0=F+sq=6U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97090C38A2A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B03C47257
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5C72075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53962071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 May 2020 23:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="muR0CUZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgEFXuo (ORCPT
+        id S1728396AbgEFXxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 19:50:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22516 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgEFXue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 19:50:34 -0400
-IronPort-SDR: jof/3rPbb9FPWE/FstfGpnNpuwzobHtLALOg7vafv7QI7Z8pxXuhCclVww84s2Ode2qtmzgsBw
- jDhidq+dZx9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 16:50:31 -0700
-IronPort-SDR: 9sNPWl6NHJRwt/Qx2aLUX8d+XLEBJrueDqYI9OOBKgEeH5SRLqpbLmf1UkHa85o4etq+9abTUJ
- mRgHZlshZ+5A==
-X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
-   d="scan'208";a="435084104"
-Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 16:50:30 -0700
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com
-Cc:     kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
-        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH V3 4/4] x86/resctrl: Use appropriate API for strings terminated by newline
-Date:   Wed,  6 May 2020 16:49:55 -0700
-Message-Id: <a99e4de3dc3f0e60281de1274ccb064071200fd9.1588808538.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1588808537.git.reinette.chatre@intel.com>
-References: <cover.1588808537.git.reinette.chatre@intel.com>
+        Wed, 6 May 2020 19:53:07 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:63099 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgEFXxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 19:53:06 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200506235303epoutp01fccd2071735bbdccdf03dffbb5f5f46b~MlYjO-8us0586205862epoutp01Y
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 23:53:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200506235303epoutp01fccd2071735bbdccdf03dffbb5f5f46b~MlYjO-8us0586205862epoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588809183;
+        bh=o2AlyizYfqY3ffmyHKBP6dMu177b2J0Zq9TqwShCWNw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=muR0CUZvYNdnzlo0FfCI/QdIOEvMQyIhsxxDdhi3gsdazxCKhFI0fGsPEyjkPs2Nf
+         L4CDVV/5wNuUYAS/3Zk+5o8Yud6mJo1F0F1F2bKloMARx7FkgA/uwtBzuIAoDBA4i/
+         IKI+oz+3avKqIx13pL72uRZ8OybbvGohDDLulLHY=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200506235303epcas1p445c4c14013dbd47bb930fb707c34d41f~MlYi5KGLh0698406984epcas1p4u;
+        Wed,  6 May 2020 23:53:03 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49HYLj5Nb4zMqYkn; Wed,  6 May
+        2020 23:53:01 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.D8.04744.BDD43BE5; Thu,  7 May 2020 08:52:59 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200506235259epcas1p180e571147fbbdb104fe8618c7555abe8~MlYfVPW2h1116411164epcas1p1o;
+        Wed,  6 May 2020 23:52:59 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200506235259epsmtrp13cc283328367adb6539eec52e4192124~MlYfUfuLu0130701307epsmtrp1V;
+        Wed,  6 May 2020 23:52:59 +0000 (GMT)
+X-AuditID: b6c32a38-26bff70000001288-d8-5eb34ddb4f54
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CF.90.18461.BDD43BE5; Thu,  7 May 2020 08:52:59 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200506235258epsmtip229c843a171187266b232c0a9050cf010~MlYfJ6JYq0254602546epsmtip2U;
+        Wed,  6 May 2020 23:52:58 +0000 (GMT)
+Subject: Re: [PATCH RE-SEND v1] PM / devfreq: Replace strncpy with strscpy
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <41092ded-8bb6-726f-6986-fee62a8a1325@samsung.com>
+Date:   Thu, 7 May 2020 09:02:57 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
+In-Reply-To: <09712864-01a5-e2f9-b55f-e822169d30fc@gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmvu5t381xBqc+S1is/viY0eJs0xt2
+        i8u75rBZfO49wmhxu3EFmwOrx85Zd9k9+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
+        yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
+        I7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQwMDIFKgwITvj5KwbrAWvuSuOH9nI3sD4lbOL
+        kZNDQsBEor9tKhuILSSwg1Hi7nOjLkYuIPsTo8TVcx/YIZxvjBKbP25ngunY1N/FDJHYyyjR
+        +vQkE4TznlFi8benjCBVwgJeElcW97GA2CICNRJ7X08C28EsYCXx+mM3O4jNJqAlsf/FDbA4
+        v4CixNUfj8F6eQXsJKbu2ccMYrMIqEic7+kC2ywqECZxclsLVI2gxMmZT8DmcwrYSrTdus8I
+        MV9c4taT+UwQtrxE89bZYJdKCPxll5i7dTszxAsuEiv/7WWFsIUlXh3fwg5hS0m87G+Dsqsl
+        Vp48wgbR3MEosWX/BagGY4n9SycDbeAA2qApsX6XPkRYUWLn77lQR/BJvPvawwpSIiHAK9HR
+        JgRRoixx+cFdaChKSixu72SbwKg0C8k7s5C8MAvJC7MQli1gZFnFKJZaUJybnlpsWGCCHNub
+        GMHJUctiB+Oecz6HGAU4GJV4eA8s2xQnxJpYVlyZe4hRgoNZSYSX58fGOCHelMTKqtSi/Pii
+        0pzU4kOMpsDQnsgsJZqcD0zceSXxhqZGxsbGFiaGZqaGhkrivFOv58QJCaQnlqRmp6YWpBbB
+        9DFxcEo1MAaHFh959pDnxgRH4Zu3K0z+F7MmLb0dJNa2PnwWz469HtPi5A/1C63Qjl8w1bhR
+        yuuTj6GOktDF5SdW7c7p/W0wUf+00OL4zVNyqxhqi9rXbLC9wssmsDL/8myHGbd/xViYvXx+
+        08Pw65kTy6sUvj/lvf1ZYUPsya6vcxdP02iZ++qarXW8xiklluKMREMt5qLiRABUE8r0pAMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsWy7bCSvO5t381xBl8/slqs/viY0eJs0xt2
+        i8u75rBZfO49wmhxu3EFmwOrx85Zd9k9+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK+PkrBus
+        Ba+5K44f2cjewPiVs4uRk0NCwERiU38XM4gtJLCbUaK9xxUiLikx7eJRoDgHkC0scfhwcRcj
+        F1DJW0aJX5v7WEFqhAW8JK4s7mMBsUUE6iSurZoAZjMLWEm8/tjNDtEANHN5cwM7SIJNQEti
+        /4sbbCA2v4CixNUfjxlBbF4BO4mpe/aBHcEioCJxvqeLCcQWFQiT2LnkMRNEjaDEyZlPwBZw
+        CthKtN26zwixTF3iz7xLzBC2uMStJ/OZIGx5ieats5knMArPQtI+C0nLLCQts5C0LGBkWcUo
+        mVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERwlWpo7GLev+qB3iJGJg/EQowQHs5IIL8+P
+        jXFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhPLEnNTk0tSC2CyTJxcEo1MIkELbuz
+        75GKX9DByrqOmG/RBWf7DxxVF7/zPig7WLLvQ+/LfNsVbBM2bdzl+nDxf/YEG945T3f5Z2w1
+        v7HodFqwi5jWJtOV1tVnVWcsCeC3sXZ9Hiu0bOM+Tbb7l3ZXXuTUfuOzjfXtiqKXgiEGAscs
+        q/Xun78a8mLHcq7eqG4G/ll7X5ebNrKZvl799lz0u5/JPt1zfzw/G/fs0K8Axp+9vcJ7j5jm
+        HbI9N/cFU/R/MauK4O6Jt9f1c++OX8W8b9MdTinR/tsul+L+/xCcZflNoujBsUY15oYpXQeu
+        BlcFfVzx/vz80/3elZOl9rbKs1eXJ1tN0Fqq9+GGVPm7xz5dfNMsL399eqK9bZdn7DolluKM
+        REMt5qLiRACHOvM6AQMAAA==
+X-CMS-MailID: 20200506235259epcas1p180e571147fbbdb104fe8618c7555abe8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200417140545epcas1p38cdc6cc5e6059437e611cf7e771d0dbd
+References: <20200227170854.9949-1-digetx@gmail.com>
+        <CGME20200417140545epcas1p38cdc6cc5e6059437e611cf7e771d0dbd@epcas1p3.samsung.com>
+        <09712864-01a5-e2f9-b55f-e822169d30fc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user input to files in the resctrl filesystem are expected to be
-terminated with a newline. Testing the user input includes a test for
-the presence of a newline and then replacing the newline with NUL
-byte followed by comparison using strcmp().
+Hi Dmitry,
 
-sysfs_streq() exists to test if strings are equal, treating both NUL and
-newline-then-NUL as equivalent string terminations. Even more,
-sysfs_match_string() exists to match a given string in an array using
-sysfs_streq().
+On 4/17/20 11:04 PM, Dmitry Osipenko wrote:
+> 27.02.2020 20:08, Dmitry Osipenko пишет:
+>> GCC produces this warning when kernel compiled using `make W=1`:
+>>
+>>   warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
+>>   772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+>>
+>> The strncpy doesn't take care of NULL-termination of the destination
+>> buffer, while the strscpy does.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/devfreq.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index 8494c5f05a73..2011f64bfa3a 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>  	devfreq->dev.release = devfreq_dev_release;
+>>  	INIT_LIST_HEAD(&devfreq->node);
+>>  	devfreq->profile = profile;
+>> -	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+>> +	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+>>  	devfreq->previous_freq = profile->initial_freq;
+>>  	devfreq->last_status.current_frequency = profile->initial_freq;
+>>  	devfreq->data = data;
+>>
+> 
+> Hello Chanwoo,
+> 
+> Do you have any objections to this patch?
+> 
 
-Replace existing strcmp() comparisons of strings that are terminated
-with a newline with more appropriate sysfs_streq() via the
-sysfs_match_string() API that can perform the match across the different
-mode strings that are already maintained in an array.
+I'm sorry for late reply. I applied it for v5.8-rc1.
+Thanks.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 32 ++++++++++++++------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index c60a3b307f7d..e70694892c02 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1408,12 +1408,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- {
- 	struct rdtgroup *rdtgrp;
- 	enum rdtgrp_mode mode;
--	int ret = 0;
-+	int user_m;
-+	int ret;
- 
--	/* Valid input requires a trailing newline */
--	if (nbytes == 0 || buf[nbytes - 1] != '\n')
-+	if (nbytes == 0)
- 		return -EINVAL;
--	buf[nbytes - 1] = '\0';
- 
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
- 	if (!rdtgrp) {
-@@ -1425,11 +1424,17 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 
- 	mode = rdtgrp->mode;
- 
--	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
--	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
--	    (!strcmp(buf, "pseudo-locksetup") &&
--	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
--	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
-+	ret = sysfs_match_string(rdt_mode_str, buf);
-+	if (ret < 0) {
-+		rdt_last_cmd_puts("Unknown or unsupported mode\n");
-+		goto out;
-+	}
-+
-+	user_m = ret;
-+	ret = 0;
-+
-+	/* Do nothing and return success if user asks for current mode */
-+	if (user_m == mode)
- 		goto out;
- 
- 	if (mode == RDT_MODE_PSEUDO_LOCKED) {
-@@ -1438,14 +1443,14 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 		goto out;
- 	}
- 
--	if (!strcmp(buf, "shareable")) {
-+	if (user_m == RDT_MODE_SHAREABLE) {
- 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
- 			ret = rdtgroup_locksetup_exit(rdtgrp);
- 			if (ret)
- 				goto out;
- 		}
- 		rdtgrp->mode = RDT_MODE_SHAREABLE;
--	} else if (!strcmp(buf, "exclusive")) {
-+	} else if (user_m == RDT_MODE_EXCLUSIVE) {
- 		if (!rdtgroup_mode_test_exclusive(rdtgrp)) {
- 			ret = -EINVAL;
- 			goto out;
-@@ -1456,14 +1461,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 				goto out;
- 		}
- 		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
--	} else if (!strcmp(buf, "pseudo-locksetup")) {
-+	} else if (user_m == RDT_MODE_PSEUDO_LOCKSETUP) {
- 		ret = rdtgroup_locksetup_enter(rdtgrp);
- 		if (ret)
- 			goto out;
- 		rdtgrp->mode = RDT_MODE_PSEUDO_LOCKSETUP;
--	} else {
--		rdt_last_cmd_puts("Unknown or unsupported mode\n");
--		ret = -EINVAL;
- 	}
- 
- out:
 -- 
-2.21.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
