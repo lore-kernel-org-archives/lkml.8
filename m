@@ -2,157 +2,113 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B629DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D23AC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552142075A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFmQCxk3"
+	by mail.kernel.org (Postfix) with ESMTP id 433F02082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgEGBRo (ORCPT
+        id S1728270AbgEGBTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 21:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgEGBRo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 21:17:44 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A982BC061A0F;
-        Wed,  6 May 2020 18:17:43 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x73so3011698lfa.2;
-        Wed, 06 May 2020 18:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+tVD16UIK2HUykZoQLbybGCDlOmlMC4/rb1eL7D7CrE=;
-        b=NFmQCxk3oJ3nTxMshA4z3OOVS1VtKP/Vgprl4bISM0TZG2ApE18sHobhx/PFWs6/uc
-         LC9lVUthwUINP/zaL4xoNEmJ2VFnnxeJ3cFln6hDdaE2aTPpEr62Bj8r7E0MKKk9jT0O
-         m1V2IayvHJJhJ7fYQSMMF8jRiIXmH19hJBIse2JqsrjGxt54AyUf8R6KitlF84mtReRY
-         nMSSLxoB9m+SpecnSO58V7CxIsCF6c0lf3Uh37a8FWs6ijVJAkWY3Y7QcVir9SGAQW4B
-         fglrDWoY0sG3qRiBG7U0YqoZIxIej4+Wih4kJfqJVqefaIZEq2bL4PWXmOxmQHowkE+a
-         u5BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+tVD16UIK2HUykZoQLbybGCDlOmlMC4/rb1eL7D7CrE=;
-        b=PtShuWE0VR9RNpB81+/xzCDRY2M5+IsyzvQ+h2CzVuVQxzYCVpcXLjaZLe5tJDsSDk
-         RPRBwM7GIg8aCOZtAgBWjT2F8GY8QVUi1pmHQOEqEj67gzB65UoCHrDKrEsiCGejpyf5
-         aHwSq5sTFYlqVdD3BXsKtkEEKgJT9YVMZlyBytKxbmpfhDtqTVl8h1Qckp/dVqXjMINi
-         dGzckHaahrIC72mhu1hBn8ROQERWfMbBeNahtCRnxHspF7VMnFc/UbP7QQPVhHkBsfEz
-         wcpoQ1zOjjVwYenlK+jdwKUXHZKwdLai57EHUNFxsEDA12IS9t7lRjQPMb/2OkQXK6R/
-         yUuw==
-X-Gm-Message-State: AGi0PuZb180e1AUnIzzbRMxSUiiDHQF5brCf2QdFN4yLW/oVPmmA/OvT
-        0nRPV+9xubXrWHxBDxsNORyRTUfbP/9AmvUz9Hy8PA==
-X-Google-Smtp-Source: APiQypLIcEJVXCrwurHq/Ev2YP2PtFWYe5xadzI8BVmHoWL7CPL4HhQlOGm2xi8BYSGTzrBLuWglxpRe70k0sQfX/hE=
-X-Received: by 2002:a05:6512:3384:: with SMTP id h4mr7095093lfg.150.1588814259888;
- Wed, 06 May 2020 18:17:39 -0700 (PDT)
+        Wed, 6 May 2020 21:19:36 -0400
+Received: from sandeen.net ([63.231.237.45]:57144 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgEGBTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 21:19:36 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id BEE752B49;
+        Wed,  6 May 2020 20:19:28 -0500 (CDT)
+Subject: Re: PROBLEM: XFS in-memory corruption with reflinks and duperemove:
+ XFS (dm-4): Internal error xfs_trans_cancel at line 1048 of file
+ fs/xfs/xfs_trans.c. Caller xfs_reflink_remap_extent+0x100/0x560
+To:     =?UTF-8?B?RWR3aW4gVMO2csO2aw==?= <edwin@etorok.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <f6c749739dc135ebd7a9321195a616b15c772082.camel@etorok.net>
+ <20200421171616.GH6749@magnolia>
+ <acc12ecd2c183c93f8af770b2302498cb30e83f4.camel@etorok.net>
+ <20200504152135.GA13811@magnolia>
+ <583e618512f15f10b3dee8857a92235950c862e7.camel@etorok.net>
+ <20200505005811.GC5716@magnolia>
+ <124EB800-8712-4C36-8B35-41363A558269@etorok.net>
+ <20200506224749.GA6730@magnolia>
+ <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <3fa09c4e-6233-2216-f7c8-a28bd7dcaf04@sandeen.net>
+Date:   Wed, 6 May 2020 20:19:34 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1587370303-25568-1-git-send-email-yilun.xu@intel.com> <20200506051040.GB31302@yilunxu-OptiPlex-7050>
-In-Reply-To: <20200506051040.GB31302@yilunxu-OptiPlex-7050>
-From:   Moritz Fischer <moritz.fischer.private@gmail.com>
-Date:   Wed, 6 May 2020 18:17:27 -0700
-Message-ID: <CAJYdmeMjeHNX9c6_gZ2HAdYO=JthEqxvAWG1+6M5_SAXMD8Fpg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] Add interrupt support to FPGA DFL drivers
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     linux-fpga@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        trix@redhat.com, bhu@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <788538c79fc331f09d335d7526f5e79484403c59.camel@etorok.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xu,
+On 5/6/20 6:20 PM, Edwin Török wrote:
+>> (Obviously, a full metadump would be useful for confirming the shape
+>> of
+>> the refcount btree, but...first things first let's look at the
+>> filefrag
+>> output.)
+> I'll try to gather one, and find a place to store/share it.
+> 
+> Best regards,
+> --Edwin
 
-On Tue, May 5, 2020 at 10:13 PM Xu Yilun <yilun.xu@intel.com> wrote:
->
-> Hi Moritz:
->
-> Hao and I did several rounds of review and fix in the mailing list. Now
-> the patches are all acked by Hao.
->
-> Could you please help review it when you have time?
+Metadumps are compact to start with and usually compress pretty well.
+Obviously a very large filesystem with lots of metadata will take some
+space, but it might not be that bad.
 
-I'll get to it this weekend. Sorry for the delay,
-
-Moritz
->
-> Thanks! :)
->
-> On Mon, Apr 20, 2020 at 04:11:36PM +0800, Xu Yilun wrote:
-> > This patchset add interrupt support to FPGA DFL drivers.
-> >
-> > With these patches, DFL driver will parse and assign interrupt resources
-> > for enumerated feature devices and their sub features.
-> >
-> > This patchset also introduces a set of APIs for user to monitor DFL
-> > interrupts. Three sub features (DFL FME error, DFL AFU error and user
-> > interrupt) drivers now support these APIs.
-> >
-> > Patch #1: DFL framework change. Accept interrupt info input from DFL bus
-> >           driver, and add interrupt parsing and assignment for feature
-> >           sub devices.
-> > Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
-> > Patch #3: DFL framework change. Add helper functions for feature sub
-> >           device drivers to handle interrupt and notify users.
-> > Patch #4: Add interrupt support for AFU error reporting sub feature.
-> > Patch #5: Add interrupt support for FME global error reporting sub
-> >           feature.
-> > Patch #6: Add interrupt support for a new sub feature, to handle user
-> >           interrupts implemented in AFU.
-> > Patch #7: Documentation for DFL interrupt handling.
-> >
-> > Main changes from v1:
-> >  - Early validating irq table for each feature in parse_feature_irq()
-> >    in Patch #1.
-> >  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
-> >    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
-> >    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
-> >
-> > Main changes from v2:
-> >  - put parse_feature_irqs() inside create_feature_instance().
-> >  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
-> >  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
-> >
-> > Main changes from v3:
-> >  - rebased to 5.7-rc1.
-> >  - fail the dfl enumeration when irq parsing error happens.
-> >  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
-> >    drivers.
-> >
-> > Main changes from v4:
-> >  - Minor fixes for Hao's comments.
-> >
-> > Xu Yilun (7):
-> >   fpga: dfl: parse interrupt info for feature devices on enumeration
-> >   fpga: dfl: pci: add irq info for feature devices enumeration
-> >   fpga: dfl: introduce interrupt trigger setting API
-> >   fpga: dfl: afu: add interrupt support for port error reporting
-> >   fpga: dfl: fme: add interrupt support for global error reporting
-> >   fpga: dfl: afu: add AFU interrupt support
-> >   Documentation: fpga: dfl: add descriptions for interrupt related
-> >     interfaces.
-> >
-> >  Documentation/fpga/dfl.rst    |  19 +++
-> >  drivers/fpga/dfl-afu-error.c  |  17 +++
-> >  drivers/fpga/dfl-afu-main.c   |  32 +++++
-> >  drivers/fpga/dfl-fme-error.c  |  18 +++
-> >  drivers/fpga/dfl-fme-main.c   |   6 +
-> >  drivers/fpga/dfl-pci.c        |  80 +++++++++--
-> >  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/fpga/dfl.h            |  57 ++++++++
-> >  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
-> >  9 files changed, 612 insertions(+), 9 deletions(-)
-> >
-> > --
-> > 2.7.4
+-Eric
