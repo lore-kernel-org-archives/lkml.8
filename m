@@ -2,115 +2,114 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F23C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E43C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABB27208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0AD208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfblUmOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEGTlq (ORCPT
+        id S1728227AbgEGTmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
+        Thu, 7 May 2020 15:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGTlp (ORCPT
+        by vger.kernel.org with ESMTP id S1726320AbgEGTmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:41:45 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C22CC05BD43;
-        Thu,  7 May 2020 12:41:45 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWmOn-0004f0-9z; Thu, 07 May 2020 21:41:37 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7396E102652; Thu,  7 May 2020 21:41:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200507175715.GA22426@otc-nc-03>
-References: <20200501184326.GA17961@araj-mobl1.jf.intel.com> <878si6rx7f.fsf@nanos.tec.linutronix.de> <20200505201616.GA15481@otc-nc-03> <875zdarr4h.fsf@nanos.tec.linutronix.de> <20200507121850.GB85463@otc-nc-03> <87wo5nj48a.fsf@nanos.tec.linutronix.de> <20200507175715.GA22426@otc-nc-03>
-Date:   Thu, 07 May 2020 21:41:36 +0200
-Message-ID: <87blmzedn3.fsf@nanos.tec.linutronix.de>
+        Thu, 7 May 2020 15:42:46 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCACC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:42:45 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id z8so7847221wrw.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gckpwq9UyhdYM7Snuci6fAgZatJZQE5/xPkNXtAqPXU=;
+        b=FfblUmOZXnlJN7hCY+NKlWXlXO24/IXplyKaWph6ieK2NVQDlzMlM3g2CYtfwTHdfL
+         ztEmLuU6qUGvsHMXuyHy9pTnpDKrNKu4fy5L4z5ghG2WOstzt8+p3cR4X7T/Um/omBSQ
+         OaaRpAVDiN1DN4OZPc5YNK9rcHz93V2MBdXgQ15+4U9NXB1aHBoo6+Lm3WLKIDgyNqbq
+         aH8nt8y3caCzE4pPMEEBJj9sNQBjJ4/VjNyxOzjUu24+Cs51JRnMFkCDInclzLva8fF8
+         EyUIJPRenaZ8+GW0sGe9jYuFdNUKcdK6tWGsKNOzre69ELk/Qo3MS0uE3gOzJ2/ISwYN
+         cRaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gckpwq9UyhdYM7Snuci6fAgZatJZQE5/xPkNXtAqPXU=;
+        b=ndwdl/v1AajtQiQK4eUODQRzRzIGAD96bgLN16ZRP/00p4a/mT/wQYKIiax8VsmCdb
+         ICNDgF5wNnOtO48Mt/mr0/c47+DiPqfx118In04Tq9YmnvqIH/RUTi5vDd4As4gpO+zt
+         hseZMc7OeYmQOz5zvNdjQOX6b0TE6/yQMaCS6gWgC7a8xgHWFtyZW/tyvr57FFbuWvOV
+         LqobFZPDWZfmSIVDp36yVIidnZoUSo3breAFp6wLooSmgN4v2mknLZd3xqMnGy+lq/3C
+         aJ/euqZZ3k+p3+3syY9JjGLBA4r0Wnbe+jNzV73SX48p8ZozVsITPGpjWnsl6So8gTaU
+         Uvww==
+X-Gm-Message-State: AGi0PuZ/EyUPPYoQC+4lbBlx55nkpUkJsjAw9wol4S9u1WgLKMg+/lFO
+        vQjYodOKrpbhe1+OtJhHbRvLw2msQEIpqc8HWLk=
+X-Google-Smtp-Source: APiQypL+8STjCF7ijbtEAlezcdp9vJ09CwLfmp0u9W0uVql+wV3veMDwYgsVGQiJW9eEMtjCo9WaAXWBE7ce29TPt6I=
+X-Received: by 2002:adf:fa91:: with SMTP id h17mr664269wrr.111.1588880564696;
+ Thu, 07 May 2020 12:42:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200507135023.33073-1-chenzhou10@huawei.com>
+In-Reply-To: <20200507135023.33073-1-chenzhou10@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 7 May 2020 15:42:33 -0400
+Message-ID: <CADnq5_M89XN26AwzRr+F0DJAP7Xz_2FWcO09iUrS2ArkFbK1cQ@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/display: remove duplicate headers
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ashok,
+Applied.  Thanks!
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
-> 
-> I think i got mixed up with logical apic id and logical cpu :-(
+Alex
 
-Stuff happens.
-
->           <idle>-0     [000] d.h.    44.376659: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
->           <idle>-0     [000] d.h.    44.376684: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
-
->           <idle>-0     [000] d.h.    44.376685: xhci_irq: xhci irq
-
->           <idle>-0     [001] d.h.    44.376750: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
->           <idle>-0     [001] d.h.    44.376774: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
-
->           <idle>-0     [001] d.h.    44.376776: xhci_irq: xhci irq
->           <idle>-0     [001] d.h.    44.395824: xhci_irq: xhci irq
-
->            <...>-14    [001] d..1    44.400666: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
->            <...>-14    [001] d..1    44.400691: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
-
->           <idle>-0     [003] d.h.    44.421021: xhci_irq: xhci irq
->           <idle>-0     [003] d.h.    44.421135: xhci_irq: xhci irq
-
->      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
->      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
-
-So this last one is a direct update. Straight forward moving it from one
-to the other CPU on the same vector number.
-
-And that's the case where we either expect the interrupt to come in on
-CPU3 or on CPU0.
-
-There is actually an example in the trace:
-
-	<idle>-0     [000] d.h.    40.616467: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
-	<idle>-0     [000] d.h.    40.616488: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
-	<idle>-0     [000] d.h.    40.616488: xhci_irq: xhci irq
-	<idle>-0     [001] d.h.    40.616504: xhci_irq: xhci irq
-
->      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
->      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
-
-But as this last one is the migration thread, aka stomp machine, I
-assume this is a hotplug operation. Which means the CPU cannot handle
-interrupts anymore. In that case we check the old vector on the
-unplugged CPU in fixup_irqs() and do the retrigger from there.
-Can you please add tracing to that one as well?
-
-Thanks,
-
-        tglx
-
-
-
-
+On Thu, May 7, 2020 at 11:27 AM Chen Zhou <chenzhou10@huawei.com> wrote:
+>
+> Remove duplicate headers which are included twice.
+>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> index 9ef9e50a34fa..1db592372435 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> @@ -13,7 +13,6 @@
+>  #include "core_status.h"
+>  #include "dpcd_defs.h"
+>
+> -#include "resource.h"
+>  #define DC_LOGGER \
+>         link->ctx->logger
+>
+> --
+> 2.20.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
