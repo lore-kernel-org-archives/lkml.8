@@ -2,105 +2,84 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0252C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6DAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E3321835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RrVQQPSN"
+	by mail.kernel.org (Postfix) with ESMTP id 0ECF720643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgEGRvf (ORCPT
+        id S1728208AbgEGRwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgEGRvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:51:35 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B3FC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:51:34 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z1so3356250pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6nsicqHKSLR08n1R+IXV8HH61Ez1sWv3K0CdRq6A4rw=;
-        b=RrVQQPSNEjwXxIpxHMpeXgb/6SFvXrlHUGtWgKRpooc/AMiY7CyxeneurgMVsZo8T4
-         rLft7rAMLxvk81jduk4p1OvVy7Ds+6FdlCoFjF4obUTG7NUio/81dR/EkXL7urAWPtiF
-         OM+VRspJQyc+7FPnIWrzi3cHthVRonjBAFiOY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6nsicqHKSLR08n1R+IXV8HH61Ez1sWv3K0CdRq6A4rw=;
-        b=P67gc9b63N+lcWhhPJt0z47T9PaGEkpybcmVaCLet8VGKLhjXRNjl7yZwptrizbicz
-         Cwy3JhPMampkNzRl2aeZ5gFC8i1PLq5bA+ATtjOdfQnxm8oRS9P/GnBsC+pKSgIBulfe
-         vafdiGl/7Vpko5WW1GDMX9IQXuIEIw9NDGz8lwns1tscWBSdiUTqnfF4mvz9KklZ4ReR
-         me3ZJ+akWCGTxEIVJPkwsWKBs21z2+pfuWG9ib1tjDqSuWGabk05WLfZgfn9MnbCdnzu
-         gbsp4tzeOYrBleo9xYcZtmJ7xTwzd4j676DeUlKPAxqVPJXXBtVygnfZVvI6Aoqum982
-         jaeA==
-X-Gm-Message-State: AGi0PuZfqAQ+H0Uz6Dps3s51gwp7ms2WFD/7N0huNtGovKEFBkDTgRsA
-        r3b9Cr/M+UtWamPdQOQEdEDshA==
-X-Google-Smtp-Source: APiQypJrg795r4p3dlKKs5p5tJSGEr5TXh4b/RDvjDLBZG4ZsffQBKKTjPJNE6l8z2s2P5ajyKYDOw==
-X-Received: by 2002:aa7:9dc7:: with SMTP id g7mr15195629pfq.291.1588873894492;
-        Thu, 07 May 2020 10:51:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g25sm5314837pfo.150.2020.05.07.10.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 10:51:33 -0700 (PDT)
-Date:   Thu, 7 May 2020 10:51:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
-        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
-        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
-        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
-        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
-        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
-        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
-        hannes@cmpxchg.org, minchan@kernel.org, mhocko@kernel.org,
-        ying.huang@intel.com, yang.shi@linux.alibaba.com,
-        gustavo@embeddedor.com, ziqian.lzq@antfin.com,
-        vdavydov.dev@gmail.com, jason.zeng@intel.com, kevin.tian@intel.com,
-        zhiyuan.lv@intel.com, lei.l.li@intel.com, paul.c.lai@intel.com,
-        ashok.raj@intel.com, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [RFC 21/43] x86/KASLR: PKRAM: support physical kaslr
-Message-ID: <202005071049.2D0939137D@keescook>
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
- <1588812129-8596-22-git-send-email-anthony.yznaga@oracle.com>
+        Thu, 7 May 2020 13:52:01 -0400
+Received: from muru.com ([72.249.23.125]:53490 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726367AbgEGRwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:52:01 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CCE4480CD;
+        Thu,  7 May 2020 17:52:49 +0000 (UTC)
+Date:   Thu, 7 May 2020 10:51:58 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Subject: Re: [PATCH next] ARM: dts: am57xx: fix networking on boards with
+ ksz9031 phy
+Message-ID: <20200507175158.GW37466@atomide.com>
+References: <20200506191124.31569-1-grygorii.strashko@ti.com>
+ <eab549aed345683a3ee79835369169c99e003488.camel@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588812129-8596-22-git-send-email-anthony.yznaga@oracle.com>
+In-Reply-To: <eab549aed345683a3ee79835369169c99e003488.camel@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:41:47PM -0700, Anthony Yznaga wrote:
-> Avoid regions of memory that contain preserved pages when computing
-> slots used to select where to put the decompressed kernel.
+* Philippe Schenker <philippe.schenker@toradex.com> [200507 08:43]:
+> On Wed, 2020-05-06 at 22:11 +0300, Grygorii Strashko wrote:
+> > Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for
+> > the
+> > KSZ9031 PHY") the networking is broken on boards:
+> >  am571x-idk
+> >  am572x-idk
+> >  am574x-idk
+> >  am57xx-beagle-x15
+> > 
+> > All above boards have phy-mode = "rgmii" and this is worked before
+> > because
+> > KSZ9031 PHY started with default RGMII internal delays configuration
+> > (TX
+> > off, RX on 1.2 ns) and MAC provided TX delay. After above commit, the
+> > KSZ9031 PHY starts handling phy mode properly and disables RX delay,
+> > as
+> > result networking is become broken.
+> > 
+> > Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+> > behavior.
+> > 
+> > Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Philippe Schenker <philippe.schenker@toradex.com>
+> > Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support
+> > for the KSZ9031 PHY")
+> > Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Thanks Grygorii!
+> 
+> Reviewed-by: Philippe Schenker <
+> philippe.schenker@toradex.com>
 
-This is changing the slot-walking code instead of updating
-mem_avoid_overlap() -- that's where the check for a "reserved" memory
-area should live.
+Thanks applying this into fixes.
 
-For example, this is how both mem_avoid_memmap() and the setup_data
-memory areas are handled.
-
-Is there a reason mem_avoid_overlap() can't be used here?
-
--- 
-Kees Cook
+Tony
