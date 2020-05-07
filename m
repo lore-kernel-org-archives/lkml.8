@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF88C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C69C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CAD208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0532184D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861735;
-	bh=MKIyheyNGViV/MgpHcPvLYxIi6TdIFMAtGgTC0w2VSQ=;
+	s=default; t=1588861740;
+	bh=eP/TXys0UfUpnKTlnjfl+s8J6xffSj+g54nOkXV7bp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nr89tAtAK8e5SMirvA26IUhZgQGgnib48yjRH8HWW7rBCgCv+5ecnm8eVFA2A/HkF
-	 cqxQKrRT2KI6Fl9TdnOoRz6RvzAJMD/hH9lFDMtvS5WAM87GWToselCGDNvNkcue2s
-	 gIfpGqSAz9dGofUnqCIbFoeCfxPnwsIdTNPcxqds=
+	b=QTcBm9XX91Ai28j6qcPrhs5uFcoypmnGvXPUGlzk9rKx6fQiRsWOZOG1x2VzjqNUT
+	 TaAySVlxo7o0XuF75PE0dAKLHWZqAg8zkCfvQYk85yhsi1ThArz/zMDdnVtL879/I5
+	 r0qtyoS6yygez+PXtR/spFJVuArC2wxXI64Aq6qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgEGO2y (ORCPT
+        id S1728364AbgEGO27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55702 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgEGO2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:48 -0400
+        id S1728304AbgEGO2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2159320870;
-        Thu,  7 May 2020 14:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8157120936;
+        Thu,  7 May 2020 14:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861727;
-        bh=MKIyheyNGViV/MgpHcPvLYxIi6TdIFMAtGgTC0w2VSQ=;
+        s=default; t=1588861732;
+        bh=eP/TXys0UfUpnKTlnjfl+s8J6xffSj+g54nOkXV7bp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFDNm7YnplleywSfSTGqsgVKet4X+sU2AWOx+ET4p+C2rLL5QiiGyo1nISinTZzdd
-         6NBSPx2yc8VSvE1MeBYa9QhhSKtNH5Q42ANmeX6ijt9iBUUdCydncp8k7umv4rrdkh
-         HlAOozr83uswdc8lYY6bpg8Xrhhl1xlTRkupmYro=
+        b=Oz7rLtv3SW6qAZ8fqoBGzoDwbs3JFWqku/ejRj0PvgPO0/BfZ0f9bFrJhDnIbSXvl
+         wJ6YCPO5J7iPeUlgngvbvqUccKK3dwhHx88cP9Vny4pw/Xq8o0te6jQ6+iE4hoTW57
+         aqgYzrTn5yE0NXJtWZHrmAQB1foq5mkBj/6XxYn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/35] dmaengine: mmp_tdma: Reset channel error on release
-Date:   Thu,  7 May 2020 10:28:07 -0400
-Message-Id: <20200507142830.26239-13-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 17/35] RDMA/core: Fix race between destroy and release FD object
+Date:   Thu,  7 May 2020 10:28:11 -0400
+Message-Id: <20200507142830.26239-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -58,38 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
+[ Upstream commit f0abc761bbb9418876cc4d1ebc473e4ea6352e42 ]
 
-When a channel configuration fails, the status of the channel is set to
-DEV_ERROR so that an attempt to submit it fails. However, this status
-sticks until the heat end of the universe, making it impossible to
-recover from the error.
+The call to ->lookup_put() was too early and it caused an unlock of the
+read/write protection of the uobject after the FD was put. This allows a
+race:
 
-Let's reset it when the channel is released so that further use of the
-channel with correct configuration is not impacted.
+     CPU1                                 CPU2
+ rdma_lookup_put_uobject()
+   lookup_put_fd_uobject()
+     fput()
+				   fput()
+				     uverbs_uobject_fd_release()
+				       WARN_ON(uverbs_try_lock_object(uobj,
+					       UVERBS_LOOKUP_WRITE));
+   atomic_dec(usecnt)
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fix the code by changing the order, first unlock and call to
+->lookup_put() after that.
+
+Fixes: 3832125624b7 ("IB/core: Add support for idr types")
+Link: https://lore.kernel.org/r/20200423060122.6182-1-leon@kernel.org
+Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mmp_tdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/core/rdma_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 4d5b987e4841a..89d90c456c0ce 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -363,6 +363,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
- 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
- 				size);
- 	tdmac->desc_arr = NULL;
-+	if (tdmac->status == DMA_ERROR)
-+		tdmac->status = DMA_COMPLETE;
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 8e650e5efb51d..1c95fefa1f06e 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -689,7 +689,6 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
+ 			     enum rdma_lookup_mode mode)
+ {
+ 	assert_uverbs_usecnt(uobj, mode);
+-	uobj->uapi_object->type_class->lookup_put(uobj, mode);
+ 	/*
+ 	 * In order to unlock an object, either decrease its usecnt for
+ 	 * read access or zero it in case of exclusive access. See
+@@ -706,6 +705,7 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
+ 		break;
+ 	}
  
- 	return;
++	uobj->uapi_object->type_class->lookup_put(uobj, mode);
+ 	/* Pairs with the kref obtained by type->lookup_get */
+ 	uverbs_uobject_put(uobj);
  }
 -- 
 2.20.1
