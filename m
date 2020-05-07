@@ -2,100 +2,97 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A504C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A711C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E63208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37F120CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oe0PU5NZ"
+	dkim=pass (2048-bit key) header.d=timesys-com.20150623.gappssmtp.com header.i=@timesys-com.20150623.gappssmtp.com header.b="lR9gZIX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgEGTpp (ORCPT
+        id S1728110AbgEGTpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42150 "EHLO
+        Thu, 7 May 2020 15:45:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726326AbgEGTpo (ORCPT
+        by vger.kernel.org with ESMTP id S1726326AbgEGTpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:45:44 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780C2C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:45:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t7so2500149plr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:45:43 -0700 (PDT)
+        Thu, 7 May 2020 15:45:53 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D41C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 12:45:53 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g185so766643qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IbfxBGzYrCHzzfTqHU4rAuwYtieZW8IZ52DJWF9xsUo=;
-        b=Oe0PU5NZ2azBtHLJKpX3ha1q5sVBZ4ZHO+l13jT6Erh0ACOWTwKch462jXBcFXyD24
-         s/knbIwKHieGmlCElrOSj0hDSdIyuGY9V7VyJlbqfYR/GtTzoLQNjVaFkcRQYiSY3Hh+
-         93C47ECe6RAr7s+FMJPAHvDax6a3hMvgtnLag=
+        d=timesys-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z/jYBC0J9QkfRK9H/zHRlhsgtFYHxAEt3SeV/+q0yv0=;
+        b=lR9gZIX45a7NOAUW7gO/TUP7kgP15l9Dy3x8IQB53ToCGkuWWhC/nVW8iIAWjhQGy2
+         trEj0TP/YH7S0QjEmfAc8//2v8Lq1FHMuGFqQW5oM8vhL+vJpTDLGDN9Hx3WTW00Tjos
+         0NaBw34V6BbrJleA2/aGtmFn19XfbRNwTbku7fDsp0U2/DJIkym1SrKuvCLk/cQlPhSx
+         ViHbvTuJBkqStOAQl9Uhw4+PDLdRhOrgDGKYkLk9vy8BrP++iZ/j/2RYIn0ao72LabQ3
+         kjmElQA6DOgPzgCwEK09hUHIbKcZW5BqKq64JAs8KBD7bzqVsY9F0mgHypwKgBq0PwLi
+         Nd6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IbfxBGzYrCHzzfTqHU4rAuwYtieZW8IZ52DJWF9xsUo=;
-        b=ThnYoPMIazo/DS27Z65U4GnPZz+LFiiNUMVWrvUCjREAvrOV4mSRTR4fSiYcWaDVX5
-         kqlv/t0FVim4WZtmVYsA3vOT4UH0xS00QJ0Ju8KJCx5I15SDGLSBlJ1/hRt4547sFxiG
-         tbQRQrseE4KYqFCFOgRgjwruNS4Wrj5T1mcX3lbpnhlalVfsGMMRf4tVMmu9eRGUYrNb
-         W6ubUsHx9T3cjonf/6pYc7iEtQ8ojOX32v19MgGvR+hlzoJqUKD9zO0Rk+H/ADvDUS6Z
-         9rRPUSdsUya5e6KOqhX2RS2sjQTNUwV0D10Jd8gL40hKKqGdGiIuy/sCKeMfpZQqIEOO
-         o5zg==
-X-Gm-Message-State: AGi0Puaun2ST0VqmArmjL9UzR50qxuygZH8sC3TcDNDsaTN7s16LzT7/
-        OvmAKv6wcRT9zirC6ENMGE6krg==
-X-Google-Smtp-Source: APiQypLBhRh1xD+zBIxgBZHXiwlmz2uQ7tdEn6c4Ababtg8mWoyu4ca2B3WYR9T4i3qlo9eH8sYYZw==
-X-Received: by 2002:a17:902:eed1:: with SMTP id h17mr14686969plb.312.1588880743038;
-        Thu, 07 May 2020 12:45:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l30sm536526pje.34.2020.05.07.12.45.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z/jYBC0J9QkfRK9H/zHRlhsgtFYHxAEt3SeV/+q0yv0=;
+        b=qjZw84+DBYlhqGuATUWTZ8nKIkPV7Hmk6e9N5//87/Di0Vu89pEwQ4dJws6rppZL0U
+         zovEHMHx7Tkbr3251Rr/C75OWWY1LC+BOLBprhorB7uzsyIu7RdmXhSRMQ3ovHq2UovR
+         0RSZSsQNnrBTIjS9jSIT1hCNxtKCED0AhJkagQQ79SSB4fjX4n99KpF35ffHX5ZhRBtV
+         w7Plael97csIE9TNfUf3Jd1SLW2aao45htQDPGfzYZWsPf5YNrAVblWCWzUmsu7I0X2F
+         NFFlDm/gGo3BjMyFXDLalS9Mu36+SLnxiU0DyYGA6vRV3TJbYa77Rn2PUSz/OUhL0fLD
+         MkDw==
+X-Gm-Message-State: AGi0PuaX0VBOQwCdObxo8K/HyRTWXGiv91bXKcGkmkKmJQ4VC5ANGu1n
+        oSBWc8Rr69IwSLJ+2MwA9IG65qJuYFFuPw==
+X-Google-Smtp-Source: APiQypL81TqxJs3IwyAikpGDMDxU+8lrSpnUTCQS4TfC8xfRR1Quc3xQtFqQjuI5gWDq3vMEf1CZhg==
+X-Received: by 2002:a37:6690:: with SMTP id a138mr16599091qkc.152.1588880752001;
+        Thu, 07 May 2020 12:45:52 -0700 (PDT)
+Received: from dfj.bfc.timesys.com (host142-13-dynamic.2-87-r.retail.telecomitalia.it. [87.2.13.142])
+        by smtp.gmail.com with ESMTPSA id s125sm2085616qkh.51.2020.05.07.12.45.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:45:42 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:45:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v3 00/11] pstore: mtd: support crash log to block and mtd
- device
-Message-ID: <202005071244.AAD82F41F@keescook>
-References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+        Thu, 07 May 2020 12:45:51 -0700 (PDT)
+From:   Angelo Dureghello <angelo.dureghello@timesys.com>
+To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        zbr@ioremap.net
+Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>
+Subject: [PATCH] w1: ds2430: fix eeprom size in driver description
+Date:   Thu,  7 May 2020 21:50:50 +0200
+Message-Id: <20200507195050.472483-1-angelo.dureghello@timesys.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:54:55PM +0800, WeiXiong Liao wrote:
-> [PATCH v3]:
-> 1. patch 1~10: a lot of improvements according to Kees Cook <keescook@chromium.org>
->                including rename module, typo, reorder, rewrite document, bugs
-> 			   and so on.
-> 2. patch 11: rename funtions of pstore/blk and update document.
+Non functional fix, set Kb to b, to avoid any misundertanding.
 
-This is looking good. I'm going to update it for the recent max_reason
-series, and make some tweaks here and there and send out a v4 tomorrow
-to see what you think. Thanks for your patience!
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+---
+ drivers/w1/slaves/w1_ds2430.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/w1/slaves/w1_ds2430.c b/drivers/w1/slaves/w1_ds2430.c
+index 6fb0563fb2ae..75bb8a88620b 100644
+--- a/drivers/w1/slaves/w1_ds2430.c
++++ b/drivers/w1/slaves/w1_ds2430.c
+@@ -290,6 +290,6 @@ static struct w1_family w1_family_14 = {
+ module_w1_family(w1_family_14);
+ 
+ MODULE_AUTHOR("Angelo Dureghello <angelo.dureghello@timesys.com>");
+-MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256kb EEPROM");
++MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256b EEPROM");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("w1-family-" __stringify(W1_EEPROM_DS2430));
 -- 
-Kees Cook
+2.26.2
+
