@@ -2,138 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D6AC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F59C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9511121BE5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877242;
-	bh=kmGDD3oC3EB4KQRIO7ZBSOzgTGdqiOKS8/Gs5OxyZzQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=km9l5ZK/R55QGA2e5DiO0y5KqZLopC6W0M8a8Vh4BEngpKd3+DLCdrDqKC3x5Duvm
-	 bLV6hLHAvk/KleghdkN5dxsfypafklTetDwDmFMe4Oi7C1G4sY6AQi2fPndFjCA9wy
-	 Ch0tKe3tiVvD39KRqfD/Ohfdjol/s73m+rnfgAt8=
+	by mail.kernel.org (Postfix) with ESMTP id E9A9C221F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWz6Vqjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgEGSrV (ORCPT
+        id S1728534AbgEGSrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgEGSrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:47:19 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 May 2020 14:47:24 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55045 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726467AbgEGSrW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:47:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588877240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fA/ECm0zhQEdUp/fUbA73B0nJs5vbdkbZsQ0b4cogDo=;
+        b=TWz6Vqjj8SBvEKBx1vLPZ+I1DGcKCa4G+y4nV2bm5DF3FyqhBCXJtSDWthw1Bn4lfbPPND
+        GpvV8mPueQCWwaE0Mv/ySdiuNnJfV+w30W7IpzUQnv/vyglM7fOBwZboc8k5ivv1Aw0oVC
+        sjZ3yk1ojO3h0yFMM+x/KLU3jWGVXT0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-271-MgJVVsgDOfqwYGQcSYPLlA-1; Thu, 07 May 2020 14:47:16 -0400
+X-MC-Unique: MgJVVsgDOfqwYGQcSYPLlA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A782184D;
-        Thu,  7 May 2020 18:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877239;
-        bh=kmGDD3oC3EB4KQRIO7ZBSOzgTGdqiOKS8/Gs5OxyZzQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aQxNvVL4LnuUDIlx7X8iJ3ft1lNV6QVFUbl5bZMcJufApldo3SFTFMFJplJfTqMaa
-         aQhG09ZmEJVF2CZLRxbvL8/rWJJi394/CcJOQZaO4qhDgaUmkMlfQd5uFA1pti9SQX
-         jSuf6bWpyzrCCe3uuZ9amCXb2unSpP7HAZCZO5xo=
-Date:   Thu, 7 May 2020 13:51:45 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ayush Sawal <ayush.sawal@chelsio.com>,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Rohit Maheshwari <rohitm@chelsio.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: Replace zero-length array with flexible-array
-Message-ID: <20200507185145.GA14096@embeddedor>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BAF3919200C0;
+        Thu,  7 May 2020 18:47:14 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CCBBF70559;
+        Thu,  7 May 2020 18:47:08 +0000 (UTC)
+Date:   Thu, 7 May 2020 14:47:05 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507184705.GG205881@optiplex-lnx>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
+ <20200507184307.GF205881@optiplex-lnx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200507184307.GF205881@optiplex-lnx>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, May 07, 2020 at 02:43:16PM -0400, Rafael Aquini wrote:
+> On Thu, May 07, 2020 at 06:22:57PM +0000, Luis Chamberlain wrote:
+> > On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > > index 8a176d8727a3..b80ab660d727 100644
+> > > --- a/kernel/sysctl.c
+> > > +++ b/kernel/sysctl.c
+> > > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
+> > >  		.extra1		= SYSCTL_ZERO,
+> > >  		.extra2		= SYSCTL_ONE,
+> > >  	},
+> > > +	{
+> > > +		.procname	= "panic_on_taint",
+> > > +		.data		= &panic_on_taint,
+> > > +		.maxlen		= sizeof(unsigned long),
+> > > +		.mode		= 0644,
+> > > +		.proc_handler	= proc_doulongvec_minmax,
+> > > +	},
+> > 
+> > You sent this out before I could reply to the other thread on v1.
+> > My thoughts on the min / max values, or lack here:
+> >                                                                                 
+> > Valid range doesn't mean "currently allowed defined" masks.                     
+> > 
+> > For example, if you expect to panic due to a taint, but a new taint type
+> > you want was not added on an older kernel you would be under a very
+> > *false* sense of security that your kernel may not have hit such a
+> > taint, but the reality of the situation was that the kernel didn't
+> > support that taint flag only added in future kernels.                           
+> > 
+> > You may need to define a new flag (MAX_TAINT) which should be the last
+> > value + 1, the allowed max values would be                                      
+> > 
+> > (2^MAX_TAINT)-1                                                                 
+> > 
+> > or                                                                              
+> > 
+> > (1<<MAX_TAINT)-1  
+> > 
+> > Since this is to *PANIC* I think we do want to test ranges and ensure
+> > only valid ones are allowed.
+> >
+> 
+> Ok. I'm thinking in:
+> 
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 8a176d8727a3..ee492431e7b0 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1217,6 +1217,15 @@ static struct ctl_table kern_table[] = {
+>                 .extra1         = SYSCTL_ZERO,
+>                 .extra2         = SYSCTL_ONE,
+>         },
+> +       {
+> +               .procname       = "panic_on_taint",
+> +               .data           = &panic_on_taint,
+> +               .maxlen         = sizeof(unsigned long),
+> +               .mode           = 0644,
+> +               .proc_handler   = proc_doulongvec_minmax,
+> +               .extra1         = SYSCTL_ZERO,
+> +               .extra2         = (1 << TAINT_FLAGS_COUNT << 1) - 1,
+							^^^^^^^^
+Without that crap, obviously. Sorry. That was a screw up on my side,
+when copyin' and pasting.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/crypto/chelsio/chcr_crypto.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/crypto/chelsio/chcr_crypto.h b/drivers/crypto/chelsio/chcr_crypto.h
-index 542bebae001f..1cc522a07aac 100644
---- a/drivers/crypto/chelsio/chcr_crypto.h
-+++ b/drivers/crypto/chelsio/chcr_crypto.h
-@@ -223,7 +223,7 @@ struct chcr_authenc_ctx {
- 
- struct __aead_ctx {
- 	struct chcr_gcm_ctx gcm[0];
--	struct chcr_authenc_ctx authenc[0];
-+	struct chcr_authenc_ctx authenc[];
- };
- 
- struct chcr_aead_ctx {
-@@ -235,7 +235,7 @@ struct chcr_aead_ctx {
- 	u8 nonce[4];
- 	u16 hmac_ctrl;
- 	u16 mayverify;
--	struct	__aead_ctx ctx[0];
-+	struct	__aead_ctx ctx[];
- };
- 
- struct hmac_ctx {
-@@ -247,7 +247,7 @@ struct hmac_ctx {
- struct __crypto_ctx {
- 	struct hmac_ctx hmacctx[0];
- 	struct ablk_ctx ablkctx[0];
--	struct chcr_aead_ctx aeadctx[0];
-+	struct chcr_aead_ctx aeadctx[];
- };
- 
- struct chcr_context {
-@@ -257,7 +257,7 @@ struct chcr_context {
- 	unsigned int  ntxq;
- 	unsigned int  nrxq;
- 	struct completion cbc_aes_aio_done;
--	struct __crypto_ctx crypto_ctx[0];
-+	struct __crypto_ctx crypto_ctx[];
- };
- 
- struct chcr_hctx_per_wr {
+-- Rafael
+	
+> +       },
+> 
+> 
+> Would that address your concerns wrt this one?
+> 
+> Cheers!
+> -- Rafael
 
