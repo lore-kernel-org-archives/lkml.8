@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7088DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5538EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461DD24953
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4EE218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879084;
-	bh=6u2Zjd4cCAJplBkIJArkC26yIzl29BGwwVH3o2xHtus=;
+	s=default; t=1588879112;
+	bh=7P91oAr2DUrWWPTylD+XYbTnS9ORls0mGBJzML58PV4=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2TrGsTeFJNIrBDJPoUm4p0FI8AAm0Q0YpExryDOF8iZ8ULWmgi0He5I6+bjEulcVo
-	 QaWAtRxyBq0dHlM/S2rnSaJlKtVY7BIuHpCNCDsu9b2kVbm71EpdPvMG21+jIb1Aog
-	 jK7FSx3ZmjYlhW0A/VD5kJ1KHNK62cYRRuiKj7S0=
+	b=cbXkWiLxlgz6T7W0FX+kwa/1y+gl8NsWyfXRej6wXK2ZgElckhrlAqBnRdBNJ4Dx7
+	 P25uW8VN2NdWM1opNlWiBSABms5zONBtN10q+9pYdtXiCy128auOqi8wQW7HExc3GL
+	 6owdb4+q191QhJoXKIpOTUGpqsi0fMKPq+frpqzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgEGTSD (ORCPT
+        id S1728682AbgEGTSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41002 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgEGTSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:18:02 -0400
+        id S1726367AbgEGTSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:18:31 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CF821835;
-        Thu,  7 May 2020 19:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07EDE208E4;
+        Thu,  7 May 2020 19:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879082;
-        bh=6u2Zjd4cCAJplBkIJArkC26yIzl29BGwwVH3o2xHtus=;
+        s=default; t=1588879110;
+        bh=7P91oAr2DUrWWPTylD+XYbTnS9ORls0mGBJzML58PV4=;
         h=Date:From:To:Cc:Subject:From;
-        b=KJ7s41EA/KoUExDhcHun9qGSDWEpgm/fTIP9T9CzHUw4Jhqsz64KiFgt9cTc+tzQ2
-         a/1gXi4RyMPG7UC9ubhXx19jnsIbGpm6KoDr//HwybVANQgxObEtbnMIVvhgeq4bRF
-         Al/JgIZkn/n4NLqevOxa/qXJnx9tV+tHjHLz/VFI=
-Date:   Thu, 7 May 2020 14:22:28 -0500
+        b=c04KiV21Vc4SC/41DebL9qH4wDdGit2GFHfK1vpNiwY/OzMO+6nmPbo4lG4hx2EBH
+         9irmKFKonvNBXnd8b0YJaaNxcXMA67PjYTPEKMH1l/f83HIq4/sx1VNTWMB9ZS2Evi
+         6oVpN0NWaQ+6DtOV0dtQNOcRE1p01eeC3O5QZD+Y=
+Date:   Thu, 7 May 2020 14:22:56 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: soc-core: Replace zero-length array with flexible-array
-Message-ID: <20200507192228.GA16355@embeddedor>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: SOF: Replace zero-length array with flexible-array
+Message-ID: <20200507192256.GA16375@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,34 +95,43 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/sound/soc-dapm.h |    2 +-
- include/sound/soc.h      |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sof/probe.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
-index 08495f8d86dc..cc3dcb815282 100644
---- a/include/sound/soc-dapm.h
-+++ b/include/sound/soc-dapm.h
-@@ -689,7 +689,7 @@ struct snd_soc_dapm_context {
- /* A list of widgets associated with an object, typically a snd_kcontrol */
- struct snd_soc_dapm_widget_list {
- 	int num_widgets;
--	struct snd_soc_dapm_widget *widgets[0];
-+	struct snd_soc_dapm_widget *widgets[];
- };
+diff --git a/sound/soc/sof/probe.h b/sound/soc/sof/probe.h
+index 45daa5552834..250c4817f637 100644
+--- a/sound/soc/sof/probe.h
++++ b/sound/soc/sof/probe.h
+@@ -36,7 +36,7 @@ struct sof_probe_point_desc {
+ struct sof_ipc_probe_dma_add_params {
+ 	struct sof_ipc_cmd_hdr hdr;
+ 	unsigned int num_elems;
+-	struct sof_probe_dma dma[0];
++	struct sof_probe_dma dma[];
+ } __packed;
  
- #define for_each_dapm_widgets(list, i, widget)				\
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 13458e4fbb13..3e14442de2ec 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -1167,7 +1167,7 @@ struct snd_soc_pcm_runtime {
- 	unsigned int fe_compr:1; /* for Dynamic PCM */
+ struct sof_ipc_probe_info_params {
+@@ -51,19 +51,19 @@ struct sof_ipc_probe_info_params {
+ struct sof_ipc_probe_dma_remove_params {
+ 	struct sof_ipc_cmd_hdr hdr;
+ 	unsigned int num_elems;
+-	unsigned int stream_tag[0];
++	unsigned int stream_tag[];
+ } __packed;
  
- 	int num_components;
--	struct snd_soc_component *components[0]; /* CPU/Codec/Platform */
-+	struct snd_soc_component *components[]; /* CPU/Codec/Platform */
- };
- /* see soc_new_pcm_runtime()  */
- #define asoc_rtd_to_cpu(rtd, n)   (rtd)->dais[n]
+ struct sof_ipc_probe_point_add_params {
+ 	struct sof_ipc_cmd_hdr hdr;
+ 	unsigned int num_elems;
+-	struct sof_probe_point_desc desc[0];
++	struct sof_probe_point_desc desc[];
+ } __packed;
+ 
+ struct sof_ipc_probe_point_remove_params {
+ 	struct sof_ipc_cmd_hdr hdr;
+ 	unsigned int num_elems;
+-	unsigned int buffer_id[0];
++	unsigned int buffer_id[];
+ } __packed;
+ 
+ int sof_ipc_probe_init(struct snd_sof_dev *sdev,
 
