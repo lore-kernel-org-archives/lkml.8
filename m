@@ -2,107 +2,215 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCF8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C551C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE2321582
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588845078;
-	bh=EKVb6V3gl8eY0vRZrnNqm70DOyW4IWovVYgpATdS4L4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvAPHe19ZFLBhvDbEy5lEdyO5MlASlEh76rxREnlvJfiLHk5Kf8muxd3PNPMgdxod
-	 y0wBRZo41dYRYubRH86y0xwUgkHnIjeHVf6XFIbpg3XCEPp+tKoSNxc20oVLOSwSap
-	 u7VPmhRc1Uf5A72blg8gYshjl6169Y/4/hCZ3v2g=
+	by mail.kernel.org (Postfix) with ESMTP id 2CA3A21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgEGJvR convert rfc822-to-8bit (ORCPT
+        id S1725985AbgEGJ41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:51:17 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32953 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgEGJvQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:51:16 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-LUyIP0opP-Oqd82D9mY13w-1; Thu, 07 May 2020 05:51:07 -0400
-X-MC-Unique: LUyIP0opP-Oqd82D9mY13w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC293462;
-        Thu,  7 May 2020 09:51:05 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.194.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2C110013BD;
-        Thu,  7 May 2020 09:51:03 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>, Paul Khuong <pvk@pvk.ca>
-Subject: [PATCH 5/5] perf script: Enable IP fields for callchains
-Date:   Thu,  7 May 2020 11:50:24 +0200
-Message-Id: <20200507095024.2789147-6-jolsa@kernel.org>
-In-Reply-To: <20200507095024.2789147-1-jolsa@kernel.org>
-References: <20200507095024.2789147-1-jolsa@kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+        Thu, 7 May 2020 05:56:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33792 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgEGJ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 05:56:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C14CB23A;
+        Thu,  7 May 2020 09:56:27 +0000 (UTC)
+Date:   Thu, 07 May 2020 11:56:22 +0200
+Message-ID: <s5h8si45ard.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     butt3rflyh4ck <butterflyhuangxx@gmail.com>, security@kernel.org,
+        syzkaller <syzkaller@googlegroups.com>, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+In-Reply-To: <20200507082302.GF1024567@kroah.com>
+References: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+        <20200507082302.GF1024567@kroah.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the callchains were deleted in pipe mode,
-we need to ensure that the IP fields are enabled,
-otherwise the callchain is not displayed.
+On Thu, 07 May 2020 10:23:02 +0200,
+Greg Kroah-Hartman wrote:
+> 
+> On Thu, May 07, 2020 at 04:04:25PM +0800, butt3rflyh4ck wrote:
+> > I report a bug (in linux-5.7-rc1) found by syzkaller.
+> > 
+> > kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/v5.7.0-rc1.config
+> > reproducer: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/repro.cprog
+> > 
+> > I test the reproducer in linux-5.7-rc4 and crash too.
+> 
+> Great, care to create a fix for this and send it to the proper
+> maintainers?  That's the best way to get it fixed, otherwise it just
+> goes in the file with the rest of the syzbot reports we are burried
+> under.
 
-Enabling IP and SYM, which should be enough for
-callchains.
+Don't worry, I already prepared a fix patch below :)
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] ALSA: rawmidi: Fix racy buffer resize under concurrent
+ accesses
+
+The rawmidi core allows user to resize the runtime buffer via ioctl,
+and this may lead to UAF when performed during concurrent reads or
+writes.
+
+This patch fixes the race by introducing a reference counter for the
+runtime buffer access and returns -EBUSY error when the resize is
+performed concurrently.
+
+Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- tools/perf/builtin-script.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ include/sound/rawmidi.h |  1 +
+ sound/core/rawmidi.c    | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5c4a580c048a..ecc8bd4c5e57 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2118,8 +2118,6 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 			return 0;
- 	}
- 
--	set_print_ip_opts(&evsel->core.attr);
--
- 	if (evsel->core.attr.sample_type) {
- 		err = perf_evsel__check_attr(evsel, scr->session);
- 		if (err)
-@@ -2132,6 +2130,13 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 	 */
- 	sample_type = perf_evlist__combined_sample_type(evlist);
- 	callchain_param_setup(sample_type);
-+
-+	/* Enable fields for callchain entries, if it got enabled. */
-+	if (callchain_param.record_mode != CALLCHAIN_NONE) {
-+		output[output_type(evsel->core.attr.type)].fields |= PERF_OUTPUT_IP |
-+								     PERF_OUTPUT_SYM;
-+	}
-+	set_print_ip_opts(&evsel->core.attr);
- 	return 0;
+diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+index a36b7227a15a..334842daa904 100644
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+ 	size_t avail_min;	/* min avail for wakeup */
+ 	size_t avail;		/* max used buffer for wakeup */
+ 	size_t xruns;		/* over/underruns counter */
++	int buffer_ref;		/* buffer reference count */
+ 	/* misc */
+ 	spinlock_t lock;
+ 	wait_queue_head_t sleep;
+diff --git a/sound/core/rawmidi.c b/sound/core/rawmidi.c
+index 20dd08e1f675..4185d9e81e3c 100644
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work(struct work_struct *work)
+ 		runtime->event(runtime->substream);
  }
  
++/* buffer refcount management: call with runtime->lock held */
++static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref++;
++}
++
++static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref--;
++}
++
+ static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
+ {
+ 	struct snd_rawmidi_runtime *runtime;
+@@ -669,6 +680,11 @@ static int resize_runtime_buffer(struct snd_rawmidi_runtime *runtime,
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
++		if (runtime->buffer_ref) {
++			spin_unlock_irq(&runtime->lock);
++			kvfree(newbuf);
++			return -EBUSY;
++		}
+ 		oldbuf = runtime->buffer;
+ 		runtime->buffer = newbuf;
+ 		runtime->buffer_size = params->buffer_size;
+@@ -962,6 +978,7 @@ int snd_rawmidi_receive(struct snd_rawmidi_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 	spin_lock_irqsave(&runtime->lock, flags);
++	snd_rawmidi_buffer_ref(runtime);
+ 	if (count == 1) {	/* special case, faster code */
+ 		substream->bytes++;
+ 		if (runtime->avail < runtime->buffer_size) {
+@@ -1006,6 +1023,7 @@ int snd_rawmidi_receive(struct snd_rawmidi_substream *substream,
+ 		else if (snd_rawmidi_ready(substream))
+ 			wake_up(&runtime->sleep);
+ 	}
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	return result;
+ }
+@@ -1021,6 +1039,7 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 	unsigned long appl_ptr;
+ 
+ 	spin_lock_irqsave(&runtime->lock, flags);
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1040,13 +1059,17 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+ 			spin_unlock_irqrestore(&runtime->lock, flags);
+ 			if (copy_to_user(userbuf + result,
+ 					 runtime->buffer + appl_ptr, count1)) {
+-				return result > 0 ? result : -EFAULT;
++				if (!result)
++					result = -EFAULT;
++				goto out;
+ 			}
+ 			spin_lock_irqsave(&runtime->lock, flags);
+ 		}
+ 		result += count1;
+ 		count -= count1;
+ 	}
++ out:
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	return result;
+ }
+@@ -1156,6 +1179,7 @@ int __snd_rawmidi_transmit_peek(struct snd_rawmidi_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 	result = 0;
++	snd_rawmidi_buffer_ref(runtime);
+ 	if (runtime->avail >= runtime->buffer_size) {
+ 		/* warning: lowlevel layer MUST trigger down the hardware */
+ 		goto __skip;
+@@ -1180,6 +1204,7 @@ int __snd_rawmidi_transmit_peek(struct snd_rawmidi_substream *substream,
+ 		}
+ 	}
+       __skip:
++	snd_rawmidi_buffer_unref(runtime);
+ 	return result;
+ }
+ EXPORT_SYMBOL(__snd_rawmidi_transmit_peek);
+@@ -1342,6 +1367,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 			return -EAGAIN;
+ 		}
+ 	}
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail > 0) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1373,6 +1399,7 @@ static long snd_rawmidi_kernel_write1(struct snd_rawmidi_substream *substream,
+ 	}
+       __end:
+ 	count1 = runtime->avail < runtime->buffer_size;
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	if (count1)
+ 		snd_rawmidi_output_trigger(substream, 1);
 -- 
-2.25.4
+2.25.0
 
