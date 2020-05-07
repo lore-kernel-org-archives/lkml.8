@@ -2,185 +2,90 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA8BC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1078CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C3121473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B22063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588874753;
+	bh=t12honBDppcMtC39atYWosMLZLOq8/S52nAqPhOENKc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NHKZzRcdgZtJesRTwSX+tc1jAWK3oVr/7UG0Sa+xqoIJ7L2nvUXAMBT5xPq6gbiiU
+	 Rpi0MbKiZIL/vRrlSEU41ysQWXi4ZBqV09t2SeEB0ICIf9RgYamxSoSH8gdyWzv9io
+	 S+jjgLd1Jqg3zp2FbNPrpz9YTK2yd36ITHcRrM9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgEGSFX (ORCPT
+        id S1728385AbgEGSFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:05:23 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51330 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbgEGSFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:05:21 -0400
-Received: from 89-64-84-94.dynamic.chello.pl (89.64.84.94) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id eede8e33c27c587e; Thu, 7 May 2020 20:05:18 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: System fails to exit s2idle by a keystroke on my laptop
-Date:   Thu, 07 May 2020 20:05:11 +0200
-Message-ID: <5029155.caIQduTdCh@kreacher>
-In-Reply-To: <CAB4CAweZcN0SPe-a7jbthV=-ip9cCzJOM=NfP9YvtXw97ugKgQ@mail.gmail.com>
-References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com> <CAJZ5v0gX1gx1_zTZg=M+xEOqxPEaq8ZU-N3hwk7OGcGdzrdBTg@mail.gmail.com> <CAB4CAweZcN0SPe-a7jbthV=-ip9cCzJOM=NfP9YvtXw97ugKgQ@mail.gmail.com>
+        Thu, 7 May 2020 14:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbgEGSFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:05:52 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9701E21835
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 18:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588874751;
+        bh=t12honBDppcMtC39atYWosMLZLOq8/S52nAqPhOENKc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CYKeVueYxchvPKyGrurGV8FrOlxvmOSuZ394PWpt/pK8cf4nJd/ec415nJunoTwNQ
+         KghxOCLsI8tANKadlLuFvkGr27Yl7iVut34uV+zAVK9rHvtZEDe32TnhpXc665HmMb
+         TpiH84isSTMk7gdNCZlPDnlflnKyXMPVvGuZlomA=
+Received: by mail-wm1-f41.google.com with SMTP id u16so7839297wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:05:51 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYIsWtR9CgW/uQkpcWH6tM8LD3Hw4WPL7RJrBcKLSfCkd5dtPt7
+        qDIjm0rn6DaItjX2CivwvD8XSlCrsX3HgfFFABWAFQ==
+X-Google-Smtp-Source: APiQypJa73RTPZHUBSMpbX8CdKJ1utp8jAStgkb82bfQlXTNFAP1uBSn3nPVJ4rGyY0p2guQJEgHVCXvidBH+PyC8/4=
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr11408000wme.176.1588874750143;
+ Thu, 07 May 2020 11:05:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200505131602.633487962@linutronix.de>
+In-Reply-To: <20200505131602.633487962@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 May 2020 11:05:37 -0700
+X-Gmail-Original-Message-ID: <CALCETrWUH6hB6C0-FzaxvGCtJ=W414+B+0zEnME+C4Pc4CYiPg@mail.gmail.com>
+Message-ID: <CALCETrWUH6hB6C0-FzaxvGCtJ=W414+B+0zEnME+C4Pc4CYiPg@mail.gmail.com>
+Subject: Re: [patch V4 part 1 00/36] x86/entry: Entry/exception code rework,
+ preparatory patches
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, May 7, 2020 5:38:11 AM CEST Chris Chiu wrote:
-> On Wed, May 6, 2020 at 6:19 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Wed, May 6, 2020 at 11:32 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > >
-> > > Thanks for the report, the issue evidently is EC-related.
-> > >
-> > > > @@ -1024,7 +1024,7 @@ static bool acpi_s2idle_wake(void)
-> > > >                  * regarded as a spurious one.
-> > > >                  */
-> > > >                 if (!acpi_ec_dispatch_gpe())
-> > > > -                       return false;
-> > > > +                       return true;
-> > >
-> > > Have you tried commenting out simply removing the if () check and the
-> > > following return statement?
-> >
-> > Scratch that.
-> >
-> > Instead, please try doing
-> >
-> > acpi_ec_dispatch_gpe()
-> >
-> > instead of the if () and the following return statement.
-> 
-> Yes. I verified with the modification you suggested on my laptop. It's
-> working OK.
-> I can wake from a keystroke w/o problem.
-> 
-> @ -1024,8 +1024,7 @@ static bool acpi_s2idle_wake(void)
->                  * If the EC GPE status bit has not been set, the wakeup is
->                  * regarded as a spurious one.
->                  */
-> -               if (!acpi_ec_dispatch_gpe())
-> -                       return false;
-> +               acpi_ec_dispatch_gpe();
-> 
->                 /*
->                  * Cancel the wakeup and process all pending events in case
-> 
+On Tue, May 5, 2020 at 7:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Folks!
+>
+> This is the hopefully final version of the rework of the entry and
+> exception code to ensure that instrumentation cannot touch the fragile
+> parts of the hardware induced entry and exception code trainwreck. It
+> further ensures correctness vs. RCU and moves quite some code out of the
+> assembly code into C.
 
-OK, great, thanks for the confirmation!
-
-Does the appended patch work for you then?
-
-It should be functionally equivalent to the above change if I didn't mess it up.
-
-
----
- drivers/acpi/ec.c       |   23 ++++++++++++++---------
- drivers/acpi/internal.h |    1 -
- drivers/acpi/sleep.c    |   14 ++------------
- 3 files changed, 16 insertions(+), 22 deletions(-)
-
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
- 		if (acpi_check_wakeup_handlers())
- 			return true;
- 
--		/*
--		 * If the status bit is set for any enabled GPE other than the
--		 * EC one, the wakeup is regarded as a genuine one.
--		 */
--		if (acpi_ec_other_gpes_active())
-+		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
-+		if (acpi_ec_dispatch_gpe())
- 			return true;
- 
- 		/*
--		 * If the EC GPE status bit has not been set, the wakeup is
--		 * regarded as a spurious one.
--		 */
--		if (!acpi_ec_dispatch_gpe())
--			return false;
--
--		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1994,23 +1994,28 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
- 
--bool acpi_ec_other_gpes_active(void)
--{
--	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
--}
--
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
- 
- 	if (!first_ec)
--		return false;
-+		return acpi_any_gpe_status_set(U32_MAX);
- 
-+	/*
-+	 * Report wakeup if the status bit is set for any enabled GPE other
-+	 * than the EC one.
-+	 */
-+	if (acpi_any_gpe_status_set(first_ec->gpe))
-+		return true;
-+
-+	/*
-+	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
-+	 * to allow the caller to process events properly after that.
-+	 */
- 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	if (ret == ACPI_INTERRUPT_HANDLED) {
-+	if (ret == ACPI_INTERRUPT_HANDLED)
- 		pm_pr_dbg("EC GPE dispatched\n");
--		return true;
--	}
-+
- 	return false;
- }
- #endif /* CONFIG_PM_SLEEP */
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
- 
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
--bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
- 
-
-
-
+Other than the minor comments I sent, part 1 all looks good to me.
