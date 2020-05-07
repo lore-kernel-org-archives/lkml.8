@@ -2,90 +2,146 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0935C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1983FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3EEA20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6AE20736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ohl5ibJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgEGK4c (ORCPT
+        id S1726533AbgEGLGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:56:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:56348 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgEGK4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:56:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C7ED1FB;
-        Thu,  7 May 2020 03:56:32 -0700 (PDT)
-Received: from [10.37.12.117] (unknown [10.37.12.117])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93C723F68F;
-        Thu,  7 May 2020 03:56:26 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm/arm64: release kvm->mmu_lock in loop to prevent
- starvation
-To:     giangyi@amazon.com, maz@kernel.org
-Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-References: <20200415084229.29992-1-giangyi@amazon.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <0e448ae0-af4c-3f0a-2dd5-6ab86c0d60c0@arm.com>
-Date:   Thu, 7 May 2020 12:01:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 7 May 2020 07:06:04 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:50345 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726367AbgEGLGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:06:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588849563; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KUkv11UrsJT4bCOAv4o9yBeyPANsHJVXo3wLqp+3x3w=;
+ b=ohl5ibJIZrusXwdN3xIjxiqErLs9AMzKuowN8jxzZQPfnOpQ/7ABO+4d0Y7gdtDWJi0B9v/b
+ X3S7bqOWuBZBFeOQbpn2tXishsRnQzN7Nq1AT6YsONja2XlhhVJCf1n5gODoi5UlwoBnrFxC
+ 0v/B/GCZP1cItsKO9qw5LISJ7dc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb3eb8a.7f4612d8bed8-smtp-out-n04;
+ Thu, 07 May 2020 11:05:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ABF22C433D2; Thu,  7 May 2020 11:05:46 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D6E4C433F2;
+        Thu,  7 May 2020 11:05:44 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200415084229.29992-1-giangyi@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 07 May 2020 16:35:44 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more
+ informative
+In-Reply-To: <2f3cd963-dffe-290b-02bf-819687713738@arm.com>
+References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
+ <CAD=FV=U0Hhae3D1-P8kbcZafHeuqng11BNAbOb2YWPx+M7X5Gw@mail.gmail.com>
+ <0b5098c28360d018f390a97155b9776c@codeaurora.org>
+ <2f3cd963-dffe-290b-02bf-819687713738@arm.com>
+Message-ID: <7c3fd8c1d5b26ac277b8729d59531474@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/2020 09:42 AM, Jiang Yi wrote:
-> Do cond_resched_lock() in stage2_flush_memslot() like what is done in
-> unmap_stage2_range() and other places holding mmu_lock while processing
-> a possibly large range of memory.
+On 2020-05-07 16:03, Robin Murphy wrote:
+> On 2020-05-07 11:04 am, Sai Prakash Ranjan wrote:
+>> Hi,
+>> 
+>> On 2020-05-07 05:40, Doug Anderson wrote:
+>>> Hi,
+>>> 
+>>> On Thu, Apr 23, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> 
+>>> wrote:
+>>>> 
+>>>> Hi,
+>>>> 
+>>>> On Thu, Apr 23, 2020 at 2:55 AM Sai Prakash Ranjan
+>>>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>> >
+>>>> > Currently on reboot/shutdown, the following messages are
+>>>> > displayed on the console as error messages before the
+>>>> > system reboots/shutdown as part of remove callback.
+>>>> >
+>>>> > On SC7180:
+>>>> >
+>>>> >   arm-smmu 15000000.iommu: removing device with active domains!
+>>>> >   arm-smmu 5040000.iommu: removing device with active domains!
+>>>> >
+>>>> > Make this error message more informative and less scary.
+>>>> >
+>>>> > Reported-by: Douglas Anderson <dianders@chromium.org>
+>>>> > Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>>>> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>>> > ---
+>>>> >  drivers/iommu/arm-smmu.c | 2 +-
+>>>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>> 
+>>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>>> 
+>>> Is this patch waiting on anything in particular now?  Do we need
+>>> reviews from Robin and/or Will?
+>>> 
+>> 
+>> Waiting for their reviews as they are the maintainers/reviewers :)
 > 
-> Signed-off-by: Jiang Yi <giangyi@amazon.com>
-> ---
->   virt/kvm/arm/mmu.c | 3 +++
->   1 file changed, 3 insertions(+)
+> Sorry, this did register at the time, I just felt that it's a bit
+> redundant to give a review tag to say "yes, this is exactly what I
+> suggested" :)
 > 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index e3b9ee268823..7315af2c52f8 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -417,16 +417,19 @@ static void stage2_flush_memslot(struct kvm *kvm,
->   	phys_addr_t next;
->   	pgd_t *pgd;
->   
->   	pgd = kvm->arch.pgd + stage2_pgd_index(kvm, addr);
->   	do {
->   		next = stage2_pgd_addr_end(kvm, addr, end);
->   		if (!stage2_pgd_none(kvm, *pgd))
->   			stage2_flush_puds(kvm, pgd, addr, next);
-> +
-> +		if (next != end)
-> +			cond_resched_lock(&kvm->mmu_lock);
->   	} while (pgd++, addr = next, addr != end);
->   }
-
-Given that this is called under the srcu_lock this looks
-good to me:
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
->   
->   /**
->    * stage2_flush_vm - Invalidate cache for pages mapped in stage 2
->    * @kvm: The struct kvm pointer
->    *
->    * Go through the stage 2 page tables and invalidate any cache lines
+> That said, I do wish I hadn't forgotten about the dev_notice message
+> level, but I think that lies over in the conceptual purity corner
+> rather than making any practical difference, so I'm still OK with the
+> patch as-is. Will?
 > 
 
+I can change to dev_notice if you have strong preference for that.
+I chose dev_info since we see the messages on every reboot and that 
+makes
+it more informational than something to notice everytime.
+
+> 
+> p.s. whoever has this entry in their address book for the IOMMU list 
+> (Doug?):
+> 
+> "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+> Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+> 
+> it really messes up Thunderbird's ability to generate working headers
+> for a reply ;)
+
+Not me ;)
+
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
