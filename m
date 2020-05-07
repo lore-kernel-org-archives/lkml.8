@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCA0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58ABC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF79A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65242082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJ5GJm9H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E11AoE+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEGOIp (ORCPT
+        id S1727838AbgEGOKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:08:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
+        Thu, 7 May 2020 10:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgEGOIl (ORCPT
+        with ESMTP id S1728199AbgEGOIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:08:41 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8ADC05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:40 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id ce16so5984119qvb.15
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:40 -0700 (PDT)
+        Thu, 7 May 2020 10:08:44 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384AFC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:44 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id o196so4041501ybg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Ew1Auf+JJ2L5arU3PyljE3NdvPut2GJPZ3Rkkz6XalQ=;
-        b=JJ5GJm9HqdYdzOugzSLtwI9AsSWBWZKzE0tdn+cUIqA3aCKIQZvuruHCGe3GCSg3TK
-         tZvjcBl21VXdjWAYumT34XIqMXm5v6nl2ZI+wwoAANrdsjDDO07rP7KzZXuqxVJJF0aG
-         /F8asZ5Q2yofy8kEROaHB1fRHDJ2QHdTDfFWrNQ01WMMEm7bH6p1PGxmq7UxTiC12V4b
-         dv14eZS1uWivH9QOUP30/IP+hxLeRi8ZpMi3bm90vWdkzzH3ABAws+Gsl7CNpOskAHv2
-         0MJnHPB52IfsWjUuEj4zi4PJKtT+Pvu360/5rZcrd8TvM4F9pOhUiFmNhhsvTuRnnv/d
-         l6dQ==
+        bh=YFMRcn6rc8qdrbrVjoj3zlWs4rTfREC3MZdtnI5wP3I=;
+        b=E11AoE+EBc31Gkgbd+qxgXilstKsTekedzy4/tyPSO4LZXDsYn+X89AaKAg3I26MTE
+         iMSLTAfqjUSMtjKb0ROL1QXNambANnCxEhkE9SFcvIjWWHgp3dGMyWQC4UL8OI7lX4M/
+         4aHhA47cwihaveXRHVJAT1J+Ny6YNozo2rDIVUxrq+t6fFv9EwCWzOxMeFzKThJLq1gN
+         a8yVgBwgKkO/cgjgj1z+R+uMEM6/1wPhwZa7B9OtUsS++6FETmdYGq5CwvgoAAozcTtR
+         lL7FW96KQlN9sXH9qPfays50jhkUrzqO0iUf4cY4pQ5YXvo//Oggc9oVDz7PdGGBTjRS
+         LVrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Ew1Auf+JJ2L5arU3PyljE3NdvPut2GJPZ3Rkkz6XalQ=;
-        b=btVrlyWNxVbk+mPofgJKzCUNNGWnM1Sae3P3JVctBDaERztG9aL0JHkAWPR/MjfAQq
-         U9sqyOhRi2Ruiw8pajT9Zduq6QTOA7rW9lKfd0kiyZz6Skf0mQ3wb8gnqvLA3Q1/nToX
-         rSG7dNDyE70dEWpHkH9jOGa+Pzj2UbrZf7TBoTZW0kwDDfh4mFeSFJW64HQPZUd8LRqB
-         oPtw/vTEVZa132aSNky15O6P6VQYI3MIIw7RYlfmpjEITgfDZQlHHfeg2RMbV3Zi1ulp
-         +HElw738EaS7x/SHKi13FrE66zktiwPrljvzhZ3Uae0RvDPeeOafmTj5CVU4g5gr28eA
-         SGZg==
-X-Gm-Message-State: AGi0PuZl2w3fLL0972bgmYj5298iq9H/ELPL3+Gfu+0HlPkmo8lb/aES
-        4NiZEeWXfn30oAS5BeQECYdVbdFHuP1Z
-X-Google-Smtp-Source: APiQypJvJKA9NnfhOBmsKSvoOjMdo+d1dPOHMI0HSSVAAH72zsNS1j+NeUQeK4QYwqrfA+9aozSBGliqUofk
-X-Received: by 2002:ad4:45ac:: with SMTP id y12mr13426252qvu.227.1588860519436;
- Thu, 07 May 2020 07:08:39 -0700 (PDT)
-Date:   Thu,  7 May 2020 07:08:04 -0700
+        bh=YFMRcn6rc8qdrbrVjoj3zlWs4rTfREC3MZdtnI5wP3I=;
+        b=fg8fEVtCEQ2OCVphY4vjtn2dg8zsWU5hctV3yFmsnHSqtl4ooDO3f3sD/JEugxg4LQ
+         0iq6X3FGeEEJRs4Map/zRo29mJJAKKijn7QIi11JD9xUKzD0e9eIAlstjH6GGNHEY0S6
+         LD9V1AxV5QhwT866KpkrCL3J2dJc4yXZkftbhnnqn/EXuL2XQirUQcSRb0TfBgkEIDGq
+         zW7xkLnziEKPgQY4VverO2uQrno//zrfPfvCQ+QZsEmtNjWDHIdLpsYQicpl2jTu+OxQ
+         o2TX5ccWCUTIxuJtYJS4sxNYtnqulsuJxOiDV8qUbs/LFQJ98Qcz6gCGtliiL2VAPmlk
+         K8Zg==
+X-Gm-Message-State: AGi0PubcqD/akLcoB7N2ED2ftZtWOpJ43gXAdByaCFvVo4GVu0Zkz1St
+        7La7yVE305/Hnfn8GoiX42FojZu76ZFJ
+X-Google-Smtp-Source: APiQypL2IF6po1tkfUIviVmVSO9IXkOUXBpFY9r+N9WQBNOwpzIxGf1hgyOybK74FwdhA8C4u5u8ZMf3FOcy
+X-Received: by 2002:a25:73ca:: with SMTP id o193mr546697ybc.149.1588860523392;
+ Thu, 07 May 2020 07:08:43 -0700 (PDT)
+Date:   Thu,  7 May 2020 07:08:06 -0700
 In-Reply-To: <20200507140819.126960-1-irogers@google.com>
-Message-Id: <20200507140819.126960-9-irogers@google.com>
+Message-Id: <20200507140819.126960-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20200507140819.126960-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH v2 08/23] perf metrics: fix parse errors in power8 metrics
+Subject: [RFC PATCH v2 10/23] perf expr: print a debug message for division by zero
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,36 +88,47 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mismatched parentheses.
+If an expression yields 0 and is then divided-by/modulus-by then the
+parsing aborts. Add a debug error message to better enable debugging
+when this happens.
 
-Fixes: dd81eafacc52 (perf vendor events power8: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
-Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.y | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
-index bffb2d4a6420..fc4aa6c2ddc9 100644
---- a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
-@@ -169,7 +169,7 @@
-     },
-     {
-         "BriefDescription": "Cycles GCT empty where dispatch was held",
--        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL)",
-+        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL",
-         "MetricGroup": "cpi_breakdown",
-         "MetricName": "gct_empty_disp_held_cpi"
-     },
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 54260094b947..21e82a1e11a2 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -103,8 +103,18 @@ expr:	  NUMBER
+ 	| expr '+' expr		{ $$ = $1 + $3; }
+ 	| expr '-' expr		{ $$ = $1 - $3; }
+ 	| expr '*' expr		{ $$ = $1 * $3; }
+-	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
+-	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
++	| expr '/' expr		{ if ($3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = $1 / $3;
++	                        }
++	| expr '%' expr		{ if ((long)$3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = (long)$1 % (long)$3;
++	                        }
+ 	| '-' expr %prec NEG	{ $$ = -$2; }
+ 	| '(' if_expr ')'	{ $$ = $2; }
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
 -- 
 2.26.2.526.g744177e7f7-goog
 
