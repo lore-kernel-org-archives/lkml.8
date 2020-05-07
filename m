@@ -2,78 +2,98 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E8FC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4BEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4C9F2078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606112070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGJWd (ORCPT
+        id S1726476AbgEGJXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:22:33 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:46213 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgEGJWc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:22:32 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49Hnzp4V3Rz1s15H;
-        Thu,  7 May 2020 11:22:29 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49Hnzn4yNjz1qspk;
-        Thu,  7 May 2020 11:22:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id HuTpiRr17Yjp; Thu,  7 May 2020 11:22:28 +0200 (CEST)
-X-Auth-Info: My1rqRLQeRYwXTe8bTgqsiQduii7/8yaKxe1UwEuWa/9BFJuuxyboUhmQ8FG6wd2
-Received: from igel.home (ppp-46-244-177-18.dynamic.mnet-online.de [46.244.177.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu,  7 May 2020 11:22:28 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 18A2D2C0D9B; Thu,  7 May 2020 11:22:28 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-References: <158834025077.28357.15141584656220094821.stgit@devnote2>
-        <158834028054.28357.398159034694277189.stgit@devnote2>
-X-Yow:  Where's my SOCIAL WORKER?
-Date:   Thu, 07 May 2020 11:22:28 +0200
-In-Reply-To: <158834028054.28357.398159034694277189.stgit@devnote2> (Masami
-        Hiramatsu's message of "Fri, 1 May 2020 22:38:00 +0900")
-Message-ID: <87eerwkskr.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
+        Thu, 7 May 2020 05:23:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3839 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbgEGJXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 05:23:47 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2E810F2A30BCBDF2A368;
+        Thu,  7 May 2020 17:23:44 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
+ 17:23:37 +0800
+To:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <hushiyuan@huawei.com>, <hewenliang4@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <583a49c9-c27a-931d-e6c2-6f63a4b18bea@huawei.com>
+Date:   Thu, 7 May 2020 17:23:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mai 01 2020, Masami Hiramatsu wrote:
+The @data and @fd is leak in the error path of apply_xbc(), so this
+patch fix it.
 
-> Since the built-in echo has different behavior in POSIX shell
-> (dash) and bash, we forcibly use /bin/echo -E (not interpret
-> backslash escapes) by default.
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ tools/bootconfig/main.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-How about using printf instead (at least where it matters)?
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 16b9a420e6fd..001076c51712 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -314,6 +314,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	ret = delete_xbc(path);
+ 	if (ret < 0) {
+ 		pr_err("Failed to delete previous boot config: %d\n", ret);
++		free(data);
+ 		return ret;
+ 	}
 
-Andreas.
+@@ -321,24 +322,26 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	fd = open(path, O_RDWR | O_APPEND);
+ 	if (fd < 0) {
+ 		pr_err("Failed to open %s: %d\n", path, fd);
++		free(data);
+ 		return fd;
+ 	}
+ 	/* TODO: Ensure the @path is initramfs/initrd image */
+ 	ret = write(fd, data, size + 8);
+ 	if (ret < 0) {
+ 		pr_err("Failed to apply a boot config: %d\n", ret);
+-		return ret;
++		goto out;
+ 	}
+ 	/* Write a magic word of the bootconfig */
+ 	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
+ 	if (ret < 0) {
+ 		pr_err("Failed to apply a boot config magic: %d\n", ret);
+-		return ret;
++		goto out;
+ 	}
++out:
+ 	close(fd);
+ 	free(data);
 
+-	return 0;
++	return ret;
+ }
+
+ int usage(void)
 -- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+1.8.3.1
+
