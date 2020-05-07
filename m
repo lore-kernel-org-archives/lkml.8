@@ -2,128 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E641CC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB46AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21DD207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFAB20735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R1v9bA5V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AmbX5+II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgEGANm (ORCPT
+        id S1728164AbgEGAQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgEGANl (ORCPT
+        Wed, 6 May 2020 20:16:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56700 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726860AbgEGAQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:13:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D887C061A0F;
-        Wed,  6 May 2020 17:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=jIXCMyIbImO8rm+oSDaQ2NCQ0Osl596aq9/e8JwCpJ8=; b=R1v9bA5VIwE6ZoPd5DtaIU67FX
-        FqrIiDLQQ8dMAf8/BA9c6R5+asnL12HNe0AUUseNBpor9jJ42IYTpkrpcXKhfIF4mvfK9HeoJncnb
-        n25fF5aTQ7OWtl1/85tTQqY6XGfl26WHHO09KZPqw4wyOblOQKn63h6ip0j3QaapLfYpLEj6CZ4JT
-        V1cfXjjPrIY3G2lM/z7CM7yDQEDFEiN16oH2Icmb9czMh2cDaS/bTnd6tlKibeVXbJE2lr/cUGDuW
-        yyAPLYhnachD/h9GclpcjhpubwTiPDBoaVoaeqmAEhELJdl7tVOrRogQQlAfEwpXIXcH+BrMqTOtO
-        ewppQ04w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWUAX-0004mp-6l; Thu, 07 May 2020 00:13:41 +0000
-Subject: Re: linux-next: Tree for Apr 14 (objtool crazy)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200414123900.4f97a83f@canb.auug.org.au>
- <e01557a7-746a-6af0-d890-707e9dd86b86@infradead.org>
- <20200414221914.hbvp4dvh47at4nlg@treble>
- <20200507085011.6d2edf32@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9c7ce0f6-b15d-5205-352f-f82bfbcf7f29@infradead.org>
-Date:   Wed, 6 May 2020 17:13:40 -0700
+        Wed, 6 May 2020 20:16:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588810573;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dSCA9RBsimoObRbae5ozwK5uzV2+0s8IdfYdBDLhAxc=;
+        b=AmbX5+IIfviu+sH1mvDLx4dTqtH6UJX1VQ+FlTSc+o2GV9BcdlLX8MaAjGGkjiksJDK+Wa
+        s0VLMPFwn3S0LjqSC5FqNKn1g4gF6Vl8GIGsQMf7L2KXte5Di1oL+X+mNaB3FSYEULrFeR
+        v53jNjR7Z1Ck2uMYXxHw8zhGWscz4Xg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-3aBf_r36NcKdIyBHyYDctA-1; Wed, 06 May 2020 20:16:07 -0400
+X-MC-Unique: 3aBf_r36NcKdIyBHyYDctA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 915801005510;
+        Thu,  7 May 2020 00:16:05 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-199.bne.redhat.com [10.64.54.199])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 152475C1D4;
+        Thu,  7 May 2020 00:16:02 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH] arm64/mm: Remove add_huge_page_size()
+To:     Will Deacon <will@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        shan.gavin@gmail.com
+References: <20200506064635.20114-1-gshan@redhat.com>
+ <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
+ <20200506071927.GB7021@willie-the-truck>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
+Date:   Thu, 7 May 2020 10:15:59 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200507085011.6d2edf32@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200506071927.GB7021@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/20 3:50 PM, Stephen Rothwell wrote:
-> Hi all,
+On 5/6/20 5:19 PM, Will Deacon wrote:
+> On Wed, May 06, 2020 at 12:36:43PM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 05/06/2020 12:16 PM, Gavin Shan wrote:
+>>> The function add_huge_page_size(), wrapper of hugetlb_add_hstate(),
+>>> avoids to register duplicated huge page states for same size. However,
+>>> the same logic has been included in hugetlb_add_hstate(). So it seems
+>>> unnecessary to keep add_huge_page_size() and this just removes it.
+>>
+>> Makes sense.
+>>
+>>>
+>>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>>> ---
+>>>   arch/arm64/mm/hugetlbpage.c | 18 +++++-------------
+>>>   1 file changed, 5 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+>>> index bbeb6a5a6ba6..ed7530413941 100644
+>>> --- a/arch/arm64/mm/hugetlbpage.c
+>>> +++ b/arch/arm64/mm/hugetlbpage.c
+>>> @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+>>>   	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
+>>>   }
+>>>   
+>>> -static void __init add_huge_page_size(unsigned long size)
+>>> -{
+>>> -	if (size_to_hstate(size))
+>>> -		return;
+>>> -
+>>> -	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+>>> -}
+>>> -
+>>>   static int __init hugetlbpage_init(void)
+>>>   {
+>>>   #ifdef CONFIG_ARM64_4K_PAGES
+>>> -	add_huge_page_size(PUD_SIZE);
+>>> +	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+>>>   #endif
+>>> -	add_huge_page_size(CONT_PMD_SIZE);
+>>> -	add_huge_page_size(PMD_SIZE);
+>>> -	add_huge_page_size(CONT_PTE_SIZE);
+>>> +	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
+>>> +	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+>>> +	hugetlb_add_hstate(CONT_PTE_SHIFT);
 > 
-> On Tue, 14 Apr 2020 17:19:14 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->>
->> On Tue, Apr 14, 2020 at 06:50:15AM -0700, Randy Dunlap wrote:
->>> On 4/13/20 7:39 PM, Stephen Rothwell wrote:  
->>>> Hi all,
->>>>
->>>> Changes since 20200413:
->>>>   
->>>
->>>
->>> I killed objtool after 49 minutes of CPU time:
->>>
->>>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND    
->>>  6159 rdunlap   30  10   42756   8028      0 R 100.0 0.099  49:19.02 objtool 
->>>
->>>
->>> /bin/sh: line 1:  6159 Terminated              ./tools/objtool/objtool orc generate --no-fp --no-unreachable --uaccess drivers/i2c/busses/i2c-parport.o  
->>
->> I took an initial look at this one.  I can dig more tomorrow unless
->> Peter beats me to it.
->>
->> (gdb) bt
->> #0  0x000000000040df55 in sec_offset_hash (sec=0xc30930, offset=4334561216) at elf.h:104
->> #1  0x000000000040e907 in find_rela_by_dest_range (elf=0x7ffff64a4010, sec=0xc30930, offset=18446744073709551608, len=1) at elf.c:227
->> #2  0x000000000040ea67 in find_rela_by_dest (elf=0x7ffff64a4010, sec=0xc30710, offset=18446744073709551608) at elf.c:246
->> #3  0x0000000000408038 in find_jump_table (file=0x427620 <file>, func=0xc32bf0, insn=0xc4f840) at check.c:1118
->> #4  0x0000000000408242 in mark_func_jump_tables (file=0x427620 <file>, func=0xc32bf0) at check.c:1170
->> #5  0x00000000004083b6 in add_jump_table_alts (file=0x427620 <file>) at check.c:1215
->> #6  0x0000000000408b95 in decode_sections (file=0x427620 <file>) at check.c:1413
->> #7  0x000000000040bf44 in check (_objname=0x7fffffffceff "drivers/i2c/busses/i2c-parport.o", orc=true) at check.c:2508
->> #8  0x0000000000405580 in cmd_orc (argc=1, argv=0x7fffffffc9d8) at builtin-orc.c:41
->> #9  0x0000000000411297 in handle_internal_command (argc=6, argv=0x7fffffffc9d0) at objtool.c:96
->> #10 0x0000000000411349 in main (argc=6, argv=0x7fffffffc9d0) at objtool.c:119
->>
->> It's an infinite loop in find_rela_by_dest_range() because offset is -8.
->> That comes from find_jump_table():
->>
->>   table_offset = text_rela->addend;
->>   table_sec = text_rela->sym->sec;
->>   ...
->>   table_rela = find_rela_by_dest(file->elf, table_sec, table_offset);
->>
->> which comes from this gem:
->>
->> 00000000000001fd <line_set>:
->>  1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
->>  204:	00 00 00 
->> 			1ff: R_X86_64_64	.rodata-0x8
->>
->> So objtool is getting confused by that -0x8 rela addend.
-> 
-> Did this get fixed?
+> Something similar has already been done in linux-next.
 > 
 
-Yes.  It's here:
-https://lore.kernel.org/lkml/02b719674b031800b61e33c30b2e823183627c19.1587842122.git.jpoimboe@redhat.com/
+Thanks, Will. I didn't check linux-next before posting this patch.
+Please ignore it then :)
 
+>> Should these page order values be converted into macros instead. Also
+>> we should probably keep (CONT_PTE_SHIFT + PAGE_SHIFT - PAGE_SHIFT) as
+>> is to make things more clear.
+> 
+> I think the real confusion stems from us not being consistent with your
+> *_SHIFT definitions on arm64. It's madness for CONT_PTE_SHIFT to be smaller
+> than PAGE_SHIFT imo, but it's just cosmetic I guess.
+> 
 
--- 
-~Randy
+Yeah, Do you want me to post a patch, to fix it?
+
+> Will
+> 
+
+Thanks,
+Gavin
 
