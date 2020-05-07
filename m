@@ -2,86 +2,84 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2B9C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEFFC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19048215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BDB208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B2sIj2Mx"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="UVP//zg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgEGCx2 (ORCPT
+        id S1728357AbgEGDB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:53:28 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49040 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgEGCx2 (ORCPT
+        Wed, 6 May 2020 23:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727095AbgEGDB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:53:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qtu3103567;
-        Wed, 6 May 2020 21:52:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588819975;
-        bh=L0nU496hZdbdRsagNnFwhK+8Afmw2+jXQkD34ygMVgc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B2sIj2MxkPozV2ZWt99LmldkDblt7NVGvS/JLCNdOK5exNdOoaeZ3rT5nKF2tQOEr
-         i2K9SHRfiMxa+qbNmeVKs4uCLWyrXA7aVrIEbxvnADpXiNd9xfZH1Kfa9T0d71hlfx
-         kwvhcZJeSTXI+S2Ro8C3XHnzYZL/la9oOXNVqkVw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0472qtJ8094533
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 May 2020 21:52:55 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 21:52:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 21:52:54 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qmu4110785;
-        Wed, 6 May 2020 21:52:49 -0500
-Subject: Re: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cbc214fd-541a-ef2d-d00b-43379730ac1f@ti.com>
-Date:   Thu, 7 May 2020 08:22:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 6 May 2020 23:01:57 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196E6C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:01:57 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id s9so4565869qkm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mvG2/ro0fLAecrusqs/x41lerTr3Wg9O5pbf09qQPz0=;
+        b=UVP//zg9hei0L/x7oxhqP5j1Ggyf9dMV0VKIOd5kBE52u+O5vdOaS9gKL558fqgsr4
+         FL+Ki/lmJbKcRVnDoeoQc7MrGEuGY4xADcftp25xoVHvRRtNSg8u9Ggar+fL4EEB/NBc
+         UeJa0/dAf8YkZOLreR21vFVyNIgqg6/pArzRBXZjaKBxGk8Bwo7Y8vkdK7go0xL/znjD
+         CBdpSUOy2jW27QlBLMmkmJl7B4Kq1yawmSAgUyUS9iPHokT5u7pSgUsUdvPtEAirJ4RP
+         xx2VxsZYmPCyUP5pT8eygVDKp6FvYG7N7aHrMB0gLcGKvEBy+Jh+7OUrYmYMe8+WnHTk
+         Z+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mvG2/ro0fLAecrusqs/x41lerTr3Wg9O5pbf09qQPz0=;
+        b=VRAPyn/1FEjZisObY9JTwdX8+IGWNfFI+Z5/igbfwDlcTk64vew2MAtSMs1DUST+yB
+         PE6qzJ1Fiwa2kSx6INRfSq9cQrZtSJG7xSzdiuFuZsQSU/Kpm3XqUSpf9X5pwzKuBQhl
+         yBJRdBM/u1hrJQZVEL58pSdJSaz3s4XKFCV4niZvFqbfnIxjXCvl7t5WYuOQVdJYzirB
+         xVuJnQtL5U4QKFTQx9HfnnhD03cVVyietsksC9IqXNIDP4etk5PUoegyX1m1at6xobc/
+         RVY+ECe4/9RM+pRoyi+uSIjp9YhGvEKDRNceLy+mAz34Mi95kfDnhB6rbUsmU9jBw+JD
+         H0Ew==
+X-Gm-Message-State: AGi0PuYwGT5jPnZL3AHThLx52UceDHgYFrQ76vyQxIa/hU+2VOJ8Ktda
+        TZOWu314H4jPYwhfsB0lFKpAiQ==
+X-Google-Smtp-Source: APiQypIhE9SmtdXVA3X3g1U8j3Y2Uco3FS+ksydVXdls+Yh1EA6Narfrv/wJQDa0m2qS+MQvD4t6vA==
+X-Received: by 2002:a37:a7c8:: with SMTP id q191mr10803578qke.214.1588820516146;
+        Wed, 06 May 2020 20:01:56 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j25sm3053315qtn.21.2020.05.06.20.01.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 20:01:55 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] slub: limit count of partial slabs scanned to gather
+ statistics
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <5BAA0D82-555E-4E72-966A-A147472271D0@lca.pw>
+Date:   Wed, 6 May 2020 23:01:54 -0400
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <39E953F3-BBA4-43BF-AA0D-B1BED21F9A4D@lca.pw>
+References: <158860845968.33385.4165926113074799048.stgit@buzz>
+ <5BAA0D82-555E-4E72-966A-A147472271D0@lca.pw>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,433 +87,294 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
-> R-Car PCIe controller has support to map multiple memory regions for
-> mapping the outbound memory in local system also the controller limits
-> single allocation for each region (that is, once a chunk is used from the
-> region it cannot be used to allocate a new one). This features inspires to
-> add support for handling multiple memory bases in endpoint framework.
-> 
-> With this patch pci_epc_mem_init() initializes address space for endpoint
-> controller which support single window and pci_epc_multi_mem_init()
-> initializes multiple windows supported by endpoint controller.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On May 6, 2020, at 3:06 PM, Qian Cai <cai@lca.pw> wrote:
+>=20
+>=20
+>=20
+>> On May 4, 2020, at 12:07 PM, Konstantin Khlebnikov =
+<khlebnikov@yandex-team.ru> wrote:
+>>=20
+>> To get exact count of free and used objects slub have to scan list of
+>> partial slabs. This may take at long time. Scanning holds spinlock =
+and
+>> blocks allocations which move partial slabs to per-cpu lists and =
+back.
+>>=20
+>> Example found in the wild:
+>>=20
+>> # cat /sys/kernel/slab/dentry/partial
+>> 14478538 N0=3D7329569 N1=3D7148969
+>> # time cat /sys/kernel/slab/dentry/objects
+>> 286225471 N0=3D136967768 N1=3D149257703
+>>=20
+>> real	0m1.722s
+>> user	0m0.001s
+>> sys	0m1.721s
+>>=20
+>> The same problem in slab was addressed in commit f728b0a5d72a ("mm, =
+slab:
+>> faster active and free stats") by adding more kmem cache statistics.
+>> For slub same approach requires atomic op on fast path when object =
+frees.
+>>=20
+>> Let's simply limit count of scanned slabs and print warning.
+>> Limit set in /sys/module/slub/parameters/max_partial_to_count.
+>> Default is 10000 which should be enough for most sane cases.
+>>=20
+>> Return linear approximation if list of partials is longer than limit.
+>> Nobody should notice difference.
+>>=20
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>=20
+> This patch will trigger the warning under memory pressure, and then =
+makes lockdep unhappy. Also,  it is almost impossible tell how many =
+max_partial_to_count is sufficient from user perspective.
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
->  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++------
->  include/linux/pci-epc.h                       |  33 ++-
->  3 files changed, 170 insertions(+), 78 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 1cdcbd102ce8..a78902cbf2f0 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -412,11 +412,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		reg = ep->msi_cap + PCI_MSI_DATA_32;
->  		msg_data = dw_pcie_readw_dbi(pci, reg);
->  	}
-> -	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-> +	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
->  	msg_addr = ((u64)msg_addr_upper) << 32 |
->  			(msg_addr_lower & ~aligned_offset);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
-> -				  epc->mem->page_size);
-> +				  epc->mem->window.page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -459,9 +459,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EPERM;
->  	}
->  
-> -	aligned_offset = msg_addr & (epc->mem->page_size - 1);
-> +	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,  msg_addr,
-> -				  epc->mem->page_size);
-> +				  epc->mem->window.page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -477,7 +477,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  	struct pci_epc *epc = ep->epc;
->  
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> -			      epc->mem->page_size);
-> +			      epc->mem->window.page_size);
->  
->  	pci_epc_mem_exit(epc);
->  }
-> @@ -610,15 +610,15 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	if (ret < 0)
->  		epc->max_functions = 1;
->  
-> -	ret = __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> -				 ep->page_size);
-> +	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> +			       ep->page_size);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to initialize address space\n");
->  		return ret;
->  	}
->  
->  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-> -					     epc->mem->page_size);
-> +					     epc->mem->window.page_size);
->  	if (!ep->msi_mem) {
->  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->  		return -ENOMEM;
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index cdd1d3821249..a3466da2a16f 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -23,7 +23,7 @@
->  static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->  {
->  	int order;
-> -	unsigned int page_shift = ilog2(mem->page_size);
-> +	unsigned int page_shift = ilog2(mem->window.page_size);
->  
->  	size--;
->  	size >>= page_shift;
-> @@ -36,67 +36,95 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->  }
->  
->  /**
-> - * __pci_epc_mem_init() - initialize the pci_epc_mem structure
-> + * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
->   * @epc: the EPC device that invoked pci_epc_mem_init
-> - * @phys_base: the physical address of the base
-> - * @size: the size of the address space
-> - * @page_size: size of each page
-> + * @windows: pointer to windows supported by the device
-> + * @num_windows: number of windows device supports
->   *
->   * Invoke to initialize the pci_epc_mem structure used by the
->   * endpoint functions to allocate mapped PCI address.
->   */
-> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
-> -		       size_t page_size)
-> +int pci_epc_multi_mem_init(struct pci_epc *epc,
-> +			   struct pci_epc_mem_window *windows,
-> +			   unsigned int num_windows)
->  {
-> -	int ret;
-> -	struct pci_epc_mem *mem;
-> -	unsigned long *bitmap;
-> +	struct pci_epc_mem *mem = NULL;
-> +	unsigned long *bitmap = NULL;
->  	unsigned int page_shift;
-> -	int pages;
-> +	size_t page_size;
->  	int bitmap_size;
-> +	int pages;
-> +	int ret;
-> +	int i;
->  
-> -	if (page_size < PAGE_SIZE)
-> -		page_size = PAGE_SIZE;
-> +	epc->num_windows = 0;
->  
-> -	page_shift = ilog2(page_size);
-> -	pages = size >> page_shift;
-> -	bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
-> +	if (!windows || !num_windows)
-> +		return -EINVAL;
->  
-> -	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> -	if (!mem) {
-> -		ret = -ENOMEM;
-> -		goto err;
-> -	}
-> +	epc->windows = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
-> +	if (!epc->windows)
-> +		return -ENOMEM;
->  
-> -	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> -	if (!bitmap) {
-> -		ret = -ENOMEM;
-> -		goto err_mem;
-> -	}
-> +	for (i = 0; i < num_windows; i++) {
-> +		page_size = windows[i].page_size;
-> +		if (page_size < PAGE_SIZE)
-> +			page_size = PAGE_SIZE;
-> +		page_shift = ilog2(page_size);
-> +		pages = windows[i].size >> page_shift;
-> +		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->  
-> -	mem->bitmap = bitmap;
-> -	mem->phys_base = phys_base;
-> -	mem->page_size = page_size;
-> -	mem->pages = pages;
-> -	mem->size = size;
-> -	mutex_init(&mem->lock);
-> +		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> +		if (!mem) {
-> +			ret = -ENOMEM;
-> +			i--;
-> +			goto err_mem;
-> +		}
->  
-> -	epc->mem = mem;
-> +		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> +		if (!bitmap) {
-> +			ret = -ENOMEM;
-> +			kfree(mem);
-> +			i--;
-> +			goto err_mem;
-> +		}
-> +
-> +		mem->window.phys_base = windows[i].phys_base;
-> +		mem->window.size = windows[i].size;
-> +		mem->window.page_size = page_size;
-> +		mem->bitmap = bitmap;
-> +		mem->pages = pages;
-> +		mutex_init(&mem->lock);
-> +		epc->windows[i] = mem;
-> +	}
-> +
-> +	epc->mem = epc->windows[0];
-> +	epc->num_windows = num_windows;
->  
->  	return 0;
->  
->  err_mem:
-> -	kfree(mem);
-> +	for (; i >= 0; i--) {
-> +		mem = epc->windows[i];
-> +		kfree(mem->bitmap);
-> +		kfree(mem);
-> +	}
-> +	kfree(epc->windows);
->  
-> -err:
-> -return ret;
-> +	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
-> +EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
->  
->  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->  		     size_t size, size_t page_size)
->  {
-> -	return __pci_epc_mem_init(epc, base, size, page_size);
-> +	struct pci_epc_mem_window mem_window;
-> +
-> +	mem_window.phys_base = base;
-> +	mem_window.size = size;
-> +	mem_window.page_size = page_size;
-> +
-> +	return pci_epc_multi_mem_init(epc, &mem_window, 1);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->  
-> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->   */
->  void pci_epc_mem_exit(struct pci_epc *epc)
->  {
-> -	struct pci_epc_mem *mem = epc->mem;
-> +	struct pci_epc_mem *mem;
-> +	int i;
->  
-> +	if (!epc->num_windows)
-> +		return;
-> +
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +		kfree(mem->bitmap);
-> +		kfree(mem);
-> +	}
-> +	kfree(epc->windows);
-> +
-> +	epc->windows = NULL;
->  	epc->mem = NULL;
-> -	kfree(mem->bitmap);
-> -	kfree(mem);
-> +	epc->num_windows = 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  
-> @@ -129,31 +168,60 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size)
->  {
-> -	int pageno;
->  	void __iomem *virt_addr = NULL;
-> -	struct pci_epc_mem *mem = epc->mem;
-> -	unsigned int page_shift = ilog2(mem->page_size);
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t align_size;
-> +	int pageno;
->  	int order;
-> +	int i;
->  
-> -	size = ALIGN(size, mem->page_size);
-> -	order = pci_epc_mem_get_order(mem, size);
-> -
-> -	mutex_lock(&mem->lock);
-> -	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> -	if (pageno < 0)
-> -		goto ret;
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +		mutex_lock(&mem->lock);
-> +		align_size = ALIGN(size, mem->window.page_size);
-> +		order = pci_epc_mem_get_order(mem, align_size);
->  
-> -	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
-> -	virt_addr = ioremap(*phys_addr, size);
-> -	if (!virt_addr)
-> -		bitmap_release_region(mem->bitmap, pageno, order);
-> +		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
-> +						 order);
-> +		if (pageno >= 0) {
-> +			page_shift = ilog2(mem->window.page_size);
-> +			*phys_addr = mem->window.phys_base +
-> +				((phys_addr_t)pageno << page_shift);
-> +			virt_addr = ioremap(*phys_addr, align_size);
-> +			if (!virt_addr) {
-> +				bitmap_release_region(mem->bitmap,
-> +						      pageno, order);
-> +				mutex_unlock(&mem->lock);
-> +				continue;
-> +			}
-> +			mutex_unlock(&mem->lock);
-> +			return virt_addr;
-> +		}
-> +		mutex_unlock(&mem->lock);
-> +	}
->  
-> -ret:
-> -	mutex_unlock(&mem->lock);
->  	return virt_addr;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  
-> +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> +						phys_addr_t phys_addr)
-> +{
-> +	struct pci_epc_mem *mem;
-> +	int i;
-> +
-> +	for (i = 0; i < epc->num_windows; i++) {
-> +		mem = epc->windows[i];
-> +
-> +		if (phys_addr >= mem->window.phys_base &&
-> +		    phys_addr < (mem->window.phys_base + mem->window.size))
-> +			return mem;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * pci_epc_mem_free_addr() - free the allocated memory address
->   * @epc: the EPC device on which memory was allocated
-> @@ -166,14 +234,23 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size)
->  {
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t page_size;
->  	int pageno;
-> -	struct pci_epc_mem *mem = epc->mem;
-> -	unsigned int page_shift = ilog2(mem->page_size);
->  	int order;
->  
-> +	mem = pci_epc_get_matching_window(epc, phys_addr);
-> +	if (!mem) {
-> +		pr_err("failed to get matching window\n");
-> +		return;
-> +	}
-> +
-> +	page_size = mem->window.page_size;
-> +	page_shift = ilog2(page_size);
->  	iounmap(virt_addr);
-> -	pageno = (phys_addr - mem->phys_base) >> page_shift;
-> -	size = ALIGN(size, mem->page_size);
-> +	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> +	size = ALIGN(size, page_size);
->  	order = pci_epc_mem_get_order(mem, size);
->  	mutex_lock(&mem->lock);
->  	bitmap_release_region(mem->bitmap, pageno, order);
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 5bc1de65849e..cc66bec8be90 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -65,20 +65,28 @@ struct pci_epc_ops {
->  	struct module *owner;
->  };
->  
-> +/**
-> + * struct pci_epc_mem_window - address window of the endpoint controller
-> + * @phys_base: physical base address of the PCI address window
-> + * @size: the size of the PCI address window
-> + * @page_size: size of each page
-> + */
-> +struct pci_epc_mem_window {
-> +	phys_addr_t	phys_base;
-> +	size_t		size;
-> +	size_t		page_size;
-> +};
-> +
->  /**
->   * struct pci_epc_mem - address space of the endpoint controller
-> - * @phys_base: physical base address of the PCI address space
-> - * @size: the size of the PCI address space
-> + * @window: address window of the endpoint controller
->   * @bitmap: bitmap to manage the PCI address space
->   * @pages: number of bits representing the address region
-> - * @page_size: size of each page
->   * @lock: mutex to protect bitmap
->   */
->  struct pci_epc_mem {
-> -	phys_addr_t	phys_base;
-> -	size_t		size;
-> +	struct pci_epc_mem_window window;
->  	unsigned long	*bitmap;
-> -	size_t		page_size;
->  	int		pages;
->  	/* mutex to protect against concurrent access for memory allocation*/
->  	struct mutex	lock;
-> @@ -89,7 +97,11 @@ struct pci_epc_mem {
->   * @dev: PCI EPC device
->   * @pci_epf: list of endpoint functions present in this EPC device
->   * @ops: function pointers for performing endpoint operations
-> - * @mem: address space of the endpoint controller
-> + * @windows: array of address space of the endpoint controller
-> + * @mem: first window of the endpoint controller, which corresponds to
-> + *       default address space of the endpoint controller supporting
-> + *       single window.
-> + * @num_windows: number of windows supported by device
->   * @max_functions: max number of functions that can be configured in this EPC
->   * @group: configfs group representing the PCI EPC device
->   * @lock: mutex to protect pci_epc ops
-> @@ -100,7 +112,9 @@ struct pci_epc {
->  	struct device			dev;
->  	struct list_head		pci_epf;
->  	const struct pci_epc_ops	*ops;
-> +	struct pci_epc_mem		**windows;
->  	struct pci_epc_mem		*mem;
-> +	unsigned int			num_windows;
->  	u8				max_functions;
->  	struct config_group		*group;
->  	/* mutex to protect against concurrent access of EP controller */
-> @@ -194,8 +208,9 @@ void pci_epc_put(struct pci_epc *epc);
->  
->  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->  		     size_t size, size_t page_size);
-> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
-> -		       size_t page_size);
-> +int pci_epc_multi_mem_init(struct pci_epc *epc,
-> +			   struct pci_epc_mem_window *window,
-> +			   unsigned int num_windows);
->  void pci_epc_mem_exit(struct pci_epc *epc);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size);
-> 
+Andrew, Stephen, can you remove this patch from linux-next?
+
+Even read some procfs files would trigger the warning and lockdep on a =
+debug kernel probably due to kmemleak and debugobjects that would =
+require more partial slabs objects. Thus, it would be problematic to =
+break testing bots on linux-next like this.
+
+>=20
+> [ 6371.600511] SLUB: too much partial slabs to count all objects, =
+increase max_partial_to_count.
+> [ 6371.601399] irq event stamp: 8132599
+>=20
+> [ 6371.611415] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [ 6371.611417] WARNING: possible circular locking dependency detected
+> [ 6371.611419] 5.7.0-rc4-mm1+ #1 Not tainted
+> [ 6371.611421] ------------------------------------------------------
+> [ 6371.611423] oom02/43515 is trying to acquire lock:
+> [ 6371.611425] ffffffff893b8980 (console_owner){-.-.}-{0:0}, at: =
+console_unlock+0x240/0x750
+>=20
+> [ 6371.611433] but task is already holding lock:
+> [ 6371.611434] ffff8886456fcb98 (&n->list_lock){-.-.}-{2:2}, at: =
+count_partial+0x29/0xe0
+>=20
+> [ 6371.611441] which lock already depends on the new lock.
+>=20
+>=20
+> [ 6371.611445] the existing dependency chain (in reverse order) is:
+>=20
+> [ 6371.611446] -> #3 (&n->list_lock){-.-.}-{2:2}:
+> [ 6371.611452]        _raw_spin_lock+0x2f/0x40
+> [ 6371.611453]        deactivate_slab+0x37a/0x690
+> [ 6371.611455]        ___slab_alloc+0x65d/0x810
+> [ 6371.611456]        __slab_alloc+0x43/0x70
+> [ 6371.611457]        __kmalloc+0x2b2/0x430
+> [ 6371.611459]        __tty_buffer_request_room+0x100/0x250
+> [ 6371.611460]        tty_insert_flip_string_fixed_flag+0x67/0x130
+> [ 6371.611462]        pty_write+0xa2/0xf0
+> [ 6371.611463]        n_tty_write+0x36b/0x7c0
+> [ 6371.611464]        tty_write+0x275/0x500
+> [ 6371.611466]        __vfs_write+0x50/0xa0
+> [ 6371.611467]        vfs_write+0x10b/0x290
+> [ 6371.611468]        redirected_tty_write+0x6a/0xc0
+> [ 6371.611470]        do_iter_write+0x253/0x2b0
+> [ 6371.611471]        vfs_writev+0x152/0x1f0
+> [ 6371.611472]        do_writev+0xda/0x180
+> [ 6371.611474]        __x64_sys_writev+0x45/0x50
+> [ 6371.611475]        do_syscall_64+0xcc/0xaf0
+> [ 6371.611477]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>=20
+> [ 6371.611478] -> #2 (&port->lock#2){-.-.}-{2:2}:
+> [ 6371.611484]        _raw_spin_lock_irqsave+0x3a/0x50
+> [ 6371.611486]        tty_port_tty_get+0x22/0xa0
+> [ 6371.611487]        tty_port_default_wakeup+0xf/0x30
+> [ 6371.611489]        tty_port_tty_wakeup+0x39/0x40
+> [ 6371.611490]        uart_write_wakeup+0x2a/0x40
+> [ 6371.611492]        serial8250_tx_chars+0x22e/0x410
+> [ 6371.611493]        serial8250_handle_irq.part.21+0x17c/0x180
+> [ 6371.611495]        serial8250_default_handle_irq+0x5c/0x90
+> [ 6371.611496]        serial8250_interrupt+0xa6/0x130
+> [ 6371.611498]        __handle_irq_event_percpu+0x81/0x550
+> [ 6371.611499]        handle_irq_event_percpu+0x70/0x100
+> [ 6371.611501]        handle_irq_event+0x5a/0x8b
+> [ 6371.611502]        handle_edge_irq+0x10c/0x370
+> [ 6371.611503]        do_IRQ+0x9e/0x1d0
+> [ 6371.611505]        ret_from_intr+0x0/0x37
+> [ 6371.611506]        cpuidle_enter_state+0x148/0x910
+> [ 6371.611507]        cpuidle_enter+0x41/0x70
+> [ 6371.611509]        do_idle+0x3cf/0x440
+> [ 6371.611510]        cpu_startup_entry+0x1d/0x1f
+> [ 6371.611511]        start_secondary+0x29a/0x340
+> [ 6371.611513]        secondary_startup_64+0xb6/0xc0
+>=20
+> [ 6371.611516] -> #1 (&port->lock){-.-.}-{2:2}:
+> [ 6371.611522]        _raw_spin_lock_irqsave+0x3a/0x50
+> [ 6371.611525]        serial8250_console_write+0x113/0x560
+> [ 6371.611527]        univ8250_console_write+0x4b/0x60
+> [ 6371.611529]        console_unlock+0x4e3/0x750
+> [ 6371.611530]        vprintk_emit+0x10d/0x340
+> [ 6371.611532]        vprintk_default+0x1f/0x30
+> [ 6371.611533]        vprintk_func+0x44/0xd4
+> [ 6371.611535]        printk+0x9f/0xc5
+> [ 6371.611537]        register_console+0x262/0x3e0
+> [ 6371.611538]        univ8250_console_init+0x23/0x2d
+> [ 6371.611540]        console_init+0x268/0x395
+> [ 6371.611542]        start_kernel+0x6c3/0x8b9
+> [ 6371.611544]        x86_64_start_reservations+0x24/0x26
+> [ 6371.611546]        x86_64_start_kernel+0xf4/0xfb
+> [ 6371.611548]        secondary_startup_64+0xb6/0xc0
+>=20
+> [ 6371.611551] -> #0 (console_owner){-.-.}-{0:0}:
+> [ 6371.611558]        __lock_acquire+0x21f8/0x3260
+> [ 6371.611560]        lock_acquire+0x1a2/0x680
+> [ 6371.611562]        console_unlock+0x2a2/0x750
+> [ 6371.611564]        vprintk_emit+0x10d/0x340
+> [ 6371.611566]        vprintk_default+0x1f/0x30
+> [ 6371.611568]        vprintk_func+0x44/0xd4
+> [ 6371.611569]        printk+0x9f/0xc5
+> [ 6371.611571]        count_partial.cold.50+0x4d/0x52
+> [ 6371.611573]        get_slabinfo+0x5c/0xb0
+> [ 6371.611575]        dump_unreclaimable_slab.cold.35+0x97/0xe2
+> [ 6371.611577]        dump_header+0x45a/0x510
+> [ 6371.611579]        oom_kill_process+0xd0/0x280
+> [ 6371.611581]        out_of_memory+0x478/0xa50
+> [ 6371.611583]        =
+__alloc_pages_slowpath.constprop.61+0x1680/0x1850
+> [ 6371.611585]        __alloc_pages_nodemask+0x57c/0x6f0
+> [ 6371.611587]        alloc_pages_vma+0x81/0x310
+> [ 6371.611589]        do_anonymous_page+0x1bb/0x7a0
+> [ 6371.611591]        __handle_mm_fault+0xbb0/0xbe0
+> [ 6371.611593]        handle_mm_fault+0xdc/0x2e0
+> [ 6371.611595]        do_page_fault+0x2cb/0x9d7
+> [ 6371.611597]        page_fault+0x34/0x40
+>=20
+> [ 6371.611600] other info that might help us debug this:
+>=20
+> [ 6371.611603] Chain exists of:
+> [ 6371.611604]   console_owner --> &port->lock#2 --> &n->list_lock
+>=20
+> [ 6371.611615]  Possible unsafe locking scenario:
+>=20
+> [ 6371.611618]        CPU0                    CPU1
+> [ 6371.611619]        ----                    ----
+> [ 6371.611621]   lock(&n->list_lock);
+> [ 6371.611625]                                lock(&port->lock#2);
+> [ 6371.611630]                                lock(&n->list_lock);
+> [ 6371.611634]   lock(console_owner);
+>=20
+> [ 6371.611639]  *** DEADLOCK ***
+>=20
+> [ 6371.611641] 5 locks held by oom02/43515:
+> [ 6371.611642]  #0: ffff888ef72b4158 (&mm->mmap_sem#2){++++}-{3:3}, =
+at: do_page_fault+0x1d6/0x9d7
+> [ 6371.611649]  #1: ffffffff894dd268 (oom_lock){+.+.}-{3:3}, at: =
+__alloc_pages_slowpath.constprop.61+0x90a/0x1850
+> [ 6371.611656]  #2: ffffffff89520aa8 (slab_mutex){+.+.}-{3:3}, at: =
+dump_unreclaimable_slab+0x2b/0x40
+> [ 6371.611661]  #3: ffff8886456fcb98 (&n->list_lock){-.-.}-{2:2}, at: =
+count_partial+0x29/0xe0
+> [ 6371.611668]  #4: ffffffff893b8e60 (console_lock){+.+.}-{0:0}, at: =
+vprintk_emit+0x100/0x340
+>=20
+> [ 6371.611675] stack backtrace:
+> [ 6371.611676] CPU: 1 PID: 43515 Comm: oom02 Not tainted =
+5.7.0-rc4-mm1+ #1
+> [ 6371.611679] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 =
+Gen10, BIOS A40 07/10/2019
+> [ 6371.611680] Call Trace:
+> [ 6371.611681]  dump_stack+0xa7/0xea
+> [ 6371.611682]  print_circular_bug.cold.54+0x147/0x14c
+> [ 6371.611684]  check_noncircular+0x295/0x2d0
+> [ 6371.611685]  ? print_circular_bug+0x1d0/0x1d0
+> [ 6371.611686]  ? __kasan_check_read+0x11/0x20
+> [ 6371.611688]  ? mark_lock+0x160/0xfe0
+> [ 6371.611689]  __lock_acquire+0x21f8/0x3260
+> [ 6371.611690]  ? register_lock_class+0xb90/0xb90
+> [ 6371.611691]  ? snprintf+0xc0/0xc0
+> [ 6371.611693]  ? __kasan_check_read+0x11/0x20
+> [ 6371.611694]  ? check_chain_key+0x1df/0x2e0
+> [ 6371.611695]  lock_acquire+0x1a2/0x680
+> [ 6371.611697]  ? console_unlock+0x240/0x750
+> [ 6371.611698]  ? lock_downgrade+0x3e0/0x3e0
+> [ 6371.611699]  ? check_flags.part.28+0x220/0x220
+> [ 6371.611701]  ? rwlock_bug.part.1+0x60/0x60
+> [ 6371.611702]  ? __kasan_check_read+0x11/0x20
+> [ 6371.611703]  console_unlock+0x2a2/0x750
+> [ 6371.611705]  ? console_unlock+0x240/0x750
+> [ 6371.611706]  vprintk_emit+0x10d/0x340
+> [ 6371.611707]  ? kernel_poison_pages.cold.3+0x86/0x86
+> [ 6371.611709]  vprintk_default+0x1f/0x30
+> [ 6371.611710]  vprintk_func+0x44/0xd4
+> [ 6371.611711]  ? do_raw_spin_lock+0x11e/0x1e0
+> [ 6371.611712]  printk+0x9f/0xc5
+> [ 6371.611714]  ? log_store.cold.31+0x11/0x11
+> [ 6371.611715]  ? count_partial+0x29/0xe0
+> [ 6371.611717]  ? do_raw_spin_lock+0x11e/0x1e0
+> [ 6371.611718]  count_partial.cold.50+0x4d/0x52
+> [ 6371.611719]  get_slabinfo+0x5c/0xb0
+> [ 6371.611721]  dump_unreclaimable_slab.cold.35+0x97/0xe2
+> [ 6371.611722]  ? show_mem+0x10b/0x11c
+> [ 6371.611723]  dump_header+0x45a/0x510
+> [ 6371.611724]  oom_kill_process+0xd0/0x280
+> [ 6371.611726]  out_of_memory+0x478/0xa50
+> [ 6371.611727]  ? oom_killer_disable+0x230/0x230
+> [ 6371.611728]  ? mutex_trylock+0x17a/0x190
+> [ 6371.611730]  __alloc_pages_slowpath.constprop.61+0x1680/0x1850
+> [ 6371.611731]  ? warn_alloc+0x120/0x120
+> [ 6371.611733]  ? check_flags.part.28+0x220/0x220
+> [ 6371.611734]  ? ___might_sleep+0x178/0x210
+> [ 6371.611735]  ? __kasan_check_read+0x11/0x20
+> [ 6371.611737]  __alloc_pages_nodemask+0x57c/0x6f0
+> [ 6371.611738]  ? __alloc_pages_slowpath.constprop.61+0x1850/0x1850
+> [ 6371.611740]  alloc_pages_vma+0x81/0x310
+> [ 6371.611741]  do_anonymous_page+0x1bb/0x7a0
+> [ 6371.611742]  ? __pte_alloc+0x170/0x170
+> [ 6371.611743]  ? match_held_lock+0x35/0x270
+> [ 6371.611745]  __handle_mm_fault+0xbb0/0xbe0
+> [ 6371.611746]  ? copy_page_range+0x420/0x420
+> [ 6371.611747]  ? sync_mm_rss+0x7f/0x190
+> [ 6371.611749]  handle_mm_fault+0xdc/0x2e0
+> [ 6371.611750]  do_page_fault+0x2cb/0x9d7
+> [ 6371.611751]  page_fault+0x34/0x40
+>=20
+>=20
+>> ---
+>> mm/slub.c |   15 ++++++++++++++-
+>> 1 file changed, 14 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index 9bf44955c4f1..86a366f7acb6 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -2407,16 +2407,29 @@ static inline unsigned long =
+node_nr_objs(struct kmem_cache_node *n)
+>> #endif /* CONFIG_SLUB_DEBUG */
+>>=20
+>> #if defined(CONFIG_SLUB_DEBUG) || defined(CONFIG_SYSFS)
+>> +
+>> +static unsigned long max_partial_to_count __read_mostly =3D 10000;
+>> +module_param(max_partial_to_count, ulong, 0644);
+>> +
+>> static unsigned long count_partial(struct kmem_cache_node *n,
+>> 					int (*get_count)(struct page *))
+>> {
+>> +	unsigned long counted =3D 0;
+>> 	unsigned long flags;
+>> 	unsigned long x =3D 0;
+>> 	struct page *page;
+>>=20
+>> 	spin_lock_irqsave(&n->list_lock, flags);
+>> -	list_for_each_entry(page, &n->partial, slab_list)
+>> +	list_for_each_entry(page, &n->partial, slab_list) {
+>> 		x +=3D get_count(page);
+>> +
+>> +		if (++counted > max_partial_to_count) {
+>> +			pr_warn_once("SLUB: too much partial slabs to =
+count all objects, increase max_partial_to_count.\n");
+>> +			/* Approximate total count of objects */
+>> +			x =3D mult_frac(x, n->nr_partial, counted);
+>> +			break;
+>> +		}
+>> +	}
+>> 	spin_unlock_irqrestore(&n->list_lock, flags);
+>> 	return x;
+>> }
+
