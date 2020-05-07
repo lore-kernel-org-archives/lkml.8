@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04CEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD929C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B98A205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEDE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PyfNjwMj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkL8H4xb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgEGODq (ORCPT
+        id S1727944AbgEGODv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:03:46 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28730 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEGODn (ORCPT
+        Thu, 7 May 2020 10:03:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49491 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726756AbgEGODt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:03:43 -0400
+        Thu, 7 May 2020 10:03:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860222;
+        s=mimecast20190719; t=1588860228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6V2gf0PUPPm7OaaYKcNrW48UHq1Rnm4/NYm4dg9LwpA=;
-        b=PyfNjwMjW0VKsawuWwMi6YDFgnEvkuN7pG4seiwwnKleUN/v7nsYp1OT/Sna01Y1UQFv/K
-        v+HX7bD+FsgnnntaY/xXVRsaL/QyNfwt9Q7HbF7YM0cx8ztWEqIeT13JRbHgYUQ3Kd6eSr
-        rr0frCJ03WIl8eDY/sR7itJoJK4Fplw=
+        bh=DQE6Fj9xYvu+P4zbftVLGWaR4OQoP1nVDad5+xQPmXI=;
+        b=fkL8H4xbCGfxmuJ7Sj70uXAJl/LDTc5h74Ccb+XXEKrz3VfLqRSRadmI1g3lYWfhn6rVgF
+        C2JjIDYBpgDoqkaGD3q7fB5K1930S0YvZ1ttUWD2ryZo2qNUYwrzZX2kO8EuDNHO9w2g02
+        po/TQd+VnMl4kbyK42OgWHMEULla8o0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-qIHWr591MXiJlBlN5gcBKg-1; Thu, 07 May 2020 10:03:35 -0400
-X-MC-Unique: qIHWr591MXiJlBlN5gcBKg-1
+ us-mta-18-x7S63w-dMNqHLM4S_PsjfA-1; Thu, 07 May 2020 10:03:42 -0400
+X-MC-Unique: x7S63w-dMNqHLM4S_PsjfA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35E8D80B724;
-        Thu,  7 May 2020 14:03:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CBF41895954;
+        Thu,  7 May 2020 14:03:41 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BF27360BEC;
-        Thu,  7 May 2020 14:03:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AE7760BEC;
+        Thu,  7 May 2020 14:03:39 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
@@ -54,9 +54,9 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         "Michael S . Tsirkin" <mst@redhat.com>,
         David Hildenbrand <david@redhat.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: [PATCH v4 11/15] virtio-mem: Add parent resource for all added "System RAM"
-Date:   Thu,  7 May 2020 16:01:35 +0200
-Message-Id: <20200507140139.17083-12-david@redhat.com>
+Subject: [PATCH v4 14/15] virtio-mem: Use -ETXTBSY as error code if the device is busy
+Date:   Thu,  7 May 2020 16:01:38 +0200
+Message-Id: <20200507140139.17083-15-david@redhat.com>
 In-Reply-To: <20200507140139.17083-1-david@redhat.com>
 References: <20200507140139.17083-1-david@redhat.com>
 MIME-Version: 1.0
@@ -67,128 +67,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's add a parent resource, named after the virtio device (inspired by
-drivers/dax/kmem.c). This allows user space to identify which memory
-belongs to which virtio-mem device.
-
-With this change and two virtio-mem devices:
-	:/# cat /proc/iomem
-	00000000-00000fff : Reserved
-	00001000-0009fbff : System RAM
-	[...]
-	140000000-333ffffff : virtio0
-	  140000000-147ffffff : System RAM
-	  148000000-14fffffff : System RAM
-	  150000000-157ffffff : System RAM
-	[...]
-	334000000-3033ffffff : virtio1
-	  338000000-33fffffff : System RAM
-	  340000000-347ffffff : System RAM
-	  348000000-34fffffff : System RAM
-	[...]
+Let's be able to distinguish if the device or if memory is busy.
 
 Cc: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/virtio/virtio_mem.c | 52 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_mem.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index eb4c16d634e0..80cdb9e6b3c4 100644
+index a719e1a04ac7..abd93b778a26 100644
 --- a/drivers/virtio/virtio_mem.c
 +++ b/drivers/virtio/virtio_mem.c
-@@ -99,6 +99,9 @@ struct virtio_mem {
- 	/* Id of the next memory bock to prepare when needed. */
- 	unsigned long next_mb_id;
- 
-+	/* The parent resource for all memory added via this device. */
-+	struct resource *parent_resource;
-+
- 	/* Summary of all memory block states. */
- 	unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
- #define VIRTIO_MEM_NB_OFFLINE_THRESHOLD		10
-@@ -1741,6 +1744,44 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 	return 0;
- }
- 
-+static int virtio_mem_create_resource(struct virtio_mem *vm)
-+{
-+	/*
-+	 * When force-unloading the driver and removing the device, we
-+	 * could have a garbage pointer. Duplicate the string.
-+	 */
-+	const char *name = kstrdup(dev_name(&vm->vdev->dev), GFP_KERNEL);
-+
-+	if (!name)
-+		return -ENOMEM;
-+
-+	vm->parent_resource = __request_mem_region(vm->addr, vm->region_size,
-+						   name, IORESOURCE_SYSTEM_RAM);
-+	if (!vm->parent_resource) {
-+		kfree(name);
-+		dev_warn(&vm->vdev->dev, "could not reserve device region\n");
-+		return -EBUSY;
-+	}
-+
-+	/* The memory is not actually busy - make add_memory() work. */
-+	vm->parent_resource->flags &= ~IORESOURCE_BUSY;
-+	return 0;
-+}
-+
-+static void virtio_mem_delete_resource(struct virtio_mem *vm)
-+{
-+	const char *name;
-+
-+	if (!vm->parent_resource)
-+		return;
-+
-+	name = vm->parent_resource->name;
-+	release_resource(vm->parent_resource);
-+	kfree(vm->parent_resource);
-+	kfree(name);
-+	vm->parent_resource = NULL;
-+}
-+
- static int virtio_mem_probe(struct virtio_device *vdev)
- {
- 	struct virtio_mem *vm;
-@@ -1770,11 +1811,16 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	if (rc)
- 		goto out_del_vq;
- 
-+	/* create the parent resource for all memory */
-+	rc = virtio_mem_create_resource(vm);
-+	if (rc)
-+		goto out_del_vq;
-+
- 	/* register callbacks */
- 	vm->memory_notifier.notifier_call = virtio_mem_memory_notifier_cb;
- 	rc = register_memory_notifier(&vm->memory_notifier);
- 	if (rc)
--		goto out_del_vq;
-+		goto out_del_resource;
- 	rc = register_virtio_mem_device(vm);
- 	if (rc)
- 		goto out_unreg_mem;
-@@ -1788,6 +1834,8 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	return 0;
- out_unreg_mem:
- 	unregister_memory_notifier(&vm->memory_notifier);
-+out_del_resource:
-+	virtio_mem_delete_resource(vm);
- out_del_vq:
- 	vdev->config->del_vqs(vdev);
- out_free_vm:
-@@ -1848,6 +1896,8 @@ static void virtio_mem_remove(struct virtio_device *vdev)
- 	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
- 	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
- 		dev_warn(&vdev->dev, "device still has system memory added\n");
-+	else
-+		virtio_mem_delete_resource(vm);
- 
- 	/* remove all tracking data - no locking needed */
- 	vfree(vm->mb_state);
+@@ -893,7 +893,7 @@ static int virtio_mem_send_plug_request(struct virtio_mem *vm, uint64_t addr,
+ 	case VIRTIO_MEM_RESP_NACK:
+ 		return -EAGAIN;
+ 	case VIRTIO_MEM_RESP_BUSY:
+-		return -EBUSY;
++		return -ETXTBSY;
+ 	case VIRTIO_MEM_RESP_ERROR:
+ 		return -EINVAL;
+ 	default:
+@@ -919,7 +919,7 @@ static int virtio_mem_send_unplug_request(struct virtio_mem *vm, uint64_t addr,
+ 		vm->plugged_size -= size;
+ 		return 0;
+ 	case VIRTIO_MEM_RESP_BUSY:
+-		return -EBUSY;
++		return -ETXTBSY;
+ 	case VIRTIO_MEM_RESP_ERROR:
+ 		return -EINVAL;
+ 	default:
+@@ -941,7 +941,7 @@ static int virtio_mem_send_unplug_all_request(struct virtio_mem *vm)
+ 		atomic_set(&vm->config_changed, 1);
+ 		return 0;
+ 	case VIRTIO_MEM_RESP_BUSY:
+-		return -EBUSY;
++		return -ETXTBSY;
+ 	default:
+ 		return -ENOMEM;
+ 	}
+@@ -1557,11 +1557,15 @@ static void virtio_mem_run_wq(struct work_struct *work)
+ 		 * or we have too many offline memory blocks.
+ 		 */
+ 		break;
+-	case -EBUSY:
++	case -ETXTBSY:
+ 		/*
+ 		 * The hypervisor cannot process our request right now
+-		 * (e.g., out of memory, migrating) or we cannot free up
+-		 * any memory to unplug it (all plugged memory is busy).
++		 * (e.g., out of memory, migrating);
++		 */
++	case -EBUSY:
++		/*
++		 * We cannot free up any memory to unplug it (all plugged memory
++		 * is busy).
+ 		 */
+ 	case -ENOMEM:
+ 		/* Out of memory, try again later. */
 -- 
 2.25.3
 
