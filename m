@@ -2,325 +2,102 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F54CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60210C54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDCA21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371A52083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588845635;
-	bh=Ak9464TnSkt1bqf6+8XjJiNocFWET02Yub6VNAXctoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KFwdBtp8TIl76YGw1cs1Iz5A5LNFqQWswHIlIKsMw7G/+HGF+4JxcJWnFTi2slbo
-	 4jCKc6Jxjr2tAMuYbv+ygDXV4aj+x/Ca/rRsAmkOzFSmVIpo3HTgM987mMe6gTdVT6
-	 rbaQ9WHBWUg9Yd12zHJa8J1C+sl1HxgQZBV2l+N8=
+	s=default; t=1588845642;
+	bh=bcDuPlK5Eisv/i5AZHvazLLY9XdRx5lz+/uXpfp9JV0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yw53Fdaok0oPxTVA3h11IS+BDoGLanhaHsaSVWrFLlcfBOxQYXfLsmHDmPIdG5Jje
+	 A/meGzmj8DjMR+lhfIm6IU3DX/KYd1BIMdGifQ5GtfEF363dmpdOiCxh6is1iSuKuy
+	 TH+fVVgqFR8dSTaDynpJMQG/1P1RXTpe00wdIZ2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEGKAb (ORCPT
+        id S1727029AbgEGKAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 06:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgEGKA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:00:27 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726222AbgEGKAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:00:18 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0989820643;
-        Thu,  7 May 2020 10:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A814C21473;
+        Thu,  7 May 2020 10:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588845626;
-        bh=Ak9464TnSkt1bqf6+8XjJiNocFWET02Yub6VNAXctoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CW65V7ggoIGopbDpQ8tsdKdGqqWkz1ox6XgnKmxvfOcz8Vil0huCY8bkIaLAPYIKL
-         xVoeSSV0KpK3/TvQCZBfvbXrn67gcDNCp1GxrGrAUsGCqG7zNwYGdjhBvA+N7RmAbl
-         dVQr33+mvgt3KLCGAyJsf225TENw3D7b7LxERJIw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Yonghong Song <yhs@fb.com>, bpf <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Wang Nan <wangnan0@huawei.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 3/3] arm: kprobes: Support nested kprobes
-Date:   Thu,  7 May 2020 19:00:19 +0900
-Message-Id: <158884561947.12656.7341370827605258688.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158884558272.12656.7654266361809594662.stgit@devnote2>
-References: <158884558272.12656.7654266361809594662.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        s=default; t=1588845617;
+        bh=bcDuPlK5Eisv/i5AZHvazLLY9XdRx5lz+/uXpfp9JV0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=JjsIhurgsHOjFr9qWqQvkxxcy4ipTQLatYA569lhQObBh7lN947EJYsDjpAkEAPIa
+         DEd0T3Jgb+mzWPee30GaH8plLJnVLwybi9eLGgyaqYjQlqzle0e8UabNznG975H/3X
+         3xHy2ae0ORM+laxQcVbParXO5zgCRycV6E8D8dpM=
+Date:   Thu, 7 May 2020 12:00:13 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v4 06/11] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <4710f82c960ff5f8b0dd7dba6aafde5bea275cfa.1588173720.git.jpoimboe@redhat.com>
+Message-ID: <nycvar.YFH.7.76.2005071159490.25812@cbobk.fhfr.pm>
+References: <cover.1588173720.git.jpoimboe@redhat.com> <4710f82c960ff5f8b0dd7dba6aafde5bea275cfa.1588173720.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make kprobes to accept 1-level nesting instead of missing it
-on arm.
+On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
 
-Any kprobes hits in kprobes pre/post handler context can be
-nested at once. If the other kprobes hits in the nested pre/post
-handler context, that will be missed.
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Because of late module patching, a livepatch module needs to be able to
+> apply some of its relocations well after it has been loaded.  Instead of
+> playing games with module_{dis,en}able_ro(), use existing text poking
+> mechanisms to apply relocations after module loading.
+> 
+> So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
+> two also have STRICT_MODULE_RWX.
+> 
+> This will allow removal of the last module_disable_ro() usage in
+> livepatch.  The ultimate goal is to completely disallow making
+> executable mappings writable.
+> 
+> [ jpoimboe: Split up patches.  Use mod state to determine whether
+> 	    memcpy() can be used.  Test and add fixes. ]
+> 
+> Cc: linux-s390@vger.kernel.org
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Acked-by: Miroslav Benes <mbenes@suse.cz>
 
-We can test this feature on the kernel with
-CONFIG_KPROBE_EVENTS_ON_NOTRACE=y as below.
+Could we please get an Ack / Reviewed-by: for this patch from s390 folks?
 
- # cd /sys/kernel/debug/tracing
- # echo p ring_buffer_lock_reserve > kprobe_events
- # echo p vfs_read >> kprobe_events
- # echo 0 > /proc/sys/debug/kprobes-optimization # to check trap handler
- # echo stacktrace > events/kprobes/p_ring_buffer_lock_reserve_0/trigger
- # echo 1 > events/kprobes/enable
- # cat trace
- ...
-              sh-94    [000] d...   124.945302: p_vfs_read_0: (vfs_read+0x0/0x120)
-              sh-94    [000] d...   125.041822: p_ring_buffer_lock_reserve_0: (ring_buffer_lock_reserve+0x0/0x57c)
-              sh-94    [000] d...   125.042102: <stack trace>
- => kprobe_dispatcher
- => aggr_pre_handler
- => kprobe_handler
- => kprobe_trap_handler
- => do_undefinstr
- => __und_svc_finish
- => ring_buffer_lock_reserve
- => kprobe_trace_func
- => kprobe_dispatcher
- => aggr_pre_handler
- => kprobe_handler
- => kprobe_trap_handler
- => do_undefinstr
- => __und_svc_finish
- => vfs_read
- => sys_read
- => ret_fast_syscall
+Thanks,
 
-The trap handler is nested correctly.
-
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/arm/include/asm/kprobes.h    |    5 ++
- arch/arm/probes/kprobes/core.c    |   79 ++++++++++++++++++-------------------
- arch/arm/probes/kprobes/core.h    |   30 ++++++++++++++
- arch/arm/probes/kprobes/opt-arm.c |    6 ++-
- 4 files changed, 76 insertions(+), 44 deletions(-)
-
-diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
-index 213607a1f45c..553f719bbfd5 100644
---- a/arch/arm/include/asm/kprobes.h
-+++ b/arch/arm/include/asm/kprobes.h
-@@ -32,10 +32,13 @@ struct prev_kprobe {
- 	unsigned int status;
- };
- 
-+#define KPROBE_NEST_MAX	2
-+
- /* per-cpu kprobe control block */
- struct kprobe_ctlblk {
- 	unsigned int kprobe_status;
--	struct prev_kprobe prev_kprobe;
-+	struct prev_kprobe prev[KPROBE_NEST_MAX];
-+	int nested;
- };
- 
- void arch_remove_kprobe(struct kprobe *);
-diff --git a/arch/arm/probes/kprobes/core.c b/arch/arm/probes/kprobes/core.c
-index 90b5bc723c83..2fe7373c3f77 100644
---- a/arch/arm/probes/kprobes/core.c
-+++ b/arch/arm/probes/kprobes/core.c
-@@ -187,18 +187,6 @@ void __kprobes arch_remove_kprobe(struct kprobe *p)
- 	}
- }
- 
--static void __kprobes save_previous_kprobe(struct kprobe_ctlblk *kcb)
--{
--	kcb->prev_kprobe.kp = kprobe_running();
--	kcb->prev_kprobe.status = kcb->kprobe_status;
--}
--
--static void __kprobes restore_previous_kprobe(struct kprobe_ctlblk *kcb)
--{
--	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
--	kcb->kprobe_status = kcb->prev_kprobe.status;
--}
--
- static void __kprobes set_current_kprobe(struct kprobe *p)
- {
- 	__this_cpu_write(current_kprobe, p);
-@@ -224,6 +212,40 @@ singlestep(struct kprobe *p, struct pt_regs *regs, struct kprobe_ctlblk *kcb)
- 	p->ainsn.insn_singlestep(p->opcode, &p->ainsn, regs);
- }
- 
-+static nokprobe_inline int reenter_kprobe(struct kprobe *p,
-+					  struct pt_regs *regs,
-+					  struct kprobe_ctlblk *kcb)
-+{
-+	/* Kprobe is pending, so we're recursing. */
-+	switch (kcb->kprobe_status) {
-+	case KPROBE_HIT_ACTIVE:
-+	case KPROBE_HIT_SSDONE:
-+		if (kcb->nested < KPROBE_NEST_MAX - 1) {
-+			save_previous_kprobe(kcb);
-+			return 0;
-+		}
-+		fallthrough;
-+	case KPROBE_HIT_SS:
-+		/* A pre- or post-handler probe got us here. */
-+		kprobes_inc_nmissed_count(p);
-+		save_previous_kprobe(kcb);
-+		set_current_kprobe(p);
-+		kcb->kprobe_status = KPROBE_REENTER;
-+		singlestep(p, regs, kcb);
-+		restore_previous_kprobe(kcb);
-+		break;
-+	case KPROBE_REENTER:
-+		/* A nested probe was hit in FIQ, it is a BUG */
-+		pr_warn("Unrecoverable kprobe detected.\n");
-+		dump_kprobe(p);
-+		fallthrough;
-+	default:
-+		/* impossible cases */
-+		BUG();
-+	}
-+	return 1;
-+}
-+
- /*
-  * Called with IRQs disabled. IRQs must remain disabled from that point
-  * all the way until processing this kprobe is complete.  The current
-@@ -262,30 +284,9 @@ void __kprobes kprobe_handler(struct pt_regs *regs)
- 			 * In this case, we can skip recursing check too.
- 			 */
- 			singlestep_skip(p, regs);
--		} else if (cur) {
--			/* Kprobe is pending, so we're recursing. */
--			switch (kcb->kprobe_status) {
--			case KPROBE_HIT_ACTIVE:
--			case KPROBE_HIT_SSDONE:
--			case KPROBE_HIT_SS:
--				/* A pre- or post-handler probe got us here. */
--				kprobes_inc_nmissed_count(p);
--				save_previous_kprobe(kcb);
--				set_current_kprobe(p);
--				kcb->kprobe_status = KPROBE_REENTER;
--				singlestep(p, regs, kcb);
--				restore_previous_kprobe(kcb);
--				break;
--			case KPROBE_REENTER:
--				/* A nested probe was hit in FIQ, it is a BUG */
--				pr_warn("Unrecoverable kprobe detected.\n");
--				dump_kprobe(p);
--				/* fall through */
--			default:
--				/* impossible cases */
--				BUG();
--			}
- 		} else {
-+			if (cur && reenter_kprobe(p, regs, kcb))
-+				return;
- 			/* Probe hit and conditional execution check ok. */
- 			set_current_kprobe(p);
- 			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-@@ -305,7 +306,7 @@ void __kprobes kprobe_handler(struct pt_regs *regs)
- 					p->post_handler(p, regs, 0);
- 				}
- 			}
--			reset_current_kprobe();
-+			pop_current_kprobe(kcb);
- 		}
- 	} else {
- 		/*
-@@ -342,11 +343,7 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
- 		 * normal page fault.
- 		 */
- 		regs->ARM_pc = (long)cur->addr;
--		if (kcb->kprobe_status == KPROBE_REENTER) {
--			restore_previous_kprobe(kcb);
--		} else {
--			reset_current_kprobe();
--		}
-+		pop_current_kprobe(kcb);
- 		break;
- 
- 	case KPROBE_HIT_ACTIVE:
-diff --git a/arch/arm/probes/kprobes/core.h b/arch/arm/probes/kprobes/core.h
-index c3db468650ce..aaff1e0f2153 100644
---- a/arch/arm/probes/kprobes/core.h
-+++ b/arch/arm/probes/kprobes/core.h
-@@ -34,6 +34,36 @@ typedef enum probes_insn (kprobe_decode_insn_t)(probes_opcode_t,
- 						const union decode_action *,
- 						const struct decode_checker *[]);
- 
-+
-+static nokprobe_inline void save_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	int i = kcb->nested++;
-+
-+	kcb->prev[i].kp = kprobe_running();
-+	kcb->prev[i].status = kcb->kprobe_status;
-+}
-+
-+static nokprobe_inline void restore_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	int i = --kcb->nested;
-+
-+	__this_cpu_write(current_kprobe, kcb->prev[i].kp);
-+	kcb->kprobe_status = kcb->prev[i].status;
-+}
-+
-+static nokprobe_inline void pop_current_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	if (kcb->nested)
-+		restore_previous_kprobe(kcb);
-+	else
-+		reset_current_kprobe();
-+}
-+
-+static nokprobe_inline bool kprobe_can_nest(struct kprobe_ctlblk *kcb)
-+{
-+	return !kprobe_running() || (kcb->nested < KPROBE_NEST_MAX - 1);
-+}
-+
- #ifdef CONFIG_THUMB2_KERNEL
- 
- extern const union decode_action kprobes_t32_actions[];
-diff --git a/arch/arm/probes/kprobes/opt-arm.c b/arch/arm/probes/kprobes/opt-arm.c
-index 7a449df0b359..cb4cb13bff88 100644
---- a/arch/arm/probes/kprobes/opt-arm.c
-+++ b/arch/arm/probes/kprobes/opt-arm.c
-@@ -161,13 +161,15 @@ optimized_callback(struct optimized_kprobe *op, struct pt_regs *regs)
- 	local_irq_save(flags);
- 	kcb = get_kprobe_ctlblk();
- 
--	if (kprobe_running()) {
-+	if (!kprobe_can_nest(kcb)) {
- 		kprobes_inc_nmissed_count(&op->kp);
- 	} else {
-+		if (kprobe_running())
-+			save_previous_kprobe(kcb);
- 		__this_cpu_write(current_kprobe, &op->kp);
- 		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
- 		opt_pre_handler(&op->kp, regs);
--		__this_cpu_write(current_kprobe, NULL);
-+		pop_current_kprobe(kcb);
- 	}
- 
- 	/*
+-- 
+Jiri Kosina
+SUSE Labs
 
