@@ -2,96 +2,116 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90AFC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B38EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6F82068E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B5C2075A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:11:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="AT1YnVi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgEGDKU (ORCPT
+        id S1728662AbgEGDLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:10:20 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:6431 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgEGDKU (ORCPT
+        Wed, 6 May 2020 23:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728295AbgEGDLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:10:20 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id CE1361A2E1E;
-        Thu,  7 May 2020 11:09:43 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ABMAdgC5CDjCyrCBmyLV44rX.3.1588820983821.Hmail.bernard@vivo.com>
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6W1BBVENIXSBkcm0vZXh5bm9zOiBtYWtlIHBvaW50ZXIgdG8gY29uc3QgZGF0YSBjb25zdCB0eXBl?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <20200426090142.21251-1-bernard@vivo.com>
+        Wed, 6 May 2020 23:11:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5F6C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:11:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id b8so1353306plm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nLKE5lsx5SwaWEyA9+AGeYv3YbiLM647KJWineLVY5w=;
+        b=AT1YnVi/QlGwrwZlMFXPJg0XP0Yg1/I7Q7vApg2pVTsoQTvFiq9XdZ+mnkigbplZP4
+         2SkP8hZ2joK6cSgKD8Tz1BVy27oeh0Of51rV/WJIbhPpqbCIKEALMNcjGKLkRfC1/mx9
+         kIZU63GJ1Gtyea2zrvhl9VngAQIcJbm0xlgrVqQTmlI7dIa73vNhjGhe+lYIvzhpuRXW
+         Q5QwAPudz3DQunNQJKHfpwrVIoTe8DYYVO62dDmCiPd60j1JNNAJcnICcZdC3giLO25L
+         l/4dYeuV3icEEWsIgf7t2GXOx1Ix+aJwj+1fgHGycibNEOmHVwN644yKF6IfVVQJqIJs
+         tZ+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nLKE5lsx5SwaWEyA9+AGeYv3YbiLM647KJWineLVY5w=;
+        b=f4Wq0Oh/DoS4Fvav3RK1kB6+o2Uw2hE4JtrVsUCgyOUCNIO7tQa79Ls71009pL7Rlg
+         4SK6tiLeoWwVLdiIKXwKAo6X1Eh0FjgbjOm2Ob9PViEpJrCSYyxTuN99kcjFaehw6hnz
+         9DLHBzPLHt61xzmJEgVFO6XuUlq2ny92RDZ1CDaNorL4h+CLvez2iM6m1b3hVG0/SEwN
+         xNQWvJkumKKx1FOJbrOWiDjT9lh0I6027MDZIw0QF+rUy/UhNN348SEVQuRUaguuuo79
+         0lCVStH4HRf9I2WaD1oHpH6Yudbg69R1uP0OleTAgIeSeacgwJk/LkOvQCh84P9W52+j
+         e6Lw==
+X-Gm-Message-State: AGi0PuYuCt93WBy9QbU4BLclnv4epqPL2lU+MUeTSTrJLI1ZBxBVoQAV
+        gRHMiYhGqjrnuJ9XnnuDE12JHg==
+X-Google-Smtp-Source: APiQypIt8HrpFKFTMpnxUNHbF3+yA9MDBPiQ1IFNYa1zqeTCpTAG2qNgifabo+tSNtUh1Xl9YsjXzw==
+X-Received: by 2002:a17:902:108:: with SMTP id 8mr11668340plb.200.1588821061137;
+        Wed, 06 May 2020 20:11:01 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.221.70])
+        by smtp.gmail.com with ESMTPSA id a17sm3321109pfr.24.2020.05.06.20.10.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 May 2020 20:11:00 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v2 RESEND] sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
+Date:   Thu,  7 May 2020 11:10:39 +0800
+Message-Id: <20200507031039.32615-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 7 May 2020 11:09:43 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Thu, 7 May 2020 11:09:43 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VNSUNCQkJMSktLQ0hLSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT09DSE9LSE1ON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6OTY6Hxw4Tjg*ETgCCTg5FgI3LU9PCSNVSFVKTkNDQ0lLQkNOQkpMVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTklLSDcG
-X-HM-Tid: 0a71ed1c403493b4kuwsce1361a2e1e
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CkZyb206IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KRGF0ZTogMjAyMC0wNC0yNiAx
-NzowMTo0MgpUbzogIElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4sSm9vbnlvdW5nIFNo
-aW0gPGp5MDkyMi5zaGltQHNhbXN1bmcuY29tPixTZXVuZy1Xb28gS2ltIDxzdzAzMTIua2ltQHNh
-bXN1bmcuY29tPixLeXVuZ21pbiBQYXJrIDxreXVuZ21pbi5wYXJrQHNhbXN1bmcuY29tPixEYXZp
-ZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+LERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5j
-aD4sS3VramluIEtpbSA8a2dlbmVAa2VybmVsLm9yZz4sS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6
-a0BrZXJuZWwub3JnPixkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyxsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5v
-cmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwpDYzogIG9wZW5zb3VyY2Uua2VybmVsQHZp
-dm8uY29tLEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KU3ViamVjdDogW1BBVENIXSBk
-cm0vZXh5bm9zOiBtYWtlIHBvaW50ZXIgdG8gY29uc3QgZGF0YSBjb25zdCB0eXBlPk1heWJlIGtl
-ZXAgcG9pbnRlciB3aGljaCBwb2ludHMgdG8gZ2xvYmFsIGNvbnN0IHN0cmluZyBkYXRhCj5pbiBj
-b25zdCB0eXBlIGlzIGJldHRlciwgbWFrZSBzdXJlIG5vdCBjaGFuZ2UgY29uc3QgZGF0YS4KPgo+
-U2lnbmVkLW9mZi1ieTogQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29tPgo+LS0tCj4gZHJp
-dmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIHwgMiArLQo+IGRyaXZlcnMvZ3B1
-L2RybS9leHlub3MvZXh5bm9zX2RybV9taWMuYyB8IDIgKy0KPiAyIGZpbGVzIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPgo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
-bm9zX2RybV9kc2kuYwo+aW5kZXggZTA4MGFhOTIzMzhjLi5mNjBkOTljODVhYzkgMTAwNjQ0Cj4t
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwo+QEAgLTIxMSw3ICsyMTEsNyBAQAo+
-IAo+ICNkZWZpbmUgT0xEX1NDTEtfTUlQSV9DTEtfTkFNRSAicGxsX2NsayIKPiAKPi1zdGF0aWMg
-Y2hhciAqY2xrX25hbWVzWzVdID0geyAiYnVzX2NsayIsICJzY2xrX21pcGkiLAo+K3N0YXRpYyBj
-b25zdCBjaGFyICpjb25zdCBjbGtfbmFtZXNbNV0gPSB7ICJidXNfY2xrIiwgInNjbGtfbWlwaSIs
-Cj4gCSJwaHljbGtfbWlwaWRwaHkwX2JpdGNsa2RpdjgiLCAicGh5Y2xrX21pcGlkcGh5MF9yeGNs
-a2VzYzAiLAo+IAkic2Nsa19yZ2JfdmNsa190b19kc2ltMCIgfTsKPiAKPmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-ZXh5bm9zL2V4eW5vc19kcm1fbWljLmMKPmluZGV4IGY0MWQ3NTkyMzU1Ny4uYTg2YWJjMTczNjA1
-IDEwMDY0NAo+LS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX21pYy5jCj4r
-KysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMKPkBAIC04OCw3ICs4
-OCw3IEBACj4gCj4gI2RlZmluZSBNSUNfQlNfU0laRV8yRCh4KQkoKHgpICYgMHgzZmZmKQo+IAo+
-LXN0YXRpYyBjaGFyICpjbGtfbmFtZXNbXSA9IHsgInBjbGtfbWljMCIsICJzY2xrX3JnYl92Y2xr
-X3RvX21pYzAiIH07Cj4rc3RhdGljIGNvbnN0IGNoYXIgKmNvbnN0IGNsa19uYW1lc1tdID0geyAi
-cGNsa19taWMwIiwgInNjbGtfcmdiX3ZjbGtfdG9fbWljMCIgfTsKPiAjZGVmaW5lIE5VTV9DTEtT
-CQlBUlJBWV9TSVpFKGNsa19uYW1lcykKPiBzdGF0aWMgREVGSU5FX01VVEVYKG1pY19tdXRleCk7
-Cj4gCj4tLSAKPjIuMjYuMgo+Cg0KDQo=
+The cpuacct_charge() and cpuacct_account_field() are called with
+rq->lock held, and this means preemption(and IRQs) are indeed
+disabled, so it is safe to use __this_cpu_*() to allow for better
+code-generation.
+
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+Chane in v2:
+    1. Update changelog.
+
+ kernel/sched/cpuacct.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
+index 9fbb103834345..6448b0438ffb2 100644
+--- a/kernel/sched/cpuacct.c
++++ b/kernel/sched/cpuacct.c
+@@ -347,7 +347,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
+ 	rcu_read_lock();
+ 
+ 	for (ca = task_ca(tsk); ca; ca = parent_ca(ca))
+-		this_cpu_ptr(ca->cpuusage)->usages[index] += cputime;
++		__this_cpu_add(ca->cpuusage->usages[index], cputime);
+ 
+ 	rcu_read_unlock();
+ }
+@@ -363,7 +363,7 @@ void cpuacct_account_field(struct task_struct *tsk, int index, u64 val)
+ 
+ 	rcu_read_lock();
+ 	for (ca = task_ca(tsk); ca != &root_cpuacct; ca = parent_ca(ca))
+-		this_cpu_ptr(ca->cpustat)->cpustat[index] += val;
++		__this_cpu_add(ca->cpustat->cpustat[index], val);
+ 	rcu_read_unlock();
+ }
+ 
+-- 
+2.11.0
+
