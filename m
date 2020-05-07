@@ -2,155 +2,86 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BD6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDE1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8692063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DnDifyvM"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE862082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588860307;
+	bh=SiwCH8RCKfzXT3qqrhJZK6OicpexUtZYquQREUsumG0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NEGflraFcJvFvjg9Z6Wk1tllU3fC6TEsvbehqq2XKV6VshkCC2YhUn1btMRXEbzRk
+	 ddGTIgTuJJFJq7KU0h4UbVtxTGk5kKTJbk5lCP7r0tIFyZj4VB6aquI8eKRcdxSZ5i
+	 K/Juh78n045fiWAfdjrYLzX6V9sz/e0fSRROF3A0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGODx (ORCPT
+        id S1727982AbgEGOFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:03:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31916 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727904AbgEGODp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:03:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mneKSrcFh5+MZzllxZ6nUp+i4lcHd2Bq+t93L/e/DVA=;
-        b=DnDifyvM1riFCNssGNw4eH/5A8stCR99xS9AskCqT/i0ZJ2Hs93+HkNoQbQiW89WYG8Q09
-        akWOWZW5Mn/AxZy5KAprhWf1Rp3Co6e3ACOmNymf9dtmIkFWLVeU2AEYwQf95S6cVJDisP
-        g7F+M1JniBmOmjHVQ+Q7iT6tnnRzpAg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-jkKsHUXTMYKhCTvguYHs1w-1; Thu, 07 May 2020 10:03:40 -0400
-X-MC-Unique: jkKsHUXTMYKhCTvguYHs1w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 7 May 2020 10:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726580AbgEGOFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:05:06 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3E141895950;
-        Thu,  7 May 2020 14:03:38 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCE136109E;
-        Thu,  7 May 2020 14:03:36 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: [PATCH v4 13/15] virtio-mem: Unplug subblocks right-to-left
-Date:   Thu,  7 May 2020 16:01:37 +0200
-Message-Id: <20200507140139.17083-14-david@redhat.com>
-In-Reply-To: <20200507140139.17083-1-david@redhat.com>
-References: <20200507140139.17083-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD282084D;
+        Thu,  7 May 2020 14:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588860306;
+        bh=SiwCH8RCKfzXT3qqrhJZK6OicpexUtZYquQREUsumG0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AvO/xVWP7PR6qhNwWQTmOuJP+VmmvTjbcv7/q8WBox/SvGGpjlLs0ZpZWiMQQqE8k
+         07XEMskdNPbV4W/3A3Sd8DKXulryXo/P7jizjir6hH/A3wgkZ1oTWAuapQYbWI+5An
+         RgrPeC32TR1T/YvGhq3ltgPztLpwbdSfcFH4UqHk=
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more informative
+Date:   Thu,  7 May 2020 15:04:54 +0100
+Message-Id: <158885763013.86999.17864741879925126551.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
+References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We unplug blocks right-to-left, let's also unplug subblocks within a block
-right-to-left.
+On Thu, 23 Apr 2020 15:25:31 +0530, Sai Prakash Ranjan wrote:
+> Currently on reboot/shutdown, the following messages are
+> displayed on the console as error messages before the
+> system reboots/shutdown as part of remove callback.
+> 
+> On SC7180:
+> 
+>   arm-smmu 15000000.iommu: removing device with active domains!
+>   arm-smmu 5040000.iommu: removing device with active domains!
+> 
+> [...]
 
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/virtio/virtio_mem.c | 38 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 22 deletions(-)
+Applied to will (for-joerg/arm-smmu/updates), thanks!
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 8dd57b61b09b..a719e1a04ac7 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -353,18 +353,6 @@ static bool virtio_mem_mb_test_sb_unplugged(struct virtio_mem *vm,
- 	return find_next_bit(vm->sb_bitmap, bit + count, bit) >= bit + count;
- }
- 
--/*
-- * Find the first plugged subblock. Returns vm->nb_sb_per_mb in case there is
-- * none.
-- */
--static int virtio_mem_mb_first_plugged_sb(struct virtio_mem *vm,
--					  unsigned long mb_id)
--{
--	const int bit = (mb_id - vm->first_mb_id) * vm->nb_sb_per_mb;
--
--	return find_next_bit(vm->sb_bitmap, bit + vm->nb_sb_per_mb, bit) - bit;
--}
--
- /*
-  * Find the first unplugged subblock. Returns vm->nb_sb_per_mb in case there is
-  * none.
-@@ -1016,21 +1004,27 @@ static int virtio_mem_mb_unplug_any_sb(struct virtio_mem *vm,
- 	int sb_id, count;
- 	int rc;
- 
-+	sb_id = vm->nb_sb_per_mb - 1;
- 	while (*nb_sb) {
--		sb_id = virtio_mem_mb_first_plugged_sb(vm, mb_id);
--		if (sb_id >= vm->nb_sb_per_mb)
-+		/* Find the next candidate subblock */
-+		while (sb_id >= 0 &&
-+		       virtio_mem_mb_test_sb_unplugged(vm, mb_id, sb_id, 1))
-+			sb_id--;
-+		if (sb_id < 0)
- 			break;
-+		/* Try to unplug multiple subblocks at a time */
- 		count = 1;
--		while (count < *nb_sb &&
--		       sb_id + count  < vm->nb_sb_per_mb &&
--		       virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id + count,
--						     1))
-+		while (count < *nb_sb && sb_id > 0 &&
-+		       virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id - 1, 1)) {
- 			count++;
-+			sb_id--;
-+		}
- 
- 		rc = virtio_mem_mb_unplug_sb(vm, mb_id, sb_id, count);
- 		if (rc)
- 			return rc;
- 		*nb_sb -= count;
-+		sb_id--;
- 	}
- 
- 	return 0;
-@@ -1337,12 +1331,12 @@ static int virtio_mem_mb_unplug_any_sb_online(struct virtio_mem *vm,
- 	 * we should sense via something like is_mem_section_removable()
- 	 * first if it makes sense to go ahead any try to allocate.
- 	 */
--	for (sb_id = 0; sb_id < vm->nb_sb_per_mb && *nb_sb; sb_id++) {
-+	for (sb_id = vm->nb_sb_per_mb - 1; sb_id >= 0 && *nb_sb; sb_id--) {
- 		/* Find the next candidate subblock */
--		while (sb_id < vm->nb_sb_per_mb &&
-+		while (sb_id >= 0 &&
- 		       !virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
--			sb_id++;
--		if (sb_id >= vm->nb_sb_per_mb)
-+			sb_id--;
-+		if (sb_id < 0)
- 			break;
- 
- 		start_pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
+[1/1] iommu/arm-smmu: Make remove callback message more informative
+      https://git.kernel.org/will/c/02782f3d60f1
+
+Cheers,
 -- 
-2.25.3
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
