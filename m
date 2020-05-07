@@ -2,336 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE2AC35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9167EC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F4F20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6568220870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QQ30FGN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgEGVy4 (ORCPT
+        id S1726770AbgEGV4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:54:56 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:54760 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbgEGVy4 (ORCPT
+        Thu, 7 May 2020 17:56:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40540 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgEGV4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:54:56 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jWoTl-0001hY-36; Thu, 07 May 2020 15:54:53 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jWoTX-0000BH-Io; Thu, 07 May 2020 15:54:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87ftcei2si.fsf@x220.int.ebiederm.org>
-        <202005051354.C7E2278688@keescook>
-Date:   Thu, 07 May 2020 16:51:13 -0500
-In-Reply-To: <202005051354.C7E2278688@keescook> (Kees Cook's message of "Tue,
-        5 May 2020 14:29:21 -0700")
-Message-ID: <87blmz8lda.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 7 May 2020 17:56:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047LuXPq128510;
+        Thu, 7 May 2020 16:56:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588888593;
+        bh=CiepMYUrdU135wGqDDohzrYL5klayaRYK1fM6UEdabY=;
+        h=From:To:CC:Subject:Date;
+        b=QQ30FGN+86wlgo3hAxA42imaQxX3nvLS9K4Acs6RwxcFsIPP1gjifF2Am7I8igzjh
+         EYQzkUKJq2/ktgetS9rqK/NBNTg7rmBXvpJH5RTd8OqteoXy4lBlLOFoX/jCXuphyK
+         K28GDlRM25/Q6A87fyg8FDXnHdaJ6GBpnM9NfKWc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 047LuX9A027239
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 May 2020 16:56:33 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
+ 2020 16:56:32 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 7 May 2020 16:56:32 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047LuWu3010621;
+        Thu, 7 May 2020 16:56:32 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <davem@davemloft.net>, <richardcochran@gmail.com>,
+        <ivan.khoronzhuk@linaro.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net/master] net: ethernet: ti: cpts: Fix linker issue when TI_CPTS is defined
+Date:   Thu, 7 May 2020 16:47:40 -0500
+Message-ID: <20200507214740.14693-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jWoTX-0000BH-Io;;;mid=<87blmz8lda.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/TffCfJjUwfPc36yFMkBlfQrVmC892J1g=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Fix build issue when CONFIG_TI_CPTS is defined in the defconfig but
+CONFIG_TI_CPTS_MOD is not set.
 
-> On Tue, May 05, 2020 at 02:45:33PM -0500, Eric W. Biederman wrote:
->> 
->> The current idiom for the callers is:
->> 
->> flush_old_exec(bprm);
->> set_personality(...);
->> setup_new_exec(bprm);
->> 
->> In 2010 Linus split flush_old_exec into flush_old_exec and
->> setup_new_exec.  With the intention that setup_new_exec be what is
->> called after the processes new personality is set.
->> 
->> Move the code that doesn't depend upon the personality from
->> setup_new_exec into flush_old_exec.  This is to facilitate future
->> changes by having as much code together in one function as possible.
->
-> Er, I *think* this is okay, but I have some questions below which
-> maybe you already investigated (and should perhaps get called out in
-> the changelog).
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+drivers/net/ethernet/ti/cpsw.c:886: undefined reference to `cpts_unregister'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_remove':
+drivers/net/ethernet/ti/cpsw.c:1742: undefined reference to `cpts_release'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_rx_handler':
+drivers/net/ethernet/ti/cpsw.c:437: undefined reference to `cpts_rx_timestamp'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_open':
+drivers/net/ethernet/ti/cpsw.c:840: undefined reference to `cpts_register'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_probe':
+drivers/net/ethernet/ti/cpsw.c:1717: undefined reference to `cpts_release'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_tx_handler':
+drivers/net/ethernet/ti/cpsw_priv.c:68: undefined reference to `cpts_tx_timestamp'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_init_common':
+drivers/net/ethernet/ti/cpsw_priv.c:525: undefined reference to `cpts_create'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_stop':
+drivers/net/ethernet/ti/cpsw_new.c:814: undefined reference to `cpts_unregister'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_remove':
+drivers/net/ethernet/ti/cpsw_new.c:2029: undefined reference to `cpts_release'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_rx_handler':
+drivers/net/ethernet/ti/cpsw_new.c:379: undefined reference to `cpts_rx_timestamp'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_probe':
+drivers/net/ethernet/ti/cpsw_new.c:2005: undefined reference to `cpts_release'
+arm-none-linux-gnueabihf-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_open':
+drivers/net/ethernet/ti/cpsw_new.c:874: undefined reference to `cpts_register'
 
-I intend to the following text to the changelog.  At this point I
-believe I have read through everything and nothing raises any concerns
-for me:
+The header file needs to check if the CONFIG_TI_CPTS_MOD is set in order
+to build the prototypes.  If not then the inline functions should be
+used.
 
---- text begin ---
+Once this change was made then a follow up error occured due to the same
+flag error in the code.
 
-To see why it is safe to move this code please note that effectively
-this change moves the personality setting in the binfmt and the following
-three lines of code after everything except unlocking the mutexes:
-        arch_pick_mmap_layout
-        arch_setup_new_exec
-        mm->task_size = TASK_SIZE
+drivers/net/ethernet/ti/cpsw_ethtool.c:724:30: error: dereferencing pointer to incomplete type ‘struct cpts’
+ info->phc_index = cpsw->cpts->phc_index;
 
-The function arch_pick_mmap_layout at most sets:
-        mm->get_unmapped_area
-        mm->mmap_base
-        mm->mmap_legacy_base
-        mm->mmap_compat_base
-        mm->mmap_compat_legacy_base
-which nothing in flush_old_exec or setup_new_exec depends on.
+CC: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/ethernet/ti/cpsw_ethtool.c | 2 +-
+ drivers/net/ethernet/ti/cpts.h         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The function arch_setup_new_exec only sets architecture specific
-state and the rest of the functions only deal in state that applies
-to all architectures.
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index fa54efe3be63..31e8a76d4407 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -709,7 +709,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
+ 	return ret;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_ENABLED(CONFIG_TI_CPTS_MOD)
+ int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
+ {
+ 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index bb997c11ee15..548af47fa938 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -8,7 +8,7 @@
+ #ifndef _TI_CPTS_H_
+ #define _TI_CPTS_H_
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_ENABLED(CONFIG_TI_CPTS_MOD)
+ 
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+-- 
+2.25.1
 
-The last line just sets mm->task_size and again nothing in flush_old_exec
-or setup_new_exec depend on task_size.
-
---- text end ---
-
->> 
->> Ref: 221af7f87b97 ("Split 'flush_old_exec' into two functions")
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  fs/exec.c | 85 ++++++++++++++++++++++++++++---------------------------
->>  1 file changed, 44 insertions(+), 41 deletions(-)
->> 
->> diff --git a/fs/exec.c b/fs/exec.c
->> index 8c3abafb9bb1..0eff20558735 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1359,39 +1359,7 @@ int flush_old_exec(struct linux_binprm * bprm)
->>  	 * undergoing exec(2).
->>  	 */
->>  	do_close_on_exec(me->files);
->> -	return 0;
->> -
->> -out_unlock:
->> -	mutex_unlock(&me->signal->exec_update_mutex);
->> -out:
->> -	return retval;
->> -}
->> -EXPORT_SYMBOL(flush_old_exec);
->> -
->> -void would_dump(struct linux_binprm *bprm, struct file *file)
->> -{
->> -	struct inode *inode = file_inode(file);
->> -	if (inode_permission(inode, MAY_READ) < 0) {
->> -		struct user_namespace *old, *user_ns;
->> -		bprm->interp_flags |= BINPRM_FLAGS_ENFORCE_NONDUMP;
->> -
->> -		/* Ensure mm->user_ns contains the executable */
->> -		user_ns = old = bprm->mm->user_ns;
->> -		while ((user_ns != &init_user_ns) &&
->> -		       !privileged_wrt_inode_uidgid(user_ns, inode))
->> -			user_ns = user_ns->parent;
->>  
->> -		if (old != user_ns) {
->> -			bprm->mm->user_ns = get_user_ns(user_ns);
->> -			put_user_ns(old);
->> -		}
->> -	}
->> -}
->> -EXPORT_SYMBOL(would_dump);
->> -
->> -void setup_new_exec(struct linux_binprm * bprm)
->> -{
->> -	struct task_struct *me = current;
->>  	/*
->>  	 * Once here, prepare_binrpm() will not be called any more, so
->>  	 * the final state of setuid/setgid/fscaps can be merged into the
->> @@ -1414,8 +1382,6 @@ void setup_new_exec(struct linux_binprm * bprm)
->>  			bprm->rlim_stack.rlim_cur = _STK_LIM;
->>  	}
->>  
->> -	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
->> -
->>  	me->sas_ss_sp = me->sas_ss_size = 0;
->>  
->>  	/*
->> @@ -1430,16 +1396,9 @@ void setup_new_exec(struct linux_binprm * bprm)
->>  	else
->>  		set_dumpable(current->mm, SUID_DUMP_USER);
->>  
->> -	arch_setup_new_exec();
->>  	perf_event_exec();
->
-> What is perf expecting to be able to examine at this point? Does it want
-> a view of things after arch_setup_new_exec()? (i.e. "final" TIF flags,
-> mmap layout, etc.) From what I can, the answer is "no, it's just
-> resetting counters", so I think this is fine. Maybe double-check with
-> Steve?
-
-I can't find anything in the perf code that depends on
-arch_pick_mmap_layout or mm->task_size.  So I don't have any concerns.
-I have grepped through both kernel/events/ and arch/x86/events/ and
-include/trace to double check and have nothing turned up.
-
-I can't see the policy of where things will be allocated in the
-memory map making any difference to perf.
-
-Depending on what events actually are I can imagine then firing and
-having issues as I can imagine an event to be just about anything
-but I don't see a way to prevent that.  
-
-I do see perf disabling events that are based on addresses.  I further
-see perf enabling/disabling events that have already been computed.  I
-see perf treating exec effectively as a process scheduling out and in.
-
-Then finally I see perf shutting itself down on suid exec, and
-generating some final perf events.  I have some concerns that is
-a bit late, and that the test might not be quite right but nothing
-particular to this change.
-
->>  	__set_task_comm(me, kbasename(bprm->filename), true);
->>  
->> -	/* Set the new mm task size. We have to do that late because it may
->> -	 * depend on TIF_32BIT which is only updated in flush_thread() on
->> -	 * some architectures like powerpc
->> -	 */
->> -	me->mm->task_size = TASK_SIZE;
->> -
->>  	/* An exec changes our domain. We are no longer part of the thread
->>  	   group */
->>  	WRITE_ONCE(me->self_exec_id, me->self_exec_id + 1);
->> @@ -1467,6 +1426,50 @@ void setup_new_exec(struct linux_binprm * bprm)
->>  	 * credentials; any time after this it may be unlocked.
->>  	 */
->>  	security_bprm_committed_creds(bprm);
->
-> Similarly for the LSM hook: is it expecting a post-arch-setup view? I
-> don't see anything looking at task_size, TIF flags, or anything else;
-> they seem to be just cleaning up from the old process being replaced, so
-> against, I think this is okay.
-
-Nothing at all with the mm.  The LSM hooks close files and
-muck with rlimits and signals, and tidy up their lsm state.
-
-There are only 3 implementations apparmor, tomoyo and selinux
-so it isn't too hard to read through them.
-
-> Not visible in this patch, the following things how happen earlier,
-> which I feel should maybe get called out in the changelog, with,
-> perhaps, better justification than what I've got here:
->
-> bprm->secureexec set/check (looks safe, since it depends on
-> prepare_binprm()'s security_bprm_set_creds().
->
-> rlim_stack.rlim_cur setting (safe, just needs to happen before
-> arch_pick_mmap_layout())
->
-> dumpable() check (looks safe, BINPRM_FLAGS_ENFORCE_NONDUMP depends on
-> much earlier would_dump(), and uid/gid depend on earlier calls to
-> prepare_binprm()'s bprm_fill_uid())
->
-> __set_task_comm (looks safe, just dealing with the task name...)
->
-> self_exec_id bump (looks safe, but I think -- it's still after uid
-> setting)
->
-> flush_signal_handlers() (looks safe -- nothing appears to depend on mm
-> nor personality)
-
-Agreed.
-
->> +	return 0;
->> +
->> +out_unlock:
->> +	mutex_unlock(&me->signal->exec_update_mutex);
->> +out:
->> +	return retval;
->> +}
->> +EXPORT_SYMBOL(flush_old_exec);
->> +
->> +void would_dump(struct linux_binprm *bprm, struct file *file)
->> +{
->> +	struct inode *inode = file_inode(file);
->> +	if (inode_permission(inode, MAY_READ) < 0) {
->> +		struct user_namespace *old, *user_ns;
->> +		bprm->interp_flags |= BINPRM_FLAGS_ENFORCE_NONDUMP;
->> +
->> +		/* Ensure mm->user_ns contains the executable */
->> +		user_ns = old = bprm->mm->user_ns;
->> +		while ((user_ns != &init_user_ns) &&
->> +		       !privileged_wrt_inode_uidgid(user_ns, inode))
->> +			user_ns = user_ns->parent;
->> +
->> +		if (old != user_ns) {
->> +			bprm->mm->user_ns = get_user_ns(user_ns);
->> +			put_user_ns(old);
->> +		}
->> +	}
->> +}
->> +EXPORT_SYMBOL(would_dump);
->
-> The diff helpfully decided this moved would_dump(). ;) Is it worth
-> maybe just moviing it explicitly above flush_old_exec() to avoid this
-> churn? I dunno.
-
-Given the amount of review and testing that has been put in at
-this point I don't think so.
-
->> +
->> +void setup_new_exec(struct linux_binprm * bprm)
->> +{
->> +	/* Setup things that can depend upon the personality */
->
-> Should this comment be above the function instead?
-
-My experience has been that comments above functions unless they are in
-full linuxdoc tend to be less well maintained than comments within the
-function itself.  So I don't think it is worth moving.x
-
->> +	struct task_struct *me = current;
->> +
->> +	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
->> +
->> +	arch_setup_new_exec();
->> +
->> +	/* Set the new mm task size. We have to do that late because it may
->> +	 * depend on TIF_32BIT which is only updated in flush_thread() on
->> +	 * some architectures like powerpc
->> +	 */
->> +	me->mm->task_size = TASK_SIZE;
->>  	mutex_unlock(&me->signal->exec_update_mutex);
->>  	mutex_unlock(&me->signal->cred_guard_mutex);
->>  }
->> -- 
->> 2.20.1
->> 
->
-> So, as I say, I *think* this is okay, but I always get suspicious about
-> reordering things in execve(). ;)
->
-> So, with a bit larger changelog discussing what's moving "earlier",
-> I think this looks good:
-
-Please see above.
-
-Eric
