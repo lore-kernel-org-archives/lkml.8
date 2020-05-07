@@ -2,120 +2,152 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7FEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E208C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682DA208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1844420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="in7uHajW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTFfyL0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgEGVry (ORCPT
+        id S1727924AbgEGVsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:47:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47425 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726480AbgEGVrw (ORCPT
+        Thu, 7 May 2020 17:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgEGVsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:47:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588888071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8NimXLPwW2cXlIec0hrGIyPRgpSOxgyz6NjChAU7LBg=;
-        b=in7uHajWViHgTF0tEe6VQYIAbqcpYAnZYcEa1L5/WrkEzEXpPZt1LahSXoRcf0u/4j6VWu
-        d22UKaOHsu8CdwPZXJNhckJygqcxChPKMLq9mtPIt/JiGH3NwVjmn00lOVEfbLD/wi8fsv
-        1Xl3J4RgBeej5UyyKC82JQYYPio5t/w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-aA9z9tkCP-SlVA92l8C7MA-1; Thu, 07 May 2020 17:47:49 -0400
-X-MC-Unique: aA9z9tkCP-SlVA92l8C7MA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6055680058A;
-        Thu,  7 May 2020 21:47:48 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 244065D9C5;
-        Thu,  7 May 2020 21:47:44 +0000 (UTC)
-Date:   Thu, 7 May 2020 15:47:43 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, jgg@ziepe.ca
-Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
-Message-ID: <20200507154743.306d2f3e@x1.home>
-In-Reply-To: <20200507212443.GO228260@xz-x1>
-References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
-        <158871568480.15589.17339878308143043906.stgit@gimli.home>
-        <20200507212443.GO228260@xz-x1>
-Organization: Red Hat
+        Thu, 7 May 2020 17:48:20 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E12C05BD43;
+        Thu,  7 May 2020 14:48:20 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z6so8565084wml.2;
+        Thu, 07 May 2020 14:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3VucMel2VcMPBSW+yTXmQNjNtFkFkvQaIgxnkoAD4f8=;
+        b=XTFfyL0XjPY7WSY1nM9GnAVxhp50hPvP6sxaihKi3WiXOAuDH3DX4mdLzFm4TnCmEU
+         wNlVTgcnpgvZ9uMAvSogigH38BM16GIeef3g71BVQGlch6SiBNo9/Tl+EcV/Jchxbqt8
+         tYRdXaXzY0+ewSiDtKZpt0mbfGs37IJWEmcSutt4xCJ11cA0sXQMR6qqmqQUzhAcMd7M
+         R0AUmbnjP/TbbJ6i4lmJElqstbx+E3124Vbo+GpGHh3RIq+UgjYxuXENF46mC0Hc43Vj
+         eCR6GnZp5L6fu273XIOX68PBA4gnjAN/krX0Rjp6LEloMSuXuNM5cWpgUn45n6E6+yfw
+         i7Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3VucMel2VcMPBSW+yTXmQNjNtFkFkvQaIgxnkoAD4f8=;
+        b=jUhhZulnTVBtq1pADOsJq8HL6WMml5U/v0CL5S9NjuRmUwtmf2UmItH5LtWdFlQs97
+         D36DUg3a9xvQGEEfbHSdA91K9PRbTyCWWXBxhp1AthuC+1tCTp8qnQRC7UPZw2OOjkBq
+         8S/jDWmad3EDcSQEJv3XdToyE+jmP6u/JvtWIwqx7iLDH1ZcuQTpReA7Um52Sgoh/YX5
+         GONFR+CfjaBymbNpMxUBhDrkLO2lRO/DTreO7F4/sJIo35JN8gLporrhcycVppwzRzLH
+         9fkGxvSP5Qfy/KGnFe0/Y7YpP70KNxJJl++sng++g7yZBWnFdyyv7quadAtEaq6/vo/O
+         RPZQ==
+X-Gm-Message-State: AGi0PubN8pnd7iu1gNgeVaKoVGLIE9IvC+xlnjvn3Ty/raZ1Hx4BhcYl
+        8QaB2cbX1ibfVqNNaMn2UjUQpZgTjUAE6vY/48iQhZ9s
+X-Google-Smtp-Source: APiQypINamJQOY2oV75ue3+82pSJ4u2LSA3OnQvIdaIqkuTVDtYRYPW3plUx8czr0GGQwzQAwytf98uAG9THrTKORH0=
+X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr12017512wmu.94.1588888098625;
+ Thu, 07 May 2020 14:48:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200507010504.26352-1-luke.r.nels@gmail.com> <20200507010504.26352-2-luke.r.nels@gmail.com>
+ <20200507082934.GA28215@willie-the-truck> <20200507101224.33a44d71@why>
+In-Reply-To: <20200507101224.33a44d71@why>
+From:   Luke Nelson <luke.r.nels@gmail.com>
+Date:   Thu, 7 May 2020 14:48:07 -0700
+Message-ID: <CAB-e3NRCJ_4+vkFPkMN67DwBBtO=sJwR-oL4-AozVw2bBJHOzg@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
+ 32-bit logical immediates
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     Luke Nelson <lukenels@cs.washington.edu>,
+        bpf <bpf@vger.kernel.org>, Xi Wang <xi.wang@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 17:24:43 -0400
-Peter Xu <peterx@redhat.com> wrote:
+Hi everyone,
 
-> On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
-> > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
-> > the range being faulted into the vma.  Add support to manually provide
-> > that, in the same way as done on KVM with hva_to_pfn_remapped().
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
-> >  1 file changed, 33 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index cc1d64765ce7..4a4cb7cd86b2 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
-> >  	return 0;
-> >  }
-> >  
-> > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
-> > +			    unsigned long vaddr, unsigned long *pfn,
-> > +			    bool write_fault)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = follow_pfn(vma, vaddr, pfn);
-> > +	if (ret) {
-> > +		bool unlocked = false;
-> > +
-> > +		ret = fixup_user_fault(NULL, mm, vaddr,
-> > +				       FAULT_FLAG_REMOTE |
-> > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
-> > +				       &unlocked);
-> > +		if (unlocked)
-> > +			return -EAGAIN;  
-> 
-> Hi, Alex,
-> 
-> IIUC this retry is not needed too because fixup_user_fault() will guarantee the
-> fault-in is done correctly with the valid PTE as long as ret==0, even if
-> unlocked==true.
-> 
-> Note: there's another patch just removed the similar retry in kvm:
-> 
-> https://lore.kernel.org/kvm/20200416155906.267462-1-peterx@redhat.com/
+Thanks for the comments! Responses below:
 
-Great, I was basing this on that kvm code, so I can make essentially an
-identical fix.  Thanks!
+> It's a bit grotty spreading the checks out now. How about we tweak things
+> slightly along the lines of:
+>
+>
+> diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
+> index 4a9e773a177f..60ec788eaf33 100644
+> --- a/arch/arm64/kernel/insn.c
+> +++ b/arch/arm64/kernel/insn.c
+> [...]
 
-Alex
+Agreed; this new version looks much cleaner. I re-ran all the tests /
+verification and everything seems good. Would you like me to submit a
+v2 of this series with this new code?
 
+
+>> We tested the new code against llvm-mc with all 1,302 encodable 32-bit
+>> logical immediates and all 5,334 encodable 64-bit logical immediates.
+>
+> That, on its own, is awesome information. Do you have any pointer on
+> how to set this up?
+
+Sure! The process of running the tests is pretty involved, but I'll
+describe it below and give some links here.
+
+We found the bugs in insn.c while adding support for logical immediates
+to the BPF JIT and verifying the changes with our tool, Serval:
+https://github.com/uw-unsat/serval-bpf. The basic idea for how we tested /
+verified logical immediates is the following:
+
+First, we have a Python script [1] for generating every encodable
+logical immediate and the corresponding instruction fields that encode
+that immediate. The script validates the list by checking that llvm-mc
+decodes each instruction back to the expected immediate.
+
+Next, we use the list [2] from the first step to check a Racket
+translation [3] of the logical immediate encoding function in insn.c.
+We found the second mask bug by noticing that some (encodable) 32-bit
+immediates were being rejected by the encoding function.
+
+Last, we use the Racket translation of the encoding function to verify
+the correctness of the BPF JIT implementation [4], i.e., the JIT
+correctly compiles BPF_{AND,OR,XOR,JSET} BPF_K instructions to arm64
+instructions with equivalent semantics. We found the first bug as the
+verifier complained that the function was producing invalid encodings
+for 32-bit -1 immediates, and we were able to reproduce a kernel crash
+using the BPF tests.
+
+We manually translated the C code to Racket because our verifier, Serval,
+currently only works on Racket code.
+
+Thanks again,
+- Luke
+
+[1]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/test/arm64/gen-logic-imm.py
+[2]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/test/arm64/logic-imm.rkt
+[3]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/arm64/insn.rkt#L66
+[4]: https://github.com/uw-unsat/serval-bpf/blob/00838174659034e9527e67d9eccd2def2354cec6/racket/arm64/bpf_jit_comp.rkt
