@@ -2,165 +2,87 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC57C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C9BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA94208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:54:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WAPAb6AJ"
+	by mail.kernel.org (Postfix) with ESMTP id DC4C8208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588892213;
+	bh=DFVZVtjOy5Zq82K7JozE2r2KIIrkXMdk+V1nGag44c4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k4T5syPhthUyfLDcS6NjtpgUX5K+6nxkKQJenLYCXeJI0h8PduGD0N5Bt2ZYC1M6Q
+	 ex5GjjCPqOw8SWLq/t6n1gobzD46GhqHUZlIrd4+ypfNSmllrLZLXJAHN8Geg1TYOs
+	 4RQU8PbwUxqa3pSNhvNCNzjj/v8aAu8S0W5Q553Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgEGWyV (ORCPT
+        id S1727110AbgEGW4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEGWyV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:54:21 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49FFC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 15:54:20 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so3316005pjd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 15:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X1eOoZGo2RhELWP8ZXLrEQsjy79crnPXYewegVbC2bc=;
-        b=WAPAb6AJ5skxQqiGjsj4YLprJto6hJMDsC1OXq2025SYCXQw680iFz8cZQDTQ1DckJ
-         EmxNFgDSkka2NqoQTFhhqT/tuSIZd2brTu/CJYiVc8+eMuFmzWsQT+pvUbKme/7dYNq5
-         oV1FD3X4i27cGhlx9grXyhUdkRWJpiSoqqf6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X1eOoZGo2RhELWP8ZXLrEQsjy79crnPXYewegVbC2bc=;
-        b=BMcvs8Wb6kVEyfZ3A9cz77LSIg8lKNyraK1R6tI2Bng4W01Q93AhI1vLwgWhwnqcZo
-         8MZZEtHfjXG/euOagjBmsRYRh/SKTGhxun/JV+MG4gJNMCVaQey+f3KpxHS4UzoMXkj+
-         qsDSfxWvAjL6AROEhykpDRqyiXfr5Nk1m15olmRISRgihnBu/9K5cF7UOmK6IvkrmH+x
-         sFHk0O7FaGUSUKQmkKDnQHiR7GJ1zg9x3zkpgeMWxI9/ZxCof4lXms5ydsb1rdtjJmwp
-         60K/0bH2ZFP8NhksiO6A8Km/bAHL3lTvlAr4Pp8dqWfNywHU2Ar+A9r5uDi75u5RHpLH
-         J0mg==
-X-Gm-Message-State: AGi0PuYxud6twgHjRxUy+d/VP0vnQ4bj/yurY2r4pDLjrsaIhlDeg617
-        avxIzOJ0iOgLMcFZaNLd1lJvew==
-X-Google-Smtp-Source: APiQypJKFKpsytswpG/Q3vS6VvEccA4XHAZJIeSSZXlao5nBRjVP6Zd0WcIrMxJfYOyASvW1D28v3w==
-X-Received: by 2002:a17:90a:ba88:: with SMTP id t8mr2525688pjr.182.1588892059212;
-        Thu, 07 May 2020 15:54:19 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id k6sm763768pju.44.2020.05.07.15.54.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 15:54:18 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     sumit.garg@linaro.org, Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] kgdb: Avoid suspicious RCU usage warning
-Date:   Thu,  7 May 2020 15:53:58 -0700
-Message-Id: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+        Thu, 7 May 2020 18:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgEGW4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 18:56:52 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B888A2083B;
+        Thu,  7 May 2020 22:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588892212;
+        bh=DFVZVtjOy5Zq82K7JozE2r2KIIrkXMdk+V1nGag44c4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cfWvMsu2a/TSPk7q/+Zmfy29Q+AC9QWezN1eQf99G/LyIFEochDHBbNGHvRrHDHwd
+         SZglIFhyk6ytKrqx4WYehFbADUTk/TTe7OKAqe6BCfjM+R6c6vfSj6H2Ogxrf/0GT4
+         qWEFvrGtflMZ2XaXUvIx5uz56muVQ9+ZoWAD9EJ0=
+Date:   Thu, 7 May 2020 15:56:50 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+Message-ID: <20200507155650.0c19229e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+        <20200505140231.16600-6-brgl@bgdev.pl>
+        <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com>
+        <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
+        <20200507095315.1154a1a6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAMpxmJUEk3itZs4HujJOXUiL80kmEvGBvLF0NFc2UQoVDVTWRg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At times when I'm using kgdb I see a splat on my console about
-suspicious RCU usage.  I managed to come up with a case that could
-reproduce this that looked like this:
+On Thu, 7 May 2020 19:03:44 +0200 Bartosz Golaszewski wrote:
+>> To implement Edwin's suggestion? Makes sense, but I'm no expert, let's
+>> also CC Heiner since he was asking about it last time. =20
+>=20
+> Yes, because taking the last bit of priv_flags from net_device seems
+> to be more controversial but if net maintainers are fine with that I
+> can simply go with the current approach.
 
-  WARNING: suspicious RCU usage
-  5.7.0-rc4+ #609 Not tainted
-  -----------------------------
-  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
-
-  other info that might help us debug this:
-
-    rcu_scheduler_active = 2, debug_locks = 1
-  3 locks held by swapper/0/1:
-   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-
-  stack backtrace:
-  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-  Hardware name: Google Cheza (rev3+) (DT)
-  Call trace:
-   dump_backtrace+0x0/0x1b8
-   show_stack+0x1c/0x24
-   dump_stack+0xd4/0x134
-   lockdep_rcu_suspicious+0xf0/0x100
-   find_task_by_pid_ns+0x5c/0x80
-   getthread+0x8c/0xb0
-   gdb_serial_stub+0x9d4/0xd04
-   kgdb_cpu_enter+0x284/0x7ac
-   kgdb_handle_exception+0x174/0x20c
-   kgdb_brk_fn+0x24/0x30
-   call_break_hook+0x6c/0x7c
-   brk_handler+0x20/0x5c
-   do_debug_exception+0x1c8/0x22c
-   el1_sync_handler+0x3c/0xe4
-   el1_sync+0x7c/0x100
-   rpmh_rsc_probe+0x38/0x420
-   platform_drv_probe+0x94/0xb4
-   really_probe+0x134/0x300
-   driver_probe_device+0x68/0x100
-   __device_attach_driver+0x90/0xa8
-   bus_for_each_drv+0x84/0xcc
-   __device_attach+0xb4/0x13c
-   device_initial_probe+0x18/0x20
-   bus_probe_device+0x38/0x98
-   device_add+0x38c/0x420
-
-If I understand properly we should just be able to blanket kgdb under
-one big RCU read lock and the problem should go away.  We'll add it to
-the beast-of-a-function known as kgdb_cpu_enter().
-
-With this I no longer get any splats and things seem to work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- kernel/debug/debug_core.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2b7c9b67931d..5155cf06731b 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -564,6 +564,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	int online_cpus = num_online_cpus();
- 	u64 time_left;
- 
-+	rcu_read_lock();
-+
- 	kgdb_info[ks->cpu].enter_kgdb++;
- 	kgdb_info[ks->cpu].exception_state |= exception_state;
- 
-@@ -635,6 +637,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -773,6 +776,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
- 
-+	rcu_read_unlock();
-+
- 	return kgdb_info[cpu].ret_state;
- }
- 
--- 
-2.26.2.645.ge9eca65c58-goog
-
+=46rom my perspective what Edwin suggests makes sense. Apart from
+little use for the bit after probe, it also seems cleaner for devres=20
+to be able to recognize managed objects based on its own state.
