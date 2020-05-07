@@ -2,153 +2,156 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D56C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C29C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D792F2186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E188C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cNlgLgOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgEGKN1 (ORCPT
+        id S1726598AbgEGKPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:13:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44474 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgEGKN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:13:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 696B8AF99;
-        Thu,  7 May 2020 10:13:26 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 17D0D1E12B0; Thu,  7 May 2020 12:13:22 +0200 (CEST)
-Date:   Thu, 7 May 2020 12:13:22 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, John Hubbard <jhubbard@nvidia.com>,
-        Tony Luck <tony.luck@intel.com>, fenghua.yu@intel.com,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>, benchan@chromium.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        santosh.shilimkar@oracle.com,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        inux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        tee-dev@lists.linaro.org, Linux-MM <linux-mm@kvack.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com
-Subject: Re: [RFC] mm/gup.c: Updated return value of
- {get|pin}_user_pages_fast()
-Message-ID: <20200507101322.GB30922@quack2.suse.cz>
-References: <1588706059-4208-1-git-send-email-jrdr.linux@gmail.com>
- <0bfe4a8a-0d91-ef9b-066f-2ea7c68571b3@nvidia.com>
- <CAFqt6zZMsQkOdjAb2k1EjwX=DtZ8gKfbRzwvreHOX-0vJLngNg@mail.gmail.com>
- <20200506100649.GI17863@quack2.suse.cz>
- <CAFqt6zYaNkJ4AfVzutXS=JsN4fE41ZAvnw03vHWpdyiRHY1m_w@mail.gmail.com>
- <20200506125930.GJ17863@quack2.suse.cz>
- <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
+        Thu, 7 May 2020 06:15:19 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31779 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726408AbgEGKPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:15:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588846517; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=XFqf1wHSQnZtSaEYl1tXrhnf2kvJl+dy/TED/57qEYE=;
+ b=cNlgLgOb8t9806JBssU9MXw+axI3ttn48BC4TvWTK8H39LH7emM/Xp3B9lHvuVgM1p/Wiluc
+ CB7kFtfH4eWLWh+mu1Z5W8mA6hu4nJP2VW8r0uwg5zklWjZlbJQAixH9UEMED+mbNzIwhbww
+ 2nIPX+wajxo4vF3m2z2ktnx2H6g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb3dfa5.7fd1d1e83998-smtp-out-n05;
+ Thu, 07 May 2020 10:15:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 99B65C4478F; Thu,  7 May 2020 10:15:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0458C433D2;
+        Thu,  7 May 2020 10:14:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFqt6zZztn_AiaGAhV+_uwrnVdKY-xLsxOwYBt-zGmLaat+OhQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 May 2020 15:44:59 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+In-Reply-To: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+Message-ID: <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06-05-20 21:38:40, Souptick Joarder wrote:
-> On Wed, May 6, 2020 at 6:29 PM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Wed 06-05-20 17:51:39, Souptick Joarder wrote:
-> > > On Wed, May 6, 2020 at 3:36 PM Jan Kara <jack@suse.cz> wrote:
-> > > >
-> > > > On Wed 06-05-20 02:06:56, Souptick Joarder wrote:
-> > > > > On Wed, May 6, 2020 at 1:08 AM John Hubbard <jhubbard@nvidia.com> wrote:
-> > > > > >
-> > > > > > On 2020-05-05 12:14, Souptick Joarder wrote:
-> > > > > > > Currently {get|pin}_user_pages_fast() have 3 return value 0, -errno
-> > > > > > > and no of pinned pages. The only case where these two functions will
-> > > > > > > return 0, is for nr_pages <= 0, which doesn't find a valid use case.
-> > > > > > > But if at all any, then a -ERRNO will be returned instead of 0, which
-> > > > > > > means {get|pin}_user_pages_fast() will have 2 return values -errno &
-> > > > > > > no of pinned pages.
-> > > > > > >
-> > > > > > > Update all the callers which deals with return value 0 accordingly.
-> > > > > >
-> > > > > > Hmmm, seems a little shaky. In order to do this safely, I'd recommend
-> > > > > > first changing gup_fast/pup_fast so so that they return -EINVAL if
-> > > > > > the caller specified nr_pages==0, and of course auditing all callers,
-> > > > > > to ensure that this won't cause problems.
-> > > > >
-> > > > > While auditing it was figured out, there are 5 callers which cares for
-> > > > > return value
-> > > > > 0 of gup_fast/pup_fast. What problem it might cause if we change
-> > > > > gup_fast/pup_fast
-> > > > > to return -EINVAL and update all the callers in a single commit ?
-> > > >
-> > > > Well, first I'd ask a different question: Why do you want to change the
-> > > > current behavior? It's not like the current behavior is confusing.  Callers
-> > > > that pass >0 pages can happily rely on the simple behavior of < 0 return on
-> > > > error or > 0 return if we mapped some pages. Callers that can possibly ask
-> > > > to map 0 pages can get 0 pages back - kind of expected - and I don't see
-> > > > any benefit in trying to rewrite these callers to handle -EINVAL instead...
-> > >
-> > > Callers with a request to map 0 pages doesn't have a valid use case. But if any
-> > > caller end up doing it mistakenly, -errno should be returned to caller
-> > > rather than 0
-> > > which will indicate more precisely that map 0 pages is not a valid
-> > > request from caller.
-> >
-> > Well, I believe this depends on the point of view. Similarly as reading 0
-> > bytes is successful, we could consider mapping 0 pages successful as well.
-> > And there can be valid cases where number of pages to map is computed from
-> > some input and when 0 pages should be mapped, it is not a problem and your
-> > change would force such callers to special case this with explicitely
-> > checking for 0 pages to map and not calling GUP in that case at all.
-> >
-> > I'm not saying what you propose is necessarily bad, I just say I don't find
-> > it any better than the current behavior and so IMO it's not worth the
-> > churn. Now if you can come up with some examples of current in-kernel users
-> > who indeed do get the handling of the return value wrong, I could be
-> > convinced otherwise.
-> 
-> There are 5 callers of {get|pin}_user_pages_fast().
+Hi Will, Robin
 
-Oh, there are *much* more callers that 5. It's more like 70. Just grep the
-source... And then you have all other {get|pin}_user_pages() variants that
-need to be kept consistent. So overall we have over 200 calls to some
-variant of GUP.
+On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> Add stall implementation hook to enable stalling
+> faults on QCOM platforms which supports it without
+> causing any kind of hardware mishaps. Without this
+> on QCOM platforms, GPU faults can cause unrelated
+> GPU memory accesses to return zeroes. This has the
+> unfortunate result of command-stream reads from CP
+> getting invalid data, causing a cascade of fail.
+> 
+> Suggested-by: Rob Clark <robdclark@gmail.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+> This has been attempted previously by Rob Clark in 2017, 2018.
+> Hopefully we can get something concluded in 2020.
+>  * https://patchwork.kernel.org/patch/9953803/
+>  * https://patchwork.kernel.org/patch/10618713/
+> ---
+>  drivers/iommu/arm-smmu-qcom.c | 1 +
+>  drivers/iommu/arm-smmu.c      | 7 +++++++
+>  drivers/iommu/arm-smmu.h      | 1 +
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-qcom.c 
+> b/drivers/iommu/arm-smmu-qcom.c
+> index 24c071c1d8b0..a13b229389d4 100644
+> --- a/drivers/iommu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -32,6 +32,7 @@ static int qcom_sdm845_smmu500_reset(struct
+> arm_smmu_device *smmu)
+> 
+>  static const struct arm_smmu_impl qcom_smmu_impl = {
+>  	.reset = qcom_sdm845_smmu500_reset,
+> +	.stall = true,
+>  };
+> 
+>  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device 
+> *smmu)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index e622f4e33379..16b03fca9966 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -488,6 +488,11 @@ static irqreturn_t arm_smmu_context_fault(int
+> irq, void *dev)
+>  			    fsr, iova, fsynr, cbfrsynra, idx);
+> 
+>  	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
+> +
+> +	if (smmu->impl && smmu->impl->stall && (fsr & ARM_SMMU_FSR_SS))
+> +		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME,
+> +				  ARM_SMMU_RESUME_TERMINATE);
+> +
+>  	return IRQ_HANDLED;
+>  }
+> 
+> @@ -659,6 +664,8 @@ static void arm_smmu_write_context_bank(struct
+> arm_smmu_device *smmu, int idx)
+>  		reg |= ARM_SMMU_SCTLR_S1_ASIDPNE;
+>  	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+>  		reg |= ARM_SMMU_SCTLR_E;
+> +	if (smmu->impl && smmu->impl->stall)
+> +		reg |= ARM_SMMU_SCTLR_CFCFG;
+> 
+>  	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
+>  }
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 8d1cd54d82a6..d5134e0d5cce 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -386,6 +386,7 @@ struct arm_smmu_impl {
+>  	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+>  	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+>  			 int status);
+> +	bool stall;
+>  };
+> 
+>  static inline void __iomem *arm_smmu_page(struct arm_smmu_device 
+> *smmu, int n)
 
-> arch/ia64/kernel/err_inject.c#L145
-> staging/gasket/gasket_page_table.c#L489
-> 
-> Checking return value 0 doesn't make sense for above 2.
-> 
-> drivers/platform/goldfish/goldfish_pipe.c#L277
-> net/rds/rdma.c#L165
-> drivers/tee/tee_shm.c#L262
-> 
-> These 3 callers have calculated the no of pages value before passing it to
-> {get|pin}_user_pages_fast(). But if they end up passing nr_pages <= 0, a return
-> value of either 0 or -EINVAL doesn't going to harm any existing
-> behavior of callers.
-> 
-> IMO, it is safe to return -errno for nr_pages <= 0, for
-> {get|pin}_user_pages_fast().
+Any comments on this patch?
 
-OK, so no real problem with any of these callers. I still don't see a
-justification for the churn you suggest... Auditting all those code sites
-is going to be pretty tedious.
+Thanks,
+Sai
 
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
