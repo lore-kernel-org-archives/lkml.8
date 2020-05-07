@@ -2,109 +2,123 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF715C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1620CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAAF20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588876812;
-	bh=xnkqkpirpIiR0PHAXndz4NhIzmy+AhXuFOqyTl8CJrI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YIyh2SdIoqXWAl4epw1SOlZnP4tx1n4KKX2Ch4hr6YwVSoRiiCyUT9dqjCN3s8x+J
-	 kaUGAchBnAtkx0h/z6NrlC3zJkES8Ll8TPbGs+LYMsYkowUNyCTUjejh6aqqdKYowx
-	 YtaAfS+xkL/3ct3MjBH6Hh42fxwy14vNA3xzIt1Q=
+	by mail.kernel.org (Postfix) with ESMTP id F01F8208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgEGSkL (ORCPT
+        id S1726860AbgEGSll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42622 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:41:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7254 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGSkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:40:11 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1C2208E4;
-        Thu,  7 May 2020 18:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588876810;
-        bh=xnkqkpirpIiR0PHAXndz4NhIzmy+AhXuFOqyTl8CJrI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2TLmU3Gw2ZuoH351KHU3IucM4SpM4h9mbDARicptjCTO/2Yd2oZYyBWLEfJpIzzQb
-         seVOB3NajwFIRo9ZTtu3s+fTxKeRR8duRO5jntyMxZipeoe7/qxdo3xNa667+trK6/
-         O1Y+Gc0GNVbh17S3kqmAtXZtDI6MG1bg4kLRrx3Y=
-Date:   Thu, 7 May 2020 13:44:37 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: tegra: Replace zero-length array with flexible-array
-Message-ID: <20200507184437.GA13468@embeddedor>
+        id S1726320AbgEGSll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:41:41 -0400
+IronPort-SDR: 3OmsZvWetR45zOQbsJ8b3yJDuOwkLT9qrvZyaTd3iDvs7IgVqUNID31tinG7fFWoQBTjFB0v3X
+ HAczm/TOAy9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 11:41:40 -0700
+IronPort-SDR: VEZfRswUS/KVAU8v0krBpSBjk+yroyuqK7k44DkO5wcStSykjoRRbBKB/pBMrKzTWimB/4jVyW
+ VXbfE0ZEUOSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="249375814"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga007.jf.intel.com with ESMTP; 07 May 2020 11:41:39 -0700
+Message-ID: <605779b67af22009111aa9eda287026327d070d0.camel@intel.com>
+Subject: Re: [PATCH] x86/fpu/xstate: Clear uninitialized xstate areas in
+ core dump
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     sam <sunhaoyl@outlook.com>, Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
+Date:   Thu, 07 May 2020 11:41:43 -0700
+In-Reply-To: <87lfm3ehbd.fsf@nanos.tec.linutronix.de>
+References: <20200507164904.26927-1-yu-cheng.yu@intel.com>
+         <87lfm3ehbd.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, 2020-05-07 at 20:22 +0200, Thomas Gleixner wrote:
+> Yu-cheng Yu <yu-cheng.yu@intel.com> writes:
+> > @@ -983,6 +983,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+> >  {
+> >  	unsigned int offset, size;
+> >  	struct xstate_header header;
+> > +	int last_off;
+> >  	int i;
+> >  
+> >  	/*
+> > @@ -1006,7 +1007,17 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+> >  
+> >  	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
+> >  
+> > +	last_off = 0;
+> > +
+> >  	for (i = 0; i < XFEATURE_MAX; i++) {
+> > +		/*
+> > +		 * Clear uninitialized area before XSAVE header.
+> > +		 */
+> > +		if (i == FIRST_EXTENDED_XFEATURE) {
+> > +			memset(kbuf + last_off, 0, XSAVE_HDR_OFFSET - last_off);
+> > +			last_off = XSAVE_HDR_OFFSET + XSAVE_HDR_SIZE;
+> > +		}
+> > +
+> >  		/*
+> >  		 * Copy only in-use xstates:
+> >  		 */
+> > @@ -1020,11 +1031,16 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+> >  			if (offset + size > size_total)
+> >  				break;
+> >  
+> > +			memset(kbuf + last_off, 0, offset - last_off);
+> > +			last_off = offset + size;
+> > +
+> >  			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
+> >  		}
+> >  
+> >  	}
+> >  
+> > +	memset(kbuf + last_off, 0, size_total - last_off);
+> 
+> Why doing all this partial zeroing? There is absolutely no point.
+> 
+> Either the caller clears the buffer or this function clears it right at
+> the beginning with:
+> 
+>     memset(kbuf, 0, min(size_total, XSAVE_MAX_SIZE));
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+I was concerned that the XSAVES buffer can be large, but this is not in a
+performance-critical path.  Yes, clear it in the beginning is simpler.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/amba/tegra-ahb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-index 57d3b2e2d007..0b2c20fddb7c 100644
---- a/drivers/amba/tegra-ahb.c
-+++ b/drivers/amba/tegra-ahb.c
-@@ -120,7 +120,7 @@ static const u32 tegra_ahb_gizmo[] = {
- struct tegra_ahb {
- 	void __iomem	*regs;
- 	struct device	*dev;
--	u32		ctx[0];
-+	u32		ctx[];
- };
- 
- static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
+Yu-cheng
 
