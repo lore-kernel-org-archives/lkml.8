@@ -2,190 +2,300 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C76C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74015C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD320870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D3D20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSG964ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEGNiT (ORCPT
+        id S1727109AbgEGNiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:38:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52016 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725857AbgEGNiS (ORCPT
+        Thu, 7 May 2020 09:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725857AbgEGNiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:38:18 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047DWYvc003581;
-        Thu, 7 May 2020 09:38:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30sp8n1fj1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 09:38:07 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047DWsi8006339;
-        Thu, 7 May 2020 09:37:53 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30sp8n1fab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 09:37:53 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047DUqkb022864;
-        Thu, 7 May 2020 13:37:39 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 30s0g5mmdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 13:37:39 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047Dbbjq61079800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 13:37:37 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E79B5AE055;
-        Thu,  7 May 2020 13:37:36 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07F8CAE057;
-        Thu,  7 May 2020 13:37:32 +0000 (GMT)
-Received: from localhost.in.ibm.com (unknown [9.85.97.135])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 13:37:31 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, pkondeti@codeaurora.org,
-        valentin.schneider@arm.com, rjw@rjwysocki.net
-Subject: [RFC 2/4] sched/core: Set nr_lat_sensitive counter at various scheduler entry/exit points
-Date:   Thu,  7 May 2020 19:07:21 +0530
-Message-Id: <20200507133723.18325-3-parth@linux.ibm.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200507133723.18325-1-parth@linux.ibm.com>
-References: <20200507133723.18325-1-parth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_08:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 suspectscore=1 priorityscore=1501 spamscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070111
+        Thu, 7 May 2020 09:38:20 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23998C05BD43;
+        Thu,  7 May 2020 06:38:19 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c64so5951789qkf.12;
+        Thu, 07 May 2020 06:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XyFI/0glapYRDGb+UZNlPaGXtG4FI3xfYMk/aRCSrjA=;
+        b=mSG964ejBYHNuzz1RO5rF48xX1pNQW8dKDVU0mz7T5HLUYpCi+toCow5ONONXrhM5Q
+         LmkkSGXRsdvw0WOjCUandtYXnOwS0jB1fdumtzlEr+yJbKwjR0AXv/J0EiBxdJsK4q/l
+         JfWJuFSxXSUTXGLXiBxCL+Y8LHGNkuynZVeMKqumVixGSn5KedI6swHJbXFTlh22HjTy
+         Ouu/SfcRKpWNnwhvyGwH1n9Fwb1ZYwJKnEcaut38C7cjl9hCynWT1qog9M6gbRYHrX1R
+         DtDlaIiCLW4c6TzevLt+22mCTmPCZCgqelsn+Px1IBplE05lf3zeKSsVNKmh3ChbpAQJ
+         uwHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XyFI/0glapYRDGb+UZNlPaGXtG4FI3xfYMk/aRCSrjA=;
+        b=EQD/Cd6NikFQwMK/oKM2bRyf6Cwiy1a4xbUJoaScf3eisTob7hfT3asM2da8Z1lGcA
+         Wxel10yWUImtMuJLREvKmLNOVk+fDDSu9JrMBv6h94OFCW2nUz3nDW4t3s3i1v0V8iji
+         QK8FQPVFNr1uoUjVJjNPTO5O7se0naCkpWLMQX7AUVrT8ZEVcyUuVehGrerUqC2oKugD
+         6h6jbu4FcBs2v9HKn8MJJhaiRacD6WZkU4lyqRcp7RvoEJQeu9uL+GOrTXszmaFp9/r/
+         lgt2Wr4ap6bPqOBgqv6YE5d/KJmuK+eaPFrt2Kl6b8gNGUiq61XLUatrhoXK2rVmAf2C
+         DKqQ==
+X-Gm-Message-State: AGi0PuY2jZPtSFt3lP/B44Yu9j6w6pc+B4hEXtKmxlgzXyFxAMZYxtJI
+        o7PAQU/Ss4qt118yA+NtO1YkvrAyuublQfGRifo=
+X-Google-Smtp-Source: APiQypIrNb7FlF97rUPM9KNAnReaMLqOOAfKivvLTFaiEKleM2Vyad8arbug4oxzX8DnMN4JAcBzXL48hFEkwoQQ06k=
+X-Received: by 2002:a37:6f47:: with SMTP id k68mr14788877qkc.341.1588858696995;
+ Thu, 07 May 2020 06:38:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200507102345.81849-1-eizan@chromium.org> <20200507202337.v3.5.I1c85bddc262913b8572d892dd6bf9bc03fbe0ec7@changeid>
+In-Reply-To: <20200507202337.v3.5.I1c85bddc262913b8572d892dd6bf9bc03fbe0ec7@changeid>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 7 May 2020 15:38:05 +0200
+Message-ID: <CAFqH_52m9b-7LLTTyXS5UB4wR4x6fzx2uQ3P5Rkj41aOy3mrdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] [media] mtk-mdp: Remove mtk_mdp_comp.id and
+ supporting functionality
+To:     Eizan Miyamoto <eizan@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Monitor tasks at:
-1. wake_up_new_task() - forked tasks
+Hi Eizan,
 
-2. set_task_cpu() - task migrations, Load balancer
+Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dj., 7 de maig
+2020 a les 12:26:
+>
+> Since components are registered in a list, the numeric component id that
+> specified a location in an array is not necessary.
+>
+> Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
 
-3. __sched_setscheduler() - set/unset latency_nice value
-Increment the nr_lat_sensitive count on the CPU with task marked with
-latency_nice == -20.
-Similarly, decrement the nr_lat_sensitive counter upon re-marking the task
-with >-20 latency_nice task.
+It looks good to me, so
 
-4. finish_task_switch() - dying task
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Signed-off-by: Parth Shah <parth@linux.ibm.com>
----
- kernel/sched/core.c  | 30 ++++++++++++++++++++++++++++--
- kernel/sched/sched.h |  5 +++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2d8b76f41d61..ad396c36eba6 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1744,6 +1744,11 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
- 	trace_sched_migrate_task(p, new_cpu);
- 
- 	if (task_cpu(p) != new_cpu) {
-+		if (task_is_lat_sensitive(p)) {
-+			per_cpu(nr_lat_sensitive, task_cpu(p))--;
-+			per_cpu(nr_lat_sensitive, new_cpu)++;
-+		}
-+
- 		if (p->sched_class->migrate_task_rq)
- 			p->sched_class->migrate_task_rq(p, new_cpu);
- 		p->se.nr_migrations++;
-@@ -2947,6 +2952,7 @@ void wake_up_new_task(struct task_struct *p)
- {
- 	struct rq_flags rf;
- 	struct rq *rq;
-+	int target_cpu = 0;
- 
- 	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
- 	p->state = TASK_RUNNING;
-@@ -2960,9 +2966,17 @@ void wake_up_new_task(struct task_struct *p)
- 	 * as we're not fully set-up yet.
- 	 */
- 	p->recent_used_cpu = task_cpu(p);
--	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
-+	target_cpu = select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0);
-+	__set_task_cpu(p, target_cpu);
-+
- #endif
- 	rq = __task_rq_lock(p, &rf);
-+
-+#ifdef CONFIG_SMP
-+	if (task_is_lat_sensitive(p))
-+		per_cpu(nr_lat_sensitive, target_cpu)++;
-+#endif
-+
- 	update_rq_clock(rq);
- 	post_init_entity_util_avg(p);
- 
-@@ -3248,6 +3262,9 @@ static struct rq *finish_task_switch(struct task_struct *prev)
- 		if (prev->sched_class->task_dead)
- 			prev->sched_class->task_dead(prev);
- 
-+		if (task_is_lat_sensitive(prev))
-+			per_cpu(nr_lat_sensitive, prev->cpu)--;
-+
- 		/*
- 		 * Remove function-return probe instances associated with this
- 		 * task and put them back on the free list.
-@@ -4732,8 +4749,17 @@ static void __setscheduler_params(struct task_struct *p,
- 	p->normal_prio = normal_prio(p);
- 	set_load_weight(p, true);
- 
--	if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE)
-+	if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE) {
-+		if (p->state != TASK_DEAD &&
-+		    attr->sched_latency_nice != p->latency_nice) {
-+			if (attr->sched_latency_nice == MIN_LATENCY_NICE)
-+				per_cpu(nr_lat_sensitive, task_cpu(p))++;
-+			else if (task_is_lat_sensitive(p))
-+				per_cpu(nr_lat_sensitive, task_cpu(p))--;
-+		}
-+
- 		p->latency_nice = attr->sched_latency_nice;
-+	}
- }
- 
- /* Actually do priority change: must hold pi & rq lock. */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 5c41020c530e..56f885e37451 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -211,6 +211,11 @@ static inline int task_has_dl_policy(struct task_struct *p)
- 	return dl_policy(p->policy);
- }
- 
-+static inline int task_is_lat_sensitive(struct task_struct *p)
-+{
-+	return p->latency_nice == MIN_LATENCY_NICE;
-+}
-+
- #define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
- 
- /*
--- 
-2.17.2
-
+> ---
+>
+> Changes in v3:
+> - Removed extra Signed-off-by: tag from commit messages.
+> - Removed extra line break in mtk_mdp_core.c
+> - Update cover letter with dependent commit
+>
+> Changes in v2:
+> - rebase onto linux-next/master to pick up
+>   757570f11fa4b0ce5472a6583de6f06e996a8527
+>
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 60 +++----------------
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h | 19 +-----
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  9 +--
+>  3 files changed, 10 insertions(+), 78 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> index da2bdad7a8d1..362fff924aef 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> @@ -14,46 +14,6 @@
+>  #include "mtk_mdp_comp.h"
+>
+>
+> -static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] = {
+> -       "mdp-rdma",
+> -       "mdp-rsz",
+> -       "mdp-wdma",
+> -       "mdp-wrot",
+> -};
+> -
+> -struct mtk_mdp_comp_match {
+> -       enum mtk_mdp_comp_type type;
+> -       int alias_id;
+> -};
+> -
+> -static const struct mtk_mdp_comp_match mtk_mdp_matches[MTK_MDP_COMP_ID_MAX] = {
+> -       { MTK_MDP_RDMA, 0 },
+> -       { MTK_MDP_RDMA, 1 },
+> -       { MTK_MDP_RSZ,  0 },
+> -       { MTK_MDP_RSZ,  1 },
+> -       { MTK_MDP_RSZ,  2 },
+> -       { MTK_MDP_WDMA, 0 },
+> -       { MTK_MDP_WROT, 0 },
+> -       { MTK_MDP_WROT, 1 },
+> -};
+> -
+> -int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
+> -                       enum mtk_mdp_comp_type comp_type)
+> -{
+> -       int id = of_alias_get_id(node, mtk_mdp_comp_stem[comp_type]);
+> -       int i;
+> -
+> -       for (i = 0; i < ARRAY_SIZE(mtk_mdp_matches); i++) {
+> -               if (comp_type == mtk_mdp_matches[i].type &&
+> -                   id == mtk_mdp_matches[i].alias_id)
+> -                       return i;
+> -       }
+> -
+> -       dev_err(dev, "Failed to get id. type: %d, id: %d\n", comp_type, id);
+> -
+> -       return -EINVAL;
+> -}
+> -
+>  void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>  {
+>         int i, err;
+> @@ -62,8 +22,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>                 err = mtk_smi_larb_get(comp->larb_dev);
+>                 if (err)
+>                         dev_err(dev,
+> -                               "failed to get larb, err %d. type:%d id:%d\n",
+> -                               err, comp->type, comp->id);
+> +                               "failed to get larb, err %d. type:%d\n",
+> +                               err, comp->type);
+>         }
+>
+>         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+> @@ -72,8 +32,8 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+>                 err = clk_prepare_enable(comp->clk[i]);
+>                 if (err)
+>                         dev_err(dev,
+> -                       "failed to enable clock, err %d. type:%d id:%d i:%d\n",
+> -                               err, comp->type, comp->id, i);
+> +                       "failed to enable clock, err %d. type:%d i:%d\n",
+> +                               err, comp->type, i);
+>         }
+>  }
+>
+> @@ -92,21 +52,15 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
+>  }
+>
+>  int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+> -                     struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id)
+> +                     struct mtk_mdp_comp *comp,
+> +                     enum mtk_mdp_comp_type comp_type)
+>  {
+>         struct device_node *larb_node;
+>         struct platform_device *larb_pdev;
+>         int i;
+>
+> -       if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
+> -               dev_err(dev, "Invalid comp_id %d\n", comp_id);
+> -               return -EINVAL;
+> -       }
+> -
+> -       INIT_LIST_HEAD(&comp->node);
+>         comp->dev_node = of_node_get(node);
+> -       comp->id = comp_id;
+> -       comp->type = mtk_mdp_matches[comp_id].type;
+> +       comp->type = comp_type;
+>
+>         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+>                 comp->clk[i] = of_clk_get(node, i);
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> index 1f745891c6c3..1bf0242cce46 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> @@ -22,18 +22,6 @@ enum mtk_mdp_comp_type {
+>         MTK_MDP_COMP_TYPE_MAX,
+>  };
+>
+> -enum mtk_mdp_comp_id {
+> -       MTK_MDP_COMP_RDMA0,
+> -       MTK_MDP_COMP_RDMA1,
+> -       MTK_MDP_COMP_RSZ0,
+> -       MTK_MDP_COMP_RSZ1,
+> -       MTK_MDP_COMP_RSZ2,
+> -       MTK_MDP_COMP_WDMA,
+> -       MTK_MDP_COMP_WROT0,
+> -       MTK_MDP_COMP_WROT1,
+> -       MTK_MDP_COMP_ID_MAX,
+> -};
+> -
+>  /**
+>   * struct mtk_mdp_comp - the MDP's function component data
+>   * @node:      list node to track sibing MDP components
+> @@ -41,7 +29,6 @@ enum mtk_mdp_comp_id {
+>   * @clk:       clocks required for component
+>   * @larb_dev:  SMI device required for component
+>   * @type:      component type
+> - * @id:                component ID
+>   */
+>  struct mtk_mdp_comp {
+>         struct list_head        node;
+> @@ -49,14 +36,12 @@ struct mtk_mdp_comp {
+>         struct clk              *clk[2];
+>         struct device           *larb_dev;
+>         enum mtk_mdp_comp_type  type;
+> -       enum mtk_mdp_comp_id    id;
+>  };
+>
+>  int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
+> -                     struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id);
+> +                     struct mtk_mdp_comp *comp,
+> +                     enum mtk_mdp_comp_type comp_type);
+>  void mtk_mdp_comp_deinit(struct device *dev, struct mtk_mdp_comp *comp);
+> -int mtk_mdp_comp_get_id(struct device *dev, struct device_node *node,
+> -                       enum mtk_mdp_comp_type comp_type);
+>  void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp);
+>  void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp);
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> index 40b9fda8b03b..f96c8b3bf861 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> @@ -137,7 +137,6 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>         for_each_child_of_node(parent, node) {
+>                 const struct of_device_id *of_id;
+>                 enum mtk_mdp_comp_type comp_type;
+> -               int comp_id;
+>
+>                 of_id = of_match_node(mtk_mdp_comp_dt_ids, node);
+>                 if (!of_id)
+> @@ -150,12 +149,6 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>                 }
+>
+>                 comp_type = (enum mtk_mdp_comp_type)of_id->data;
+> -               comp_id = mtk_mdp_comp_get_id(dev, node, comp_type);
+> -               if (comp_id < 0) {
+> -                       dev_warn(dev, "Skipping unknown component %pOF\n",
+> -                                node);
+> -                       continue;
+> -               }
+>
+>                 comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
+>                 if (!comp) {
+> @@ -164,7 +157,7 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+>                         goto err_comp;
+>                 }
+>
+> -               ret = mtk_mdp_comp_init(dev, node, comp, comp_id);
+> +               ret = mtk_mdp_comp_init(dev, node, comp, comp_type);
+>                 if (ret) {
+>                         of_node_put(node);
+>                         goto err_comp;
+> --
+> 2.26.2.526.g744177e7f7-goog
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
