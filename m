@@ -2,191 +2,97 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AC3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4355CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E288E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EB32084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588861650;
+	bh=e0b9s7OdLWu3UwsM0eMiCMeu0kR0EfPAyMaj/JB6Kn0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=e2lRGxw35sYTIYxGF8yC7BC9zxvktECf4sjBTYQnqgyQ1Hi6CcQMnaSwmerIyRv1f
+	 CdGxNfqdWjmELXkUmYfpasN676jQ37KZiqA5/BzVeK/lWc8gq8/aCTM976OIfNGdcS
+	 jk8AvFCHfn87oBrxuxgKVptKFX3Gg5FwBKZUg3hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEGOWl (ORCPT
+        id S1726470AbgEGO13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:22:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:60562 "EHLO foss.arm.com"
+        Thu, 7 May 2020 10:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgEGOWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:22:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3F41D6E;
-        Thu,  7 May 2020 07:22:39 -0700 (PDT)
-Received: from [10.163.73.155] (unknown [10.163.73.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8ED23F68F;
-        Thu,  7 May 2020 07:22:36 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] arm64/cpufeature: Verify KVM capabilities during CPU
- hotplug
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-References: <1588832387-8489-1-git-send-email-anshuman.khandual@arm.com>
- <20200507112028.4a5cc279@why>
-Message-ID: <5f75d3e5-df3a-0570-4cb1-37826b9099d8@arm.com>
-Date:   Thu, 7 May 2020 19:52:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725948AbgEGO13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F272083B;
+        Thu,  7 May 2020 14:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861648;
+        bh=e0b9s7OdLWu3UwsM0eMiCMeu0kR0EfPAyMaj/JB6Kn0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=y43Hqv7n6ShLSM2r6jRu3EKehaMZ+XFMaK9OX7Zw5lwQUrMID4ybRcvYr4xDzflwx
+         TFnYfScoKnleAmg7z2fE5YdkF1/KrYWiy3PIkUBBQGL55ekV5eRzi88mLgslvzBv8j
+         RJZICRVCmXju7poUxCzJjmwbmFCuSg4pP6P2FDnI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 01/50] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Thu,  7 May 2020 10:26:37 -0400
+Message-Id: <20200507142726.25751-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200507112028.4a5cc279@why>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alaa Hleihel <alaa@mellanox.com>
 
-On 05/07/2020 03:50 PM, Marc Zyngier wrote:
-> On Thu,  7 May 2020 11:49:47 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
-> Hi Anshuman,
+[ Upstream commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c ]
 
-Hi Marc,
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-> 
->> This validates KVM capabilities like VMID width, IPA range for hotplug CPU
->> against system finalized values. While here, it factors out get_vmid_bits()
->> for general use and also defines ID_AA64MMFR0_PARANGE_MASK.
-> 
-> nit: these are not KVM-specific capabilities, but general
-> virtualization features.
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/mlx4/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sure, will change as (s/kvm/hyp) instead and update the commit
-message here.
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 2f5d9b181848b..e5758eb0b7d27 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1502,8 +1502,9 @@ static int __mlx4_ib_create_default_rules(
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
+-- 
+2.20.1
 
-> 
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: kvmarm@lists.cs.columbia.edu
->> Cc: linux-kernel@vger.kernel.org
->>
->> Suggested-by: Suzuki Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/include/asm/cpufeature.h | 22 +++++++++++++++++++
->>  arch/arm64/include/asm/kvm_mmu.h    |  2 +-
->>  arch/arm64/include/asm/sysreg.h     |  1 +
->>  arch/arm64/kernel/cpufeature.c      |  2 ++
->>  arch/arm64/kvm/reset.c              | 33 +++++++++++++++++++++++++++--
->>  5 files changed, 57 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
->> index afe08251ff95..6808a2091de4 100644
->> --- a/arch/arm64/include/asm/cpufeature.h
->> +++ b/arch/arm64/include/asm/cpufeature.h
->> @@ -745,6 +745,28 @@ static inline bool cpu_has_hw_af(void)
->>  extern bool cpu_has_amu_feat(int cpu);
->>  #endif
->>  
->> +static inline unsigned int get_vmid_bits(u64 mmfr1)
->> +{
->> +	int vmid_bits;
->> +
->> +	vmid_bits = cpuid_feature_extract_unsigned_field(mmfr1,
->> +						ID_AA64MMFR1_VMIDBITS_SHIFT);
->> +	if (vmid_bits == ID_AA64MMFR1_VMIDBITS_16)
->> +		return 16;
->> +
->> +	/*
->> +	 * Return the default here even if any reserved
->> +	 * value is fetched from the system register.
->> +	 */
->> +	return 8;
->> +}
->> +
->> +#ifdef CONFIG_KVM_ARM_HOST
->> +void verify_kvm_capabilities(void);
->> +#else
->> +static inline void verify_kvm_capabilities(void) { }
->> +#endif
->> +
->>  #endif /* __ASSEMBLY__ */
->>  
->>  #endif
->> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
->> index 30b0e8d6b895..a7137e144b97 100644
->> --- a/arch/arm64/include/asm/kvm_mmu.h
->> +++ b/arch/arm64/include/asm/kvm_mmu.h
->> @@ -416,7 +416,7 @@ static inline unsigned int kvm_get_vmid_bits(void)
->>  {
->>  	int reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
->>  
->> -	return (cpuid_feature_extract_unsigned_field(reg,
->> ID_AA64MMFR1_VMIDBITS_SHIFT) == 2) ? 16 : 8;
->> +	return get_vmid_bits(reg);
->>  }
->>  
->>  /*
->> diff --git a/arch/arm64/include/asm/sysreg.h
->> b/arch/arm64/include/asm/sysreg.h index c4ac0ac25a00..3510a4668970
->> 100644 --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -705,6 +705,7 @@
->>  #define ID_AA64MMFR0_TGRAN16_SUPPORTED	0x1
->>  #define ID_AA64MMFR0_PARANGE_48		0x5
->>  #define ID_AA64MMFR0_PARANGE_52		0x6
->> +#define ID_AA64MMFR0_PARANGE_MASK	0x7
->>  
->>  #ifdef CONFIG_ARM64_PA_BITS_52
->>  #define ID_AA64MMFR0_PARANGE_MAX	ID_AA64MMFR0_PARANGE_52
->> diff --git a/arch/arm64/kernel/cpufeature.c
->> b/arch/arm64/kernel/cpufeature.c index 9fac745aa7bb..041dd610b0f8
->> 100644 --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -2206,6 +2206,8 @@ static void verify_local_cpu_capabilities(void)
->>  
->>  	if (system_supports_sve())
->>  		verify_sve_features();
->> +
->> +	verify_kvm_capabilities();
-> 
-> You should only check this if booted at EL2. Otherwise, it doesn't
-> really matter.
-
-Sure, will first check on is_hyp_mode_available() before calling into
-verify_kvm_capabilities().
-
-> 
->>  }
->>  
->>  void check_local_cpu_capabilities(void)
->> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
->> index 30b7ea680f66..1eebcc2a8396 100644
->> --- a/arch/arm64/kvm/reset.c
->> +++ b/arch/arm64/kvm/reset.c
->> @@ -340,11 +340,39 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->>  	return ret;
->>  }
->>  
->> +void verify_kvm_capabilities(void)
-> 
-> This is really in the wrong file. reset.c is supposed to contain things
-> that are meaningful to the guest reset state. This clearly isn't. I'd
-> suggest you add an accessor for the kvm_ipa_limit variable, and keep
-> the function next to the other verify_* functions in cpufeature.c.
-
-Sure, will do.
