@@ -2,166 +2,137 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA59C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F22C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BB72080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54052080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfOowyx/"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hVcFRSKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGJZD (ORCPT
+        id S1726531AbgEGJZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57866 "EHLO
+        Thu, 7 May 2020 05:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgEGJZC (ORCPT
+        with ESMTP id S1726326AbgEGJZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:25:02 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF64CC061A10;
-        Thu,  7 May 2020 02:25:01 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id z6so1838853plk.10;
-        Thu, 07 May 2020 02:25:01 -0700 (PDT)
+        Thu, 7 May 2020 05:25:13 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3835C0610D5
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:25:12 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id f83so5229509qke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 02:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GySnMOCjEwjmYKLw1ybYlhgVtoYAht9uSjW2oEXIKIo=;
-        b=AfOowyx/OkmjNQUa65VECiO/+/o4o6RBP4CsdAGU1pv7F5oGZguv4qpvECbO2DsLRm
-         /s+Bawlqy3JPH7s9dsf8VqDxrucmGUm+2Kyf8MK45fdwAfHl9v1UM8gil57A6xVFFZ/1
-         74/V0q4KY50NRk/mssMxuQM4RWJ5NkkymbfmzPa7uvMJ2kVpyC5JjC0qNfEJ5G4AujYo
-         uY1Dlv7PsEC5GoglrLdQucCkcXNh80X3UDShw6LeDf1nEBzbfIVPMkI2kMq+l/JQ8Azq
-         gA3FCW4SWsn8juJT+7kj68gwXc4uP+CFPTHLZR+OmCl6soyeziW+7XyxLKo/CXURipft
-         DmuQ==
+         :cc:content-transfer-encoding;
+        bh=JbyrTxjTZIm41hIBopPv7oBGmFhzJlTGvI6JGZoJteY=;
+        b=hVcFRSKFl9lmb9j77HI03fHv6Hk1v73kcQa902XWtGd6PrAdnJrdvBGI59aZDmbRnl
+         QnTav+0K5mLsSEZQ+KAHILuJauchPaRpwCZ2HSvGeKxlR2yK4cJ0EcXZADu40Fwy4x1Z
+         7Td0waIzoSgNxJnjGTqKuH6UjSRss+Omt6RfgBDuoNZUOr1hny/f+F+Kqz8+YBJjRvbF
+         VI5sQ5IOLK/ydoybPZPeKcEAJqD5SJUS8bRmzndUxkTm6yJSD6dATGFBmttsyzC366Lk
+         ATnnN77ZG4GiXFS++MXDBiLfnEwEZzbIJZrEkoVLXC2F5G/7JO9R6O9saQzfQLTr4med
+         V/Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GySnMOCjEwjmYKLw1ybYlhgVtoYAht9uSjW2oEXIKIo=;
-        b=ADsx8JvuuU/MJOaYD8V+6qGKl3JmDj1hz7agYhT6JVDYzJ2GHlnkL3lt2Ebz8V7AYr
-         0ElsFocJLnfZ0AS4MHnwE/+6XimOSkbfpjquVasiqaP0xZBaMoorPkcAzCN3OTZV1elY
-         ySQEHBrBarI9QOqCEi+G+6eHTsynHx4ZX2d4S9VtR/szoQCsNEJ5Iam44XANEaOHMD7v
-         F0B183MD+jvVnNaQxx3v4xdu4QqwFSSrPo166Nno5rG3aD+yHtg3X4VurJ4Pdr0ERNJv
-         w+MyZxA/qkZjDaoDOhJbelx2MkGVpMlGkOfPtIPZusKFl85+x54CVvnShTdC9AqarGvC
-         ZLPA==
-X-Gm-Message-State: AGi0PuZ3Nt8Yf1PcB62x//iTPHW2jOMzkjfPL1asixer7d+1wmDUzvTQ
-        JLQEfHLSlytDn8BciNQgq6uL9Nzpl+92Oe6MEGY=
-X-Google-Smtp-Source: APiQypLCo11VtyxLxVipMJet+Uc/jH+bliGdPTuMeaMs+hQVOZgfSQlXQ/Vm47iIhfVrJzInVwy52114mBZs8kv8eGk=
-X-Received: by 2002:a17:90a:fa81:: with SMTP id cu1mr14771332pjb.25.1588843501300;
- Thu, 07 May 2020 02:25:01 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JbyrTxjTZIm41hIBopPv7oBGmFhzJlTGvI6JGZoJteY=;
+        b=gpM2mlRPDL1Fdd5K7Jti6rjbmaheguiO50MPWTX/hk+A4cgv7UE5GvbILMUQiFvaV6
+         UGwLVweQjmpVrh+glg7I0yIJQm+F5nDnkln518SlYo9JpNpyfVMSGUxY1Htqv4qn5YsL
+         krNwbGQy7/z1FEmch1PkSCHie0cCewdM1nh9qgP6IEkAovKcJLJia87LjSZDsDsM/ARL
+         WpMqewMstF5NseBfH2POtb8s4f2lPJzx4WUeqnspfZl0y1rKHc1bhgGKYfgH48+0bjs9
+         HHg0xMF+RFRcmSmibERtr5SXcpiN95c6JT9eTExLhDQGEEngDRWmUvV43msPG8ilblWS
+         KsRg==
+X-Gm-Message-State: AGi0PuZwZLBoZEsTmT+hZKMCENo94ydvcPWhoyQDbZ2W5GIej2ljj7fJ
+        A/AF+IFlwKtGsw9ZZ5hRU4CW8wGiEyUQaSjqLdG9YA==
+X-Google-Smtp-Source: APiQypLSXck1EaP6FHaf/R4OayTt1mguGYQPHoVpSdiDDIrFzvY+Z5TozNRG3W20rgYO4xwmyohpCkW+LYwhZ5sejQE=
+X-Received: by 2002:a05:620a:1289:: with SMTP id w9mr12058283qki.263.1588843511709;
+ Thu, 07 May 2020 02:25:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <158880834905.2183490.15616329469420234017.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158880834905.2183490.15616329469420234017.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 May 2020 12:24:49 +0300
-Message-ID: <CAHp75Vf0zBnwHubK+C265M9nh3Y5K2K=8ck61HQtnW+021bgwQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Drop rcu usage for MMIO mappings
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20200505140231.16600-1-brgl@bgdev.pl> <20200505140231.16600-6-brgl@bgdev.pl>
+ <20200505103105.1c8b0ce3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAMRc=Mf0ipaeLKhHCZaq2YeZKzi=QBAse7bEz2hHxXN5OL=ptg@mail.gmail.com> <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200506101236.25a13609@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 7 May 2020 11:25:01 +0200
+Message-ID: <CAMpxmJWckQdKvUGFDAJ1WMtD9WoGWmGe3kyKYhcfRT2nOB93xw@mail.gmail.com>
+Subject: Re: [PATCH 05/11] net: core: provide devm_register_netdev()
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm@lists.01.org
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 3:21 AM Dan Williams <dan.j.williams@intel.com> wrote:
+=C5=9Br., 6 maj 2020 o 19:12 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(=
+a):
 >
-> Recently a performance problem was reported for a process invoking a
-> non-trival ASL program. The method call in this case ends up
-> repetitively triggering a call path like:
+> On Wed, 6 May 2020 08:39:47 +0200 Bartosz Golaszewski wrote:
+> > wt., 5 maj 2020 o 19:31 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a=
+):
+> > >
+> > > On Tue,  5 May 2020 16:02:25 +0200 Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > Provide devm_register_netdev() - a device resource managed variant
+> > > > of register_netdev(). This new helper will only work for net_device
+> > > > structs that have a parent device assigned and are devres managed t=
+oo.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > > diff --git a/net/core/dev.c b/net/core/dev.c
+> > > > index 522288177bbd..99db537c9468 100644
+> > > > --- a/net/core/dev.c
+> > > > +++ b/net/core/dev.c
+> > > > @@ -9519,6 +9519,54 @@ int register_netdev(struct net_device *dev)
+> > > >  }
+> > > >  EXPORT_SYMBOL(register_netdev);
+> > > >
+> > > > +struct netdevice_devres {
+> > > > +     struct net_device *ndev;
+> > > > +};
+> > >
+> > > Is there really a need to define a structure if we only need a pointe=
+r?
+> > >
+> >
+> > There is no need for that, but it really is more readable this way.
+> > Also: using a pointer directly doesn't save us any memory nor code
+> > here.
 >
->     acpi_ex_store
->     acpi_ex_store_object_to_node
->     acpi_ex_write_data_to_field
->     acpi_ex_insert_into_field
->     acpi_ex_write_with_update_rule
->     acpi_ex_field_datum_io
->     acpi_ex_access_region
->     acpi_ev_address_space_dispatch
->     acpi_ex_system_memory_space_handler
->     acpi_os_map_cleanup.part.14
->     _synchronize_rcu_expedited.constprop.89
->     schedule
->
-> The end result of frequent synchronize_rcu_expedited() invocation is
-> tiny sub-millisecond spurts of execution where the scheduler freely
-> migrates this apparently sleepy task. The overhead of frequent scheduler
-> invocation multiplies the execution time by a factor of 2-3X.
->
-> For example, performance improves from 16 minutes to 7 minutes for a
-> firmware update procedure across 24 devices.
->
-> Perhaps the rcu usage was intended to allow for not taking a sleeping
-> lock in the acpi_os_{read,write}_memory() path which ostensibly could be
-> called from an APEI NMI error interrupt? Neither rcu_read_lock() nor
-> ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
-> was not serving as a mechanism to avoid direct calls to ioremap(). Even
-> the original implementation had a spin_lock_irqsave(), but that is not
-> NMI safe.
->
-> APEI itself already has some concept of avoiding ioremap() from
-> interrupt context (see erst_exec_move_data()), if the new warning
-> triggers it means that APEI either needs more instrumentation like that
-> to pre-emptively fail, or more infrastructure to arrange for pre-mapping
-> the resources it needs in NMI context.
+> I don't care either way but devm_alloc_etherdev_mqs() and co. are using
+> the double pointer directly. Please make things consistent. Either do
+> the same, or define the structure in some header and convert other
+> helpers to also make use of it.
 
-...
+In order to use devres_find() to check if struct net_device is managed
+in devm_register_netdev() I need to know the address of the release
+function used by devm_alloc_etherdev_mqs(). Do you mind if I move all
+networking devres routines (currently only devm_alloc_etherdev_mqs())
+into a separate .c file (e.g. under net/devres.c)?
 
-> +static void __iomem *acpi_os_rw_map(acpi_physical_address phys_addr,
-> +                                   unsigned int size, bool *did_fallback)
-> +{
-> +       void __iomem *virt_addr = NULL;
-
-Assignment is not needed as far as I can see.
-
-> +       if (WARN_ONCE(in_interrupt(), "ioremap in interrupt context\n"))
-> +               return NULL;
-> +
-> +       /* Try to use a cached mapping and fallback otherwise */
-> +       *did_fallback = false;
-> +       mutex_lock(&acpi_ioremap_lock);
-> +       virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
-> +       if (virt_addr)
-> +               return virt_addr;
-> +       mutex_unlock(&acpi_ioremap_lock);
-> +
-> +       virt_addr = acpi_os_ioremap(phys_addr, size);
-> +       *did_fallback = true;
-> +
-> +       return virt_addr;
-> +}
-
-I'm wondering if Sparse is okay with this...
-
-> +static void acpi_os_rw_unmap(void __iomem *virt_addr, bool did_fallback)
-> +{
-> +       if (did_fallback) {
-> +               /* in the fallback case no lock is held */
-> +               iounmap(virt_addr);
-> +               return;
-> +       }
-> +
-> +       mutex_unlock(&acpi_ioremap_lock);
-> +}
-
-...and this functions from locking perspective.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Bart
