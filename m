@@ -2,161 +2,87 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E3DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2471C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D692082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lVaXZ0mh"
+	by mail.kernel.org (Postfix) with ESMTP id 9ECE02083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgEGOKq (ORCPT
+        id S1727898AbgEGOK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
+        Thu, 7 May 2020 10:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbgEGOIh (ORCPT
+        with ESMTP id S1727959AbgEGOKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:08:37 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52600C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:36 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id i2so5916103qkl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=+ot4xu8P2SexJM6MGXYbzzq/GQaqN2BkLb72ro0O34w=;
-        b=lVaXZ0mh6FK8Prt7mNxTyIcNt6EFgoSCMlglY8lrSqIasj9pRYsWpcCEztWEsHYepH
-         g5HwSqM4GKiXBK4Lil2OEElO+27ehGfV9SxtHiBWHZYCYHtRjfVben1h3D4ESq2wKWs7
-         4lCLPZxDH1N31XcmOoo7qSvDFcDJ/AHBCqGKKg6ouvjs3TYuasNXfE324sZNnpQMT9VC
-         Ak9hWT/Qxd5dWoPkTB1Gs8JOTJ6LkOMyQiQLHqmHHROwUrqgvBMof3ObRgQyJIPaEpJj
-         OCQi6OIPQCLcX8q3h6YpuqQ44j+eISJeXbhrIZZBzRtl218CVoO87VlFmsfoGbX/9IQV
-         ayTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+ot4xu8P2SexJM6MGXYbzzq/GQaqN2BkLb72ro0O34w=;
-        b=fg7beFCT1JjC0YeBPOaseN8t9KcC4PfC9AngwxWK0cWwKp8DkHVjerBGELiqiK/EFL
-         5paqd9OVMehXbhUT9zpvtNNEulbYE9OT/LjZ7hr565Tb0N40D5Cg9e0+LO1IcgMGJ2Fo
-         DBpYAsENuf0veTDZZzSTYVZgYnHehAu7xfbOeGGG/qagl/PwJrrtjFlxh1iP8AWdOOEc
-         sQCdIYONhcRzshYcXBGp0YO3mRsKr/vzmWX4uzfpLpj+izrHXW+h5A+vo/+WdDClNSXL
-         wn/bTbalsT1Aqrtw9/AxHlmKxmUKzqfeRUxG/USZL7WdkwU01FwE0WZgUbymtw7VP+A1
-         oPgw==
-X-Gm-Message-State: AGi0PubVpT8TwD+09/hcwnPrEyNfEVBOIciKR3BV0Y9cAhNoIFzh+bNr
-        ie/KtAAeYlHKwrU1/28lxwyG14mMsQTH
-X-Google-Smtp-Source: APiQypLSwGFaeQ3jLZNr0eoQmZByLc8kamDR6qEDf34qocQyZvZ+qRw+9vkmNyoQZakPK3lBCHhQ4zRh0Iaq
-X-Received: by 2002:ad4:55e7:: with SMTP id bu7mr13866483qvb.88.1588860515414;
- Thu, 07 May 2020 07:08:35 -0700 (PDT)
-Date:   Thu,  7 May 2020 07:08:02 -0700
-In-Reply-To: <20200507140819.126960-1-irogers@google.com>
-Message-Id: <20200507140819.126960-7-irogers@google.com>
-Mime-Version: 1.0
-References: <20200507140819.126960-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH v2 06/23] perf expr: parse numbers as doubles
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-kernel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 May 2020 10:10:54 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C459C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:10:54 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWhEC-0002Nn-3H; Thu, 07 May 2020 16:10:20 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 566BB102652; Thu,  7 May 2020 16:10:19 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 2 05/18] x86/entry: Move irq tracing on syscall entry to C-code
+In-Reply-To: <207acd23-4acb-3fd1-7c92-9f48c79fa059@oracle.com>
+References: <20200505134112.272268764@linutronix.de> <20200505134340.611961721@linutronix.de> <207acd23-4acb-3fd1-7c92-9f48c79fa059@oracle.com>
+Date:   Thu, 07 May 2020 16:10:19 +0200
+Message-ID: <87sggbj0ok.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is expected in expr.y and metrics use floating point values such as
-x86 broadwell IFetch_Line_Utilization.
+Alexandre Chartre <alexandre.chartre@oracle.com> writes:
+> On 5/5/20 3:41 PM, Thomas Gleixner wrote:
+>> -	/*
+>> -	 * User mode is traced as though IRQs are on, and the interrupt
+>> -	 * gate turned them off.
+>> -	 */
+>> -	TRACE_IRQS_OFF
+>> -
+>>   	movq	%rsp, %rdi
+>>   	call	do_int80_syscall_32
+>>   .Lsyscall_32_done:
+>> 
+>
+> enter_from_user_mode() is also called with the CALL_enter_from_user_mode macro,
+> which is used in interrupt_entry() and identry. Don't you need to also remove
+> the TRACE_IRQS_OFF there now?
 
-Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/expr.l | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Hrm. right. OTOH, it's just redundant and should be no harm, but let me have a
+look at that again.
 
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 73db6a9ef97e..ceab11bea6f9 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -10,12 +10,12 @@
- char *expr_get_text(yyscan_t yyscanner);
- YYSTYPE *expr_get_lval(yyscan_t yyscanner);
- 
--static int __value(YYSTYPE *yylval, char *str, int base, int token)
-+static double __value(YYSTYPE *yylval, char *str, int token)
- {
--	u64 num;
-+	double num;
- 
- 	errno = 0;
--	num = strtoull(str, NULL, base);
-+	num = strtod(str, NULL);
- 	if (errno)
- 		return EXPR_ERROR;
- 
-@@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
- 	return token;
- }
- 
--static int value(yyscan_t scanner, int base)
-+static int value(yyscan_t scanner)
- {
- 	YYSTYPE *yylval = expr_get_lval(scanner);
- 	char *text = expr_get_text(scanner);
- 
--	return __value(yylval, text, base, NUMBER);
-+	return __value(yylval, text, NUMBER);
- }
- 
- /*
-@@ -81,7 +81,7 @@ static int str(yyscan_t scanner, int token, int runtime)
- }
- %}
- 
--number		[0-9]+
-+number		[0-9]*\.?[0-9]+
- 
- sch		[-,=]
- spec		\\{sch}
-@@ -105,7 +105,7 @@ min		{ return MIN; }
- if		{ return IF; }
- else		{ return ELSE; }
- #smt_on		{ return SMT_ON; }
--{number}	{ return value(yyscanner, 10); }
-+{number}	{ return value(yyscanner); }
- {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
- "|"		{ return '|'; }
- "^"		{ return '^'; }
--- 
-2.26.2.526.g744177e7f7-goog
+Thanks,
 
+        tglx
