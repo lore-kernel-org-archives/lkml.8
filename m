@@ -2,153 +2,215 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3FDC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD1DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB94207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9B6208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:36:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="c1QbtHwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEGHg1 (ORCPT
+        id S1726926AbgEGHgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:36:27 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50160 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgEGHfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:35:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B7E1720177E;
-        Thu,  7 May 2020 09:35:43 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AB623201781;
-        Thu,  7 May 2020 09:35:43 +0200 (CEST)
-Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CA3E203C5;
-        Thu,  7 May 2020 09:35:43 +0200 (CEST)
-From:   Diana Craciun <diana.craciun@oss.nxp.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     laurentiu.tudor@nxp.com, stuyoder@gmail.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: [PATCH v2 01/12] bus/fsl-mc: Do no longer export the total number of irqs outside dprc_scan_objects
-Date:   Thu,  7 May 2020 10:34:20 +0300
-Message-Id: <20200507073431.2710-2-diana.craciun@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507073431.2710-1-diana.craciun@oss.nxp.com>
-References: <20200507073431.2710-1-diana.craciun@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 7 May 2020 03:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725834AbgEGHgr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:36:47 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971B1C061A41
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 00:36:46 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id z2so3341487iol.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 00:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=izaC0j97DaEKeWCVsCGRwOFQb7MeNG6AyPzpQh6sfPU=;
+        b=c1QbtHwkMQwm1lStyF86Ezx5rzlYQTI7Gd32BWAMTad1lET7RxRG96/ZyNAa0lWZgi
+         jAKxt+Z8dD53SeH0xJDt3n4hoiJfIdVzYLiumVXiPvdwhw4uRfCScA028Z8nmu+CgGAy
+         Qrl4Qy6OUmThArCylKm6AbYDL2ohS7DjGGSkY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=izaC0j97DaEKeWCVsCGRwOFQb7MeNG6AyPzpQh6sfPU=;
+        b=CKkBJpN0/wbdN5NMZxhRHovikoS4X1/OWsTLBKIp5ipXC5KoPZwPzdUmTVifHJ7SrG
+         jjGGMBLP1bo9v6utyRPDvLrI9/89/xUW8HgqbfTY+s+cf5RJwdjdPVzYM7DDqtbLRI9z
+         j1rTaXjSZLF6RfQGOhmrNan3mkWlSIFsjgCw9uNGaDQcwQrcMvdyY/sjQ3+Nr6guAynA
+         Dsq3RfqKiOwD8qsXb0OpV3Vg1ud+lu6qzlECeaW+o/Mg3a+2nClTPNKsDBomlBa3PXU/
+         KzeTL4JlYeG7HVD5IsfQPMGKBB9U5IeXtc7irDJRl8wKfSMRFylPPPslaxLZsDEJY6nl
+         EsxA==
+X-Gm-Message-State: AGi0PuZu9muvx4V8eIwM8eNsXQYzeYQ9dJQxczFjQqnzHUf4Sa++Ircw
+        GENkrn4SY1KGCWY6sBySyQs8v0RF8wD/uGpZ0T6IEw==
+X-Google-Smtp-Source: APiQypLpq8huNxkhKDsHKb6+tSygwEJaTcwboqexXdJmXAAKs6Kn4dvmnWL1eZ5wk46A23oHuVJmrRRiqSUQuHS+m9g=
+X-Received: by 2002:a02:6983:: with SMTP id e125mr12598539jac.47.1588837005803;
+ Thu, 07 May 2020 00:36:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200425133939.3508912-0-mholenko@antmicro.com>
+ <20200425133939.3508912-3-mholenko@antmicro.com> <aa7c915310753b042be35758893dee91d3651ffc.camel@kernel.crashing.org>
+In-Reply-To: <aa7c915310753b042be35758893dee91d3651ffc.camel@kernel.crashing.org>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Thu, 7 May 2020 09:36:34 +0200
+Message-ID: <CAPk366T3ACKrKX=RZwcN3D+Gy43-EGA+6vpwvOh5SKLXd1BM1Q@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The total number of interrupts is only used for some checks
-outside the dprc_scan_objects function. Furthermore, in some
-situations the check is made twice. Move the bounds check inside
-the function for all situations.
+On Wed, Apr 29, 2020 at 5:12 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Sat, 2020-04-25 at 13:42 +0200, Mateusz Holenko wrote:
+> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> >
+> > This commit adds driver for the FPGA-based LiteX SoC
+> > Controller from LiteX SoC builder.
+>
+> Sorry for jumping in late, Joel only just pointed me to this :)
+>
+> > + * The purpose of `litex_set_reg`/`litex_get_reg` is to implement
+> > + * the logic of writing to/reading from the LiteX CSR in a single
+> > + * place that can be then reused by all LiteX drivers.
+> > + */
+> > +void litex_set_reg(void __iomem *reg, unsigned long reg_size,
+> > +                 unsigned long val)
+> > +{
+> > +     unsigned long shifted_data, shift, i;
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&csr_lock, flags);
+> > +
+> > +     for (i = 0; i < reg_size; ++i) {
+> > +             shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             shifted_data = val >> shift;
+> > +
+> > +             __raw_writel(shifted_data, reg + (LITEX_REG_SIZE * i));
+> > +     }
+> > +
+> > +     spin_unlock_irqrestore(&csr_lock, flags);
+> > +}
+> > +
+> > +unsigned long litex_get_reg(void __iomem *reg, unsigned long reg_size)
+> > +{
+> > +     unsigned long shifted_data, shift, i;
+> > +     unsigned long result = 0;
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&csr_lock, flags);
+> > +
+> > +     for (i = 0; i < reg_size; ++i) {
+> > +             shifted_data = __raw_readl(reg + (LITEX_REG_SIZE * i));
+> > +
+> > +             shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             result |= (shifted_data << shift);
+> > +     }
+> > +
+> > +     spin_unlock_irqrestore(&csr_lock, flags);
+> > +
+> > +     return result;
+> > +}
+>
+> I really don't like the fact that the register sizes & sub sizes are
+> #defined. As your comment explains, this makes it harder to support
+> other configurations. This geometry should come from the device-tree
+> instead.
 
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
----
- drivers/bus/fsl-mc/dprc-driver.c | 30 ++++++++++--------------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
+This is a valid point - putting those parameters into DT would indeed allow
+for more flexibility. Currently we are focusing on supporting a single LiteX
+configuration (32-bit/8-bit bus) and that's why those parameters got fixed.
 
-diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
-index c8b1c3842c1a..035b220779d0 100644
---- a/drivers/bus/fsl-mc/dprc-driver.c
-+++ b/drivers/bus/fsl-mc/dprc-driver.c
-@@ -3,6 +3,7 @@
-  * Freescale data path resource container (DPRC) driver
-  *
-  * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
-+ * Copyright 2019-2020 NXP
-  * Author: German Rivera <German.Rivera@freescale.com>
-  *
-  */
-@@ -197,8 +198,6 @@ static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
-  * dprc_scan_objects - Discover objects in a DPRC
-  *
-  * @mc_bus_dev: pointer to the fsl-mc device that represents a DPRC object
-- * @total_irq_count: If argument is provided the function populates the
-- * total number of IRQs created by objects in the DPRC.
-  *
-  * Detects objects added and removed from a DPRC and synchronizes the
-  * state of the Linux bus driver, MC by adding and removing
-@@ -212,8 +211,7 @@ static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
-  * populated before they can get allocation requests from probe callbacks
-  * of the device drivers for the non-allocatable devices.
-  */
--static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
--			     unsigned int *total_irq_count)
-+static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev)
- {
- 	int num_child_objects;
- 	int dprc_get_obj_failures;
-@@ -294,22 +292,21 @@ static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
- 	 * Allocate IRQ's before binding the scanned devices with their
- 	 * respective drivers.
- 	 */
--	if (dev_get_msi_domain(&mc_bus_dev->dev) && !mc_bus->irq_resources) {
-+	if (dev_get_msi_domain(&mc_bus_dev->dev)) {
- 		if (irq_count > FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS) {
- 			dev_warn(&mc_bus_dev->dev,
- 				 "IRQs needed (%u) exceed IRQs preallocated (%u)\n",
- 				 irq_count, FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
- 		}
- 
--		error = fsl_mc_populate_irq_pool(mc_bus,
-+		if (!mc_bus->irq_resources) {
-+			error = fsl_mc_populate_irq_pool(mc_bus,
- 				FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
--		if (error < 0)
--			return error;
-+			if (error < 0)
-+				return error;
-+		}
- 	}
- 
--	if (total_irq_count)
--		*total_irq_count = irq_count;
--
- 	dprc_remove_devices(mc_bus_dev, child_obj_desc_array,
- 			    num_child_objects);
- 
-@@ -342,7 +339,7 @@ static int dprc_scan_container(struct fsl_mc_device *mc_bus_dev)
- 	 * Discover objects in the DPRC:
- 	 */
- 	mutex_lock(&mc_bus->scan_mutex);
--	error = dprc_scan_objects(mc_bus_dev, NULL);
-+	error = dprc_scan_objects(mc_bus_dev);
- 	mutex_unlock(&mc_bus->scan_mutex);
- 	if (error < 0) {
- 		fsl_mc_cleanup_all_resource_pools(mc_bus_dev);
-@@ -411,9 +408,8 @@ static irqreturn_t dprc_irq0_handler_thread(int irq_num, void *arg)
- 		      DPRC_IRQ_EVENT_CONTAINER_DESTROYED |
- 		      DPRC_IRQ_EVENT_OBJ_DESTROYED |
- 		      DPRC_IRQ_EVENT_OBJ_CREATED)) {
--		unsigned int irq_count;
- 
--		error = dprc_scan_objects(mc_dev, &irq_count);
-+		error = dprc_scan_objects(mc_dev);
- 		if (error < 0) {
- 			/*
- 			 * If the error is -ENXIO, we ignore it, as it indicates
-@@ -428,12 +424,6 @@ static irqreturn_t dprc_irq0_handler_thread(int irq_num, void *arg)
- 
- 			goto out;
- 		}
--
--		if (irq_count > FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS) {
--			dev_warn(dev,
--				 "IRQs needed (%u) exceed IRQs preallocated (%u)\n",
--				 irq_count, FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
--		}
- 	}
- 
- out:
+Adding support for other configurations however is not just changing those
+two parameters (which should be fairly easy by itself), but also
+handling different
+registers layout for a single peripheral (in different configurations
+CSRs offsets and sizes may differ).
+
+Since this adds another layer of complexity we want to start with a simpler
+version that can be extended in the future.
+
+> Also this while thing is rather gross (and the lock will not help
+> performance). Why can't CSRs be normally memory mapped always instead ?
+
+Using a different LiteX configuration 32-bit/32-bit bus would solve
+the problem -
+a single LiteX CSR would map nicely to a single 32-bit memory pointer and no
+loop/locks would be needed.
+
+In the default configuration (32-bit/8-bit bus) there are gaps between bytes
+(as Gabriel Somlo already explained in his mail) which need to be handled
+"manually".
+
+> Even when transporting them on a HW bus that's smaller, the HW bus
+> conversion should be able to do the break-down into a multi-breat
+> transfer rather than doing that in SW.
+>
+> Or at least have a fast-path if the register size is no larger than the
+> sub size, so you can use a normal ioread32/iowrite32.
+
+Again - this is possible, but using a non-default 32-bit/32-bit bus LiteX
+configuration.
+
+> Also I wonder ... last I played with LiteX, it would re-generate the
+> register layout (including the bit layout inside registers potentially)
+> rather enthousiastically, making it pretty hard to have a fixed
+> register layout for use by a kernel driver. Was this addressed ?
+
+TBH I never experienced bit layout inside a register to change by itself,
+but I agree that using different bus width configurations causes CSRs
+to be splitted into 4/2/1 32-bit registers (changing de facto the layout
+from the SW perspective) - that's why we provide helper functions
+in this file.
+
+It is possible to have different configurations of a peripheral
+in LiteX that e.g, turns features on/off - this might cause some CSRs
+to shift and result in incompatibilities. There are ways in LiteX
+to avoid such problems if the model is properly designed, though.
+
+Another aspect of LiteX is that the order in which separate peripherals
+(modules) are created results in a different memory map of the whole SoC.
+This, however, is easily addressed by using a dynamically generated DT
+and do not require the code of drivers to be altered in any way.
+
+> Cheers,
+> Ben.
+>
+>
+
+Thanks for your comments!
+
+
 -- 
-2.17.1
-
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
