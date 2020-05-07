@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD3AC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F6BC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C86820575
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B9920575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877873;
-	bh=mzjCxewRj9P2nva9AGQCzVblWiicOrzlTnaX6AyDD8k=;
+	s=default; t=1588877880;
+	bh=v54+jJXI55ev/ljByJU0bELFAb0LTCoWQZNBXlPcq6M=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0w8K0pg70/7kLdeX9H0eyawUWB/py5sT/aIX7aFnFgbgz4VXbiHWSTOp5rpPfwwTI
-	 xZ8qRs1PKX9oRhJDn3qqAWIDbOUZIbpKBsrdd4h+Mhhbz+jngRIVdXGCVCIhs1BaWa
-	 eUJjLWvxi5zYXAUp7VzAtCPE2wqmvWZO4Ofn6v1Y=
+	b=Vfch4fTyWApnozj9hlfwUw10q6C6oE8Pa7XTl08cm9fZa+ovAd62T6V4Q0EsJcUGi
+	 eRT0N00ywa5WBsSgL/4ouq9matDR6hqdNWO+mZspIEV6SiLj4vuaiKdhAjGNS3fcKK
+	 lrJlNphDsnSQYy4nlZ+X1rmgDim3igBVEOe09cZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgEGS5w (ORCPT
+        id S1726558AbgEGS57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:57:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59178 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgEGS5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:57:50 -0400
+        id S1726926AbgEGS55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:57:57 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA9820575;
-        Thu,  7 May 2020 18:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB8620575;
+        Thu,  7 May 2020 18:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877870;
-        bh=mzjCxewRj9P2nva9AGQCzVblWiicOrzlTnaX6AyDD8k=;
+        s=default; t=1588877877;
+        bh=v54+jJXI55ev/ljByJU0bELFAb0LTCoWQZNBXlPcq6M=;
         h=Date:From:To:Cc:Subject:From;
-        b=J1oCEdjxhnYVugeeMwUbT4+O0jX0WrjBTQ8YcTl/+gDSvokcEgA72t9lJ+g/wDxdg
-         43Ply6JSMo2/bUCpngLE2KYS6G8hqsjPq70xqLs1z5yzESFL7liVOWoDgEbwEMrk7k
-         AAIcLS1WXPZnKBuGhmIELfedZeyK+Aog6EXjRR7I=
-Date:   Thu, 7 May 2020 14:02:16 -0500
+        b=jNUUPCbHLXL+RGEmVjXV4LexFXr2GtNKv+s2Fi35Ni/57M7Xa2vVfUsuYHNYHLOao
+         ARkd0WBSfasJhdIAz1BUfP6UdO/swEaHn1/TJHozcEZrf70tNiIYfflYm8KOstj7A9
+         UQnSrNgiG+0Ms7UVehDBfqh/EnYUmasRl3Jdoeag=
+Date:   Thu, 7 May 2020 14:02:23 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ipv6: Replace zero-length array with flexible-array
-Message-ID: <20200507190216.GA15407@embeddedor>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: Replace zero-length array with flexible-array
+Message-ID: <20200507190223.GA15428@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,20 +92,34 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/net/if_inet6.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/nfs4.h    |    2 +-
+ include/linux/nfs_xdr.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/if_inet6.h b/include/net/if_inet6.h
-index a01981d7108f..514dd6e423b1 100644
---- a/include/net/if_inet6.h
-+++ b/include/net/if_inet6.h
-@@ -78,7 +78,7 @@ struct inet6_ifaddr {
- struct ip6_sf_socklist {
- 	unsigned int		sl_max;
- 	unsigned int		sl_count;
--	struct in6_addr		sl_addr[0];
-+	struct in6_addr		sl_addr[];
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index 82d8fb422092..7c4b63561035 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -38,7 +38,7 @@ struct nfs4_ace {
+ 
+ struct nfs4_acl {
+ 	uint32_t	naces;
+-	struct nfs4_ace	aces[0];
++	struct nfs4_ace	aces[];
  };
  
- #define IP6_SFLSIZE(count)	(sizeof(struct ip6_sf_socklist) + \
+ #define NFS4_MAXLABELLEN	2048
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 440230488025..6aad9b0a5062 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1227,7 +1227,7 @@ struct nfs4_secinfo4 {
+ 
+ struct nfs4_secinfo_flavors {
+ 	unsigned int		num_flavors;
+-	struct nfs4_secinfo4	flavors[0];
++	struct nfs4_secinfo4	flavors[];
+ };
+ 
+ struct nfs4_secinfo_arg {
 
