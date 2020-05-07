@@ -2,96 +2,111 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD7C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42168C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7DE2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:50:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2346PGD"
+	by mail.kernel.org (Postfix) with ESMTP id 138DA2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588859541;
+	bh=IwsXYXmDs9aNaYPa4+QMKqQ65GYmJMLHHgZOQO0ito0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uLZPLbqJRriiHsR2OeAnohqPmTFZKivUIZ5/NIQLgMRUFAir5q4fdJgh7MFaVrIT8
+	 K59UoKVwYAP6c+z/U7vc5gbAoLVX+Vvz3OS+Tj1JBNtPfiRBDASFVmYfPrToy4Y1nE
+	 WqOM1FpCbwzwn8fVTuvjXx86zfKOg2ZSNQfYs/EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgEGNuE (ORCPT
+        id S1726533AbgEGNwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726521AbgEGNuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:50:00 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E909DC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 06:49:59 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id r14so2941800ybm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 06:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RmR99xx+Yesm6oorgLPy7gPshtSDq8wvp8OCFeJfg9c=;
-        b=e2346PGDvrAMzUO2Mv86gFcgr729Ua8DFn3nGE4JDikbENkM6tT559dmqxIbt0UUTm
-         hdoTkstFceX+NH9kO5ZGH/Ho4VsjAV3Nhrr4h9wZnztBpuISSGImg27AgICD+D4IKoSK
-         ro5WFuh7ssWcEXH+dL8zYlG/k8XW/7gSHrNeyGgcuy2g/7LiQau37jTLz3hhbEK8BQ9W
-         Ghxo54dMjeYBAG1BKRjC2/63ZCIrkuaHQ9PR6GAf7cgniEZ7HMYbEgvtHGp3f3UYwPRj
-         QK1rCytsf4HMLSf7luqvIPBWLSDGoX1xMaaQBSb7XIOks2Z/JmXc6Lue2+7EjSTpc4W2
-         nl3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RmR99xx+Yesm6oorgLPy7gPshtSDq8wvp8OCFeJfg9c=;
-        b=VO1e1r5XQlpecSvhap3pEyOlcmlRnCzs7SSdtmNGsmtjG3De8OOcqllKAry+YhZTB2
-         So4JNUeEw6KPxdw3b2a/LdoJEJK+y9w7i0tgf8xc5vntJOQ4LPkYzy0klu9UufebQkc1
-         UQvsBfWdCl+O+HYitwRm+gtWpvXAEzIC1IVTI7FQWksNPsskZywsZXzdQxw6y3cBUlDq
-         Q2bM+jX9d+e+VcC+0AtGUBgyHuXxjre+tvUGwE6Xp4026ThwNxqm5CAkB+4E1ddR1+1L
-         gKO56FuCFJP6RmXndFPHN4I5YOrjIKlKq4uEBlAhaRbHMh2aXUYNzgeBzcsFT+mWX9Bo
-         msJw==
-X-Gm-Message-State: AGi0PubrtzCP/zjIwrqLCBR62VuRNeLCu3nvkZs3762y29mijz9dFD75
-        59ahWSBJpgaoH+3q1/0+ZKNXtjC0Uwarrh7XWIGDdw==
-X-Google-Smtp-Source: APiQypLlJOWtkmwdaWITNck8f5md4q8BhjXx4Z8R7bfcHESuPPrXnBHYT7/OO3pZmn63Xy6S5NhzTEqO/S7CJJgevM4=
-X-Received: by 2002:a25:1484:: with SMTP id 126mr22422004ybu.380.1588859398853;
- Thu, 07 May 2020 06:49:58 -0700 (PDT)
+        Thu, 7 May 2020 09:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgEGNwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:52:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681E52073A;
+        Thu,  7 May 2020 13:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588859539;
+        bh=IwsXYXmDs9aNaYPa4+QMKqQ65GYmJMLHHgZOQO0ito0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mnd4bYDWYAIZ4zCHfaiJgGW7gq/naBS9fqditzfIOrsnv40Et2ZRgwpNfZocNknka
+         Axg7s2N1KjHSV9RE7TilOJ7BeJnjKctTrwdNmwvVRrJhDfMgNkonFMoZ7eABSB+qyC
+         PuuBS2r0GmqVqCNKkbKQu7tNa+Iw0qnZXMIV3cCs=
+Date:   Thu, 7 May 2020 14:52:14 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     catalin.marinas@arm.com, Dave.Martin@arm.com, mark.rutland@arm.com,
+        james.morse@arm.com, 0x7f454c46@gmail.com, tglx@linutronix.de,
+        lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hushiyuan@huawei.com,
+        hewenliang4@huawei.com
+Subject: Re: [PATCH] arm64: stacktrace: Factor out some common code info
+ on_stack()
+Message-ID: <20200507135213.GA32706@willie-the-truck>
+References: <10b188af-a03b-3acc-8a06-cf31a46f735a@huawei.com>
 MIME-Version: 1.0
-References: <20200116.042722.153124126288244814.davem@davemloft.net>
- <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com> <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
- <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com> <20200117123253.GC14879@hirez.programming.kicks-ass.net>
- <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com> <20200117180324.GA2623847@rani.riverdale.lan>
- <94573cea-a833-9b48-6581-8cc5cdd19b89@gmail.com> <20200117183800.GA2649345@rani.riverdale.lan>
- <45224c36-9941-aae5-aca4-e2c8e3723355@gmail.com> <20200120081858.GI14879@hirez.programming.kicks-ass.net>
- <39ddacf9-adbe-c3f5-45a8-9c5280ef11bb@hisilicon.com>
-In-Reply-To: <39ddacf9-adbe-c3f5-45a8-9c5280ef11bb@hisilicon.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 7 May 2020 06:49:46 -0700
-Message-ID: <CANn89iLiCh-LDw9WsB=3Wm=V-Ey80JRrC8yf8fsy=vbVc9FuPQ@mail.gmail.com>
-Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, jinyuqi@huawei.com,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        guoyang2@huawei.com, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10b188af-a03b-3acc-8a06-cf31a46f735a@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 2:12 AM Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->
-> Hi Peter/Eric,
->
-> Shall we use atomic_add_return() unconditionally and add some comments? Or I missed
-> something.
->
+On Thu, May 07, 2020 at 05:28:19PM +0800, Yunfeng Ye wrote:
+> diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
+> index fdb913cc0bcb..b92bef2fb6cd 100644
+> --- a/arch/arm64/include/asm/stacktrace.h
+> +++ b/arch/arm64/include/asm/stacktrace.h
+> @@ -69,27 +69,40 @@ extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+> 
+>  DECLARE_PER_CPU(unsigned long *, irq_stack_ptr);
+> 
+> -static inline bool on_irq_stack(unsigned long sp,
+> +static inline bool on_stack(unsigned long sp, unsigned long low,
+> +				unsigned long high, enum stack_type type,
+>  				struct stack_info *info)
+>  {
+> -	unsigned long low = (unsigned long)raw_cpu_read(irq_stack_ptr);
+> -	unsigned long high = low + IRQ_STACK_SIZE;
+> -
+> -	if (!low)
+> -		return false;
+> -
+>  	if (sp < low || sp >= high)
+>  		return false;
+> 
+>  	if (info) {
+>  		info->low = low;
+>  		info->high = high;
+> -		info->type = STACK_TYPE_IRQ;
+> +		info->type = type;
+>  	}
+> -
+>  	return true;
+>  }
+> 
+> +static inline bool on_valid_stack(unsigned long sp, unsigned long low,
+> +				unsigned long high, enum stack_type type,
+> +				struct stack_info *info)
+> +{
+> +	if (!low)
+> +		return false;
+> +
+> +	return on_stack(sp, low, high, type, info);
+> +}
 
+Do we need this as distinct from on_stack()? Afaict, 'low' is never
+going to be NULL for the on_stack() callers, so I suggest just having
+on_stack() check 'low' and getting everybody to call that instead.
 
-Yes. A big fat comment, because I do not want yet another bogus
-complaint from someone playing with a buggy UBSAN.
+Make sense?
+
+Will
