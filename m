@@ -2,72 +2,110 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F1C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F881C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C84820753
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0A020753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:59:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="edDncOw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgEGH7d (ORCPT
+        id S1726743AbgEGH7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:59:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46846 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725879AbgEGH7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:59:33 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 56786EBB9CFDFC6BB918;
-        Thu,  7 May 2020 15:59:31 +0800 (CST)
-Received: from huawei.com (10.175.113.25) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
- 15:59:23 +0800
-From:   Zheng Zengkai <zhengzengkai@huawei.com>
-To:     <andrew@lunn.ch>, <davem@davemloft.net>, <rjui@broadcom.com>
-CC:     <f.fainelli@gmail.com>, <bcm-kernel-feedback-list@broadcom.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhengzengkai@huawei.com>
-Subject: [PATCH net-next] net: phy: Make iproc_mdio_resume static
-Date:   Thu, 7 May 2020 16:03:26 +0800
-Message-ID: <20200507080326.111896-1-zhengzengkai@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 May 2020 03:59:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41511 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725969AbgEGH7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:59:41 -0400
+Received: from [IPv6:2601:646:8600:3281:d918:a6fd:d52c:4754] ([IPv6:2601:646:8600:3281:d918:a6fd:d52c:4754])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0477xAJT3336894
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 7 May 2020 00:59:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0477xAJT3336894
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588838351;
+        bh=QcutLOCTnJxVMrJr2hvrS8R5JE5w+xhrOu5seWrSXig=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=edDncOw6ExGuJsk6POL7egz6dy6fPWjFEWh3td3E9oMv5SXP0TJbKzQatvtT4mA/j
+         FIW8/LpQww4n+9WGTUWqSD2T0iWg4UjNAE4DsNqkc/mf0UV8BDhUqPBwsKqMo8R2AM
+         /PTK+lZWRYBujbzoOQIPodZXEvkh9sty32cJT/KBGuBA8xPCyX2CdzirMHzK0f+rfy
+         0hwDI7S6Mq6sAVqr6gwuogD8Y6ZN4V2SvhbMUtya6HiJ06MbItx1CqUemLfdJvNpYB
+         urzr+rNBVisCE/9E879nByfmNSPBNjvZX7mduX3QwON++dhPNTNACREVYz/i1RqVqa
+         8pnWGB4jymFKw==
+Date:   Thu, 07 May 2020 00:59:03 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
+References: <20200505174423.199985-1-ndesaulniers@google.com> <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com> <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [PATCH] x86: bitops: fix build regression
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Brian Gerst'" <brgerst@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+From:   hpa@zytor.com
+Message-ID: <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On May 7, 2020 12:44:44 AM PDT, David Laight <David=2ELaight@ACULAB=2ECOM> =
+wrote:
+>From: Brian Gerst
+>> Sent: 07 May 2020 07:18
+>=2E=2E=2E
+>> > --- a/arch/x86/include/asm/bitops=2Eh
+>> > +++ b/arch/x86/include/asm/bitops=2Eh
+>> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
+>*addr)
+>> >         if (__builtin_constant_p(nr)) {
+>> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>> >                         : CONST_MASK_ADDR(nr, addr)
+>> > -                       : "iq" (CONST_MASK(nr) & 0xff)
+>> > +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
+>>=20
+>> I think a better fix would be to make CONST_MASK() return a u8 value
+>> rather than have to cast on every use=2E
+>
+>Or assign to a local variable - then it doesn't matter how
+>the value is actually calculated=2E So:
+>			u8 mask =3D CONST_MASK(nr);
+>			asm volatile(LOCK_PREFIX "orb %1,%0"
+>				: CONST_MASK_ADDR(nr, addr)
+>				: "iq" mask
+>
+>	David
+>
+>-
+>Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
+>MK1 1PT, UK
+>Registration No: 1397386 (Wales)
 
-drivers/net/phy/mdio-bcm-iproc.c:182:5: warning:
- symbol 'iproc_mdio_resume' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zheng Zengkai <zhengzengkai@huawei.com>
----
- drivers/net/phy/mdio-bcm-iproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
-index f1ded03f0229..89bdfcc0e506 100644
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -179,7 +179,7 @@ static int iproc_mdio_remove(struct platform_device *pdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--int iproc_mdio_resume(struct device *dev)
-+static int iproc_mdio_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
--- 
-2.20.1
-
+"const u8" please=2E=2E=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
