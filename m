@@ -2,161 +2,181 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAACEC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5825FC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8D662087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314AD2068E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQH6RfxU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SbDfHNsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgEGDIR (ORCPT
+        id S1728491AbgEGDI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        Wed, 6 May 2020 23:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgEGDIQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725879AbgEGDIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:08:16 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C17BC061A0F;
-        Wed,  6 May 2020 20:08:16 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id b6so1346113uak.6;
-        Wed, 06 May 2020 20:08:16 -0700 (PDT)
+        Wed, 6 May 2020 23:08:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930F4C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 20:08:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i15so4073485wrx.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 20:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
-        b=nQH6RfxU7ceNQuXYXgG9OZlSHcATWEnjnhVkzSi1Bop+6sQlFdf2KboXe+5MRiTOPZ
-         wXed/hWDipbbakcaTpb+kOKIbF7MLdB84XNqIhkkaPvWP3L2PD8d6D+Y6W+3gClHxG+H
-         K8qib7WZguDpYxSbhB1djNjEJZks9oM9+/cMA+5mNycHbJfDzz+2S9eJ3vHO6jeQwId0
-         0+m05MEFgioXDWBnkBJ4z8D1JeUYmsRs3wYGcbtrU9O1SkQVJQkFFR6PVHEai0Tx5iK7
-         05Htbwrt6jmfcrguLgsyCehN71Ydh/PPSJsZoDLUibLmLwScZdvQU1ISgYZZKzOzc+4h
-         AfJg==
+         :cc;
+        bh=gsgt81MlDlEnto/Qdmhwfg0yKkYAEa0cqpBxi8rVFIU=;
+        b=SbDfHNsVlfwga5HlZsXZUndrMHRULtSgVl0BqdUggNtB1qsob5uD0JyX829hO72zkR
+         cm/8xweeLd9jJO9m8puEA2KdLib1VQ8BLx8ALUobrhsRbyeEeyjETYOtW5+bFoF5iASD
+         ZE4hLHneOrzNo6QZ0kX0rw/CbBvg4b1fGD/G/3feDX49Cpyoi5nam9lIu9+edv+nA5DJ
+         aVR9G0FQKBxNogFDiSnECeq6gY1+oJEO2TuLnmCjUul/GzJfl2sMBspUtT4Bq/q3n53X
+         TKwTLnjHEybyfrEWSfTE+5M4PQMfS4uyumllO9W/XOePZvv7yo84bDog271sy0t6z9Im
+         yJoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b5KrgkS9IpHYVnkrIf1m2LB5pieWU4ZRsegpvq8ZuNM=;
-        b=re5YeSuedIfPEN5jqxu2c6gGTtNBVJrqTEeXsp3pCNxKanjqE6l99v+ioBEJ9kjs0M
-         hLZ1oLfmNbs0tz8KJtO55PNuWD5e6hZoCBn7pkECFydliFJJgYvGBw5DtYDdC0HwxIU3
-         ndMY3BMfIyC8MSNlTUruowsZ2saGhRLDZzTnC5EJfrT138ZnANYoXaSqSjxZ/cZRrenS
-         n/EcZw9YJpG2elSTJ6kVNb/hvYC+RUopsDr+yPE/z30faMBuuyEnPzAMVJ5mdMMzo+O4
-         ET3gNiTGuoJGiPekpZZllJDuSFq30QYi2hEMF7Jr7KQjInlkupKHqO0Xx/T3WC0ZohAT
-         ezug==
-X-Gm-Message-State: AGi0PuYg2sQClTF1dkkeINThCeZWotKQ0UlVTcn+T3T3f2AMtFK8I4Uz
-        pdJxx99gKeHwwGydY1mNQG8H6VrNpbqyEZanB/nxBknI
-X-Google-Smtp-Source: APiQypLy2gZGyrB2039SyMEF5+hQSLSHuFESjGbmWh7/XJ2Fxp/FeHdyAqmT6q9hnYF5XM72W3uT7UPzgl0MM0NuEqg=
-X-Received: by 2002:ab0:375a:: with SMTP id i26mr9842013uat.120.1588820895622;
- Wed, 06 May 2020 20:08:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=gsgt81MlDlEnto/Qdmhwfg0yKkYAEa0cqpBxi8rVFIU=;
+        b=cl72yQpDiDbKMEfho1b0wBHbCEa8A63bOuZtk1X5GeHxNxF4G3/mmyfoj8nh2FFSkv
+         Jd3odjp+GmlQB03VozY8JdigMGUVrVM3mdz+b9m+O5F37sZFbHroQR58WCqWYjgLXuR7
+         GKVDKFBrfi4x1dk1g+oz2EeaXu1HrghrhLtcMNMzBqyexKcJppCVLSEq3r4nWK7xB/ud
+         duQTX8BLEfGSeGAz/kslNls7RWjf6UKS3NSwxz66uF8MZsgYj+Bb1jCfc6HW6VZ6yD94
+         E+u0vc5DuOuoLPsVhdcUlrViGOkFz1vkpyEd1Vq7iimNkAE7mxRb7pN+CyTGmQq/h72j
+         74bg==
+X-Gm-Message-State: AGi0PuZm3+bfMQ/xswPIQnvYjMsqVmPsVAqTtERzVYneJKemdtXOxB1I
+        QWgtaP03Bhmx7/JIuxJeqA/RLLTtdprGAXSuiMNNyA==
+X-Google-Smtp-Source: APiQypJYBc+4MO14/l2sBXNv+eueA8YQH/AYbiQD4bmsfXP2t3f539TUHGl8HMJof9KUOufQG4S/sjUHWHRGOiOP17E=
+X-Received: by 2002:adf:fe51:: with SMTP id m17mr12501816wrs.414.1588820901909;
+ Wed, 06 May 2020 20:08:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028215919.83697-1-john.stultz@linaro.org>
- <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
- <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
- <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
-In-Reply-To: <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Thu, 7 May 2020 11:08:04 +0800
-Message-ID: <CAKgpwJU7VDx90STE7bhx9VZ5p1jtqCyyLavmhXfpaicyDAYt_g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by
- device controller
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yu Chen <chenyu56@huawei.com>,
+References: <20200505102700.7912-1-anders.roxell@linaro.org>
+ <CABVgOS=awiwi7APWr5HgU6Eht-VAygWPeQyNsCnAF09OLpR46A@mail.gmail.com> <CADYN=9Jdwd=3Rh=wyzO7eOxtyTSm+JqjF385iQjfMocpz1A3YA@mail.gmail.com>
+In-Reply-To: <CADYN=9Jdwd=3Rh=wyzO7eOxtyTSm+JqjF385iQjfMocpz1A3YA@mail.gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 7 May 2020 11:08:10 +0800
+Message-ID: <CABVgOSndkMOd0U+p=fMy0q-KdN29XERheY=3-3+dgVoeWf9m5g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Marco Elver <elver@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John Stultz <john.stultz@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=E6=
-=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:27=E5=86=99=E9=81=93=EF=BC=9A
+On Wed, May 6, 2020 at 6:33 PM Anders Roxell <anders.roxell@linaro.org> wrote:
 >
-> On Wed, May 6, 2020 at 2:00 AM Jun Li <lijun.kernel@gmail.com> wrote:
-> > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=883=
-0=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=EF=BC=
-=9A
-> > > On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote=
-:
-> > > > John Stultz <john.stultz@linaro.org> writes:
-> > > > > From: Yu Chen <chenyu56@huawei.com>
-> > > > >
-> > > > > It needs more time for the device controller to clear the CmdAct =
-of
-> > > > > DEPCMD on Hisilicon Kirin Soc.
-> > > >
-> > > > Why does it need more time? Why is it so that no other platform nee=
-ds
-> > > > more time, only this one? And which command, specifically, causes
-> > > > problem?
-> >
-> > Sorry for my back to this so late.
-> >
-> > This change is required on my dwc3 based HW too, I gave a check
-> > and the reason is suspend_clk is used in case the PIPE phy is at P3,
-> > this slow clock makes my EP command below timeout.
-> >
-> > dwc3_gadget_ep_cmd: ep0out: cmd 'Set Endpoint Configuration' [401]
-> > params 00001000 00000500 00000000 --> status: Timed Out
-> >
-> > Success case takes about 400us to complete, see below trace(44.286278
-> > - 44.285897 =3D 0.000381):
-> >
-> > configfs_acm.sh-822   [000] d..1    44.285896: dwc3_writel: addr
-> > 000000006d59aae1 value 00000401
-> > configfs_acm.sh-822   [000] d..1    44.285897: dwc3_readl: addr
-> > 000000006d59aae1 value 00000401
-> > ... ...
-> > configfs_acm.sh-822   [000] d..1    44.286278: dwc3_readl: addr
-> > 000000006d59aae1 value 00000001
-> > configfs_acm.sh-822   [000] d..1    44.286279: dwc3_gadget_ep_cmd:
-> > ep0out: cmd 'Set Endpoint Configuration' [401] params 00001000
-> > 00000500 00000000 --> status: Successful
-> >
-> > Hi John,
-> >
-> > Do you still have this problem? if yes, What's the value of
-> > USBLNKST[21:18] when the timeout happens?
+> Hi David,
 >
-> Sorry. As I mentioned, I was working to upstream a patchset that I
-> hadn't created, so the context I had was limited. As I couldn't
-> reproduce an issue without the change on the device I had, I figured
-> it would be best to drop it.
+> Thank you for the review.
+>
+> On Wed, 6 May 2020 at 07:08, David Gow <davidgow@google.com> wrote:
+> >
+> > On Tue, May 5, 2020 at 6:27 PM Anders Roxell <anders.roxell@linaro.org> wrote:
+> > >
+> > > Make it easier to enable all KUnit fragments.  This is needed for kernel
+> > > test-systems, so its easy to get all KUnit tests enabled and if new gets
+> > > added they will be enabled as well.  Fragments that has to be builtin
+> > > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
+> > >
+> > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > > ---
+> > >  lib/kunit/Kconfig | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > > index 95d12e3d6d95..537f37bc8400 100644
+> > > --- a/lib/kunit/Kconfig
+> > > +++ b/lib/kunit/Kconfig
+> > > @@ -41,4 +41,10 @@ config KUNIT_EXAMPLE_TEST
+> > >           is intended for curious hackers who would like to understand how to
+> > >           use KUnit for kernel development.
+> > >
+> > > +config KUNIT_RUN_ALL
+> > > +       tristate "KUnit run all test"
+> >
+> > I'm not 100% sure about this name and description. It only actually
+> > "runs" the tests if they're builtin (as modules, they'll only run when
+> > loaded).
+> >
+> > Would KUNIT_BUILD_ALL or KUNIT_ALL_TESTS
+>
+> I would like to go with KUNIT_ALL_TESTS if no one objects.
+>
 
-That was fine.
->
-> However, as you have some analysis and rational for why such a change
-> would be needed, I don't have an objection to it. Do you want to
-> resubmit the patch with your explanation and detailed log above in the
-> commit message?
+Personally, I'm fine with that.
 
-Sure, I will resubmit the patch with my explanation added in commit message=
-.
+Brendan, thoughts?
 
-thanks
-Li Jun
+> > or similar be better?
+> >
+> > It also, as mentioned, only really runs all available (i.e., with
+> > dependencies met in the current .config) tests (as distinct from the
+> > --alltests flag to kunit.py, which builds UML with allyesconfig), it
+> > might be good to add this to the description or help.
+> >
+> > Something like "Enable all KUnit tests" or "Enable all available KUnit
+> > tests" (or even something about "all KUnit tests with satisfied
+> > dependencies") might be clearer.
 >
-> thanks
-> -john
+> I like "All KUnit tests with satisfied dependencies".
+>
+> >
+> > > +       help
+> > > +         Enables all KUnit tests, if they can be enabled.
+> > > +         That depends on if KUnit is enabled as a module or builtin.
+> > > +
+> > I like the first line here, but the second one could use a bit more
+> > explanation. Maybe copy some of the boilerplate text from other tests,
+> > e.g.:
+> >
+> >           KUnit tests run during boot and output the results to the debug log
+> >          in TAP format (http://testanything.org/). Only useful for kernel devs
+> >          running the KUnit test harness, and not intended for inclusion into a
+> >          production build.
+> >
+> >          For more information on KUnit and unit tests in general please refer
+> >          to the KUnit documentation in Documentation/dev-tools/kunit/.
+> >
+> >          If unsure, say N.
+>
+> Makes much more sense, thanks.
+>
+> >
+> > >  endif # KUNIT
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > Otherwise, this is looking good. I've done some quick testing, and it
+> > all seems to work for me. As long as it's clear what the difference
+> > between this and other ways of running "all tests" (like the
+> > --alltests kunit.py option),
+>
+> Do you think it should be made clearer in some way?
+>
+
+I think the changes above should do it.
+
+-- David
