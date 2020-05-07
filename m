@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7606C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2362495B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77192495B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877497;
-	bh=jS1JZUc/306T2uxJxfJMUJJif1/i/lbkHg/ck6XKeHg=;
+	s=default; t=1588877503;
+	bh=g2B3WHP3TtTh6XPDE/6X/pw7R5qG55xrJfAjLiXMLog=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=nGY7OARmUz4uXEU6HAyE+QrhkAzGESUeNlGwdbQH2rcmS59Zzo08Lk0Q5vy3M+GKC
-	 AbZ+61qPOJZyj95kmI9EqwPDVnKXuDydWnTAAU7vM50LIsgVzwkhRd9k55bl5X4NTD
-	 dkE5SGfFROR9DtRURwNk75b2BW3JO3Z+La859lYo=
+	b=uDPX71GBaBH5c0BJvjTneQ11ivKzT5fkBqKqto4SkQrVgSkT+ks+waADlYkj/58jM
+	 IbSvDy+VAJ+x1yNqEcNwu4f/3sWbi9a2sOPFuB37LJQN1LclFFGtaPNj0anTTKu60o
+	 PbhwAjE9vGvUEC2ms3ShAnDTYXUq3y6juw+aqsHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgEGSvg (ORCPT
+        id S1728742AbgEGSvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:51:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52306 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgEGSvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:51:36 -0400
+        id S1728237AbgEGSvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:51:42 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E582824957;
-        Thu,  7 May 2020 18:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94C9D2495B;
+        Thu,  7 May 2020 18:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877495;
-        bh=jS1JZUc/306T2uxJxfJMUJJif1/i/lbkHg/ck6XKeHg=;
+        s=default; t=1588877502;
+        bh=g2B3WHP3TtTh6XPDE/6X/pw7R5qG55xrJfAjLiXMLog=;
         h=Date:From:To:Cc:Subject:From;
-        b=RNyFnZUIZ90jofZMnACoBPDAGi9K3ssrewWXIWSHXKu2NAbgmSsBTd/aLRrAbmvj6
-         LpKjnNlOb6hZRuzH9Y6ITmOQT5qP7rdwqalohVkgD2VVByrvQq4LvFG3v4V819+6sb
-         xDs3H3kjn0ZehPI2UXNs4Ro+zePY/TaeUt8q9J0Y=
-Date:   Thu, 7 May 2020 13:56:01 -0500
+        b=M2kYlSroDA8yK19NxCXt3sWB0sdiIQlQWo1ZBS4p//O7WzVbRRE9snCfeymw212ic
+         iUO0vWvAt63WMmD2T9garVTMdfNfB7aHFdZ1oc0pyyk01RriSyVRPRkRDcQbkQlh1d
+         mAcicuXulY9ntyoUmsA+BwcUncRd4H6CjtRZWGMM=
+Date:   Thu, 7 May 2020 13:56:08 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] modpost: Replace zero-length array with flexible-array
-Message-ID: <20200507185601.GA14759@embeddedor>
+To:     Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/testing: Replace zero-length array with flexible-array
+Message-ID: <20200507185608.GA14779@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,48 +92,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- scripts/basic/fixdep.c |    2 +-
- scripts/mod/modpost.c  |    2 +-
- scripts/mod/modpost.h  |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/nsfs/pidns.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
-index 877ca2c88246..d98540552941 100644
---- a/scripts/basic/fixdep.c
-+++ b/scripts/basic/fixdep.c
-@@ -160,7 +160,7 @@ struct item {
- 	struct item	*next;
- 	unsigned int	len;
- 	unsigned int	hash;
--	char		name[0];
-+	char		name[];
+diff --git a/tools/testing/selftests/nsfs/pidns.c b/tools/testing/selftests/nsfs/pidns.c
+index e0d86e1668c0..e3c772c6a7c7 100644
+--- a/tools/testing/selftests/nsfs/pidns.c
++++ b/tools/testing/selftests/nsfs/pidns.c
+@@ -27,7 +27,7 @@
+ #define __stack_aligned__	__attribute__((aligned(16)))
+ struct cr_clone_arg {
+ 	char stack[128] __stack_aligned__;
+-	char stack_ptr[0];
++	char stack_ptr[];
  };
  
- #define HASHSZ 256
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 5c3c50c5ec52..4d4b979d76be 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -166,7 +166,7 @@ struct symbol {
- 				    *  (only for external modules) **/
- 	unsigned int is_static:1;  /* 1 if symbol is not global */
- 	enum export  export;       /* Type of export */
--	char name[0];
-+	char name[];
- };
- 
- static struct symbol *symbolhash[SYMBOL_HASH_SIZE];
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 60dca9b7106b..39f6c29fb568 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -111,7 +111,7 @@ buf_write(struct buffer *buf, const char *s, int len);
- 
- struct namespace_list {
- 	struct namespace_list *next;
--	char namespace[0];
-+	char namespace[];
- };
- 
- struct module {
+ static int child(void *args)
 
