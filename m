@@ -2,102 +2,130 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE616C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0520C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4A020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V1WGo7Fk"
+	by mail.kernel.org (Postfix) with ESMTP id ADE9420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588875198;
+	bh=isc0kLRbNV5b1RIUPTy0rHpHFGiv4FYC2dz4s88QE0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O9bx70da4S6fQRHQroZeZFulDXhnWneUsh+a0EinXQG8cNSu5lmr+CPBJBBF+GXYW
+	 uBTDaQwNUVxsHKHmWp18OFIxrwnnANhaF0P/OCtfmolFt91hQiGmFOJ+x3OnZxlHu3
+	 WAkOM6SS8MuciJiXEX0/wYYQN9XYOe1mMGbKXORM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgEGSKh (ORCPT
+        id S1727964AbgEGSNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728334AbgEGSKb (ORCPT
+        Thu, 7 May 2020 14:13:18 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:37469 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgEGSNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:31 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C67C05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:31 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id y31so7696511qta.16
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=AcjgyLDbLfuRPfYfCs3xX2tel3iqkqWZ6prN5gsFA74=;
-        b=V1WGo7FkR2BTf224rUb5QRFlyVtAEb490hVPQiagqofLxb2Un7HOf/lJzDMWR4dBaY
-         goSk91EGW+FQMdpAJVpp9BCL7bztPmvctr4uif/kvn093HQ1ShZjG8EoS9jdhGl1/BZ8
-         uyafHnGr31hJEL3BWu0hNXUT3C479EPil+Q8kJAZ3VEgj4geeN+bZbgCvZQe5VG6NeXQ
-         bK+RLFa3yo67keVKT6lXDjTpR9KIQRlqqx9MLvbeVPhoU3ibYvltd9C1qD3ffqxlY15X
-         18R22J/ldn5X2iJ7Qdm3RAQAavLDC0ea0wQ0O8QHDdIYStFzIstAlLdBGpV3e+H8Yjfe
-         GxUA==
+        Thu, 7 May 2020 14:13:17 -0400
+Received: by mail-oo1-f65.google.com with SMTP id v6so1558969oou.4;
+        Thu, 07 May 2020 11:13:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=AcjgyLDbLfuRPfYfCs3xX2tel3iqkqWZ6prN5gsFA74=;
-        b=Wy1qF97sBjERAaKV+GiAxCFD8NHE6poRtZF3BjQVqFJjheWDTOnS5/uyBnQ1wpVHaX
-         W2ugXa9cPVTfEIMSUetPZqcjrIAR7ZcKbBf7P73gPUWuuZ2OYNzj88iRLuiu96GTpP4N
-         4oan3PhmwQQTJ0A2WpRqRHBRXNlapTg6UKPOrSJir0CUav6t7DC0cikwE1fzZ5o0stYG
-         IyUQMbzizACY5jWwAN8ZFJ7tIMWxeMYiY6yq1+rTzsF3sPSnI4fQrOr5RXQW+kktnrEc
-         8qEKG1bh6NGeS1GlPbliEHYjDQrEMykCAitEq3TB0fdnHBPawjm1z+4BHP4BonmnU4hy
-         COEw==
-X-Gm-Message-State: AGi0PubVP0wro/GRXh+I/JDORG5cCeCI+yj+dN+y1v0khDpOKX7Cwou4
-        p74sNf8bhn4xGmhIqJnfwSOg4rUnogY7d703+xzxQ51zkb+q8WL+prqauG+Az7NUzgfyAIjfxBm
-        VxPBDIS8ElJ0YDOHSCxT9g6lnaQdmw6WSUF1qXZZw9mfxjICf4D3zffkKS370qtBNsebfiscO
-X-Google-Smtp-Source: APiQypIeezwk8wKH5NFbxB1HRYZCWpSgPZOxn7vsJyIsBC8u1e/b/PRaJxwmopqEIxBGP+Ma+iemjLuU+rJg
-X-Received: by 2002:a0c:c28b:: with SMTP id b11mr14000646qvi.112.1588875030512;
- Thu, 07 May 2020 11:10:30 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:10:05 +0100
-In-Reply-To: <20200507181012.29791-1-qperret@google.com>
-Message-Id: <20200507181012.29791-8-qperret@google.com>
-Mime-Version: 1.0
-References: <20200507181012.29791-1-qperret@google.com>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 07/14] kthread: Export kthread_bind_mask()
-From:   Quentin Perret <qperret@google.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G5yuqVqzlYuNUS6BzsyczFiXvtDmajE6nmIOPOTL+co=;
+        b=FV5mqNmrm4ZtMaKZYJEygDtaFfcBF5fjbNc5ELVtmIxHxcSEdZlqbQlCmsNLRL+Lhl
+         1n/Ek/JbktpDEflfP/qhLDtPBQ33gCiaZtPb3LD4lnRjjT9+je1TMrjRMlUOF8uw+egm
+         QOBMSsaxTiFHMORuXh5pohbtolMCHpE0ZeREx9sgdlQX1vqLZdsEL+ZJ5z4qU7dJfILl
+         owSYQCjWAYjFBaAApIQqhFgflGLT9EFQJx6RrADRdoh3q0qsnpnJVuZYUbJRgGkxFFZ7
+         uYbKXKZpRBQCgzG3+y3sN3l5TrE2uPMgfzUCmeL9p6FEHI2HkguoSkn8qg234BamDdOQ
+         fSVw==
+X-Gm-Message-State: AGi0PubG+TRVM7WmVbCF79Ao57pJJzSbW0bz8VRdEE6/w8Utmr5mF7KD
+        FzDPmHT/BkvkXe23kFWWng==
+X-Google-Smtp-Source: APiQypLnrVJU4jXjyeAEeEq5NZXUl0k0NVDycnKbTqrLkF6KTOGkFNBdqRUalc0CZfs9BzR1UPSByQ==
+X-Received: by 2002:a4a:9c55:: with SMTP id c21mr12846656ook.25.1588875195883;
+        Thu, 07 May 2020 11:13:15 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t186sm1583007oif.13.2020.05.07.11.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 11:13:15 -0700 (PDT)
+Received: (nullmailer pid 23913 invoked by uid 1000);
+        Thu, 07 May 2020 18:13:14 -0000
+Date:   Thu, 7 May 2020 13:13:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx
+ term offset
+Message-ID: <20200507181314.GA21663@bogus>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-10-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430220619.3169-10-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It will be needed by schedutil once modularized, export it.
+On Fri, May 01, 2020 at 12:06:16AM +0200, Ansuel Smith wrote:
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
+> 
+> Add tx term offset support to pcie qcom driver need in some revision of
+> the ipq806x SoC.
+> Ipq8064 have tx term offset set to 7.
+> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index da8058fd1925..372d2c8508b5 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -45,6 +45,9 @@
+>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+>  
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12, 16)
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> +
+>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+>  #define PHY_REFCLK_SSP_EN			BIT(16)
+>  #define PHY_REFCLK_USE_PAD			BIT(12)
+> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
+>  	u32 tx_swing_full;
+>  	u32 tx_swing_low;
+>  	u32 rx0_eq;
+> +	u8 phy_tx0_term_offset;
+>  };
+>  
+>  struct qcom_pcie_resources_1_0_0 {
+> @@ -318,6 +322,11 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->ext_reset))
+>  		return PTR_ERR(res->ext_reset);
+>  
+> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
+> +		res->phy_tx0_term_offset = 7;
 
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- kernel/kthread.c | 1 +
- 1 file changed, 1 insertion(+)
+Based on my other comments, you'll want to turn this into match data.
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa481be3a..c0d84e1fbec2 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -430,6 +430,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
- {
- 	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
- }
-+EXPORT_SYMBOL_GPL(kthread_bind_mask);
- 
- /**
-  * kthread_bind - bind a just-created kthread to a cpu.
--- 
-2.26.2.526.g744177e7f7-goog
-
+> +	else
+> +		res->phy_tx0_term_offset = 0;
+> +
