@@ -2,190 +2,114 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ADEC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EABC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94D152073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROGrRGuQ"
+	by mail.kernel.org (Postfix) with ESMTP id 51CAE2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588862254;
+	bh=fFjPDlSYqtZsiNtwI2hwcFmM5WH27agQGBfvGvrioZI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o5s3hvMm7D4tXkybHwr92hVP0AS5R+D7DhHP1iE7jEIGu0e814smaJzOyzlBCS11J
+	 d7JMOCBJukzUdqP+rrho39dkgU/xftRc0i7doOjqA2ChZv6OnL7oK5WiXJRkdZt+ow
+	 bcus3FBvanKNL30mWFhX1w3wYY/3V+WLlSZKflwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEGOh0 (ORCPT
+        id S1727882AbgEGO17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgEGOhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:37:13 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E546C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:37:12 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y3so6719048wrt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NtbLV99k7TcIhG9ot/elTDrTvZyxlbX0LhoeRI3dMJQ=;
-        b=ROGrRGuQbv1ezHkVZIx64NllWTBgL153FVe39Ip61c3DS2H58HlSW61e0cVlbqnGoR
-         wsx0oheAGkitiEY9de3wdfVdrkTAfOjgqJcaPaq5qSa2KOwmhcf/Gd8CLavoqHBSZXVj
-         5W+4/25YjkUIGcufTRFQxi3M6yX+BzoxXL52g9KcjZLkyb19GslPhTkIISF/X81jmi9v
-         36ICtNRwEGVTquSuIyZn5oZnjucJLK4wUmlbUt2xxNYqyRyVLRcg4aFAIWPX/xADOPwZ
-         3HSl9BBe2VeN/+rxN9a0HpSYYV3nudvx9r36QeA61BrWan2tKIaiSsSDVLWslNTDcc0v
-         ggMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NtbLV99k7TcIhG9ot/elTDrTvZyxlbX0LhoeRI3dMJQ=;
-        b=VDI5tBWJVyAPr95dBIIffrxZGQuLWt6jZZs6Az8fwgaL0RRC06POrlryX2KDyG1aD9
-         T0E3gwqBl/ipCtIvl/wVYKhsmIWY5Cx6ZNnWMTHmUvXERxkqVVPuMs0rNOI4vTpt4fVM
-         P9ApRyFJSYdO5Xs/56sM1AFFDF6tdtKXIioey5D7m2b5o+SZid/6DdZYkPGJ0XUL52uE
-         X3zqD8QChZtcbsfrvYaVFGbT4ERu/JbxG70U1XU5nyZbpxZvzc0cMkvaS3uUEsT8vcyo
-         S96zQA34+UimnhYcTB4yORDfDAWq6mqt06No3CUfEth1ApHeRIU8i6/F3tojxUhxeSPw
-         W8Yg==
-X-Gm-Message-State: AGi0PuYfI3+ymMVk1IXOF2jiLdkjC7ODOtR4Kn0YJpoNl9KrOVcrkjGM
-        D0jiosC0yJnRbbXk8m4iTzqfTCMj
-X-Google-Smtp-Source: APiQypLvVynFDLP/3lRmrHqHdus/jAmNy9Zd3fOg/lsg+ZG1pWGxp2rc1ajQR0TvmCHb1dRZxka2yw==
-X-Received: by 2002:adf:ecc3:: with SMTP id s3mr17105593wro.116.1588862229858;
-        Thu, 07 May 2020 07:37:09 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o6sm8808095wrw.63.2020.05.07.07.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 07:37:08 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 2/4] habanalabs: define ASIC-dependent interface for signal/wait
-Date:   Thu,  7 May 2020 17:36:59 +0300
-Message-Id: <20200507143701.32456-2-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507143701.32456-1-oded.gabbay@gmail.com>
-References: <20200507143701.32456-1-oded.gabbay@gmail.com>
+        Thu, 7 May 2020 10:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727834AbgEGO1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4925A215A4;
+        Thu,  7 May 2020 14:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861675;
+        bh=fFjPDlSYqtZsiNtwI2hwcFmM5WH27agQGBfvGvrioZI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eNapZzGt+QBZNoGi1313IquHPl94YEhPMSm2lEZvQHTQoCrmdwJrClXb6kGdNnH6a
+         t11m+u7DRwtMTBDoMyKouH/02WMQZoLZ7jZCn1ZF5UYA+bpMWIE2oPo8kZnzhI3MiS
+         mlu0CDoFSTlU1INTJcREE5sAi0xB41kAma4KzC1s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 23/50] RDMA/core: Fix race between destroy and release FD object
+Date:   Thu,  7 May 2020 10:26:59 -0400
+Message-Id: <20200507142726.25751-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
+References: <20200507142726.25751-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-This feature requires handling h/w resources which are a bit different from
-one ASIC to the other. Therefore, we need to define a set of interfaces the
-ASIC code provides to the common code to signal, wait, reset sync object
-and to reset and init a queue.
+[ Upstream commit f0abc761bbb9418876cc4d1ebc473e4ea6352e42 ]
 
-As this feature is not supported in Goya, provide an empty implementation
-of those functions.
+The call to ->lookup_put() was too early and it caused an unlock of the
+read/write protection of the uobject after the FD was put. This allows a
+race:
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+     CPU1                                 CPU2
+ rdma_lookup_put_uobject()
+   lookup_put_fd_uobject()
+     fput()
+				   fput()
+				     uverbs_uobject_fd_release()
+				       WARN_ON(uverbs_try_lock_object(uobj,
+					       UVERBS_LOOKUP_WRITE));
+   atomic_dec(usecnt)
+
+Fix the code by changing the order, first unlock and call to
+->lookup_put() after that.
+
+Fixes: 3832125624b7 ("IB/core: Add support for idr types")
+Link: https://lore.kernel.org/r/20200423060122.6182-1-leon@kernel.org
+Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c  | 43 ++++++++++++++++++++++++++++
- drivers/misc/habanalabs/habanalabs.h | 15 ++++++++++
- 2 files changed, 58 insertions(+)
+ drivers/infiniband/core/rdma_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 70fe00264f4a..b3e2354aaca2 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -5137,6 +5137,42 @@ u32 goya_get_queue_id_for_cq(struct hl_device *hdev, u32 cq_idx)
- 	return cq_idx;
- }
- 
-+static void goya_ext_queue_init(struct hl_device *hdev, u32 q_idx)
-+{
-+
-+}
-+
-+static void goya_ext_queue_reset(struct hl_device *hdev, u32 q_idx)
-+{
-+
-+}
-+
-+static u32 goya_get_signal_cb_size(struct hl_device *hdev)
-+{
-+	return 0;
-+}
-+
-+static u32 goya_get_wait_cb_size(struct hl_device *hdev)
-+{
-+	return 0;
-+}
-+
-+static void goya_gen_signal_cb(struct hl_device *hdev, void *data, u16 sob_id)
-+{
-+
-+}
-+
-+static void goya_gen_wait_cb(struct hl_device *hdev, void *data, u16 sob_id,
-+			u16 sob_val, u16 mon_id, u32 q_idx)
-+{
-+
-+}
-+
-+static void goya_reset_sob(struct hl_device *hdev, void *data)
-+{
-+
-+}
-+
- static void goya_set_dma_mask_from_fw(struct hl_device *hdev)
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 2947f4f83561d..177333d8bcdae 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -678,7 +678,6 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
+ 			     enum rdma_lookup_mode mode)
  {
- 	if (RREG32(mmPSOC_GLOBAL_CONF_NON_RST_FLOPS_0) ==
-@@ -5222,6 +5258,13 @@ static const struct hl_asic_funcs goya_funcs = {
- 	.read_device_fw_version = goya_read_device_fw_version,
- 	.load_firmware_to_device = goya_load_firmware_to_device,
- 	.load_boot_fit_to_device = goya_load_boot_fit_to_device,
-+	.ext_queue_init = goya_ext_queue_init,
-+	.ext_queue_reset = goya_ext_queue_reset,
-+	.get_signal_cb_size = goya_get_signal_cb_size,
-+	.get_wait_cb_size = goya_get_wait_cb_size,
-+	.gen_signal_cb = goya_gen_signal_cb,
-+	.gen_wait_cb = goya_gen_wait_cb,
-+	.reset_sob = goya_reset_sob,
- 	.set_dma_mask_from_fw = goya_set_dma_mask_from_fw,
- 	.get_device_time = goya_get_device_time
- };
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 7cd9a8d72451..dd93cd903f91 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -553,6 +553,13 @@ enum hl_pll_frequency {
-  *                          contained in registers
-  * @load_firmware_to_device: load the firmware to the device's memory
-  * @load_boot_fit_to_device: load boot fit to device's memory
-+ * @ext_queue_init: Initialize the given external queue.
-+ * @ext_queue_reset: Reset the given external queue.
-+ * @get_signal_cb_size: Get signal CB size.
-+ * @get_wait_cb_size: Get wait CB size.
-+ * @gen_signal_cb: Generate a signal CB.
-+ * @gen_wait_cb: Generate a wait CB.
-+ * @reset_sob: Reset a SOB.
-  * @set_dma_mask_from_fw: set the DMA mask in the driver according to the
-  *                        firmware configuration
-  * @get_device_time: Get the device time.
-@@ -648,6 +655,14 @@ struct hl_asic_funcs {
- 					enum hl_fw_component fwc);
- 	int (*load_firmware_to_device)(struct hl_device *hdev);
- 	int (*load_boot_fit_to_device)(struct hl_device *hdev);
-+	void (*ext_queue_init)(struct hl_device *hdev, u32 hw_queue_id);
-+	void (*ext_queue_reset)(struct hl_device *hdev, u32 hw_queue_id);
-+	u32 (*get_signal_cb_size)(struct hl_device *hdev);
-+	u32 (*get_wait_cb_size)(struct hl_device *hdev);
-+	void (*gen_signal_cb)(struct hl_device *hdev, void *data, u16 sob_id);
-+	void (*gen_wait_cb)(struct hl_device *hdev, void *data, u16 sob_id,
-+				u16 sob_val, u16 mon_id, u32 q_idx);
-+	void (*reset_sob)(struct hl_device *hdev, void *data);
- 	void (*set_dma_mask_from_fw)(struct hl_device *hdev);
- 	u64 (*get_device_time)(struct hl_device *hdev);
- };
+ 	assert_uverbs_usecnt(uobj, mode);
+-	uobj->uapi_object->type_class->lookup_put(uobj, mode);
+ 	/*
+ 	 * In order to unlock an object, either decrease its usecnt for
+ 	 * read access or zero it in case of exclusive access. See
+@@ -695,6 +694,7 @@ void rdma_lookup_put_uobject(struct ib_uobject *uobj,
+ 		break;
+ 	}
+ 
++	uobj->uapi_object->type_class->lookup_put(uobj, mode);
+ 	/* Pairs with the kref obtained by type->lookup_get */
+ 	uverbs_uobject_put(uobj);
+ }
 -- 
-2.17.1
+2.20.1
 
