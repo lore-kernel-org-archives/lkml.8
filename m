@@ -2,117 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B212C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D695C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427E32075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uw9tkn4t"
+	by mail.kernel.org (Postfix) with ESMTP id 2D00A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgEGKYt (ORCPT
+        id S1726579AbgEGKZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725949AbgEGKYs (ORCPT
+        Thu, 7 May 2020 06:25:05 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50055 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGKZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:24:48 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA513C061A41
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 03:24:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s10so1904535plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 03:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=B/Mk9PnpQZ4xKWEBXlLMDvhktcZ9bgwGO85pTWBmd1Q=;
-        b=Uw9tkn4tmqYAbTMf70CLe39oO9q1CC6aVjLT1Rme6khxLYX4hxUID3ZnvBSZGakv5P
-         cGKuKJqk2HPHbQ4P1iQd69NwgL2xHQejKzAHF3MGaRFbXyURliEk1oHrAxQepDxSyXed
-         VFbE4tH2UIH74TV9w+cRWY5I37BG/H1vO1EhM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=B/Mk9PnpQZ4xKWEBXlLMDvhktcZ9bgwGO85pTWBmd1Q=;
-        b=pLmHcz2WzFnIMff9o/ThjdE/oB2opGNSPn+xYkTHMgopj5ydhI7aySgkIVmrZWccct
-         rH1Nf7HAY8E9f7VfrzvHs4EJA72EggvaigoIQZcs5+l1m7BGf/BeFRtvuqKeHEefB2zh
-         gGXOl/OYLpSeMwhDUIWR2qXKG8hHY08cyP1mIttyJVoutJrPbY4jbZwzAXjW86BW+bEG
-         V3tM9b1zgUHjL0esyzLqQCGmLwpV8HemmPnkenZ8RZouP+NHCEVPL5W6SEJUfrK67ebh
-         UfFLbzVj3uzm3eXkTp1fgve1TPXbo+5Xd/t0Y2tiETvIQ1gbjZUIdwLE6wWzEHHqyIvn
-         IQDA==
-X-Gm-Message-State: AGi0PubSKfRSmS1KUCmJpmuuWo5VjmczAcgMWCfuopOzbXfLsnTyz66F
-        D+iDNIAipDRfu/1N0lVK+/ys0Ld9c0k=
-X-Google-Smtp-Source: APiQypIfdyYf1DVe2NADcLWJNyPuVcmkF60Nyz26uFMfQ6Htik4/hMklktg3MMP3+ePUbdo+ebw1vA==
-X-Received: by 2002:a17:90a:b78e:: with SMTP id m14mr2742862pjr.114.1588847088130;
-        Thu, 07 May 2020 03:24:48 -0700 (PDT)
-Received: from localhost ([2401:fa00:9:14:a92f:c47d:76a8:b09e])
-        by smtp.gmail.com with ESMTPSA id a138sm4514903pfd.32.2020.05.07.03.24.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 03:24:47 -0700 (PDT)
-From:   Eizan Miyamoto <eizan@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Eizan Miyamoto <eizan@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v3 3/5] [media] mtk-mdp: handle vpu_wdt_reg_handler() errors during probe
-Date:   Thu,  7 May 2020 20:23:46 +1000
-Message-Id: <20200507202337.v3.3.Ia8efd7905e2fcfc81f547e27a51f06373624b3da@changeid>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200507102345.81849-1-eizan@chromium.org>
-References: <20200507102345.81849-1-eizan@chromium.org>
+        Thu, 7 May 2020 06:25:05 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 831E6240014;
+        Thu,  7 May 2020 10:21:11 +0000 (UTC)
+Date:   Thu, 7 May 2020 12:21:10 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vincenzo Aliberti <vincenzo.aliberti@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] mtd: lpddr: fix excessive stack usage with clang
+Message-ID: <20200507122110.50ccce48@xps13>
+In-Reply-To: <20200506023828.GA415100@ubuntu-s3-xlarge-x86>
+References: <20200505140136.263461-1-arnd@arndb.de>
+        <20200506023828.GA415100@ubuntu-s3-xlarge-x86>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cleanup to better handle errors during MDP probe.
 
-Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Nathan Chancellor <natechancellor@gmail.com> wrote on Tue, 5 May 2020
+19:38:28 -0700:
 
-Changes in v3: None
-Changes in v2:
-- remove unnecessary error handling labels in favor of err_m2m_register
+> On Tue, May 05, 2020 at 04:01:16PM +0200, Arnd Bergmann wrote:
+> > Building lpddr2_nvm with clang can result in a giant stack usage
+> > in one function:
+> > 
+> > drivers/mtd/lpddr/lpddr2_nvm.c:399:12: error: stack frame size of 1144 bytes in function 'lpddr2_nvm_probe' [-Werror,-Wframe-larger-than=]
+> > 
+> > The problem is that clang decides to build a copy of the mtd_info
+> > structure on the stack and then do a memcpy() into the actual version. It
+> > shouldn't really do it that way, but it's not strictly a bug either.
+> > 
+> > As a workaround, use a static const version of the structure to assign
+> > most of the members upfront and then only set the few members that
+> > require runtime knowledge at probe time.
+> > 
+> > Fixes: 96ba9dd65788 ("mtd: lpddr: add driver for LPDDR2-NVM PCM memories")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>  
+> 
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index 9b24b8d46eb7..17d155219ba2 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -188,8 +188,12 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	}
- 
- 	mdp->vpu_dev = vpu_get_plat_device(pdev);
--	vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
--			    VPU_RST_MDP);
-+	ret = vpu_wdt_reg_handler(mdp->vpu_dev, mtk_mdp_reset_handler, mdp,
-+				  VPU_RST_MDP);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register reset handler\n");
-+		goto err_m2m_register;
-+	}
- 
- 	platform_set_drvdata(pdev, mdp);
- 
--- 
-2.26.2.526.g744177e7f7-goog
-
+> 
+> > ---
+> >  drivers/mtd/lpddr/lpddr2_nvm.c | 35 ++++++++++++++++++----------------
+> >  1 file changed, 19 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/lpddr/lpddr2_nvm.c b/drivers/mtd/lpddr/lpddr2_nvm.c
+> > index 0f1547f09d08..72f5c7b30079 100644
+> > --- a/drivers/mtd/lpddr/lpddr2_nvm.c
+> > +++ b/drivers/mtd/lpddr/lpddr2_nvm.c
+> > @@ -393,6 +393,17 @@ static int lpddr2_nvm_lock(struct mtd_info *mtd, loff_t start_add,
+> >  	return lpddr2_nvm_do_block_op(mtd, start_add, len, LPDDR2_NVM_LOCK);
+> >  }
+> >  
+> > +static const struct mtd_info lpddr2_nvm_mtd_info = {
+> > +	.type		= MTD_RAM,
+> > +	.writesize	= 1,
+> > +	.flags		= (MTD_CAP_NVRAM | MTD_POWERUP_LOCK),
+> > +	._read		= lpddr2_nvm_read,
+> > +	._write		= lpddr2_nvm_write,
+> > +	._erase		= lpddr2_nvm_erase,
+> > +	._unlock	= lpddr2_nvm_unlock,
+> > +	._lock		= lpddr2_nvm_lock,
+> > +};
+> > +
+> >  /*
+> >   * lpddr2_nvm driver probe method
+> >   */
+> > @@ -433,6 +444,7 @@ static int lpddr2_nvm_probe(struct platform_device *pdev)
+> >  		.pfow_base	= OW_BASE_ADDRESS,
+> >  		.fldrv_priv	= pcm_data,
+> >  	};
+> > +
+> >  	if (IS_ERR(map->virt))
+> >  		return PTR_ERR(map->virt);
+> >  
+> > @@ -444,22 +456,13 @@ static int lpddr2_nvm_probe(struct platform_device *pdev)
+> >  		return PTR_ERR(pcm_data->ctl_regs);
+> >  
+> >  	/* Populate mtd_info data structure */
+> > -	*mtd = (struct mtd_info) {
+> > -		.dev		= { .parent = &pdev->dev },
+> > -		.name		= pdev->dev.init_name,
+> > -		.type		= MTD_RAM,
+> > -		.priv		= map,
+> > -		.size		= resource_size(add_range),
+> > -		.erasesize	= ERASE_BLOCKSIZE * pcm_data->bus_width,
+> > -		.writesize	= 1,
+> > -		.writebufsize	= WRITE_BUFFSIZE * pcm_data->bus_width,
+> > -		.flags		= (MTD_CAP_NVRAM | MTD_POWERUP_LOCK),
+> > -		._read		= lpddr2_nvm_read,
+> > -		._write		= lpddr2_nvm_write,
+> > -		._erase		= lpddr2_nvm_erase,
+> > -		._unlock	= lpddr2_nvm_unlock,
+> > -		._lock		= lpddr2_nvm_lock,
+> > -	};
+> > +	*mtd = lpddr2_nvm_mtd_info;
+> > +	mtd->dev.parent		= &pdev->dev;
+> > +	mtd->name		= pdev->dev.init_name;
+> > +	mtd->priv		= map;
+> > +	mtd->size		= resource_size(add_range);
+> > +	mtd->erasesize		= ERASE_BLOCKSIZE * pcm_data->bus_width;
+> > +	mtd->writebufsize	= WRITE_BUFFSIZE * pcm_data->bus_width;
+> >  
+> >  	/* Verify the presence of the device looking for PFOW string */
+> >  	if (!lpddr2_nvm_pfow_present(map)) {
+> > -- 
+> > 2.26.0
+> >   
