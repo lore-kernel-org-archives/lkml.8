@@ -2,108 +2,121 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41726C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B32C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6332145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FaGuhBOb"
+	by mail.kernel.org (Postfix) with ESMTP id 515E22145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588874546;
+	bh=VwlZdvyZ65Zk5wRT7z0+h8x/so/vB6yAwldwafnFQW4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DrPTVyenANLeJPAeNsPLVUzzo6L9YFv6x2utA/xwFm5+nBowq0pdYVWf8wto1pw1e
+	 tTl9MpDq1/PJkunnNqO8FnilycjICjctHDUdM+s0XLFzP9ZAMOkB1p93N5RoaMpkdD
+	 jd9ujr8sCnxD/zWmjRwlHTlpEWGdnouQBjlIop/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEGSCV (ORCPT
+        id S1728297AbgEGSCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726491AbgEGSCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:02:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF1EC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:02:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b6so2357108plz.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RcV9lFh0IW1N+XHaoImBLGRzG64WEmrZADnXXHQ+xEw=;
-        b=FaGuhBOb8Z469hrDfs6vsVsvoQgKcxtPvTN256HuPR18U0yw2VUUtU8/pjPfcRCDEN
-         sGQZ3k0HLtLtMtSGbBqPZQ2KN6pC/7KLzY/BJ+HtHbvlLLMOHudRKh1zoCjaJb2WE3lV
-         GtqAPDel/iGBpnVwe8/QLWFa8wVii5Y+bFp60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RcV9lFh0IW1N+XHaoImBLGRzG64WEmrZADnXXHQ+xEw=;
-        b=pJ8+c8XnMFaUJIoq1jimgAMhPQNZb/f7i+XUrqWJ+0Rn4bN4Uwy7AXwS3aNSJek85A
-         AI3P+dHLt1HXZqVGfTXmgApeSaJglC6wV57O/G8B2QurO9rr8dICBIx6uF6MLK4PEkNM
-         llRy7X0rvtm4zVL6rNKTJBVsffQ8C0dcA5RuI/7X3+EpGOofbtPT7zaO5OP9MmXuN+5o
-         dyYaYOTP0BSz7P9PzWtdH4ZEM/pMrDik15GjRfe8ME/WTBl4WYSTqDCcex7IDVhWt6z6
-         FmFFKdGRA/bUGUWAE81oxWo7WVRykXwxM4KxqLMzaxVnJ8ekWR1MKEIbon6yIPhkwxK3
-         BkOA==
-X-Gm-Message-State: AGi0PuYD1lrmWsvPb7vSw6cF0dgwBxQnvl4CsmTvEoDhEEa0vddfcz4R
-        ASikIyphMn7cZJqgY9dA0AwDfQ==
-X-Google-Smtp-Source: APiQypJKk+TbElDSjc9LxL9Q/oaEJix7niFewv4zimIZp6EwRkySvviGZeAu9Fq+9oA2ikbs9CHxWw==
-X-Received: by 2002:a17:90a:25cb:: with SMTP id k69mr1327983pje.93.1588874540257;
-        Thu, 07 May 2020 11:02:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b75sm421141pjc.23.2020.05.07.11.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:02:19 -0700 (PDT)
-Date:   Thu, 7 May 2020 11:02:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
- flexible-array member
-Message-ID: <202005071058.A2234694ED@keescook>
-References: <20200507040912.GA31382@embeddedor>
+        Thu, 7 May 2020 14:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgEGSCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:02:24 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36A4A24954
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 18:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588874543;
+        bh=VwlZdvyZ65Zk5wRT7z0+h8x/so/vB6yAwldwafnFQW4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RBb8L9nURNjYclAs3LOnV3iMbO+08U1E+5fWF500lIiqowb9vDzqnVHrFf2R6YOJQ
+         c+tksHteKwvzR1Qm0eZ7x2rQ2kbvCB7ivlAutVrE0BxRM68SEwe1gv8HbU+UH/XcWh
+         EPxTkRL9XaVSXsP+hbwZovrdnQZqKFq9pKxr/jtI=
+Received: by mail-wr1-f41.google.com with SMTP id l18so7471969wrn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:02:23 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ42fCJFRil4AkpaeDbPwYStrdZUF35YX+atGWyrtEXXLNLh1E8
+        CMH8rcL/BB6FRZMXVpGRvIMcLFYnK7dXVimj2eL6+g==
+X-Google-Smtp-Source: APiQypJmWnsaeXWFP3t8RdXi07tyN0RgGFyVnzXqq90lSm0AqnFzrs2SnReq/hpsqubfqhJK8KMT9Cq9xeaxvO4eaGA=
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr16440356wrv.75.1588874541618;
+ Thu, 07 May 2020 11:02:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507040912.GA31382@embeddedor>
+References: <20200505131602.633487962@linutronix.de> <20200505134100.957390899@linutronix.de>
+In-Reply-To: <20200505134100.957390899@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 May 2020 11:02:09 -0700
+X-Gmail-Original-Message-ID: <CALCETrX=Obqn2ms5EYs7HPxTE_UgnVkmt-HoAoGzB4BajuMwLA@mail.gmail.com>
+Message-ID: <CALCETrX=Obqn2ms5EYs7HPxTE_UgnVkmt-HoAoGzB4BajuMwLA@mail.gmail.com>
+Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 11:09:12PM -0500, Gustavo A. R. Silva wrote:
-> As mentioned above: "Flexible array members have incomplete type, and
-> so the sizeof operator may not be applied. As a quirk of the original
-> implementation of zero-length arrays, sizeof evaluates to zero."[1] So,
-> the sizeof(flexible-array) can be safely removed to fix the error above.
+On Tue, May 5, 2020 at 7:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> Convert #MC over to using task_work_add(); it will run the same code
+> slightly later, on the return to user path of the same exception.
 
-As in "sizeof(event_header->event) always evaluated to 0, so removing it
-has no effect".
+I think this patch is correct, but I think it's only one small and not
+that obviously wrong step away from being broken:
 
-> [...]
-> diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
-> index e741b1157525..351a2989b3c6 100644
-> --- a/drivers/char/tpm/eventlog/tpm2.c
-> +++ b/drivers/char/tpm/eventlog/tpm2.c
-> @@ -51,8 +51,7 @@ static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
->  	int i;
->  
->  	event_header = addr;
-> -	size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
-> -		+ event_header->event_size;
-> +	size = sizeof(*event_header) + event_header->event_size;
+>         if ((m.cs & 3) == 3) {
+>                 /* If this triggers there is no way to recover. Die hard. */
+>                 BUG_ON(!on_thread_stack() || !user_mode(regs));
+> -               local_irq_enable();
+> -               preempt_enable();
+>
+> -               if (kill_it || do_memory_failure(&m))
+> -                       force_sig(SIGBUS);
+> -               preempt_disable();
+> -               local_irq_disable();
+> +               current->mce_addr = m.addr;
+> +               current->mce_status = m.mcgstatus;
+> +               current->mce_kill_me.func = kill_me_maybe;
+> +               if (kill_it)
+> +                       current->mce_kill_me.func = kill_me_now;
+> +               task_work_add(current, &current->mce_kill_me, true);
 
-That said, I think it would be better to stick to the struct_size()
-idiom for dealing with flexible arrays here:
+This is fine if the source was CPL3, but it's not going to work if CPL
+was 0.  We don't *currently* do this from CPL0, but people keep
+wanting to.  So perhaps there should be a comment like:
 
-	size = struct_size(event_header, event, event_size);
+/*
+ * The #MC originated at CPL3, so we know that we will go execute the
+task_work before returning to the offending user code.
+ */
 
--- 
-Kees Cook
+IOW, if we want to recover from CPL0 #MC, we will need a different mechanism.
+
+I also confess a certain amount of sadness that my beautiful
+haha-not-really-atomic-here mechanism isn't being used anymore. :(
+
+--Andy
