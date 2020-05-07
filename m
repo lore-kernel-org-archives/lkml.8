@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36412C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD2C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1112E21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1894208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879249;
-	bh=yUeqqtw92TMd9QVAQWtIq+r0VD45Nr+xnNAHOagDNJU=;
+	s=default; t=1588879253;
+	bh=gdUcbJXVtT6YHaa/pRQ/6RwwYOCYa19E7kHEwdNGrpU=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=TPnOCW46X51JZxvaoxkGtt44h41UzxbWT5mbg+FNeSBGuyNO5w6UJsQvvGrwvX//Z
-	 lbecKiLpcfMWQ4WQoq+4HvLOi9bZY6HPmqhg+uEWxqdigj/+OEBSdpiu92GCC3+ROK
-	 RNAr/+UqnRRDrYKFKXrqncimm8hKTiVkGhPAO/gI=
+	b=Cx4afjTKtcwjYGSSqx4lLGksDgVFn+X1zPsjmwZMYW4+TZbeG5EzHY+l3bkjWSgHO
+	 oqdLdaQiYNj1TJBmR6Y5R2D0jLSBIK25tUsEHG5jLKz2/qxBEVHCRrYv0rlLG1tFOU
+	 61GpECaBvtxIiWbtdxLHff4eYMlAW44p/v72J8RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgEGTUr (ORCPT
+        id S1728692AbgEGTUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgEGTUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:20:46 -0400
+        id S1727837AbgEGTUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:20:52 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8020208D6;
-        Thu,  7 May 2020 19:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0681208E4;
+        Thu,  7 May 2020 19:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879246;
-        bh=yUeqqtw92TMd9QVAQWtIq+r0VD45Nr+xnNAHOagDNJU=;
+        s=default; t=1588879251;
+        bh=gdUcbJXVtT6YHaa/pRQ/6RwwYOCYa19E7kHEwdNGrpU=;
         h=Date:From:To:Cc:Subject:From;
-        b=oVKuosy/ZXzrS2uzu7QnZP4w33E0rmSrAfBKo+Bj/eWcD/oESVEZrXc637mDt8Ub0
-         ECQVP+zUL8Eg6hKxnx+XQxnv35gKvmBKF47w3BWhFPzEEEFOURH0V5vAoFkFG+Uh7U
-         0SR6kMHKkR8G4r6cb90zB8mCE2Cq3c+obYyLoEEk=
-Date:   Thu, 7 May 2020 14:25:12 -0500
+        b=FsM5D+H1Q0D/Ggqx8+VPzcsDC6kmAQhmprvGzjUpT5FE+WeaS/lkzXHF1GmuW/m4v
+         JNmAF9UU71unvR3hIiR6a9sqwttWFIebrBMOqQDxQWevbmRCIDw+hRXHbPqs9c0Igk
+         HyQdDDdvJtkGVPtBS5rBsuFcbAyFLAhnowjqUfGk=
+Date:   Thu, 7 May 2020 14:25:17 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: tegra-apb: Replace zero-length array with
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: imx8mm: Replace zero-length array with
  flexible-array
-Message-ID: <20200507192512.GA16537@embeddedor>
+Message-ID: <20200507192517.GA16557@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,20 +94,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c |    2 +-
+ drivers/thermal/imx8mm_thermal.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index f6a2f42ffc51..a42c0b4d14ac 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -225,7 +225,7 @@ struct tegra_dma {
- 	u32				global_pause_count;
- 
- 	/* Last member of the structure */
--	struct tegra_dma_channel channels[0];
-+	struct tegra_dma_channel channels[];
+diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+index 0d60f8d7894f..e6061e26d4ac 100644
+--- a/drivers/thermal/imx8mm_thermal.c
++++ b/drivers/thermal/imx8mm_thermal.c
+@@ -54,7 +54,7 @@ struct imx8mm_tmu {
+ 	void __iomem *base;
+ 	struct clk *clk;
+ 	const struct thermal_soc_data *socdata;
+-	struct tmu_sensor sensors[0];
++	struct tmu_sensor sensors[];
  };
  
- static inline void tdma_write(struct tegra_dma *tdma, u32 reg, u32 val)
+ static int imx8mm_tmu_get_temp(void *data, int *temp)
 
