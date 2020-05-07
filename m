@@ -2,124 +2,121 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD283C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98C7C207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZaX8Bq1i"
+	by mail.kernel.org (Postfix) with ESMTP id E613D206B9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgEGP16 (ORCPT
+        id S1726618AbgEGP2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:27:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42076 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgEGP16 (ORCPT
+        Thu, 7 May 2020 11:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725914AbgEGP2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:27:58 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047FJSLv096762;
-        Thu, 7 May 2020 15:27:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=C8WOwvn7FyfQFJKI0VEW/oC4rt5Brcw47m53AfhP1FA=;
- b=ZaX8Bq1igkK4JT2UBd9+SBtgpCECZgPTLv5f1sPcCi7WCvQ49+A9DIiYsU580lXVbmig
- ovU6PWORIxv5ToMCVZImok5oG1xMoq6lccIjfhpgSVilahsMh50UtZCHBSFU2Utxosbe
- VxuQdSIZ5TlmT0snQPDrIPI2cZw80adlpSB6LGFCpJh+L3+qP3uQKau5ZnHBLkTmZs0S
- w5AD4xaK9n+XVPbjfFx5Jc6fJ0NLMF9+S83YA/P7bym65lKRJmPRofqkGDhKrLHnmwOc
- oezXIOGh2rxAmw3Orss/1qHSBCJPADNfG0hkdToLQUYZW0vZv6W0SbL3mp5xxcyqfWAi YQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30usgq7wvj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 15:27:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047FGxcB046376;
-        Thu, 7 May 2020 15:27:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30us7qtn4t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 15:27:08 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047FR5Sn007254;
-        Thu, 7 May 2020 15:27:05 GMT
-Received: from linux-1.home (/92.157.36.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 08:27:05 -0700
-Subject: Re: [patch V4 part 3 04/29] x86/traps: Make interrupt enable/disable
- symmetric in C code
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thu, 7 May 2020 11:28:39 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A92C05BD43;
+        Thu,  7 May 2020 08:28:39 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWiRs-00057R-3f; Thu, 07 May 2020 17:28:32 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABB061C001A;
+        Thu,  7 May 2020 17:28:31 +0200 (CEST)
+Date:   Thu, 07 May 2020 15:28:31 -0000
+From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/urgent] objtool: Fix infinite loop in find_jump_table()
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134354.774943181@linutronix.de>
- <20200505134903.622702796@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <4b13ee35-da6f-a77d-cb19-1b32657cb939@oracle.com>
-Date:   Thu, 7 May 2020 17:25:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com>
+References: <378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505134903.622702796@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Message-ID: <158886531158.8414.1142535737378207630.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- mlxlogscore=835 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=870 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070124
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the objtool/urgent branch of tip:
 
-On 5/5/20 3:43 PM, Thomas Gleixner wrote:
-> Traps enable interrupts conditionally but rely on the ASM return code to
-> disable them again. That results in redundant interrupt disable and trace
-> calls.
-> 
-> Make the trap handlers disable interrupts before returning to avoid that,
-> which allows simplification of the ASM entry code.
-> 
-> Originally-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> ---
->   arch/x86/kernel/traps.c |   28 +++++++++++++++++++---------
->   arch/x86/mm/fault.c     |   15 +++++++++++++--
->   2 files changed, 32 insertions(+), 11 deletions(-)
-> 
+Commit-ID:     1119d265bc20226c241e5540fc8a246d9e30b272
+Gitweb:        https://git.kernel.org/tip/1119d265bc20226c241e5540fc8a246d9e30b272
+Author:        Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate:    Tue, 28 Apr 2020 16:45:16 -05:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 07 May 2020 17:22:31 +02:00
 
-So this patch makes C trap handlers disable interrupts on return but there's no
-change to the ASM entry code, which will still (also) disable interrupts. I suppose
-this is cleaned up in a next patch. So it's worth mentioning that the "simplification
-of the ASM entry code" is not in this patch.
+objtool: Fix infinite loop in find_jump_table()
 
-alex.
+Kristen found a hang in objtool when building with -ffunction-sections.
+
+It was caused by evergreen_pcie_gen2_enable.cold() being laid out
+immediately before evergreen_pcie_gen2_enable().  Since their "pfunc" is
+always the same, find_jump_table() got into an infinite loop because it
+didn't recognize the boundary between the two functions.
+
+Fix that with a new prev_insn_same_sym() helper, which doesn't cross
+subfunction boundaries.
+
+Reported-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/378b51c9d9c894dc3294bc460b4b0869e950b7c5.1588110291.git.jpoimboe@redhat.com
+---
+ tools/objtool/check.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4b170fd..0e8f9a3 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -72,6 +72,17 @@ static struct instruction *next_insn_same_func(struct objtool_file *file,
+ 	return find_insn(file, func->cfunc->sec, func->cfunc->offset);
+ }
+ 
++static struct instruction *prev_insn_same_sym(struct objtool_file *file,
++					       struct instruction *insn)
++{
++	struct instruction *prev = list_prev_entry(insn, list);
++
++	if (&prev->list != &file->insn_list && prev->func == insn->func)
++		return prev;
++
++	return NULL;
++}
++
+ #define func_for_each_insn(file, func, insn)				\
+ 	for (insn = find_insn(file, func->sec, func->offset);		\
+ 	     insn;							\
+@@ -1050,8 +1061,8 @@ static struct rela *find_jump_table(struct objtool_file *file,
+ 	 * it.
+ 	 */
+ 	for (;
+-	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
+-	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
++	     insn && insn->func && insn->func->pfunc == func;
++	     insn = insn->first_jump_src ?: prev_insn_same_sym(file, insn)) {
+ 
+ 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
+ 			break;
