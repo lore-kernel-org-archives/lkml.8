@@ -2,208 +2,294 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DE6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB80C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B3320A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="byF7VyPn"
+	by mail.kernel.org (Postfix) with ESMTP id 9486A20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588887907;
+	bh=dGXn7y8HdVpOqYXGyJzDbO47D9xeOiu6s7qC2sjSIfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=15S7Ey8fZgolPpNSnaZYJvKm1czHB553URyBigBCFilekEq3Rc1DgkcDqf7hPcHkd
+	 MG5d9inas7SMA5GREk+N/+GGC0EGrmcdCW9qlc5PDNqV2G3vKg1bLh/lQZIp4RK162
+	 e32/scwTXzJ7UENNCD4VJxl0FHMuO4F5uRfmAgD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgEGVo6 (ORCPT
+        id S1727874AbgEGVpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgEGVoW (ORCPT
+        Thu, 7 May 2020 17:45:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39721 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgEGVoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:44:22 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0598C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:44:21 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id pg17so5883660ejb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5bOWsbby9E+qmMGJsuMwgUAgEfU2kO6P0jdaZ6pAtUk=;
-        b=byF7VyPnLI+nh2I1eprmmNFINZ+NJ5pkCzxdpNRuekTuNjT51vhh3CkV59wkiwN6XH
-         krwChNxiVaVptfaH/K+bCu0LY0cnQl5xilBXoOas9PauRDAkXOKPqe01yfPQuPx1XduZ
-         A0TAiHE+AOTm+JRQPZP2nACr3Ul4ObfdoQGrxi+Cpr1bPzmZoE1CWkqpf+/r3ex3IIW2
-         yZD1J7LPkidCeei/H6Hf6xaOAj2urjtMyLqyv0kw8rUdyUIpSq2wMms6dl/9ktOCl4VB
-         9T6Fo6/2uYHMb6SPeVBuh+nwu7QH+Z1b83muCKIBcRYEGskyNZwNJKFacUigra42hXmQ
-         eB9w==
+        Thu, 7 May 2020 17:44:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m13so5857164otf.6;
+        Thu, 07 May 2020 14:44:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5bOWsbby9E+qmMGJsuMwgUAgEfU2kO6P0jdaZ6pAtUk=;
-        b=bwbWHYwv8ayLLU1cA7imRJpsZ7dyEn94AHwr8a6AF5nHlnXvfX/jex6GvAm22+JG84
-         v6b1SoQRJVxbq9rQERuiHSc2ZEoyqzu2r6WR7VChC8EpdNzU/IFilW//7WE4Va9Qu/15
-         PoR73jvqCUBTRTRaOZT/BQzZp7kf3GBoIGJd6whZ7zbWXq9ILVm2yH5FKchnyKU6dHMp
-         o1+i5f51ctW4KPiiA80Kv4Pure2PGU223lzC3IqoA6BpCC7IMKUbcKl//W5CBdQt3CfT
-         R2nUe/hoRapoOGz1sdIglo6JAm4S+yBXEfdYBpqfO5vPchXKk4lEZpazS/S5ANv9DwA/
-         HBgw==
-X-Gm-Message-State: AGi0PubhtPc5MFWYH1HWwrl7J7Tyx2foimWaESCOGxprDbWUSH35WpbC
-        RwiswQQlO29sEs/rJfkdaFJAyg==
-X-Google-Smtp-Source: APiQypKvd5mkRt0RGmY7O6yLJA3U6CWrKQQMB1yksU+oUQ9QxRNgVpW7n33l2Cd6M0LU0va+oSuwEA==
-X-Received: by 2002:a17:906:3952:: with SMTP id g18mr14340273eje.191.1588887860372;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N9AdjN2grTDKj0LC6+6n7CezqEC5sJdE8xDXYQF1i3s=;
+        b=lCnY1uExZeEzYZ5pv9G78d1PkSXsKddixvbrn48Oxuy1oxzIjCAyFuBzBVm1OvzjRh
+         G5P91h9l+Mkh/85EbzPgxn3qAjmGWFxR3FbOmLh60/t0p/n4boDbF90/bT3DeJQbm6LS
+         YcFLod5OUPp9c6f1MSo+2AgGdzCHqnWSDHJ5eqo8y2wqPXGIYn9i0vDT4bGkrSbwpNe2
+         fILb+Jrgp/oTpoUBMh2cVT0ORRo559M0y4/ro6SyO3xoooHFpTMEXrIHxZ+V4+PNIj0Z
+         qoJqMglYokdW6YMHgFoLzraiAsqFboejcv7QZGYsDPOKHDAnJaSjc+mmQ8iilswzhiY+
+         58fg==
+X-Gm-Message-State: AGi0PuZKXCHFx6E+99SlDp6S3lfEwuuOpy6sk8j8cah6epaSSQVmBsUh
+        6tmF4wNRoiBAKR0CV/PEGw==
+X-Google-Smtp-Source: APiQypLhRJk4LtAJP8Fc/YOnELVetovZB3qLkmaTtGMFxTfHBSM/5ti/Wip+PxXNkxCkyJss2ezbvg==
+X-Received: by 2002:a05:6830:154c:: with SMTP id l12mr12665391otp.120.1588887860161;
         Thu, 07 May 2020 14:44:20 -0700 (PDT)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:a1ee:a39a:b93a:c084])
-        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.19
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s13sm1705690oic.27.2020.05.07.14.44.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 07 May 2020 14:44:19 -0700 (PDT)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     david@fromorbit.com, hch@infradead.org, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: [RFC PATCH V3 03/10] btrfs: use attach/detach_page_private
-Date:   Thu,  7 May 2020 23:43:53 +0200
-Message-Id: <20200507214400.15785-4-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
-References: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
+Received: (nullmailer pid 24797 invoked by uid 1000);
+        Thu, 07 May 2020 21:44:18 -0000
+Date:   Thu, 7 May 2020 16:44:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        efremov@linux.com, b.zolnierkie@samsung.com, vidyas@nvidia.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH] PCI: endpoint: functions/pci-epf-test: Support slave DMA
+ transfer
+Message-ID: <20200507214418.GA22159@bogus>
+References: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the new pair function is introduced, we can call them to clean the
-code in btrfs.
+On Fri, May 01, 2020 at 05:29:12PM -0700, Alan Mikhak wrote:
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+> 
+> Modify pci_epf_test_data_transfer() to also support slave DMA transfers.
+> Adds a direction parameter so caller can specify one of the supported DMA
+> transfer directions: DMA_MEM_TO_MEM, DMA_MEM_TO_DEV, and DMA_DEV_TO_MEM.
+> For DMA_MEM_TO_MEM, the function calls dmaengine_prep_dma_memcpy() as it
+> did before. For DMA_MEM_TO_DEV or DMA_DEV_TO_MEM direction, the function
+> calls dmaengine_slave_config() to configure the slave channel before it
+> calls dmaengine_prep_slave_single().
+> 
+> Modify existing callers to specify DMA_MEM_TO_MEM since that is the only
+> possible option so far. Rename the phys_addr local variable in some of the
+> callers for more readability. Tighten some of the timing function calls to
+> avoid counting error print time in case of error.
 
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
-RFC V2 -> RFC V3
-1. rename clear_page_private to detach_page_private.
+Looks fine, but also needs a user. The last sentence sounds like a 
+separate change.
 
-RFC -> RFC V2
-1. change the name of new functions to attach/clear_page_private.
-2. call attach_page_private(newpage, clear_page_private(page)) to
-   cleanup code further as suggested by Dave Chinner.
-
- fs/btrfs/disk-io.c   |  4 +---
- fs/btrfs/extent_io.c | 21 ++++++---------------
- fs/btrfs/inode.c     | 23 +++++------------------
- 3 files changed, 12 insertions(+), 36 deletions(-)
-
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index d10c7be10f3b..7278789ff8a7 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -980,9 +980,7 @@ static void btree_invalidatepage(struct page *page, unsigned int offset,
- 		btrfs_warn(BTRFS_I(page->mapping->host)->root->fs_info,
- 			   "page private not zero on page %llu",
- 			   (unsigned long long)page_offset(page));
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
-+		detach_page_private(page);
- 	}
- }
- 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 39e45b8a5031..bf816387715b 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3076,22 +3076,16 @@ static int submit_extent_page(unsigned int opf,
- static void attach_extent_buffer_page(struct extent_buffer *eb,
- 				      struct page *page)
- {
--	if (!PagePrivate(page)) {
--		SetPagePrivate(page);
--		get_page(page);
--		set_page_private(page, (unsigned long)eb);
--	} else {
-+	if (!PagePrivate(page))
-+		attach_page_private(page, eb);
-+	else
- 		WARN_ON(page->private != (unsigned long)eb);
--	}
- }
- 
- void set_page_extent_mapped(struct page *page)
- {
--	if (!PagePrivate(page)) {
--		SetPagePrivate(page);
--		get_page(page);
--		set_page_private(page, EXTENT_PAGE_PRIVATE);
--	}
-+	if (!PagePrivate(page))
-+		attach_page_private(page, (void *)EXTENT_PAGE_PRIVATE);
- }
- 
- static struct extent_map *
-@@ -4929,10 +4923,7 @@ static void btrfs_release_extent_buffer_pages(struct extent_buffer *eb)
- 			 * We need to make sure we haven't be attached
- 			 * to a new eb.
- 			 */
--			ClearPagePrivate(page);
--			set_page_private(page, 0);
--			/* One for the page private */
--			put_page(page);
-+			detach_page_private(page);
- 		}
- 
- 		if (mapped)
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 320d1062068d..a7f7ff0a8b7c 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8303,11 +8303,8 @@ btrfs_readpages(struct file *file, struct address_space *mapping,
- static int __btrfs_releasepage(struct page *page, gfp_t gfp_flags)
- {
- 	int ret = try_release_extent_mapping(page, gfp_flags);
--	if (ret == 1) {
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
--	}
-+	if (ret == 1)
-+		detach_page_private(page);
- 	return ret;
- }
- 
-@@ -8329,14 +8326,8 @@ static int btrfs_migratepage(struct address_space *mapping,
- 	if (ret != MIGRATEPAGE_SUCCESS)
- 		return ret;
- 
--	if (page_has_private(page)) {
--		ClearPagePrivate(page);
--		get_page(newpage);
--		set_page_private(newpage, page_private(page));
--		set_page_private(page, 0);
--		put_page(page);
--		SetPagePrivate(newpage);
--	}
-+	if (page_has_private(page))
-+		attach_page_private(newpage, detach_page_private(page));
- 
- 	if (PagePrivate2(page)) {
- 		ClearPagePrivate2(page);
-@@ -8458,11 +8449,7 @@ static void btrfs_invalidatepage(struct page *page, unsigned int offset,
- 	}
- 
- 	ClearPageChecked(page);
--	if (PagePrivate(page)) {
--		ClearPagePrivate(page);
--		set_page_private(page, 0);
--		put_page(page);
--	}
-+	detach_page_private(page);
- }
- 
- /*
--- 
-2.17.1
-
+> 
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 67 ++++++++++++++++++---------
+>  1 file changed, 44 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 60330f3e3751..1d026682febb 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -104,25 +104,41 @@ static void pci_epf_test_dma_callback(void *param)
+>   * The function returns '0' on success and negative value on failure.
+>   */
+>  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> -				      dma_addr_t dma_dst, dma_addr_t dma_src,
+> -				      size_t len)
+> +				      dma_addr_t dma_dst,
+> +				      dma_addr_t dma_src,
+> +				      size_t len,
+> +				      enum dma_transfer_direction dir)
+>  {
+>  	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+>  	struct dma_chan *chan = epf_test->dma_chan;
+>  	struct pci_epf *epf = epf_test->epf;
+> +	struct dma_slave_config sconf;
+>  	struct dma_async_tx_descriptor *tx;
+>  	struct device *dev = &epf->dev;
+>  	dma_cookie_t cookie;
+> +	dma_addr_t buf;
+>  	int ret;
+>  
+>  	if (IS_ERR_OR_NULL(chan)) {
+> -		dev_err(dev, "Invalid DMA memcpy channel\n");
+> +		dev_err(dev, "Invalid DMA channel\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
+> +	if (dir == DMA_MEM_TO_MEM) {
+> +		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src,
+> +					       len, flags);
+> +	} else {
+> +		memset(&sconf, 0, sizeof(sconf));
+> +		sconf.direction = dir;
+> +		sconf.dst_addr = dma_dst;
+> +		sconf.src_addr = dma_src;
+> +		dmaengine_slave_config(chan, &sconf);
+> +
+> +		buf = (dir == DMA_MEM_TO_DEV) ? dma_dst : dma_src;
+> +		tx = dmaengine_prep_slave_single(chan, buf, len, dir, flags);
+> +	}
+>  	if (!tx) {
+> -		dev_err(dev, "Failed to prepare DMA memcpy\n");
+> +		dev_err(dev, "Failed to prepare DMA transfer\n");
+>  		return -EIO;
+>  	}
+>  
+> @@ -268,7 +284,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		goto err_dst_addr;
+>  	}
+>  
+> -	ktime_get_ts64(&start);
+>  	use_dma = !!(reg->flags & FLAG_USE_DMA);
+>  	if (use_dma) {
+>  		if (!epf_test->dma_supported) {
+> @@ -277,14 +292,18 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  			goto err_map_addr;
+>  		}
+>  
+> +		ktime_get_ts64(&start);
+>  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> -						 src_phys_addr, reg->size);
+> +						 src_phys_addr, reg->size,
+> +						 DMA_MEM_TO_MEM);
+> +		ktime_get_ts64(&end);
+>  		if (ret)
+>  			dev_err(dev, "Data transfer failed\n");
+>  	} else {
+> +		ktime_get_ts64(&start);
+>  		memcpy(dst_addr, src_addr, reg->size);
+> +		ktime_get_ts64(&end);
+>  	}
+> -	ktime_get_ts64(&end);
+>  	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
+>  
+>  err_map_addr:
+> @@ -310,7 +329,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  	void *buf;
+>  	u32 crc32;
+>  	bool use_dma;
+> -	phys_addr_t phys_addr;
+> +	phys_addr_t src_phys_addr;
+>  	phys_addr_t dst_phys_addr;
+>  	struct timespec64 start, end;
+>  	struct pci_epf *epf = epf_test->epf;
+> @@ -319,8 +338,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  	struct device *dma_dev = epf->epc->dev.parent;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+>  
+> -	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+>  	if (!src_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_SRC_ADDR_INVALID;
+> @@ -328,7 +348,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+> +	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+>  			       reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+> @@ -360,10 +380,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  
+>  		ktime_get_ts64(&start);
+>  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> -						 phys_addr, reg->size);
+> +						 src_phys_addr, reg->size, dir);
+> +		ktime_get_ts64(&end);
+>  		if (ret)
+>  			dev_err(dev, "Data transfer failed\n");
+> -		ktime_get_ts64(&end);
+>  
+>  		dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
+>  				 DMA_FROM_DEVICE);
+> @@ -383,10 +403,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+>  	kfree(buf);
+>  
+>  err_map_addr:
+> -	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
+> +	pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
+>  
+>  err_addr:
+> -	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
+> +	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
+>  
+>  err:
+>  	return ret;
+> @@ -398,7 +418,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  	void __iomem *dst_addr;
+>  	void *buf;
+>  	bool use_dma;
+> -	phys_addr_t phys_addr;
+> +	phys_addr_t dst_phys_addr;
+>  	phys_addr_t src_phys_addr;
+>  	struct timespec64 start, end;
+>  	struct pci_epf *epf = epf_test->epf;
+> @@ -407,8 +427,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  	struct device *dma_dev = epf->epc->dev.parent;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> +	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+>  
+> -	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> +	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+>  	if (!dst_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		reg->status = STATUS_DST_ADDR_INVALID;
+> @@ -416,7 +437,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  		goto err;
+>  	}
+>  
+> -	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+> +	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+>  			       reg->size);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to map address\n");
+> @@ -450,11 +471,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  		}
+>  
+>  		ktime_get_ts64(&start);
+> -		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
+> -						 src_phys_addr, reg->size);
+> +		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> +						 src_phys_addr,	reg->size, dir);
+> +		ktime_get_ts64(&end);
+>  		if (ret)
+>  			dev_err(dev, "Data transfer failed\n");
+> -		ktime_get_ts64(&end);
+>  
+>  		dma_unmap_single(dma_dev, src_phys_addr, reg->size,
+>  				 DMA_TO_DEVICE);
+> @@ -476,10 +497,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+>  	kfree(buf);
+>  
+>  err_map_addr:
+> -	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
+> +	pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
+>  
+>  err_addr:
+> -	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
+> +	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
+>  
+>  err:
+>  	return ret;
+> -- 
+> 2.7.4
+> 
