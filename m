@@ -2,138 +2,89 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B46C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CCAC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748412080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588834058;
-	bh=hUD5exA4dNKvCcKV83BYNh5VFO685TqU5GU5ToDg3us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b92xOBhwFLbJzfdINVaXGuqOFwRBOKU9f8UJUoQBol2Zy/8A4KIUJw8L/ebMCDEuG
-	 8x6dn7Uk+jzNQvlToRn8okspAAjI3daZ6Eb4NH5IclzdsGhxQm42mHJF/5FZPHHswj
-	 ThyubaLWz3b/2JQlCQKJQDMdK+ALshPieqoEu7yk=
+	by mail.kernel.org (Postfix) with ESMTP id 752FE207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgEGGrh (ORCPT
+        id S1726690AbgEGGrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36338 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 02:47:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47878 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgEGGrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:47:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D794F2078C;
-        Thu,  7 May 2020 06:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588834056;
-        bh=hUD5exA4dNKvCcKV83BYNh5VFO685TqU5GU5ToDg3us=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dCZ6mLUcN1lIcruUpjFnEcOhlyrmSgxjeyHHlnFw/4co12Hwb9W/Qsgzq6nZ+HnJp
-         DibKlr9P4RQGxGYL3/8X8BfHpXRz53ezegCOp/1lVZvRByJvVXChNS4+D1DL4tpB3T
-         fOVh6T5cCACfVwnSp8ZDtkKBDaj/Y7C6rRFAF5rg=
-Date:   Thu, 7 May 2020 08:47:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vince Bridgers <vbridger@opensource.altera.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Vitaly Bordug <vbordug@ru.mvista.com>,
-        Claudiu Manoil <claudiu.manoil@freescale.com>,
-        Li Yang <leoli@freescale.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <blogic@openwrt.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Mugunthan V N <mugunthanvnm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200507064734.GA798308@kroah.com>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
+        id S1725763AbgEGGrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:47:45 -0400
+IronPort-SDR: yBo+CBlGLSVjteJDBjmJ1MTNvhlUjKS4lhiHO2YrtpA6sDqT4EYPexWno/l1xCGOKTi2jPqKGT
+ hBZs0bAj6MKg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 23:47:44 -0700
+IronPort-SDR: 5pgQX32zHuoaoJHS0ypm2zrWQM8pnclLJQUVs6cFKCishwiQrOTaJJ+NBWZHQnrRUCq8v9KmQl
+ AXNNhZ/1Fliw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
+   d="scan'208";a="260429256"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.169.187]) ([10.249.169.187])
+  by orsmga003.jf.intel.com with ESMTP; 06 May 2020 23:47:42 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/5] iommu/vt-d: Add page request draining support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
+ <MWHPR11MB16452D6184F192F6B10784EE8CA50@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a6b404ef-4a0d-7ad3-2e20-91060e5374c0@linux.intel.com>
+Date:   Thu, 7 May 2020 14:47:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507064412.GL2042@localhost>
+In-Reply-To: <MWHPR11MB16452D6184F192F6B10784EE8CA50@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:44:12AM +0200, Johan Hovold wrote:
-> On Thu, May 07, 2020 at 12:27:53AM +0530, Naresh Kamboju wrote:
-> > On Tue, 29 Nov 2016 at 00:00, Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > Make sure to deregister and free any fixed-link PHY registered using
-> > > of_phy_register_fixed_link() on probe errors and on driver unbind.
-> > >
-> > > Fixes: 83895bedeee6 ("net: mvneta: add support for fixed links")
-> > > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > > ---
-> > >  drivers/net/ethernet/marvell/mvneta.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> > > index 0c0a45af950f..707bc4680b9b 100644
-> > > --- a/drivers/net/ethernet/marvell/mvneta.c
-> > > +++ b/drivers/net/ethernet/marvell/mvneta.c
-> > > @@ -4191,6 +4191,8 @@ static int mvneta_probe(struct platform_device *pdev)
-> > >         clk_disable_unprepare(pp->clk);
-> > >  err_put_phy_node:
-> > >         of_node_put(phy_node);
-> > > +       if (of_phy_is_fixed_link(dn))
-> > > +               of_phy_deregister_fixed_link(dn);
-> > 
-> > While building kernel Image for arm architecture on stable-rc 4.4 branch
-> > the following build error found.
-> > 
-> > drivers/net/ethernet/marvell/mvneta.c:3442:3: error: implicit
-> > declaration of function 'of_phy_deregister_fixed_link'; did you mean
-> > 'of_phy_register_fixed_link'? [-Werror=implicit-function-declaration]
-> > |    of_phy_deregister_fixed_link(dn);
-> > |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > |    of_phy_register_fixed_link
-> > 
-> > ref:
-> > https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/541374729
-> 
-> Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> PHYs") needs to be backported as well for these.
-> 
-> Original series can be found here:
-> 
-> 	https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
+Hi Kevin,
 
-Ah, thanks for that, I thought I dropped all of the ones that caused
-build errors, but missed the above one.  I'll go take the whole series
-instead.
+Thanks a lot for reviewing.
 
-greg k-h
+On 2020/5/7 14:38, Tian, Kevin wrote:
+>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>> Sent: Thursday, May 7, 2020 8:55 AM
+>>
+>> When a PASID is stopped or terminated, there can be pending PRQs
+>> (requests that haven't received responses) in the software and
+>> remapping hardware. The pending page requests must be drained
+>> so that the pasid could be reused. The chapter 7.10 in the VT-d
+>> specification specifies the software steps to drain pending page
+>> requests and responses.
+>>
+>> This includes two parts:
+>>   - PATCH 1/4 ~ 2/4: refactor the qi_submit_sync() to support multiple
+>>     descriptors per submission which will be used in the following
+>>     patch.
+>>   - PATCH 3/4 ~ 4/4: add page request drain support after a pasid entry
+>>     is torn down.
+>>
+> I think you should mention that this series depends on Jacob's nested
+> SVA series.
+> 
+
+Yes. It's based on Jacob's vSVA series since guest unbind also requires
+prq draining.
+
+Best regards,
+baolu
