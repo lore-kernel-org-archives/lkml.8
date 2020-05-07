@@ -2,134 +2,135 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA81C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF5DC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2B120838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:07:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bx45uV6n"
+	by mail.kernel.org (Postfix) with ESMTP id 395A8208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgEGGH1 (ORCPT
+        id S1726218AbgEGGIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:07:27 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39630 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725845AbgEGGH0 (ORCPT
+        Thu, 7 May 2020 02:08:00 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42225 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgEGGIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:07:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588831646; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=w52CLOliTGUIv4DY+s5b588tvhYB84FRFaDJLCmhljA=; b=Bx45uV6nwfXBlcxcpjbEdqx8DjT6BemAWW/HoUmO9U3owllWUDfRtWhXA42QoltRzkwRyTUz
- zxiXwKCvIiYYZLhEitR9PK1tieGuWBPR6fIVzeI+H65zcJSI+dCiz844ZNauRmUT8wsSLUat
- dzqCcy78jhl0g8D+68QEwz3Hzng=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb3a593.7feb87a099d0-smtp-out-n02;
- Thu, 07 May 2020 06:07:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 91184C433BA; Thu,  7 May 2020 06:07:15 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EBEAEC433D2;
-        Thu,  7 May 2020 06:07:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EBEAEC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ath10k: Remove msdu from idr when management pkt send fails
-References: <1588667015-25490-1-git-send-email-pillair@codeaurora.org>
-Date:   Thu, 07 May 2020 09:07:11 +0300
-In-Reply-To: <1588667015-25490-1-git-send-email-pillair@codeaurora.org>
-        (Rakesh Pillai's message of "Tue, 5 May 2020 13:53:35 +0530")
-Message-ID: <875zd88ei8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 7 May 2020 02:08:00 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a21so4942245ljb.9;
+        Wed, 06 May 2020 23:07:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oMfRzSsPW3kRjYs+IOUJ9u3rrSqH1BCp5PIFe3h0wzc=;
+        b=N742UzLKPVhQSrP6ihxtX24e4sMGkq07hxbLCp4cd7aHsZ0YGzNi957e0rNOkBefj2
+         nx6S50aStPtQVfuyw7pOhZW5rMreErvYp5GupjUvd9RU+9O2TF7GP1LtkF9BXDzN025p
+         xhvQFADn1+pEO0ncjuGvh6/xuggTdL9Ltg3F0IzHp5GwDQnoxm1gW+j4VQe8jKm6dD0S
+         TwAwuiXuLkJSLH/FUOQg4yysnzydl6IHm4rbMS9Dt4p6yWyAQKixoED1aW4l44MT7oDU
+         CzDqvJTqkSIUfNdw5hYYjDnw8Q+qaRfJ5D1+Rsw5blGAp8WkS/6+V2kpK2C8AASt7QFB
+         z9Zg==
+X-Gm-Message-State: AGi0PuYGwShsDagvNhtrqdqxWLyFSMJzVaIOnf1A1P9GeBNjvBT9Qoz9
+        A1HbX+5zyNNTA3/ZGP2jCuY=
+X-Google-Smtp-Source: APiQypKMUqyhMrmZdfXHPJRO4S8bPRVYq4Skdbov1b5y0zi9V/FjOhyTgQng1dhRbbWFU63P3w4wNw==
+X-Received: by 2002:a2e:2414:: with SMTP id k20mr7084478ljk.162.1588831675881;
+        Wed, 06 May 2020 23:07:55 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id a2sm2602371ljj.53.2020.05.06.23.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 23:07:55 -0700 (PDT)
+Date:   Thu, 7 May 2020 09:07:10 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 03/11] power: supply: bd70528: rename linear_range to
+ avoid collision
+Message-ID: <f0b88bd1bc1bfda268d3069ea9d05ebadb3fb17a.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rakesh Pillai <pillair@codeaurora.org> writes:
+Follow-up patches in this series will add a generic struct
+linear_range. Rename bd70528 internal struct to avoid collision.
 
-> Currently when the sending of any management pkt
-> via wmi command fails, the packet is being unmapped
-> freed in the error handling. But the idr entry added,
-> which is used to track these packet is not getting removed.
->
-> Hence, during unload, in wmi cleanup, all the entries
-> in IDR are removed and the corresponding buffer is
-> attempted to be freed. This can cause a situation where
-> one packet is attempted to be freed twice.
->
-> Fix this error by rmeoving the msdu from the idr
-> list when the sending of a management packet over
-> wmi fails.
->
-> Tested HW: WCN3990
-> Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
->
-> Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/power/supply/bd70528-charger.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-[...]
+diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
+index b8e1ec106627..3b820110ecfa 100644
+--- a/drivers/power/supply/bd70528-charger.c
++++ b/drivers/power/supply/bd70528-charger.c
+@@ -335,14 +335,14 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
+ 	return 0;
+ }
+ 
+-struct linear_range {
++struct bd70528_linear_range {
+ 	int min;
+ 	int step;
+ 	int vals;
+ 	int low_sel;
+ };
+ 
+-static const struct linear_range current_limit_ranges[] = {
++static const struct bd70528_linear_range current_limit_ranges[] = {
+ 	{
+ 		.min = 5,
+ 		.step = 1,
+@@ -374,7 +374,7 @@ static const struct linear_range current_limit_ranges[] = {
+  * voltage for low temperatures. The driver currently only reads
+  * the charge current at room temperature. We do set both though.
+  */
+-static const struct linear_range warm_charge_curr[] = {
++static const struct bd70528_linear_range warm_charge_curr[] = {
+ 	{
+ 		.min = 10,
+ 		.step = 10,
+@@ -398,7 +398,7 @@ static const struct linear_range warm_charge_curr[] = {
+ #define MAX_WARM_CHG_CURR_SEL 0x1f
+ #define MIN_CHG_CURR_SEL 0x0
+ 
+-static int find_value_for_selector_low(const struct linear_range *r,
++static int find_value_for_selector_low(const struct bd70528_linear_range *r,
+ 				       int selectors, unsigned int sel,
+ 				       unsigned int *val)
+ {
+@@ -420,7 +420,7 @@ static int find_value_for_selector_low(const struct linear_range *r,
+  * I guess it is enough if we use voltage/current which is closest (below)
+  * the requested?
+  */
+-static int find_selector_for_value_low(const struct linear_range *r,
++static int find_selector_for_value_low(const struct bd70528_linear_range *r,
+ 				       int selectors, unsigned int val,
+ 				       unsigned int *sel, bool *found)
+ {
+-- 
+2.21.0
 
-> --- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-> +++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-> @@ -133,6 +133,7 @@ struct wmi_ops {
->  	struct sk_buff *(*gen_mgmt_tx_send)(struct ath10k *ar,
->  					    struct sk_buff *skb,
->  					    dma_addr_t paddr);
-> +	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
->  	struct sk_buff *(*gen_dbglog_cfg)(struct ath10k *ar, u64 module_enable,
->  					  u32 log_level);
->  	struct sk_buff *(*gen_pktlog_enable)(struct ath10k *ar, u32 filter);
-> @@ -442,6 +443,15 @@ ath10k_wmi_get_txbf_conf_scheme(struct ath10k *ar)
->  }
->  
->  static inline int
-> +ath10k_wmi_cleanup_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu)
-> +{
-> +	if (!ar->wmi.ops->cleanup_mgmt_tx_send)
-> +		return -EOPNOTSUPP;
-> +
-> +	return ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
-> +}
-> +
-> +static inline int
->  ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
->  			dma_addr_t paddr)
->  {
-> @@ -457,8 +467,11 @@ ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
->  
->  	ret = ath10k_wmi_cmd_send(ar, skb,
->  				  ar->wmi.cmd->mgmt_tx_send_cmdid);
-> -	if (ret)
-> +	if (ret) {
-> +		/* remove this msdu from idr tracking */
-> +		ath10k_wmi_cleanup_mgmt_tx_send(ar, msdu);
->  		return ret;
-> +	}
-
-I missed that this call was in wmi-ops.h, but the idea is that file
-should be just a dumb wrapper and not have any logic. So I moved this to
-mac.c, the functionality should be the same but please do check my
-changes:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=master-pending&id=71195d2244ed812c73dc617f7536566400f7ce87
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
