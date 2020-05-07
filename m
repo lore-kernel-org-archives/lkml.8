@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D46FC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CAFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91EF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D61C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861972;
-	bh=cqW4Z+247hzHb4dini1qWArrhk5IzoBlZfzZ1WrIoo0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYXjaFmuRpwzr6FmP/X72LufAJKd/MnRdQPGQ4Bwp5C17o7fE9OlbOjJzUkp3Ilaw
-	 XXfge6i03FSCqre8wzEnnyJD5ZrPGDhwjmLOU9OdKrGUcD+UD+xRFgYWSS7Rfgf4Sm
-	 HdAbNAerhNR+91wYURJvcUdQon2fYdYXg364pXwE=
+	s=default; t=1588861975;
+	bh=PjgHZ2CfhfHertRK0wT0BKyG9NZkRI5FcJ6OuwK+rxw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NQ/pKOuzAKYc+gIaaV3g9HJZFiGZJP193sP0qfgDP0MkAlSKfZSM/hUyZAkgcral+
+	 4bJE3uETMYZMov3Zlj7pnwEU+u2+lrp1qMGPuyKD6OfBmA3+OANcoTfBucPtkRm5l8
+	 li5KKyVWtxMiBH3B0maUkM3TmUp+9ibAP0rtsu+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgEGOcv (ORCPT
+        id S1728972AbgEGOcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57896 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728663AbgEGO3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:46 -0400
+        id S1728657AbgEGO3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CCB92145D;
-        Thu,  7 May 2020 14:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 462192083B;
+        Thu,  7 May 2020 14:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861786;
-        bh=cqW4Z+247hzHb4dini1qWArrhk5IzoBlZfzZ1WrIoo0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6VADxJj550/AttLHw++gGcOqYlsFAGQdRKzu+/+Af7PGRoy3nhUDFbe82U/Jk6gK
-         rUmRVt+cVJaGZ3TWd70MglKmV7NL10J0MPEEQXGHyFoWYvCxPbOZLgat7vJgXBfVs2
-         2tBdn4wldBWGtjEi22ltxHYPM6tDw2iiCRp9eBaE=
+        s=default; t=1588861785;
+        bh=PjgHZ2CfhfHertRK0wT0BKyG9NZkRI5FcJ6OuwK+rxw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T0pyd/5Mb9dYItZqUeNnLJ4Or4oGcnX2NQlCl4+flXqQbuQL+w3I4+p7ltTDSVVN+
+         8YIw5fcyoesZoLRuVmqiBsLPze8F9IOkOv392KeENq19GLAw/+UMb4iMpABbJMTDBY
+         dI0vaPYWh2+D10QaWnIXSTvcAQL/gZ/KXzkz0ww0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/16] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Thu,  7 May 2020 10:29:29 -0400
-Message-Id: <20200507142943.26848-2-sashal@kernel.org>
+Cc:     Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/16] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Thu,  7 May 2020 10:29:28 -0400
+Message-Id: <20200507142943.26848-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
-References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,81 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
+[ Upstream commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c ]
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx4/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index 7173a4ee862cb..5e9f9c70fe701 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 7e73a1a6cb671..3f8511104c5b6 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1614,8 +1614,9 @@ static int __mlx4_ib_create_default_rules(
+ 	int i;
  
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
 -- 
 2.20.1
 
