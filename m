@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8318BC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9783CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4D72173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFA721835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588878079;
-	bh=Bd9ng0ejT5N0guis1pv/eylwB+4g3fX/7CGGNiSv4ns=;
+	s=default; t=1588878085;
+	bh=zVXmqoLDVD2WgpBRe4UKXv7/cwYfVjp6DI3tW4V29fY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=z5qvakvUSnboLa3kZr53puDYHWZGpCEEtpHhNARtJZC4o+CIm+cFap+pt4IVDcdVL
-	 lC6bWdzaaOHv8skere3KG0jf2h3Z5/U9eU0SndcvzVkH0/dNgm0ShPkMP3CSPNIRQh
-	 p9IYLvpGDgu2pQ+23xLGOnEUywF0QcdY8NOsPaXI=
+	b=0WWpYmbV7dfaGzLqvdZxVa79FxKPc6f1HFIvY58HCvG6bss7AmECTXX4kl13dk2M5
+	 9P7+oo/XZXjS2pnnJJID93DFRQcG4w/indLiY7IRRVu0B7rC+lqk1KslzEFy/kwBb5
+	 GKZUgxo2ZbUNa7z+KGhQW97RJdcPFbsUT/bhVGK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgEGTBS (ORCPT
+        id S1728444AbgEGTBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGTBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:01:18 -0400
+        id S1726320AbgEGTBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:01:23 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F2912083B;
-        Thu,  7 May 2020 19:01:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE242083B;
+        Thu,  7 May 2020 19:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588878077;
-        bh=Bd9ng0ejT5N0guis1pv/eylwB+4g3fX/7CGGNiSv4ns=;
+        s=default; t=1588878082;
+        bh=zVXmqoLDVD2WgpBRe4UKXv7/cwYfVjp6DI3tW4V29fY=;
         h=Date:From:To:Cc:Subject:From;
-        b=K9d07fSnZ94nYK4zmbNDVzIrF6tgyErVnZUYBrXhugNE/ywoecfMuGXt9YpBaXCQC
-         HtAZHWFFviBG1b8/8rkAWY3CaQxa9ZCM20CFYZQHTWL4DUWXFYrELuqcOr50D3wckM
-         DUH3q20sCUwcbSd18JfFmWd9/EW7iqTl/itSkzVQ=
-Date:   Thu, 7 May 2020 14:05:44 -0500
+        b=E9FZWmoH2xfmdJj3SKjckcSoz/Qsc3bWTppwIoGvtGgrmUWGrVSIQe9hLD8jqhVmo
+         RWo5CbElxmoYiv3rHB8emNc4ryBKizulFOQ4cMpyxZOkBqXfIm31XERDEv/Wfu736G
+         f+DaSb2Y1WhHW7KT6yR361U7k42yawGMW3QC1ScA=
+Date:   Thu, 7 May 2020 14:05:49 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Replace zero-length array with flexible-array
-Message-ID: <20200507190544.GA15633@embeddedor>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] pcmcia: Replace zero-length array with flexible-array
+Message-ID: <20200507190549.GA15653@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,43 +91,38 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/pci/pci.c   |    2 +-
- include/linux/pci.h |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/pcmcia/cistpl.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 595fcf59843f..bb78f580814e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1578,7 +1578,7 @@ EXPORT_SYMBOL(pci_restore_state);
+diff --git a/include/pcmcia/cistpl.h b/include/pcmcia/cistpl.h
+index 59a011101e0e..749320cc9aba 100644
+--- a/include/pcmcia/cistpl.h
++++ b/include/pcmcia/cistpl.h
+@@ -161,7 +161,7 @@ typedef struct cistpl_funcid_t {
  
- struct pci_saved_state {
- 	u32 config_space[16];
--	struct pci_cap_saved_data cap[0];
-+	struct pci_cap_saved_data cap[];
- };
+ typedef struct cistpl_funce_t {
+     u_char	type;
+-    u_char	data[0];
++    u_char	data[];
+ } cistpl_funce_t;
  
- /**
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..0453ee458ab1 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -279,7 +279,7 @@ struct pci_cap_saved_data {
- 	u16		cap_nr;
- 	bool		cap_extended;
- 	unsigned int	size;
--	u32		data[0];
-+	u32		data[];
- };
+ /*======================================================================
+@@ -255,7 +255,7 @@ typedef struct cistpl_data_serv_t {
+     u_char	escape;
+     u_char	encrypt;
+     u_char	misc_features;
+-    u_char	ccitt_code[0];
++    u_char	ccitt_code[];
+ } cistpl_data_serv_t;
  
- struct pci_cap_saved_state {
-@@ -532,7 +532,7 @@ struct pci_host_bridge {
- 			resource_size_t start,
- 			resource_size_t size,
- 			resource_size_t align);
--	unsigned long	private[0] ____cacheline_aligned;
-+	unsigned long	private[] ____cacheline_aligned;
- };
+ typedef struct cistpl_fax_serv_t {
+@@ -265,7 +265,7 @@ typedef struct cistpl_fax_serv_t {
+     u_char	encrypt;
+     u_char	features_0;
+     u_char	features_1;
+-    u_char	ccitt_code[0];
++    u_char	ccitt_code[];
+ } cistpl_fax_serv_t;
  
- #define	to_pci_host_bridge(n) container_of(n, struct pci_host_bridge, dev)
+ typedef struct cistpl_voice_serv_t {
 
