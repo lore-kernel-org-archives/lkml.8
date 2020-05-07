@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35BBC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522A8C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A94F4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E8021835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879342;
-	bh=cpk19YX7Aez2b3mVwHp6mHxj7I9/DZSqMJ91G22Vfuw=;
+	s=default; t=1588879348;
+	bh=27j1iFeO7/uFIYuS96IIzx3OB0gXSl5+yOvIErECFgA=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dKgY4KrJ5e8pn7Pa2qgj5r/pFDFQLMGSUsju97GpfbE6iqDZ3OPpp/W/EzX/2cCyc
-	 oIGn2CRJJFGj9f1ajxawj/q0vdNQ+hkX9yxLmP72rbtoHr9+BPzoQSrhhZzgIMYQ9u
-	 29fFXJPXymCivlDipfJ3SbtL0jrUmF2wnfg4vCeE=
+	b=HGW9SGO31durJDk0QVPAtsNeD6vPdlCW8tYzBoWem5petQviDrVZ0zIuaiWtId5Cw
+	 lJCPlhUTAf6Wl9u0BIgGY3JK+EXQGySGt0K5HO0bBh3D1QlNtXzLQ1sp3ThHwnwjzs
+	 +IiLma+Lote7bJuQmbtjur6JfPKSJjOlT1yeqpyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgEGTWW (ORCPT
+        id S1728397AbgEGTW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43186 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGTWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:22:21 -0400
+        id S1726558AbgEGTW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:22:26 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC549208D6;
-        Thu,  7 May 2020 19:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC911208E4;
+        Thu,  7 May 2020 19:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879341;
-        bh=cpk19YX7Aez2b3mVwHp6mHxj7I9/DZSqMJ91G22Vfuw=;
+        s=default; t=1588879346;
+        bh=27j1iFeO7/uFIYuS96IIzx3OB0gXSl5+yOvIErECFgA=;
         h=Date:From:To:Cc:Subject:From;
-        b=AIUqiOSqMD+IbcKBnyrPQHUA15R8Vwt80WMpmUWte5KgIG+EoDtDpGP8hpwpG7p75
-         ph5gkgWPo0Jf4iTdULngqZrg2xMhTx9PQq9CnclBl/j3K7H8Hk9db96tH0GEXl4E4F
-         FZZHnZDpyr0iFzrpuCxA62lxrSz5UwmVfY2nkoqs=
-Date:   Thu, 7 May 2020 14:26:47 -0500
+        b=xdPU4qJBkKugdQKmTvNZ2uh/J5SNwl5PKpj9KHLoeisbBtvnthXjdCts/VAbUpF1Z
+         1rPoTGkanvQxgf/aGjFuqKknFYxeNFtO4pkx4JikGk00RVhjb+rYQ2tmdqGGE1L0MS
+         ztiO3xcXYnYL1TwODWrRUwZJSvdyzMi6nRDB19/A=
+Date:   Thu, 7 May 2020 14:26:52 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jussi Kivilinna <jussi.kivilinna@iki.fi>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rndis_wlan: Replace zero-length array with flexible-array
-Message-ID: <20200507192647.GA16710@embeddedor>
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] um: virtio: Replace zero-length array with flexible-array
+Message-ID: <20200507192652.GA16743@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,44 +92,34 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/rndis_wlan.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/um/drivers/vector_kern.h |    2 +-
+ arch/um/drivers/vhost_user.h  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/rndis_wlan.c b/drivers/net/wireless/rndis_wlan.c
-index c8f8fe5497a8..52375f3e430a 100644
---- a/drivers/net/wireless/rndis_wlan.c
-+++ b/drivers/net/wireless/rndis_wlan.c
-@@ -201,7 +201,7 @@ struct ndis_80211_pmkid_candidate {
- struct ndis_80211_pmkid_cand_list {
- 	__le32 version;
- 	__le32 num_candidates;
--	struct ndis_80211_pmkid_candidate candidate_list[0];
-+	struct ndis_80211_pmkid_candidate candidate_list[];
+diff --git a/arch/um/drivers/vector_kern.h b/arch/um/drivers/vector_kern.h
+index d0159082faf0..8fff93a75a92 100644
+--- a/arch/um/drivers/vector_kern.h
++++ b/arch/um/drivers/vector_kern.h
+@@ -129,7 +129,7 @@ struct vector_private {
+ 	struct vector_estats estats;
+ 	struct sock_fprog *bpf;
+ 
+-	char user[0];
++	char user[];
+ };
+ 
+ extern int build_transport_data(struct vector_private *vp);
+diff --git a/arch/um/drivers/vhost_user.h b/arch/um/drivers/vhost_user.h
+index 6c71b6005177..6f147cd3c9f7 100644
+--- a/arch/um/drivers/vhost_user.h
++++ b/arch/um/drivers/vhost_user.h
+@@ -78,7 +78,7 @@ struct vhost_user_config {
+ 	u32 offset;
+ 	u32 size;
+ 	u32 flags;
+-	u8 payload[0]; /* Variable length */
++	u8 payload[]; /* Variable length */
  } __packed;
  
- struct ndis_80211_status_indication {
-@@ -246,12 +246,12 @@ struct ndis_80211_bssid_ex {
- 	__le32 net_infra;
- 	u8 rates[NDIS_802_11_LENGTH_RATES_EX];
- 	__le32 ie_length;
--	u8 ies[0];
-+	u8 ies[];
- } __packed;
- 
- struct ndis_80211_bssid_list_ex {
- 	__le32 num_items;
--	struct ndis_80211_bssid_ex bssid[0];
-+	struct ndis_80211_bssid_ex bssid[];
- } __packed;
- 
- struct ndis_80211_fixed_ies {
-@@ -333,7 +333,7 @@ struct ndis_80211_bssid_info {
- struct ndis_80211_pmkid {
- 	__le32 length;
- 	__le32 bssid_info_count;
--	struct ndis_80211_bssid_info bssid_info[0];
-+	struct ndis_80211_bssid_info bssid_info[];
- } __packed;
- 
- /*
+ struct vhost_user_vring_state {
 
