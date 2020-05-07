@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32756C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B09CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0366221582
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7725520753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Koz8yhPr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a1D0g4qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEGIPA (ORCPT
+        id S1727770AbgEGIPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46958 "EHLO
+        Thu, 7 May 2020 04:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726922AbgEGIOy (ORCPT
+        by vger.kernel.org with ESMTP id S1727106AbgEGIPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:14:54 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E2BC0610D5
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:14:54 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id g6so5983964ybc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:14:54 -0700 (PDT)
+        Thu, 7 May 2020 04:15:00 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEE9C0610D5
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 01:15:00 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id x8so4875277qkf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 01:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=laqIw2e8BtvC1AZBZIJa3w6PXohYXYOFdU6fqXlT6Ys=;
-        b=Koz8yhPrUge2qVVcAlXS3xyTi6AXWgzlfI0d/AGJIRthsuF8fw+v2Ec78xvYT1vOlR
-         kEr+40q4sqVBX2wHSELJg/ziCcyodqffvKB8cPN3wNTjlV6wa4O2bY/SrAuIct2lInpT
-         jK7ZTZQwfp8xM4w1f59/gu1d6VSLBWgPWsuWz7YKC+dPriJw4tMIwIc6XhMjtUe7OZXU
-         GtvOIuWm3IX4nSFjVVpokhNFSTVvIpatY3gOP40uSJbWKHDv5/mSbK+j+fDMdFJjpw5W
-         YRoGylIfifN6N++4ritkfMUA/OFQaHaOyelTbptoqRdfKQ9CfYVCOlOYx/e9SqoD7/jn
-         OgAQ==
+        bh=wdUpgcjdyvRHeAuiwINZJwatakpGlpcmPaMYucAxya4=;
+        b=a1D0g4qgq2DeZVYxZXmwzJvFe80E+NY6Bl81ZXr1D2+xAl8ZNsS0+tJz9pxiOODZQE
+         6pJFFiDn3fEWNQQ5lrrjMYapn6poOSYZtu6PN0DoTmMrD4O2LkXxmyYf4XoZdMLy2FDP
+         kEmpHV/MX3b6DZcKXWZYgy29uupIcAuwPc/RJzfEZ/Rn1SypACWfGKtvagqouxnMc+Se
+         fJp0uZhkxRe7LTOnqHzqpSKdGKl375V2yIAzJ1aw5aG8/v7YD4el/AuJZKSYXHgff9PO
+         9695v/gBHe1pjJ7KY1yMmDhcIQNhKpQUkImim277Mw6mGWUzKGp3FctFIkMGsnx6HxE4
+         2FcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=laqIw2e8BtvC1AZBZIJa3w6PXohYXYOFdU6fqXlT6Ys=;
-        b=jib/VC6qiY1gSyC/0GV5x3HUUjXLe4UpvVB52RLPu3JMuIFdpHuydENYxxdOCvBhpc
-         xz5sDQO/tnwVnbS6tQlIYczNM8UmvFyQlWQ7ljZcjOAIJN0s7X4kSC6J3EnIBK1xsD17
-         rfUpxKWiDCL/po9J7ZEnyquTx9CTjbWtzdjmpzC0VzYsGErM3HElMn0TFustF74LV8x8
-         1ufxEx5VYIgVIWpGOLHl1XyNvM04DIlj9pw3I378BH3gfn3osY14p0XdVqA2eiarX8qu
-         kzobb/uf6oyVCJccacJpTrKPekFm5osPJq50xcimW3cyi+t19oaVcAEwW42O64gUiAha
-         Umrg==
-X-Gm-Message-State: AGi0PuY+w2xMtYO3S4inacLrjq17D7XLYfznA6pK1TDBcn/nCxjtzwT7
-        6FRO0qQ56UlnKCS2D7ZYakl0JcWZsIz6
-X-Google-Smtp-Source: APiQypLaC9JqxCmf6Bc+54GwEgoHzPXMW94TycpXOg7SlZklfTr4XBRhXJ0pzY3K1F7ZAs3iNOA7yPXtwrAv
-X-Received: by 2002:a25:d1c1:: with SMTP id i184mr8537881ybg.165.1588839293414;
- Thu, 07 May 2020 01:14:53 -0700 (PDT)
-Date:   Thu,  7 May 2020 01:14:32 -0700
+        bh=wdUpgcjdyvRHeAuiwINZJwatakpGlpcmPaMYucAxya4=;
+        b=D4YhSzw7nkWxS69kcP9U2eYWCl+vFxRuv4EDEqZmHMKx+dnhQYuUfPeNSKv/pZlzMQ
+         tCQljmTpKJsTlPH0Bm9ZSluuu7PBevuXpLZaZVLHrCeOdrTHxRiwEC5JeBb6DJfdM9kU
+         dAVce3/eTj6DVxlNdJLeu5NE51dkRNtJWRR5+AB9/RQbd1zk/XFZDRu1L92vhumMBQaE
+         FkTUJTycC+axG1d8RVH8iMeP7Z0PN69HG0thbzKfwIa2IDdda33L1+uisE+otzx5Pkng
+         svk2gT+3yvVyo1c4y/VU9pYeX281FAIK5/iageQFr2L4mA93cGgCGHn5XAMcMYSnHs9y
+         Oh0g==
+X-Gm-Message-State: AGi0PuacDCHpEsMtniHEW5k3BoWbGIdG8Rrj9BYR4JXRqim0hkPKpRfT
+        W0Oy/4/ADF6tyxveagZV3vA1gtztnyE6
+X-Google-Smtp-Source: APiQypKfY5bUdzcKD5EFsOUTDzmIo6WlYY0MBP0ESNMa+3S6spMM1XtYeHvtMwk6ZY1SEl8iBwSWx7hYrFlz
+X-Received: by 2002:ad4:4f01:: with SMTP id fb1mr12775550qvb.162.1588839299303;
+ Thu, 07 May 2020 01:14:59 -0700 (PDT)
+Date:   Thu,  7 May 2020 01:14:35 -0700
 In-Reply-To: <20200507081436.49071-1-irogers@google.com>
-Message-Id: <20200507081436.49071-4-irogers@google.com>
+Message-Id: <20200507081436.49071-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20200507081436.49071-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH 3/7] perf metricgroup: free metric_events on error
+Subject: [RFC PATCH 6/7] perf metricgroup: order event groups by size
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,39 +95,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid a simple memory leak.
+When adding event groups to the group list, insert them in size order.
+This performs an insertion sort on the group list. By placing the
+largest groups at the front of the group list it is possible to see if a
+larger group contains the same events as a later group. This can make
+the later group redundant - it can reuse the events from the large group.
+A later patch will add this sharing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/metricgroup.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index dcd175c05872..2356dda92a07 100644
+index 0a00c0f87872..25e3e8df6b45 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -185,6 +185,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
-+			free(metric_events);
- 			continue;
- 		}
- 		for (i = 0; metric_events[i]; i++)
-@@ -192,11 +193,13 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		me = metricgroup__lookup(metric_events_list, evsel, true);
- 		if (!me) {
- 			ret = -ENOMEM;
-+			free(metric_events);
- 			break;
- 		}
- 		expr = malloc(sizeof(struct metric_expr));
- 		if (!expr) {
- 			ret = -ENOMEM;
-+			free(metric_events);
- 			break;
- 		}
- 		expr->metric_expr = eg->metric_expr;
+@@ -519,7 +519,21 @@ static int __metricgroup__add_metric(struct list_head *group_list,
+ 		return -EINVAL;
+ 	}
+ 
+-	list_add_tail(&eg->nd, group_list);
++	if (list_empty(group_list))
++		list_add(&eg->nd, group_list);
++	else {
++		struct list_head *pos;
++
++		/* Place the largest groups at the front. */
++		list_for_each_prev(pos, group_list) {
++			struct egroup *old = list_entry(pos, struct egroup, nd);
++
++			if (hashmap__size(&eg->pctx.ids) <=
++			    hashmap__size(&old->pctx.ids))
++				break;
++		}
++		list_add(&eg->nd, pos);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.26.2.526.g744177e7f7-goog
 
