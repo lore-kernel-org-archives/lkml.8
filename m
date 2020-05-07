@@ -2,120 +2,78 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93912C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0471AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BD120838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n51Rn83w"
+	by mail.kernel.org (Postfix) with ESMTP id D5CB220735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgEGNLw (ORCPT
+        id S1726519AbgEGNMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725857AbgEGNLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:11:51 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3623C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 06:11:51 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F0B6A0029AA22443DE255A6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:6a00:29aa:2244:3de2:55a6])
+        Thu, 7 May 2020 09:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgEGNMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:12:09 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BD3F61EC034B;
-        Thu,  7 May 2020 15:11:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1588857107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=E20OXuV+EnYUFdXJHJBT+cw6g5yrTYVS4U7ukdVv+74=;
-        b=n51Rn83wku7F/3qcyGr68GzLR+aOLw6jiMALFfXXeH8gEZVw3mnx/BfD8uYKGIYD6vTr7l
-        WGXx0xU1K8JLR0D+e2ymSUB8HGMTSfdi8yneVs0RzoPoZdjybA74DBDeg5ZJS2+9O/gJpE
-        kXCUFvjRcr8n5Nj4SMiKkCsucG3+j4k=
-Date:   Thu, 7 May 2020 15:11:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 06/10] x86/fpu/xstate: Update
- sanitize_restored_xstate() for supervisor xstates
-Message-ID: <20200507131142.GA23026@zn.tnic>
-References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
- <20200328164307.17497-7-yu-cheng.yu@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 78C8C20735;
+        Thu,  7 May 2020 13:12:08 +0000 (UTC)
+Date:   Thu, 7 May 2020 09:12:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+Message-ID: <20200507091207.5c3b1a92@gandalf.local.home>
+In-Reply-To: <20200502120842.9d93352083fb854295150235@kernel.org>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834028054.28357.398159034694277189.stgit@devnote2>
+        <20200501101942.5c0da986@gandalf.local.home>
+        <20200502120842.9d93352083fb854295150235@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200328164307.17497-7-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 09:43:03AM -0700, Yu-cheng Yu wrote:
-> The function sanitize_restored_xstate() sanitizes user xstates of an XSAVE
-> buffer by setting the buffer's header->xfeatures to the input 'xfeatures',
+On Sat, 2 May 2020 12:08:42 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-It doesn't set them to the input xfeatures. I see a "&=" there.
+> > > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > > index ab6bedb25736..b3f70f53ee69 100644
+> > > --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > > @@ -30,7 +30,7 @@ fi
+> > >  
+> > >  echo "Test histogram trace_marker tigger"
+> > >  
+> > > -echo 'hist:keys=common_pid' > events/ftrace/print/trigger
+> > > +echo 'hist:keys=ip' > events/ftrace/print/trigger  
+> > 
+> > This is doing more than just changing the echo being used. It's changing
+> > the test being done.  
+> 
+> Yes, I need Tom's review for this change. As far as I can test, this
+> fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
+> for this test case.
+> 
 
-> effectively resetting features not in 'xfeatures' back to the init state.
-> 
-> When supervisor xstates are introduced, it is necessary to make sure only
-> user xstates are sanitized.  Ensure supervisor bits in header->xfeatures
-> stay set and supervisor states are not modified.
-> 
-> To make names clear, also:
-> 
-> - Rename the function to sanitize_restored_user_xstate().
-> - Rename input parameter 'xfeatures' to 'xfeatures_from_user'.
-> - In __fpu__restore_sig(), rename 'xfeatures' to 'user_xfeatures'.
-> 
-> v3:
-> - Change xfeatures_user to user_xfeatures.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
->  arch/x86/kernel/fpu/signal.c | 37 +++++++++++++++++++++++-------------
->  1 file changed, 24 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-> index cd6eafba12da..d09d72334a12 100644
-> --- a/arch/x86/kernel/fpu/signal.c
-> +++ b/arch/x86/kernel/fpu/signal.c
-> @@ -211,9 +211,9 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
->  }
->  
->  static inline void
-> -sanitize_restored_xstate(union fpregs_state *state,
-> -			 struct user_i387_ia32_struct *ia32_env,
-> -			 u64 xfeatures, int fx_only)
-> +sanitize_restored_user_xstate(union fpregs_state *state,
-> +			      struct user_i387_ia32_struct *ia32_env,
-> +			      u64 xfeatures_from_user, int fx_only)
+I still don't see how changing "keys=common_pid" to "keys=ip" has anything
+to do with the echo patch. If that is a problem, it should be a different
+patch with explanation to why "keys=common_pid" is broken.
 
-Name those user_xfeatures too.
+-- Steve
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
