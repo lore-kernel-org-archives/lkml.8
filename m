@@ -2,107 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B6C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C4BC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A0F208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:12:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KDcfxey5"
+	by mail.kernel.org (Postfix) with ESMTP id BFB0220CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588893149;
+	bh=W4VuTywsK3umF5q4huqbEAOV3ayvPAX3DEszmqXdOko=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=zwdRAhUiWzNk/Z/Wo1kb9wQCk8qm2NY72Ky9w4qf6cKx6b1FhVkRgAmO2qvjOenrk
+	 cYchGNtC4kQmPVM7MgMNQSIyWnEGVp0ulZedsDD3XYty2hz5R9r1uHmu6Lncb+smW1
+	 p6P4iPUagzPAb9VFR/e4sJ9tFbgqhh+z9HIsITmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgEGXMP (ORCPT
+        id S1726922AbgEGXM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:12:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726514AbgEGXMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:12:15 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B0EC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:12:15 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w65so3762097pfc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J/3HPQN7W1ZKY/vF6kf3W74SkxKV+nge4or+WiAyuSA=;
-        b=KDcfxey5JIeGwWZPE5JoJOlaG6N/dElrdB6K50KHlFNelrxKbvTlkPWInDHxs8alm/
-         NX3IKCFYgAxWXCG9PdEvu9YXEAfEcE2Nze27cHGAKW5PPMDiXPcZsxWxOItkDTN0ekWq
-         LYsQeiFSGwWQ73N+eS/xnETE2JkSx8/6CnM7w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J/3HPQN7W1ZKY/vF6kf3W74SkxKV+nge4or+WiAyuSA=;
-        b=UJz7AJmPU0Nmvc2MvyCU3yd7SyWOoELc3R2D1kOYesJS5kjq1bgt4TpIvMA+i8ZhFm
-         V8h3Uip/UF66mk7rv2C4bWCOVAutVlDezIl90CYTCb4n6fjMRgkC9UFy0rHjViiwLyXV
-         ZQPwTlfkFu6gG2jhJx8HG5ORQe2CkpLp1KRPOJXEEDpCRGufC7k8iPKMmLv/1y/r/8W1
-         apeSpNOSuWb8AcaiZr5E1AEyP9YUXSRJj2hEcYn1CQoXxHoeNqYWnJOZWuf4N9zdpxzi
-         KKJFaNuJlVUB1ew1XuQSBNMAoxwDiNAPlJj+IqPWwERnrIwEPVYVpI0mjn17iV6LU9Kt
-         foVw==
-X-Gm-Message-State: AGi0PuYVqTpERviG8xd/dlaEmPspBi+8tGmrZkoyHLlJNIp627HZBNaG
-        FRZSiNuK/7Tff4Q9LI0GHZTOtw==
-X-Google-Smtp-Source: APiQypIkBJ7SdIhSa8KYeQISr03jagf7wOKIy319ImOEn53vTqQ6U/9cCflFav80DgkHzgPHRdd4JQ==
-X-Received: by 2002:a62:ed14:: with SMTP id u20mr16651128pfh.69.1588893134874;
-        Thu, 07 May 2020 16:12:14 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id w12sm5861057pfq.133.2020.05.07.16.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 16:12:14 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     sumit.garg@linaro.org, Douglas Anderson <dianders@chromium.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] kdb: Cleanup math with KDB_CMD_HISTORY_COUNT
-Date:   Thu,  7 May 2020 16:11:46 -0700
-Message-Id: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+        Thu, 7 May 2020 19:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbgEGXM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 19:12:28 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61BF208D6;
+        Thu,  7 May 2020 23:12:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588893147;
+        bh=W4VuTywsK3umF5q4huqbEAOV3ayvPAX3DEszmqXdOko=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=TZs79MWzj4zW4vFzY+2hGEhp3zV251x6hiLKBK6nckwzYjEJSZy4ObeE4vrJmRchZ
+         DSVveFNJw6ZeuQG5kkEhLXPPgB8Wx/soNyZnf9rI4ZQmyNMm4SPyiOORpQ3iniIpxd
+         +oWsEjKxg5ZWMm7V+NbTQK7PwcuE28KcDD5dMzeA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9B55E35233B2; Thu,  7 May 2020 16:12:27 -0700 (PDT)
+Date:   Thu, 7 May 2020 16:12:27 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     mingo@kernel.org, tglx@linutronix.de
+Cc:     kasan-dev@googlegroups.com, elver@google.com,
+        linux-kernel@vger.kernel.org, hqjagain@gmail.com,
+        weiyongjun1@huawei.com
+Subject: [GIT PULL kcsan] KCSAN commits for v5.8
+Message-ID: <20200507231227.GA12010@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From code inspection the math in handle_ctrl_cmd() looks super sketchy
-because it subjects -1 from cmdptr and then does a "%
-KDB_CMD_HISTORY_COUNT".  It turns out that this code works because
-"cmdptr" is unsigned and KDB_CMD_HISTORY_COUNT is a nice power of 2.
-Let's make this a little less sketchy.
+Hello!
 
-This patch should be a no-op.
+This pull request contains KCSAN updates for v5.8.  These have been
+subject to LKML review:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+https://lore.kernel.org/lkml/20200415183343.GA12265@paulmck-ThinkPad-P72
+https://lore.kernel.org/lkml/20200417025837.49780-1-weiyongjun1@huawei.com
+https://lore.kernel.org/lkml/20200401101714.44781-1-elver@google.com
+https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com
+https://lore.kernel.org/lkml/20200424154730.190041-2-elver@google.com
 
- kernel/debug/kdb/kdb_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+All of these have also been subjected to the kbuild test robot and
+-next testing.  The following changes since commit f5d2313bd3c5:
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 515379cbf209..6865a0f58d38 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -1108,7 +1108,8 @@ static int handle_ctrl_cmd(char *cmd)
- 	switch (*cmd) {
- 	case CTRL_P:
- 		if (cmdptr != cmd_tail)
--			cmdptr = (cmdptr-1) % KDB_CMD_HISTORY_COUNT;
-+			cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
-+				 KDB_CMD_HISTORY_COUNT;
- 		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
- 		return 1;
- 	case CTRL_N:
--- 
-2.26.2.645.ge9eca65c58-goog
+  kcsan, trace: Make KCSAN compatible with tracing (2020-03-21 09:44:41 +0100)
 
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git kcsan-for-tip
+
+for you to fetch changes up to 50a19ad4b1ec531eb550183cb5d4ab9f25a56bf8:
+
+  objtool, kcsan: Add kcsan_disable_current() and kcsan_enable_current_nowarn() (2020-05-06 13:47:06 -0700)
+
+----------------------------------------------------------------
+Ingo Molnar (1):
+      Improve KCSAN documentation a bit
+
+Marco Elver (17):
+      kcsan: Add option to allow watcher interruptions
+      kcsan: Add option for verbose reporting
+      kcsan: Add current->state to implicitly atomic accesses
+      kcsan: Update Documentation/dev-tools/kcsan.rst
+      kcsan: Update API documentation in kcsan-checks.h
+      kcsan: Introduce report access_info and other_info
+      kcsan: Avoid blocking producers in prepare_report()
+      kcsan: Add support for scoped accesses
+      objtool, kcsan: Add explicit check functions to uaccess whitelist
+      kcsan: Introduce scoped ASSERT_EXCLUSIVE macros
+      kcsan: Move kcsan_{disable,enable}_current() to kcsan-checks.h
+      kcsan: Change data_race() to no longer require marking racing accesses
+      kcsan: Fix function matching in report
+      kcsan: Make reporting aware of KCSAN tests
+      checkpatch: Warn about data_race() without comment
+      kcsan: Add __kcsan_{enable,disable}_current() variants
+      objtool, kcsan: Add kcsan_disable_current() and kcsan_enable_current_nowarn()
+
+Qiujun Huang (1):
+      kcsan: Fix a typo in a comment
+
+Wei Yongjun (1):
+      kcsan: Use GFP_ATOMIC under spin lock
+
+ Documentation/dev-tools/kcsan.rst | 228 ++++++++++++-------
+ include/linux/compiler.h          |   4 +-
+ include/linux/kcsan-checks.h      | 261 ++++++++++++++++++----
+ include/linux/kcsan.h             |  19 +-
+ init/init_task.c                  |   1 +
+ kernel/kcsan/atomic.h             |  21 +-
+ kernel/kcsan/core.c               | 183 ++++++++++-----
+ kernel/kcsan/debugfs.c            |  47 +++-
+ kernel/kcsan/kcsan.h              |   8 +-
+ kernel/kcsan/report.c             | 455 ++++++++++++++++++++++++--------------
+ lib/Kconfig.kcsan                 |  39 +++-
+ scripts/checkpatch.pl             |   8 +
+ tools/objtool/check.c             |   4 +
+ 13 files changed, 880 insertions(+), 398 deletions(-)
