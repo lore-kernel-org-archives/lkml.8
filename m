@@ -2,107 +2,69 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643ADC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB68C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B52820643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26B820643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgEGRsh (ORCPT
+        id S1728110AbgEGRtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:48:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26136 "EHLO mga01.intel.com"
+        Thu, 7 May 2020 13:49:19 -0400
+Received: from muru.com ([72.249.23.125]:53478 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgEGRsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:48:36 -0400
-IronPort-SDR: rJCF1nCYdeGGqwiQ9w4IJDvSipRRgKnHw7dz4VS9dNTKKVOPy34fCUPcoZ2F2+EMFaUVpRQUtg
- DTms4HLsWFmQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 10:48:36 -0700
-IronPort-SDR: n+wnT7yQJKWW2P4uJXN3jxTgi9+UwRapDpTr3iblt8rCQtRCqnTDxbaOqU0Y1naHjEx+FhhC4r
- SzYipRyvdyhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="435378020"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga005.jf.intel.com with ESMTP; 07 May 2020 10:48:35 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id D31B9301C1B; Thu,  7 May 2020 10:48:35 -0700 (PDT)
-Date:   Thu, 7 May 2020 10:48:35 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH 0/7] Share events between metrics
-Message-ID: <20200507174835.GB3538@tassilo.jf.intel.com>
-References: <20200507081436.49071-1-irogers@google.com>
+        id S1726470AbgEGRtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 13:49:19 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0AC7080CD;
+        Thu,  7 May 2020 17:50:06 +0000 (UTC)
+Date:   Thu, 7 May 2020 10:49:15 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH v2 12/15] ARM: omap2plus: Drop unneeded select of
+ MIGHT_HAVE_CACHE_L2X0
+Message-ID: <20200507174915.GV37466@atomide.com>
+References: <20200505150722.1575-1-geert+renesas@glider.be>
+ <20200505150722.1575-13-geert+renesas@glider.be>
+ <20200505182618.GQ37466@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507081436.49071-1-irogers@google.com>
+In-Reply-To: <20200505182618.GQ37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:14:29AM -0700, Ian Rogers wrote:
-> Metric groups contain metrics. Metrics create groups of events to
-> ideally be scheduled together. Often metrics refer to the same events,
-> for example, a cache hit and cache miss rate. Using separate event
-> groups means these metrics are multiplexed at different times and the
-> counts don't sum to 100%. More multiplexing also decreases the
-> accuracy of the measurement.
+* Tony Lindgren <tony@atomide.com> [200505 18:27]:
+> * Geert Uytterhoeven <geert+renesas@glider.be> [200505 08:08]:
+> > Support for TI AM43x SoCs depends on ARCH_MULTI_V7, which selects
+> > ARCH_MULTI_V6_V7.
+> > As the latter selects MIGHT_HAVE_CACHE_L2X0, there is no need for
+> > SOC_AM43XX to select MIGHT_HAVE_CACHE_L2X0.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Tony Lindgren <tony@atomide.com>
+> > Cc: linux-omap@vger.kernel.org
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> > v2:
+> >   - Add Acked-by.
 > 
-> This change orders metrics from groups or the command line, so that
-> the ones with the most events are set up first. Later metrics see if
-> groups already provide their events, and reuse them if
-> possible. Unnecessary events and groups are eliminated.
+> I'll queue this into omap-for-v5.8/soc tomorrow assuming nobody else
+> has it already applied.
 
-Note this actually may make multiplexing errors worse.
+OK applying int omap-for-v5.8/soc thanks.
 
-For metrics it is often important that all the input values to
-the metric run at the same time. 
-
-So e.g. if you have two metrics and they each fit into a group,
-but not together, even though you have more multiplexing it
-will give more accurate results for each metric.
-
-I think you change can make sense for metrics that don't fit 
-into single groups anyways. perf currently doesn't quite know
-this but some heuristic could be added. 
-
-But I wouldn't do it for simple metrics that fit into groups.
-The result may well be worse.
-
-My toplev tool has some heuristics for this, also some more
-sophisticated ones that tracks subexpressions. That would
-be far too complicated for perf likely.
-
--Andi
+Tony
