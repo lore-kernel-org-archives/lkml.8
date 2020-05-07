@@ -2,107 +2,151 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070C6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1263C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B9621473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ie60NRuJ"
+	by mail.kernel.org (Postfix) with ESMTP id B93062083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgEGMOT (ORCPT
+        id S1726514AbgEGMOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:14:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58204 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgEGMOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:14:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 047CEFbJ108738;
-        Thu, 7 May 2020 07:14:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588853655;
-        bh=QlxtLs1bYV4C6jrPTOhXGflRMXFMssbJhOKrVMLzTN0=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=Ie60NRuJqjwdkAvw7IinN8tbXCo7CFNz/K3MIBDpQIXfBurz3ESY73yfX90/TJ5MD
-         aLALtdy+m6o8Z7S63jWpjMia9b8l2otNHqxnBUwp7EK8opNixMmzbwuTRBbWhisVXL
-         yvQ2N8s5E816yZ9sQiFc42y74NLh+hbPXBSD4qno=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047CEFIa109561;
-        Thu, 7 May 2020 07:14:15 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
- 2020 07:14:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 7 May 2020 07:14:15 -0500
-Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 047CEFgQ105716;
-        Thu, 7 May 2020 07:14:15 -0500
-Subject: Re: [net PATCH v2] net: hsr: fix incorrect type usage for protocol
- variable
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200506213107.28291-1-m-karicheri2@ti.com>
-Message-ID: <76101ccc-0a9d-dad9-1d34-f3d204a1dbe5@ti.com>
-Date:   Thu, 7 May 2020 08:14:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 08:14:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55358 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgEGMOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:14:20 -0400
+IronPort-SDR: LsqasHE3mSiJjx2vM3UbQplJW9vNLaTwjNiKc8JTUpLgqNjdcCFEbZug7+fNiufgQ6Fi68JZRC
+ TubZeEKjymQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 05:14:19 -0700
+IronPort-SDR: 61V9ALDR6QMUADZTZFRkDHgf3hERxwAarYX4mW9ugefLn1/6Irpabx+UhvF8LZ3flvNrPXYytv
+ h9oVEwp+TfOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="461827210"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 07 May 2020 05:14:18 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWfPt-0008ds-LM; Thu, 07 May 2020 20:14:17 +0800
+Date:   Thu, 07 May 2020 20:13:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/next] BUILD SUCCESS
+ ad49dba5db65067e6a53256192749bc40e51833f
+Message-ID: <5eb3fb80.285aD9K0YocldEr+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200506213107.28291-1-m-karicheri2@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
+branch HEAD: ad49dba5db65067e6a53256192749bc40e51833f  torture: Add --allcpus argument to the kvm.sh script
 
-On 5/6/20 5:31 PM, Murali Karicheri wrote:
-> Fix following sparse checker warning:-
-> 
-> net/hsr/hsr_slave.c:38:18: warning: incorrect type in assignment (different base types)
-> net/hsr/hsr_slave.c:38:18:    expected unsigned short [unsigned] [usertype] protocol
-> net/hsr/hsr_slave.c:38:18:    got restricted __be16 [usertype] h_proto
-> net/hsr/hsr_slave.c:39:25: warning: restricted __be16 degrades to integer
-> net/hsr/hsr_slave.c:39:57: warning: restricted __be16 degrades to integer
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> ---
->   v2 : Added Acked-by from Vinicius Costa Gomes
->   net/hsr/hsr_slave.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/hsr/hsr_slave.c b/net/hsr/hsr_slave.c
-> index f4b9f7a3ce51..25b6ffba26cd 100644
-> --- a/net/hsr/hsr_slave.c
-> +++ b/net/hsr/hsr_slave.c
-> @@ -18,7 +18,7 @@ static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
->   {
->   	struct sk_buff *skb = *pskb;
->   	struct hsr_port *port;
-> -	u16 protocol;
-> +	__be16 protocol;
->   
->   	if (!skb_mac_header_was_set(skb)) {
->   		WARN_ONCE(1, "%s: skb invalid", __func__);
-> 
-I saw that you have applied the initial patch to net-next. Please ignore 
-this.
+elapsed time: 684m
 
--- 
-Murali Karicheri
-Texas Instruments
+configs tested: 84
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm64                               defconfig
+arm                                 defconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+s390                             allmodconfig
+i386                              allnoconfig
+nios2                               defconfig
+um                                  defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+mips                              allnoconfig
+nios2                            allyesconfig
+alpha                               defconfig
+parisc                           allyesconfig
+alpha                            allyesconfig
+m68k                              allnoconfig
+riscv                               defconfig
+sparc64                             defconfig
+c6x                               allnoconfig
+csky                                defconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+openrisc                         allyesconfig
+csky                             allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a012-20200507
+x86_64               randconfig-a004-20200507
+x86_64               randconfig-a006-20200507
+x86_64               randconfig-a002-20200507
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
