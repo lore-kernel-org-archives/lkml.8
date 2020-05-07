@@ -2,135 +2,140 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D789C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871BBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABD42083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNz7Rl44"
+	by mail.kernel.org (Postfix) with ESMTP id 638E621473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588846395;
+	bh=LMkSfgWIlczw6vc0SHnoOdbI5842QFt4OcrAzsDGewg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nMPDCIs9yRU/dL8zf/ikuuqjCvUXVnAuqxOdABCltTnIry2ZbS4C31slbfH0hrVZM
+	 Ipp5Gsg4c8WX1Wq6be86XzYeuRFrik+Ef5Xal6BjSdVV/Yu1tuUuOPQDRMzf29NJE4
+	 gnr7nDNIB5Ri8Ugqp4zXg3Wh3HM0ywFr+f1DZut4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgEGKLZ (ORCPT
+        id S1726408AbgEGKNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgEGKLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:11:24 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B01C061A10;
-        Thu,  7 May 2020 03:11:24 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t40so2419970pjb.3;
-        Thu, 07 May 2020 03:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=HhSAZeA5fR3eItczHq8etGQv9r/MRFur72D3zwuNGr8=;
-        b=PNz7Rl44p/6xrv3Ez9oT4I8v/ywwZUrSOGssT1stHaUldJsN3rR+Z1nc8KvN5aJWtZ
-         41vtDvGKG6WIAg/bUhLCJlH+oTkDlRiVOc1MXVkywbKC11wAbus0FUF1wdTaVPmEdBLc
-         PLMI608TXls4KxptYlzIqlpOVvuPwVT7JYtCujHchp9H4VFwMDjI2chyFWwhO/aa0Erd
-         9I5/FQXK2MV/RixgCzVAe/1kMvz4EF/YqP087eo7k3QxYObbHEOLpBaLbJDKRBv0RvgU
-         l0+FKFgK/A/TqaUZZLMqBvCIALogr4K6Ra5/K18G21vhVAcNRHB3iwgsu/FZb5tLTZ6V
-         CwfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=HhSAZeA5fR3eItczHq8etGQv9r/MRFur72D3zwuNGr8=;
-        b=LsgQtq7lzLiQpI2Mr5sX23INoaxfTUIiaJDH2Vn4tfEoqw9N8rrGFZ3jD03NxitvkR
-         QUxa7CqdMvim558cM760Ro/QhDlkwUkOKcMUoD1ypW5gdiUY4mPs+sZYMaaqbVxguw/M
-         NwLfr4o0ZbcocLgEQEqdgNmlklTk3oM1yZSq/85H4vczxr8cT5DA4tO83C7QRTZy16pE
-         ameWMfCXSYPACtKW5pB9LoYSO4HynlBqz0pnqVMlKaL0OiSZ+ZQ76xgipeUD288goluf
-         iyPo777IfvKIRrN9cwMq1yxkK7sA7+NvnamMh4Oh30fA+7hMltxmA/9fGyfvQZMjmuug
-         Hwzg==
-X-Gm-Message-State: AGi0PuYUZBjAd8zBaWJMg6zk2cn+rVqJjtWpqHlJo5PWJZqn4CM/Fapp
-        xTUF6mM/jzHy8X1Yloi+w7axPEtPjfU=
-X-Google-Smtp-Source: APiQypL2FeT2BHJNUixYPIA4dPmVZLzjBVooz5RM2BkFiXZ9Gv6It3eyH66eBN8NiTWnZ9IT2WyUNw==
-X-Received: by 2002:a17:902:7d98:: with SMTP id a24mr11941831plm.97.1588846283429;
-        Thu, 07 May 2020 03:11:23 -0700 (PDT)
-Received: from [192.168.1.7] ([120.244.109.48])
-        by smtp.gmail.com with ESMTPSA id m12sm3368268pgj.46.2020.05.07.03.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 03:11:22 -0700 (PDT)
-Subject: Re: [PATCH] media: usb: ttusb-dec: avoid buffer overflow in
- ttusb_dec_handle_irq() when DMA failures/attacks occur
-To:     Sean Young <sean@mess.org>
-Cc:     mchehab@kernel.org, kstewart@linuxfoundation.org,
-        tomasbortoli@gmail.com, gregkh@linuxfoundation.org,
-        allison@lohutok.net, tglx@linutronix.de,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200505142110.7620-1-baijiaju1990@gmail.com>
- <20200507084332.GA14459@gofer.mess.org>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <4f95bc0d-0b75-dd75-642c-b2238feb9890@gmail.com>
-Date:   Thu, 7 May 2020 18:11:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 7 May 2020 06:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgEGKNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:13:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A0C2073A;
+        Thu,  7 May 2020 10:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588846392;
+        bh=LMkSfgWIlczw6vc0SHnoOdbI5842QFt4OcrAzsDGewg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BsP2NPtiTL2i5OjJj/mq95xJ5BK3a4tQO9IuYxjt5OUazIFmdDmvjBmR3S3qZqG03
+         n5CpwCIjhrVbjD7NCONWgLTGDlKJzqOQohZzrsGeQZOA1xlCJnPqBpNHygtfODRJTi
+         Ubn5aKAzUB00IVZjoQKOX/v2oX37ySbEcma3ed4A=
+Date:   Thu, 7 May 2020 12:13:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     butt3rflyh4ck <butterflyhuangxx@gmail.com>, security@kernel.org,
+        syzkaller <syzkaller@googlegroups.com>, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+Message-ID: <20200507101310.GA1311017@kroah.com>
+References: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+ <20200507082302.GF1024567@kroah.com>
+ <s5h8si45ard.wl-tiwai@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20200507084332.GA14459@gofer.mess.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5h8si45ard.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the reply, Sean :)
+On Thu, May 07, 2020 at 11:56:22AM +0200, Takashi Iwai wrote:
+> On Thu, 07 May 2020 10:23:02 +0200,
+> Greg Kroah-Hartman wrote:
+> > 
+> > On Thu, May 07, 2020 at 04:04:25PM +0800, butt3rflyh4ck wrote:
+> > > I report a bug (in linux-5.7-rc1) found by syzkaller.
+> > > 
+> > > kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/v5.7.0-rc1.config
+> > > reproducer: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/repro.cprog
+> > > 
+> > > I test the reproducer in linux-5.7-rc4 and crash too.
+> > 
+> > Great, care to create a fix for this and send it to the proper
+> > maintainers?  That's the best way to get it fixed, otherwise it just
+> > goes in the file with the rest of the syzbot reports we are burried
+> > under.
+> 
+> Don't worry, I already prepared a fix patch below :)
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+> -- 8< --
+> From: Takashi Iwai <tiwai@suse.de>
+> Subject: [PATCH] ALSA: rawmidi: Fix racy buffer resize under concurrent
+>  accesses
+> 
+> The rawmidi core allows user to resize the runtime buffer via ioctl,
+> and this may lead to UAF when performed during concurrent reads or
+> writes.
+> 
+> This patch fixes the race by introducing a reference counter for the
+> runtime buffer access and returns -EBUSY error when the resize is
+> performed concurrently.
+> 
+> Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+> Cc: <stable@vger.kernel.org>
+> Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
+>  include/sound/rawmidi.h |  1 +
+>  sound/core/rawmidi.c    | 29 ++++++++++++++++++++++++++++-
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+> index a36b7227a15a..334842daa904 100644
+> --- a/include/sound/rawmidi.h
+> +++ b/include/sound/rawmidi.h
+> @@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+>  	size_t avail_min;	/* min avail for wakeup */
+>  	size_t avail;		/* max used buffer for wakeup */
+>  	size_t xruns;		/* over/underruns counter */
+> +	int buffer_ref;		/* buffer reference count */
+>  	/* misc */
+>  	spinlock_t lock;
+>  	wait_queue_head_t sleep;
+> diff --git a/sound/core/rawmidi.c b/sound/core/rawmidi.c
+> index 20dd08e1f675..4185d9e81e3c 100644
+> --- a/sound/core/rawmidi.c
+> +++ b/sound/core/rawmidi.c
+> @@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work(struct work_struct *work)
+>  		runtime->event(runtime->substream);
+>  }
+>  
+> +/* buffer refcount management: call with runtime->lock held */
+> +static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
+> +{
+> +	runtime->buffer_ref++;
+> +}
+> +
+> +static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
+> +{
+> +	runtime->buffer_ref--;
+> +}
 
-On 2020/5/7 16:43, Sean Young wrote:
-> On Tue, May 05, 2020 at 10:21:10PM +0800, Jia-Ju Bai wrote:
->> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->> ---
->>   drivers/media/usb/ttusb-dec/ttusb_dec.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
->> index 3198f9624b7c..8543c552515b 100644
->> --- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
->> +++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
->> @@ -250,6 +250,7 @@ static void ttusb_dec_handle_irq( struct urb *urb)
->>   	struct ttusb_dec *dec = urb->context;
->>   	char *buffer = dec->irq_buffer;
->>   	int retval;
->> +	u8 index = buffer[4];
->>   
->>   	switch(urb->status) {
->>   		case 0: /*success*/
->> @@ -281,11 +282,11 @@ static void ttusb_dec_handle_irq( struct urb *urb)
->>   		 * this should/could be added later ...
->>   		 * for now lets report each signal as a key down and up
->>   		 */
->> -		if (buffer[4] - 1 < ARRAY_SIZE(rc_keys)) {
-> Here buffer[4] is signed char, so if buffer[4] == 0 then (buffer[4] - 1) = -1,
-> this becomes "if (-1 < ARRAY_SIZE(rc_keys))", which evaluates to false,
-> due to it becoming an unsigned compare. _I think_.
+Why not use the reference count structure?
 
-I think you are right.
-Maybe I should use "int index = buffer[4]" here.
-
->> -			dprintk("%s:rc signal:%d\n", __func__, buffer[4]);
->> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 1);
->> +		if (index - 1 < ARRAY_SIZE(rc_keys)) {
->> +			dprintk("%s:rc signal:%d\n", __func__, index);
->> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 1);
->>   			input_sync(dec->rc_input_dev);
->> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 0);
->> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 0);
-> Like Greg said, this patch reduces the number of dereferences and makes
-> the code much cleaner, but the commit message is misleading.
-
-Okay, I will change my log and send a new patch.
-
-
-Best wishes,
-Jia-Ju Bai
+greg k-h
