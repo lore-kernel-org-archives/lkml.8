@@ -2,110 +2,336 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BA0C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE2AC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9A9208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588888380;
-	bh=81LJLCuNyzmOMuyaEZtSC/KgW9caNdZSYjXO4X+C1mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nItx3dusaguWSnA/h/JLyspEv1OwEczdWIkdp2hzkgodAhswHclt46ySXHioK6hh5
-	 6gBeTC6AjkmZJY3IDXVJwTrJDC1VPiOx2OmCtNWXZ2dfrF5K9k/V2W/1coAoZmUkIU
-	 22D8nEyAiecd2Ho63BFpBzdcIX4GiaVfvXwkuQVU=
+	by mail.kernel.org (Postfix) with ESMTP id 64F4F20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgEGVw7 (ORCPT
+        id S1726751AbgEGVy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:52:59 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35817 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEGVw7 (ORCPT
+        Thu, 7 May 2020 17:54:56 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:54760 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbgEGVy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:52:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k110so5900245otc.2;
-        Thu, 07 May 2020 14:52:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CU/jhaPmhAqWWMxE+0ciw1zj8C+7RdKkmDqSPqeUli8=;
-        b=ECf0ToFO/iFtn71D4Kvx0tUpUrFRTQFNS8AwPf1AEerJpYWqShI01SNy/ud8UUea88
-         xDkqT/WojV6XxNF6HczHC/1IhoNkYRxkBsWABoP2mED4eouVtBAyeDCI+lrVYo0nbxW/
-         4Evwul7yLpuDrnTXV4fBN6uzGQFhDXqv0ulcglcX8P72RlAbElH9cggm6V4vlGRYpMea
-         ErW5nNRZvh1H9pb6fRdGOZw0Vwm99f9aOh23YhMFNdShOIC3lqYNe+bI6zlEpfhmCR/O
-         PTABrbBdr6OhJyzECgQmnyKcuP3Cjq1g4JyO+rT6kZm1K5U7/N2Y0JN5D9kXPg2PDo+t
-         zVxQ==
-X-Gm-Message-State: AGi0PuYoFJOtqifihA2XGYureuniW90G7TYOvf6T25RkkPVAJMAqlKS1
-        TkNs88uDjz/1tTqYSxiteg==
-X-Google-Smtp-Source: APiQypI1zeZzisqllNqDsttAgfTLEwQGuSYUTjKm2oOFsg8op6zupqbBMYh9erodVZ5cDOxXvTFLIw==
-X-Received: by 2002:a9d:592:: with SMTP id 18mr11812118otd.337.1588888378253;
-        Thu, 07 May 2020 14:52:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w62sm1680584oia.32.2020.05.07.14.52.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:52:57 -0700 (PDT)
-Received: (nullmailer pid 8285 invoked by uid 1000);
-        Thu, 07 May 2020 21:52:56 -0000
-Date:   Thu, 7 May 2020 16:52:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200507215256.GA8228@bogus>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-5-nsaenzjulienne@suse.de>
+        Thu, 7 May 2020 17:54:56 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWoTl-0001hY-36; Thu, 07 May 2020 15:54:53 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jWoTX-0000BH-Io; Thu, 07 May 2020 15:54:52 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87ftcei2si.fsf@x220.int.ebiederm.org>
+        <202005051354.C7E2278688@keescook>
+Date:   Thu, 07 May 2020 16:51:13 -0500
+In-Reply-To: <202005051354.C7E2278688@keescook> (Kees Cook's message of "Tue,
+        5 May 2020 14:29:21 -0700")
+Message-ID: <87blmz8lda.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-5-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jWoTX-0000BH-Io;;;mid=<87blmz8lda.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/TffCfJjUwfPc36yFMkBlfQrVmC892J1g=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 18:13:17 +0200, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideoCore. Inform VideoCore that VL805 was just reset.
-> 
-> Also, as this creates a dependency between USB_PCI and VideoCore's
-> firmware interface, and since USB_PCI can't be set as a module neither
-> this can. Reflect that on the firmware interface Kconfg.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-> 
-> Changes since v5:
->  - Fix Kconfig issue with allmodconfig
-> 
-> Changes since v4:
->  - Do not split up error message
-> 
-> Changes since v3:
->  - Add more complete error message
-> 
-> Changes since v1:
->  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->    gets compiled when needed.
-> 
->  drivers/firmware/Kconfig      |  3 ++-
->  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
->  2 files changed, 18 insertions(+), 1 deletion(-)
-> 
+Kees Cook <keescook@chromium.org> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Tue, May 05, 2020 at 02:45:33PM -0500, Eric W. Biederman wrote:
+>> 
+>> The current idiom for the callers is:
+>> 
+>> flush_old_exec(bprm);
+>> set_personality(...);
+>> setup_new_exec(bprm);
+>> 
+>> In 2010 Linus split flush_old_exec into flush_old_exec and
+>> setup_new_exec.  With the intention that setup_new_exec be what is
+>> called after the processes new personality is set.
+>> 
+>> Move the code that doesn't depend upon the personality from
+>> setup_new_exec into flush_old_exec.  This is to facilitate future
+>> changes by having as much code together in one function as possible.
+>
+> Er, I *think* this is okay, but I have some questions below which
+> maybe you already investigated (and should perhaps get called out in
+> the changelog).
+
+I intend to the following text to the changelog.  At this point I
+believe I have read through everything and nothing raises any concerns
+for me:
+
+--- text begin ---
+
+To see why it is safe to move this code please note that effectively
+this change moves the personality setting in the binfmt and the following
+three lines of code after everything except unlocking the mutexes:
+        arch_pick_mmap_layout
+        arch_setup_new_exec
+        mm->task_size = TASK_SIZE
+
+The function arch_pick_mmap_layout at most sets:
+        mm->get_unmapped_area
+        mm->mmap_base
+        mm->mmap_legacy_base
+        mm->mmap_compat_base
+        mm->mmap_compat_legacy_base
+which nothing in flush_old_exec or setup_new_exec depends on.
+
+The function arch_setup_new_exec only sets architecture specific
+state and the rest of the functions only deal in state that applies
+to all architectures.
+
+The last line just sets mm->task_size and again nothing in flush_old_exec
+or setup_new_exec depend on task_size.
+
+--- text end ---
+
+>> 
+>> Ref: 221af7f87b97 ("Split 'flush_old_exec' into two functions")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c | 85 ++++++++++++++++++++++++++++---------------------------
+>>  1 file changed, 44 insertions(+), 41 deletions(-)
+>> 
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 8c3abafb9bb1..0eff20558735 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1359,39 +1359,7 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>  	 * undergoing exec(2).
+>>  	 */
+>>  	do_close_on_exec(me->files);
+>> -	return 0;
+>> -
+>> -out_unlock:
+>> -	mutex_unlock(&me->signal->exec_update_mutex);
+>> -out:
+>> -	return retval;
+>> -}
+>> -EXPORT_SYMBOL(flush_old_exec);
+>> -
+>> -void would_dump(struct linux_binprm *bprm, struct file *file)
+>> -{
+>> -	struct inode *inode = file_inode(file);
+>> -	if (inode_permission(inode, MAY_READ) < 0) {
+>> -		struct user_namespace *old, *user_ns;
+>> -		bprm->interp_flags |= BINPRM_FLAGS_ENFORCE_NONDUMP;
+>> -
+>> -		/* Ensure mm->user_ns contains the executable */
+>> -		user_ns = old = bprm->mm->user_ns;
+>> -		while ((user_ns != &init_user_ns) &&
+>> -		       !privileged_wrt_inode_uidgid(user_ns, inode))
+>> -			user_ns = user_ns->parent;
+>>  
+>> -		if (old != user_ns) {
+>> -			bprm->mm->user_ns = get_user_ns(user_ns);
+>> -			put_user_ns(old);
+>> -		}
+>> -	}
+>> -}
+>> -EXPORT_SYMBOL(would_dump);
+>> -
+>> -void setup_new_exec(struct linux_binprm * bprm)
+>> -{
+>> -	struct task_struct *me = current;
+>>  	/*
+>>  	 * Once here, prepare_binrpm() will not be called any more, so
+>>  	 * the final state of setuid/setgid/fscaps can be merged into the
+>> @@ -1414,8 +1382,6 @@ void setup_new_exec(struct linux_binprm * bprm)
+>>  			bprm->rlim_stack.rlim_cur = _STK_LIM;
+>>  	}
+>>  
+>> -	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
+>> -
+>>  	me->sas_ss_sp = me->sas_ss_size = 0;
+>>  
+>>  	/*
+>> @@ -1430,16 +1396,9 @@ void setup_new_exec(struct linux_binprm * bprm)
+>>  	else
+>>  		set_dumpable(current->mm, SUID_DUMP_USER);
+>>  
+>> -	arch_setup_new_exec();
+>>  	perf_event_exec();
+>
+> What is perf expecting to be able to examine at this point? Does it want
+> a view of things after arch_setup_new_exec()? (i.e. "final" TIF flags,
+> mmap layout, etc.) From what I can, the answer is "no, it's just
+> resetting counters", so I think this is fine. Maybe double-check with
+> Steve?
+
+I can't find anything in the perf code that depends on
+arch_pick_mmap_layout or mm->task_size.  So I don't have any concerns.
+I have grepped through both kernel/events/ and arch/x86/events/ and
+include/trace to double check and have nothing turned up.
+
+I can't see the policy of where things will be allocated in the
+memory map making any difference to perf.
+
+Depending on what events actually are I can imagine then firing and
+having issues as I can imagine an event to be just about anything
+but I don't see a way to prevent that.  
+
+I do see perf disabling events that are based on addresses.  I further
+see perf enabling/disabling events that have already been computed.  I
+see perf treating exec effectively as a process scheduling out and in.
+
+Then finally I see perf shutting itself down on suid exec, and
+generating some final perf events.  I have some concerns that is
+a bit late, and that the test might not be quite right but nothing
+particular to this change.
+
+>>  	__set_task_comm(me, kbasename(bprm->filename), true);
+>>  
+>> -	/* Set the new mm task size. We have to do that late because it may
+>> -	 * depend on TIF_32BIT which is only updated in flush_thread() on
+>> -	 * some architectures like powerpc
+>> -	 */
+>> -	me->mm->task_size = TASK_SIZE;
+>> -
+>>  	/* An exec changes our domain. We are no longer part of the thread
+>>  	   group */
+>>  	WRITE_ONCE(me->self_exec_id, me->self_exec_id + 1);
+>> @@ -1467,6 +1426,50 @@ void setup_new_exec(struct linux_binprm * bprm)
+>>  	 * credentials; any time after this it may be unlocked.
+>>  	 */
+>>  	security_bprm_committed_creds(bprm);
+>
+> Similarly for the LSM hook: is it expecting a post-arch-setup view? I
+> don't see anything looking at task_size, TIF flags, or anything else;
+> they seem to be just cleaning up from the old process being replaced, so
+> against, I think this is okay.
+
+Nothing at all with the mm.  The LSM hooks close files and
+muck with rlimits and signals, and tidy up their lsm state.
+
+There are only 3 implementations apparmor, tomoyo and selinux
+so it isn't too hard to read through them.
+
+> Not visible in this patch, the following things how happen earlier,
+> which I feel should maybe get called out in the changelog, with,
+> perhaps, better justification than what I've got here:
+>
+> bprm->secureexec set/check (looks safe, since it depends on
+> prepare_binprm()'s security_bprm_set_creds().
+>
+> rlim_stack.rlim_cur setting (safe, just needs to happen before
+> arch_pick_mmap_layout())
+>
+> dumpable() check (looks safe, BINPRM_FLAGS_ENFORCE_NONDUMP depends on
+> much earlier would_dump(), and uid/gid depend on earlier calls to
+> prepare_binprm()'s bprm_fill_uid())
+>
+> __set_task_comm (looks safe, just dealing with the task name...)
+>
+> self_exec_id bump (looks safe, but I think -- it's still after uid
+> setting)
+>
+> flush_signal_handlers() (looks safe -- nothing appears to depend on mm
+> nor personality)
+
+Agreed.
+
+>> +	return 0;
+>> +
+>> +out_unlock:
+>> +	mutex_unlock(&me->signal->exec_update_mutex);
+>> +out:
+>> +	return retval;
+>> +}
+>> +EXPORT_SYMBOL(flush_old_exec);
+>> +
+>> +void would_dump(struct linux_binprm *bprm, struct file *file)
+>> +{
+>> +	struct inode *inode = file_inode(file);
+>> +	if (inode_permission(inode, MAY_READ) < 0) {
+>> +		struct user_namespace *old, *user_ns;
+>> +		bprm->interp_flags |= BINPRM_FLAGS_ENFORCE_NONDUMP;
+>> +
+>> +		/* Ensure mm->user_ns contains the executable */
+>> +		user_ns = old = bprm->mm->user_ns;
+>> +		while ((user_ns != &init_user_ns) &&
+>> +		       !privileged_wrt_inode_uidgid(user_ns, inode))
+>> +			user_ns = user_ns->parent;
+>> +
+>> +		if (old != user_ns) {
+>> +			bprm->mm->user_ns = get_user_ns(user_ns);
+>> +			put_user_ns(old);
+>> +		}
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL(would_dump);
+>
+> The diff helpfully decided this moved would_dump(). ;) Is it worth
+> maybe just moviing it explicitly above flush_old_exec() to avoid this
+> churn? I dunno.
+
+Given the amount of review and testing that has been put in at
+this point I don't think so.
+
+>> +
+>> +void setup_new_exec(struct linux_binprm * bprm)
+>> +{
+>> +	/* Setup things that can depend upon the personality */
+>
+> Should this comment be above the function instead?
+
+My experience has been that comments above functions unless they are in
+full linuxdoc tend to be less well maintained than comments within the
+function itself.  So I don't think it is worth moving.x
+
+>> +	struct task_struct *me = current;
+>> +
+>> +	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
+>> +
+>> +	arch_setup_new_exec();
+>> +
+>> +	/* Set the new mm task size. We have to do that late because it may
+>> +	 * depend on TIF_32BIT which is only updated in flush_thread() on
+>> +	 * some architectures like powerpc
+>> +	 */
+>> +	me->mm->task_size = TASK_SIZE;
+>>  	mutex_unlock(&me->signal->exec_update_mutex);
+>>  	mutex_unlock(&me->signal->cred_guard_mutex);
+>>  }
+>> -- 
+>> 2.20.1
+>> 
+>
+> So, as I say, I *think* this is okay, but I always get suspicious about
+> reordering things in execve(). ;)
+>
+> So, with a bit larger changelog discussing what's moving "earlier",
+> I think this looks good:
+
+Please see above.
+
+Eric
