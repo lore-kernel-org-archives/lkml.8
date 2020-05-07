@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24945C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4774DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2CF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4E22073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862001;
-	bh=DPE8s2oC1JMVuEkSyn2rkj3IAwdAdBt9u5pz3lRE9H0=;
+	s=default; t=1588862006;
+	bh=KFbd1vMPx1N9D3//2dkbNX6qzqR1HhfZr1JgaPOh90s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYPS4Etwo9kxSI+zBSyOgWTWvIVeaLepTikvvOUwNLGtyxiY/sa9RpBfjS9TJ6Hp8
-	 h8QdEgMqLfxBpHqMvfyxoPoAt3fDzChNRdCyuthR7XL3OMesLUT2tlCMUvf8MnKb6C
-	 bPDzMWOKC4jxWX8BQWOTMp4jVBjv/v7F0UULwmvk=
+	b=rPcdVAsVP4ZiIttT/Nxs0LPsVirIlfwY2VKINdT2IL+RxpRPvzDYS+Bx5rW9CSd77
+	 PQni/ztWu0boiQRqBqb1eUQqzq7HvF7IfE2jNtHoy9q+IngiwgA2KbUSkuus7A3YM6
+	 iHS8AKPWUILhG4jZAtuxfCHEP9yVZ9c2gD+FRiS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgEGO3g (ORCPT
+        id S1728773AbgEGOdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgEGO3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:22 -0400
+        id S1728591AbgEGO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58EF2083B;
-        Thu,  7 May 2020 14:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5BBE2083B;
+        Thu,  7 May 2020 14:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861761;
-        bh=DPE8s2oC1JMVuEkSyn2rkj3IAwdAdBt9u5pz3lRE9H0=;
+        s=default; t=1588861774;
+        bh=KFbd1vMPx1N9D3//2dkbNX6qzqR1HhfZr1JgaPOh90s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oA7gIpzUi8r7+b4dXU3AoiEsb2cCBe6WAov+Tk8ArCE2ydiTH3NJKgnvQCh+ozwsg
-         FH3nsNAHLmb6lkMpm6E822VD6Ks2QayJsxOAJQ8SGA6clmVKW+4RCB4GK4aTe2Vbii
-         WDqOUry13SkzqQ4YMgeH7jKS78MAf5IdJ9FET7Ow=
+        b=smsOevBPoj8WDiBMED7akYMYW8QF88yXYmIPzv4yu55ZcXGITmF4obecpLmKzvOBd
+         bAmCy+BZNRR4a5ydLersgz1Sbas32E3J5Uh9zQ/J3x5ZYR8MyDYWI32lnNLATS3CYY
+         u0j7AOYiTtOAkuYtYJ02SgPGJmyyoHxN6o8kjC9Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/20] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
-Date:   Thu,  7 May 2020 10:28:59 -0400
-Message-Id: <20200507142917.26612-3-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/20] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+Date:   Thu,  7 May 2020 10:29:10 -0400
+Message-Id: <20200507142917.26612-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142917.26612-1-sashal@kernel.org>
 References: <20200507142917.26612-1-sashal@kernel.org>
@@ -59,33 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan Zhao <yan.y.zhao@intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 ]
+[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
 
-add parentheses to avoid possible vaddr overflow.
+Make a note of the first time we discover the turbo mode has been
+disabled by the BIOS, as otherwise we complain every time we try to
+update the mode.
 
-Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 2 +-
+ drivers/cpufreq/intel_pstate.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index c362757540866..c635ba3167f7b 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -598,7 +598,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 			continue;
- 		}
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 29f25d5d65e00..e7b3d4ed8eff4 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -957,7 +957,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
  
--		remote_vaddr = dma->vaddr + iova - dma->iova;
-+		remote_vaddr = dma->vaddr + (iova - dma->iova);
- 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
- 					     do_accounting);
- 		if (ret)
+ 	update_turbo_state();
+ 	if (global.turbo_disabled) {
+-		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
++		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
+ 		mutex_unlock(&intel_pstate_limits_lock);
+ 		mutex_unlock(&intel_pstate_driver_lock);
+ 		return -EPERM;
 -- 
 2.20.1
 
