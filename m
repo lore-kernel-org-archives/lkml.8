@@ -7,35 +7,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80960C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8B9C54E7F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 620F720870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358B720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgEGPAr (ORCPT
+        id S1728084AbgEGPAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:00:47 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63690 "EHLO mga02.intel.com"
+        Thu, 7 May 2020 11:00:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:27764 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbgEGPAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726470AbgEGPAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 11:00:23 -0400
-IronPort-SDR: XB5MSRRJifVAeXuiy7L4epSUhi3Z/7UJV6M8fjXoBTBo25+lfcrvE8sEEvIhD1Uku6MUOgQUaj
- TpsQ7wIQFKOQ==
+IronPort-SDR: brtgMqZQMcbdujJGmdp5UFK3HI0e0x5HLuai21o/gOX8ufKL72zuRmgLHFU8YVX+K9mwjZE3+C
+ foYayD1A/k9g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:21 -0700
-IronPort-SDR: saT76zwPdNDhyVhlS8gGstj7Z1vEVhsiCVSWpU8SA2MZuPcSyBfm4xuaedmODqMXokcDkJBKU+
- 8RFyk6fiFs3w==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:19 -0700
+IronPort-SDR: Cy4UofL/ZGlxBiwM8d7yBPac+s1xeopmMiYRGd1bsbjvN9m3oMzJUzzLiZDzQ9TZkKicsB3vdJ
+ vg2mxCRP3g1g==
 X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="370140539"
+   d="scan'208";a="296559905"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:21 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:18 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
         Helge Deller <deller@gmx.de>,
@@ -56,15 +59,15 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
         linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH V3 13/15] parisc/kmap: Remove duplicate kmap code
-Date:   Thu,  7 May 2020 08:00:01 -0700
-Message-Id: <20200507150004.1423069-14-ira.weiny@intel.com>
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH V3 11/15] drm: Remove drm specific kmap_atomic code
+Date:   Thu,  7 May 2020 07:59:59 -0700
+Message-Id: <20200507150004.1423069-12-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200507150004.1423069-1-ira.weiny@intel.com>
 References: <20200507150004.1423069-1-ira.weiny@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -73,107 +76,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-parisc reimplements the kmap calls except to flush it's dcache.  This is
-arguably an abuse of kmap but regardless it is messy and confusing.
+kmap_atomic_prot() is now exported by all architectures.  Use this
+function rather than open coding a driver specific kmap_atomic.
 
-Remove the duplicate code and have parisc define
-ARCH_HAS_FLUSH_ON_KUNMAP for a kunmap_flush_on_unmap() architecture
-specific call to flush the cache.
-
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
 ---
-Changes from V2:
-	New Patch for this series
----
- arch/parisc/include/asm/cacheflush.h | 28 ++--------------------------
- include/linux/highmem.h              | 10 +++++++---
- 2 files changed, 9 insertions(+), 29 deletions(-)
+ drivers/gpu/drm/ttm/ttm_bo_util.c    | 56 ++--------------------------
+ drivers/gpu/drm/vmwgfx/vmwgfx_blit.c | 16 ++++----
+ include/drm/ttm/ttm_bo_api.h         |  4 --
+ 3 files changed, 12 insertions(+), 64 deletions(-)
 
-diff --git a/arch/parisc/include/asm/cacheflush.h b/arch/parisc/include/asm/cacheflush.h
-index 119c9a7681bc..99663fc1f997 100644
---- a/arch/parisc/include/asm/cacheflush.h
-+++ b/arch/parisc/include/asm/cacheflush.h
-@@ -100,35 +100,11 @@ flush_anon_page(struct vm_area_struct *vma, struct page *page, unsigned long vma
- 	}
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+index 52d2b71f1588..f09b096ba4fd 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_util.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+@@ -257,54 +257,6 @@ static int ttm_copy_io_page(void *dst, void *src, unsigned long page)
+ 	return 0;
  }
  
--#include <asm/kmap_types.h>
--
--#define ARCH_HAS_KMAP
--
--static inline void *kmap(struct page *page)
--{
--	might_sleep();
--	return page_address(page);
--}
--
--static inline void kunmap(struct page *page)
--{
--	flush_kernel_dcache_page_addr(page_address(page));
--}
--
--static inline void *kmap_atomic(struct page *page)
--{
--	preempt_disable();
--	pagefault_disable();
--	return page_address(page);
--}
--
--static inline void kunmap_atomic_high(void *addr)
-+#define ARCH_HAS_FLUSH_ON_KUNMAP
-+static inline void kunmap_flush_on_unmap(void *addr)
- {
- 	flush_kernel_dcache_page_addr(addr);
- }
- 
--#define kmap_atomic_prot(page, prot)	kmap_atomic(page)
--#define kmap_atomic_pfn(pfn)	kmap_atomic(pfn_to_page(pfn))
--
- #endif /* _PARISC_CACHEFLUSH_H */
- 
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index 89838306f50d..cc0c3904e501 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -129,7 +129,6 @@ static inline struct page *kmap_to_page(void *addr)
- 
- static inline unsigned long totalhigh_pages(void) { return 0UL; }
- 
--#ifndef ARCH_HAS_KMAP
- static inline void *kmap(struct page *page)
- {
- 	might_sleep();
-@@ -138,6 +137,9 @@ static inline void *kmap(struct page *page)
- 
- static inline void kunmap(struct page *page)
- {
-+#ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-+	kunmap_flush_on_unmap(page_address(page));
-+#endif
- }
- 
- static inline void *kmap_atomic(struct page *page)
-@@ -150,14 +152,16 @@ static inline void *kmap_atomic(struct page *page)
- 
- static inline void kunmap_atomic_high(void *addr)
- {
--	/* Nothing to do in the CONFIG_HIGHMEM=n case as kunmap_atomic()
-+	/* Mostly nothing to do in the CONFIG_HIGHMEM=n case as kunmap_atomic()
- 	 * handles re-enabling faults + preemption */
-+#ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-+	kunmap_flush_on_unmap(addr);
-+#endif
- }
- 
- #define kmap_atomic_pfn(pfn)	kmap_atomic(pfn_to_page(pfn))
- 
- #define kmap_flush_unused()	do {} while(0)
+-#ifdef CONFIG_X86
+-#define __ttm_kmap_atomic_prot(__page, __prot) kmap_atomic_prot(__page, __prot)
+-#define __ttm_kunmap_atomic(__addr) kunmap_atomic(__addr)
+-#else
+-#define __ttm_kmap_atomic_prot(__page, __prot) vmap(&__page, 1, 0,  __prot)
+-#define __ttm_kunmap_atomic(__addr) vunmap(__addr)
 -#endif
+-
+-
+-/**
+- * ttm_kmap_atomic_prot - Efficient kernel map of a single page with
+- * specified page protection.
+- *
+- * @page: The page to map.
+- * @prot: The page protection.
+- *
+- * This function maps a TTM page using the kmap_atomic api if available,
+- * otherwise falls back to vmap. The user must make sure that the
+- * specified page does not have an aliased mapping with a different caching
+- * policy unless the architecture explicitly allows it. Also mapping and
+- * unmapping using this api must be correctly nested. Unmapping should
+- * occur in the reverse order of mapping.
+- */
+-void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot)
+-{
+-	if (pgprot_val(prot) == pgprot_val(PAGE_KERNEL))
+-		return kmap_atomic(page);
+-	else
+-		return __ttm_kmap_atomic_prot(page, prot);
+-}
+-EXPORT_SYMBOL(ttm_kmap_atomic_prot);
+-
+-/**
+- * ttm_kunmap_atomic_prot - Unmap a page that was mapped using
+- * ttm_kmap_atomic_prot.
+- *
+- * @addr: The virtual address from the map.
+- * @prot: The page protection.
+- */
+-void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot)
+-{
+-	if (pgprot_val(prot) == pgprot_val(PAGE_KERNEL))
+-		kunmap_atomic(addr);
+-	else
+-		__ttm_kunmap_atomic(addr);
+-}
+-EXPORT_SYMBOL(ttm_kunmap_atomic_prot);
+-
+ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
+ 				unsigned long page,
+ 				pgprot_t prot)
+@@ -316,13 +268,13 @@ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
+ 		return -ENOMEM;
  
- #endif /* CONFIG_HIGHMEM */
+ 	src = (void *)((unsigned long)src + (page << PAGE_SHIFT));
+-	dst = ttm_kmap_atomic_prot(d, prot);
++	dst = kmap_atomic_prot(d, prot);
+ 	if (!dst)
+ 		return -ENOMEM;
  
+ 	memcpy_fromio(dst, src, PAGE_SIZE);
+ 
+-	ttm_kunmap_atomic_prot(dst, prot);
++	kunmap_atomic(dst);
+ 
+ 	return 0;
+ }
+@@ -338,13 +290,13 @@ static int ttm_copy_ttm_io_page(struct ttm_tt *ttm, void *dst,
+ 		return -ENOMEM;
+ 
+ 	dst = (void *)((unsigned long)dst + (page << PAGE_SHIFT));
+-	src = ttm_kmap_atomic_prot(s, prot);
++	src = kmap_atomic_prot(s, prot);
+ 	if (!src)
+ 		return -ENOMEM;
+ 
+ 	memcpy_toio(dst, src, PAGE_SIZE);
+ 
+-	ttm_kunmap_atomic_prot(src, prot);
++	kunmap_atomic(src);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+index bb46ca0c458f..94d456a1d1a9 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+@@ -374,12 +374,12 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_line_data *d,
+ 		copy_size = min_t(u32, copy_size, PAGE_SIZE - src_page_offset);
+ 
+ 		if (unmap_src) {
+-			ttm_kunmap_atomic_prot(d->src_addr, d->src_prot);
++			kunmap_atomic(d->src_addr);
+ 			d->src_addr = NULL;
+ 		}
+ 
+ 		if (unmap_dst) {
+-			ttm_kunmap_atomic_prot(d->dst_addr, d->dst_prot);
++			kunmap_atomic(d->dst_addr);
+ 			d->dst_addr = NULL;
+ 		}
+ 
+@@ -388,8 +388,8 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_line_data *d,
+ 				return -EINVAL;
+ 
+ 			d->dst_addr =
+-				ttm_kmap_atomic_prot(d->dst_pages[dst_page],
+-						     d->dst_prot);
++				kmap_atomic_prot(d->dst_pages[dst_page],
++						 d->dst_prot);
+ 			if (!d->dst_addr)
+ 				return -ENOMEM;
+ 
+@@ -401,8 +401,8 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_line_data *d,
+ 				return -EINVAL;
+ 
+ 			d->src_addr =
+-				ttm_kmap_atomic_prot(d->src_pages[src_page],
+-						     d->src_prot);
++				kmap_atomic_prot(d->src_pages[src_page],
++						 d->src_prot);
+ 			if (!d->src_addr)
+ 				return -ENOMEM;
+ 
+@@ -499,9 +499,9 @@ int vmw_bo_cpu_blit(struct ttm_buffer_object *dst,
+ 	}
+ out:
+ 	if (d.src_addr)
+-		ttm_kunmap_atomic_prot(d.src_addr, d.src_prot);
++		kunmap_atomic(d.src_addr);
+ 	if (d.dst_addr)
+-		ttm_kunmap_atomic_prot(d.dst_addr, d.dst_prot);
++		kunmap_atomic(d.dst_addr);
+ 
+ 	return ret;
+ }
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 0a9d042e075a..de1ccdcd5703 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -668,10 +668,6 @@ int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
+ int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
+ 		struct ttm_bo_device *bdev);
+ 
+-void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
+-
+-void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
+-
+ /**
+  * ttm_bo_io
+  *
 -- 
 2.25.1
 
