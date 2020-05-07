@@ -2,144 +2,166 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5050C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6611C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C818F21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C3020870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRJdY9jA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgEGQuR (ORCPT
+        id S1727808AbgEGQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:50:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43277 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgEGQuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:50:17 -0400
-IronPort-SDR: cjuoT0SQTDfVqtbMxVZtA6VW+kuCC5BTXiedrIY5+HBRKrWgjXX2LjCfCU8nXrrzQX1/OtyB1n
- +KgXicC7yeag==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:50:15 -0700
-IronPort-SDR: Ms9q1mkGk1TD+317CGrZFl70J8ycy1T6V+H20BPKVdBhqKbvUSeZXJw6f8cRlz8hi3C9iRTiZ9
- RLGaVuVla6MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="461910078"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 07 May 2020 09:50:15 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, sam <sunhaoyl@outlook.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
-Subject: [PATCH] x86/fpu/xstate: Clear uninitialized xstate areas in core dump
-Date:   Thu,  7 May 2020 09:49:04 -0700
-Message-Id: <20200507164904.26927-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 May 2020 12:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726222AbgEGQvA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:51:00 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34460C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:51:00 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id t199so5797008oif.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:51:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kMWnRRDjjsl8pcwIzMkXZpSdECOOZg3cVfKKxGE9IxU=;
+        b=dRJdY9jA+xNPFSRPPjeN/lm3++Ov86g8r/vn3O7ODiV3PQfGdKJ5FakS1sLEu+fQBT
+         29yv5RduYMLG2LOH6TcwA96XBs+ctHUAl/KeTIW60QJD4J0Co6397LQHc861Ek5yBeP7
+         Y75wMHIerqbMmwWmuXKjhFsCTn+QTBiEzzPew51QZIKyvjjWtuJFwwcm9HlvKv8Rqxu8
+         gKEVKBGdE9/J6QuoZF1rsgInmlrf/YhYcV2Gpuo45HlgFwHIS7Y2WZuhPTKybLxYjGvL
+         GciCFvU/SJmDby3zsUoeD/+RBR6ndKLKoAKQwHUv9fSqwVkzFmTcItKulo6eor1cy4EC
+         oEng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kMWnRRDjjsl8pcwIzMkXZpSdECOOZg3cVfKKxGE9IxU=;
+        b=OLlxEi3psc61ahsC459Gooy6lk4UxlMhZ+CqBu/SK//RzhV3qjTILlMeeNmT2KWX5U
+         +QRhurpzZQo3Or6gZsvPx+0hVwNQQCYfCGMMt7WEuOz7QeGxfpXfXjnDqm5k19P4t8/m
+         j97AqDRb6vaWYxE8gli6hFfiIozwTA5HZ87JbAa1tRT+aZG2EogmQyeGQe+HxfKann6c
+         T8bhnKfKxbpD6ZtbwbL1uYXO8i0uHf2FGNuEbVNBjUTfZb1PKkyE+TwDorbkHdMptCGk
+         iOyngdprQin2xUg91jPr5n/jK/hwlZgLxwOs9BhPOZkeVVf7yvCPuZeHiOXUfEf79U9D
+         NnLA==
+X-Gm-Message-State: AGi0PuZB9ZIn1Hw2yYzYlscYiRLlrFgbCbREwJKx8Kr+ToZbuOb2iMCs
+        dkgX96dtUe9QvIPWrqFefjPutfyLpeRWOoIm7ReE5A==
+X-Google-Smtp-Source: APiQypJImJ49afgLk0pP4NB8LDfNUhM5qhGqPYLHutBzFRxjQ6Ry0xTvAFLNn/pBw2LLCXTKqdRft+Ws1iZ8QR0rvxA=
+X-Received: by 2002:aca:1c08:: with SMTP id c8mr7227783oic.172.1588870259205;
+ Thu, 07 May 2020 09:50:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CANpmjNPCZ2r9V7t50_yy+F_-roBWJdiQWgmvvcqTFxzdzOwKhg@mail.gmail.com>
+ <20200507162617.2472578-1-arnd@arndb.de>
+In-Reply-To: <20200507162617.2472578-1-arnd@arndb.de>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 7 May 2020 18:50:47 +0200
+Message-ID: <CANpmjNObn6aXUe95e9UpuVwxHQ5ubMx_n3LLEgh=pe4rJd-Qyw@mail.gmail.com>
+Subject: Re: [PATCH] [v2] ubsan, kcsan: don't combine sanitizer with kcov on clang
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a core dump, copy_xstate_to_kernel() copies only enabled user xfeatures
-to a kernel buffer without touching areas for disabled xfeatures.  However,
-those uninitialized areas may contain random data, which is then written to
-the core dump file and can be read by a non-privileged user.
+On Thu, 7 May 2020 at 18:26, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Clang does not allow -fsanitize-coverage=trace-{pc,cmp} together
+> with -fsanitize=bounds or with ubsan:
+>
+> clang: error: argument unused during compilation: '-fsanitize-coverage=trace-pc' [-Werror,-Wunused-command-line-argument]
+> clang: error: argument unused during compilation: '-fsanitize-coverage=trace-cmp' [-Werror,-Wunused-command-line-argument]
+>
+> To avoid the warning, check whether clang can handle this correctly
+> or disallow ubsan and kcsan when kcov is enabled.
+>
+> Link: https://bugs.llvm.org/show_bug.cgi?id=45831
+> Link: https://lore.kernel.org/lkml/20200505142341.1096942-1-arnd@arndb.de
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: this implements Marco's suggestion to check what the compiler
+> actually supports, and references the bug report I now opened.
+>
+> Let's wait for replies on that bug report before this gets applied,
+> in case the feedback there changes the conclusion.
 
-Fix it by clearing uninitialized areas.
+Waiting makes sense, if this is not very urgent.
 
-Link: https://github.com/google/kmsan/issues/76
-Link: https://lore.kernel.org/lkml/20200419100848.63472-1-glider@google.com/
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reported-by: sam <sunhaoyl@outlook.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>
----
- arch/x86/kernel/fpu/xstate.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Acked-by: Marco Elver <elver@google.com>
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 32b153d38748..0856daa29be7 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -983,6 +983,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
- {
- 	unsigned int offset, size;
- 	struct xstate_header header;
-+	int last_off;
- 	int i;
- 
- 	/*
-@@ -1006,7 +1007,17 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
- 
- 	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
- 
-+	last_off = 0;
-+
- 	for (i = 0; i < XFEATURE_MAX; i++) {
-+		/*
-+		 * Clear uninitialized area before XSAVE header.
-+		 */
-+		if (i == FIRST_EXTENDED_XFEATURE) {
-+			memset(kbuf + last_off, 0, XSAVE_HDR_OFFSET - last_off);
-+			last_off = XSAVE_HDR_OFFSET + XSAVE_HDR_SIZE;
-+		}
-+
- 		/*
- 		 * Copy only in-use xstates:
- 		 */
-@@ -1020,11 +1031,16 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
- 			if (offset + size > size_total)
- 				break;
- 
-+			memset(kbuf + last_off, 0, offset - last_off);
-+			last_off = offset + size;
-+
- 			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
- 		}
- 
- 	}
- 
-+	memset(kbuf + last_off, 0, size_total - last_off);
-+
- 	if (xfeatures_mxcsr_quirk(header.xfeatures)) {
- 		offset = offsetof(struct fxregs_state, mxcsr);
- 		size = MXCSR_AND_FLAGS_SIZE;
--- 
-2.21.0
+Thank you!
 
+> ---
+>  lib/Kconfig.kcsan | 11 +++++++++++
+>  lib/Kconfig.ubsan | 11 +++++++++++
+>  2 files changed, 22 insertions(+)
+>
+> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> index ea28245c6c1d..a7276035ca0d 100644
+> --- a/lib/Kconfig.kcsan
+> +++ b/lib/Kconfig.kcsan
+> @@ -3,9 +3,20 @@
+>  config HAVE_ARCH_KCSAN
+>         bool
+>
+> +config KCSAN_KCOV_BROKEN
+> +       def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
+> +       depends on CC_IS_CLANG
+> +       depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=thread -fsanitize-coverage=trace-pc)
+> +       help
+> +         Some versions of clang support either KCSAN and KCOV but not the
+> +         combination of the two.
+> +         See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
+> +         in newer releases.
+> +
+>  menuconfig KCSAN
+>         bool "KCSAN: dynamic data race detector"
+>         depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
+> +       depends on !KCSAN_KCOV_BROKEN
+>         select STACKTRACE
+>         help
+>           The Kernel Concurrency Sanitizer (KCSAN) is a dynamic
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index 929211039bac..a5ba2fd51823 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -26,9 +26,20 @@ config UBSAN_TRAP
+>           the system. For some system builders this is an acceptable
+>           trade-off.
+>
+> +config UBSAN_KCOV_BROKEN
+> +       def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
+> +       depends on CC_IS_CLANG
+> +       depends on !$(cc-option,-Werror=unused-command-line-argument -fsanitize=bounds -fsanitize-coverage=trace-pc)
+> +       help
+> +         Some versions of clang support either UBSAN or KCOV but not the
+> +         combination of the two.
+> +         See https://bugs.llvm.org/show_bug.cgi?id=45831 for the status
+> +         in newer releases.
+> +
+>  config UBSAN_BOUNDS
+>         bool "Perform array index bounds checking"
+>         default UBSAN
+> +       depends on !UBSAN_KCOV_BROKEN
+>         help
+>           This option enables detection of directly indexed out of bounds
+>           array accesses, where the array size is known at compile time.
+> --
+> 2.26.0
+>
