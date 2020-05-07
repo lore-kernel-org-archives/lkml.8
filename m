@@ -2,194 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55745C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7DC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401C6208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28E2207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mqCj3qeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgEGEwg convert rfc822-to-8bit (ORCPT
+        id S1725910AbgEGEz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 00:52:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60897 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgEGEwf (ORCPT
+        Thu, 7 May 2020 00:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbgEGEz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 00:52:35 -0400
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jWYWP-0000T6-BD
-        for linux-kernel@vger.kernel.org; Thu, 07 May 2020 04:52:33 +0000
-Received: by mail-pl1-f199.google.com with SMTP id k23so4143233pll.19
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 21:52:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=w4FDbx+sqaj7/I18BPPgkxjRI2IWGp9DxRd9OXfc4I8=;
-        b=sgrRqdiD+2VUZ1HBk9dx3cRXdUMuOISmE8+D0bDYcwEa+qpAQipb7qFl21T59st9CA
-         lvS0ZTF8QV3bTPfYCs1RqHwSS2VH/LU2URxB++WIhZHPYmoDsJbKzOm3B7791Gk/SNt7
-         d9vTkfEnPmoAu3hrCzTBpE+chuM0mAhIsCKk9zgP9TcVmcWWWd0t+/dy/57QVatVwJ1i
-         9Cv7q7q5pcu3HIpONXWCrujzBMYRMCkZSyaniSbtiaHIgZ/CCtyhQ9BYA9UjHZLR9AXi
-         /r8X7rZeEB/67spuIulIWO5I7Os2YJxnErs8NlHXL0KKkiSrHxaOLCkGY+yzIxko2wE+
-         Lfuw==
-X-Gm-Message-State: AGi0PuZyoYKjZo3uqLbt9KXzv1xhnWUu/EE2eF7xFIsBrmikeOFgt5Lp
-        9dwMkWHaoj3PMcWA9XxOXpgKOMMj4ICBorcbyuNyg4UylM9JSWppJbUUWVQGhFJFxEvX6wRpf+B
-        6zSJUbG43hYAR1RMIOQazd5EetL+0YFvX27BpUB/lqA==
-X-Received: by 2002:a17:902:7289:: with SMTP id d9mr11737736pll.147.1588827151903;
-        Wed, 06 May 2020 21:52:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKd1OFSTF85NtleoC+pgFpSup5vc27PkUDpOeKCJJnN6mB3hBbdRvincDHIf2zmxpakc3zpnw==
-X-Received: by 2002:a17:902:7289:: with SMTP id d9mr11737714pll.147.1588827151405;
-        Wed, 06 May 2020 21:52:31 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id w13sm3396670pfn.192.2020.05.06.21.52.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 May 2020 21:52:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] xhci: Set port link to RxDetect if port is not enabled
- after resume
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <a4311a60-ad12-e9a8-d391-f34832f65ef5@linux.intel.com>
-Date:   Thu, 7 May 2020 12:52:28 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <79060777-FF5B-4394-9A05-8573B6EF6578@canonical.com>
-References: <20200311040456.25851-1-kai.heng.feng@canonical.com>
- <B4E44BDC-5AFE-4F8A-8498-0EEE9CDAC0E1@canonical.com>
- <635B3350-F064-4B45-B194-40F793423049@canonical.com>
- <35fbb517-31b1-7bba-8e07-795ab18af1ff@linux.intel.com>
- <47BCEDDA-2E91-4CE3-AA45-B2EEB1DA111D@canonical.com>
- <a4311a60-ad12-e9a8-d391-f34832f65ef5@linux.intel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 7 May 2020 00:55:59 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1490DC061A0F;
+        Wed,  6 May 2020 21:55:59 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hh4B5zw4z9sRY;
+        Thu,  7 May 2020 14:55:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588827356;
+        bh=AU2PEgfN5HkCY/lykPvJpAGTGV/oowF0bQCK/YlxYRY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mqCj3qeGt8sjSGsMSZMhp875k/myFaBwas7miKkV70A8ch4BCy7Ezu8vo1krLhSAW
+         psDKViQNVrxJYAj98XDmFBL4+l9zKunLV2HiW5Oi8r/H6VFsy4gSyELJhErufWq25i
+         BrKqLRKHw1F+SVWliPBfps7FOmqUWvHXFXjKa5q3kNznIKR1MVJi7AzUrvuuZs2DYE
+         oqb/HNFUOzjUksR6lm7V8xgHFvswH6hS141WCLwlyQA/gHG54KxWcFv3K8HQEJKIW9
+         shQl/HIq48ThpM0chplCN2b8Vy8tVDDtrOhXkvFQHkPExJYcInwQSbRlFrM995fUxW
+         ADb02oGOd7RVg==
+Date:   Thu, 7 May 2020 14:55:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Benson Leung <bleung@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Sarthak Kukreti <sarthakkukreti@chromium.org>
+Subject: linux-next: manual merge of the chrome-platform tree with the
+ pstore tree
+Message-ID: <20200507145547.7c514106@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/438muPcTwi24xAvTu+a_DYj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/438muPcTwi24xAvTu+a_DYj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> On Apr 28, 2020, at 00:49, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
-> 
-> On 27.4.2020 12.05, Kai-Heng Feng wrote:
->> 
->> 
->>> On Apr 23, 2020, at 19:25, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
->>> 
->>> Was this roothub port forcefully suspended xhci_bus_suspend()?
->>> i.e. was a bit set in bus_state->bus_suspended for this port?
->> 
->> No, it's a USB3 device so it was set to U3 via USB_PORT_FEAT_LINK_STATE.
-> 
-> Logs show port was first forced by xhci_bus_suspend() to U3  ("port 0 not
-> suspended" message)
-> and only later set to U3 by USB_PORT_FEAT_LINK_STATE.
-> Seems line wrong order or race.
+Today's linux-next merge of the chrome-platform tree got a conflict in:
 
-The "port 0 not suspended" is actually for 3-1, if we print bus num and port + 1:
-[  213.732977] xhci_hcd 0000:3f:00.0: port 3-1 not suspended
+  drivers/platform/chrome/chromeos_pstore.c
 
-For port 4-1 it's always suspended before suspend the bus.
-I'll send a patch to adjust the debug message for better clarity.
+between commit:
 
-> 
-> while suspended we get a port event about a connect status change,
-> showing port link state is in disabled.
-> Cherry picked messages:
-> 
-> [ 1330.021450] xhci_hcd 0000:3f:00.0: port 0 not suspended
-> [ 1330.036822] xhci_hcd 0000:3f:00.0: Set port 4-1 link state, portsc: 0x1203, write 0x11261
-> [ 1331.020736] xhci_hcd 0000:3f:00.0: Port change event, 4-1, id 1, portsc: 0x20280
-> [ 1331.020738] xhci_hcd 0000:3f:00.0: resume root hub
-> [ 1331.020741] xhci_hcd 0000:3f:00.0: handle_port_status: starting port polling.
-> 
-> If we force the port link state to U3 in xhci_bus_suspend() maybe it would make
-> sense to try and recover it in xhci_bus_resume(). But only for that forced
-> port.
-> 
-> None of the previous suspend/resume cycles in the logs went smooth either.
-> Each time device 4-1 was forced to U3 bus xhci_bus_suspend(), and at resume the
-> link was stuck in polling until timeout, after which it went to compliance mode,
-> and had to be warm reset to recover.
+  7bddec15c574 ("pstore/ram: Introduce max_reason and convert dump_oops")
 
-If my observation above is true, port 4-1 is indeed suspended by usb_port_suspend() rather than xhci_bus_suspend().
+from the pstore tree and commit:
 
-> 
-> We could add the code to recover USB3 ports from disabled state in case we
-> forced them to U3, but the rootcause of theus suspend/resume issues should
-> be found as well
+  1c7c51347f2e ("platform/chrome: chromeos_pstore: set user space log size")
 
-Seems like the issue doesn't happen if the host system use S2Idle instead of S3.
-However, I can't see any difference in xHCI driver with different suspend methods.
-Maybe the root cause is that, ASMedia controller and SMSC hub are just quirky?
+from the chrome-platform tree.
 
-> 
-> Limiting your code to USB3 devices that xhi_bus_suspend forced to U3 would look
-> something like this:
-> 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index 9eca1fe81061..0f16dd936ab8 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -1789,6 +1789,15 @@ int xhci_bus_resume(struct usb_hcd *hcd)
-> 			case XDEV_RESUME:
-> 				/* resume already initiated */
-> 				break;
-> +			case XDEV_DISABLED:
-> +				if (hcd->speed >= HCD_USB3) {
-> +					portsc = xhci_port_state_to_neutral(
-> +						portsc);
-> +					portsc &= ~PORT_PLS_MASK;
-> +					portsc |= PORT_LINK_STROBE |
-> +						XDEV_RXDETECT;
-> +				}
-> +				/* fall through for both USB3 abd USB2 */
-> 			default:
-> 				/* not in a resumeable state, ignore it */
-> 				clear_bit(port_index,
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-This doesn't work because port 4-1 isn't suspended by xhci_bus_suspend().
+--=20
+Cheers,
+Stephen Rothwell
 
-Maybe we can restrict the case to ports that are suspended by USB_PORT_FEAT_LINK_STATE.
-Is the following patch looks good to you?
+diff --cc drivers/platform/chrome/chromeos_pstore.c
+index fa51153688b4,82dea8cb5da1..000000000000
+--- a/drivers/platform/chrome/chromeos_pstore.c
++++ b/drivers/platform/chrome/chromeos_pstore.c
+@@@ -57,7 -57,8 +57,8 @@@ static struct ramoops_platform_data chr
+  	.record_size	=3D 0x40000,
+  	.console_size	=3D 0x20000,
+  	.ftrace_size	=3D 0x20000,
++ 	.pmsg_size	=3D 0x20000,
+ -	.dump_oops	=3D 1,
+ +	.max_reason	=3D KMSG_DUMP_OOPS,
+  };
+ =20
+  static struct platform_device chromeos_ramoops =3D {
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index f37316d2c8fa..dc2e14ea308d 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1787,6 +1787,16 @@ int xhci_bus_resume(struct usb_hcd *hcd)
-                        clear_bit(port_index, &bus_state->bus_suspended);
-                        continue;
-                }
-+
-+               if (bus_state->suspended_ports & (1 << port_index)) {
-+                       if ((portsc & PORT_PLS_MASK) == XDEV_DISABLED &&
-+                           hcd->speed >= HCD_USB3) {
-+                               portsc = xhci_port_state_to_neutral(portsc);
-+                               portsc &= ~PORT_PLS_MASK;
-+                               portsc |= PORT_LINK_STROBE | XDEV_RXDETECT;
-+                       }
-+               }
-+
-                /* resume if we suspended the link, and it is still suspended */
-                if (test_bit(port_index, &bus_state->bus_suspended))
-                        switch (portsc & PORT_PLS_MASK) {
+--Sig_/438muPcTwi24xAvTu+a_DYj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-Kai-Heng
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zlNMACgkQAVBC80lX
+0GxnOgf/eG7ZXxtuY6ayV1S7/ldiT3uY/VwLGFqxsErvpTQ8DdzL0U5+2abZ1ePM
+77tw/drUO2ZBoMfVBdEpfbfv4LwGJbi+7H6qBKm4o4anapnsF5/ZivHesf86E8kf
+u23VyKH/kcGBasYVvP7kK7zY6oPiHU7HZo9LmGDmWCEze1JTjjYQo0tTg01zs1M0
+Q1YmScIRCcqPe2d2qhBpBgn5gBEQwuU5he/2kCT9cs9LVYWd4XH9LBTrXYMsGXaP
++KlVOOg6aD7yBwht0GaPjsvjbxDvX5BPCI6dQSwYxclrqUy2am3Ggg5e/ym65vGn
+CCF6bZPd7LlU073jtKSWlZUdI8mFIg==
+=J1nG
+-----END PGP SIGNATURE-----
 
-> 
-> -Mathias
-
+--Sig_/438muPcTwi24xAvTu+a_DYj--
