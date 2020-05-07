@@ -2,127 +2,193 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B68DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5A3C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792F92083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CBC20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="coX3lDQh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W2IGuUxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgEGMX0 (ORCPT
+        id S1726761AbgEGMYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727100AbgEGMXX (ORCPT
+        Thu, 7 May 2020 08:24:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25968 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbgEGMYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:23:23 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E8BAC05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 05:23:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so6604683wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 05:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=js2krj0RD3hheEAL8cEfa5AyUl6zi0N+wYVVoWFXilU=;
-        b=coX3lDQhoiVcmqCufwxRJFR3NjAPEGH0QUsc9BHbtnYuDYAuLvTLxr0YOckuFoNb7v
-         35jokTarqofjAL3txGkkqvMZF3vNo4G0u7efJqy9Y1pnS66YOVSLWrt6IuSYNYzRPyrp
-         AlIT+KfReY3LKpelz3IBfQjruAr5XEaRDetgT1Nrn/xtHLNlkqv6RE0QEAIlFU4wWyv+
-         VEoUUlCkUZ2JKYaSIedjEjVQO2ejeJ4w6XYe6uW1EUMzKjJaO1JtXNWnn4m6koCVsIEY
-         6G20LE29aCBSg2u8Jp6+umXE2ph1Ui21SToAqkAkEb8oBp0aY5QcRTkCCninELhLUXPf
-         Qt5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=js2krj0RD3hheEAL8cEfa5AyUl6zi0N+wYVVoWFXilU=;
-        b=WNcnfzkxjZfkNcTrtokDcjD8vk+IzSdh8+99iexwefc68QGeiLYB/WmVnvZefZKnmC
-         tE2WuYplhjyrpPIrZlYilU+h9kZcmMlsZI0buePkscZtv0ZVEmZMKgtbV9yuYMGE6xA9
-         Gy7kCopfWW4hZzTrIPJIGfo/ggC9UXsGGYi2hnHJdMcd5qLFVOrpI1mrL1Vo6nWVQODk
-         4YBmT9AEXQDHyxlTmXo9MAVYXQ8068OBPUOz1MeuEakwU4vkJ7L8ksPFE4oqGdzO5jij
-         Zl0rLedClFu6QRNhjBagD70FIHmkHkQ9DbI86AcmTzvZ/pWhz02i+wL9C6HY4pHWMv0a
-         jmBQ==
-X-Gm-Message-State: AGi0PubIcTrPmU/jgmOXR1QZkCplbwUFJzyTwU2n8cuo3D9xla0+bIRU
-        fQxo3BuYfFf+0tJo6xmsuPI2iHbNDKI=
-X-Google-Smtp-Source: APiQypKUssr+tZ7ONvwALRESmstwlo4sXONYM0CoLMz4PdmEGwytmWK3dIclCWwC8C5V8ol/fEYJtA==
-X-Received: by 2002:a05:600c:4013:: with SMTP id i19mr3094203wmm.71.1588854201286;
-        Thu, 07 May 2020 05:23:21 -0700 (PDT)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id p7sm8202936wrf.31.2020.05.07.05.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 05:23:20 -0700 (PDT)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     heikki.krogerus@linux.intel.com, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        nikolaus.voss@loewensteinmedical.de,
-        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
-        keescook@chromium.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH 2/2] usb: typec: tps6598x: Add OF probe binding
-Date:   Thu,  7 May 2020 13:23:52 +0100
-Message-Id: <20200507122352.1773661-3-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200507122352.1773661-1-bryan.odonoghue@linaro.org>
-References: <20200507122352.1773661-1-bryan.odonoghue@linaro.org>
+        Thu, 7 May 2020 08:24:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588854262;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=iGvZ3uBqZcHGQ791dw2pD6/mhpLb7FxWwAQ3Uf5c+LU=;
+        b=W2IGuUxmGrwhfMPGmhGa5+BWTOaNXPgX9G9Us1inzIBZ7GA/NL4Uy7TJKq4gcohsWpd7Bv
+        caY64JW3tMMwPxcDD7BmjRtbKFvEzbsxxD1ONm5JjW0vG5mdaW2E9RNrP8oUDX2HbyyBh+
+        tZxyqAcZSBMZSpZgod6LvsMqLxhedVo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-enMj3OjONYqiRP1ToP_xqA-1; Thu, 07 May 2020 08:24:19 -0400
+X-MC-Unique: enMj3OjONYqiRP1ToP_xqA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DACA7835B4A;
+        Thu,  7 May 2020 12:24:17 +0000 (UTC)
+Received: from [10.36.113.245] (ovpn-113-245.ams2.redhat.com [10.36.113.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B15D63F9D;
+        Thu,  7 May 2020 12:24:12 +0000 (UTC)
+Subject: Re: [PATCH v3 07/15] mm/memory_hotplug: Introduce
+ offline_and_remove_memory()
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+References: <20200507103119.11219-1-david@redhat.com>
+ <20200507103119.11219-8-david@redhat.com>
+ <20200507064558-mutt-send-email-mst@kernel.org>
+ <a915653f-232e-aa13-68f7-f988704fa84c@redhat.com>
+ <441bfb92-ecfa-f54e-3661-b219ea166e55@redhat.com>
+ <20200507073408-mutt-send-email-mst@kernel.org>
+ <3bed2d1d-d94a-45ca-afe3-5e6ee660b0fc@redhat.com>
+ <20200507080849-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <2d3b2be0-330e-3e55-7861-b43885349751@redhat.com>
+Date:   Thu, 7 May 2020 14:24:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200507080849-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a MODULE_DEVICE_TABLE() to allow probing of this driver from a DTS
-setting.
+On 07.05.20 14:11, Michael S. Tsirkin wrote:
+> On Thu, May 07, 2020 at 01:37:30PM +0200, David Hildenbrand wrote:
+>> On 07.05.20 13:34, Michael S. Tsirkin wrote:
+>>> On Thu, May 07, 2020 at 01:33:23PM +0200, David Hildenbrand wrote:
+>>>>>> I get:
+>>>>>>
+>>>>>> error: sha1 information is lacking or useless (mm/memory_hotplug.c).
+>>>>>> error: could not build fake ancestor
+>>>>>>
+>>>>>> which version is this against? Pls post patches on top of some tag
+>>>>>> in Linus' tree if possible.
+>>>>>
+>>>>> As the cover states, latest linux-next. To be precise
+>>>>>
+>>>>> commit 6b43f715b6379433e8eb30aa9bcc99bd6a585f77 (tag: next-20200507,
+>>>>> next/master)
+>>>>> Author: Stephen Rothwell <sfr@canb.auug.org.au>
+>>>>> Date:   Thu May 7 18:11:31 2020 +1000
+>>>>>
+>>>>>     Add linux-next specific files for 20200507
+>>>>>
+>>>>
+>>>> The patches seem to apply cleanly on top of
+>>>>
+>>>> commit a811c1fa0a02c062555b54651065899437bacdbe (linus/master)
+>>>> Merge: b9388959ba50 16f8036086a9
+>>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>>>> Date:   Wed May 6 20:53:22 2020 -0700
+>>>>
+>>>>     Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+>>>
+>>> Because you have the relevant hashes in your git tree not pruned yet.
+>>> Do a new clone and they won't apply.
+>>>
+>>
+>> Yeah, most probably, it knows how to merge. I'm used to sending all my
+>> -mm stuff based on -next, so this here is different.
+> 
+> 
+> Documentation/process/5.Posting.rst addresses this:
+> 
 
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Gustavo A. R. Silva <garsilva@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- drivers/usb/typec/tps6598x.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks for the info.
 
-diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
-index 0698addd1185..61c6761072c9 100644
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -563,6 +563,14 @@ static int tps6598x_remove(struct i2c_client *client)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id tps6598x_of_match[] = {
-+	{ .compatible = "ti,tps6598x", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tps6598x_of_match);
-+#endif
-+
- static const struct i2c_device_id tps6598x_id[] = {
- 	{ "tps6598x" },
- 	{ }
-@@ -572,6 +580,7 @@ MODULE_DEVICE_TABLE(i2c, tps6598x_id);
- static struct i2c_driver tps6598x_i2c_driver = {
- 	.driver = {
- 		.name = "tps6598x",
-+		.of_match_table = of_match_ptr(tps6598x_of_match),
- 	},
- 	.probe_new = tps6598x_probe,
- 	.remove = tps6598x_remove,
+> 
+> Patches must be prepared against a specific version of the kernel.  As a
+> general rule, a patch should be based on the current mainline as found in
+> Linus's git tree.  When basing on mainline, start with a well-known release
+> point - a stable or -rc release - rather than branching off the mainline at
+> an arbitrary spot.
+> 
+> It may become necessary to make versions against -mm, linux-next, or a
+> subsystem tree, though, to facilitate wider testing and review.  Depending
+> on the area of your patch and what is going on elsewhere, basing a patch
+> against these other trees can require a significant amount of work
+> resolving conflicts and dealing with API changes.
+
+Yeah, but with -mm patches it is completely impractical to base them
+against Linus's git tree.
+
 -- 
-2.25.1
+Thanks,
+
+David / dhildenb
 
