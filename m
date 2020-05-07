@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BFAC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FF7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277CE20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983812084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861664;
-	bh=3l+OqPkT9XKfyeX0lxDdjvyXUc/liQWx6S4UZK0lAMI=;
+	s=default; t=1588861667;
+	bh=0YWd1KybDICAXW00MqaZR7V6phzPC/IofZcdh25NxOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQisDeqItbGd6JWqgb2izCOF2vev1GktjFStvldzOVsvwX8yw1OoSqCXSkRHbfZJO
-	 VZtTGTTHzHVT1Z3BTS3C8xZJj0mwBmKwkDu9clxicArrpdZA46sSVBCrpmxUAOlBwi
-	 VCX5iX+9JoIudE0xK/VJnfVKrSRKn1wKwbMtnI8A=
+	b=JYsue8D3doIZWZTHjNxhbyMApLWG5N9pYZj6GsnkzElcFYNkDJUhIqYv3+IHGvrck
+	 dbIO72bnqhnhGF7DzUvfGwJkpS1ISxr/lRbeDK+Crlr8E5BPRf9/zlKVkUakCrgeCP
+	 dgkqHkGUAgwBB9rzNE6z2JQRwSmDnZcgGwWGN6cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgEGO1n (ORCPT
+        id S1727121AbgEGO1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:27:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgEGO1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:36 -0400
+        id S1727086AbgEGO1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149052084D;
-        Thu,  7 May 2020 14:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4D482083B;
+        Thu,  7 May 2020 14:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861655;
-        bh=3l+OqPkT9XKfyeX0lxDdjvyXUc/liQWx6S4UZK0lAMI=;
+        s=default; t=1588861662;
+        bh=0YWd1KybDICAXW00MqaZR7V6phzPC/IofZcdh25NxOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAzc/daYx15gUcN9WkSaK1Gz0Gr5ooelVbEm3dw2WM/SC41pg2CV1wJpvtqvlHtpW
-         OOIPgDtvlVXvoNb9JFVX2t3f/ju1bFByMUMQNjNl+nVqQeNBJxZzO3fkCJ4Xa4CjJf
-         G0G8trW4hXfH/Uoe1H4Ng6eTpfinn43EYIrO6/VM=
+        b=2S/58gtOURtH7TE/8TaYx+8lNMlFc9l4M/yFp3N5sbrP3KB8eEYaxIAA1pKbzRCQ7
+         AYu/PQEbLRu4u8PtoLmiLX3KMIbNCSu7LfIj96Rhl/teo+gjNBqkwm32EEqOz2CS78
+         bs3FrBFsL3U3VtPsL8PJ+onpJ6RczCn0mx2I4o3s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 07/50] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
-Date:   Thu,  7 May 2020 10:26:43 -0400
-Message-Id: <20200507142726.25751-7-sashal@kernel.org>
+Cc:     Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 12/50] RDMA/mlx5: Set GRH fields in query QP on RoCE
+Date:   Thu,  7 May 2020 10:26:48 -0400
+Message-Id: <20200507142726.25751-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -59,33 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan Zhao <yan.y.zhao@intel.com>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 ]
+[ Upstream commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 ]
 
-add parentheses to avoid possible vaddr overflow.
+GRH fields such as sgid_index, hop limit, et. are set in the QP context
+when QP is created/modified.
 
-Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Currently, when query QP is performed, we fill the GRH fields only if the
+GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
+the check so we will set all relevant data for the RoCE too.
+
+Since this data is returned to userspace, the below is an ABI regression.
+
+Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
+Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/qp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index a177bf2c66834..ec9be79ba2d79 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -554,7 +554,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 			continue;
- 		}
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 8fe149e808af1..245fef36ab4cb 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -5545,7 +5545,9 @@ static void to_rdma_ah_attr(struct mlx5_ib_dev *ibdev,
+ 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
+ 	rdma_ah_set_static_rate(ah_attr,
+ 				path->static_rate ? path->static_rate - 5 : 0);
+-	if (path->grh_mlid & (1 << 7)) {
++
++	if (path->grh_mlid & (1 << 7) ||
++	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
+ 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
  
--		remote_vaddr = dma->vaddr + iova - dma->iova;
-+		remote_vaddr = dma->vaddr + (iova - dma->iova);
- 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
- 					     do_accounting);
- 		if (ret)
+ 		rdma_ah_set_grh(ah_attr, NULL,
 -- 
 2.20.1
 
