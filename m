@@ -2,73 +2,98 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28925C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E73C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA302070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D155E2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WrN8B/Fh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgEGO4b (ORCPT
+        id S1726774AbgEGO5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:56:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:33292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgEGO4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:56:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75A1C1FB;
-        Thu,  7 May 2020 07:56:30 -0700 (PDT)
-Received: from [10.57.36.85] (unknown [10.57.36.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D63D3F68F;
-        Thu,  7 May 2020 07:56:28 -0700 (PDT)
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
- <fad5dc096a2bd9404341ba8738ba8fc9@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <80a3b07d-f3a7-07c4-4e8f-76e28563027c@arm.com>
-Date:   Thu, 7 May 2020 15:56:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Thu, 7 May 2020 10:57:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgEGO5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:57:40 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D254C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:57:40 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id z2so4657000iol.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b5LGB9U5mr0ssbQpTapfFOTOTVm3j7jCi0JK44bqEyw=;
+        b=WrN8B/FhVmqT7+rHqd9W58bKtQYTI02+ycf8FUg/7vrUtF87HaMP/IE6eiI80zAxh6
+         sSjLlHhf7rlZkQx8+nTUVrSu+WO+bt7ci87LoHw2F7ZggtxNr+C1WnSFGqN0jL8zEcHC
+         qxzkr6SlGFQiPlKTHENPwbr6kj6BLbzBaLdSl0+eynrrA0vKj4ybsgELTISuEnfW42Yv
+         dQok9g3ruMJ/rCKZ8pk4s++xxyjTo5Qc/jouz356inWtvxr0sPBd+y7q8U8gREY0yHtR
+         i9tDU6K8xUYh8/k9swuBk8t2ji6cxGJgOCx244/tZwrzVKIn/zpxfVxsGi02lUa+sThP
+         nBug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b5LGB9U5mr0ssbQpTapfFOTOTVm3j7jCi0JK44bqEyw=;
+        b=k3QdC9EnJINyHyZBuxPhMOEuBFxNCxw2bQjJcP2hGjZyFBA5DNlVuS8H1+HrJ8peNR
+         IUsVNX/QxxCUTyHf/HRILGnhnricnmzu1/NB08O2TG/dg1pS4iYNYwo1XUVOzh0ZTGxM
+         eKldHnlarx1QBk500HcUcBFlmLDMS60JAnwM8fM7++wNX3d+XOBNz8Bz21x+WODnQPpc
+         JUqt6KO03nCq1j/K0wi3yFOmh7mqevYBeH3UFdLOAYyuVGOM/n9WdKFSO/Ps3rARY4Ug
+         l5rL+o+5yj2KDwL88Xn3T7fWP/dIRqhgEkzJ+4fPu/aV+yf5roh9iA2rfhCSt8ZLKba2
+         +/8w==
+X-Gm-Message-State: AGi0PuZZWHitcQWhK7uf2fnLrmzH3v7dH9PC7lmoU0nI4rC2Utu3QpDl
+        d1ahbfxgsxL9Gldx2t+EyQDkriNNS3s=
+X-Google-Smtp-Source: APiQypJ2pfnQ5mtWTdwxdgb+WT1d5T3KXYSjVr1M6UMi0PTH+3ibjDMAUvwZW7JwXzLLFSk/FGvg9g==
+X-Received: by 2002:a05:6638:155:: with SMTP id y21mr14505534jao.79.1588863459503;
+        Thu, 07 May 2020 07:57:39 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r18sm2662960ioj.15.2020.05.07.07.57.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 07:57:38 -0700 (PDT)
+Subject: Re: PING for Re: bdi: fix use-after-free for dev_name(bdi->dev) v3
+ (resend)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504124801.2832087-1-hch@lst.de>
+ <20200507062743.GA5814@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1753814d-377a-f98e-e670-161b3f17cc43@kernel.dk>
+Date:   Thu, 7 May 2020 08:57:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <fad5dc096a2bd9404341ba8738ba8fc9@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200507062743.GA5814@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-07 1:06 pm, Sai Prakash Ranjan wrote:
-[...]
-> We could have our own context fault handler in QCOM implementation,
-> but that would just be duplicating things from arm-smmu context fault
-> handler. So I did not think it makes much sense to have our own
-> fault handler in qcom impl just for enabling stall model.
+On 5/7/20 12:27 AM, Christoph Hellwig wrote:
+> On Mon, May 04, 2020 at 02:47:52PM +0200, Christoph Hellwig wrote:
+>> Hi Jens,
+>>
+>> can you pick up this series?
+> 
+> ping?  Especially as 1-4 fix a kernel crash and should probably be
+> 5.7 material.
 
-Hmm, it's probably worth thinking ahead a bit here, to the "actually 
-doing things with stalls" plan. I don't have a clear picture off-hand of 
-how well the new device fault handler API might fit into arm-smmu - at 
-the very least trying to make it truly generic implies having to play 
-nasty tricks with disable_irq() for the general case given the "IRQ may 
-remain asserted while SS is active" possibility, and that isn't 
-particularly inviting. Not to mention tying it into the 
-pretend-auxdomain stuff that *is* rather dependent on the qcom impl. If 
-it turns out that you'll eventually have to reimplement the IRQ handler 
-anyway for all that, then starting off down that route *might* work out 
-cleaner and less hassle overall.
+I've added 1-4 for 5.7, and the rest for 5.8.
 
-Robin.
+-- 
+Jens Axboe
+
