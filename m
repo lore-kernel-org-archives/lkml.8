@@ -2,144 +2,164 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308C6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB0EC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3EDD206B9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="aU24/Rub"
+	by mail.kernel.org (Postfix) with ESMTP id 45F6E20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgEGUmw (ORCPT
+        id S1726519AbgEGUp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:42:52 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46367 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgEGUmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:42:51 -0400
-IronPort-SDR: 6lsKsE/Gn3xiIxZrhNmOeW8GOzCKM0+zGYBk3IeXa4k9DGmRLM6p0hIPDOFA2qflKGaLAVvDK2
- q2+rPiUom2QQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:42:47 -0700
-IronPort-SDR: 0CS4jvyBfp4KSGaDcYDmM+8T65/4tyJ8GiNJM/zUl7XBMIgakV9ntFIQ+jOp87809deDFTtflE
- mM4X3vAx7qcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="295848467"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by fmsmga002.fm.intel.com with ESMTP; 07 May 2020 13:42:46 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 May 2020 13:42:46 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX116.amr.corp.intel.com (10.22.240.14) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 May 2020 13:42:46 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 May 2020 13:42:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GBqZDinxz+lAwQHGJhJZPzkCKL5QshxQZjD7CS/3zKQapzB/ZbLRN3KbmvXzw9fR9Ny97Z44YCMbgvjdqGql9ghdkyLtVD0gT531R+FbmdlXLJElLAV3b2IPNsH1CpG2d3aP5LLxAdlzKOd/PxhZGao/mvLns6u7cxDemBldmPfwB0BK8m+dFyQjxmm6OHABMJiP56y/kOY6WwgpR7k3n3odPgVHXeRJSX6iC7SOfB70p5NeuxW+K3VTbeV/6yg+qZgT6VB5zY6Qli+fYlw2AQ+jNaB0nBKacaO4HJz5HGnjS5PxG3M+AC0uriWrwXe9aE8kZQwbW+Ix7/0GFqcqww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=trt/SqIaEplCDwC7iGDmXiPdfbPnJf8WZqNgJVduCJ0=;
- b=Hg4X/RoAHOI3VCEdNd6PY+54jOaHnmqsBDta1yL7G24Gk8i29F0XR5ZQ3+ExxkwyMTU264TGRagS1Yj/9+zbbT05db02iMr960fWj/JZH+Gz5WCbx0ZrVnjx4AtPV98MKBFWZcXNrY/Z+KbeOefuaDHsHUZnlcAN7HDFh2FgmCwFy0ghPAeT2YgJAIJmGVvZMq6H+e6vrYXc0wy1ajgcQVGI2/dtE0puPjRelTJzTq0xtCodqnyvB1CbFChk7ddRdABNByr07nY5uUQuBoB67DJMwyT6CwV7AVbdfjjAvnhtqOcuR3vX3Pizxv61ldINyKmnYLWLTXVqrdTfSCe3GQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=trt/SqIaEplCDwC7iGDmXiPdfbPnJf8WZqNgJVduCJ0=;
- b=aU24/RubRYJfaxVrnG3hpw5+tKHrcpv6T2t68w1B6//7neFGY/dJUAIVKVy6u6pbkIrvzvfiMQF0eZED6V0asVK9hluPTj8InyWPbg5eS5txnGgqQdrz9FNsOR+E9++JkhvPyn472eFcNHc7z2GHlhbFn3DqbgVoi+zkKwbzQ44=
-Received: from DM5PR11MB1659.namprd11.prod.outlook.com (2603:10b6:4:6::20) by
- DM5PR11MB1594.namprd11.prod.outlook.com (2603:10b6:4:5::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.30; Thu, 7 May 2020 20:42:45 +0000
-Received: from DM5PR11MB1659.namprd11.prod.outlook.com
- ([fe80::34e5:3ad6:73cd:4783]) by DM5PR11MB1659.namprd11.prod.outlook.com
- ([fe80::34e5:3ad6:73cd:4783%12]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 20:42:45 +0000
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-Subject: RE: [Intel-wired-lan] [PATCH net-next] ixgbe: Use true, false for
- bool variable in __ixgbe_enable_sriov()
-Thread-Topic: [Intel-wired-lan] [PATCH net-next] ixgbe: Use true, false for
- bool variable in __ixgbe_enable_sriov()
-Thread-Index: AQHWIrEZMVV555cHQku27UMWWc4JnKidGoxA
-Date:   Thu, 7 May 2020 20:42:45 +0000
-Message-ID: <DM5PR11MB16599DCBE62862ADE61E6BBE8CA50@DM5PR11MB1659.namprd11.prod.outlook.com>
-References: <20200505074337.21477-1-yanaijie@huawei.com>
-In-Reply-To: <20200505074337.21477-1-yanaijie@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.207]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c4b62bf2-0f4d-4708-25d5-08d7f2c73259
-x-ms-traffictypediagnostic: DM5PR11MB1594:
-x-microsoft-antispam-prvs: <DM5PR11MB15942F6F94A520269AA710D58CA50@DM5PR11MB1594.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HXzy0r7c/0yUH4hPcGBGq0O3t2xEVOMLyYVk9Zz6FV7evr9GJZUx1EU6qnq0tQZtmG5hiRQPqX9/XS2bHWTuD/Risbq2pprt0aXKOxs2OBJWlEe9gmuVi8ni65N4u6Vd/ym+vSPQlsBz01E6As4gcsK6zm5+VObuDFyr6V9EyT6UFFsyzCHMN205OKkVRqjfdjbVDg04Ajm0xAn67BtId8Tvsc+jDYxEun3hrcSbn9StCCuA537pNNCPFhbwdW5dZHMH544kRyhcqgpWzK/V67TqknxtR/plXLPGM4uj0KEoe4s4NER99FwgaWkrqmcBWfC0yUl8xbDCPs/w80YfAVrdQtesRwcJtSzb2AQKfcl9e8/eUa+sNrW2yfeJhGRw2+c13IZZS7qWHX40V5OT6oMzSgFMPdC28J+offbPKrZ3PjV8k/L6hiWRDU2EnrBCc091K24RnpOI2FYGhQmDd543tPbtvjuReyaWOBmxfoUtTJQ9Q81hsBQOayyiAFdODF6JRtczVbg0UrkhlVgw1A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1659.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(366004)(39860400002)(136003)(33430700001)(5660300002)(110136005)(33440700001)(66446008)(64756008)(76116006)(66556008)(71200400001)(66476007)(478600001)(8676002)(8936002)(55016002)(316002)(66946007)(9686003)(26005)(53546011)(6506007)(7696005)(86362001)(4744005)(33656002)(83320400001)(83280400001)(83310400001)(83290400001)(52536014)(83300400001)(2906002)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: H35PO6IlmFem5dh/0tKohDwYawb+yO4sbA2RX03HOxv3H/PgwGNqlfM3Adv3KfEhdBfTVS+34TjltfDfB5wKR3XXQyvihWolZHR0OBGALAK6as2W/pO6A4OlMlk13edP331pBh4wLlSiMOqGQ4DuiHb+au3B7ojtBoHnNvD0uO7pSwWJd/LjQssQV09s65vDusnNSmo5tLgBqQSbhHCyqQ6Sedkd8bWEWx7qTz3wo7lUJJ8ZvsuxVgM9P4/OPukpJcgSDTPBGrVuSn+KquLiIi5lwH3PwIgZ0Gbs0MnXUSkkMKDxsbJ8B5aUlveIpvGtvyvI93iYHb1lGSrQV8ROfPVsd1u8dul8JRyZ4uAERSNjRM6LSepPcr7M+dDhXWZ6ZpD2xJ0kUfy6AdNSDqzgZlhiblz0tGgcTvSbyUEft6i6We9pEH6brXUBLwg3AoA1SzpI0I9TMoXHn3Ni0w4qYuZYhAdBcKoXkGGcobnY4MlwzLTyPOWg+Xf+LOsQCZpf3VJVtb/P0xA7QImQbHPWkP7ZbwOH7J8KcB9F0A09kbRaUcio3Pg0djo1kdr6xDl9mF4rO7xuMGILC+NvOzHJLESztlSw7QrAIoyzO+7x5FdUeA6x5OerFYSx/r/SPYC/IOhpQGjrOZ+YsrliwsCYgv6+6XFFXnO97RSswiaSD55f1ofUIDdBAd2z8V8u1RBwIfqoRdhKPP2lroaPWIBpR3CppBvK4Zs6iupSqCy9uqqGxS7wLuz7F6nPo5yhsLYe66gmZHkpCGLFCScs0JaUnBfQmwEKbFWFVvFuiFoaBd8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4b62bf2-0f4d-4708-25d5-08d7f2c73259
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 20:42:45.1442
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jW0QhiOIWy/lMLc5X0msl5bACw0lJqz9nqY2RMeYUar3EeaVfAtAKT05haVtvG5tyJY3pEZdQQafm4YyBb2Jk4Jifc6upQa0VO0Oh/Ur3N8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1594
-X-OriginatorOrg: intel.com
+        Thu, 7 May 2020 16:45:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726093AbgEGUpZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 16:45:25 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047KXHcV055062;
+        Thu, 7 May 2020 16:45:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g5q56q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 16:45:19 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047KXRih055831;
+        Thu, 7 May 2020 16:45:19 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g5q566-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 16:45:18 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047KeALF017294;
+        Thu, 7 May 2020 20:45:17 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5v2q4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 20:45:17 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047KjEfJ5832932
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 20:45:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7D8C11C04A;
+        Thu,  7 May 2020 20:45:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD8E711C052;
+        Thu,  7 May 2020 20:45:13 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.135.201])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 May 2020 20:45:13 +0000 (GMT)
+Message-ID: <1588884313.5685.110.camel@linux.ibm.com>
+Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        John Johansen <john.johansen@canonical.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Thu, 07 May 2020 16:45:13 -0400
+In-Reply-To: <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+         <1588864628.5685.78.camel@linux.ibm.com>
+         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_13:2020-05-07,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------Original Message-----
-From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of Jas=
-on Yan
-Sent: Tuesday, May 5, 2020 12:44 AM
-To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net; =
-ast@kernel.org; daniel@iogearbox.net; kuba@kernel.org; hawk@kernel.org; joh=
-n.fastabend@gmail.com; intel-wired-lan@lists.osuosl.org; netdev@vger.kernel=
-.org; linux-kernel@vger.kernel.org; bpf@vger.kernel.org
-Cc: Jason Yan <yanaijie@huawei.com>
-Subject: [Intel-wired-lan] [PATCH net-next] ixgbe: Use true, false for bool=
- variable in __ixgbe_enable_sriov()
+On Thu, 2020-05-07 at 16:47 +0000, Roberto Sassu wrote:
+> > > > On Wed, 2020-05-06 at 15:44 -0400, Mimi Zohar wrote:
+> > > > > Since copying the EVM HMAC or original signature isn't applicable, I
+> > > > > would prefer exploring an EVM portable and immutable signature only
+> > > > > solution.
+> > > >
+> > > > To prevent copying the EVM xattr, we added "security.evm" to
+> > > > /etc/xattr.conf.  To support copying just the EVM portable and
+> > > > immutable signatures will require a different solution.
+> > >
+> > > This patch set removes the need for ignoring security.evm. It can be
+> > always
+> > > copied, even if it is an HMAC. EVM will update it only when verification in
+> > > the pre hook is successful. Combined with the ability of protecting a
+> > subset
+> > > of files without introducing an EVM policy, these advantages seem to
+> > > outweigh the effort necessary to make the switch.
+> > 
+> > As the EVM file HMAC and original signature contain inode specific
+> > information (eg. i_version, i_generation), these xattrs cannot ever be
+> > copied.  The proposed change is in order to support just the new EVM
+> > signatures.
+> 
+> Right, I didn't consider it.
+> 
+> Would it make sense instead to introduce an alias like security.evm_immutable
+> so that this xattr can be copied?
 
-Fix the following coccicheck warning:
+Being portable, not the attribute of being immutable, allows copying
+the EVM xattr.  Your original problem - the order in which the xattrs
+are copied - might still be an issue.  We need to look at "cp" closer
+to understand what it is doing.  For example, are the xattrs written
+while the target file is tagged as a new file?
 
-drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c:105:2-38: WARNING:
-Assignment of 0/1 to bool variable
+There have been similar problems in the past.  For example, tar calls
+mknodat to create the file, but doesn't write the file data.  The
+solution there was to tag the file as a new file.
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_sriov.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We need to understand the problem better, before deciding how to
+resolve it.
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+> 
+> > At least IMA file hashes should always be used in conjunction with
+> > EVM.  EVM xattrs should always require a security.ima xattr to bind
+> 
+> I proposed to enforce this restriction some time ago:
+> 
+> https://patchwork.kernel.org/patch/10979351/
+> 
+> Is it ok to enforce it globally?
 
+Doing this would then be dependent on upstreaming the initramfs xattr
+patches first, wouldn't it?  :)
 
+> 
+> > the file metadata to the file data.  The IMA and EVM policies really
+> > need to be in sync.
+> 
+> It would be nice, but at the moment EVM considers also files that are
+> not selected by the IMA policy. An example of why this is a problem is
+> the audit service that fails to start when it tries to adjust the permissions
+> of the log files. Those files don't have security.evm because they are
+> not appraised by IMA, but EVM denies the operation.
+
+No, this is a timing issue as to whether or not the builtin policy or
+a custom policy has been loaded.  A custom policy could exclude the
+log files based on LSM labels, but they are included in the builtin
+policy.
+
+Mimi
