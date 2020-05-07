@@ -2,128 +2,348 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A604C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84992C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7051720720
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QSBVJtiY"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA4420735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgEGXy0 (ORCPT
+        id S1726891AbgEGXzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbgEGXyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:54:25 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B4DC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:54:24 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id a15so307566qvt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/raYmft6nSaYLNIgpOxoChFcf5nF1Q2ACz6k5lK6B/4=;
-        b=QSBVJtiYPNgCyg1Ax8MDmIonk9zKYH0IwrH/+u1j84YGMeisn3e+g5EGfpuObjJv7H
-         wXFl0tfpZnxNnL053pF5sRWfIpTmu9eUL4M/zurqAuPqCZexdEgP1pM2dggKDOZjnEyy
-         f6umf0+v8hfXZ4AZKWQYtiLz6vbcbQ/SZhptvHMrDLwUmI9k8+UWJ8gEEN+lNSZiuSKN
-         rgbjcYlDgqSq19b+5VbYruXqDxWlnvU6ogiMB6YnPypcQltpT5B/nG/bL2YQfDfbt0yM
-         FeKyBoa4zJpeEKZGnc4fSHBnCA/++Yf4pPt5kyhoPiECazyfelAm9wkjL4fNtPGd5gQE
-         5vUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/raYmft6nSaYLNIgpOxoChFcf5nF1Q2ACz6k5lK6B/4=;
-        b=GqTfz5JW+jmFBhdDRX+9cgvuEqHFX7Gj1YCbvHiyhlH39a+pmLdA+5wDy9twhT2BoM
-         3B98aWPi1lgalFWDvUiulpom5fr8q8JpxfMCtD8XyRCYoWIOWVRwreY4w1BnzFYFlhIh
-         GQo0RXTmiezKeq2UEcoFhK7UkbX+IhSZ+27BowduPu4Br2Ies4cF+hmg1kXonfzJiOJV
-         HxteT0tPUBuOIKytMbWU3qmvQrd2xJLeDi+jTYc3H6e9iRc69ucvvsqSOW0xrTxKxaWS
-         bcuLz3mmOh/h7GzNyQk2jWvT3JwrqZW+QceRNfaUY2vg4OjA9f5HA1vpS8uS1KEI5hyb
-         q2Iw==
-X-Gm-Message-State: AGi0PubQ+l5n/Lm3QiTCO4zGdC+6YQis226b5td0plIaXG7Iv982ESSk
-        5ABZU98jzaI323N+AOohOo2ubw==
-X-Google-Smtp-Source: APiQypJYoWIyvU8RY67V0VqBgsWt6nPorPZktKfWBDwkHhKb5x5+IKwxKG3GMtrHiOuUW542Jyo5Xw==
-X-Received: by 2002:ad4:4966:: with SMTP id p6mr61018qvy.161.1588895663160;
-        Thu, 07 May 2020 16:54:23 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id j11sm4877452qkk.33.2020.05.07.16.54.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 May 2020 16:54:22 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jWqLN-00070n-OS; Thu, 07 May 2020 20:54:21 -0300
-Date:   Thu, 7 May 2020 20:54:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com
-Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
-Message-ID: <20200507235421.GK26002@ziepe.ca>
-References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
- <158871568480.15589.17339878308143043906.stgit@gimli.home>
- <20200507212443.GO228260@xz-x1>
+        Thu, 7 May 2020 19:55:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2515 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgEGXzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 19:55:39 -0400
+IronPort-SDR: e6P0vGUWLOvoFYXEEZSYPLpgQwOp/tJMz0R8LydBFHF0cfdynH7avQAgmSTSyyQY25S7bGQhO2
+ rPvg/1tZwLoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 16:55:31 -0700
+IronPort-SDR: ka+TMz8D+wZX+awfx1R69MtBaIv58Pi9zH33FF2popoTwztxUaRb2E+qUdIlSDpbThN0/cL/rW
+ f8d3NyYtFNIA==
+X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
+   d="scan'208";a="285189036"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 16:55:31 -0700
+Subject: [PATCH v2] ACPI: Drop rcu usage for MMIO mappings
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     rafael.j.wysocki@intel.com
+Cc:     stable@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Date:   Thu, 07 May 2020 16:39:20 -0700
+Message-ID: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507212443.GO228260@xz-x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:24:43PM -0400, Peter Xu wrote:
-> On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
-> > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
-> > the range being faulted into the vma.  Add support to manually provide
-> > that, in the same way as done on KVM with hva_to_pfn_remapped().
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
-> >  1 file changed, 33 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index cc1d64765ce7..4a4cb7cd86b2 100644
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
-> >  	return 0;
-> >  }
-> >  
-> > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
-> > +			    unsigned long vaddr, unsigned long *pfn,
-> > +			    bool write_fault)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = follow_pfn(vma, vaddr, pfn);
-> > +	if (ret) {
-> > +		bool unlocked = false;
-> > +
-> > +		ret = fixup_user_fault(NULL, mm, vaddr,
-> > +				       FAULT_FLAG_REMOTE |
-> > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
-> > +				       &unlocked);
-> > +		if (unlocked)
-> > +			return -EAGAIN;
-> 
-> Hi, Alex,
-> 
-> IIUC this retry is not needed too because fixup_user_fault() will guarantee the
-> fault-in is done correctly with the valid PTE as long as ret==0, even if
-> unlocked==true.
+Recently a performance problem was reported for a process invoking a
+non-trival ASL program. The method call in this case ends up
+repetitively triggering a call path like:
 
-It is true, and today it is fine, but be careful when reworking this
-to use notifiers as unlocked also means things like the vma pointer
-are invalidated.
+    acpi_ex_store
+    acpi_ex_store_object_to_node
+    acpi_ex_write_data_to_field
+    acpi_ex_insert_into_field
+    acpi_ex_write_with_update_rule
+    acpi_ex_field_datum_io
+    acpi_ex_access_region
+    acpi_ev_address_space_dispatch
+    acpi_ex_system_memory_space_handler
+    acpi_os_map_cleanup.part.14
+    _synchronize_rcu_expedited.constprop.89
+    schedule
 
-Jason
+The end result of frequent synchronize_rcu_expedited() invocation is
+tiny sub-millisecond spurts of execution where the scheduler freely
+migrates this apparently sleepy task. The overhead of frequent scheduler
+invocation multiplies the execution time by a factor of 2-3X.
+
+For example, performance improves from 16 minutes to 7 minutes for a
+firmware update procedure across 24 devices.
+
+Perhaps the rcu usage was intended to allow for not taking a sleeping
+lock in the acpi_os_{read,write}_memory() path which ostensibly could be
+called from an APEI NMI error interrupt? Neither rcu_read_lock() nor
+ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
+was not serving as a mechanism to avoid direct calls to ioremap(). Even
+the original implementation had a spin_lock_irqsave(), but that is not
+NMI safe.
+
+APEI itself already has some concept of avoiding ioremap() from
+interrupt context (see erst_exec_move_data()), if the new warning
+triggers it means that APEI either needs more instrumentation like that
+to pre-emptively fail, or more infrastructure to arrange for pre-mapping
+the resources it needs in NMI context.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 620242ae8c3d ("ACPI: Maintain a list of ACPI memory mapped I/O remappings")
+Cc: Len Brown <lenb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Erik Kaneda <erik.kaneda@intel.com>
+Cc: Myron Stowe <myron.stowe@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v1 [1]:
+
+- Actually cc: the most important list for ACPI changes (Rafael)
+
+- Cleanup unnecessary variable initialization (Andy)
+
+Link: https://lore.kernel.org/linux-nvdimm/158880834905.2183490.15616329469420234017.stgit@dwillia2-desk3.amr.corp.intel.com/
+
+
+ drivers/acpi/osl.c |  117 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 57 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 762c5d50b8fe..a44b75aac5d0 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -214,13 +214,13 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
+ 	return pa;
+ }
+ 
+-/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
+ static struct acpi_ioremap *
+ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
+ 
+-	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
++	lockdep_assert_held(&acpi_ioremap_lock);
++	list_for_each_entry(map, &acpi_ioremaps, list)
+ 		if (map->phys <= phys &&
+ 		    phys + size <= map->phys + map->size)
+ 			return map;
+@@ -228,7 +228,6 @@ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
+ 	return NULL;
+ }
+ 
+-/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
+ static void __iomem *
+ acpi_map_vaddr_lookup(acpi_physical_address phys, unsigned int size)
+ {
+@@ -263,7 +262,8 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
+ 
+-	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
++	lockdep_assert_held(&acpi_ioremap_lock);
++	list_for_each_entry(map, &acpi_ioremaps, list)
+ 		if (map->virt <= virt &&
+ 		    virt + size <= map->virt + map->size)
+ 			return map;
+@@ -360,7 +360,7 @@ void __iomem __ref
+ 	map->size = pg_sz;
+ 	map->refcount = 1;
+ 
+-	list_add_tail_rcu(&map->list, &acpi_ioremaps);
++	list_add_tail(&map->list, &acpi_ioremaps);
+ 
+ out:
+ 	mutex_unlock(&acpi_ioremap_lock);
+@@ -374,20 +374,13 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+ 
+-/* Must be called with mutex_lock(&acpi_ioremap_lock) */
+-static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
+-{
+-	unsigned long refcount = --map->refcount;
+-
+-	if (!refcount)
+-		list_del_rcu(&map->list);
+-	return refcount;
+-}
+-
+-static void acpi_os_map_cleanup(struct acpi_ioremap *map)
++static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
+ {
+-	synchronize_rcu_expedited();
++	lockdep_assert_held(&acpi_ioremap_lock);
++	if (--map->refcount > 0)
++		return;
+ 	acpi_unmap(map->phys, map->virt);
++	list_del(&map->list);
+ 	kfree(map);
+ }
+ 
+@@ -408,7 +401,6 @@ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
+ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (!acpi_permanent_mmap) {
+ 		__acpi_unmap_table(virt, size);
+@@ -422,11 +414,8 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	acpi_os_drop_map_ref(map);
+ 	mutex_unlock(&acpi_ioremap_lock);
+-
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
+ 
+@@ -461,7 +450,6 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
+ 		return;
+@@ -477,11 +465,8 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	acpi_os_drop_map_ref(map);
+ 	mutex_unlock(&acpi_ioremap_lock);
+-
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
+@@ -700,55 +685,71 @@ int acpi_os_read_iomem(void __iomem *virt_addr, u64 *value, u32 width)
+ 	return 0;
+ }
+ 
++static void __iomem *acpi_os_rw_map(acpi_physical_address phys_addr,
++				    unsigned int size, bool *did_fallback)
++{
++	void __iomem *virt_addr;
++
++	if (WARN_ONCE(in_interrupt(), "ioremap in interrupt context\n"))
++		return NULL;
++
++	/* Try to use a cached mapping and fallback otherwise */
++	*did_fallback = false;
++	mutex_lock(&acpi_ioremap_lock);
++	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
++	if (virt_addr)
++		return virt_addr;
++	mutex_unlock(&acpi_ioremap_lock);
++
++	virt_addr = acpi_os_ioremap(phys_addr, size);
++	*did_fallback = true;
++
++	return virt_addr;
++}
++
++static void acpi_os_rw_unmap(void __iomem *virt_addr, bool did_fallback)
++{
++	if (did_fallback) {
++		/* in the fallback case no lock is held */
++		iounmap(virt_addr);
++		return;
++	}
++
++	mutex_unlock(&acpi_ioremap_lock);
++}
++
+ acpi_status
+ acpi_os_read_memory(acpi_physical_address phys_addr, u64 *value, u32 width)
+ {
+-	void __iomem *virt_addr;
+ 	unsigned int size = width / 8;
+-	bool unmap = false;
++	bool did_fallback = false;
++	void __iomem *virt_addr;
+ 	u64 dummy;
+ 	int error;
+ 
+-	rcu_read_lock();
+-	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
+-	if (!virt_addr) {
+-		rcu_read_unlock();
+-		virt_addr = acpi_os_ioremap(phys_addr, size);
+-		if (!virt_addr)
+-			return AE_BAD_ADDRESS;
+-		unmap = true;
+-	}
+-
++	virt_addr = acpi_os_rw_map(phys_addr, size, &did_fallback);
++	if (!virt_addr)
++		return AE_BAD_ADDRESS;
+ 	if (!value)
+ 		value = &dummy;
+ 
+ 	error = acpi_os_read_iomem(virt_addr, value, width);
+ 	BUG_ON(error);
+ 
+-	if (unmap)
+-		iounmap(virt_addr);
+-	else
+-		rcu_read_unlock();
+-
++	acpi_os_rw_unmap(virt_addr, did_fallback);
+ 	return AE_OK;
+ }
+ 
+ acpi_status
+ acpi_os_write_memory(acpi_physical_address phys_addr, u64 value, u32 width)
+ {
+-	void __iomem *virt_addr;
+ 	unsigned int size = width / 8;
+-	bool unmap = false;
++	bool did_fallback = false;
++	void __iomem *virt_addr;
+ 
+-	rcu_read_lock();
+-	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
+-	if (!virt_addr) {
+-		rcu_read_unlock();
+-		virt_addr = acpi_os_ioremap(phys_addr, size);
+-		if (!virt_addr)
+-			return AE_BAD_ADDRESS;
+-		unmap = true;
+-	}
++	virt_addr = acpi_os_rw_map(phys_addr, size, &did_fallback);
++	if (!virt_addr)
++		return AE_BAD_ADDRESS;
+ 
+ 	switch (width) {
+ 	case 8:
+@@ -767,11 +768,7 @@ acpi_os_write_memory(acpi_physical_address phys_addr, u64 value, u32 width)
+ 		BUG();
+ 	}
+ 
+-	if (unmap)
+-		iounmap(virt_addr);
+-	else
+-		rcu_read_unlock();
+-
++	acpi_os_rw_unmap(virt_addr, did_fallback);
+ 	return AE_OK;
+ }
+ 
+
