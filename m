@@ -2,63 +2,67 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA9BC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA4BC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2662145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964402145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phup02Xy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buLQEpFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgEGSKS (ORCPT
+        id S1728028AbgEGSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
+        Thu, 7 May 2020 14:10:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGSKR (ORCPT
+        by vger.kernel.org with ESMTP id S1726860AbgEGSKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:10:17 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C7BC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:16 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id r14so7935095ybk.21
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:15 -0700 (PDT)
+        Thu, 7 May 2020 14:10:19 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40AF5C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:18 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id v18so7680767qtq.22
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=sjWkrGrnU/EJtxPoXRaoT1xpbM/x0feZVAsuk0CdGxM=;
-        b=phup02XyRX5qCSTgfWJ0IuC3rFaKoFAIRCaVT1BxerHyNi3c5nNxAsm0xyzl3q8+u8
-         lzsrqa5sjNgVN6EpoK4iXtC8qaLxcT2DwbMO2+5W+pjNhPSXjGhZ5cdy+zouEP1AnoFx
-         nrd6KrtLXXDw5LZPjtm4DXQ4VAe4WiCeS0CrDW19m0i2TMrnFz1gvJ8Hzb5VJo8Iud8t
-         nsPyZX1HlbVSwXoqDacSL7QZyxwHLHD9ZATTRtRN+JMREoDoYPDvIBrsROnipw7sMaKD
-         vkxRcsEqxa+89keD+o4y002kAz2t+ID92iyiWydARX6TDXVQYFHtF9l+DkkJb2YVoYfW
-         c7Ug==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=KCzP4bl+LsDIRE9Q4UUvX6EBmJ7sU8y+C6Dq7vCJhH8=;
+        b=buLQEpFYJXDRA5yOOUN1Qv439Td9XdcBA8tv5KPRARKKfvPpsCXa/OGiesg1VlmuUi
+         blDGxmJsXai8UyPSMxrDHjhxkit77Jj/4ySr1XgMT2k9ikcR9bYF4eRJXN97Oym5x3Mm
+         g0d0AdY8/H2rxNvlriy3bU09kZxmXVHdY1EUyAt2D0ICjogDvlWZ8SaS4SxgowHGXnrJ
+         zjVYurnBZTOolQWBNn0L3DoWL1ggGFySbJtZJ+WKh6PIs99yIJsX7LyUDI+D5NCruQhp
+         XFuqjRQC5gpzIwYswzujFnzxHjlbr+c3SJpXiKKAwAJJz9fqFKP43I56hHQ3byQqbplU
+         ujag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=sjWkrGrnU/EJtxPoXRaoT1xpbM/x0feZVAsuk0CdGxM=;
-        b=HVm7G7cL8dhsWd7aDaRG9tpfDIfzqO6DfIzJTseuNK76KnnL2VBBE0fRAtxdBmFSkr
-         cfBPDX++1Cos/s4clTDRMES0B11HvREw1UtzKKGSk/dND01Z/mAaxclbijx7aE3ojJjO
-         kUMfW0A2uAaQkMfk6otit2CGQSFePhQkcifx7YF2WauHeSBsySUoOUFghzgc4MjBF8qo
-         4xHDEOoZp8oXmPtdQOI0endqymKu5DXf0PjX5n0TqjODx3BLxmfGYhU9ege25Cm1B+3W
-         AtqJZjUt7tdgsBcHRQeOKldPqfPrSSMVMQBGp3cbJYpO2LZ5IpVSl+DkGZ1z7kGQ86fq
-         8TMQ==
-X-Gm-Message-State: AGi0PuZRyd7+lFfDSpnAvqrASkAkb5kB3LYQvRHtj0E7YALiD7bafVLu
-        IoJpXGNmBA9uADKvXspbLbXLDQoc8bJv3W6VvgEEiWr08KBmUcLvnH+S+h37adqMMQFArKmMGJm
-        vwCKnD2/fYxRYQiXsCPURXHUkeD/9wXlUuSBghrwDK6OKsXGEKO0+m8nCKLOBYkRHI7WmPe2f
-X-Google-Smtp-Source: APiQypLF514pacRtQ1a7I3HJKFHx78pHnwzf2OvlWcJDi5aN+FX+pzeg47Q4KMrBdLGN9MtVa+GMZ0pbEecv
-X-Received: by 2002:a25:12c1:: with SMTP id 184mr24597001ybs.162.1588875014916;
- Thu, 07 May 2020 11:10:14 -0700 (PDT)
-Date:   Thu,  7 May 2020 19:09:58 +0100
-Message-Id: <20200507181012.29791-1-qperret@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=KCzP4bl+LsDIRE9Q4UUvX6EBmJ7sU8y+C6Dq7vCJhH8=;
+        b=SMjUvNzNPZRFVeDfP2GRqbNT6Z1NLLUw1yjTfkC2RqplyyeJ+eL7P8O14lc3kYqdZY
+         8HCnpI22YTFOJTWV+ZajPJ5W9abycRothJXxmleJOhE9KgVychXQR7KIej7VmD3iVQRR
+         jBuIfUCC4BNFNsFhjJL72D0dQWAZ4sblm27XZdL5iD1UJ2CV3WwAOrlkfR5JfVkZD1CN
+         6gQcoadv9I8JtAYlskq1Ys2feQzkwwdmi1YJMOr10tHmU3Lqwfy9Qk54kEJZOZyevYnH
+         3sWA/LcoL5tG+q/V1QAdwhDOOvcHm+Ab7FR3urBZIZ2Oyo41XwTRql51mnxkL41Q4m44
+         uh/w==
+X-Gm-Message-State: AGi0PuZPO/d20Qq3x96zUj3Rwc6esl4oTGNIz9TZx119l7ZM0C7+JbsU
+        Wma4eXEi3CeRfoiEB9Pwla8unrSqVF8uv/cs7CRDtMrgH9abQuOeYwKKr8tNzT9sy1g4frNPjUk
+        +p8BZY6nnWvktVRagxQHXlmDszygQLrifbR1b38Adulr4OM/ozvoVbD+o+CVnU7Zli+3CBwP9
+X-Google-Smtp-Source: APiQypKQhmCNyPtVGvHVeJln2UQbjcMKFZZasRoGbfH9naq6fFRrNf4dZOwRdFtzNL/pINDfbcBonxYb3hAe
+X-Received: by 2002:ad4:50c3:: with SMTP id e3mr13732268qvq.116.1588875017166;
+ Thu, 07 May 2020 11:10:17 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:09:59 +0100
+In-Reply-To: <20200507181012.29791-1-qperret@google.com>
+Message-Id: <20200507181012.29791-2-qperret@google.com>
 Mime-Version: 1.0
+References: <20200507181012.29791-1-qperret@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH 00/14] Modularize schedutil
+Subject: [PATCH 01/14] sched: Provide sched_set_deadline()
 From:   Quentin Perret <qperret@google.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -75,83 +79,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Android is trying very hard to use a single kernel image (commonly
-called Generic Kernel Image, or GKI), closely aligned with mainline, to
-run on all Android devices regardless of the vendor.
+As all the sched_setscheduler*() exports have been removed, introduce
+sched_set_deadline() on the model of sched_set_fifo() to enable modules
+to create SCHED_DEADLINE tasks.
 
-The GKI project intends to not only improve the status quo for Android
-users directly (less fragmentation simplifies updatability), but also
-to benefit upstream by forcing all vendors to agree on one common
-kernel, that we push hard to be aligned with mainline.
-
-One challenge to implement GKI is to avoid bloating the kernel by
-compiling too many things in, especially given that different devices
-need different things. As such, anything that can be turned into a
-module helps GKI, by offering an alternative to having that component
-built-in. This is true for pretty much anything that can be made
-modular, including drivers as well as other kernel components, such as
-CPUFreq governors.
-
-Indeed, in practice, Android devices often ship with only one CPUFreq
-governor enabled, and don't require any other that would simply waste
-memory for no benefits. All CPUFreq governors can already be built as
-modules with one notable exception: schedutil. Though popular in
-Android, some devices do not use schedutil, which is why it would be
-preferable to not have it unconditionally built in GKI. This series is
-an attempt to solve this problem, by making schedutil tristate.
-
-While modularization is usually not something we want to see near the
-scheduler, it appeared to me as I wrote those patches that the
-particular case of schedutil was actually not too bad to implement.
-We already have to support switching governors at run-time, simply
-because userspace is free to do that, so the infrastructure for turning
-sugov on and off dynamically is already there. Loading the code a little
-later doesn't seem to make that a lot worse.
-
-Patches 01-05 refactor some code to break the few dependencies on
-schedutil being builtin (notably EAS). Patches 06-12 export various
-symbols that schedutil needs when compiled as a module. And finally,
-patches 13-14 finish off the work by making the Kconfig tristate.
-
+Signed-off-by: Quentin Perret <qperret@google.com>
 ---
-The series is based on Peter's sched/fifo [1] branch (because sugov
-uses sched_setscheduler_nocheck()).
+ include/linux/sched.h |  2 ++
+ kernel/sched/core.c   | 17 +++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=sched/fifo
-
-Quentin Perret (14):
-  sched: Provide sched_set_deadline()
-  sched: cpufreq: Use sched_set_deadline() from sugov
-  sched: cpufreq: Introduce 'want_eas' governor flag
-  sched: cpufreq: Move sched_cpufreq_governor_change()
-  sched: cpufreq: Move schedutil_cpu_util()
-  arch_topology: Export cpu_scale per-cpu array
-  kthread: Export kthread_bind_mask()
-  sched/core: Export runqueues per-cpu array
-  sched/cpufreq: Export cpufreq_this_cpu_can_update()
-  sched/fair: Export cpu_util_freq()
-  tick/sched: Export tick_nohz_get_idle_calls_cpu
-  x86: Export arch_scale_freq_key
-  sched: cpufreq: Use IS_ENABLED() for schedutil
-  sched: cpufreq: Modularize schedutil
-
- arch/x86/kernel/smpboot.c        |   1 +
- drivers/base/arch_topology.c     |   1 +
- drivers/cpufreq/Kconfig          |   2 +-
- include/linux/cpufreq.h          |   6 +-
- include/linux/sched.h            |   2 +
- include/linux/sched/sysctl.h     |   2 +-
- kernel/kthread.c                 |   1 +
- kernel/sched/core.c              |  18 ++++
- kernel/sched/cpufreq.c           |  34 ++++++
- kernel/sched/cpufreq_schedutil.c | 176 +++----------------------------
- kernel/sched/fair.c              | 119 ++++++++++++++++++++-
- kernel/sched/sched.h             |  36 ++-----
- kernel/sched/topology.c          |  16 +--
- kernel/sysctl.c                  |   2 +-
- kernel/time/tick-sched.c         |   1 +
- 15 files changed, 212 insertions(+), 205 deletions(-)
-
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index c0da93a26f62..63c8ae7a0dd8 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1630,6 +1630,8 @@ extern int sched_setscheduler_nocheck(struct task_struct *, int, const struct sc
+ extern void sched_set_fifo(struct task_struct *p);
+ extern void sched_set_fifo_low(struct task_struct *p);
+ extern void sched_set_normal(struct task_struct *p, int nice);
++extern int sched_set_deadline(struct task_struct *p, u64 runtime, u64 deadline,
++			      u64 period, u64 flags);
+ extern int sched_setattr(struct task_struct *, const struct sched_attr *);
+ extern int sched_setattr_nocheck(struct task_struct *, const struct sched_attr *);
+ extern struct task_struct *idle_task(int cpu);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7324f3b0f8d2..dbaf3f63df22 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5136,6 +5136,23 @@ void sched_set_normal(struct task_struct *p, int nice)
+ }
+ EXPORT_SYMBOL_GPL(sched_set_normal);
+ 
++int sched_set_deadline(struct task_struct *p, u64 runtime, u64 deadline,
++		       u64 period, u64 flags)
++{
++	struct sched_attr attr = {
++		.size		= sizeof(struct sched_attr),
++		.sched_policy	= SCHED_DEADLINE,
++		.sched_flags	= flags,
++		.sched_nice	= 0,
++		.sched_priority	= 0,
++		.sched_runtime	= runtime,
++		.sched_deadline = deadline,
++		.sched_period	= period,
++	};
++	return sched_setattr_nocheck(p, &attr);
++}
++EXPORT_SYMBOL_GPL(sched_set_deadline);
++
+ static int
+ do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
+ {
 -- 
 2.26.2.526.g744177e7f7-goog
 
