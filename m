@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02545C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1DA24959
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB9624956
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877274;
-	bh=dROCvQhuhTk/4ReemAeIpwKD9k2gIx4WZ5RfjEiUzYg=;
+	s=default; t=1588877279;
+	bh=wAlJrQIDJ7e2mzEYDUF5NXN7yX2bWpMPUEC0lL3Fmcs=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dn5nUCtsrWlakrY45naxamLj+k/t5vchfC+OjqsWpeppp2XvQWDl9R3CNYQAyvT4C
-	 f4ryeK/xadP5gfihFsyQjgPWOd6I2aID6pA5ADwe6CuCb+YjIm4msZ6cRpq+qQ56qT
-	 bGy+LA2EWqQPxRcKSWhMW/hRUDJv2yxoGorqNYDs=
+	b=bILkTfyRBCnisGQLWv9yHJTp4/gITBioKbHSzYYg34Qg6pcQfMJcxlKwQWkN1Zees
+	 gX+kzxppzOIrVAZ6kiBvdMabfrZsUhRLl9BfYNqpsAJam3HKQOilnPkIraN2rrpTlO
+	 8Es68r4k5TbLd5iJ/DfqFRVF2sawijqX5opVLCWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEGSrx (ORCPT
+        id S1728537AbgEGSr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:47:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48584 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEGSrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:47:52 -0400
+        id S1726467AbgEGSr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:47:58 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 920C124956;
-        Thu,  7 May 2020 18:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD72E21BE5;
+        Thu,  7 May 2020 18:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877272;
-        bh=dROCvQhuhTk/4ReemAeIpwKD9k2gIx4WZ5RfjEiUzYg=;
+        s=default; t=1588877277;
+        bh=wAlJrQIDJ7e2mzEYDUF5NXN7yX2bWpMPUEC0lL3Fmcs=;
         h=Date:From:To:Cc:Subject:From;
-        b=oSNUyDWfd/GhoGbkJciFaZdX5iWBf7Ei9QgXvUre8JgelT7EwTWVnZ/QkjXfM2Y5B
-         699MdkiGbeY9eZl74bOIeL7bS76Sya7m0Hvw9Fq1YoAYkThJRH/YYfo6jy2ZNKQPqV
-         6BKDIHykYuAfk/tIGmWv7BuDVF6J7N8E1axmzp6E=
-Date:   Thu, 7 May 2020 13:52:18 -0500
+        b=ayZgs1ZnTFfMcYNvwUdvhQBIX+lEBgrLSyfF4bDHQqBFWVCbvB61k7/TuOZWZCBpd
+         VGvDVMpR6rxAf/02bSg+zc/DXrZputzMne6SOlpaovvCGV0JrJWkOtUjBemNOkeXYq
+         sWVGtiobSqvtTogT5fetR1htKVBy1mimJNDbGsBY=
+Date:   Thu, 7 May 2020 13:52:24 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/edid: Replace zero-length array with flexible-array
-Message-ID: <20200507185218.GA14186@embeddedor>
+Subject: [PATCH] cb710: Replace zero-length array with flexible-array
+Message-ID: <20200507185224.GA14209@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/drm/drm_displayid.h |    2 +-
+ include/linux/cb710.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/drm/drm_displayid.h b/include/drm/drm_displayid.h
-index 9d3b745c3107..94b4390bf990 100644
---- a/include/drm/drm_displayid.h
-+++ b/include/drm/drm_displayid.h
-@@ -89,7 +89,7 @@ struct displayid_detailed_timings_1 {
- 
- struct displayid_detailed_timing_block {
- 	struct displayid_block base;
--	struct displayid_detailed_timings_1 timings[0];
-+	struct displayid_detailed_timings_1 timings[];
+diff --git a/include/linux/cb710.h b/include/linux/cb710.h
+index 60de3fedd3a7..405657a9a0d5 100644
+--- a/include/linux/cb710.h
++++ b/include/linux/cb710.h
+@@ -36,7 +36,7 @@ struct cb710_chip {
+ 	unsigned		slot_mask;
+ 	unsigned		slots;
+ 	spinlock_t		irq_lock;
+-	struct cb710_slot	slot[0];
++	struct cb710_slot	slot[];
  };
  
- #define for_each_displayid_db(displayid, block, idx, length) \
+ /* NOTE: cb710_chip.slots is modified only during device init/exit and
 
