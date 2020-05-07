@@ -2,83 +2,135 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834F3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB834C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4E62084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B7F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fWwekOEK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljddwFgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgEGQXP (ORCPT
+        id S1726778AbgEGQ0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:23:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
+        Thu, 7 May 2020 12:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbgEGQXP (ORCPT
+        by vger.kernel.org with ESMTP id S1726470AbgEGQ0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:23:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C524C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=HWcYFhwuKZBkcAlypnWomG6dn+SIe9TYlotFgzRCTJg=; b=fWwekOEKyltFs3du68d9ZNphza
-        oLlBD7294ZfcEiOENvK6tGCjvvhIWyUaDESHwoTHPU6/tgJGEz3i3LgseeEUER9jFcTC4OetLfs35
-        tx371+qnyiE+CrPMV9ptgA7quZgLqGIfhrBZi5XHmcYeKRhbz+cCUMoso9/YbdoBRv9RaFqKnpEiv
-        jp2utHCAAJhotGbQ6esIDg8npjaSdXQFWfg2l4odPJhV919bMwSEWdRBd/PHoi0YmFQNSJ1v8KtHw
-        8z9RYYp9/G1BA0y4XSdAhuYPBDjdA3aNVZZx8kpeh7rapIl1FZl6BW+9PPN/CIfuWLdQx9WGUjXI3
-        dkUGf+xA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWjIm-0008To-Fd; Thu, 07 May 2020 16:23:12 +0000
-To:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] drm: panel: add MODULE_LICENSE to
- panel-visionox-rm69299.c
-Message-ID: <bbb7b3b3-9968-9a1f-8ef6-2e8e3be998f6@infradead.org>
-Date:   Thu, 7 May 2020 09:23:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 12:26:04 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36330C05BD43;
+        Thu,  7 May 2020 09:26:04 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d7so2738953ioq.5;
+        Thu, 07 May 2020 09:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DxrpDcEowC2nWijqj13bXtMWCGzq2IqmtnQs3KgvsXI=;
+        b=ljddwFgYm/EfJhn50K7SOmOsqWqMR5j/cLfNW11NDz81cwXUjaKQ3mBtGQ0MQ3Czrw
+         iuA5Z0o4BBm/uHkO5FszeGeNA+lwcliuRrtyTSNCyA7WnfiTotNo1cZ1xdkstRgvuBVT
+         1DSjFDO49P0i88RsSEF4mkyNjxYQ7hWE7Ng5hk+xWZoI3ephe6o2w+ZkFaDMwIzieeWu
+         d/CRl5/FdlyfTKiH84PY4GoSBW8ixz1Mc8KdERpywIo2RHCRKiMROAroNg8v+iCgqpY8
+         Z9SI8SJa1MVZuiflc2gS6fTvO/a+mu+UZnIfdszf6vcRXvddN37f9+yEO6GnINjpFeE4
+         O5rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DxrpDcEowC2nWijqj13bXtMWCGzq2IqmtnQs3KgvsXI=;
+        b=chOZ0qW3SuKH6nvwzTsy/7kfWhv6HlPYxjFF0cvtTlrb7A9GhIOjBngIJnkoVKS8da
+         Pr3V1DdIdxB7OBHA+p08UosrkJ4EUo8WAKsQ05sl0naqolTLLD4OyHX02avCZPAj7on1
+         DWDFePoOxY9Ll6PTrJ/R1I/4Rc8T6rd6yLGKovH9GkSK6S2ShUYgiISI9HBvIfb6CVXT
+         KL5TU2JN+Zl1jA8trFPu0KF9600c296+TiWOoLa5EMKh98YPJs+iEoMXbHA7tLi5p6al
+         ywTw///947qqY/UpEUMF04H4OIddblCzbAt9OmUV72vNX8TFzlFHTMW10DEuxL75gIMg
+         E4ZA==
+X-Gm-Message-State: AGi0PuZLaQHPB01Dwpkg1U84sriVA9RTy5nlNGx3PzAFoNbIvR8gP3Hn
+        0v1b5FOGJ/cQ0OpbGHlLJGaI5bVerBv3H7vW1Nk=
+X-Google-Smtp-Source: APiQypKDF58jn4byCgHHNjiVKd2T2f04YumBuTEle19S+IjBAzkjZmg/zOArb9caTa4uMTFbNgwyIY+epItZP9R8RoM=
+X-Received: by 2002:a5e:a607:: with SMTP id q7mr14744359ioi.109.1588868762638;
+ Thu, 07 May 2020 09:26:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505125902.GA10381@suse.com> <e5839bffe4939c6290d74ca2fb39310bd4916c16.camel@kernel.org>
+In-Reply-To: <e5839bffe4939c6290d74ca2fb39310bd4916c16.camel@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Thu, 7 May 2020 18:26:03 +0200
+Message-ID: <CAOi1vP8oO156ZH0Ge3d5V0fu+NTW6LO12bxgy1h-W5X4+9zN=w@mail.gmail.com>
+Subject: Re: [PATCH] ceph: demote quotarealm lookup warning to a debug message
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Luis Henriques <lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, May 7, 2020 at 3:44 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Tue, 2020-05-05 at 13:59 +0100, Luis Henriques wrote:
+> > A misconfigured cephx can easily result in having the kernel client
+> > flooding the logs with:
+> >
+> >   ceph: Can't lookup inode 1 (err: -13)
+> >
+> > Change his message to debug level.
+> >
+> > Link: https://tracker.ceph.com/issues/44546
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> > Hi!
+> >
+> > This patch should fix some harmless warnings when using cephx to restri=
+ct
+> > users access to certain filesystem paths.  I've added a comment to the
+> > tracker where removing this warning could result (unlikely, IMHO!) in a=
+n
+> > admin to miss not-so-harmless bogus configurations.
+> >
+> > Cheers,
+> > --
+> > Lu=C3=ADs
+> >
+> >  fs/ceph/quota.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+> > index de56dee60540..19507e2fdb57 100644
+> > --- a/fs/ceph/quota.c
+> > +++ b/fs/ceph/quota.c
+> > @@ -159,8 +159,8 @@ static struct inode *lookup_quotarealm_inode(struct=
+ ceph_mds_client *mdsc,
+> >       }
+> >
+> >       if (IS_ERR(in)) {
+> > -             pr_warn("Can't lookup inode %llx (err: %ld)\n",
+> > -                     realm->ino, PTR_ERR(in));
+> > +             dout("Can't lookup inode %llx (err: %ld)\n",
+> > +                  realm->ino, PTR_ERR(in));
+> >               qri->timeout =3D jiffies + msecs_to_jiffies(60 * 1000); /=
+* XXX */
+> >       } else {
+> >               qri->timeout =3D 0;
+> >
+>
+> Ilya,
+>
+> We've had a number of reports where people get a ton of kernel log spam
+> when they hit this problem. I think we probably ought to mark this patch
+> for stable and go ahead and send it to Linus for v5.7 -- any objection?
 
-Add MODULE_LICENSE() to the panel-visionox-rm69299 driver
-to fix a build warning.
+Sure, I'll queue it up.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-visionox-rm69299.o
+Thanks,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/panel/panel-visionox-rm69299.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20200507.orig/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-+++ linux-next-20200507/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-@@ -300,3 +300,4 @@ static struct mipi_dsi_driver visionox_r
- module_mipi_dsi_driver(visionox_rm69299_driver);
- 
- MODULE_DESCRIPTION("Visionox RM69299 DSI Panel Driver");
-+MODULE_LICENSE("GPL v2");
-
+                Ilya
