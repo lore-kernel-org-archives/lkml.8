@@ -2,147 +2,93 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE05C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C1820747
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Z2UIsTa0"
+	by mail.kernel.org (Postfix) with ESMTP id 67D8A20747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgEGCTw (ORCPT
+        id S1727851AbgEGCWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:19:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19537 "EHLO mga02.intel.com"
+        Wed, 6 May 2020 22:22:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31295 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgEGCTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:19:51 -0400
-IronPort-SDR: heEV03yyJmEWDXemWAewTC+BWyoRu/d9gE2StGm8+xc3dbHMqR6nRi5ofeu8QocI+CQQcg66pl
- +gzRmC9rdJVg==
+        id S1726587AbgEGCWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:22:11 -0400
+IronPort-SDR: 8SbwEQyzKkwfuf17MedXmDJw37z4rnamwpZxzZfELUlCyh/KMv5MYsIgVGswtwHIsq3T012SuI
+ WnXBsTlxoBOg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 19:19:50 -0700
-IronPort-SDR: hYNd45gk+1H1xwqQte0wPFuvvcKu6q5d/4dwJNTEQy/VluTp7bB2s5zIcaObJyt/gs07qD+iui
- gHX9wSfuam0g==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 19:22:11 -0700
+IronPort-SDR: N44NmMeJFi8fM31NdVbMUW5ElTg0hNdWotwLp5GU+rlmslq/H+0ZFBWB/1e1UVRVrU5d7l1AQA
+ SZtMqQz3RC9A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
-   d="scan'208";a="284836540"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga004.fm.intel.com with ESMTP; 06 May 2020 19:19:49 -0700
-Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 6 May 2020 19:19:49 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX154.amr.corp.intel.com (10.22.226.12) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 6 May 2020 19:19:48 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 6 May 2020 19:19:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AOQTtxsdPyy5Xbet5i0ykc/Lf3Zip5rsOPr0e8JFMkk3yLtck3fIrwywdNVNowiaQyP6FKC6dIbTYhu42QxYP7UgRt3ObPJ8QTgV+QhErtTblnPMDEaBLkL5+pR+kqrhLLxLrEfnKUfrJOjs/CFcCCzA0k2eGhMJ/vR88M1z1k3k3uEph6xyYfC3QCKkastGNPFbs/y2Ck55VciBwnzCn6AtWcdl+Wo0ZOUJv3YpIQHK5rid5l2YK0mE5zpQjuloZP+yI5NxaYBhLKMUBY5lGzaj4ih0+2YyDJWBBnOTz03CxPOA2ZeYOOZEbOzSxFvo8kaEddrbYYVpbJzl0S1cBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V+ukuXCYu0SZ/97fQaxD2AFwkDHPtoogHJEhbgWLs8s=;
- b=QNOoc+g8yus6eLA6b/QKsnXZp/MPUmK6DN/ZP70CrbuRxqF0Yj92QHUO+SS/oVuBJUTHF51aRbHJMsW2//hC0caaYvbw4jbpljZZGMAav+9UniW8kKbXpXgQy2/5GxmEA46b2h0g+bwL1dM5Mwz6U7+s2rPom4t9ZSnhxgyndQSj5leNE8rt+v5iMYscNMjHJPIJTFkNhedw0S+olG4XImcT/O7/VIxNTn01dhEG08AnRvWAtyS/jU2sO0kvu0C8gHNw1skAmdp4rjv1sBps85g/TiBueFmg+PNAqhq9o2x2kU947mH2KaCxxjXdjnfzxgs/JluXDJpzmpe9h8Ztyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V+ukuXCYu0SZ/97fQaxD2AFwkDHPtoogHJEhbgWLs8s=;
- b=Z2UIsTa0x2YURbq6u8Hb6sbqlQDeqOtJrOQohEui/4n1lt8RewZjegrb940l6BcxvJiaFoupqkUX2tbuxmSIYrzfOOajLNH35ogZ3WPID8xFeYDCGNpxQzQ1h51Q0fKEcxbfN8XTKGpzVIPgJT9Kt73pX/m2tfJAorsLErswFPw=
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- (2603:10b6:405:5b::22) by BN6PR1101MB2228.namprd11.prod.outlook.com
- (2603:10b6:405:52::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
- 2020 02:19:47 +0000
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::5419:a938:2a3:ee27]) by BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::5419:a938:2a3:ee27%5]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 02:19:41 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Keyon Jie <yang.jie@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     Kate Stewart <kstewart@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "amadeuszx.slawinski@linux.intel.com" 
-        <amadeuszx.slawinski@linux.intel.com>
-Subject: RE: [PATCH] ASoC: Intel: sst: ipc command timeout
-Thread-Topic: [PATCH] ASoC: Intel: sst: ipc command timeout
-Thread-Index: AQHWDxGPcERmvVi2FUaZ0GDzXVeqv6h4uesAgAAAnRCAAFQWgIAEY1sggB0N0ACAAYzUsA==
-Date:   Thu, 7 May 2020 02:19:40 +0000
-Message-ID: <BN6PR1101MB2132623374C6A708160CE11D97A50@BN6PR1101MB2132.namprd11.prod.outlook.com>
-References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
- <4f495cf1-4740-cf3b-196f-cc850c503b43@linux.intel.com>
- <BN6PR1101MB21328B6F4147640D07F9E40A97DA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <c8309abf-cbfb-a3db-5aa7-2e2f748a6d34@intel.com>
- <BN6PR1101MB21328C54E66082227B9F497A97D50@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <4623d6b9-8dc6-b301-c8ff-74dfb6baf2a3@linux.intel.com>
-In-Reply-To: <4623d6b9-8dc6-b301-c8ff-74dfb6baf2a3@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [36.230.11.97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 80c496d5-5914-4bc9-209b-08d7f22d19a5
-x-ms-traffictypediagnostic: BN6PR1101MB2228:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR1101MB222811D509439E6B243E6E7E97A50@BN6PR1101MB2228.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y8yD+KhFL79iQMPDl+3BGeEc1g405IwNN+h9UDIvw6IdtAlhdwmzVLNOFJ958XOq6TakRvjv5QUOMXcWzz4ILrQa0V581n8YgxzqhcRWxgzqv6OHZrCDO0pqhNveJHNsumJ21aS7l0y+mBqgb9Zjde/TINImbxsh16vdZoeZOoPWP4Ok+ndj2CeLUUlEnDOjcZ+uPL9IaHD2k39Ag6dxwC+/Syw68pu4ij/l6uzGXsply5CnW+GWMAjZ4NKwfPhSTDqf7vk3THdwPJGtFB3njhyDtFlO3BZJMFrA9iZgBwgWt4j71LRU2qPn+z/zkW6H3YmBJQSgXSeTOKSj8SxGuuYJ+lMqVVplWCxywti5QasrW/DqY1xcj1//sEaEt0WfA/ntTOmVjm+9oFU5vWpfY8B55SCOhdbnf/uQB4HkwqreZbVKDVeUdPgb7Vw+yDuS6zNtd6Q70is2nCwBnZL5ogmbUJnEgK1OiInX8Fmfnh1C+G1TT1Xsc6FS1+iDQNtkH/+sRgqM8qmQOnHzWoyzWQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(39860400002)(366004)(136003)(33430700001)(66946007)(76116006)(6506007)(9686003)(186003)(71200400001)(26005)(83290400001)(83310400001)(83320400001)(83280400001)(316002)(7416002)(86362001)(7696005)(83300400001)(66446008)(8936002)(64756008)(66556008)(52536014)(66476007)(8676002)(4326008)(54906003)(478600001)(110136005)(5660300002)(33656002)(2906002)(33440700001)(4744005)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OHmjZiq4FFmZFOTETEJ5z0Skj/hyMjGmDN3cOQyksbyAPjfgPPUlVvQpxSzCvCLmjKFdf7OAK/iEmemAhAeGZ/aL82eC3mfQM5zIxjeIqfyS2IGzYVcKKkcmIN1vEacXoRVdaw4Bb7Dw82s1rj2XdVirJS9gKb+HsPa1p1tfAtgVVl3WismUpCtlDin4kjP9ncpW/Ff6f1t80LUpYOhh+9dfnH/aqLnEYSMkvWYL1Z8yV3qfrhvnFPBmkrEr3eDchJ2fAEMfwCvJ3UbV8okCSBwH1vu8XnSVHVQVSERQD5a/9YQA0OTyD9ecIQeN3F6FmM0zt57NXfQG1OghLUHmuRrsiCQumVhGb/CLiQ5uSJgZaKZHmEweh6b8nfPr971KzNlL3pSYDcJW/4iOQ/omGP0PIQTNkEQ6QvJncaVo7A+3gOV3IWP9HmFWCuf3RWvePY+nGm1sh9IJXopzlghryofCgqDpueKI8U05OieHXmSMmQAhPrcGJpN6l0SX3WDVGjWbHnutKOu49hkMOpFfAscmcbAjVuEktUzv17SlPZHq6n/YZ6kcxJrv78TPSaDLs+oWr14OF3kt3tNFDbpqND0pojimtkMEcGGZIhePfQ4YzvWVgjB+rmBwZLRrfp3+t32ANElCCEqM1ZCe0zNBxKYUJ2oZPvcAw4uwakrzrX+ov6UcvuwTZxhO6pvzEplh2yGcSBz+LCoVcPR32xne+dbmvPzK/85tijT+Ipc9v4QTFCBUE1zioAXNEfJQjVOgMamX4VHpSs2TAn8ni1FjkVr2dPqGboWg80qqdX4OqoQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+   d="scan'208";a="407477588"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
+  by orsmga004.jf.intel.com with ESMTP; 06 May 2020 19:22:08 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [RESEND PATCH] KVM: x86/pmu: Support full width counting
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200427071922.86257-1-like.xu@linux.intel.com>
+ <aa182eec-3d0b-1452-19cc-20654190a2ae@redhat.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <ce270752-191e-8610-b253-b53870b3f358@intel.com>
+Date:   Thu, 7 May 2020 10:22:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80c496d5-5914-4bc9-209b-08d7f22d19a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 02:19:40.9648
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pel6A/hVx4MMm94Y0SDlujl5uwHT6vysfBwtefvM3z/Z5IYDkY/NVLFuqbQWY+1vp5+OUlADAR7MH3J4n7PSjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2228
-X-OriginatorOrg: intel.com
+In-Reply-To: <aa182eec-3d0b-1452-19cc-20654190a2ae@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gTG9va3MgdGhlcmUgaXMgcmFjZSBiZXR3ZWVuIHRoZSBwcmV2aW91cyBzdHJlYW0gc3Rv
-cCBhbmQgdGhlIGN1cnJlbnQNCj4gc3RyZWFtIHN0YXJ0IGhlcmUuIENhbiB5b3UgaGVscCB0cnkg
-Y2hhbmdpbmcgdGhlDQo+IHNzdF9ieXRfc3RyZWFtX3N0YXJ0L3N0b3AoKSBmcm9tICdub3dhaXQn
-IG1vZGUgdG8gJ3dhaXQnIG1vZGUsIGFuZCBzZWUgaWYNCj4gdGhlIGlzc3VlIGNhbiBiZSByZXBy
-b2R1Y2VkIHdpdGggaXQ/DQoNCkhpIEtleW9uLA0KDQpLZXJuZWwgcGFuaWMgaWYgdGhlIG1vZGUg
-aXMgY2hhbmdlZC4gVGhlIGRlZmVjdCBjb3VsZCBoYXBwZW4gdG8gdGhlIGZpcnN0DQpBTExPQ19T
-VFJFQU0gY29tbWFuZCBhZnRlciBib290c3RyYXAgc28gSSB0aGluayB0aGUgU1RBUlQvRFJPUF9T
-VFJBTQ0KbWF5IG5vdCB3b3JrLiANCg0KDQpSZWdhcmRzLA0KQnJlbnQNCj4gDQo+IA0KPiBUaGFu
-a3MsDQo+IH5LZXlvbg0KPiANCg==
+Hi Paolo,
+
+Thanks for your comments!
+
+On 2020/5/5 0:57, Paolo Bonzini wrote:
+> On 27/04/20 09:19, Like Xu wrote:
+>> +	if (vmx_supported_perf_capabilities())
+>> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PDCM);
+> I think we can always set it, worst case it will be zero.
+Sure,  we could set it for x86.
+>
+> However, blocking intel_pmu_set_msr altogether is incorrect.  Instead,
+> you need to:
+>
+> - list the MSR in msr_based_features_all so that it appears in
+> KVM_GET_MSR_FEATURE_INDEX_LIST
+>
+> - return the supported bits in vmx_get_msr_feature
+>
+> - allow host-initiated writes (as long as they only set supported bits)
+> of the MSR in intel_pmu_set_msr.
+Please review the v2 patch for this feature,
+https://lore.kernel.org/kvm/20200507021452.174646-1-like.xu@linux.intel.com/
+
+Thanks,
+Like Xu
+>
+> Thanks,
+>
+> Paolo
+>
+
