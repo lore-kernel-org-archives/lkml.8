@@ -2,139 +2,96 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9E2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B661C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 582692073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59EF22073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i819Zid9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nkAMZOGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgEGPKu (ORCPT
+        id S1728005AbgEGPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
+        Thu, 7 May 2020 11:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726267AbgEGPKu (ORCPT
+        by vger.kernel.org with ESMTP id S1726267AbgEGPLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:10:50 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B45C05BD43;
-        Thu,  7 May 2020 08:10:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id u10so2165654pls.8;
-        Thu, 07 May 2020 08:10:50 -0700 (PDT)
+        Thu, 7 May 2020 11:11:02 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDD9C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 08:11:02 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id x6so3667043vso.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mHPaRymVXT/RRtPGGSsDfbM2nTSXjaJgAumG3IDMRCs=;
-        b=i819Zid9bujthzQEqT/LQEVlN+VrPGpv/O1lFRDQcmSPJnVk+PNQJdkl6kC9YUWsFB
-         8IiLVRhxyVgP4kU9cg1pLitPVlvZ0VasazDMJ1npUrm+iarSgDznmIS/cj/sxGtjRKB0
-         jRYmOxajzM1LlfQGhrqrJ8814VmcyWwydN/24yfxSzA3LA1GWllZ5O/D8JM4i0gZqm5c
-         AaqSV7L72JzJBGNYpYglQMUDg5iHxnFXeF5Rv/oxP7gPopo1NUtpBKBtG54/P1CcFOTz
-         nD7E1xtk7yb0xjIdSQlL4bE8EnE9xMjCqk97xX57SCde7O2tAT3duMRG5pg3d24GiSA7
-         ie/w==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RndLXpjGcg2BFmdbethLGIwu7OqaNE0mD4rRGU8RVzc=;
+        b=nkAMZOGNPKlk7/n/u8CYJjF3Syua63LITwI5bpol7Mqr6TTXkvZw6dqszUIx/ap1/B
+         2dZmgFSOZ9u78AywiwqogbB9v4eKI4IMaebLSxRBporBGtdbS4hwzV2kX5nAjoCwY71n
+         B0oR0yhSAs/RGthRqb1FqMAneLaVwGi1i4tdw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mHPaRymVXT/RRtPGGSsDfbM2nTSXjaJgAumG3IDMRCs=;
-        b=aLvqklacnBAXxuAtLG8hUUQmV1Ax//8w+IRFsibl/Ub0MwYiFY2SlemwXIjo+xsc3o
-         QMlc6O6sdYx0yL2tNasM21zZd6Ft4A0ik2IBCJJSTBz3loY1d3zkmowYdYU6ZmpO2giV
-         REiuczJHV3d5Kkl4FSALp5gzTIylnOIVHMidwXmnHrhtaNPkKonk8sS1fevo/vqaZwDK
-         0oo4XTJQhVIAE+hcz2KdyerXLryVsmor48uq0S38bJso82RMTuHmOoC31tjfebmxHwzL
-         VwvEqfZ04IzkmvvAQFWiHj3B71TRadwDy2BWS/rM99d9q7+veA7cRwfpzEy6FIlb5CUE
-         2GrQ==
-X-Gm-Message-State: AGi0PuY2TO7ILdBY++KuLWiIf7UxSMyNmkKHzanezBHzbdKT257AsrLp
-        9LU+VJN65UXRArOkIVd++aZzMDQHFUQ=
-X-Google-Smtp-Source: APiQypJKVymrKVR3UytW9PIKPTnQgkWe0I+V8k0XQZrX4F1WO/7TS8P594vlGgDu2lWvpgozekUlmw==
-X-Received: by 2002:a17:90a:2344:: with SMTP id f62mr538353pje.152.1588864249839;
-        Thu, 07 May 2020 08:10:49 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id d124sm5067944pfa.98.2020.05.07.08.10.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 08:10:49 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Input: applespi - add missed input_unregister_device
-Date:   Thu,  7 May 2020 23:10:41 +0800
-Message-Id: <20200507151041.792460-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RndLXpjGcg2BFmdbethLGIwu7OqaNE0mD4rRGU8RVzc=;
+        b=TZLuLDhSIr7NJOLhW+dkVtOoTDPRgV0bUpRbGP3YLTw3+z5NUWPOhqOoWcNfVTyCWl
+         nCRGh6I91cGeFCzN3sAheOd83dci1hJDJscurU9zrqk5T0Kst74Uosar0yAEZD0dY/i6
+         73PZFAPJhf7uyoBUgK/XLGgCoz3RGwvPiEPPu5Yj1NH1vqSPWeFEucl+bF6+7//1CPIE
+         h0MXMaKt0QnWVwPrNSnpDg/Lw0A6DE0uJhP+qDZ6jq6UPVhinH0R8YvYc20znbdYQIME
+         uJEuvwHuhylj6sWwzm3UtO3F1UtdpoVuLlQ7OvROCEmW//sd5bjA0nQmLRdO4udd2EcB
+         XbiA==
+X-Gm-Message-State: AGi0Pubp9W+RLxIx1BtUc3rYmOs60CstJETQeXv2plOQA/Qot54+zt7Y
+        8g+Gpmhdk7l5OtVn1I5AQykHBYZjey4=
+X-Google-Smtp-Source: APiQypJfUONTw9gDoGXveI3NB49r3wKnyC2XEdmjpl0gXNrJsjzQ2OWF+tt8/rbK9e3L8zWhAW0MmQ==
+X-Received: by 2002:a67:2dcb:: with SMTP id t194mr12733157vst.136.1588864260948;
+        Thu, 07 May 2020 08:11:00 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id l192sm271277vsd.15.2020.05.07.08.11.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 08:11:00 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id v23so1563793vke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:11:00 -0700 (PDT)
+X-Received: by 2002:a1f:c643:: with SMTP id w64mr12224571vkf.0.1588864259688;
+ Thu, 07 May 2020 08:10:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200507110649.37426-1-yanaijie@huawei.com>
+In-Reply-To: <20200507110649.37426-1-yanaijie@huawei.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 7 May 2020 08:10:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Wp-L_oYsb1N4O6VC-NN5Ht2+J8S5o7AJgOk==quhHstA@mail.gmail.com>
+Message-ID: <CAD=FV=Wp-L_oYsb1N4O6VC-NN5Ht2+J8S5o7AJgOk==quhHstA@mail.gmail.com>
+Subject: Re: [PATCH] kgdb: Return true in kgdb_nmi_poll_knock()
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver calls input_register_device() in probe, but misses
-input_unregister_device() in probe failure and remove.
-Add the missed function calls to fix it.
+Hi,
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/input/keyboard/applespi.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+On Thu, May 7, 2020 at 4:07 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> Fix the following coccicheck warning:
+>
+> include/linux/kgdb.h:301:54-55: WARNING: return of 0/1 in function
+> 'kgdb_nmi_poll_knock' with return type bool
+>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  include/linux/kgdb.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-index d38398526965..8ee9fdb562a5 100644
---- a/drivers/input/keyboard/applespi.c
-+++ b/drivers/input/keyboard/applespi.c
-@@ -1745,7 +1745,7 @@ static int applespi_probe(struct spi_device *spi)
- 		dev_err(&applespi->spi->dev,
- 			"Failed to obtain GPE for SPI slave device: %s\n",
- 			acpi_format_exception(acpi_sts));
--		return -ENODEV;
-+		goto err_unregister;
- 	}
- 	applespi->gpe = (int)gpe;
- 
-@@ -1756,7 +1756,7 @@ static int applespi_probe(struct spi_device *spi)
- 		dev_err(&applespi->spi->dev,
- 			"Failed to install GPE handler for GPE %d: %s\n",
- 			applespi->gpe, acpi_format_exception(acpi_sts));
--		return -ENODEV;
-+		goto err_unregister;
- 	}
- 
- 	applespi->suspended = false;
-@@ -1767,7 +1767,7 @@ static int applespi_probe(struct spi_device *spi)
- 			"Failed to enable GPE handler for GPE %d: %s\n",
- 			applespi->gpe, acpi_format_exception(acpi_sts));
- 		acpi_remove_gpe_handler(NULL, applespi->gpe, applespi_notify);
--		return -ENODEV;
-+		goto err_unregister;
- 	}
- 
- 	/* trigger touchpad setup */
-@@ -1805,6 +1805,10 @@ static int applespi_probe(struct spi_device *spi)
- 			    &applespi_tp_dim_fops);
- 
- 	return 0;
-+
-+err_unregister:
-+	input_unregister_device(applespi->keyboard_input_dev);
-+	return -ENODEV;
- }
- 
- static void applespi_drain_writes(struct applespi_data *applespi)
-@@ -1847,6 +1851,7 @@ static int applespi_remove(struct spi_device *spi)
- 	applespi_drain_reads(applespi);
- 
- 	debugfs_remove_recursive(applespi->debugfs_root);
-+	input_unregister_device(applespi->keyboard_input_dev);
- 
- 	return 0;
- }
--- 
-2.26.2
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
