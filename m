@@ -4,39 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917DBC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D842C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5DD21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B902173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEGPAU (ORCPT
+        id S1727891AbgEGPAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:00:20 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4207 "EHLO mga17.intel.com"
+        Thu, 7 May 2020 11:00:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26843 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgEGPAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:00:16 -0400
-IronPort-SDR: EpzMgQJzEKFktUnOWBtWA+7dfNiMTfwJJ1U8pAEommdT02gdB87wKN+I1kjKNNmMzopL6W69Ek
- x9i+ap/9Psug==
+        id S1727804AbgEGPAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:00:18 -0400
+IronPort-SDR: c05THDTGrokAjGqf+9tsAdjhST4Pk5hmm5NXwWOryloLLxDAttBnlTZyf3Y/oQU79H/5KsUM9u
+ G3syySnQvL4w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:13 -0700
-IronPort-SDR: rItSlL4hsyBNkXMqNql+Ys5NswC+4JXGqRysaI2kTLNQAY2D5Loizqww6p54Idpm9iU3xvV6ff
- CCjw69mcPYbg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:17 -0700
+IronPort-SDR: sRkR7UilV6CWTdxUmMyqpXUXSGr/Ud0WD+B+k8nkRsPEeAekElxzFhnEGzvkUle3k0gZ16+r8K
+ F0nvdY6zpDxg==
 X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="462168553"
+   d="scan'208";a="250112626"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:13 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:00:17 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
         Helge Deller <deller@gmx.de>,
@@ -57,10 +55,11 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
         linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>
-Subject: [PATCH V3 05/15] {x86,powerpc,microblaze}/kmap: Move preempt disable
-Date:   Thu,  7 May 2020 07:59:53 -0700
-Message-Id: <20200507150004.1423069-6-ira.weiny@intel.com>
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH V3 09/15] arch/kmap: Don't hard code kmap_prot values
+Date:   Thu,  7 May 2020 07:59:57 -0700
+Message-Id: <20200507150004.1423069-10-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200507150004.1423069-1-ira.weiny@intel.com>
 References: <20200507150004.1423069-1-ira.weiny@intel.com>
@@ -73,195 +72,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-During this kmap() conversion series we must maintain bisect-ability.
-To do this, kmap_atomic_prot() in x86, powerpc, and microblaze need to
-remain functional.
+To support kmap_atomic_prot() on all architectures each arch must
+support protections passed in to them.
 
-Create a temporary inline version of kmap_atomic_prot within these
-architectures so we can rework their kmap_atomic() calls and then lift
-kmap_atomic_prot() to the core.
+Change csky, mips, nds32 and xtensa to use their global constant
+kmap_prot rather than a hard coded value which was equal.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes from V2:
-	Fix microblaze not being static inline
-
-Changes from V1:
-	New patch
+changes from V1:
+	Mention that kmap_prot is a constant in commit message
 ---
- arch/microblaze/include/asm/highmem.h | 11 ++++++++++-
- arch/microblaze/mm/highmem.c          | 10 ++--------
- arch/powerpc/include/asm/highmem.h    | 11 ++++++++++-
- arch/powerpc/mm/highmem.c             |  9 ++-------
- arch/x86/include/asm/highmem.h        | 11 ++++++++++-
- arch/x86/mm/highmem_32.c              | 10 ++--------
- 6 files changed, 36 insertions(+), 26 deletions(-)
+ arch/csky/mm/highmem.c   | 2 +-
+ arch/mips/mm/highmem.c   | 2 +-
+ arch/nds32/mm/highmem.c  | 2 +-
+ arch/xtensa/mm/highmem.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
-index 0c94046f2d58..c38d920a1171 100644
---- a/arch/microblaze/include/asm/highmem.h
-+++ b/arch/microblaze/include/asm/highmem.h
-@@ -51,7 +51,16 @@ extern pte_t *pkmap_page_table;
- #define PKMAP_NR(virt)  ((virt - PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
+diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
+index 0aafbbbe651c..f4311669b5bb 100644
+--- a/arch/csky/mm/highmem.c
++++ b/arch/csky/mm/highmem.c
+@@ -32,7 +32,7 @@ void *kmap_atomic_high(struct page *page)
+ #ifdef CONFIG_DEBUG_HIGHMEM
+ 	BUG_ON(!pte_none(*(kmap_pte - idx)));
+ #endif
+-	set_pte(kmap_pte-idx, mk_pte(page, PAGE_KERNEL));
++	set_pte(kmap_pte-idx, mk_pte(page, kmap_prot));
+ 	flush_tlb_one((unsigned long)vaddr);
  
--extern void *kmap_atomic_prot(struct page *page, pgprot_t prot);
-+extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
-+static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+{
-+	preempt_disable();
-+	pagefault_disable();
-+	if (!PageHighMem(page))
-+		return page_address(page);
-+
-+	return kmap_atomic_high_prot(page, prot);
-+}
- extern void __kunmap_atomic(void *kvaddr);
- 
- static inline void *kmap_atomic(struct page *page)
-diff --git a/arch/microblaze/mm/highmem.c b/arch/microblaze/mm/highmem.c
-index d7569f77fa15..0e3efaa8a004 100644
---- a/arch/microblaze/mm/highmem.c
-+++ b/arch/microblaze/mm/highmem.c
-@@ -32,18 +32,12 @@
-  */
- #include <asm/tlbflush.h>
- 
--void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 
- 	unsigned long vaddr;
- 	int idx, type;
- 
--	preempt_disable();
--	pagefault_disable();
--	if (!PageHighMem(page))
--		return page_address(page);
--
--
- 	type = kmap_atomic_idx_push();
- 	idx = type + KM_TYPE_NR*smp_processor_id();
- 	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
-@@ -55,7 +49,7 @@ void *kmap_atomic_prot(struct page *page, pgprot_t prot)
- 
- 	return (void *) vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_prot);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void __kunmap_atomic(void *kvaddr)
- {
-diff --git a/arch/powerpc/include/asm/highmem.h b/arch/powerpc/include/asm/highmem.h
-index ba3371977d49..d049806a8354 100644
---- a/arch/powerpc/include/asm/highmem.h
-+++ b/arch/powerpc/include/asm/highmem.h
-@@ -59,7 +59,16 @@ extern pte_t *pkmap_page_table;
- #define PKMAP_NR(virt)  ((virt-PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
- 
--extern void *kmap_atomic_prot(struct page *page, pgprot_t prot);
-+extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
-+static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+{
-+	preempt_disable();
-+	pagefault_disable();
-+	if (!PageHighMem(page))
-+		return page_address(page);
-+
-+	return kmap_atomic_high_prot(page, prot);
-+}
- extern void __kunmap_atomic(void *kvaddr);
- 
- static inline void *kmap_atomic(struct page *page)
-diff --git a/arch/powerpc/mm/highmem.c b/arch/powerpc/mm/highmem.c
-index 320c1672b2ae..f075cef6d663 100644
---- a/arch/powerpc/mm/highmem.c
-+++ b/arch/powerpc/mm/highmem.c
-@@ -30,16 +30,11 @@
-  * be used in IRQ contexts, so in some (very limited) cases we need
-  * it.
-  */
--void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned long vaddr;
- 	int idx, type;
- 
--	preempt_disable();
--	pagefault_disable();
--	if (!PageHighMem(page))
--		return page_address(page);
--
- 	type = kmap_atomic_idx_push();
- 	idx = type + KM_TYPE_NR*smp_processor_id();
- 	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
-@@ -49,7 +44,7 @@ void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+ 	return (void *)vaddr;
+diff --git a/arch/mips/mm/highmem.c b/arch/mips/mm/highmem.c
+index 155fbb107b35..87023bd1a33c 100644
+--- a/arch/mips/mm/highmem.c
++++ b/arch/mips/mm/highmem.c
+@@ -29,7 +29,7 @@ void *kmap_atomic_high(struct page *page)
+ #ifdef CONFIG_DEBUG_HIGHMEM
+ 	BUG_ON(!pte_none(*(kmap_pte - idx)));
+ #endif
+-	set_pte(kmap_pte-idx, mk_pte(page, PAGE_KERNEL));
++	set_pte(kmap_pte-idx, mk_pte(page, kmap_prot));
+ 	local_flush_tlb_one((unsigned long)vaddr);
  
  	return (void*) vaddr;
- }
--EXPORT_SYMBOL(kmap_atomic_prot);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
+diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
+index f6e6915c0d31..809f8c830f06 100644
+--- a/arch/nds32/mm/highmem.c
++++ b/arch/nds32/mm/highmem.c
+@@ -21,7 +21,7 @@ void *kmap_atomic_high(struct page *page)
  
- void __kunmap_atomic(void *kvaddr)
- {
-diff --git a/arch/x86/include/asm/highmem.h b/arch/x86/include/asm/highmem.h
-index 90b96594d6c5..61f47fef40e5 100644
---- a/arch/x86/include/asm/highmem.h
-+++ b/arch/x86/include/asm/highmem.h
-@@ -58,7 +58,16 @@ extern unsigned long highstart_pfn, highend_pfn;
- #define PKMAP_NR(virt)  ((virt-PKMAP_BASE) >> PAGE_SHIFT)
- #define PKMAP_ADDR(nr)  (PKMAP_BASE + ((nr) << PAGE_SHIFT))
- 
--void *kmap_atomic_prot(struct page *page, pgprot_t prot);
-+extern void *kmap_atomic_high_prot(struct page *page, pgprot_t prot);
-+static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+{
-+	preempt_disable();
-+	pagefault_disable();
-+	if (!PageHighMem(page))
-+		return page_address(page);
-+
-+	return kmap_atomic_high_prot(page, prot);
-+}
- void *kmap_atomic(struct page *page);
- void __kunmap_atomic(void *kvaddr);
- void *kmap_atomic_pfn(unsigned long pfn);
-diff --git a/arch/x86/mm/highmem_32.c b/arch/x86/mm/highmem_32.c
-index c4ebfd0ae401..48b56b1af902 100644
---- a/arch/x86/mm/highmem_32.c
-+++ b/arch/x86/mm/highmem_32.c
-@@ -12,17 +12,11 @@
-  * However when holding an atomic kmap it is not legal to sleep, so atomic
-  * kmaps are appropriate for short, tight code paths only.
-  */
--void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-+void *kmap_atomic_high_prot(struct page *page, pgprot_t prot)
- {
- 	unsigned long vaddr;
- 	int idx, type;
- 
--	preempt_disable();
--	pagefault_disable();
--
--	if (!PageHighMem(page))
--		return page_address(page);
--
- 	type = kmap_atomic_idx_push();
- 	idx = type + KM_TYPE_NR*smp_processor_id();
+ 	idx = type + KM_TYPE_NR * smp_processor_id();
  	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
-@@ -32,7 +26,7 @@ void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+-	pte = (page_to_pfn(page) << PAGE_SHIFT) | (PAGE_KERNEL);
++	pte = (page_to_pfn(page) << PAGE_SHIFT) | (kmap_prot);
+ 	ptep = pte_offset_kernel(pmd_off_k(vaddr), vaddr);
+ 	set_pte(ptep, pte);
+ 
+diff --git a/arch/xtensa/mm/highmem.c b/arch/xtensa/mm/highmem.c
+index 4de323e43682..50168b09510a 100644
+--- a/arch/xtensa/mm/highmem.c
++++ b/arch/xtensa/mm/highmem.c
+@@ -48,7 +48,7 @@ void *kmap_atomic_high(struct page *page)
+ #ifdef CONFIG_DEBUG_HIGHMEM
+ 	BUG_ON(!pte_none(*(kmap_pte + idx)));
+ #endif
+-	set_pte(kmap_pte + idx, mk_pte(page, PAGE_KERNEL_EXEC));
++	set_pte(kmap_pte + idx, mk_pte(page, kmap_prot));
  
  	return (void *)vaddr;
  }
--EXPORT_SYMBOL(kmap_atomic_prot);
-+EXPORT_SYMBOL(kmap_atomic_high_prot);
- 
- void *kmap_atomic(struct page *page)
- {
 -- 
 2.25.1
 
