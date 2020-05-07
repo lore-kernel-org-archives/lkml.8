@@ -3,108 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E661CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D7FC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2E32082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA9D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588866633;
-	bh=a4g1pYWcIDP9Pbd1virnw3Z83hS76WeKV3KwymGm09U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zHD5WdkVJJasQZOQPriVLqA7vRhdF18dRCfYg5VeZQXpkSr68HjQPEAaDq6f/ny0n
-	 W42LkrWbVsF7UOIOthz7cjAPDYAifpB1OsZefRvosJgqbBmtkMKAJ3LXJxjPYUJLdf
-	 FniNV31QF8IOqlUKEczRWTFNiisH+rtK3Y65TAkQ=
+	s=default; t=1588866695;
+	bh=1Q9VbK+JcufVG88INJmlPCjfx0C7wnoXRYXdD54VdV4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QWg0HIkQWy/9M15lrCsYolmSB31Uz5KLe+00pxRMX0RU5p0XpJP7FQerUJN449y3i
+	 iYbvl0KNmWrNmihgTEY3Al2ECepFVID9pamgxGQkVKeqLvp2L2OailGGILIldKsJIk
+	 zfrXIEtAvcTR9J2UJNYJCQu7jhcH8x4v1aKeQ5C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgEGPud (ORCPT
+        id S1727779AbgEGPvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 11:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEGPuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:50:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726616AbgEGPve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:51:34 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74EFB20659;
-        Thu,  7 May 2020 15:50:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF54A20659;
+        Thu,  7 May 2020 15:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588866632;
-        bh=a4g1pYWcIDP9Pbd1virnw3Z83hS76WeKV3KwymGm09U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dSaTPs3Enu9YAiDYWqenhOiKwvLbcEun5F5evfg3kwO4xVSEy99B924mrWjVqKxHZ
-         vRue5I3xj+CxdNPpJT/BUCn/ZVSkyNKd/21TphpJTu+Zw0XPrA4WYEaGjH/8NVZa3D
-         DytGmdOxNJi9199T6xqy0BJSX8HPKwmpFs60MTtg=
-Date:   Fri, 8 May 2020 00:50:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-Message-Id: <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
-In-Reply-To: <20200507091207.5c3b1a92@gandalf.local.home>
-References: <158834025077.28357.15141584656220094821.stgit@devnote2>
-        <158834028054.28357.398159034694277189.stgit@devnote2>
-        <20200501101942.5c0da986@gandalf.local.home>
-        <20200502120842.9d93352083fb854295150235@kernel.org>
-        <20200507091207.5c3b1a92@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1588866694;
+        bh=1Q9VbK+JcufVG88INJmlPCjfx0C7wnoXRYXdD54VdV4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=O+QfpX/C/690T6tqapb1Dd6Z+sXEs6NySD2jiIFxIhM8Z49iD9rw38Bq/MHy20Hei
+         Zi3pj6HAmRMao3K0gj1TyLUXXkd7Io3IbAOJDl52KIsXbq5EH9DOMpbDSLtPY5CNwq
+         EZYjY5AUJ1K/7Mmfxx7Kq3iTaaq76DdczroJyJBI=
+Date:   Thu, 7 May 2020 10:51:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [RFC 1/2] PCI/IOV: Introduce pci_iov_sysfs_link() function
+Message-ID: <20200507155132.GA6568@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e62d9d62-528f-ac1a-671f-4da2d2e88641@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 09:12:07 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Sat, 2 May 2020 12:08:42 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > > > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> > > > index ab6bedb25736..b3f70f53ee69 100644
-> > > > --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> > > > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> > > > @@ -30,7 +30,7 @@ fi
-> > > >  
-> > > >  echo "Test histogram trace_marker tigger"
-> > > >  
-> > > > -echo 'hist:keys=common_pid' > events/ftrace/print/trigger
-> > > > +echo 'hist:keys=ip' > events/ftrace/print/trigger  
-> > > 
-> > > This is doing more than just changing the echo being used. It's changing
-> > > the test being done.  
+On Thu, May 07, 2020 at 09:48:30AM +0200, Niklas Schnelle wrote:
+> On 5/6/20 11:10 PM, Bjorn Helgaas wrote:
+> > On Wed, May 06, 2020 at 05:41:38PM +0200, Niklas Schnelle wrote:
+> >> currently pci_iov_add_virtfn() scans the SR-IOV bars, adds the VF to the
+> >> bus and also creates the sysfs links between the newly added VF and its
+> >> parent PF.
 > > 
-> > Yes, I need Tom's review for this change. As far as I can test, this
-> > fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
-> > for this test case.
+> > s/currently/Currently/
+> > s/bars/BARs/
 > > 
-> 
-> I still don't see how changing "keys=common_pid" to "keys=ip" has anything
-> to do with the echo patch. If that is a problem, it should be a different
-> patch with explanation to why "keys=common_pid" is broken.
+> >> With pdev->no_vf_scan fencing off the entire pci_iov_add_virtfn() call
+> >> s390 as the sole pdev->no_vf_scan user thus ends up missing these sysfs
+> >> links which are required for example by QEMU/libvirt.
+> >> Instead of duplicating the code introduce a new pci_iov_sysfs_link()
+> >> function for establishing sysfs links.
+> > 
+> > This looks like two paragraphs missing the blank line between.
+> > 
+> > This whole thing is not "introducing" any new functionality; it's
+> > "refactoring" to move existing functionality around and make it
+> > callable separately.
+> You're right I'll keep it in the subject for easier reference
+> if that's okay with you.
+> > 
+> >> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > 
+> > With the fixes above and a few below:
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Thank you for the very quick and useful feedback.
+> I've incorporated the changes and will resend with the PATCH prefix.
+> If/when accepted what tree should the first patch go to?
 
-This test case uses a trace_marker event to make a histogram with
-the common_pid key, and it expects the "echo" command is built-in command
-so that the pid is same while writing several events to trace_marker.
-I changed it to "ip" which is always same if trace_marker interface is
-used.
+I'd expect them both to go via the s390 tree so there's no dependency
+between the PCI merge and the s390 merge.
 
-Thank you,
-
-> 
-> -- Steve
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> And yes I plan to let the second patch go via the s390 tree.
