@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4741BC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B39C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170C2208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A91E21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588879271;
-	bh=qh1j1EPgFp9gEO4yUol6TFAoaToJnGzXm0ToAUgd8vA=;
+	s=default; t=1588879275;
+	bh=Fqz2PjC/jFV89A9kXw++EXBwCRqH25aWHuTpik2W34I=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jHy5i9Eu5gtfbuEhD2ZuOT7uxbfKD2XZ4JGOmeur35hZ2wexMr1nNJyOtN4GtlnQ6
-	 jd9yyMqGdV9fKmpBsLGZrWnEE9xZFQkBjt755e2w6zO+vMvZuPc98lRkaWUaeypZ5K
-	 J/r7+GzqV6CGIA/rsoLtOjBEJhMY6KavFJvuQnrI=
+	b=kKF9UdMQSkiru0SZJZN15kVTOFRUI2xRgv4pOmIAMZguJWoAcEou0QmjfL4vS5Dvo
+	 WHbPBQYUuPmcCZo7k0G0i3OTHyinaZmBncKZjPya3SDBaDSnpfKgtVTQvIW2JLJZcL
+	 Bn8NNp4/Wy63IZa8dT/XAl/eKGGpbMXGxJckqI3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgEGTVK (ORCPT
+        id S1728733AbgEGTVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgEGTVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:21:09 -0400
+        id S1728309AbgEGTVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:21:13 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 163A521835;
-        Thu,  7 May 2020 19:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2662221F7;
+        Thu,  7 May 2020 19:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588879268;
-        bh=qh1j1EPgFp9gEO4yUol6TFAoaToJnGzXm0ToAUgd8vA=;
+        s=default; t=1588879273;
+        bh=Fqz2PjC/jFV89A9kXw++EXBwCRqH25aWHuTpik2W34I=;
         h=Date:From:To:Cc:Subject:From;
-        b=juFTsTqegvq3Bv4Q2LiuA8DtFUy8o/PXwJhVFoG153XAwDnoyikkW75jBlGZ+d+3i
-         SXYGKQVIOEPhhnUxU7c8JHjgnxHDcQ5yn74TK1z4ZjBNJ41QTvPbw64yHFwFtQ7lhs
-         6NmDIyesKEngYmbeZtxRFwUKpa+PiBIRYDPhtPC0=
-Date:   Thu, 7 May 2020 14:25:35 -0500
+        b=sIlWVVg+1ES+Eb2qBbHDRCjQ+Br9Roy/dbGcWJFqTZ/hZ3Ia2eHs7Pah817dUkshs
+         E8aX9VcPCHsTf7p/wpO/gZat2vnUAOz8oSMY02e6LDI6NKrTvgxrwqYsZbVoMY9d7x
+         yhr9+B+GOcWSofspsfYfjVDvKlhknDKYLGsrEUcg=
+Date:   Thu, 7 May 2020 14:25:39 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] soc: ti: Replace zero-length array with flexible-array
-Message-ID: <20200507192535.GA16622@embeddedor>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing/probe: Replace zero-length array with flexible-array
+Message-ID: <20200507192539.GA16642@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +92,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/soc/ti/knav_qmss.h |    2 +-
+ kernel/trace/trace_probe.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
-index 038aec352df7..a01eda720bf6 100644
---- a/drivers/soc/ti/knav_qmss.h
-+++ b/drivers/soc/ti/knav_qmss.h
-@@ -67,7 +67,7 @@ struct knav_reg_config {
- 	u32		link_ram_size0;
- 	u32		link_ram_base1;
- 	u32		__pad2[2];
--	u32		starvation[0];
-+	u32		starvation[];
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index a0ff9e200ef6..a22b62813f8c 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -236,7 +236,7 @@ struct trace_probe_event {
+ 	struct trace_event_call		call;
+ 	struct list_head 		files;
+ 	struct list_head		probes;
+-	struct trace_uprobe_filter	filter[0];
++	struct trace_uprobe_filter	filter[];
  };
  
- struct knav_reg_region {
+ struct trace_probe {
 
