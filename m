@@ -2,73 +2,71 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE572C35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67047C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C437820735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2FD21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgEGWGf (ORCPT
+        id S1727124AbgEGWGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:06:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44227 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgEGWGe (ORCPT
+        Thu, 7 May 2020 18:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgEGWGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:06:34 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jWodU-000300-A9; Thu, 07 May 2020 22:04:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus_wmi: remove redundant initialization of variable status
-Date:   Thu,  7 May 2020 23:04:55 +0100
-Message-Id: <20200507220455.66681-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 7 May 2020 18:06:43 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08152C05BD43;
+        Thu,  7 May 2020 15:06:43 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWof7-003GTu-PA; Thu, 07 May 2020 22:06:38 +0000
+Date:   Thu, 7 May 2020 23:06:37 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Max Kellermann <mk@cm4all.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] fs/io_uring: fix O_PATH fds in openat, openat2, statx
+Message-ID: <20200507220637.GH23230@ZenIV.linux.org.uk>
+References: <20200507185725.15840-1-mk@cm4all.com>
+ <20200507190131.GF23230@ZenIV.linux.org.uk>
+ <4cac0e53-656c-50f0-3766-ae3cc6c0310a@kernel.dk>
+ <20200507192903.GG23230@ZenIV.linux.org.uk>
+ <8e3c88cc-027b-4f90-b4f8-a20d11d35c4b@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e3c88cc-027b-4f90-b4f8-a20d11d35c4b@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, May 07, 2020 at 02:53:30PM -0600, Jens Axboe wrote:
 
-The variable status is being initialized with a value that is never read
-and it is being updated later with a new value. The initialization is
-redundant and can be removed.
+> I think the patch is correct as-is, I took a good look at how we're
+> currently handling it. None of those three ops should fiddle with
+> the fd at all, and all of them do forbid the use of fixed files (the
+> descriptor table look-alikes), so that part is fine, too.
+> 
+> There's some low hanging fruit around optimizing and improving it,
+> I'm including an updated version below. Max, can you double check
+> with your testing?
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+<looks>
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index bb7c529d7d16..1909d728a536 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -309,7 +309,7 @@ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
- 	struct acpi_buffer input;
- 	u64 phys_addr;
- 	u32 retval;
--	u32 status = -1;
-+	u32 status;
- 
- 	/*
- 	 * Copy to dma capable address otherwise memory corruption occurs as
--- 
-2.25.1
-
+Could you explain WTF is io_issue_sqe() doing in case of IORING_OP_CLOSE?
+Specifically, what is the value of
+        req->close.fd = READ_ONCE(sqe->fd);
+        if (req->file->f_op == &io_uring_fops ||
+            req->close.fd == req->ctx->ring_fd)
+                return -EBADF;
+in io_close_prep()?  And what does happen if some joker does dup2()
+of something with io_uring_fops into our slot right after that check?
+Before the subsequent
+        ret = __close_fd_get_file(req->close.fd, &req->close.put_file);
+that is.
