@@ -2,119 +2,173 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40374C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFBFC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE5120659
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="va8IcNz8"
+	by mail.kernel.org (Postfix) with ESMTP id 7E11A20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588862215;
+	bh=Dek+MGDDA1gIbGByUT5XOUMDdXthngPtNd3pio84ldc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=E7jPrVNpt2x+/3ry1cqgq7Bn4uhgN1EaK+XN+FQ+JEDsKDTnOyCzMo1vKD2qgVyot
+	 PDJgvZvcrGqNY8slBpKnpymLmfmuM1TwiNj/s5Z6HKg/4lV+/+Lj/wdu4FKqTXQK+r
+	 B9/76ZRe2L9nIF58xYzjqlP85h1RwRzVjHCS9d6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgEGOgq (ORCPT
+        id S1728823AbgEGOgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728765AbgEGOgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:36:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69437C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:36:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s8so6693257wrt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2cUePzGWzDDGYMdSJecoGhzZI0bICDSzA7fgbQwoVdI=;
-        b=va8IcNz8I2zqjE9CHsCzAnM6YWsHCkT+6BNuJ8fRsAg/QlH3lUCW+YkNknR8VqSvOG
-         E/IC3lRkd0ZwHQalan9TG1D4/w2fUTyiZGxS/Q17YpXKcCbyWWsxSxx0xFlWxdzfx+ut
-         ysYussSGR3GqsKtZzvNvKz5uEtHfKa8FYgUcDiMWE1hpFlB7r3M6eaEtZRKXOjsn7QfN
-         oORfrpfCEN3NfkyQRARTPBZf4GQ7PEgSTsKIsFDcD3penmf6YN2IBJ8mFLFunzaBnjmu
-         tuILSOMKhNChWN19gJNhOvmcEv+JElMcVgODP4coW1YiN9SIPkaGu9JYdaOSup2+p4YN
-         6M5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2cUePzGWzDDGYMdSJecoGhzZI0bICDSzA7fgbQwoVdI=;
-        b=GhanfNXz/bdnVYCgEFpcQIxOj62/vZJulzunEQECG/ZQYIpYrv1tOdZ1FAfrCW/n/5
-         Cj6i213ftHvzYm9rPl/x8HuZFMOEBPlV+sBWlcxEWV1uVjDbAuZiHKtJ1NJ1sHkFnWl0
-         c8PnI0Yl9RJKlDI1oh8QG44bAccstFjtuWBScDyAOrjcolWH6VrzfCXxGAbXl2ABUGfU
-         ibIqjeHhiVqof4elRe+GOLrPqdI7wVBKYEWeo+PPNz7BZoQ+wn72+dvxyR93QLdsowZX
-         4q3SFbJYszTG1khszk8XkC7zPAA9Te+Ki+vzD8FaRIvD5twyY3ow0TVdtb4tAYLbx8ty
-         QZcA==
-X-Gm-Message-State: AGi0PubO24QTmqdQgnqK0OaIAM5rk9lBiERNJYwQrXEV/qaQQnzEv/yi
-        MH6cftFaeoy4gBT0V009SFNrKQ==
-X-Google-Smtp-Source: APiQypIg/E6o9sgqmhLM4Cgv9qszquDB3MDl0xGyH0m0ulxsGd7+lcGC7cQvQySga4gTWRe+HpOBog==
-X-Received: by 2002:adf:f8c1:: with SMTP id f1mr15498170wrq.171.1588862197885;
-        Thu, 07 May 2020 07:36:37 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id h17sm8450409wmm.6.2020.05.07.07.36.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 07:36:37 -0700 (PDT)
-Date:   Thu, 7 May 2020 15:36:33 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     David Brazdil <dbrazdil@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] arm64: kvm: Unify users of HVC instruction
-Message-ID: <20200507143633.GA169263@google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
- <20200430144831.59194-2-dbrazdil@google.com>
- <878si3j13w.wl-maz@kernel.org>
+        Thu, 7 May 2020 10:36:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727978AbgEGO2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D802083B;
+        Thu,  7 May 2020 14:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861689;
+        bh=Dek+MGDDA1gIbGByUT5XOUMDdXthngPtNd3pio84ldc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xtc9G+odZRk3kQaWCw06CGd9FFmF4dz1vGM2GYvdWALgYPN88Movj/1VYNt3aaBb7
+         HR2Nq3jvgwnxG3bkYDWiE6sJRiOR6xXlssX5NEniIC94wijjnzkkaPpTVSUn+t65r4
+         kQcE308K6qTdjOc7q6QyJHxb5dZ3qOC5O9YpGiJM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 34/50] SUNRPC: defer slow parts of rpc_free_client() to a workqueue.
+Date:   Thu,  7 May 2020 10:27:10 -0400
+Message-Id: <20200507142726.25751-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
+References: <20200507142726.25751-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878si3j13w.wl-maz@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 07 May 2020 at 15:01:07 (+0100), Marc Zyngier wrote:
-> >  /*
-> > - * u64 __kvm_call_hyp(void *hypfn, ...);
-> > + * u64 __kvm_call_hyp(unsigned long arg, ...);
-> >   *
-> >   * This is not really a variadic function in the classic C-way and care must
-> >   * be taken when calling this to ensure parameters are passed in registers
-> >   * only, since the stack will change between the caller and the callee.
-> > - *
-> > - * Call the function with the first argument containing a pointer to the
-> > - * function you wish to call in Hyp mode, and subsequent arguments will be
-> > - * passed as x0, x1, and x2 (a maximum of 3 arguments in addition to the
-> > - * function pointer can be passed).  The function being called must be mapped
-> > - * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
-> > - * passed in x0.
-> > - *
-> > - * A function pointer with a value less than 0xfff has a special meaning,
-> > - * and is used to implement hyp stubs in the same way as in
-> > - * arch/arm64/kernel/hyp_stub.S.
-> 
-> I don't think any of this becomes obsolete with this patch (apart from
-> the reference to 32bit), and only changes with patch #2. Or am I
-> misunderstanding something?
+From: NeilBrown <neilb@suse.de>
 
-Nope, I think you're right. To be fair, this patch has changed quite
-a bit since the first version (which did change that comment a little
-later IIRC), but David has done all the hard work on top so I'll let
-him answer that one.
+[ Upstream commit 7c4310ff56422ea43418305d22bbc5fe19150ec4 ]
 
-And David, feel free to take the authorship for this patch -- I barely
-recognize it (for the better), so it's more than fair if you get the
-credit :)
+The rpciod workqueue is on the write-out path for freeing dirty memory,
+so it is important that it never block waiting for memory to be
+allocated - this can lead to a deadlock.
 
-Thanks,
-Quentin
+rpc_execute() - which is often called by an rpciod work item - calls
+rcp_task_release_client() which can lead to rpc_free_client().
+
+rpc_free_client() makes two calls which could potentially block wating
+for memory allocation.
+
+rpc_clnt_debugfs_unregister() calls into debugfs and will block while
+any of the debugfs files are being accessed.  In particular it can block
+while any of the 'open' methods are being called and all of these use
+malloc for one thing or another.  So this can deadlock if the memory
+allocation waits for NFS to complete some writes via rpciod.
+
+rpc_clnt_remove_pipedir() can take the inode_lock() and while it isn't
+obvious that memory allocations can happen while the lock it held, it is
+safer to assume they might and to not let rpciod call
+rpc_clnt_remove_pipedir().
+
+So this patch moves these two calls (together with the final kfree() and
+rpciod_down()) into a work-item to be run from the system work-queue.
+rpciod can continue its important work, and the final stages of the free
+can happen whenever they happen.
+
+I have seen this deadlock on a 4.12 based kernel where debugfs used
+synchronize_srcu() when removing objects.  synchronize_srcu() requires a
+workqueue and there were no free workther threads and none could be
+allocated.  While debugsfs no longer uses SRCU, I believe the deadlock
+is still possible.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/sunrpc/clnt.h |  8 +++++++-
+ net/sunrpc/clnt.c           | 21 +++++++++++++++++----
+ 2 files changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index ca7e108248e21..7bd124e06b36f 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -71,7 +71,13 @@ struct rpc_clnt {
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ 	struct dentry		*cl_debugfs;	/* debugfs directory */
+ #endif
+-	struct rpc_xprt_iter	cl_xpi;
++	/* cl_work is only needed after cl_xpi is no longer used,
++	 * and that are of similar size
++	 */
++	union {
++		struct rpc_xprt_iter	cl_xpi;
++		struct work_struct	cl_work;
++	};
+ 	const struct cred	*cl_cred;
+ };
+ 
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 7324b21f923e6..a2c215a6980d8 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -880,6 +880,20 @@ EXPORT_SYMBOL_GPL(rpc_shutdown_client);
+ /*
+  * Free an RPC client
+  */
++static void rpc_free_client_work(struct work_struct *work)
++{
++	struct rpc_clnt *clnt = container_of(work, struct rpc_clnt, cl_work);
++
++	/* These might block on processes that might allocate memory,
++	 * so they cannot be called in rpciod, so they are handled separately
++	 * here.
++	 */
++	rpc_clnt_debugfs_unregister(clnt);
++	rpc_clnt_remove_pipedir(clnt);
++
++	kfree(clnt);
++	rpciod_down();
++}
+ static struct rpc_clnt *
+ rpc_free_client(struct rpc_clnt *clnt)
+ {
+@@ -890,17 +904,16 @@ rpc_free_client(struct rpc_clnt *clnt)
+ 			rcu_dereference(clnt->cl_xprt)->servername);
+ 	if (clnt->cl_parent != clnt)
+ 		parent = clnt->cl_parent;
+-	rpc_clnt_debugfs_unregister(clnt);
+-	rpc_clnt_remove_pipedir(clnt);
+ 	rpc_unregister_client(clnt);
+ 	rpc_free_iostats(clnt->cl_metrics);
+ 	clnt->cl_metrics = NULL;
+ 	xprt_put(rcu_dereference_raw(clnt->cl_xprt));
+ 	xprt_iter_destroy(&clnt->cl_xpi);
+-	rpciod_down();
+ 	put_cred(clnt->cl_cred);
+ 	rpc_free_clid(clnt);
+-	kfree(clnt);
++
++	INIT_WORK(&clnt->cl_work, rpc_free_client_work);
++	schedule_work(&clnt->cl_work);
+ 	return parent;
+ }
+ 
+-- 
+2.20.1
+
