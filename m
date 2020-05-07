@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8172AC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB7AC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58183216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D833820575
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877774;
-	bh=4Vs8QxaVwzsgCZC7VZqciOtD1Lflpg1/+iLS46dpZGM=;
+	s=default; t=1588877781;
+	bh=jm3fKnCO4Xf3QTCG3k8/S+/8DNeXKLAAKD5XoFMMhyY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hjyxADcFruHFwDuPYD9YOlDI9GutY6mV1voE8x+NtA15pJQeP1zq9ep/+RwAq1SAe
-	 s1SHBFT0DlbnnDecwszG/ViI4BLFXhFv5hg53tzrxk6ZuDgMr20uScDvMdvQ/FRYUw
-	 +oDiYl44McCE7aVSRMCKDSyaxXsw3UuBPKBYraFM=
+	b=WIbJstk4vDX9H6AwY335uUnJI18da6JYIeOKulB0O4ynjQ6CqMAM3iCR+ZS+mED1f
+	 7Bhzy3nfbFTNLLfxZ2QolNFhJ3YtupI7mm/TCW1dGW+eIIDe1ULXzK8hCIHRBg4VbB
+	 8kA4EiJniICdZfspEqi8JhvowMWRIL0vrootPTtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgEGS4N (ORCPT
+        id S1728474AbgEGS4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgEGS4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:56:13 -0400
+        id S1727799AbgEGS4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:56:20 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E0220575;
-        Thu,  7 May 2020 18:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DC9216FD;
+        Thu,  7 May 2020 18:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877772;
-        bh=4Vs8QxaVwzsgCZC7VZqciOtD1Lflpg1/+iLS46dpZGM=;
+        s=default; t=1588877780;
+        bh=jm3fKnCO4Xf3QTCG3k8/S+/8DNeXKLAAKD5XoFMMhyY=;
         h=Date:From:To:Cc:Subject:From;
-        b=O9847wy6gQrf3ooNlVPFe+hHKH/0f/mytZcFG+j+BNZBaXoQrvTeAEhKECvvx/DBf
-         VGlMP6sU4ne/8Ma9PawMSCVC4QG6ES2Ga9zJqGc0R671Oedp+xMhGTxiSsrKIDyibR
-         7XTe4/2TKtN2z4P6CdP26AEUsvIx7mznlhQJ1Fyc=
-Date:   Thu, 7 May 2020 14:00:38 -0500
+        b=j8F77k+hOMYWNsm4ZYGQsIc2ubNpcV2lJi+sF3xlCpyYvURINI7X9RHHgSWg7/c0j
+         k45JS4quwF/uKI6F4RcPAt11oF+N91Qn+NxJt0yJ/nN7nFfTnYIiWChCWiNAjpgmMV
+         lhfWkscvzOYaHFDVlhw9do8omT79Q0bRoM6p4Wh0=
+Date:   Thu, 7 May 2020 14:00:46 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Ludovic Desroches <ludovic.desroches@microchip.com>
 Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: at_hdmac: Replace zero-length array with
+Subject: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
  flexible-array
-Message-ID: <20200507190038.GA15272@embeddedor>
+Message-ID: <20200507190046.GA15298@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,20 +93,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/at_hdmac_regs.h |    2 +-
+ drivers/dma/at_xdmac.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-index 397692e937b3..80fc2fe8c77e 100644
---- a/drivers/dma/at_hdmac_regs.h
-+++ b/drivers/dma/at_hdmac_regs.h
-@@ -331,7 +331,7 @@ struct at_dma {
- 	struct dma_pool		*dma_desc_pool;
- 	struct dma_pool		*memset_pool;
- 	/* AT THE END channels table */
--	struct at_dma_chan	chan[0];
-+	struct at_dma_chan	chan[];
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index bb0eaf38b594..fd92f048c491 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -212,7 +212,7 @@ struct at_xdmac {
+ 	struct clk		*clk;
+ 	u32			save_gim;
+ 	struct dma_pool		*at_xdmac_desc_pool;
+-	struct at_xdmac_chan	chan[0];
++	struct at_xdmac_chan	chan[];
  };
  
- #define	dma_readl(atdma, name) \
+ 
 
