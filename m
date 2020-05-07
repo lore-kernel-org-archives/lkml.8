@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24A3C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85CCC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C034B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D7B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PL3FBnz4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t2vdQIPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgEGOIj (ORCPT
+        id S1728176AbgEGOIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:08:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        Thu, 7 May 2020 10:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgEGOI3 (ORCPT
+        with ESMTP id S1728152AbgEGOIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:08:29 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB3DC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:28 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id q57so7297255qte.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:28 -0700 (PDT)
+        Thu, 7 May 2020 10:08:38 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E51C05BD0B
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:08:38 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id g6so7011283ybc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=A2CqCWbomYGlREhGlvIy2Wyy+nj5upT0ckyyzFHG6Ps=;
-        b=PL3FBnz4OOA6yzb+55sssITuWyhhXK8/iDtmURZAsKlGMrSA8upcA1OtUFeEGBQiER
-         BDN0joRB6PXCYxrS0J9zg08hUOcV13opx30b+HGs/oHICoaP9WwVByOePDN0G8bMmOOr
-         x5eR/F6kUcONDt1+BkKBKzTMqaDc0x2WEQbmsGBk2O0bF1PuwG1T1ckFLuDEL2cDzSRm
-         cEVZCpd4MN4Imcvo5o0ZCBRXPulR09oc1xE9zmhik3TXZ8D7q4pjZYdhGYjzSMIIHj1z
-         Ha2tRfxP9CKo92M9mROEebOFNhyhnrtMV74+9YTzm6i0w8OQ6W7smBTZdN68HIxNUGqd
-         VY5w==
+        bh=kaPuV4QeaPOgBS5KpMFoLQOvshqKxuzG67jCzUS9Y1Y=;
+        b=t2vdQIPvTuaw1GcoNMlIdPgAkxtEo+9rt91Cg8ynmpG7HRj0sNH+uXO+nsyQr302z1
+         /psxBlb4K9AhGUT8UfXLdXWjTrQYnxS3JgzmYGxCRti3kZubOn5DSU3gMHaFcCqiYnOW
+         Luhm0zXQcVY7M9bZlTgLDwOn1cKf85agkyjFmgT000/0HA8plWGcOmM2p4z1OvLO7UXM
+         zEq5/8CqGU7ImpXX9K1Jb4hCAl2X+hT5/5GE4dCXEBpGASUVhx83a/xO5ssuh3dLGDH4
+         yqBNUsWKsqN+auXqPJdXVAr6gCZWNybyTXIGzVaps33XJSyIt8qGR4kAzkUsj4D6FK/I
+         7N8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=A2CqCWbomYGlREhGlvIy2Wyy+nj5upT0ckyyzFHG6Ps=;
-        b=qwIGoijw9K+Lpy9yiX6zRAEa6ddfz6sZbDxCKnOh5pba55CKMlPfNrqX5HmKLs1Giq
-         bP9eCCgPrKKnQwVeq4m7w+UubOk9R/MjurAD8WHOFAwJDEe4UequhcaXDf52l2YkNZAH
-         ZEt3a87sdrvo8u+4mmG6G5QC1TbZ3hE0dltsVjvGNUQ5nOkoEUQn1ho+zMXiJoujBjql
-         ELMGas8dUsBgRgSy+f9S62AIfwU+Le0gvSiiQ+0m2wgYCpaY8rRlekpEx+aelrg6CD1g
-         6uRCzvTKsBv76K7Ajqpw7vxW/dwKiBQM36BHZp0BVsfUpVaE/Q95hFRmuuPHekpD4ptR
-         OeIA==
-X-Gm-Message-State: AGi0PuYC1qZYOCdli1D6B8dcTtX3T7Y5fZ0tmmjrDTwRA3NfUfl3TF1w
-        rKPnaW1xrAJ1aZYHkI5YOR8HUzz3dA45
-X-Google-Smtp-Source: APiQypIBfLjchnGbgpejIe7/sa8aDyyTZfrkSafjpmLT6hYdPcXCkCK0r3M9Ed4tSV1IZJCkYFgvQL6J3FbE
-X-Received: by 2002:a05:6214:8ec:: with SMTP id dr12mr2009360qvb.121.1588860507707;
- Thu, 07 May 2020 07:08:27 -0700 (PDT)
-Date:   Thu,  7 May 2020 07:07:58 -0700
+        bh=kaPuV4QeaPOgBS5KpMFoLQOvshqKxuzG67jCzUS9Y1Y=;
+        b=pAJUQB2Q04cAl1E0ZiaO+2XPaXU1IrJEym3Lvko3dMhQclnjoOa+siOhmpGLHLWcqU
+         UT6FTbiQfazKajkqWs9Qtjw+RVpuHSoAGxC+KNeMtfPOyckbHIPRg94trOxVkxeXfQNx
+         zr9MDEHQbr11lMf8p6ekanLYecKj6/LR+I5o40Q41RJ4s7GtAOO5zsLiynXTx/egpMZz
+         MkpWASrNbjbcMTLxfdv+MbMEevxD268Q0oPkt330Hitag3nToo3QrA+1x80i+UCWex3u
+         Lj1XS1D9TwEk/NfM1W0XSKx6TJAAobA+REgpli7Fm0762WM78I59CpaeXnJ6Wa2HYffX
+         MlSg==
+X-Gm-Message-State: AGi0PuZZXsT//zCftpHOfgOX5szx5IxRDxc85ayDM3bs//pnvFAT3n9y
+        P4/obPu/jbe+72OLZDHQwhhZG+ZTa57x
+X-Google-Smtp-Source: APiQypIj0TNxD8t6MORWi035rqjdD5V07jI6QDPkaYQHb6E8+t4cGs+uY73czbk+WmzTznhG2kkioDjdNb17
+X-Received: by 2002:a25:848d:: with SMTP id v13mr16679607ybk.493.1588860517380;
+ Thu, 07 May 2020 07:08:37 -0700 (PDT)
+Date:   Thu,  7 May 2020 07:08:03 -0700
 In-Reply-To: <20200507140819.126960-1-irogers@google.com>
-Message-Id: <20200507140819.126960-3-irogers@google.com>
+Message-Id: <20200507140819.126960-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20200507140819.126960-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [RFC PATCH v2 02/23] perf metrics: fix parse errors in cascade lake metrics
+Subject: [RFC PATCH v2 07/23] perf expr: debug lex if debugging yacc
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,56 +95,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove over escaping with \\.
-Remove extraneous if 1 if 0 == 1 else 0 else 0.
+Only effects parser debugging (disabled by default). Enables displaying
+'--accepting rule at line .. ("...").
 
-Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/expr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index 7fde0d2943cd..d25eebce34c9 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -328,31 +328,31 @@
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-+        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "DRAM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
-+        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "DRAM_Parallel_Reads"
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
--        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "MEM_PMM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Read_BW"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Write_BW"
-     },
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index aa631e37ad1e..8b4ce704a68d 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -45,6 +45,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 
+ #ifdef PARSER_DEBUG
+ 	expr_debug = 1;
++	expr_set_debug(1, scanner);
+ #endif
+ 
+ 	ret = expr_parse(val, ctx, scanner);
 -- 
 2.26.2.526.g744177e7f7-goog
 
