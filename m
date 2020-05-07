@@ -2,29 +2,29 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289F0C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1B5C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09BAF20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CBE2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEGHz7 (ORCPT
+        id S1726712AbgEGH4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:55:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52492 "EHLO huawei.com"
+        Thu, 7 May 2020 03:56:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43172 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725841AbgEGHzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:55:55 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 67FFC5C86ABFCE12BA9B;
-        Thu,  7 May 2020 15:55:53 +0800 (CST)
+        id S1726575AbgEGH4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:56:00 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 65D8F75FC4DD6324E1FD;
+        Thu,  7 May 2020 15:55:58 +0800 (CST)
 Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 15:55:44 +0800
+ 14.3.487.0; Thu, 7 May 2020 15:55:49 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
@@ -40,10 +40,12 @@ To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         linux-raid <linux-raid@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 00/10] clean up SECTOR related macros and sectors/pages conversions
-Date:   Thu, 7 May 2020 15:50:50 +0800
-Message-ID: <20200507075100.1779-1-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 06/10] mm/swap: use npage_to_sectors() and PAGE_SECTORS to clean up code
+Date:   Thu, 7 May 2020 15:50:56 +0800
+Message-ID: <20200507075100.1779-7-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20200507075100.1779-1-thunder.leizhen@huawei.com>
+References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -54,60 +56,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1 --> v2:
-As Matthew Wilcox's suggestion, add sectors_to_npage()/npage_to_sectors()
-helpers to eliminate SECTORS_PER_PAGE_SHIFT, because it's quite hard to read.
-In further, I also eliminated PAGE_SECTORS_SHIFT.
+1. Replace "<<= (PAGE_SHIFT - 9)" with "*= PAGE_SECTORS"
+2. Replace "<< (PAGE_SHIFT - 9)" with npage_to_sectors()
 
-I tried to eliminate all magic number "9" and "512", but it's too many, maybe
-no one want to review it, so I gave up. In the process of searching, I found
-the existing macro PAGE_SECTORS, it's equivalent to SECTORS_PER_PAGE. Because
-PAGE_SECTORS was defined in include/linux/device-mapper.h, and SECTORS_PER_PAGE
-was defined in drivers/block/zram/zram_drv.h, so I discarded SECTORS_PER_PAGE,
-althrough I prefer it so much.
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ mm/page_io.c  |  4 ++--
+ mm/swapfile.c | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-v1:
-When I studied the code of mm/swap, I found "1 << (PAGE_SHIFT - 9)" appears
-many times. So I try to clean up it.
-
-1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
-2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
-3. Replace "9" with SECTOR_SHIFT
-4. Replace "512" with SECTOR_SIZE
-
-Zhen Lei (10):
-  block: move PAGE_SECTORS definition into <linux/blkdev.h>
-  zram: abolish macro SECTORS_PER_PAGE
-  block: add sectors_to_npage()/npage_to_sectors() helpers
-  zram: abolish macro SECTORS_PER_PAGE_SHIFT
-  block: abolish macro PAGE_SECTORS_SHIFT
-  mm/swap: use npage_to_sectors() and PAGE_SECTORS to clean up code
-  block: use sectors_to_npage() and PAGE_SECTORS to clean up code
-  md: use sectors_to_npage() and npage_to_sectors() to clean up code
-  md: use existing definition RESYNC_SECTORS
-  md: use PAGE_SECTORS to clean up code
-
- block/blk-settings.c          |  6 +++---
- block/partitions/core.c       |  5 ++---
- drivers/block/brd.c           |  7 ++-----
- drivers/block/null_blk_main.c | 10 ++++------
- drivers/block/zram/zram_drv.c |  8 ++++----
- drivers/block/zram/zram_drv.h |  2 --
- drivers/md/bcache/util.h      |  2 --
- drivers/md/dm-kcopyd.c        |  2 +-
- drivers/md/dm-table.c         |  2 +-
- drivers/md/md-bitmap.c        | 16 ++++++++--------
- drivers/md/md.c               |  6 +++---
- drivers/md/raid1.c            | 10 +++++-----
- drivers/md/raid10.c           | 28 ++++++++++++++--------------
- drivers/md/raid5-cache.c      | 11 +++++------
- drivers/md/raid5.c            |  4 ++--
- include/linux/blkdev.h        |  7 +++++--
- include/linux/device-mapper.h |  1 -
- mm/page_io.c                  |  4 ++--
- mm/swapfile.c                 | 12 ++++++------
- 19 files changed, 67 insertions(+), 76 deletions(-)
-
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 76965be1d40e..23291a49ab91 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -38,7 +38,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 
+ 		bio->bi_iter.bi_sector = map_swap_page(page, &bdev);
+ 		bio_set_dev(bio, bdev);
+-		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
++		bio->bi_iter.bi_sector *= PAGE_SECTORS;
+ 		bio->bi_end_io = end_io;
+ 
+ 		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+@@ -266,7 +266,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+ 
+ static sector_t swap_page_sector(struct page *page)
+ {
+-	return (sector_t)__page_file_index(page) << (PAGE_SHIFT - 9);
++	return npage_to_sectors((sector_t)__page_file_index(page));
+ }
+ 
+ static inline void count_swpout_vm_event(struct page *page)
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 5871a2aa86a5..c8be92f972a4 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
+ 
+ 	/* Do not discard the swap header page! */
+ 	se = first_se(si);
+-	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
+-	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
++	start_block = npage_to_sectors(se->start_block + 1);
++	nr_blocks = npage_to_sectors((sector_t)se->nr_pages - 1);
+ 	if (nr_blocks) {
+ 		err = blkdev_issue_discard(si->bdev, start_block,
+ 				nr_blocks, GFP_KERNEL, 0);
+@@ -188,8 +188,8 @@ static int discard_swap(struct swap_info_struct *si)
+ 	}
+ 
+ 	for (se = next_se(se); se; se = next_se(se)) {
+-		start_block = se->start_block << (PAGE_SHIFT - 9);
+-		nr_blocks = (sector_t)se->nr_pages << (PAGE_SHIFT - 9);
++		start_block = npage_to_sectors(se->start_block);
++		nr_blocks = npage_to_sectors((sector_t)se->nr_pages);
+ 
+ 		err = blkdev_issue_discard(si->bdev, start_block,
+ 				nr_blocks, GFP_KERNEL, 0);
+@@ -240,8 +240,8 @@ static void discard_swap_cluster(struct swap_info_struct *si,
+ 		start_page += nr_blocks;
+ 		nr_pages -= nr_blocks;
+ 
+-		start_block <<= PAGE_SHIFT - 9;
+-		nr_blocks <<= PAGE_SHIFT - 9;
++		start_block *= PAGE_SECTORS;
++		nr_blocks *= PAGE_SECTORS;
+ 		if (blkdev_issue_discard(si->bdev, start_block,
+ 					nr_blocks, GFP_NOIO, 0))
+ 			break;
 -- 
 2.26.0.106.g9fadedd
 
