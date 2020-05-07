@@ -2,104 +2,193 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0EAC35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6E3C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C65208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B64208DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hhnnE6pM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGVfL (ORCPT
+        id S1726922AbgEGVf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:35:11 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:47851 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgEGVfL (ORCPT
+        Thu, 7 May 2020 17:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgEGVf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:35:11 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M2fDl-1jYidz2tHb-004D2T; Thu, 07 May 2020 23:34:40 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Steve Whitehouse <swhiteho@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        clang-built-linux@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] dlm: remove BUG() before panic()
-Date:   Thu,  7 May 2020 23:34:28 +0200
-Message-Id: <20200507213438.1886005-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Thu, 7 May 2020 17:35:27 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3B9C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:35:26 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t7so2613016plr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3EHfl+OZQ86xl3nnBfabGaWfnGOtgLn9bxyisBpB13s=;
+        b=hhnnE6pMuSjGxbdEhUqhrtz8mbWCLLN5LkkxK1NxLHSPp3O0WTkCLROvKUgNxSTHGa
+         0DbNWk3aI+/KjHfsrCRBpx2/15gnwwyBeCnPpvxSK7o+bxecMGa+GPZ3UrU4d9l8PS6b
+         8wkvPLbSVLmrTJtmMesDHAslZOhOFMWognir0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3EHfl+OZQ86xl3nnBfabGaWfnGOtgLn9bxyisBpB13s=;
+        b=DzDiWhj48ys6P9v0GMQgD2zATFcbgTbgAbjFASEJ1TlaYpLDe4F/FfkxSCFcA816aq
+         +iNdarSgcPHHN2opWrrg2BoroeZgoVGZC6u01CvULprzjdiqcjmA/CVOQ29XTlXgSZ0m
+         p0nPY9pZrVdVzUWV2J7VNRtu8llIw2TCKDThm6TlgdwlINv5QqSrgebPMvWU/eu5+4Ib
+         v+64Gdt9e01grKfifHSdNk5QvvD71VBwJRwEJNPkzNM7LoFVjQ/ebO+WmaEslOH0LPgN
+         VkslRu289IGuDGauQpEoQrVzubdREsQgN24g4lFHUhxRhqTjn17PEjcUKu7lXIiPJBfj
+         eCMw==
+X-Gm-Message-State: AGi0PuZFXk6FxLbvXG5lniKGm4AczMYEDvTuR5Qa1axybFhcdEDSP5mX
+        FP3gAEbG9WlMEncXgdwIouUwdg==
+X-Google-Smtp-Source: APiQypKQSS3uzlkYHq8gThdNX9odtEUYpe3SwGbt56mePxUb+nlwO2wwSe+J7lSKN9DYDNPgDmZloQ==
+X-Received: by 2002:a17:902:9042:: with SMTP id w2mr15140927plz.127.1588887326189;
+        Thu, 07 May 2020 14:35:26 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id i10sm5884860pfa.166.2020.05.07.14.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:35:25 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
+Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
+        linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
+        swboyd@chromium.org, jernej.skrabec@siol.net,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot Plug Detect
+Date:   Thu,  7 May 2020 14:34:54 -0700
+Message-Id: <20200507213500.241695-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MWsD4C2gbHQCzPSYpVZ0sRh+EhEaHN4oMDZVkk1sis4OPLEClxS
- 9xPRJqaQrjFl8IZ2Wv+Imy6LKHFafuWPi7xy8fl6ubV2+zFiAgJ6IxDiVxaK4716fxwdvqh
- M5rEYTS93N64nWAN6gDJVXmzdZYNsNmMvQlR/FTzVXrvI8h/2iIzH/7IgDXLXgUGItn6TXu
- GD9+FlIaYKZw9eXdw7bPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zlN+6/l7oGM=:Dtq4zd5iUWJg9Z78qsfioZ
- 8RK3MHA0rTEYRPIyN7utMpOZAgFAhbZRr2wZmJ6rZD7wYBQeVP6lJjJYNP0Y4pA8ziyluG+OA
- 0emP49TXl7VaRidDwOBf3AIz1rvtgUEUmlqDcx7VPKsC49CK2ZxZq9BQYMIN9lKnSIPCe72y6
- LamOjF/74tCb2buLKP/rHpDHeatvFoo9xLhujqR7Nf2OyzkMsOdKLv/UfsDOTQGPuJJdVL+Bb
- punQYzmOEevxUCFpxvXnGSnKpqP6L8Z4S5riXlgoNOPgH/EegygOfE2jwHXlT7K2Noa+evqJ/
- TQn71PQJM5umwRSI+Df7ztizmEMrmNpbfSAQEjIxhNq42CeSWmWA1VI9uXMnguoveazaJ4aYT
- qFonyxDdXAdZkeYS3j3WLQZbUjNf9Pr71lF4fRkTLUvBM/qisoljjIa5TCb6hYEp1zjy/93rZ
- feBlVofAdNBshcUd3Z5/DLhZ0xJ8T3Pn+e2LBbv9xvv0aNTOx/7OVp/SFkosOQw12GOvCaN59
- 8Lo6dSS+pK2H61RZulEtmOm6AItFAZKtPWi0OowNBIm13PffuCKmNhiD0aZt9Urdz7oPmRmAy
- t2PubAtayKfOzzrQjMLDVkZ9PzcMX1CohkcyKWJYuZ81BL3ajX5rnaIjlXyOuYo0IU7MERGhl
- dE+XXVaHj2cVQCMdASZIfIrWy7xM49XBBn4igMM96xL8ai9SJ0Rn1yS055OHKCBzc2AiP8nsG
- krVjtRPYFE/MBMvZeMC+tBjymko3ZImGZv/Rrn8kGdIuJUFFzEe8UpdekyHRZpbgZURXtsNKm
- fkZkKttRwrfOHBxEfx593W9WShzlz+bMYciYGVzrKlPqxjMlI8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building a kernel with clang sometimes fails with an objtool error in dlm:
 
-fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
+As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
+Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
+kinda useless, at least for embedded DisplayPort (eDP).  However,
+despite the fact that the actual HPD pin on the bridge is mostly
+useless for eDP, the concept of HPD for eDP still makes sense.  It
+allows us to optimize out a hardcoded delay that many panels need if
+HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
+events to measure timing from and we have to assume the worst case if
+we can't actually read HPD.
 
-The problem is that BUG() never returns and the compiler knows
-that anything after it is unreachable, however the panic still
-emits some code that does not get fully eliminated.
+One way to use HPD for eDP without using the mostly useless HPD pin on
+ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
+like to a GPIO.  This works great because eDP panels aren't physically
+hotplugged.  That means the debouncing logic that caused us problems
+wasn't really needed and a raw GPIO works great.
 
-Having both BUG() and panic() is really pointless as the BUG()
-kills the current process and the subsequent panic() never hits.
-In most cases, we probably don't really want either and should
-replace the DLM_ASSERT() statements with WARN_ON(), as has
-been done for some of them.
+As per the above, a smart board designer would realize the value of
+HPD and choose to route it to a GPIO somewhere on the board to avoid
+the silly sn65dsi86 debouncing.  While said "smart designer" could
+theoretically route HPD anywhere on the board, a really smart designer
+would realize that there are several GPIOs on the bridge itself that
+are nearly useless for anything but this purpose and route HPD to one
+of those.
 
-Remove the BUG() here so the user at least sees the panic message
-and we can reliably build randconfig kernels.
+This series of patches is intended to allow the scenario described
+above.
 
-Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/dlm/dlm_internal.h | 1 -
- 1 file changed, 1 deletion(-)
+This patch has been tested on a board that is not yet mainline.  On
+the hardware I have:
+- Panel spec says HPD could take up to 200 ms to come up, so without
+  HPD hooked up we need to delay 200 ms.
+- On my board the panel is powered by the same rail as the
+  touchscreen.  By chance of probe order the touchscreen comes up
+  first.  This means by the time we check HPD in ti_sn_bridge_enable()
+  it's already up.  Thus we can use the panel on 200 ms earlier.
+- If I measure HPD on this pane it comes up ~56 ms after the panel is
+  powered.  This means I can save 144 ms of delay.
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 416d9de35679..4311d01b02a8 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -97,7 +97,6 @@ do { \
-                __LINE__, __FILE__, #x, jiffies); \
-     {do} \
-     printk("\n"); \
--    BUG(); \
-     panic("DLM:  Record message above and reboot.\n"); \
-   } \
- }
+Side effects (though not main goals) of this series are:
+- ti-sn65dsi86 GPIOs are now exported in Linux.
+- ti-sn65dsi86 bindings are converted to yaml.
+- Common panel bindings now have "hpd-gpios" listed.
+- The simple-panel driver in Linux can delay in prepare based on
+  "hpd-gpios"
+- ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
+  if HPD isn't hooked up.
+
+Changes in v5:
+- Use of_xlate so that numbers in dts start at 1, not 0.
+- Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
+
+Changes in v4:
+- Don't include gpio.h
+- Use gpiochip_get_data() instead of container_of() to get data.
+- GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
+- Use Linus W's favorite syntax to read a bit from a bitfield.
+- Define and use SN_GPIO_MUX_MASK.
+- Add a comment about why we use a bitmap for gchip_output.
+- Tacked on "or is otherwise unusable." to description.
+
+Changes in v3:
+- Becaue => Because
+- Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
+- More comments about how powering off affects us (get_dir, dir_input).
+- Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
+- Use a bitmap rather than rolling my own.
+- Remind how gpio_get_optional() works in the commit message.
+- useful implement => useful to implement
+
+Changes in v2:
+- ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
+- ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
+- ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
+- specification => specifier.
+- power up => power.
+- Added back missing suspend-gpios.
+- data-lanes and lane-polarities are are the right place now.
+- endpoints don't need to be patternProperties.
+- Specified more details for data-lanes and lane-polarities.
+- Added old example back in, fixing bugs in it.
+- Example i2c bus is just called "i2c", not "i2c1" now.
+- ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
+- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
+
+Douglas Anderson (6):
+  drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+  dt-bindings: display: Add hpd-gpios to panel-common bindings
+  drm/panel-simple: Support hpd-gpios for delaying prepare()
+  dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
+  dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
+  arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
+
+ .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+ .../bindings/display/bridge/ti,sn65dsi86.yaml | 293 ++++++++++++++++++
+ .../bindings/display/panel/panel-common.yaml  |   6 +
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   2 +
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         | 214 +++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c          |  53 ++++
+ 6 files changed, 568 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+
 -- 
-2.26.0
+2.26.2.645.ge9eca65c58-goog
 
