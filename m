@@ -2,76 +2,142 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA82C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E37FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B179A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F062720CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588849997;
+	bh=JpJwu3HzMRZiNarifyoKzt5DSF15LyA9t4q0RBYx/+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y2lcMdnAJ02Oek+DUk6NqUjUwnbAyqcP45hVZYUjOyK8EPCpywt9FbJ+gvvm2GVLi
+	 rVsiPKHe+UMH6ubhBiPD+X9bvj6CoYyKZqRiqT4QpD9bKNhR+qBeo0bzwM8KVpYS/a
+	 +jBE5/stvEyf7dZ/gCMx4eun6AoeBYlM7Obw34SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgEGLM7 (ORCPT
+        id S1726625AbgEGLNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:12:59 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3526 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgEGLM6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:12:58 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15eb3ecfbafc-3ed47; Thu, 07 May 2020 19:11:55 +0800 (CST)
-X-RM-TRANSID: 2ee15eb3ecfbafc-3ed47
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.0.146.193])
-        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95eb3ecf8d80-33832;
-        Thu, 07 May 2020 19:11:55 +0800 (CST)
-X-RM-TRANSID: 2ee95eb3ecf8d80-33832
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     gregkh@linuxfoundation.org, allison@lohutok.net,
-        rfontana@redhat.com, kstewart@linuxfoundation.org,
-        mpe@ellerman.id.au, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] dca: Use PTR_ERR_OR_ZERO() to simplify code
-Date:   Thu,  7 May 2020 19:12:24 +0800
-Message-Id: <20200507111224.4176-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 7 May 2020 07:13:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgEGLNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:13:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF74E208E4;
+        Thu,  7 May 2020 11:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588849994;
+        bh=JpJwu3HzMRZiNarifyoKzt5DSF15LyA9t4q0RBYx/+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U0ZIgjbxbrUQp22xHRVXhrRyXYovhO9OcSbJLRCt06RzSv/mH0Mi/xwKnQhuqUAE5
+         bq6FwoI59EsiNC3tKiUsGN+5q7sqMFLPCdtlFoH6z0/XtKE9yLiprcbT//sCoJDkbK
+         emJbjo8/AvGo/ULzVUqsZa9FJLI8MDche1ilHUnM=
+Date:   Thu, 7 May 2020 13:13:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vince Bridgers <vbridger@opensource.altera.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Vitaly Bordug <vbordug@ru.mvista.com>,
+        Claudiu Manoil <claudiu.manoil@freescale.com>,
+        Li Yang <leoli@freescale.com>,
+        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <blogic@openwrt.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Mugunthan V N <mugunthanvnm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        Netdev <netdev@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
+ phydev leaks
+Message-ID: <20200507111312.GA1497799@kroah.com>
+References: <1480357509-28074-1-git-send-email-johan@kernel.org>
+ <1480357509-28074-12-git-send-email-johan@kernel.org>
+ <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
+ <20200507064412.GL2042@localhost>
+ <20200507064734.GA798308@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507064734.GA798308@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function PTR_ERR_OR_ZERO() contains the check of
-IS_ERR() and the return of PTR_ERR() or zero.
+On Thu, May 07, 2020 at 08:47:34AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 07, 2020 at 08:44:12AM +0200, Johan Hovold wrote:
+> > On Thu, May 07, 2020 at 12:27:53AM +0530, Naresh Kamboju wrote:
+> > > On Tue, 29 Nov 2016 at 00:00, Johan Hovold <johan@kernel.org> wrote:
+> > > >
+> > > > Make sure to deregister and free any fixed-link PHY registered using
+> > > > of_phy_register_fixed_link() on probe errors and on driver unbind.
+> > > >
+> > > > Fixes: 83895bedeee6 ("net: mvneta: add support for fixed links")
+> > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > ---
+> > > >  drivers/net/ethernet/marvell/mvneta.c | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
+> > > >
+> > > > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> > > > index 0c0a45af950f..707bc4680b9b 100644
+> > > > --- a/drivers/net/ethernet/marvell/mvneta.c
+> > > > +++ b/drivers/net/ethernet/marvell/mvneta.c
+> > > > @@ -4191,6 +4191,8 @@ static int mvneta_probe(struct platform_device *pdev)
+> > > >         clk_disable_unprepare(pp->clk);
+> > > >  err_put_phy_node:
+> > > >         of_node_put(phy_node);
+> > > > +       if (of_phy_is_fixed_link(dn))
+> > > > +               of_phy_deregister_fixed_link(dn);
+> > > 
+> > > While building kernel Image for arm architecture on stable-rc 4.4 branch
+> > > the following build error found.
+> > > 
+> > > drivers/net/ethernet/marvell/mvneta.c:3442:3: error: implicit
+> > > declaration of function 'of_phy_deregister_fixed_link'; did you mean
+> > > 'of_phy_register_fixed_link'? [-Werror=implicit-function-declaration]
+> > > |    of_phy_deregister_fixed_link(dn);
+> > > |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > |    of_phy_register_fixed_link
+> > > 
+> > > ref:
+> > > https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/541374729
+> > 
+> > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
+> > PHYs") needs to be backported as well for these.
+> > 
+> > Original series can be found here:
+> > 
+> > 	https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
+> 
+> Ah, thanks for that, I thought I dropped all of the ones that caused
+> build errors, but missed the above one.  I'll go take the whole series
+> instead.
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/dca/dca-sysfs.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This should now all be fixed up, thanks.
 
-diff --git a/drivers/dca/dca-sysfs.c b/drivers/dca/dca-sysfs.c
-index eb25627b0..21ebd0af2 100644
---- a/drivers/dca/dca-sysfs.c
-+++ b/drivers/dca/dca-sysfs.c
-@@ -24,9 +24,7 @@ int dca_sysfs_add_req(struct dca_provider *dca, struct device *dev, int slot)
- 
- 	cd = device_create(dca_class, dca->cd, MKDEV(0, slot + 1), NULL,
- 			   "requester%d", req_count++);
--	if (IS_ERR(cd))
--		return PTR_ERR(cd);
--	return 0;
-+	return PTR_ERR_OR_ZERO(cd);
- }
- 
- void dca_sysfs_remove_req(struct dca_provider *dca, int slot)
--- 
-2.20.1.windows.1
-
-
-
+greg k-h
