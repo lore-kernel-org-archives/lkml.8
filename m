@@ -2,241 +2,113 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DBCC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D582DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6615E20725
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CD820753
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 05:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgEGFDy (ORCPT
+        id S1725939AbgEGFMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 01:03:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:13542 "EHLO mga04.intel.com"
+        Thu, 7 May 2020 01:12:18 -0400
+Received: from verein.lst.de ([213.95.11.211]:44501 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgEGFDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 01:03:54 -0400
-IronPort-SDR: UUapGBflz0SZkX0BBdYf3kdtyl3BWNM3A9IjAilTQrS0o5UWLu1ztEsOytvm2wd749atibUwnN
- SslPc0G7qUsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 22:03:53 -0700
-IronPort-SDR: JDMPi4J5tTFEgCNjxL2pFzfCKgxlsdEK9g3fU0/dEYdJhb/1fsWrC2nTteztaho1kthciLSQ/b
- caVZpJiSAdcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
-   d="scan'208";a="249991765"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 22:03:52 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jWYhK-000IUt-LP; Thu, 07 May 2020 13:03:50 +0800
-Date:   Thu, 07 May 2020 13:03:36 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:kcsan-dev] BUILD SUCCESS
- 50a19ad4b1ec531eb550183cb5d4ab9f25a56bf8
-Message-ID: <5eb396a8.2a93NZjuG/kFptfv%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725783AbgEGFMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 01:12:17 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 990EF68B05; Thu,  7 May 2020 07:12:13 +0200 (CEST)
+Date:   Thu, 7 May 2020 07:12:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/15] x86: use non-set_fs based maccess routines
+Message-ID: <20200507051213.GB4501@lst.de>
+References: <20200506062223.30032-1-hch@lst.de> <20200506062223.30032-16-hch@lst.de> <CAHk-=wi6E5z_aKr9NX+QcEJqJvSyrDbO3ypPugxstcPV5EPSMQ@mail.gmail.com> <20200506181543.GA7873@lst.de> <CAHk-=wghKpGdTmD4EDfwX2uyppwxksU+nFyS1B--kbopcQAgwg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wghKpGdTmD4EDfwX2uyppwxksU+nFyS1B--kbopcQAgwg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  kcsan-dev
-branch HEAD: 50a19ad4b1ec531eb550183cb5d4ab9f25a56bf8  objtool, kcsan: Add kcsan_disable_current() and kcsan_enable_current_nowarn()
+On Wed, May 06, 2020 at 12:01:32PM -0700, Linus Torvalds wrote:
+> Oh, absolutely. I did *NOT* mean that you'd use "unsafe_get_user()" as
+> the actual interface. I just meant that as an implementation detail on
+> x86, using "unsafe_get_user()" instead of "__get_user_size()"
+> internally both simplifies the implementation, and means that it
+> doesn't clash horribly with my local changes.
 
-elapsed time: 483m
+I had a version that just wrapped them, but somehow wasn't able to
+make it work due to all the side effects vs macros issues.  Maybe I
+need to try again, the current version seemed like a nice way out
+as it avoided a lot of the silly casting.
 
-configs tested: 174
-configs skipped: 0
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Btw, that brings up another issue: so that people can't mis-use those
+> kernel accessors and use them for user addresses, they probably should
+> actually do something like
+> 
+>         if ((long)addr >= 0)
+>                 goto error_label;
+> 
+> on x86. IOW, have the "strict" kernel pointer behavior.
+> 
+> Otherwise somebody will start using them for user pointers, and it
+> will happen to work on old x86 without CLAC/STAC support.
+> 
+> Of course, maybe CLAC/STAC is so common these days (at least with
+> developers) that we don't have to worry about it.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-ia64                             allyesconfig
-i386                              allnoconfig
-s390                             allmodconfig
-csky                             allyesconfig
-mips                             allyesconfig
-riscv                               defconfig
-openrisc                            defconfig
-powerpc                             defconfig
-h8300                            allmodconfig
-ia64                             alldefconfig
-xtensa                              defconfig
-openrisc                         allyesconfig
-um                               allmodconfig
-nds32                               defconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                       allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          alldefconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-m68k                 randconfig-a001-20200506
-mips                 randconfig-a001-20200506
-nds32                randconfig-a001-20200506
-parisc               randconfig-a001-20200506
-alpha                randconfig-a001-20200506
-riscv                randconfig-a001-20200506
-m68k                 randconfig-a001-20200507
-mips                 randconfig-a001-20200507
-nds32                randconfig-a001-20200507
-parisc               randconfig-a001-20200507
-alpha                randconfig-a001-20200507
-riscv                randconfig-a001-20200507
-h8300                randconfig-a001-20200506
-nios2                randconfig-a001-20200506
-microblaze           randconfig-a001-20200506
-c6x                  randconfig-a001-20200506
-sparc64              randconfig-a001-20200506
-h8300                randconfig-a001-20200507
-nios2                randconfig-a001-20200507
-microblaze           randconfig-a001-20200507
-c6x                  randconfig-a001-20200507
-sparc64              randconfig-a001-20200507
-s390                 randconfig-a001-20200506
-xtensa               randconfig-a001-20200506
-sh                   randconfig-a001-20200506
-openrisc             randconfig-a001-20200506
-csky                 randconfig-a001-20200506
-xtensa               randconfig-a001-20200507
-sh                   randconfig-a001-20200507
-openrisc             randconfig-a001-20200507
-csky                 randconfig-a001-20200507
-i386                 randconfig-b003-20200506
-i386                 randconfig-b001-20200506
-x86_64               randconfig-b001-20200506
-x86_64               randconfig-b003-20200506
-i386                 randconfig-b002-20200506
-x86_64               randconfig-c002-20200507
-x86_64               randconfig-c001-20200507
-i386                 randconfig-c002-20200507
-i386                 randconfig-c003-20200507
-x86_64               randconfig-c003-20200507
-i386                 randconfig-c001-20200507
-x86_64               randconfig-d001-20200507
-i386                 randconfig-d003-20200507
-i386                 randconfig-d001-20200507
-x86_64               randconfig-d003-20200507
-x86_64               randconfig-d002-20200507
-i386                 randconfig-d002-20200507
-i386                 randconfig-e003-20200506
-x86_64               randconfig-e003-20200506
-x86_64               randconfig-e001-20200506
-i386                 randconfig-e002-20200506
-i386                 randconfig-e001-20200506
-x86_64               randconfig-a003-20200506
-x86_64               randconfig-a001-20200506
-x86_64               randconfig-a002-20200506
-i386                 randconfig-a001-20200506
-i386                 randconfig-a002-20200506
-i386                 randconfig-a003-20200506
-i386                 randconfig-f003-20200507
-x86_64               randconfig-f002-20200507
-i386                 randconfig-f001-20200507
-i386                 randconfig-f002-20200507
-x86_64               randconfig-g003-20200506
-i386                 randconfig-g003-20200506
-i386                 randconfig-g002-20200506
-x86_64               randconfig-g001-20200506
-i386                 randconfig-g001-20200506
-x86_64               randconfig-g002-20200506
-i386                 randconfig-h002-20200506
-i386                 randconfig-h001-20200506
-i386                 randconfig-h003-20200506
-x86_64               randconfig-h002-20200506
-x86_64               randconfig-h003-20200506
-x86_64               randconfig-h001-20200506
-x86_64               randconfig-a002-20200507
-i386                 randconfig-a001-20200507
-i386                 randconfig-a002-20200507
-i386                 randconfig-a003-20200507
-ia64                 randconfig-a001-20200506
-arm64                randconfig-a001-20200506
-arc                  randconfig-a001-20200506
-powerpc              randconfig-a001-20200506
-arm                  randconfig-a001-20200506
-sparc                randconfig-a001-20200506
-ia64                 randconfig-a001-20200507
-arm64                randconfig-a001-20200507
-arc                  randconfig-a001-20200507
-arm                  randconfig-a001-20200507
-sparc                randconfig-a001-20200507
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             alldefconfig
-s390                                defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                             i386_defconfig
-um                               allyesconfig
-um                                  defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+The actual public routines (probe_kernel_read and co) get these
+checks through probe_kernel_read_allowed, which is implemented by
+the x86 code.  Doing this for every 1-8 byte access might be a little
+slow, though.  Do you really fear drivers starting to use the low-level
+helper?  Maybe we need to move those into a different header than
+<asm/uaccess.h> that makes it more clear that they are internal?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> But here you see what it is, if you want to. __get_user_size()
+> technically still exists, but it has the "target branch" semantics in
+> here, so your patch clashes badly with it.
+
+The target branch semantics actually are what I want, that is how the
+maccess code is structured.  This is the diff I'd need for the calling
+conventions in your bundle:
+
+
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 765e18417b3ba..d1c8aacedade1 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -526,14 +526,8 @@ do {									\
+ #define HAVE_ARCH_PROBE_KERNEL
+ 
+ #define arch_kernel_read(dst, src, type, err_label)			\
+-do {									\
+-        int __kr_err;							\
+-									\
+ 	__get_user_size(*((type *)dst), (__force type __user *)src,	\
+-			sizeof(type), __kr_err);			\
+-        if (unlikely(__kr_err))						\
+-		goto err_label;						\
+-} while (0)
++			sizeof(type), err_label);			\
+ 
+ #define arch_kernel_write(dst, src, type, err_label)			\
+ 	__put_user_size(*((type *)(src)), (__force type __user *)(dst),	\
