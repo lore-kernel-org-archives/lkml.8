@@ -2,114 +2,202 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57270C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52040C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404F8205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28428205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khDXSpGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgEGOGA (ORCPT
+        id S1726771AbgEGOGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:06:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59853 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgEGOF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:05:59 -0400
-IronPort-SDR: RP/Y2f1PV6Emv49xb6l2YoaXl7/QebIatPptIWObMuuctY/UK0QSHCdI1hudmEjixDfd464bDX
- /sPvo1RSme8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 07:05:58 -0700
-IronPort-SDR: 5tCBvfLrV57N2TTqBGhMqkkL/5QL+bUuW+LU44NCJSYKO4wgf/ixNS2eiWonlITIrNCWcGxFft
- bqNf61n2K5pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
-   d="scan'208";a="339361341"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga001.jf.intel.com with ESMTP; 07 May 2020 07:05:55 -0700
-Subject: [PATCH] mmc: block: Fix request completion in the CQE timeout path
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Sarthak Garg <sartgarg@codeaurora.org>, stable@vger.kernel.org,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-References: <1588775643-18037-1-git-send-email-vbadigan@codeaurora.org>
- <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
- <b4a01f2c-479a-2a23-58b7-64f16cbc17a2@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <66747f4c-e61f-509f-a3cc-7e3499a844e4@intel.com>
-Date:   Thu, 7 May 2020 17:06:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 10:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgEGOGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:06:43 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A048CC05BD43;
+        Thu,  7 May 2020 07:06:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so6994561wmh.0;
+        Thu, 07 May 2020 07:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+aQ+iWJtTlzvsD3O2ITCsYtNNFRLe3AecxY3imabsd8=;
+        b=khDXSpGwapNMmlhylLz/6Mk+CnEra5lCL0OPUi5q+Cnsa2lM8MXNpd1HZmI8dFLYaG
+         tcoQ/F+JUev7CrL6JmDD59WWH+9bI4xjyVlHnJTicHX4gkS/n6UmmE/w30RUVEkh+ldr
+         Oj1VBZjIapPdI1MVHLg0zxJAsHPrv+KcQdkVgs59fvqvvCd7jmH2cHVYV3VNGOxE0REO
+         NA3sk0pReUia0BZCdo8JLIemI6UoHAdkPJHE3E5SkFRVygRsdL2xdrqNUbQusyAjH7iB
+         N7mu3/YcHm6ae+ttcfv2c2ZH6AY/YaBywSUHBZrCfWRwf5e4Agv4DCLtViaPIXGX33X9
+         Uiog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+aQ+iWJtTlzvsD3O2ITCsYtNNFRLe3AecxY3imabsd8=;
+        b=tvSt6gzj+SPs2kME9TpUQwPwyKTVG896A+alTD1wK+3QLFbPx6w3UgN6QpJdcsIo4a
+         XiRDARq4UogPiP0rRwTjz+KbJmNr1w3HY8Iu6zOHhSNhEnl/K2q8dvNYX5JTwQKyGMA1
+         fRSTNjCHKMrIt57eZFJX5/bsMYkcUw5OzyskBQNRlCZEMAsSPhJT4BXU1yKxvAKUvLMa
+         X2Tuy2hbQvF2agQPWqDfSAbfgp1uHkNTHPL08NZOvMSlhI7JAbet63OM7aPtKCfwnben
+         v9MaUqxvDPZM3DrORbzaVGJCN6CKTEEjL4R/OHl+limG6b0e7f87gQxucJiryQ7T4ggb
+         H+Jw==
+X-Gm-Message-State: AGi0PuZLnDYyILcRcGZaPH6SDHgboBx8KONcQkKUUgI2a1DqJSdmcTXZ
+        LsH+dJpLlL3xY5aAWOuli1yMIS1qyKLIr1aSNKUFHATZefg=
+X-Google-Smtp-Source: APiQypKh6M97mrJpLTUKpwAL4sa3NeR7OHWBIyL14CIeMc/Pa4lvzDLFMKSILqEgHY89bJSU4fGGd1iEywdfPQ3wbco=
+X-Received: by 2002:a1c:7f91:: with SMTP id a139mr10008195wmd.164.1588860401319;
+ Thu, 07 May 2020 07:06:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b4a01f2c-479a-2a23-58b7-64f16cbc17a2@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200507140139.17083-1-david@redhat.com> <20200507140139.17083-12-david@redhat.com>
+In-Reply-To: <20200507140139.17083-12-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 7 May 2020 16:06:30 +0200
+Message-ID: <CAM9Jb+jXy6Adhg=GstpMZN3roo1uQuikj2hpsxGj6-JUQU3oGA@mail.gmail.com>
+Subject: Re: [PATCH v4 11/15] virtio-mem: Add parent resource for all added
+ "System RAM"
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, it should be noted that the CQE timeout (60 seconds) is substantial
-so a CQE request that times out is really stuck, and the race between
-timeout and completion is extremely unlikely. Nevertheless this patch
-fixes an issue with it.
+> Let's add a parent resource, named after the virtio device (inspired by
+> drivers/dax/kmem.c). This allows user space to identify which memory
+> belongs to which virtio-mem device.
+>
+> With this change and two virtio-mem devices:
+>         :/# cat /proc/iomem
+>         00000000-00000fff : Reserved
+>         00001000-0009fbff : System RAM
+>         [...]
+>         140000000-333ffffff : virtio0
+>           140000000-147ffffff : System RAM
+>           148000000-14fffffff : System RAM
+>           150000000-157ffffff : System RAM
+>         [...]
+>         334000000-3033ffffff : virtio1
+>           338000000-33fffffff : System RAM
+>           340000000-347ffffff : System RAM
+>           348000000-34fffffff : System RAM
+>         [...]
+>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/virtio/virtio_mem.c | 52 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index eb4c16d634e0..80cdb9e6b3c4 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -99,6 +99,9 @@ struct virtio_mem {
+>         /* Id of the next memory bock to prepare when needed. */
+>         unsigned long next_mb_id;
+>
+> +       /* The parent resource for all memory added via this device. */
+> +       struct resource *parent_resource;
+> +
+>         /* Summary of all memory block states. */
+>         unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
+>  #define VIRTIO_MEM_NB_OFFLINE_THRESHOLD                10
+> @@ -1741,6 +1744,44 @@ static int virtio_mem_init(struct virtio_mem *vm)
+>         return 0;
+>  }
+>
+> +static int virtio_mem_create_resource(struct virtio_mem *vm)
+> +{
+> +       /*
+> +        * When force-unloading the driver and removing the device, we
+> +        * could have a garbage pointer. Duplicate the string.
+> +        */
+> +       const char *name = kstrdup(dev_name(&vm->vdev->dev), GFP_KERNEL);
+> +
+> +       if (!name)
+> +               return -ENOMEM;
+> +
+> +       vm->parent_resource = __request_mem_region(vm->addr, vm->region_size,
+> +                                                  name, IORESOURCE_SYSTEM_RAM);
+> +       if (!vm->parent_resource) {
+> +               kfree(name);
+> +               dev_warn(&vm->vdev->dev, "could not reserve device region\n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       /* The memory is not actually busy - make add_memory() work. */
+> +       vm->parent_resource->flags &= ~IORESOURCE_BUSY;
+> +       return 0;
+> +}
+> +
+> +static void virtio_mem_delete_resource(struct virtio_mem *vm)
+> +{
+> +       const char *name;
+> +
+> +       if (!vm->parent_resource)
+> +               return;
+> +
+> +       name = vm->parent_resource->name;
+> +       release_resource(vm->parent_resource);
+> +       kfree(vm->parent_resource);
+> +       kfree(name);
+> +       vm->parent_resource = NULL;
+> +}
+> +
+>  static int virtio_mem_probe(struct virtio_device *vdev)
+>  {
+>         struct virtio_mem *vm;
+> @@ -1770,11 +1811,16 @@ static int virtio_mem_probe(struct virtio_device *vdev)
+>         if (rc)
+>                 goto out_del_vq;
+>
+> +       /* create the parent resource for all memory */
+> +       rc = virtio_mem_create_resource(vm);
+> +       if (rc)
+> +               goto out_del_vq;
+> +
+>         /* register callbacks */
+>         vm->memory_notifier.notifier_call = virtio_mem_memory_notifier_cb;
+>         rc = register_memory_notifier(&vm->memory_notifier);
+>         if (rc)
+> -               goto out_del_vq;
+> +               goto out_del_resource;
+>         rc = register_virtio_mem_device(vm);
+>         if (rc)
+>                 goto out_unreg_mem;
+> @@ -1788,6 +1834,8 @@ static int virtio_mem_probe(struct virtio_device *vdev)
+>         return 0;
+>  out_unreg_mem:
+>         unregister_memory_notifier(&vm->memory_notifier);
+> +out_del_resource:
+> +       virtio_mem_delete_resource(vm);
+>  out_del_vq:
+>         vdev->config->del_vqs(vdev);
+>  out_free_vm:
+> @@ -1848,6 +1896,8 @@ static void virtio_mem_remove(struct virtio_device *vdev)
+>             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
+>             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
+>                 dev_warn(&vdev->dev, "device still has system memory added\n");
+> +       else
+> +               virtio_mem_delete_resource(vm);
+>
+>         /* remove all tracking data - no locking needed */
+>         vfree(vm->mb_state);
+> --
 
-Commit ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-preserved the existing functionality, to complete the request.
-However that had only been necessary because the block layer
-timeout handler had been marking the request to prevent it from being
-completed normally. That restriction was removed at the same time, the
-result being that a request that has gone will have been completed anyway.
-That is, the completion in the timeout handler became unnecessary.
-
-At the time, the unnecessary completion was harmless because the block
-layer would ignore it, although that changed in kernel v5.0.
-
-Note for stable, this patch will not apply cleanly without patch "mmc:
-core: Fix recursive locking issue in CQE recovery path"
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-Cc: stable@vger.kernel.org
----
-
-
-This is the patch I alluded to when replying to "mmc: core: Fix recursive
-locking issue in CQE recovery path"
-
-
- drivers/mmc/core/queue.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 72bef39d7011..10ea67892b5f 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -110,8 +110,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct
-request *req)
- 				mmc_cqe_recovery_notifier(mrq);
- 			return BLK_EH_RESET_TIMER;
- 		}
--		/* No timeout (XXX: huh? comment doesn't make much sense) */
--		blk_mq_complete_request(req);
-+		/* The request has gone already */
- 		return BLK_EH_DONE;
- 	default:
- 		/* Timeout is handled by mmc core */
--- 
-2.17.1
-
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
