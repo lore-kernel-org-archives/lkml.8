@@ -2,115 +2,307 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8D0C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9C2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6EF8215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8464C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588875781;
-	bh=7Jk0frUU8pj4R+QZ01+4CPwtyxDQgz9dP3pjH08JnUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FVv66LuBYQPEGr8L5X2pOP2GM+G+kiDfgmDXT8BfLivytC7xbYksDNvPx31hUuMbC
-	 D0oJpxQSbl9r8qCfXBODAB6FCRbxuiGRwr/nQb8aBRCrYBeFmn8ZO0TKlWQVNKoqre
-	 brizDQWsTEFvtvMbZggaDlaoB9rK99vG/3YNBSIY=
+	s=default; t=1588875822;
+	bh=fCjeaBeAoOVJ6UvxDacRtC+jF+ARaVU2hjSVm4av3To=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=gOnsIoN+gW4FhT0qhEp0RuIEbG9DuDxpoQlQanQJcxpPrm7vM/TBmP70cKwPlYCSI
+	 0etkSzERNHLSV7+pCqNXiSadLO5JAcY1g2Rqh+JLt1eRLxpnZZfSqYzZQO+eM0xohq
+	 Mvm4VrOoPt39kjLNsyTVbNTinbwzmjD/lL+QXCIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgEGSXB (ORCPT
+        id S1728341AbgEGSXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:23:01 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35144 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgEGSXA (ORCPT
+        Thu, 7 May 2020 14:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726518AbgEGSXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:23:00 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ms17so2997470pjb.0;
-        Thu, 07 May 2020 11:22:59 -0700 (PDT)
+        Thu, 7 May 2020 14:23:41 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FDCC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:23:41 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id f3so1983561ioj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=ipgG7bVxBHO6i2KUwtORX/P7bJ96Jy9myM8jttxH8h0=;
+        b=Iew6+vU5zbhaRcytxF7/yg0gXVBJ/raP7Af1w9QPnwPVsaA3ELnU25v5gvStd3YEWv
+         ipZGP/AtTFBnxhtc2sHJZA7TF8OzkNM0E4TChWeABb2CAbTZNnQDwmAVUuC7MAHqsNX5
+         59MH6oUY0Aw29BgMg1utGesU/MyGzoZGBmJ2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=crOGNM1IiUdeKZ/Udc473eZwbzdnFX83mUx0lAy7H7w=;
-        b=WbuHqxk+AdWTuV7r8z7510wccudAPgeCTPKpyIomIGpEaCBfAQKYf4fbWkRv+h2pD3
-         k7oV2HsHzcYijcjFfND0uVUDrI3c++5YdPyqtTYiF7yfL5wtvtcIOsVPN7KEaOgM0oed
-         dWYmcVuhqfTbU85qds9qo+iRr0SyNyabIrIxzGb5RV1s6O7E2YNst7llAX4KWKMCqusS
-         6xwnfIro1x679JKck+qUnjCIPwr0LRpCPUY+RDAfwuFy8AmCsBjkcqcl8J3p5qBiLPJC
-         wyvVdozulcXLNxZoTR322JwkTkuLmXLL/a218yG3lmhQFj+axxI66fSjVFna2JospJLt
-         Mu3g==
-X-Gm-Message-State: AGi0PuZ3NkBv112mEcylHZG7YEAQ4wC6NGWnIgvZHR8zniH+d9mwa5A1
-        xCryH86gj4V19eiUfMIsKrs=
-X-Google-Smtp-Source: APiQypKahnzYyNUg9AVnphKZxOGotDLI5iak1AH7DVsvqQtw4mS2xuWkahM3ViDKvMYI+csMPj4q9Q==
-X-Received: by 2002:a17:902:b206:: with SMTP id t6mr14698777plr.270.1588875779441;
-        Thu, 07 May 2020 11:22:59 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 192sm5459770pfu.182.2020.05.07.11.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:22:58 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id CF043403EA; Thu,  7 May 2020 18:22:57 +0000 (UTC)
-Date:   Thu, 7 May 2020 18:22:57 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200507182257.GX11244@42.do-not-panic.com>
-References: <20200507180631.308441-1-aquini@redhat.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=ipgG7bVxBHO6i2KUwtORX/P7bJ96Jy9myM8jttxH8h0=;
+        b=ABNOyhj96ojxr81Z5sMRJEHeLPbSFtRrctessF2SWg4iub4CHAE9Mmzz6Qqu3R2Umc
+         ytEzvNDPvuZI9Fzx40FRa+8fOEi6OvjLa1JwyvHUqbM4nWmt9u4j65/UfHMe8eXs7e6F
+         b8XGon58nre78NFWbDkRhX5FFQhOtUjr9NMgfGLByHD8dI5vkt/A4IOufSNnGPGhcT1o
+         NpQkTQMPYieR1dLDFa9Vv7SQl/IU+gHnjNh2CcQWws/P5qMI46bE4DkOqr2FHHC7ZZAB
+         qfTIsd4Aa3mzLV1rWAHZxSi2G+zV/W+7xzIqq78AUJuSL6R5ji3pwK9mGXUGXCQ7E1Ca
+         UMpg==
+X-Gm-Message-State: AGi0Pua/+yQChn/5lcDd08H25T5Hxqq7Lzei4Qt/1NPz9l58hLAq89Eb
+        8kq9qvsbw+TdnIhGWMHciyIAjA==
+X-Google-Smtp-Source: APiQypL2kG1RhI04hlcZ0tVCmFltse5K0gUj5/r/pPYFcA5knj0cjT7Ft32CMLfpez8J9WE33jnZ5w==
+X-Received: by 2002:a05:6602:124c:: with SMTP id o12mr15222131iou.71.1588875820360;
+        Thu, 07 May 2020 11:23:40 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i10sm3065557ilp.28.2020.05.07.11.23.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 11:23:39 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     skhan@linuxfoundation.org, linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest update for Linux 5.7-rc5
+Message-ID: <357f0c72-ecb3-021e-4f5a-7ddc649688f2@linuxfoundation.org>
+Date:   Thu, 7 May 2020 12:23:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507180631.308441-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/mixed;
+ boundary="------------DA18C3776462DC6A0D75C49B"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8727a3..b80ab660d727 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_ONE,
->  	},
-> +	{
-> +		.procname	= "panic_on_taint",
-> +		.data		= &panic_on_taint,
-> +		.maxlen		= sizeof(unsigned long),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_doulongvec_minmax,
-> +	},
+This is a multi-part message in MIME format.
+--------------DA18C3776462DC6A0D75C49B
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-You sent this out before I could reply to the other thread on v1.
-My thoughts on the min / max values, or lack here:
-                                                                                
-Valid range doesn't mean "currently allowed defined" masks.                     
+Hi Linus,
 
-For example, if you expect to panic due to a taint, but a new taint type
-you want was not added on an older kernel you would be under a very
-*false* sense of security that your kernel may not have hit such a
-taint, but the reality of the situation was that the kernel didn't
-support that taint flag only added in future kernels.                           
+Please pull the following Kselftest update for Linux 5.7-rc5.
 
-You may need to define a new flag (MAX_TAINT) which should be the last
-value + 1, the allowed max values would be                                      
+This Kselftest update for Linux 5.7-rc5 consists of ftrace test
+fixes and fix to kvm Makefile for relocatable native/cross builds
+and installs.
 
-(2^MAX_TAINT)-1                                                                 
+diff is attached.
 
-or                                                                              
+thanks,
+-- Shuah
 
-(1<<MAX_TAINT)-1  
+----------------------------------------------------------------
+The following changes since commit f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba:
 
-Since this is to *PANIC* I think we do want to test ranges and ensure
-only valid ones are allowed.
+   selftests/ftrace: Check the first record for kprobe_args_type.tc 
+(2020-04-24 09:39:26 -0600)
 
-  Luis
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.7-rc5
+
+for you to fetch changes up to 66d69e081b526b6a6031f0d3ca8ddff71e5707a5:
+
+   selftests: fix kvm relocatable native/cross builds and installs 
+(2020-05-01 09:47:55 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.7-rc5
+
+This Kselftest update for Linux 5.7-rc5 consists of ftrace test fixes
+and fix to kvm Makefile for relocatable native/cross builds and installs.
+
+----------------------------------------------------------------
+Alan Maguire (2):
+       ftrace/selftests: workaround cgroup RT scheduling issues
+       ftrace/selftest: make unresolved cases cause failure if 
+--fail-unresolved set
+
+Masami Hiramatsu (1):
+       selftests/ftrace: Make XFAIL green color
+
+Shuah Khan (1):
+       selftests: fix kvm relocatable native/cross builds and installs
+
+  tools/testing/selftests/ftrace/ftracetest | 32 
++++++++++++++++++++++++++++++--
+  tools/testing/selftests/kvm/Makefile      | 29 
++++++++++++++++++++++++++++-
+  2 files changed, 58 insertions(+), 3 deletions(-)
+
+----------------------------------------------------------------
+
+--------------DA18C3776462DC6A0D75C49B
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.7-rc5.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.7-rc5.diff"
+
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 063ecb290a5a..a4605b5ee66d 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+ echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
++echo "		--fail-unresolved Treat UNRESOLVED as a failure"
+ echo "		-d|--debug Debug mode (trace all shell commands)"
+ echo "		-l|--logdir <dir> Save logs on the <dir>"
+ echo "		            If <dir> is -, all logs output in console only"
+@@ -29,8 +30,25 @@ err_ret=1
+ # kselftest skip code is 4
+ err_skip=4
+ 
++# cgroup RT scheduling prevents chrt commands from succeeding, which
++# induces failures in test wakeup tests.  Disable for the duration of
++# the tests.
++
++readonly sched_rt_runtime=/proc/sys/kernel/sched_rt_runtime_us
++
++sched_rt_runtime_orig=$(cat $sched_rt_runtime)
++
++setup() {
++  echo -1 > $sched_rt_runtime
++}
++
++cleanup() {
++  echo $sched_rt_runtime_orig > $sched_rt_runtime
++}
++
+ errexit() { # message
+   echo "Error: $1" 1>&2
++  cleanup
+   exit $err_ret
+ }
+ 
+@@ -39,6 +57,8 @@ if [ `id -u` -ne 0 ]; then
+   errexit "this must be run by root user"
+ fi
+ 
++setup
++
+ # Utilities
+ absdir() { # file_path
+   (cd `dirname $1`; pwd)
+@@ -93,6 +113,10 @@ parse_opts() { # opts
+       UNSUPPORTED_RESULT=1
+       shift 1
+     ;;
++    --fail-unresolved)
++      UNRESOLVED_RESULT=1
++      shift 1
++    ;;
+     --logdir|-l)
+       LOG_DIR=$2
+       shift 2
+@@ -157,6 +181,7 @@ KEEP_LOG=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
++UNRESOLVED_RESULT=0
+ STOP_FAILURE=0
+ # Parse command-line options
+ parse_opts $*
+@@ -235,6 +260,7 @@ TOTAL_RESULT=0
+ 
+ INSTANCE=
+ CASENO=0
++
+ testcase() { # testfile
+   CASENO=$((CASENO+1))
+   desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
+@@ -260,7 +286,7 @@ eval_result() { # sigval
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+-      return 1 # this is a kind of bug.. something happened.
++      return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
+@@ -273,7 +299,7 @@ eval_result() { # sigval
+       return $UNSUPPORTED_RESULT # depends on use case
+     ;;
+     $XFAIL)
+-      prlog "	[${color_red}XFAIL${color_reset}]"
++      prlog "	[${color_green}XFAIL${color_reset}]"
+       XFAILED_CASES="$XFAILED_CASES $CASENO"
+       return 0
+     ;;
+@@ -406,5 +432,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+ prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+ 
++cleanup
++
+ # if no error, return 0
+ exit $TOTAL_RESULT
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 712a2ddd2a27..b728c0a0f9b2 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -5,8 +5,34 @@ all:
+ 
+ top_srcdir = ../../../..
+ KSFT_KHDR_INSTALL := 1
++
++# For cross-builds to work, UNAME_M has to map to ARCH and arch specific
++# directories and targets in this Makefile. "uname -m" doesn't map to
++# arch specific sub-directory names.
++#
++# UNAME_M variable to used to run the compiles pointing to the right arch
++# directories and build the right targets for these supported architectures.
++#
++# TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
++# LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
++#
++# x86_64 targets are named to include x86_64 as a suffix and directories
++# for includes are in x86_64 sub-directory. s390x and aarch64 follow the
++# same convention. "uname -m" doesn't result in the correct mapping for
++# s390x and aarch64.
++#
++# No change necessary for x86_64
+ UNAME_M := $(shell uname -m)
+ 
++# Set UNAME_M for arm64 compile/install to work
++ifeq ($(ARCH),arm64)
++	UNAME_M := aarch64
++endif
++# Set UNAME_M s390x compile/install to work
++ifeq ($(ARCH),s390)
++	UNAME_M := s390x
++endif
++
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c lib/test_util.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+@@ -53,7 +79,7 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+@@ -84,6 +110,7 @@ $(LIBKVM_OBJ): $(OUTPUT)/%.o: %.c
+ $(OUTPUT)/libkvm.a: $(LIBKVM_OBJ)
+ 	$(AR) crs $@ $^
+ 
++x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+ all: $(STATIC_LIBS)
+ $(TEST_GEN_PROGS): $(STATIC_LIBS)
+ 
+
+--------------DA18C3776462DC6A0D75C49B--
