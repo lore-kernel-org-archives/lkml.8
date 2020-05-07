@@ -2,176 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DCCC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B618C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A6820736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758012082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RxrFmj2x"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XN7mNqB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgEGCxA (ORCPT
+        id S1728412AbgEGCxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:53:00 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33928 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgEGCxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:53:00 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPD2001465;
-        Wed, 6 May 2020 21:52:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588819945;
-        bh=77R+KN0P7OsXUgS4duR3XXp1coR50qLJMaCXXlSV/To=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RxrFmj2xHI3XzwRDd6EzTkWMyRLVoJV6Gv7++CFw3vBoFCNYGBoD1neud85nJ/7Ui
-         H4tk3kZFbkYIgVmPyDe4Y6M8dRGXJ2gD/vNMdLpf7k0jNXbSVu12/OJlC3NKQdOZDP
-         pAViwat4VydyzOnRRomoWgYymz3/TFYv8phPKH54=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPMY045107;
-        Wed, 6 May 2020 21:52:25 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
- 2020 21:52:25 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 6 May 2020 21:52:25 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qJsC110440;
-        Wed, 6 May 2020 21:52:20 -0500
-Subject: Re: [PATCH v9 4/8] PCI: endpoint: Pass page size as argument to
- pci_epc_mem_init()
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <8986f0a7-8e23-71d5-d718-def48a28dfc8@ti.com>
-Date:   Thu, 7 May 2020 08:22:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 May 2020 22:53:04 -0400
+Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:12165
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725827AbgEGCxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:53:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ACpXuDHxLDKSYdhjAz2iKlASzh3zrk5gLNfG8c26dQKlYavD/SZsJdS1yf4D2Ds8dl/9lsg0jsLUUwpziFMN6UdXxpmZWqYJSTjiMoVPNaT5EhsdMDI6k4qQY6eDfnnvbW9mW+l7CYPs4TwnyjD1lft53wmMW/YJ30U5EderI4JP/kaLRSSELxoAt6RAKRfWWz1+499auMPjJNeWx/GNbRnvG0YYQ6iscrp7+bLBvUarT3amOV6Eqtjv0lwZYrXba7rtYMZwkzOr3rrID29nJJB+xFIcXdioIzWrheIuyqM2sZACGJpk8TsBeBI7L5VBB+IuDWA62EJUdAzI7k0paw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BeH+x+d1OI91WnjW+uFClHA1gAB4zH8lqjlkhfEF5b8=;
+ b=V2MjcSAIr98jsPtnFRiCo0PbefgxwZExfLoFdTtId9YJR4h75uaZ6yZ1tyZ35PdEVAaLUz6WxZ11jw5s9I13Z8XZOBPyA0GDR7ELRNzeSNrzkT+ejUYnkJWqkhvrPn4eb3W9fqoOxaZIZ0dDB7ZW/qbMDdv+Gw1SEV0/7oYrGmYhzkkYl31TLl4Jw6N+n5JEbIOVH3tmcjZWZWGwyamXbqkjWW1Bd9mNP3FXJTrza/kxKo9keakUIpBUE+ZV7AIKTt7ProLeukAkiFJzn/eeKVZi2P3iwSJRaf6HEksziwI4FjW7VEOYjH+DuShNdiguBJ71HwnOhsfuD+CHCP+7/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BeH+x+d1OI91WnjW+uFClHA1gAB4zH8lqjlkhfEF5b8=;
+ b=XN7mNqB381bF3uDyvoN95fjm09Ijq2lvwSQTQ70ZPFW0oKQEZeKEh6GyioAiP3MTBaWCqnSJvttz3uJHkK2ip5fDffydBjkRVkaDrE1DxeuECH0ZN3DHo1tiMGFyIM6bt3dXi3GZ9A0zcJUTxV2c8bGaLWNuGbdg/a5xWsHcu5o=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VE1PR04MB6445.eurprd04.prod.outlook.com (2603:10a6:803:11c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Thu, 7 May
+ 2020 02:52:56 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173%7]) with mapi id 15.20.2958.030; Thu, 7 May 2020
+ 02:52:56 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     "dsahern@gmail.com" <dsahern@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "vlad@buslov.dev" <vlad@buslov.dev>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>
+Subject: RE: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
+ control action
+Thread-Topic: Re: [v4,iproute2-next 1/2] iproute2-next:tc:action: add a gate
+ control action
+Thread-Index: AdYkGP/813CTQ3HyQZuckXvjuAsisQ==
+Date:   Thu, 7 May 2020 02:52:56 +0000
+Message-ID: <VE1PR04MB64969AC550AE3A762DADEF5292A50@VE1PR04MB6496.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: networkplumber.org; dkim=none (message not signed)
+ header.d=none;networkplumber.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 595e83a7-e875-48af-ed63-08d7f231bf01
+x-ms-traffictypediagnostic: VE1PR04MB6445:|VE1PR04MB6445:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB64451DE3AB5DAE9F5B15FE5E92A50@VE1PR04MB6445.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wElIhp+yCNxD0uZZwaqoFAm977uM45pPFNn7MBgqWU4CxffQmznWI5kRLXpIP85YoPQ5bF1jCLPsRZGZ31z+2TyPH7leFIQ4zJ0jWkVdEPgq2TtHowaE0bGidQgFj0mCz6VJAiE6BPuOWtgxxNp+LZfkJHaQm1qozW8Mmbu9sc3aRatJ/so2hwXKmYOMNUTTLmps5YwwI9Xg8hN/CYcNnsGTqhg06NMknWMVN9/8aR7Iia+5cdckocf56hZbiejqCS4wrIqzZ/2vIwO9oH7+KpHyogl32v+sFNjfKZervy6kJMKMu4EL8/R1MdZoxYno5ABGUJ97bv7YOF5eaYEsADfqaVw4c0nYvNYXKRr4ZOPnPvV500gEOrq0qv/KxGMEAy8P52+gwJFG+ePzWhiz2IRyVZpnSLjeoWWfz3hyE+gthC1CUUZgQw+3aCmb4p0ljCwIW0SVk2FuIqAaz+psFbZR5+lgRdL/0K8wG2vbueQHrVurLMWeArJHoUR8yWo/8bKxSxwqVibdhiw2od/gFQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(33430700001)(71200400001)(4326008)(478600001)(66446008)(5660300002)(9686003)(33440700001)(83300400001)(83290400001)(83280400001)(83320400001)(83310400001)(8676002)(66556008)(66476007)(316002)(54906003)(66946007)(55016002)(64756008)(186003)(44832011)(76116006)(8936002)(86362001)(33656002)(6916009)(52536014)(6506007)(2906002)(53546011)(26005)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 1Osem7V5aZBFYj2SrIHT0Fhqv9Lu0Qa5NfEUR+GAAJua0WnqDBclblBXY7rvvmE50fQTolu77eiatdVuxJL9VniyeXULg0Ua40M9Gi1nohLfB5Z97Ql/ejJb7owZg0jVqawul5lW3orFbE3uDqsSauUGQgj1hvVl2bG04hnAO2M6EIaNHCLfdb/ALA3GbDlTUk67t+GB3fPZI+J5Mlu/22mTyPk0dgOq4zZwyxdDEBSthwgcjLI2aoXx0unqDzCvAjgVK43Maw+pouJDBn2aceGz28i36GH4ycGyn+BToRuitaWuSIp2KeSma5VhrEHg4dfBr5tITeYjMz1jHgR+csREoYWb3E8mi+5NT5YdDn+4jn0ZG+0/jjs5midRrKmR55cuqcsyCi/TXfHbg/dYAt1VbfEENSud4YVHZ2j9A5JPy7rOCOqep4tjX+yfNSKJVjHi2XCK24DN/t/XXF7CL6EdQQibZ4Tt6IBHUamVZYmSLPLqHgHdabAKH1BbaGhBJ7Kv5xsGPD9n9Nl7VD/Ax6MLtqlkJ/3Dw7jqbnq0p1az1YUaGodza/szJ8RiXjA/XeW2deaV7Y4xpIVD9E50VG2sRUQPCVnhiTaggZxIId8NPjudwiktsPJWR19vD+Ial7T+qQRaH9WDjDYevfU3W+Upn6ay+AQx3yhHuPmYigwHHMvl9W5OX6FwPu5Z/7jrdb6qNJh3uzKmUdPrRuRO806z9PJioJQWDnIILKUyxzO0zvcLiUWziO/ZLylNKPDL+WJB2BCm7B7GGeRWSYvM7tHHii0ZnJKcl/ievhO+qXM=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 595e83a7-e875-48af-ed63-08d7f231bf01
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 02:52:56.7069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JCUs7m8AVQsSAHyuBT8UIlqUSs9MSBU7O9Em8Yhw/2Ex1FYG5pvRT8IyBcwfmMX7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
-> pci_epc_mem_init() internally used page size equal to *PAGE_SIZE* to
-> manage the address space so instead just pass the page size as a
-> argument to pci_epc_mem_init().
-> 
-> Also make pci_epc_mem_init() as a C function instead of a macro function
-> in preparation for adding support for pci-epc-mem core to handle multiple
-> windows.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
->  drivers/pci/controller/pcie-rockchip-ep.c        | 2 +-
->  drivers/pci/endpoint/pci-epc-mem.c               | 7 +++++++
->  include/linux/pci-epc.h                          | 5 ++---
->  4 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index 1c173dad67d1..1c15c8352125 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -450,7 +450,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
->  		epc->max_functions = 1;
->  
->  	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
-> -			       resource_size(pcie->mem_res));
-> +			       resource_size(pcie->mem_res), PAGE_SIZE);
->  	if (ret < 0) {
->  		dev_err(dev, "failed to initialize the memory space\n");
->  		goto err_init;
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> index d743b0a48988..5eaf36629a75 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -615,7 +615,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
->  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
->  
->  	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
-> -			       resource_size(rockchip->mem_res));
-> +			       resource_size(rockchip->mem_res), PAGE_SIZE);
->  	if (err < 0) {
->  		dev_err(dev, "failed to initialize the memory space\n");
->  		goto err_uninit_port;
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index abfac1109a13..cdd1d3821249 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -93,6 +93,13 @@ return ret;
->  }
->  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->  
-> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
-> +		     size_t size, size_t page_size)
-> +{
-> +	return __pci_epc_mem_init(epc, base, size, page_size);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_mem_init);
-> +
->  /**
->   * pci_epc_mem_exit() - cleanup the pci_epc_mem structure
->   * @epc: the EPC device that invoked pci_epc_mem_exit
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index e0ed9d01f6e5..5bc1de65849e 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -137,9 +137,6 @@ struct pci_epc_features {
->  #define devm_pci_epc_create(dev, ops)    \
->  		__devm_pci_epc_create((dev), (ops), THIS_MODULE)
->  
-> -#define pci_epc_mem_init(epc, phys_addr, size)	\
-> -		__pci_epc_mem_init((epc), (phys_addr), (size), PAGE_SIZE)
-> -
->  static inline void epc_set_drvdata(struct pci_epc *epc, void *data)
->  {
->  	dev_set_drvdata(&epc->dev, data);
-> @@ -195,6 +192,8 @@ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
->  struct pci_epc *pci_epc_get(const char *epc_name);
->  void pci_epc_put(struct pci_epc *epc);
->  
-> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
-> +		     size_t size, size_t page_size);
->  int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
->  		       size_t page_size);
->  void pci_epc_mem_exit(struct pci_epc *epc);
-> 
+SGkgU3RlcGhlbiwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0
+ZXBoZW4gSGVtbWluZ2VyIDxzdGVwaGVuQG5ldHdvcmtwbHVtYmVyLm9yZz4NCj4gU2VudDogMjAy
+MMTqNdTCNsjVIDIzOjIyDQo+IFRvOiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPg0KPiBDYzogZHNh
+aGVybkBnbWFpbC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IG5ldGRldkB2
+Z2VyLmtlcm5lbC5vcmc7IHZpbmljaXVzLmdvbWVzQGludGVsLmNvbTsNCj4gZGF2ZW1AZGF2ZW1s
+b2Z0Lm5ldDsgdmxhZEBidXNsb3YuZGV2OyBDbGF1ZGl1IE1hbm9pbA0KPiA8Y2xhdWRpdS5tYW5v
+aWxAbnhwLmNvbT47IFZsYWRpbWlyIE9sdGVhbiA8dmxhZGltaXIub2x0ZWFuQG54cC5jb20+Ow0K
+PiBBbGV4YW5kcnUgTWFyZ2luZWFuIDxhbGV4YW5kcnUubWFyZ2luZWFuQG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbdjQsaXByb3V0ZTItbmV4dCAxLzJdIGlwcm91dGUyLW5leHQ6dGM6YWN0aW9u
+OiBhZGQgYQ0KPiBnYXRlIGNvbnRyb2wgYWN0aW9uDQo+IE9uIFdlZCwgIDYgTWF5IDIwMjAgMTY6
+NDA6MTkgKzA4MDANCj4gUG8gTGl1IDxQby5MaXVAbnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICAg
+ICAgICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiYmFzZS10aW1lIikgPT0gMCkg
+ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBORVhUX0FSRygpOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICBpZiAoZ2V0X3U2NCgmYmFzZV90aW1lLCAqYXJndiwgMTApKSB7DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW52YWxpZGFyZyA9ICJiYXNlLXRpbWUiOw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX2FyZzsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCph
+cmd2LCAiY3ljbGUtdGltZSIpID09IDApIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgTkVY
+VF9BUkcoKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgaWYgKGdldF91NjQoJmN5Y2xlX3Rp
+bWUsICphcmd2LCAxMCkpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnZh
+bGlkYXJnID0gImN5Y2xlLXRpbWUiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGdvdG8gZXJyX2FyZzsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAg
+ICAgICAgfSBlbHNlIGlmIChtYXRjaGVzKCphcmd2LCAiY3ljbGUtdGltZS1leHQiKSA9PSAwKSB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIE5FWFRfQVJHKCk7DQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgIGlmIChnZXRfdTY0KCZjeWNsZV90aW1lX2V4dCwgKmFyZ3YsIDEwKSkgew0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludmFsaWRhcmcgPSAiY3ljbGUtdGltZS1l
+eHQiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX2FyZzsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgfQ0KPiANCj4gQ291bGQgYWxsIHRoZXNlIHRpbWUgdmFs
+dWVzIHVzZSBleGlzdGluZyBUQyBoZWxwZXIgcm91dGluZXM/DQoNCkkgYWdyZWUgdG8ga2VlcCB0
+aGUgdGMgcm91dGluZXMgaW5wdXQuDQpUaGUgbmFtZXMgb2YgdGltZXIgaW5wdXQgYW5kIHR5cGUg
+aXMgbW9yZSByZWZlcmVuY2UgdGhlIHRhcHJpbyBpbnB1dC4NCg0KPiBTZWUgZ2V0X3RpbWUoKS4g
+IFRoZSB3YXkgeW91IGhhdmUgaXQgbWFrZXMgc2Vuc2UgZm9yIGhhcmR3YXJlIGJ1dCBzdGFuZHMN
+Cj4gb3V0IHZlcnN1cyB0aGUgcmVzdCBvZiB0Yy4NCj4gDQo+IEl0IG1heWJlIHRoYXQgdGhlIGtl
+cm5lbCBVQVBJIGlzIHdyb25nLCBhbmQgc2hvdWxkIGJlIHVzaW5nIHNhbWUgdGltZQ0KPiB1bml0
+cyBhcyByZXN0IG9mIHRjLiBGb3Jnb3QgdG8gcmV2aWV3IHRoYXQgcGFydCBvZiB0aGUgcGF0Y2gu
+DQoNCkkgd291bGQgYWxzbyBzeW5jIHdpdGgga2VybmVsIFVBUEkgaWYgbmVlZGVkLg0KDQoNCkJy
+LA0KUG8gTGl1DQo=
