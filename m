@@ -2,266 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E3C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AAAC35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC1220870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3FD20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aBOCZWpy";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JIPQ1ttf"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EDE1qhVO";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="F3ITSOOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEGW0q (ORCPT
+        id S1726638AbgEGW3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:26:46 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49468 "EHLO
+        Thu, 7 May 2020 18:29:14 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60158 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgEGW0o (ORCPT
+        by vger.kernel.org with ESMTP id S1726437AbgEGW3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:26:44 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047ML9It010911;
-        Thu, 7 May 2020 15:26:39 -0700
+        Thu, 7 May 2020 18:29:13 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047MLVFL005129;
+        Thu, 7 May 2020 15:29:02 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
  subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=HujoUhfhOJD/O0Ctoz3VKf1kuOWomGPzKxz+CmQERiM=;
- b=aBOCZWpy7lM7NbLCrLr2iz1357Bb6MOypRr9rOMb2co9dl0EUc0yjxmBw5RD3ogtS9xG
- yA8NPYvAKPbOn3FBGwI+4GftrnpEwFTDC+NMuH8wv7QWHaEwinEjRwjVYSpuqNtZIGuw
- t+jkXGHtjqSPPzOHFp95m9Zl+n6QOF2uhpA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 30vtdxr849-1
+ mime-version; s=facebook; bh=UDbtAIFjEXHKVl26AKa8dZMXw9dz2JTdPz7l7c7Z+tY=;
+ b=EDE1qhVOY1hpPdh0VdZ9ZIV5xGBuCPpk/P09+rWz+YL/h0URB+6ZckvOXBvRQajkbU5D
+ g6Kwirhqe55RaOJpmdpLOaw49lhBD9LXBMxOXsNCahrrOR/Pw3TVvQODBWiyqVlpnLMV
+ ddc/JjUvUNez5nfhS04OccrlquBwZH2AcXI= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 30vte4g8bn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 07 May 2020 15:26:39 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+        Thu, 07 May 2020 15:29:02 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 7 May 2020 15:26:37 -0700
+ 15.1.1847.3; Thu, 7 May 2020 15:29:02 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I0bkM34qqCov6BruB66nnPwvCrpy54MWxheeXgivLG4QbTK0tAA9brnZhVt9HtVpTHeIKlyjvum1W4rNzoWAoAf97pEjMWCz+YcWLbU7zMU1vm9EfDN1a/49baNKyROwIh4/GLNL6piCLxMIzy+8MEhNZCYkZ9+cYilzUhgSDWwwajvaW5F4LPUQ/VauzXMm2iXtNO6ahB52Z/SIr2cYH3CYZUl7U3/Vz8xvhtBRcUFiiVWQzysYWP3ewO0p25oKl2LrZG64TMtcecPLJaQ+mSkKsjjjcYn2loeKbjGQx4yvES86nH/bFqMzEqwciNw5oB/c5U4yipjBFZsKUl80qw==
+ b=N7kz8iV4VE2wTm4VZRlK/wzBVkaKGoDnJVr51JAZ/PyNlUqi/uOs1hfUvnfHxIVGgyEq8DdpRzALLgJs5ETKSpUH6WqQOI72YS15XToG1Ljbw86BhJH5R7EwhLAiLrrsIMPYh2ga3q0OInvEhfUU90OBGSSB6nFyjWjdFhOiSIoDJm21IWXbhW1Dwo9OpsoUr22oOLeQnsJD2N+HB61RYJCvz+2O6Q4RqHMAIssbRJVXlWvRG0kJKcpepvbMRTE7Sh+HtBoWv8fbAoE/3PpoZgf7psKyMOGOMkR/vAPeYJx2L+fZkg9IvYduqKchZ3++lSnl9tr4mPeySph6J3bCEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HujoUhfhOJD/O0Ctoz3VKf1kuOWomGPzKxz+CmQERiM=;
- b=DZQfrNi5n6QDtLqoNiqfNHYpc0COQgox4LPHLGLCfdyfhmC4MdyEKY0yI04nRNDefg2HB4kiRsKjxYsKEFoXEQQremU+XB6nRD3IZZ8XcknYKl4ZN6zVWd5aGPTY0cEVNjgmMf6zKwa878zZ2pv5K5Hb6iZC9PZpukm14gsHHtVhtdGWFTECKGDLHJFX+C/aMWD3EO5ZWlZItfWVA3M/IUL/sLONBNBjZ1eF0LcV0X95L6HBGmX/opVkgGfajODotUm2X1vT35cJOSkRXJw/G9jqWZM0e8R1bpFzZTNpPddDIAnBX91+PzO2XznMeRGZCj+riezV/4wAgLqHeYNlmQ==
+ bh=UDbtAIFjEXHKVl26AKa8dZMXw9dz2JTdPz7l7c7Z+tY=;
+ b=E6mbHmuHXPSWbaL6dHzdOzmCQEy+gELFkI14fRm1nQ6meU3VZazvC+xPoDZfQwCxIA3nfFlFHwCaBZKzlL3rD23uHUiOPMijpxv1/uHfDBlxnypu3UUGG8wUXeYs8If8jX24CIHAoHHtC621Ly/Hg1RolcnCthUFXY1IATt8wlH8PMyJgnjvMjvAo24y7eqSSI23psqjxDZ8SVHYBBtbmN4IhjTtrycMx6L/hV7GpPJ43P0F7nlPnvs3Gi/MJIOFk3ySOdVihKSaZaiztGXW58gE1Pa4dYKYsqHsVu2r+IHcMlGWrzoYTVfNibK9kHIIfUaKa8ndJT/mSEXRqZj5sw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
  header.d=fb.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
  s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HujoUhfhOJD/O0Ctoz3VKf1kuOWomGPzKxz+CmQERiM=;
- b=JIPQ1ttf/KN+6drftAFoFK2KcL0P/YSI1aweEz4L0SVg78uJzrHfmNrC/D6NZv9UCoYCYLABcpFjmsHST4cyq3R/nbgePXF72fHbOMlYLVyIvxthz26kcy9zVNwiAAlPo7noSVmx9DZ/mD/JmaaRH7Pb/fNFh/fhBrW/dVYxyWw=
-Authentication-Results: cmpxchg.org; dkim=none (message not signed)
- header.d=none;cmpxchg.org; dmarc=none action=none header.from=fb.com;
+ bh=UDbtAIFjEXHKVl26AKa8dZMXw9dz2JTdPz7l7c7Z+tY=;
+ b=F3ITSOORr+fAXfdQHxsxC1pZLeqcc1CaPqoQe7Rx/J4HFkcHUFq6BN3HVOl8ihmXjqKq6I72fCAWwY/Rogv7FAJhh6yAqIVXZ/3TqyWzpuWoNN3N3RhqM/Ki9QbBd/GnhPaUF6ZOWZHwclQOVL/L2axCCPw2J4do6qoy+gf2hTE=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
 Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
  by BYAPR15MB2358.namprd15.prod.outlook.com (2603:10b6:a02:8c::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
- 2020 22:26:35 +0000
+ 2020 22:29:01 +0000
 Received: from BYAPR15MB4136.namprd15.prod.outlook.com
  ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
  ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 22:26:34 +0000
-Date:   Thu, 7 May 2020 15:26:31 -0700
+ 22:29:01 +0000
+Date:   Thu, 7 May 2020 15:28:56 -0700
 From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/19] mm: memcg/slab: obj_cgroup API
-Message-ID: <20200507222631.GA81857@carbon.dhcp.thefacebook.com>
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-7-guro@fb.com>
- <20200507210314.GD161043@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
+Message-ID: <20200507222856.GB81857@carbon.dhcp.thefacebook.com>
+References: <20200507204913.18661-1-shakeelb@google.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507210314.GD161043@cmpxchg.org>
-X-ClientProxiedBy: BY5PR17CA0022.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::35) To BYAPR15MB4136.namprd15.prod.outlook.com
+In-Reply-To: <20200507204913.18661-1-shakeelb@google.com>
+X-ClientProxiedBy: BY5PR17CA0066.namprd17.prod.outlook.com
+ (2603:10b6:a03:167::43) To BYAPR15MB4136.namprd15.prod.outlook.com
  (2603:10b6:a03:96::24)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:5b44) by BY5PR17CA0022.namprd17.prod.outlook.com (2603:10b6:a03:1b8::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Thu, 7 May 2020 22:26:34 +0000
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:5b44) by BY5PR17CA0066.namprd17.prod.outlook.com (2603:10b6:a03:167::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 22:28:59 +0000
 X-Originating-IP: [2620:10d:c090:400::5:5b44]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9391fa89-b501-4baa-de8e-08d7f2d5b336
+X-MS-Office365-Filtering-Correlation-Id: 5ec02bb3-b24b-466a-dcdd-08d7f2d60997
 X-MS-TrafficTypeDiagnostic: BYAPR15MB2358:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2358612285ABCAE487593157BEA50@BYAPR15MB2358.namprd15.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2358523606ED30454A860A29BEA50@BYAPR15MB2358.namprd15.prod.outlook.com>
 X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 03965EFC76
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EQvDa7fqWaF3M5rtqI5+LK5cYNoJUJHDFz49P/XjMlM0ppOq2o8/6w5pbIaNVLzB/yzc+iJVbP43nIQA95omC/JSrNMKJsKLZNOViwVsGwy4vaR1x9vQol2HVDN+7hOi7ncKIgiKxzZOlJWTFX13DLWUM6qZLvM0iQxfkv59Z4szrcK0+frGvkbtFAmLlUvRiEy0okj6gtwCArB6XnlHX08xmSqFnVVj78zBM5rTRUI95pZ28t6YgbrfZ3DZjyh9SStnENuEifJBYeK5YFVkHqPyUN9u3wr/Eys+jcYDVUMgmYk7qQhk8a47dAhmNUqlYYavXoWmq/oYN0j3NB6FI1TwW1Ng6ND/P9A+7w5yhQB7R+IdjzriNmjN3ehkVFRpqpR8PmEtNdXGoo921+9D4ycMJtvZAcHRiD02s72mQgwFl01Uqyh7pr8bCk23TXjDiTpD+siMsElTgN0QjFLtpwtzEEznjsBtOwtHh5FYnWo+sAa7VXEK7h+kYQt+E5TlYzHBOfh+SqkmoeOyNTUpjQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(366004)(39860400002)(396003)(33430700001)(33440700001)(66556008)(66476007)(66946007)(8936002)(8676002)(1076003)(2906002)(5660300002)(54906003)(6666004)(6916009)(33656002)(6506007)(9686003)(16526019)(86362001)(55016002)(316002)(7696005)(52116002)(186003)(478600001)(83280400001)(83320400001)(83290400001)(83310400001)(83300400001)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 6wn++WgBYkQ0rA+N4QITswaB/E89RPpu+xR9zO4ah+8qCHx81GMrzDXfeB9TPKrZudImOLPiZsJsdgQkyZZgE3ohmfDf/wz2fEpOTJFPHg0k2ABUYGlJQqjlKE7c8++P+itl2Zsao1AW9tMcNT9mdDOh78bd49OfIeiekMiJKZp16G4XfqXJJPhy5nAIDugTVCgBgd7SbLWVDvolRcgXCV0Q92U8qGY/qGQyoFk25vAKmYRBsqqp2JKhagBSblh3NQaeOvtruKEw3INOx02a/SlS4K4Z1k9Pe1hISSacXpdA3zjjUBoTkfrXWZ43XHGKsYQJUg9yfKGszE9qL/57kYWeaEZ6gnDHZsXUXrO17TrxJV7zAJe0k1pU/mcRl4mcERGl+MlqrdMxzKl9XpJjw/tKL+6GbWNvOQTrI9q//6VIGz/1pV2//f3JS5sT9QDPWaejAnnXc492WMEcaA4telnJVQkErB8hYVs/qhO+7SSs3rTxl0pIOPepAjXGnfFC/WiurTpiv/liWO4bxLSdQcDdlL9VRdFkFs63kDTHIE0jp+Zgw+T760IMljOix7bZzV73Uc7V1VC37TcpNhTeigQ/IQt+fMQQ3u43F+XYl87E2RgnaSQGQYl4355+UsIUKWbIpJvMPb48FhcMPPEGpgxm4BfR22IIeOHrBhp3vSFKLxDetKpHDZwmcMDPE5m2Lcyg2qzrSmLGs6SMkRvLChyMtRCoCPd2FB/v0XQW/0qvKG5RQSIjUNfjHpPIbmtTRE//oMeK6YAwzKvsA8GZEN61FqTIj53SJKcEHB/z9MbLym9PjoPzfpik1oQLWVYf1x58x6a/AhE3+nxI2ZURMw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9391fa89-b501-4baa-de8e-08d7f2d5b336
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 22:26:34.7796
+X-Microsoft-Antispam-Message-Info: SJ4jHD3vT1zMwzlBVYmLqYH27KOaxTwXkhgrV3VC3qzSWNpK3R6+5osE0Pa/WUS0f3h5j0Fthj3fq3Pm6jPGa2Ux7QFUZ/Ln3jlNF1xQ7OqsL5jxOBC/mBiE99m+233WAp3DA0i0S+K0aIwAXL3iq7WLmdfTKoByc7yNUb3Ownjj02bhjLWeFRpTwVyTndiO9QLOgYBVFxqH+zX/fX9IS0Tvd1+0hvoLXmSoT7sF2DlXsqfpoo18dQy5GTmcv7TQ1IzyBI1cEDioPZQN/AroX15A0TdN2lHSsNhCPU8TCquYGMkD5Tnk00OBZfkGbWn+3k7K1PutCJiQDt+8TT7P89UexK2aNNDdQUD3eGksQL0ZwNVrprhK5+pJ4293upoEj+cz/el2+tWsFqmtmtIjVf6ArbiQ8VnVhkkOqGvsZX9jAYmwh/3N0q+ud3Gxkl8hzjKbY+EczScF1JXTuUTooAAAhSv3hbNUU1sKKVF+aPLDhoRY/x8evMt8RQhzUHR2PBn8L36MY/PrCdkoy6IJGQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(376002)(366004)(39860400002)(396003)(33430700001)(33440700001)(66556008)(66476007)(66946007)(8936002)(8676002)(1076003)(2906002)(5660300002)(54906003)(15650500001)(6666004)(6916009)(33656002)(6506007)(9686003)(16526019)(86362001)(55016002)(316002)(7696005)(52116002)(186003)(478600001)(83280400001)(83320400001)(83290400001)(83310400001)(83300400001)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 061DS4Um+xcFsFCfPxwcP8uDt/yqPEDn7ORRF7UpyFMEZi1SPBSo8lQAGnYC4XT+lWnzgyJwcxHIOavUNizihkt3F29//R+kpq/AsNEn3tl6qJo0OACxREsBdsF1EQ0EfFTP3+FGY/676Wy3fRv/p4oAsmlmP4YbWkWsMDu9js0Okkhqd+RutHydC+ctiiqEpAOtcv3GfbO8HaD5McxByNo5NL3t6TG8GlFEl3vZXHUHK1RqJpqWUd2foXfoUU2BSGenHRs4ShfLTqapDvoLQXHPN9tMx9gk8S2zeo99h7sYWgfNEik4yvLRcZwAe+6B+mGgkQlnxwQTBTpRzFQajbhQM9v+7BKukAonhdKLros/PQi9m2KldKqjfuJJ5mkqOkdSnBkUXK2A3SsKGF2wQ5Kv6vYLM+AWEPoF1OkGJOK8c7tOh3z2tXfAQ/zSOXia14LRrCNWXcUM/DiY1h7g4qL/cdNoayP4I+F+Kp3Y3e/p10VfgGVby3e1Q2pRsh9B4DrINMNH3ax58VQBW2T9/tAAS1rKZfZkx465vltILb4Erd47BXboDknODtiH3IRUmhD5uHWDCcs+/vzsHPQ0RcnfwBeozkygQXFfHX6oa6Tq3HrJdoeU+FFLX3A0L+rWWP+ZUHZq2xWeBM0SDQv2SMwTUS3tzEumA3BigFTmTaKlst01Cs+AeXCuxcJ8Xqb0ShedGsDVzM/QF82dKYzkI+htQpMn+9Qaef2d8R0XoZD7lN4HkkOQ1MlCyLZv2FPBUefZ0yoxWbKySSnkXZDgNe9W21jliZEA3Ww3Sa1uP0PX5m7RT5QUwNpk3ertGN/IXlZXDO7eaPNNPZccg/npRA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ec02bb3-b24b-466a-dcdd-08d7f2d60997
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 22:29:00.3319
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WwRWNExM4fduVfIvAGU2nW6vN/uoZ3ouZB4DEDwvOa4t97h3CANLmamWVl48kuDh
+X-MS-Exchange-CrossTenant-UserPrincipalName: OZKmVd8Otv5Mm/c/yK8OE5HSSzU6DgnCmGH8SoTnkPpwPVuCqNhgRnJEJSRs3Uxf
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2358
 X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-07_16:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- suspectscore=5 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
- spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2005070178
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=976 mlxscore=0
+ bulkscore=0 suspectscore=1 phishscore=0 clxscore=1011 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070178
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:03:14PM -0400, Johannes Weiner wrote:
-> On Wed, Apr 22, 2020 at 01:46:55PM -0700, Roman Gushchin wrote:
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -257,6 +257,78 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
-> >  }
-> >  
-> >  #ifdef CONFIG_MEMCG_KMEM
-> > +extern spinlock_t css_set_lock;
-> > +
-> > +static void obj_cgroup_release(struct percpu_ref *ref)
-> > +{
-> > +	struct obj_cgroup *objcg = container_of(ref, struct obj_cgroup, refcnt);
-> > +	struct mem_cgroup *memcg;
-> > +	unsigned int nr_bytes;
-> > +	unsigned int nr_pages;
-> > +	unsigned long flags;
-> > +
-> > +	nr_bytes = atomic_read(&objcg->nr_charged_bytes);
-> > +	WARN_ON_ONCE(nr_bytes & (PAGE_SIZE - 1));
-> > +	nr_pages = nr_bytes >> PAGE_SHIFT;
+On Thu, May 07, 2020 at 01:49:13PM -0700, Shakeel Butt wrote:
+> One way to measure the efficiency of memory reclaim is to look at the
+> ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> not updated consistently at the system level and the ratio of these are
+> not very meaningful. The pgsteal and pgscan are updated for only global
+> reclaim while pgrefill gets updated for global as well as cgroup
+> reclaim.
 > 
-> What guarantees that we don't have a partial page in there at this
-> point? I guess any outstanding allocations would pin the objcg, so
-> when it's released all objects have been freed.
-
-Right, this is exactly the reason why there can't be a partial page
-at this point.
-
+> Please note that this difference is only for system level vmstats. The
+> cgroup stats returned by memory.stat are actually consistent. The
+> cgroup's pgsteal contains number of reclaimed pages for global as well
+> as cgroup reclaim. So, one way to get the system level stats is to get
+> these stats from root's memory.stat but root does not expose that
+> interface. Also for !CONFIG_MEMCG machines /proc/vmstat is the only way
+> to get these stats. So, make these stats consistent.
 > 
-> But if that's true, how can we have full pages remaining in there now?
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-Imagine the following sequence:
-1) CPU0: objcg == stock->cached_objcg
-2) CPU1: we do a small allocation (e.g. 92 bytes), page is charged
-3) CPU1: a process from another memcg is allocating something, stock if flushed,
-   objcg->nr_charged_bytes = PAGE_SIZE - 92
-5) CPU0: we do release this object, 92 bytes are added to stock->nr_bytes
-6) CPU0: stock is flushed, 92 bytes are added to objcg->nr_charged_bytes
+Acked-by: Roman Gushchin <guro@fb.com>
 
-In the result, nr_charged_bytes == PAGE_SIZE. This PAGE will be uncharged
-in obj_cgroup_release().
-
-I've double checked this, it's actually pretty easy to trigger in the real life.
-
-> 
-> > @@ -2723,6 +2820,30 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
-> >  	return page->mem_cgroup;
-> >  }
-> >  
-> > +__always_inline struct obj_cgroup *get_obj_cgroup_from_current(void)
-> > +{
-> > +	struct obj_cgroup *objcg = NULL;
-> > +	struct mem_cgroup *memcg;
-> > +
-> > +	if (unlikely(!current->mm))
-> > +		return NULL;
-> > +
-> > +	rcu_read_lock();
-> > +	if (unlikely(current->active_memcg))
-> > +		memcg = rcu_dereference(current->active_memcg);
-> > +	else
-> > +		memcg = mem_cgroup_from_task(current);
-> > +
-> > +	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg)) {
-> > +		objcg = rcu_dereference(memcg->objcg);
-> > +		if (objcg && obj_cgroup_tryget(objcg))
-> > +			break;
-> > +	}
-> > +	rcu_read_unlock();
-> > +
-> > +	return objcg;
-> > +}
-> 
-> Thanks for moving this here from one of the later patches, it helps
-> understanding the life cycle of obj_cgroup better.
-> 
-> > +int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
-> > +{
-> > +	struct mem_cgroup *memcg;
-> > +	unsigned int nr_pages, nr_bytes;
-> > +	int ret;
-> > +
-> > +	if (consume_obj_stock(objcg, size))
-> > +		return 0;
-> > +
-> > +	rcu_read_lock();
-> > +	memcg = obj_cgroup_memcg(objcg);
-> > +	css_get(&memcg->css);
-> > +	rcu_read_unlock();
-> > +
-> > +	nr_pages = size >> PAGE_SHIFT;
-> > +	nr_bytes = size & (PAGE_SIZE - 1);
-> > +
-> > +	if (nr_bytes)
-> > +		nr_pages += 1;
-> > +
-> > +	ret = __memcg_kmem_charge(memcg, gfp, nr_pages);
-> 
-> If consume_obj_stock() fails because some other memcg is cached,
-> should this try to consume the partial page in objcg->nr_charged_bytes
-> before getting more pages?
-
-We can definitely do it, but I'm not sure if it's good for the performance.
-
-Dealing with nr_charged_bytes will require up to two atomic writes,
-so calling __memcg_kmem_charge() can be faster if memcg is cached
-on percpu stock.
-
-> 
-> > +	if (!ret && nr_bytes)
-> > +		refill_obj_stock(objcg, PAGE_SIZE - nr_bytes);
-> 
-> This will put the cgroup into the cache if the allocation resulted in
-> a partially free page.
-> 
-> But if this was a page allocation, we may have objcg->nr_cache_bytes
-> from a previous subpage allocation that we should probably put back
-> into the stock.
-
-Yeah, we can do this, but I don't know if there will be any benefits.
-
-Actually we don't wanna to touch objcg->nr_cache_bytes too often, as
-it can become a contention point if there are many threads allocating
-in the memory cgroup.
-
-So maybe we want to do the opposite: relax it a bit and stop flushing
-it on every stock refill and flush only if it exceeds a certain value.
-
-> 
-> It's not a common case, I'm just trying to understand what
-> objcg->nr_cache_bytes holds and when it does so.
-
-So it's actually a centralized leftover from the rounding of the actual
-charge to the page size.
-
-> 
-> The rest of this patch looks good to me!
-
-Great!
-
-Thank you very much for the review!
+Thanks!
