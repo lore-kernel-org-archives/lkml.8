@@ -2,134 +2,79 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF43C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFE2C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0962083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2319B2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kpvqOcI0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V1dxn1S+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGQQC (ORCPT
+        id S1727114AbgEGQQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:16:02 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58671 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726521AbgEGQQC (ORCPT
+        Thu, 7 May 2020 12:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726393AbgEGQQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:16:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588868161; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=w5NiSQ77D5gTRpc269gInIopQbtzyb+mp/b4/2QKUDE=; b=kpvqOcI0j4jOI36NeBW5oCyLGR2nhN40gAIZKl/rCZNbhTJTCysf6M0OypTBHkYAEsGynvyZ
- BxHB4JEj6mEQ5QGTNrdfHTFKEq1dzJ6SboxghByaoBZvHfPRTxTsYTRGfnGGqKmgZ6cU4HyP
- pbMwjIK6hlEJ/+2FtMvkdtkC+Wg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb43438.7f2b80073570-smtp-out-n04;
- Thu, 07 May 2020 16:15:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7F4DAC44793; Thu,  7 May 2020 16:15:51 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D35DC433F2;
-        Thu,  7 May 2020 16:15:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D35DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     stummala@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        <stable@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Andreas Koop <andreas.koop@zf.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH V2] mmc: core: Fix recursive locking issue in CQE recovery path
-Date:   Thu,  7 May 2020 21:45:33 +0530
-Message-Id: <1588868135-31783-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
-References: <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
+        Thu, 7 May 2020 12:16:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97A6C05BD43;
+        Thu,  7 May 2020 09:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=A8uqttsFcU+RJDntrcBSCeABb5tI8iPtiiJqsyKDW04=; b=V1dxn1S+iYZZ/l2L4kNnzJsOKl
+        D5sgSRXA0U8TWty4HMvZv5pQyvRFkETw7KoQyMOmXOYOT9gbPtC+T57mcLDqekS5INAW8E4PeuMg0
+        HcNDr6JinkpcrJEcXTD7rSuLygBcrtYF/T4gLcpAtb3otJ+vJQpmct+098gJcFtL2Miz/2nTRhPPE
+        MREnEiK5hUlCWueg/4gMRkwnd5oHgyvXn+c2VtjzQhobuZqzYJ/W5aOwWLggS+wCiNbWmt2Li7/+j
+        /6JzjZCIEThKa3BrWMwMhf2jaDszjlexfq3EdRBNl9g05zYhjIAygk+X2ol2F7IcVI/3zJrlGItO8
+        h3zci7YQ==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWjCI-0002gy-PH; Thu, 07 May 2020 16:16:31 +0000
+Date:   Thu, 7 May 2020 18:16:28 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Joel Becker <jlbec@evilplan.org>
+Subject: [GIT PULL] configfs fix for 5.7
+Message-ID: <20200507161628.GA440967@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sarthak Garg <sartgarg@codeaurora.org>
+The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
 
-Consider the following stack trace
+  Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
 
--001|raw_spin_lock_irqsave
--002|mmc_blk_cqe_complete_rq
--003|__blk_mq_complete_request(inline)
--003|blk_mq_complete_request(rq)
--004|mmc_cqe_timed_out(inline)
--004|mmc_mq_timed_out
+are available in the Git repository at:
 
-mmc_mq_timed_out acquires the queue_lock for the first
-time. The mmc_blk_cqe_complete_rq function also tries to acquire
-the same queue lock resulting in recursive locking where the task
-is spinning for the same lock which it has already acquired leading
-to watchdog bark.
+  git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.7
 
-Fix this issue with the lock only for the required critical section.
+for you to fetch changes up to 8aebfffacfa379ba400da573a5bf9e49634e38cb:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
-Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
----
- drivers/mmc/core/queue.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+  configfs: fix config_item refcnt leak in configfs_rmdir() (2020-04-27 08:17:10 +0200)
 
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 25bee3d..b5fd3bc 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -107,7 +107,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
- 	case MMC_ISSUE_DCMD:
- 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
- 			if (recovery_needed)
--				__mmc_cqe_recovery_notifier(mq);
-+				mmc_cqe_recovery_notifier(mrq);
- 			return BLK_EH_RESET_TIMER;
- 		}
- 		/* No timeout (XXX: huh? comment doesn't make much sense) */
-@@ -127,18 +127,13 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
- 	struct mmc_card *card = mq->card;
- 	struct mmc_host *host = card->host;
- 	unsigned long flags;
--	int ret;
-+	bool ignore_tout;
- 
- 	spin_lock_irqsave(&mq->lock, flags);
--
--	if (mq->recovery_needed || !mq->use_cqe || host->hsq_enabled)
--		ret = BLK_EH_RESET_TIMER;
--	else
--		ret = mmc_cqe_timed_out(req);
--
-+	ignore_tout = mq->recovery_needed || !mq->use_cqe || host->hsq_enabled;
- 	spin_unlock_irqrestore(&mq->lock, flags);
- 
--	return ret;
-+	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
- }
- 
- static void mmc_mq_recovery_handler(struct work_struct *work)
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+----------------------------------------------------------------
+configfs fix for 5.7
+
+ - fix a refcount leak in configfs_rmdir (Xiyu Yang)
+
+----------------------------------------------------------------
+Xiyu Yang (1):
+      configfs: fix config_item refcnt leak in configfs_rmdir()
+
+ fs/configfs/dir.c | 1 +
+ 1 file changed, 1 insertion(+)
