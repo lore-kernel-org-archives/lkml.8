@@ -2,104 +2,132 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF745C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB25C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB282075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588885527;
-	bh=83PrL5s+hTnt+kmPDJQ+oyNs/Tji4/M4/BIN15DDJHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EHUxsEj95XBDhbaXhT5r2IzSpbl+BPOhEIJuxNqQw9SxAi/hYA0f1ysoP+YWkO1Xg
-	 zltZe+uABAec19T/CfPGoYm/4IBD9CCNO2j4frutiT6LTxygp9ys7dkYgwtgCvfnW5
-	 7SFJbKBPppJYn5UJYgpAYslOY16i+h1FnETb7pyY=
+	by mail.kernel.org (Postfix) with ESMTP id E90CF208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEGVF1 (ORCPT
+        id S1726690AbgEGVGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:05:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41966 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVF0 (ORCPT
+        Thu, 7 May 2020 17:06:08 -0400
+Received: from www62.your-server.de ([213.133.104.62]:40234 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGVGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:05:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c3so5777838otp.8;
-        Thu, 07 May 2020 14:05:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GIj6kxDR7LGNuMotCOajJTwyR96cZe3Qpni2Sj/PoIY=;
-        b=l1447p3gnOCNtkWw6U2Vu+6hvNC9desFaXzPss625l+w/mM/gaJJR0VUkUAot79vs9
-         8bbiBzoN0YgBySrbZS73PgupapeMyPJkn6WcDva4qohpguygt2oZ3hy9NDiE2aIC2Jzu
-         Z3KBZzE4fD8lYrnGDmOLpB3+UwnG9UAZHRUXWdKb/LkLLqoPuH7ctouNg6hO25OfqO59
-         I9VEn9m8wZesTn5tePjyRaVe7A78AzV1nfxKCm47zBlZvjPDGactrktURIA+BdgfBeaX
-         ygzr/3toYJSm0IChVGL+gvr89CJ3QS8m6E6aeBA9eT3x5FPnjkG8UqnVgG/XQbnENEIM
-         qGEQ==
-X-Gm-Message-State: AGi0PuanioIEmGB/tzVX9Bba9EU5+0KvMkL5Ia7xO1vW0fi/7SJ2WLJB
-        3/Xbw4KZLqUknOVzLlinG/Uf774=
-X-Google-Smtp-Source: APiQypJdtsPrvNlnN0TthkAX/I+9RMU6sL0lnI0AMoufaSaLCpUUL+uGICO4QBCt32XId2EnXg1yQw==
-X-Received: by 2002:a05:6830:1592:: with SMTP id i18mr12868544otr.190.1588885525673;
-        Thu, 07 May 2020 14:05:25 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e13sm1619297otj.46.2020.05.07.14.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:05:24 -0700 (PDT)
-Received: (nullmailer pid 23601 invoked by uid 1000);
-        Thu, 07 May 2020 21:05:23 -0000
-Date:   Thu, 7 May 2020 16:05:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 01/12] PCI: aardvark: Train link immediately after
- enabling training
-Message-ID: <20200507210523.GA23539@bogus>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200430080625.26070-2-pali@kernel.org>
+        Thu, 7 May 2020 17:06:07 -0400
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWniO-0004wi-CU; Thu, 07 May 2020 23:05:56 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jWniO-0008Ol-3O; Thu, 07 May 2020 23:05:56 +0200
+Subject: Re: [PATCH v3] net: bpf: permit redirect from ingress L3 to egress L2
+ devices at near max mtu
+To:     =?UTF-8?Q?Maciej_=c5=bbenczykowski?= <maze@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <CANP3RGduts2FJ2M5MLcf23GaRa=-fwUC7oPf-S4zp39f63jHMg@mail.gmail.com>
+ <20200507023606.111650-1-zenczykowski@gmail.com>
+ <ae1e5602-a2fd-661b-155c-d32ff0059ce6@iogearbox.net>
+ <CANP3RGcz3VE6kS8JUNw4gR1tbCGGbF=-u99_j9QZRrz6559=kw@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <a711e527-5283-cf3f-6866-06ee0a010d74@iogearbox.net>
+Date:   Thu, 7 May 2020 23:05:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <CANP3RGcz3VE6kS8JUNw4gR1tbCGGbF=-u99_j9QZRrz6559=kw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-2-pali@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25805/Thu May  7 14:14:46 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 10:06:14 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
-> Adding even 100ms (PCI_PM_D3COLD_WAIT) delay between enabling link
-> training and starting link training causes detection issues with some
-> buggy cards (such as Compex WLE900VX).
-> 
-> Move the code which enables link training immediately before the one
-> which starts link traning.
-> 
-> This fixes detection issues of Compex WLE900VX card on Turris MOX after
-> cold boot.
-> 
-> Fixes: f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready...")
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
+On 5/7/20 6:46 PM, Maciej Å»enczykowski wrote:
+> (a) not clear why the max is SKB_MAX_ALLOC in the first place (this is
+> PAGE_SIZE << 2, ie. 16K on x86), while lo mtu is 64k
 
-Acked-by: Rob Herring <robh@kernel.org>
+Agreed, tbh, it's not clear to me either atm. :) The SKB_MAX_ALLOC constant itself
+should be replaced with something more appropriate. Also as a small side note,
+the !skb->dev check should be removed since in tc ingress/egress the skb->dev
+is never NULL. (See also tc_cls_act_convert_ctx_access() on struct __sk_buff,
+ifindex conversion.)
+
+> (b) hmm, if we're not redirecting, then exceeding the ingress device's
+> mtu doesn't seem to be a problem.
+> 
+> Indeed AFAIK this can already happen, some devices will round mtu up
+> when they configure the device mru buffers.
+> (ie. you configure L3 mtu 1500, they treat that as L2 1536 or 1532 [-4
+> fcs], simply because 3 * 512 is a nice amount of buffers, or they'll
+> accept not only 1514 L2, but also 1518 L2 or even 1522 L2 for VLAN and
+> Q-IN-Q -- even if the packets aren't actually VLAN'ed, so your non
+> VLAN mru might be 1504 or 1508)
+> 
+> Indeed my corp dell workstation with some standard 1 gigabit
+> motherboard nic has a standard default mtu of 1500, and I've seen it
+> receive L3 mtu 1520 packets (apparently due to misconfiguration in our
+> hardware [cisco? juniper?] ipv4->ipv6 translator which can take 1500
+> mtu ipv4 packets and convert them to 1520 mtu ipv6 packets without
+> fragmenting or generating icmp too big errors).  While it's obviously
+> wrong, it does just work (the network paths themselves are also
+> obviously 1520 clean).
+
+Right, agree on tc ingress side when skb goes further up the stack.
+
+> (c) If we are redirecting we'll eventually (after bpf program returns)
+> hit dev_queue_xmit(), and shouldn't that be what returns an error?
+
+You mean whether the check should be inside __dev_queue_xmit() itself
+instead? Maybe. From a cursory glance the MTU checks are spread in upper
+layer protos. As mentioned, we would need to have coverage for BPF progs
+attached on the tc ingress and egress (sch_handle_{ingress,egress}())
+hook where for each case an skb can be just TC_ACT_OK'ed (up to stack or
+down to driver), redirected via ____dev_forward_skb() or dev_queue_xmit().
+The ____dev_forward_skb() has us covered and for TC_ACT_OK on tc ingress,
+we'd only need a generic upper cap. So for the rest of the cases, we'd
+need to have some sort of sanity check somewhere.
+
+> btw. is_skb_forwardable() actually tests
+> - device is up && (packet is gso || skb->len < dev->mtu +
+> dev->hard_header_len + VLAN_HLEN);
+> 
+> which is also wrong and in 2 ways, cause VLAN_HLEN makes no sense on
+> non ethernet, and the __bpf_skb_max_len function doesn't account for
+> VLAN...  (which possibly has implications if you try to redirect to a
+> vlan interface)
+
+Yeah, it probably would for QinQ which is probably why noone was running
+into it so far. At least the skb_vlan_push() would first store the tag
+via __vlan_hwaccel_put_tag() in the skb itself.
+
+> I think having an mtu check is useful, but I think the mtu should be
+> selectable by the bpf program.  Because it might not even be device
+> mtu at all, it might be path mtu which we should be testing against.
+> It should also be checked for gso frames, since the max post
+> segmentation size should be enforced.
+> 
+> I agree we should expose dev->mtu (and dev->hard_header_len and hatype)
+> 
+> I'll mull this over a bit more, but I'm not convinced this patch isn't ok as is.
+> There just is probably more we should do.
+
+Ok, makes sense. Thanks for looking into it!
