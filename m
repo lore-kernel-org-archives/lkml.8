@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91613C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1415C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 733FD20735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B093E20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eJqf8CTe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STYmhm1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgEGLuW (ORCPT
+        id S1726948AbgEGLuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:50:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42880 "EHLO
+        Thu, 7 May 2020 07:50:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21043 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbgEGLuU (ORCPT
+        by vger.kernel.org with ESMTP id S1726367AbgEGLuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:50:20 -0400
+        Thu, 7 May 2020 07:50:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588852219;
+        s=mimecast20190719; t=1588852220;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=mr9x5PJcF7Hzoh5oRRsXaOLTGqKm4KfDRv0S4QUsVzI=;
-        b=eJqf8CTeHlVUZ58xbdhGFmortIGfVjZkeU8I04Mompla3Ecqd5ZmfIrcsFo0aTLkq3OA5P
-        Ufz8B7lY+m0im70Th9ICLDvqvO/W2GEM5bA+wx4osWLoxzr7kdv/Hhqm1z7xcnP0JeTkDp
-        gY7+K/kc5a/vl4TPRlyXU4DNm+T15V8=
+        bh=PfaExeimQuSozD59A7tLBDViigQKEMhsQ3YbIsYE+KU=;
+        b=STYmhm1CbHk9HioR/CxIIahPhdXlIqSM0KFiFN5xW85LmOnYNnVVXjz9FfNaR9C2Z+fadZ
+        yroseHN9Zst54BJkkBerMwJe1bR24W5Ky8yoVENkLSoav+wjxFY+7GWdH6+l1w21WVcSMx
+        l8UX3TaaeZCHpahyjG3j0zVivVM1eR8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-ggF9kNepNlSWuSdOI7IL8A-1; Thu, 07 May 2020 07:50:17 -0400
-X-MC-Unique: ggF9kNepNlSWuSdOI7IL8A-1
+ us-mta-96-HZcRMLwLOG6CrjBlk_tcug-1; Thu, 07 May 2020 07:50:18 -0400
+X-MC-Unique: HZcRMLwLOG6CrjBlk_tcug-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CE481895A28;
-        Thu,  7 May 2020 11:50:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA3578015CF;
+        Thu,  7 May 2020 11:50:17 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 205221C933;
-        Thu,  7 May 2020 11:50:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9033F1C933;
+        Thu,  7 May 2020 11:50:17 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     peterx@redhat.com
-Subject: [PATCH v2 3/9] KVM: X86: Set RTM for DB_VECTOR too for KVM_EXIT_DEBUG
-Date:   Thu,  7 May 2020 07:50:05 -0400
-Message-Id: <20200507115011.494562-4-pbonzini@redhat.com>
+Subject: [PATCH v2 6/9] KVM: nSVM: trap #DB and #BP to userspace if guest debugging is on
+Date:   Thu,  7 May 2020 07:50:08 -0400
+Message-Id: <20200507115011.494562-7-pbonzini@redhat.com>
 In-Reply-To: <20200507115011.494562-1-pbonzini@redhat.com>
 References: <20200507115011.494562-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
@@ -57,30 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
-
-RTM should always been set even with KVM_EXIT_DEBUG on #DB.
-
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Message-Id: <20200505205000.188252-2-peterx@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/svm/nested.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index bb5a527e49d9..2384a2dbec44 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4683,7 +4683,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 			kvm_queue_exception_p(vcpu, DB_VECTOR, dr6);
- 			return 1;
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 90a1ca939627..adab5b1c5fe1 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -608,6 +608,11 @@ static int nested_svm_intercept_db(struct vcpu_svm *svm)
+ {
+ 	unsigned long dr6;
+ 
++	/* Always catch it and pass it to userspace if debugging the guest.  */
++	if (svm->vcpu.guest_debug &
++	    (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
++		return NESTED_EXIT_HOST;
++
+ 	/* if we're not singlestepping, it's not ours */
+ 	if (!svm->nmi_singlestep)
+ 		return NESTED_EXIT_DONE;
+@@ -682,6 +687,9 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+ 		if (svm->nested.intercept_exceptions & excp_bits) {
+ 			if (exit_code == SVM_EXIT_EXCP_BASE + DB_VECTOR)
+ 				vmexit = nested_svm_intercept_db(svm);
++			else if (exit_code == SVM_EXIT_EXCP_BASE + BP_VECTOR &&
++				 svm->vcpu.guest_debug & KVM_GUESTDBG_USE_SW_BP)
++				vmexit = NESTED_EXIT_HOST;
+ 			else
+ 				vmexit = NESTED_EXIT_DONE;
  		}
--		kvm_run->debug.arch.dr6 = dr6 | DR6_FIXED_1;
-+		kvm_run->debug.arch.dr6 = dr6 | DR6_FIXED_1 | DR6_RTM;
- 		kvm_run->debug.arch.dr7 = vmcs_readl(GUEST_DR7);
- 		/* fall through */
- 	case BP_VECTOR:
 -- 
 2.18.2
 
