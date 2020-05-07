@@ -2,111 +2,165 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDE8C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D9C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EBB215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877619;
-	bh=a3q7EVtRZYdws6ttRdc7CqZlAg4XEZKPq6gzkh3v70E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Kc4iPx/lyXOnBsCnXuXgzGc9HvCwoYBIw5IG0QPRp9Tix8yBZsiV18nceyI4Iw2iU
-	 dmf5PHMAUXC+ExVGV9LQH6xDnpkW7l+/6gBAczXYgdoBB++KNAy/bR89QNPylOpbK3
-	 +4Kk0ipF/Hyg29+CgB4v5dwFK/cDEHrswA4BQdXA=
+	by mail.kernel.org (Postfix) with ESMTP id A412F215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AWpMVeNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgEGSxj (ORCPT
+        id S1728627AbgEGSxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgEGSxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:53:38 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4040920870;
-        Thu,  7 May 2020 18:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877617;
-        bh=a3q7EVtRZYdws6ttRdc7CqZlAg4XEZKPq6gzkh3v70E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pZFh6Bvivm/9yt4HEz1VmtQOTA0kAk4gl8f++6RwXmbw3ebMigsp5bxH3Ktj2+m+S
-         Mvf9iMdh7xyfZHQETabnvLUgG2S1XKmjxuJ6XGf/tzEMTsghq7ggwvttufRps1M9G5
-         Qqplf8sBda1op/dTYkK57zl8YNq7/bDs6gTIGxxY=
-Date:   Thu, 7 May 2020 13:58:04 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] locking/lockdep: Replace zero-length array with
- flexible-array
-Message-ID: <20200507185804.GA15036@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 7 May 2020 14:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726926AbgEGSxq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:53:46 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FE2C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:53:46 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g185so579272qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HdnkYkSkwpLh+orrApa7Rm9CqGAa5Q8eU7irYvG3X2E=;
+        b=AWpMVeNZtOcDehpQv6YuIjQbfY2hoFmZeODxYBSwYnNCPscHVRQK1TfnTzoJ3IejYj
+         9sQQIK2kcFod+PFjfSF4IyqyWYNywT0GmAfJwJTEA+8n+DH25ZlBk1ZeQDdsGoUaCF0S
+         0EasjR5EywfSB6e5oZ4dg3aejrGFDmxnv24t+WwCji3bKD8DiOgJFDNIVx5RCidj3ecI
+         ToHY3lm1/HKg/+1n1cVTgMbN8JrBQwlCZIma6JeMIGO4bZBE2QFRhwRMVw77DUwcSh+n
+         cPfffJde16piheXEnT3pr3SBVXVIcyFxhq3o3oGVwAlDGvxhmTXRLhfM8h86M2IDVsEk
+         EJfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HdnkYkSkwpLh+orrApa7Rm9CqGAa5Q8eU7irYvG3X2E=;
+        b=kprFjRJa8z2QHqWmJ/Cjj/i9Sm3dKkeFA2d/6W4MVWhVSqXz6Tm5i6J6YY3WFWLOAQ
+         OziGZSS8eKGy1gJf7AWdrJLO5X+eNxeji5bwD6Uab/s/K57aMnarFytwb786+9rRr5df
+         e5RCl0J0CWUM6myhTOES5jeB6YznktUWbCrGCry0laHbWw7CIQ4at+S2Wlrh5+VhcN7b
+         2h8P0hRsLIGwHY7p5xo90coBvnW41VwS12pg/lMEEcUWkkNnzlzwgQJ93TppIWCvFHI8
+         hHgBx0Qhk6sDenYgxtRtOiznh1ucMxCiXdxei7FXnfo5H7QvJKSyzuODUUjwHLi0pwCj
+         j2DA==
+X-Gm-Message-State: AGi0PuY3hsZ3QMA+zQFtJw3ptur6i+8CpvtMLylcIZ9wkFhEDJnDHwWa
+        2HpW+iZTysU8r0csw4ieeDxpOQ==
+X-Google-Smtp-Source: APiQypI3RGmKJcNRWmEz8e03pNcyFWvkIc5Dug+RCrqXfLu381OE9XW+rZkkPmVn+2A+AIVLYEV/CQ==
+X-Received: by 2002:a05:620a:2fa:: with SMTP id a26mr8474627qko.295.1588877625313;
+        Thu, 07 May 2020 11:53:45 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q207sm146330qka.13.2020.05.07.11.53.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 11:53:44 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Clang and UBSAN: member access within null pointer of type
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAKwvOdmMjwoTZFSp2DnzeKePxgczfOJyOH_T-vyzHGcm5cFXgA@mail.gmail.com>
+Date:   Thu, 7 May 2020 14:53:43 -0400
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C3E33F8C-D9DF-4029-B03E-3E7DDFD572BF@lca.pw>
+References: <CA6078C3-3489-40E4-B756-A0AF6DB3A3A5@lca.pw>
+ <CAKwvOdmMjwoTZFSp2DnzeKePxgczfOJyOH_T-vyzHGcm5cFXgA@mail.gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> On May 7, 2020, at 2:30 PM, Nick Desaulniers <ndesaulniers@google.com> =
+wrote:
+>=20
+> On Thu, May 7, 2020 at 6:42 AM Qian Cai <cai@lca.pw> wrote:
+>>=20
+>> Running a Clang (9.0.1) build kernel with UBSAN generated a few =
+warnings during boot,
+>=20
+> Very cool, these reports are so nice! They hand you everything on a
+> silver platter.  Thanks for testing/sending!  Let's take a look.
+>=20
+>>=20
+>> [    0.000000] UBSAN: null-ptr-deref in =
+drivers/acpi/acpica/tbfadt.c:459:37
+>> [    0.000000] member access within null pointer of type 'struct =
+acpi_table_fadt'
+>> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted =
+5.7.0-rc4-next-20200507 #2
+>> [    0.000000] Call trace:
+>> [    0.000000]  dump_backtrace+0x0/0x22c
+>> [    0.000000]  show_stack+0x28/0x34
+>> [    0.000000]  dump_stack+0x104/0x194
+>> [    0.000000]  handle_null_ptr_deref+0xdc/0x10c
+>> [    0.000000]  __ubsan_handle_type_mismatch_v1+0x64/0x78
+>> [    0.000000]  acpi_tb_create_local_fadt+0x104/0x6ec
+>=20
+> ok so acpi_tb_create_local_fadt() dereferenced a `null pointer of type
+> 'struct acpi_table_fadt'` in null-ptr-deref in
+> drivers/acpi/acpica/tbfadt.c:459.
+>=20
+> That line number doesn't line up with linux-next; which tree was this?
+> That will probably help track these down faster.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+It is linux-next indeed as in the signature.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+next-20200507
 
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
+# ./scripts/faddr2line vmlinux acpi_tb_create_local_fadt+0x104/0x6ec
+acpi_tb_create_local_fadt+0x104/0x6ec:
+acpi_tb_convert_fadt at drivers/acpi/acpica/tbfadt.c:459
+(inlined by) acpi_tb_create_local_fadt at =
+drivers/acpi/acpica/tbfadt.c:388
 
-This issue was found with the help of Coccinelle.
+This line,
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+        if (acpi_gbl_FADT.header.length <=3D ACPI_FADT_V2_SIZE) {
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- kernel/locking/lockdep.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+acpi_gbl_FADT was defined in,
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ac10db66cc63..cfdff122905b 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -489,7 +489,7 @@ struct lock_trace {
- 	struct hlist_node	hash_entry;
- 	u32			hash;
- 	u32			nr_entries;
--	unsigned long		entries[0] __aligned(sizeof(unsigned long));
-+	unsigned long		entries[] __aligned(sizeof(unsigned long));
- };
- #define LOCK_TRACE_SIZE_IN_LONGS				\
- 	(sizeof(struct lock_trace) / sizeof(unsigned long))
+.//include/acpi/acpixf.h:266:ACPI_GLOBAL(struct acpi_table_fadt, =
+acpi_gbl_FADT);
+
+#ifdef DEFINE_ACPI_GLOBALS
+#define ACPI_GLOBAL(type,name) \
+	extern type name; \
+	type name
+
+
+
+#define ACPI_INIT_GLOBAL(type,name,value) \
+	type name=3Dvalue
+
+
+
+#else
+#ifndef ACPI_GLOBAL
+#define ACPI_GLOBAL(type,name) \
+	extern type name
+#endif
+
+
+
+#ifndef ACPI_INIT_GLOBAL
+#define ACPI_INIT_GLOBAL(type,name,value) \
+	extern type name
+#endif
+#endif
+
+I looks like DEFINE_ACPI_GLOBALS should be set in =
+drivers/acpi/acpica/utglobal.c.
+
 
