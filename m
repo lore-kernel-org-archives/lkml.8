@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A66C54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10898C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EEF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A5B21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862138;
-	bh=1gc/ZJjQLoxuABNwrGqSR1gLScz4TYvEcE6/5csEEiQ=;
+	s=default; t=1588862140;
+	bh=tP9D+63v58Q0bM08mp96NUT3tfQZXHC9ELHMUIXPN/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G9wxvFhQl61D+1E0Raxa3WeCgZOGLh0Sm7aOLRR40K/bHF+3KHfjD08h8nmeU23Zy
-	 Lxe7xhnCq2Bg9eMpv+PEtJo0My321DcFu/sqDyS4+M1w5csk/hrq/0QxLsNikTmctC
-	 IBSOX6POHESbjooiQHz8FJx76LOJV7tOkmsswTtM=
+	b=uJrW0375dlU3wBVp5JSLiouTIuMXLlsA/KxDAWFJZZzRhyxMchB+id0hWJg0rnExG
+	 vA/hez4SZs+DLrebe9saKNPSEKt9n/sRhB5s0Ukm/JSHpQwq1u0/P3DZ245NiTuUr7
+	 uLXBxHim/cWGC+PepSxLbxL6+1zkfYwGAVlUoGOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgEGO2j (ORCPT
+        id S1728418AbgEGOfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728154AbgEGO2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:35 -0400
+        id S1728194AbgEGO2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A1BF2145D;
-        Thu,  7 May 2020 14:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A77A2184D;
+        Thu,  7 May 2020 14:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861714;
-        bh=1gc/ZJjQLoxuABNwrGqSR1gLScz4TYvEcE6/5csEEiQ=;
+        s=default; t=1588861718;
+        bh=tP9D+63v58Q0bM08mp96NUT3tfQZXHC9ELHMUIXPN/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiuQcGSj79VLSZr+ke30cMY9hfs9nPrAsyRLP2L7XZlHztUQXUnf8En2gYeXkwkKA
-         wBLnhPw2rK8UTGFFMM3bjZZkG8VMt5bQbBfrmOz7tdflPzqr8Kg4pk2dw7DA5UE5Nb
-         YqfimFHJidukCH0qd0cJJiLwqvt8gxpxMx9yIKcs=
+        b=doNWDEgCUxdNQ7rIE1AXYesHbKBY2+zR68WYEX5leWKh30I5CBcOJAjf4E4phbnaS
+         c1w3Zm3soTyP2Km1tjcnns/wQMRss1jU6CwoqcZIAzoVyTIZXawgN4Ii6PKeqDlzOk
+         Rwe5m8LBQyio5BdSQ8K03bYWXiGJdKzjOXe+maTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/35] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Thu,  7 May 2020 10:27:57 -0400
-Message-Id: <20200507142830.26239-3-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/35] scsi: qla2xxx: set UNLOADING before waiting for session deletion
+Date:   Thu,  7 May 2020 10:28:00 -0400
+Message-Id: <20200507142830.26239-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -60,81 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
+[ Upstream commit 856e152a3c08bf7987cbd41900741d83d9cddc8e ]
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+The purpose of the UNLOADING flag is to avoid port login procedures to
+continue when a controller is in the process of shutting down.  It makes
+sense to set this flag before starting session teardown.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Furthermore, use atomic test_and_set_bit() to avoid the shutdown being run
+multiple times in parallel. In qla2x00_disable_board_on_pci_error(), the
+test for UNLOADING is postponed until after the check for an already
+disabled PCI board.
+
+Link: https://lore.kernel.org/r/20200421204621.19228-2-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Reviewed-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index c5c3fc6e6c600..26c94b32d6f49 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 06037e3c78549..7c588c5b5f6e3 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3700,6 +3700,13 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	}
+ 	qla2x00_wait_for_hba_ready(base_vha);
  
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
++
+ 	if (IS_QLA25XX(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
+ 	    IS_QLA28XX(ha)) {
+ 		if (ha->flags.fw_started)
+@@ -3718,15 +3725,6 @@ qla2x00_remove_one(struct pci_dev *pdev)
  
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
+ 	qla2x00_wait_for_sess_deletion(base_vha);
  
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
+-
+ 	qla_nvme_delete(base_vha);
+ 
+ 	dma_free_coherent(&ha->pdev->dev,
+@@ -6053,13 +6051,6 @@ qla2x00_disable_board_on_pci_error(struct work_struct *work)
+ 	struct pci_dev *pdev = ha->pdev;
+ 	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
+ 
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+ 	ql_log(ql_log_warn, base_vha, 0x015b,
+ 	    "Disabling adapter.\n");
+ 
+@@ -6070,9 +6061,14 @@ qla2x00_disable_board_on_pci_error(struct work_struct *work)
+ 		return;
  	}
  
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
+-	qla2x00_wait_for_sess_deletion(base_vha);
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
  
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
++	qla2x00_wait_for_sess_deletion(base_vha);
  
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+ 	qla2x00_delete_all_vps(ha, base_vha);
+ 
 -- 
 2.20.1
 
