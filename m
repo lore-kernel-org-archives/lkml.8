@@ -2,159 +2,70 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A63C54E4B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D246CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED28215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzcY94Ld"
+	by mail.kernel.org (Postfix) with ESMTP id B293021655
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgEGUJd (ORCPT
+        id S1728761AbgEGUJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728685AbgEGUJR (ORCPT
+        Thu, 7 May 2020 16:09:36 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:51086
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728685AbgEGUJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:09:17 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FD4C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:09:16 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id e6so3123838pjt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bnBeK10KzsaeyDFO2398m9/Skswi+j6FYU/gKr10cks=;
-        b=GzcY94LdE0hSxHNb2Ie4O6ZGy7FUnmfrizHDOWnagUu/3DoRcnlASU4EtxJamQJf5n
-         YInSK43rqVxNgmqEJyLE1V8uoQuK711LrzZzl6Jy+DwiB3USC73zDvfsnly8sf5RE3MO
-         gJ0PUw1ZkSRig2z0wZbVSdLbZCRY0xEmG2+0A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bnBeK10KzsaeyDFO2398m9/Skswi+j6FYU/gKr10cks=;
-        b=kIQ86yp9uJX/eSM40osqymwBNXjLFdwiHPpdHHKrynkwvDTdJ+9ibN/sQuu0ykonxV
-         qwEF5JjNaWKvKQ/Qqilwxu438PxQzX0rp0ppPlBLnFhKx+rsNkcZ1pa/W9ik1AgiYfmq
-         PrmMEoqAi+fm3IJ+td3pWXNqkxLUdLOGXoE48JqADSDyLalzDoLtBmErHpfhBSRri2Ts
-         o43GEMk436MDZJjVadIOb0rLv6uIbeEymXTO+woND5cuXs5QYSHKMIZo3NE3VSV5tW8D
-         rOo1XrWCe7F+1AhQsXNlWs88V8BAjbyACKTC4wv+WRMm1EI5yXF0oUZpd6WXj2jkZiSw
-         G/xg==
-X-Gm-Message-State: AGi0PuZVsTdBY4iMozKrV5ybrp9901/KrSCwRBuYxwoD1JdOQ7NSjf2u
-        Y23COxOLZbzVL5gv5r17BMsA2g==
-X-Google-Smtp-Source: APiQypKbwI7JzsjlGczS2mRvFdtUhbrL91Jdr9XjVjfScPm9ggnNRqUiKjXSnHdXQBa+ufgliHhpcg==
-X-Received: by 2002:a17:902:dc84:: with SMTP id n4mr14949596pld.281.1588882156436;
-        Thu, 07 May 2020 13:09:16 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d203sm5547601pfd.79.2020.05.07.13.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:09:15 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
-        gregkh@linuxfoundation.org
-Cc:     corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
-        linux-serial@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
-        jslaby@suse.com, kgdb-bugreport@lists.sourceforge.net,
-        sumit.garg@linaro.org, will@kernel.org, tglx@linutronix.de,
-        agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
-        Douglas Anderson <dianders@chromium.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 12/12] serial: amba-pl011: Support kgdboc_earlycon
-Date:   Thu,  7 May 2020 13:08:50 -0700
-Message-Id: <20200507130644.v4.12.I8ee0811f0e0816dd8bfe7f2f5540b3dba074fae8@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200507200850.60646-1-dianders@chromium.org>
-References: <20200507200850.60646-1-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 7 May 2020 16:09:34 -0400
+X-IronPort-AV: E=Sophos;i="5.73,365,1583190000"; 
+   d="scan'208";a="348061030"
+Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 07 May 2020 22:09:32 +0200
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Nic Volanschi <eugene.volanschi@inria.fr>
+Subject: [PATCH] tracing/probe: reverse arguments to list_add
+Date:   Thu,  7 May 2020 21:30:08 +0200
+Message-Id: <1588879808-24488-1-git-send-email-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+Elsewhere in the file, the function trace_kprobe_has_same_kprobe uses
+a trace_probe_event.probes object as the second argument of
+list_for_each_entry, ie as a list head, while the list_for_each_entry
+iterates over the list fields of the trace_probe structures, making
+them the list elements.  So, exchange the arguments on the list_add
+call to put the list head in the second argument.
 
-Implement the read() function in the early console driver. With
-recently added kgdboc_earlycon feature, this allows you to use kgdb
-to debug fairly early into the system boot.
+Since both list_head structures were just initialized, this problem
+did not cause any loss of information.
 
-We only bother implementing this if polling is enabled since kgdb can't
-be enabled without that.
+Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+ kernel/trace/trace_probe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v4: None
-Changes in v3:
-- ("serial: amba-pl011: Support kgdboc_earlycon") pulled into my v3.
-- Renamed earlycon_kgdboc to kgdboc_earlycon.
-
-Changes in v2: None
-
- drivers/tty/serial/amba-pl011.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 2296bb0f9578..c010f639298d 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2435,6 +2435,37 @@ static void pl011_early_write(struct console *con, const char *s, unsigned n)
- 	uart_console_write(&dev->port, s, n, pl011_putc);
- }
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index ab8b6436d53f..b8a928e925c7 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1006,7 +1006,7 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+ 	INIT_LIST_HEAD(&tp->event->class.fields);
+ 	INIT_LIST_HEAD(&tp->event->probes);
+ 	INIT_LIST_HEAD(&tp->list);
+-	list_add(&tp->event->probes, &tp->list);
++	list_add(&tp->list, &tp->event->probes);
  
-+#ifdef CONFIG_CONSOLE_POLL
-+static int pl011_getc(struct uart_port *port)
-+{
-+	if (readl(port->membase + UART01x_FR) & UART01x_FR_RXFE)
-+		return NO_POLL_CHAR;
-+
-+	if (port->iotype == UPIO_MEM32)
-+		return readl(port->membase + UART01x_DR);
-+	else
-+		return readb(port->membase + UART01x_DR);
-+}
-+
-+static int pl011_early_read(struct console *con, char *s, unsigned int n)
-+{
-+	struct earlycon_device *dev = con->data;
-+	int ch, num_read = 0;
-+
-+	while (num_read < n) {
-+		ch = pl011_getc(&dev->port);
-+		if (ch == NO_POLL_CHAR)
-+			break;
-+
-+		s[num_read++] = ch;
-+	}
-+
-+	return num_read;
-+}
-+#else
-+#define pl011_early_read NULL
-+#endif
-+
- /*
-  * On non-ACPI systems, earlycon is enabled by specifying
-  * "earlycon=pl011,<address>" on the kernel command line.
-@@ -2454,6 +2485,7 @@ static int __init pl011_early_console_setup(struct earlycon_device *device,
- 		return -ENODEV;
- 
- 	device->con->write = pl011_early_write;
-+	device->con->read = pl011_early_read;
- 
- 	return 0;
- }
--- 
-2.26.2.645.ge9eca65c58-goog
+ 	call = trace_probe_event_call(tp);
+ 	call->class = &tp->event->class;
 
