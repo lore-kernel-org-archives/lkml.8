@@ -6,106 +6,248 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F89C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4951C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E990A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3BD2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588859058;
-	bh=A65o93oA659l57qzQi9fqA4AboQSPcBGUlmqBXf4idw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=0OoqbI5nVar+0w631LiQJvEvK4McICDZyKdXeLY5DaSc75DHGWZualTa/qIfXGCz6
-	 pl0uS82yLeD8Bk4fel7EDsqc+zujYec0abMe8kOmFLdczNOcBQ9mwJDvOe7q9wHxUm
-	 +h2exZvtJISbuijZuefp++6AkMDwKstv+cfOioD8=
+	s=default; t=1588859187;
+	bh=eHmQj8wYpAwPh3hGGlCty8PZQ0Dkon0MI/L6MouzpQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JKTPaFx7xf76n3Y+YbmntQrRthCCczUrp9zfj9czUyJ+zzz/390niDcNLofgL7lRD
+	 Hd6i3/g/Jjeb9eQwqqK/a5Gi5aBSfaVPXVewbwXHmuGsdftdB9Nkyq1PozwIIH9Jzb
+	 dDQmK2qNFA92Pd8zD6I5zsR7AERxyLtESrDP71U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEGNoR (ORCPT
+        id S1726756AbgEGNq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40120 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 09:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgEGNoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:44:15 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        id S1725879AbgEGNq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:46:26 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C4720708;
-        Thu,  7 May 2020 13:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C0B620708;
+        Thu,  7 May 2020 13:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588859054;
-        bh=A65o93oA659l57qzQi9fqA4AboQSPcBGUlmqBXf4idw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PewNcwmRKjnGMBjIGfgAnKwirjB3T4i2ZPq+UeTHSwJQwbXh5D3eAat83UthrFHFA
-         GgU+4LBi8mKBn9RN2Nr2bEr4e6Iui63bMoKOore/wu7ZPocv0QNnLLvHol2uE9KFz0
-         aZ0HBjg7k/kb77cVdL71h1LNh5Q0ihWOcrdaVGIE=
-Message-ID: <e5839bffe4939c6290d74ca2fb39310bd4916c16.camel@kernel.org>
-Subject: Re: [PATCH] ceph: demote quotarealm lookup warning to a debug
- message
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Luis Henriques <lhenriques@suse.com>
-Date:   Thu, 07 May 2020 09:44:13 -0400
-In-Reply-To: <20200505125902.GA10381@suse.com>
-References: <20200505125902.GA10381@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        s=default; t=1588859185;
+        bh=eHmQj8wYpAwPh3hGGlCty8PZQ0Dkon0MI/L6MouzpQE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CMo2+O9vtGqE/lBlqZeg4+flJoKOKBLPcDet3/Hd8+/Yv+v3fOEvmyhcm5oz6UgTF
+         LaCP4ap21/nuVQrEUu1ZWZDJOBcF6zcLKNyVE8JxzAe04wKoyX/jDJlHvPjFtujCeD
+         hIXnVwtZBsfFVBKA2gbPaZk077hWl3lJ3GkkSrgI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jWgr1-00AHKx-JV; Thu, 07 May 2020 14:46:23 +0100
+Date:   Thu, 07 May 2020 14:46:22 +0100
+Message-ID: <87a72jj1sh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/15] arm64: kvm: Add build rules for separate nVHE object files
+In-Reply-To: <20200430144831.59194-5-dbrazdil@google.com>
+References: <20200430144831.59194-1-dbrazdil@google.com>
+        <20200430144831.59194-5-dbrazdil@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 13:59 +0100, Luis Henriques wrote:
-> A misconfigured cephx can easily result in having the kernel client
-> flooding the logs with:
+On Thu, 30 Apr 2020 15:48:20 +0100,
+David Brazdil <dbrazdil@google.com> wrote:
 > 
->   ceph: Can't lookup inode 1 (err: -13)
+> Add new folder arch/arm64/kvm/hyp/nvhe and a Makefile for building code that
+
+s/folder/directory/
+
+> runs in EL2 under nVHE KVM.
 > 
-> Change his message to debug level.
+> Compile each source file into a `.hyp.tmp.o` object first, then prefix all
+> its symbols with "__hyp_text_" using `objcopy` and produce a `.hyp.o`.
+
+Madness. ;-)
+
+> Suffixes were chosen so that it would be possible for VHE and nVHE to share
+> some source files, but compiled with different CFLAGS. nVHE build rules add
+> -D__HYPERVISOR__.
 > 
-> Link: https://tracker.ceph.com/issues/44546
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> Macros are added for prefixing a nVHE symbol name when referenced from kernel
+> proper.
+> 
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
 > ---
-> Hi!
+>  arch/arm64/include/asm/kvm_asm.h | 13 ++++++++++++
+>  arch/arm64/kernel/image-vars.h   | 12 +++++++++++
+>  arch/arm64/kvm/hyp/Makefile      |  4 ++--
+>  arch/arm64/kvm/hyp/nvhe/Makefile | 35 ++++++++++++++++++++++++++++++++
+>  scripts/kallsyms.c               |  1 +
+>  5 files changed, 63 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/kvm/hyp/nvhe/Makefile
 > 
-> This patch should fix some harmless warnings when using cephx to restrict
-> users access to certain filesystem paths.  I've added a comment to the
-> tracker where removing this warning could result (unlikely, IMHO!) in an
-> admin to miss not-so-harmless bogus configurations.
-> 
-> Cheers,
-> --
-> Luís
-> 
->  fs/ceph/quota.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
-> index de56dee60540..19507e2fdb57 100644
-> --- a/fs/ceph/quota.c
-> +++ b/fs/ceph/quota.c
-> @@ -159,8 +159,8 @@ static struct inode *lookup_quotarealm_inode(struct ceph_mds_client *mdsc,
->  	}
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 7c7eeeaab9fa..99ab204519ca 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -42,6 +42,12 @@
 >  
->  	if (IS_ERR(in)) {
-> -		pr_warn("Can't lookup inode %llx (err: %ld)\n",
-> -			realm->ino, PTR_ERR(in));
-> +		dout("Can't lookup inode %llx (err: %ld)\n",
-> +		     realm->ino, PTR_ERR(in));
->  		qri->timeout = jiffies + msecs_to_jiffies(60 * 1000); /* XXX */
->  	} else {
->  		qri->timeout = 0;
+>  #include <linux/mm.h>
+>  
+> +/* Translate the name of @sym to its nVHE equivalent. */
+> +#define kvm_nvhe_sym(sym)	__hyp_text_##sym
+> +
+> +/* Choose between VHE and nVHE variants of a symbol. */
+> +#define kvm_hyp_sym(sym)	(has_vhe() ? sym : kvm_nvhe_sym(sym))
+> +
+>  /* Translate a kernel address of @sym into its equivalent linear mapping */
+>  #define kvm_ksym_ref(sym)						\
+>  	({								\
+> @@ -51,6 +57,13 @@
+>  		val;							\
+>  	 })
+>  
+> +/*
+> + * Translate a kernel address of @sym into its equivalent linear mapping,
+> + * choosing between VHE and nVHE variant of @sym accordingly.
+> + */
+> +#define kvm_hyp_ref(sym) \
+> +	(has_vhe() ? kvm_ksym_ref(sym) : kvm_ksym_ref(kvm_nvhe_sym(sym)))
+> +
+
+Things are becoming a bit redundant here: you have a has_vhe() test,
+followed by a is_kernel_in_hyp_mode() test in kvm_ksym_ref(). Certainly
+this could do with some simplification. Another thing to think about is
+whether has_vhe() is the right thing to use as it isn't valid until you
+have discovered the capabilities. I think it is fine, but you should
+check it.
+
+>  struct kvm;
+>  struct kvm_vcpu;
+>  
+> diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+> index 7f06ad93fc95..13850134fc28 100644
+> --- a/arch/arm64/kernel/image-vars.h
+> +++ b/arch/arm64/kernel/image-vars.h
+> @@ -51,4 +51,16 @@ __efistub__ctype		= _ctype;
+>  
+>  #endif
+>  
+> +#ifdef CONFIG_KVM
+> +
+> +/*
+> + * KVM nVHE code has its own symbol namespace prefixed by __hyp_text_, to
+> + * isolate it from the kernel proper. The following symbols are legally
+> + * accessed by it, therefore provide aliases to make them linkable.
+> + * Do not include symbols which may not be safely accessed under hypervisor
+> + * memory mappings.
+> + */
+> +
+> +#endif /* CONFIG_KVM */
+> +
+>  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
+> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+> index 29e2b2cd2fbc..79bf822a484b 100644
+> --- a/arch/arm64/kvm/hyp/Makefile
+> +++ b/arch/arm64/kvm/hyp/Makefile
+> @@ -6,9 +6,9 @@
+>  ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
+>  		$(DISABLE_STACKLEAK_PLUGIN)
+>  
+> -obj-$(CONFIG_KVM) += hyp.o
+> +obj-$(CONFIG_KVM) += vhe.o nvhe/
+>  
+> -hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
+> +vhe-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
+>  	 debug-sr.o entry.o switch.o fpsimd.o tlb.o host_hypercall.o hyp-entry.o
+>  
+>  # KVM code is run at a different exception code with a different map, so
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+> new file mode 100644
+> index 000000000000..873d3ab0fd68
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for Kernel-based Virtual Machine module, HYP/nVHE part
+> +#
+> +
+> +asflags-y := -D__HYPERVISOR__
+> +ccflags-y := -D__HYPERVISOR__ -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
+> +	     $(DISABLE_STACKLEAK_PLUGIN)
+> +
+> +obj-y :=
+> +
+> +obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
+> +extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
+> +
+> +$(obj)/%.hyp.tmp.o: $(src)/%.c FORCE
+> +	$(call if_changed_rule,cc_o_c)
+> +$(obj)/%.hyp.tmp.o: $(src)/%.S FORCE
+> +	$(call if_changed_rule,as_o_S)
+> +$(obj)/%.hyp.o: $(obj)/%.hyp.tmp.o FORCE
+> +	$(call if_changed,hypcopy)
+> +
+> +quiet_cmd_hypcopy = HYPCOPY $@
+> +      cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__hyp_text_ $< $@
+> +
+> +# KVM nVHE code is run at a different exception code with a different map, so
+
+s/exception code/exception level/
+s/map/memory map/
+
+> +# compiler instrumentation that inserts callbacks or checks into the code may
+> +# cause crashes. Just disable it.
+> +GCOV_PROFILE	:= n
+> +KASAN_SANITIZE	:= n
+> +UBSAN_SANITIZE	:= n
+> +KCOV_INSTRUMENT	:= n
+> +
+> +# Skip objtool checking for this directory because nVHE code is compiled with
+> +# non-standard build rules.
+> +OBJECT_FILES_NON_STANDARD := y
+> diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+> index 3e8dea6e0a95..b5c9dc6de38d 100644
+> --- a/scripts/kallsyms.c
+> +++ b/scripts/kallsyms.c
+> @@ -109,6 +109,7 @@ static bool is_ignored_symbol(const char *name, char type)
+>  		".LASANPC",		/* s390 kasan local symbols */
+>  		"__crc_",		/* modversions */
+>  		"__efistub_",		/* arm64 EFI stub namespace */
+> +		"__hyp_text_",		/* arm64 non-VHE KVM namespace */
+>  		NULL
+>  	};
+
+Could you add a small comment to the commit message as to what this is
+for? It certainly piqued my curiosity, and keeping a record of it would
+be nice.
+
+>  
+> -- 
+> 2.26.1
+> 
 > 
 
-Ilya,
+Thanks,
 
-We've had a number of reports where people get a ton of kernel log spam
-when they hit this problem. I think we probably ought to mark this patch
-for stable and go ahead and send it to Linus for v5.7 -- any objection?
+	M.
 
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Without deviation from the norm, progress is not possible.
