@@ -2,100 +2,120 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3777DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E8BC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0593220731
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="JYC32j/t"
+	by mail.kernel.org (Postfix) with ESMTP id C002D21473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588885637;
+	bh=uGv1rTQpsSyaj/Rn1LM0bx4EjZZdGqbJZQKF4nHutLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d82oPbZvK/9D3yu5rw/1LtT2+A7EVAoLgOCtjg30xOHOUQefgzcGVYVvF/S9KeuU5
+	 VaPFEqQiJl2C8cRR/a6jAJv84uRbbKZ9tI94iAe7L6pRkGgiEIptbuFsYX1SNl3OCz
+	 oySon9i/AtkP8PhjAnOYf4zMCxDKvd6RL0nvt8bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgEGVGO (ORCPT
+        id S1726660AbgEGVHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVGK (ORCPT
+        Thu, 7 May 2020 17:07:17 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33847 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGVHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:06:10 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C215C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:06:10 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s9so1320635qkm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NEeebNbM/M0OFPawcEwiP7KQRHS26VREdoUS4zdOewE=;
-        b=JYC32j/tVnDFyZT5cYi5BA4MS8gBSFnKpZe1g7y+WWKiAfQZ5EJtQTrCYRiguXAA2l
-         0vJ7cSu9q8Xr9H+/xflgKxprjziO6nUU0m7xAn8VfL6xKLvxxDNKL95b+nfZgyUxXtfY
-         OYFZrMyS7894JTbZAsi9npqMeADUMfGvvSzL8mEc+eiwUY9CgOj9HYnA0M7QMYVPJTv7
-         Y2ciFMaL72giuvY6ENJegOReYfVmdOC34oZ8grdvBs6wYWx5dlara1Zb+FCCQLhN9OUv
-         xNIpdubzwyETlxZKfGC0XPp7JAThtjvREjJjOUiA/Y7VelnvQgT1oEmJ4YrXFO9uLnnF
-         s1Ew==
+        Thu, 7 May 2020 17:07:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so5515932oic.1;
+        Thu, 07 May 2020 14:07:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NEeebNbM/M0OFPawcEwiP7KQRHS26VREdoUS4zdOewE=;
-        b=hZTiar3ySeGRRnOn3MbspsttONZ5Jnzm91t9fil/VeZOoDXI0j2nOaayBpETvqDRHU
-         dXHpBr0FTbR8VF7H+PyIFYYtaGkcuXrw1u/fjMtK1wI4066RyeI0aX4eRTJ365VQlmNc
-         wIUiLZb8Mzd32wxPy9T0/33gYvKNEzHW2OeSLwbDbj3IfZ9w6dY2Dbha8O66zaKqfgy0
-         oz0i1DEAq6eL2Qqj11PQ2DZFi1/075kio3Owp9PK/8HJZP6tUslYEXQj7yLAnrNF0cbz
-         0HmHVPEAP/vuWauDM+7wjfr4AMMZ7q+w1bMwrw7DUfHmR1d3MdzJAxqMzyoxlaQD6YqJ
-         KrJw==
-X-Gm-Message-State: AGi0Pua3lJm8vtzN1pVzp7KAD4K06/hzURmGz8v7clajEO3MDpontUVZ
-        BhMFrouQ6KIsKSlwcXKkBJPSVNo5a5g=
-X-Google-Smtp-Source: APiQypJsEx7aeCPdLDnanbySV4gX1hXU71wlsuantZoJhLj50yE07ICZgNKiJA9SVzPbUFe4vnX9lw==
-X-Received: by 2002:a37:6409:: with SMTP id y9mr16506966qkb.184.1588885569875;
-        Thu, 07 May 2020 14:06:09 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id x19sm4049983qkh.42.2020.05.07.14.06.08
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=9/DVS+dary5bcN5wwyGQLe4r2M44cjfHRGvR6cavOks=;
+        b=NwEk+5LRPrR8gY60b+mbxZB/zAfRmakJC3m05NqiVduCPUfMzJS2rZJV+z41Ru3f6L
+         TQ1WjKj2bjgMISCUewNEYMQim2GvbyNXNdf67hR8wzhV5GV3ga1yNwurTiaiWDKvpK6Y
+         WzNE7YPjqhgpknH4FQdEXNicfu3YlbXWJUfGZo6MLLMfSMfPK7kbTTJclIxtWeSfS3FM
+         kL9cM1CWZ7uSmt0cDhVMFcp73cJaUE3KzfRtlipCBebuH2wMrz8i0PsN7k9YGBRPKCdH
+         bliBsmbxeRVXhWxAa+87xu35QZPMtgo7mddn/JeWBNntT2b6xkiluIOvljNbi05KaFCD
+         rMGQ==
+X-Gm-Message-State: AGi0PubPXrkSwQ8hzIySUVT7YISOKZNpsWHbLK3+n0AK1mVWiWdBF77e
+        IY8i5DcE74CKYwRVAH585g==
+X-Google-Smtp-Source: APiQypIBgpIqcuerq6AtzGUWximQsZ+IdSaqx8tmt01/OcNReArRLM+RM4D3CN2f1QAlzqb1M54l8A==
+X-Received: by 2002:aca:ec51:: with SMTP id k78mr8258261oih.60.1588885635412;
+        Thu, 07 May 2020 14:07:15 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 4sm1770225oog.3.2020.05.07.14.07.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:06:09 -0700 (PDT)
-Date:   Thu, 7 May 2020 17:05:53 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 10/19] mm: memcg/slab: deprecate memory.kmem.slabinfo
-Message-ID: <20200507210553.GE161043@cmpxchg.org>
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-11-guro@fb.com>
+        Thu, 07 May 2020 14:07:14 -0700 (PDT)
+Received: (nullmailer pid 26846 invoked by uid 1000);
+        Thu, 07 May 2020 21:07:13 -0000
+Date:   Thu, 7 May 2020 16:07:13 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 02/12] PCI: aardvark: Don't blindly enable ASPM L0s
+ and don't write to read-only register
+Message-ID: <20200507210713.GA26756@bogus>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200430080625.26070-3-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200422204708.2176080-11-guro@fb.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430080625.26070-3-pali@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:46:59PM -0700, Roman Gushchin wrote:
-> Deprecate memory.kmem.slabinfo.
+On Thu, 30 Apr 2020 10:06:15 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
+> Trying to change Link Status register does not have any effect as this
+> is a read-only register. Trying to overwrite bits for Negotiated Link
+> Width does not make sense.
 > 
-> An empty file will be presented if corresponding config options are
-> enabled.
+> In future proper change of link width can be done via Lane Count Select
+> bits in PCIe Control 0 register.
 > 
-> The interface is implementation dependent, isn't present in cgroup v2,
-> and is generally useful only for core mm debugging purposes. In other
-> words, it doesn't provide any value for the absolute majority of users.
+> Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+> Control register is wrong. There should be at least some detection if
+> endpoint supports L0s as isn't mandatory.
 > 
-> A drgn-based replacement can be found in tools/cgroup/slabinfo.py .
-> It does support cgroup v1 and v2, mimics memory.kmem.slabinfo output
-> and also allows to get any additional information without a need
-> to recompile the kernel.
+> Moreover ASPM Control bits in Link Control register are controlled by
+> pcie/aspm.c code which sets it according to system ASPM settings,
+> immediately after aardvark driver probes. So setting these bits by
+> aardvark driver has no long running effect.
 > 
-> If a drgn-based solution is too slow for a task, a bpf-based tracing
-> tool can be used, which can easily keep track of all slab allocations
-> belonging to a memory cgroup.
+> Remove code which touches ASPM L0s bits from this driver and let
+> kernel's ASPM implementation to set ASPM state properly.
 > 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Some users are reporting issues that this code is problematic for some
+> Intel wifi cards and removing it fixes them, see e.g.:
+> https://bugzilla.kernel.org/show_bug.cgi?id=196339
+> 
+> If problems with Intel wifi cards occur even after this commit, then
+> pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+> for affected problematic cards.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Rob Herring <robh@kernel.org>
