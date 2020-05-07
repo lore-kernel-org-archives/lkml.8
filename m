@@ -2,87 +2,92 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA7FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46935C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21CC520936
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:03:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NZBesiYZ"
+	by mail.kernel.org (Postfix) with ESMTP id 257D3208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgEGNC7 (ORCPT
+        id S1726635AbgEGNEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:02:59 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:47150 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgEGNC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:02:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Z6KuXtJXawSDTaJcg/aiiJZVD/MQw/2EooMYHaz1n38=; b=NZBesiYZmcT+GQ5aRvDvCuwRji
-        QfXQu2V3SjosPKNkKlqCn8dK0a8Ur+VYM1W3x7AvNkKXbEVves+KKczOEdnKRPJ4JEMtyvJSZLR0B
-        RyGvIrnev+ogcbU0gC+8OUuMJVc0Xzv19/0BrS9/gA9oywKOD3dMQfoAlgDZBYAcyo+w=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jWgAt-001Dto-76; Thu, 07 May 2020 15:02:51 +0200
-Date:   Thu, 7 May 2020 15:02:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>, netdev@vger.kernel.org,
-        olteanv@gmail.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net] net: dsa: Add missing reference counting
-Message-ID: <20200507130251.GL208718@lunn.ch>
-References: <20200505210253.20311-1-f.fainelli@gmail.com>
- <20200505172302.GB1170406@t480s.localdomain>
- <d681a82b-5d4b-457f-56de-3a439399cb3d@gmail.com>
+        Thu, 7 May 2020 09:04:46 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58059 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725914AbgEGNEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:04:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TxqomBt_1588856677;
+Received: from 30.27.116.247(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TxqomBt_1588856677)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 07 May 2020 21:04:38 +0800
+Subject: Re: [PATCH v4 2/7] KVM: arm64: clean up redundant 'kvm_run'
+ parameters
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
+ <35eb095a344b4192b912385bc02c54e6@kernel.org>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <f093f6cf-4892-7c8f-d3aa-e908d5740cba@linux.alibaba.com>
+Date:   Thu, 7 May 2020 21:04:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d681a82b-5d4b-457f-56de-3a439399cb3d@gmail.com>
+In-Reply-To: <35eb095a344b4192b912385bc02c54e6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:24:14PM -0700, Florian Fainelli wrote:
+
+
+On 2020/5/5 16:39, Marc Zyngier wrote:
+> Hi Tianjia,
 > 
+> On 2020-04-27 05:35, Tianjia Zhang wrote:
+>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+>> structure. For historical reasons, many kvm-related function parameters
+>> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+>> patch does a unified cleanup of these remaining redundant parameters.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 > 
-> On 5/5/2020 2:23 PM, Vivien Didelot wrote:
-> > On Tue,  5 May 2020 14:02:53 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >> If we are probed through platform_data we would be intentionally
-> >> dropping the reference count on master after dev_to_net_device()
-> >> incremented it. If we are probed through Device Tree,
-> >> of_find_net_device() does not do a dev_hold() at all.
-> >>
-> >> Ensure that the DSA master device is properly reference counted by
-> >> holding it as soon as the CPU port is successfully initialized and later
-> >> released during dsa_switch_release_ports(). dsa_get_tag_protocol() does
-> >> a short de-reference, so we hold and release the master at that time,
-> >> too.
-> >>
-> >> Fixes: 83c0afaec7b7 ("net: dsa: Add new binding implementation")
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> > 
-> > Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-> > 
-> Andrew, Vladimir, any thoughts on that?
+> On the face of it, this looks OK, but I haven't tried to run the
+> resulting kernel. I'm not opposed to taking this patch *if* there
+> is an agreement across architectures to take the series (I value
+> consistency over the janitorial exercise).
+> 
+> Another thing is that this is going to conflict with the set of
+> patches that move the KVM/arm code back where it belongs (arch/arm64/kvm),
+> so I'd probably cherry-pick that one directly.
+> 
+> Thanks,
+> 
+>          M.
+> 
 
-Hi Florian
+Do I need to submit this set of patches separately for each 
+architecture? Could it be merged at once, if necessary, I will
+resubmit based on the latest mainline.
 
-Have you looked at how other stacked drivers do this? bond/team, vlan,
-bridge, BATMAN?
-
-Do we maybe need to subscribe to the master devices notifier chain,
-and do a tear down when the device is removed?
-
-    Andrew
+Thanks,
+Tianjia
