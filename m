@@ -2,153 +2,185 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E27C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852FEC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C112208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:35:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sB+cvXpj"
+	by mail.kernel.org (Postfix) with ESMTP id 6E8DA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 09:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgEGJfJ (ORCPT
+        id S1726437AbgEGJgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 05:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEGJfI (ORCPT
+        Thu, 7 May 2020 05:36:15 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:45733 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgEGJgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 05:35:08 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EBAC061A10
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 02:35:08 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id j16so4611411oih.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 02:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cahzpbTf0SUTONv4Oc4dlWOWG1dLD0UTEN01WnEA1bg=;
-        b=sB+cvXpjSs3AonkAHGdzo61kc0V6MO35qvFlBZk6PJuerkQfupOhCpjW5jRFRb9Nhk
-         t5DhNhxSe2cl1tLcmr8BGUDdiyjPYBMzd9VZUH1yt2oykHR108x2bvudCIE8OvhQC6q6
-         sVlxqXej2AkbQlTtRgUlUiyUEeNOx4oPuYgZxjxF94HfN6GoS8X42q/oIhc+JJxz3+Ht
-         dt+Dl+3gAXXjsxneuB+TD9KQ0qq7xeSH5KVR1S3RoInu4LDzE34pXhMQOCRpELjUCVNn
-         kEQqRmb6yECYsGCgCYO10DaWK0qzaKhfEGtqvZ8tuEdm2g8IX4wHUbMEgkyq1GgaD/GJ
-         qIAQ==
+        Thu, 7 May 2020 05:36:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id t10so5332703ilf.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 02:36:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cahzpbTf0SUTONv4Oc4dlWOWG1dLD0UTEN01WnEA1bg=;
-        b=gTSpLOJ2yd6m9jb5qqYu1+dtmTAa0AuhPu7bCAPLyUYBf2t9A0ToQXYNFcEk6iNzyW
-         codx3x2EFwlIy4IB23xAdbtu/NN97bBFNWpxvKD/9jgo158c8rLuN+HoTMeBiStIjrOn
-         PvHOUvgL/73TIFgjzNX7osLx19VHE/o7cfXW/7LCyR4OUDYtCQn42vkkc0vFQsFdsV4K
-         pgH3vN3fXKGyD8fWHR0QNe+sU6btCHRuUa9s8Iu+upvxT31Ni33h7fgduLAH9+NSORTm
-         ihcc/0rrDox2ihB/7zqfP0oSswz57HvLAfUnwHQm0b81xdGEKCRis4jaRW/bXPJT9vS0
-         jGGw==
-X-Gm-Message-State: AGi0PuY45Hs0FjZXajUZ+IuU/eNNNiHX1TMGuLRSu65z0TLLxcN+ESte
-        v5Ra9aCdSdOAGTN7dxCKVmCMHAEK2wOY0kxB3tkM+53L
-X-Google-Smtp-Source: APiQypIugmQsTko33VfSMgr6X6oStN4gmmFhMoOdVUqWPl5MIIYT3qytEmPYLOWqVbZALTsKLqvDK3uS/mQBhJ1CUbs=
-X-Received: by 2002:aca:c646:: with SMTP id w67mr6001691oif.70.1588844107814;
- Thu, 07 May 2020 02:35:07 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zgr12NG/96S5pfuI0okSGWF9x6WfA1Zy9V4M4WnWAMM=;
+        b=om8HPgaJ/w738SNF0WnaPGOUVSKHMsbfrZAhH3RzwxdTGapq08hV/0DXVgFJeIZ9Qa
+         X9Vl1PQO5Y2bUk/ncQaLSKg4ShJaQWyUcKkpLRZSE4mOxcC04sw9vVTKefL53dj9pK0K
+         mNooC82auefn/XTWJ3fwkPcbT/cSHg7kgxbNWNtTsZkmb0DyamyV5WmnNvFs3W/mN9NZ
+         Dm7gPHj931WtvzFwLdMmtTLCWxKg5dB+4jExfVjm0ACm1PKKCjRdHaJPhr3pR1dlkIKD
+         mhdXhSiWVwIwlT3iOYornBCT1RaHAS4DiTW6H6EEwly7buLzKXP85fpxyGyyKK672/cz
+         XcyQ==
+X-Gm-Message-State: AGi0PubFN/DBNqIhjQ2mQxBLqEo4RVxmRCUmEDW/bMQf19mDhkhGS0ug
+        RB2sgU4sjmbdgMQ1omDMs/AELP6gSW6qm817YndnJiCnLLQj
+X-Google-Smtp-Source: APiQypJUExR5SSgw0gyrpqPlg6LOLXBmXfah4Ewhloj32cSZgjhr8+4KKOwzOxYkPeUrgIepVI9nKfDmy+bwCbmD5rUFzEg7sNu1
 MIME-Version: 1.0
-References: <20200506132816.GJ8043@willie-the-truck> <20200506143616.GY2869@paulmck-ThinkPad-P72>
- <20200506144141.GA12919@willie-the-truck> <CANpmjNP3ge49sXJZS-KaL5bpEq0rmc4CqepjGRbtbCVwm7rwpw@mail.gmail.com>
- <20200506180232.GB2869@paulmck-ThinkPad-P72> <CANpmjNP1v8wORd_nfQb7hVH2EY5P565uJYsRFt0dXi4KZvQ46A@mail.gmail.com>
- <20200506193713.GG2869@paulmck-ThinkPad-P72> <20200506214727.GA27039@paulmck-ThinkPad-P72>
-In-Reply-To: <20200506214727.GA27039@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 7 May 2020 11:34:55 +0200
-Message-ID: <CANpmjNObCdQ-QnawW+gz5aAwM7AVSgRe4yptyavyQGG20bp5-Q@mail.gmail.com>
-Subject: Re: Please can I have a stable KCSAN branch for 5.8?
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:d1c4:: with SMTP id u4mr12749363ilg.183.1588844173612;
+ Thu, 07 May 2020 02:36:13 -0700 (PDT)
+Date:   Thu, 07 May 2020 02:36:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000925dda05a50b9c13@google.com>
+Subject: KASAN: use-after-free Read in rpc_net_ns
+From:   syzbot <syzbot+22b5ef302c7c40d94ea8@syzkaller.appspotmail.com>
+To:     anna.schumaker@netapp.com, bfields@fieldses.org,
+        chuck.lever@oracle.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        neilb@suse.de, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, trond.myklebust@hammerspace.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 at 23:47, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Wed, May 06, 2020 at 12:37:13PM -0700, Paul E. McKenney wrote:
-> > On Wed, May 06, 2020 at 09:11:23PM +0200, Marco Elver wrote:
-> > > On Wed, 6 May 2020 at 20:02, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Wed, May 06, 2020 at 05:26:56PM +0200, Marco Elver wrote:
-> > > > > On Wed, 6 May 2020 at 16:41, Will Deacon <will@kernel.org> wrote:
-> > > > > >
-> > > > > > Hi Paul,
-> > > > > >
-> > > > > > Cheers for the quick reply!
-> > > > > >
-> > > > > > On Wed, May 06, 2020 at 07:36:16AM -0700, Paul E. McKenney wrote:
-> > > > > > > On Wed, May 06, 2020 at 02:28:17PM +0100, Will Deacon wrote:
-> > > > > > > > I'm looking to rebase my READ_ONCE() series [1] on top of the KCSAN patches
-> > > > > > > > so that we can get them in for 5.8. However, tip/locking/kcsan seems to be
-> > > > > > > > missing some bits:
-> > > > > > > >
-> > > > > > > >   * An update to checkpatch.pl to warn about missing comments for
-> > > > > > > >     data_race():
-> > > > > > > >
-> > > > > > > >     https://lore.kernel.org/r/20200401101714.44781-1-elver@google.com
-> > > > > > >
-> > > > > > > For some reason, I thought this was going up some other tree, but I do
-> > > > > > > not see it in -next.  So unless I hear otherwise, I will pull it into
-> > > > > > > the v5.8 kcsan branch.
-> > > > > >
-> > > > > > Brill, thanks.
-> > > > > >
-> > > > > > > >   * I'm unable to apply these two patches from Marco that are needed for
-> > > > > > > >     my READ_ONCE() work:
-> > > > > > > >
-> > > > > > > >     https://lore.kernel.org/lkml/20200424154730.190041-1-elver@google.com/
-> > > > > > > >
-> > > > > > > >     I think these depend on stuff that has been queued by Paul, and appears
-> > > > > > > >     in linux-next, but to be honest with you I'm quite confused about what
-> > > > > > > >     is queued for 5.8 and what isn't.
-> > > > > > >
-> > > > > > > This one is queued, but I currently have it in the v5.9 pile (but
-> > > > > > > tentatively for v5.8).  Unless Marco tells me otherwise, I will move it
-> > > > > > > to the v5.8 branch, which will be part of my pull request next week.
-> > > > > >
-> > > > > > Great, then this would all show up on tip/locking/kscan, right?
-> > > > > >
-> > > > > > > > What's the best base for me to use?
-> > > > > > >
-> > > > > > > The -next tree has the latter, but not yet the former.
-> > > > > >
-> > > > > > That probably means -next is good enough for me to cook a new version of my
-> > > > > > series, and then I can make a proper branch next week.
-> > > > > >
-> > > > > > > Hopefully we can get this straightened out, and please accept my apologies
-> > > > > > > for the hassle!
-> > > > > >
-> > > > > > No need to apologise, I just couldn't figure out what was what and decided
-> > > > > > it was easier to ask the experts ;)
-> > > > >
-> > > > > Just confirming that I don't see any issues with the plan -- the
-> > > > > patches that Will needs are good to go into the v5.8 branch.
-> > > >
-> > > > OK, I have updated -rcu's kcsan and kcsan-dev branches.  Could you please
-> > > > double-check, given that pull-request time is quite soon?
-> > >
-> > > I believe "objtool, kcsan: Add kcsan_disable_current() and
-> > > kcsan_enable_current_nowarn()" is missing, which should go after
-> > > "kcsan: Add __kcsan_{enable,disable}_current() variants".
-> >
-> > Thank you for checking!  I will move that one also.
->
-> And it is moved.  FYI, I will likely be sending my KCSAN pull request
-> late tomorrow (Thursday) Pacific Time, a few days earlier than normal.
+Hello,
 
-Looks good, thank you!
+syzbot found the following crash on:
 
--- Marco
+HEAD commit:    f66ed1eb Merge tag 'iomap-5.7-fixes-1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13a4fa9c100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5b075813ec8b93cd
+dashboard link: https://syzkaller.appspot.com/bug?extid=22b5ef302c7c40d94ea8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12315918100000
+
+The bug was bisected to:
+
+commit 7c4310ff56422ea43418305d22bbc5fe19150ec4
+Author: NeilBrown <neilb@suse.de>
+Date:   Fri Apr 3 03:33:41 2020 +0000
+
+    SUNRPC: defer slow parts of rpc_free_client() to a workqueue.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12176e60100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11176e60100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16176e60100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+22b5ef302c7c40d94ea8@syzkaller.appspotmail.com
+Fixes: 7c4310ff5642 ("SUNRPC: defer slow parts of rpc_free_client() to a workqueue.")
+
+IPv6: ADDRCONF(NETDEV_CHANGE): veth1_vlan: link becomes ready
+IPv6: ADDRCONF(NETDEV_CHANGE): veth0_vlan: link becomes ready
+==================================================================
+BUG: KASAN: use-after-free in rpc_net_ns+0x222/0x230 net/sunrpc/clnt.c:1506
+Read of size 8 at addr ffff8880a7c888d8 by task kworker/0:3/2690
+
+CPU: 0 PID: 2690 Comm: kworker/0:3 Not tainted 5.7.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events rpc_free_client_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ rpc_net_ns+0x222/0x230 net/sunrpc/clnt.c:1506
+ rpc_clnt_remove_pipedir net/sunrpc/clnt.c:111 [inline]
+ rpc_free_client_work+0x1a/0x60 net/sunrpc/clnt.c:892
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 8372:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x161/0x7a0 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ xprt_alloc+0x2d/0x800 net/sunrpc/xprt.c:1658
+ xs_setup_xprt.part.0+0x56/0x2e0 net/sunrpc/xprtsock.c:2735
+ xs_setup_xprt net/sunrpc/xprtsock.c:2906 [inline]
+ xs_setup_udp+0x9e/0x890 net/sunrpc/xprtsock.c:2850
+ xprt_create_transport+0xf9/0x480 net/sunrpc/xprt.c:1905
+ rpc_create+0x282/0x680 net/sunrpc/clnt.c:581
+ nfs_create_rpc_client+0x4eb/0x680 fs/nfs/client.c:535
+ nfs_init_client fs/nfs/client.c:652 [inline]
+ nfs_init_client+0x6d/0xf0 fs/nfs/client.c:639
+ nfs_get_client+0x1098/0x1430 fs/nfs/client.c:429
+ nfs_init_server+0x305/0xf00 fs/nfs/client.c:691
+ nfs_create_server+0x15c/0x700 fs/nfs/client.c:978
+ nfs_try_get_tree+0x166/0x8d0 fs/nfs/super.c:922
+ nfs_get_tree+0x95a/0x13a0 fs/nfs/fs_context.c:1291
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2816 [inline]
+ do_mount+0x1306/0x1b30 fs/namespace.c:3141
+ __do_sys_mount fs/namespace.c:3350 [inline]
+ __se_sys_mount fs/namespace.c:3327 [inline]
+ __x64_sys_mount+0x18f/0x230 fs/namespace.c:3327
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 23:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+ __cache_free mm/slab.c:3426 [inline]
+ kmem_cache_free_bulk+0x7d/0x280 mm/slab.c:3721
+ kfree_bulk include/linux/slab.h:412 [inline]
+ kfree_rcu_work+0x1a1/0x480 kernel/rcu/tree.c:2859
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8880a7c88000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 2264 bytes inside of
+ 4096-byte region [ffff8880a7c88000, ffff8880a7c89000)
+The buggy address belongs to the page:
+page:ffffea00029f2200 refcount:1 mapcount:0 mapping:00000000862db9cd index:0x0 head:ffffea00029f2200 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea00029ca708 ffffea00029a1c88 ffff8880aa002000
+raw: 0000000000000000 ffff8880a7c88000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a7c88780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a7c88800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880a7c88880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                    ^
+ ffff8880a7c88900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a7c88980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
