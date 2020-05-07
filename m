@@ -2,223 +2,269 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EE5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F4BC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5C420838
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AoTz5sGm"
+	by mail.kernel.org (Postfix) with ESMTP id 49D4920838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgEGP5Q (ORCPT
+        id S1728109AbgEGP5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727998AbgEGP5O (ORCPT
+        Thu, 7 May 2020 11:57:32 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52195 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgEGP5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 11:57:14 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23608C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 08:57:14 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d184so3202920pfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D4EacoqLrks03Ge0RCzM6pu9iVWZ73tmsSunwf83CvA=;
-        b=AoTz5sGmagbHHvj2Ukx2Xn0z5zI4ieVjR3BuWxfMXVqkIDVqRpfZzMZ3lr/cT1UCdB
-         Rlr9fsxa01PQZrNoTl088lbebcpciyfdWkOi2/JDtNBm1YhZF3Dxl/gx02be7INEG+oA
-         6qlGHMwDEbY79blf2uKO+a5CXvf4KdjgtNQJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D4EacoqLrks03Ge0RCzM6pu9iVWZ73tmsSunwf83CvA=;
-        b=mlPqj+lwWAT9+oQGNGUihJpIQC4p9tVJb8oQ62fV4VJt8beMg7d8iIfMo2obwbEprG
-         lEm7KmxH/UdtQxs6ffZkbQUwG8N0Y+OMKVfvtgYEZd9bn7+rsFJ1J3EtYLMX6DROYbTc
-         5dW5iVomH7O22NGDIJddE0V8Y1xpOpyvmW/K0mcH+g2e3e8gRa6AwWpAAmDKmltAFPsy
-         W6tTN+AxP5z+t5VmqArEYm9Loj18uDUeZrxbNGbBsKy11c4VN4mAGjc3m4gwz7Ek9D3L
-         Ql4LrFZ5Mn/uKv3DLi7V6yiAumXwZMpW41PATIUa8NEhvzo+1GAh9+AfRoJR1595zr/A
-         CrWw==
-X-Gm-Message-State: AGi0PuaBIugPq598HEaGg8xkXlA038ENId0YVQk8aC4cKnGA3Hr86ncZ
-        +V1PGbVao+LTACzILwDbviKPzSXDoAY=
-X-Google-Smtp-Source: APiQypKpyD0a/6T6VXGV5Q0+j/KBuiI/K33HfPtiUjfj2T9KrCHbp9VRrfnx8mQILJgdSpJFU/m6zQ==
-X-Received: by 2002:a62:16cb:: with SMTP id 194mr14822510pfw.78.1588867033537;
-        Thu, 07 May 2020 08:57:13 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id gd17sm234805pjb.21.2020.05.07.08.57.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 08:57:12 -0700 (PDT)
-Date:   Thu, 7 May 2020 08:57:11 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org, akashast@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] interconnect: Add helpers for enabling/disabling a
- path
-Message-ID: <20200507155711.GZ4525@google.com>
-References: <20200507120846.8354-1-georgi.djakov@linaro.org>
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 0A9F5C001A;
+        Thu,  7 May 2020 15:57:10 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2 1/3] usb: gadget: udc: atmel: Don't use DT to configure end point
+Date:   Thu,  7 May 2020 17:56:49 +0200
+Message-Id: <20200507155651.1094142-2-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200507155651.1094142-1-gregory.clement@bootlin.com>
+References: <20200507155651.1094142-1-gregory.clement@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200507120846.8354-1-georgi.djakov@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:08:46PM +0300, Georgi Djakov wrote:
-> There is a repeated pattern in multiple drivers where they want to switch
-> the bandwidth between zero and some other value. This is happening often
-> in the suspend/resume callbacks. Let's add helper functions to enable and
-> disable the path, so that callers don't have to take care of remembering
-> the bandwidth values and handle this in the framework instead.
-> 
-> With this patch the users can call icc_disable() and icc_enable() to lower
-> their bandwidth request to zero and then restore it back to it's previous
-> value.
-> 
-> Suggested-by: Evan Green <evgreen@chromium.org>
-> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v2: https://lore.kernel.org/r/20200428091650.27669-1-georgi.djakov@linaro.org/
-> * Extract the common code into __icc_enable() (Matthias)
-> 
-> 
->  drivers/interconnect/core.c     | 39 ++++++++++++++++++++++++++++++++-
->  drivers/interconnect/internal.h |  2 ++
->  include/linux/interconnect.h    | 12 ++++++++++
->  3 files changed, 52 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index f5699ed34e43..d5e0f93c942d 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -158,6 +158,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
->  		hlist_add_head(&path->reqs[i].req_node, &node->req_list);
->  		path->reqs[i].node = node;
->  		path->reqs[i].dev = dev;
-> +		path->reqs[i].enabled = true;
->  		/* reference to previous node was saved during path traversal */
->  		node = node->reverse;
->  	}
-> @@ -249,9 +250,12 @@ static int aggregate_requests(struct icc_node *node)
->  	if (p->pre_aggregate)
->  		p->pre_aggregate(node);
->  
-> -	hlist_for_each_entry(r, &node->req_list, req_node)
-> +	hlist_for_each_entry(r, &node->req_list, req_node) {
-> +		if (!r->enabled)
-> +			continue;
->  		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
->  			     &node->avg_bw, &node->peak_bw);
-> +	}
->  
->  	return 0;
->  }
-> @@ -571,6 +575,39 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
->  }
->  EXPORT_SYMBOL_GPL(icc_set_bw);
->  
-> +static int __icc_enable(struct icc_path *path, bool enable)
-> +{
-> +	int i;
-> +
-> +	if (!path)
-> +		return 0;
-> +
-> +	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&icc_lock);
-> +
-> +	for (i = 0; i < path->num_nodes; i++)
-> +		path->reqs[i].enabled = enable;
-> +
-> +	mutex_unlock(&icc_lock);
-> +
-> +	return icc_set_bw(path, path->reqs[0].avg_bw,
-> +			  path->reqs[0].peak_bw);
-> +}
-> +
-> +int icc_disable(struct icc_path *path)
-> +{
-> +	return __icc_enable(path, false);
-> +}
-> +EXPORT_SYMBOL_GPL(icc_disable);
-> +
-> +int icc_enable(struct icc_path *path)
-> +{
-> +	return __icc_enable(path, true);
-> +}
-> +EXPORT_SYMBOL_GPL(icc_enable);
-> +
+The endpoint configuration used to be stored in the device tree,
+however the configuration depend on the "version" of the controller
+itself.
 
-uber-nit: my brain expects the order enable/disable, just like lock/unlock
-or true/false instead of vice-versa, but it's certainly not really
-important :)
+This information is already documented by the compatible string. It
+then possible to just rely on the compatible string and completely
+remove the full ep configuration done in the device tree as it was
+already the case for all the other USB device controller.
 
->  /**
->   * icc_get() - return a handle for path between two endpoints
->   * @dev: the device requesting the path
-> diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
-> index bf18cb7239df..f5f82a5c939e 100644
-> --- a/drivers/interconnect/internal.h
-> +++ b/drivers/interconnect/internal.h
-> @@ -14,6 +14,7 @@
->   * @req_node: entry in list of requests for the particular @node
->   * @node: the interconnect node to which this constraint applies
->   * @dev: reference to the device that sets the constraints
-> + * @enabled: indicates whether the path with this request is enabled
->   * @tag: path tag (optional)
->   * @avg_bw: an integer describing the average bandwidth in kBps
->   * @peak_bw: an integer describing the peak bandwidth in kBps
-> @@ -22,6 +23,7 @@ struct icc_req {
->  	struct hlist_node req_node;
->  	struct icc_node *node;
->  	struct device *dev;
-> +	bool enabled;
->  	u32 tag;
->  	u32 avg_bw;
->  	u32 peak_bw;
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index 770692421f4c..2b7b331c9354 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -30,6 +30,8 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
->  struct icc_path *of_icc_get(struct device *dev, const char *name);
->  struct icc_path *devm_of_icc_get(struct device *dev, const char *name);
->  void icc_put(struct icc_path *path);
-> +int icc_disable(struct icc_path *path);
-> +int icc_enable(struct icc_path *path);
->  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->  void icc_set_tag(struct icc_path *path, u32 tag);
->  
-> @@ -57,6 +59,16 @@ static inline void icc_put(struct icc_path *path)
->  {
->  }
->  
-> +static inline int icc_disable(struct icc_path *path)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int icc_enable(struct icc_path *path)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
->  {
->  	return 0;
+Acked-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 112 +++++++++++++++---------
+ drivers/usb/gadget/udc/atmel_usba_udc.h |  12 +++
+ 2 files changed, 84 insertions(+), 40 deletions(-)
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index 6e0432141c40..f4c83514e527 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -2043,10 +2043,56 @@ static const struct usba_udc_errata at91sam9g45_errata = {
+ 	.pulse_bias = at91sam9g45_pulse_bias,
+ };
+ 
++static const struct usba_ep_config ep_config_sam9[] __initconst = {
++	{ .nr_banks = 1 },				/* ep 0 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 1 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 2 */
++	{ .nr_banks = 3, .can_dma = 1 },		/* ep 3 */
++	{ .nr_banks = 3, .can_dma = 1 },		/* ep 4 */
++	{ .nr_banks = 3, .can_dma = 1, .can_isoc = 1 },	/* ep 5 */
++	{ .nr_banks = 3, .can_dma = 1, .can_isoc = 1 },	/* ep 6 */
++};
++
++static const struct usba_ep_config ep_config_sama5[] __initconst = {
++	{ .nr_banks = 1 },				/* ep 0 */
++	{ .nr_banks = 3, .can_dma = 1, .can_isoc = 1 },	/* ep 1 */
++	{ .nr_banks = 3, .can_dma = 1, .can_isoc = 1 },	/* ep 2 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 3 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 4 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 5 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 6 */
++	{ .nr_banks = 2, .can_dma = 1, .can_isoc = 1 },	/* ep 7 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 8 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 9 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 10 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 11 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 12 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 13 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 14 */
++	{ .nr_banks = 2, .can_isoc = 1 },		/* ep 15 */
++};
++
++static const struct usba_udc_config udc_at91sam9rl_cfg = {
++	.errata = &at91sam9rl_errata,
++	.config = ep_config_sam9,
++	.num_ep = ARRAY_SIZE(ep_config_sam9),
++};
++
++static const struct usba_udc_config udc_at91sam9g45_cfg = {
++	.errata = &at91sam9g45_errata,
++	.config = ep_config_sam9,
++	.num_ep = ARRAY_SIZE(ep_config_sam9),
++};
++
++static const struct usba_udc_config udc_sama5d3_cfg = {
++	.config = ep_config_sama5,
++	.num_ep = ARRAY_SIZE(ep_config_sama5),
++};
++
+ static const struct of_device_id atmel_udc_dt_ids[] = {
+-	{ .compatible = "atmel,at91sam9rl-udc", .data = &at91sam9rl_errata },
+-	{ .compatible = "atmel,at91sam9g45-udc", .data = &at91sam9g45_errata },
+-	{ .compatible = "atmel,sama5d3-udc" },
++	{ .compatible = "atmel,at91sam9rl-udc", .data = &udc_at91sam9rl_cfg },
++	{ .compatible = "atmel,at91sam9g45-udc", .data = &udc_at91sam9g45_cfg },
++	{ .compatible = "atmel,sama5d3-udc", .data = &udc_sama5d3_cfg },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -2055,18 +2101,19 @@ MODULE_DEVICE_TABLE(of, atmel_udc_dt_ids);
+ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+ 						    struct usba_udc *udc)
+ {
+-	u32 val;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct of_device_id *match;
+ 	struct device_node *pp;
+ 	int i, ret;
+ 	struct usba_ep *eps, *ep;
++	const struct usba_udc_config *udc_config;
+ 
+ 	match = of_match_node(atmel_udc_dt_ids, np);
+ 	if (!match)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	udc->errata = match->data;
++	udc_config = match->data;
++	udc->errata = udc_config->errata;
+ 	udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9g45-pmc");
+ 	if (IS_ERR(udc->pmc))
+ 		udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9rl-pmc");
+@@ -2082,8 +2129,7 @@ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+ 
+ 	if (fifo_mode == 0) {
+ 		pp = NULL;
+-		while ((pp = of_get_next_child(np, pp)))
+-			udc->num_ep++;
++		udc->num_ep = udc_config->num_ep;
+ 		udc->configured_ep = 1;
+ 	} else {
+ 		udc->num_ep = usba_config_fifo_table(udc);
+@@ -2100,52 +2146,38 @@ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+ 
+ 	pp = NULL;
+ 	i = 0;
+-	while ((pp = of_get_next_child(np, pp)) && i < udc->num_ep) {
++	while (i < udc->num_ep) {
++		const struct usba_ep_config *ep_cfg = &udc_config->config[i];
++
+ 		ep = &eps[i];
+ 
+-		ret = of_property_read_u32(pp, "reg", &val);
+-		if (ret) {
+-			dev_err(&pdev->dev, "of_probe: reg error(%d)\n", ret);
+-			goto err;
+-		}
+-		ep->index = fifo_mode ? udc->fifo_cfg[i].hw_ep_num : val;
++		ep->index = fifo_mode ? udc->fifo_cfg[i].hw_ep_num : i;
++
++		/* Only the first EP is 64 bytes */
++		if (ep->index == 0)
++			ep->fifo_size = 64;
++		else
++			ep->fifo_size = 1024;
+ 
+-		ret = of_property_read_u32(pp, "atmel,fifo-size", &val);
+-		if (ret) {
+-			dev_err(&pdev->dev, "of_probe: fifo-size error(%d)\n", ret);
+-			goto err;
+-		}
+ 		if (fifo_mode) {
+-			if (val < udc->fifo_cfg[i].fifo_size) {
++			if (ep->fifo_size < udc->fifo_cfg[i].fifo_size)
+ 				dev_warn(&pdev->dev,
+-					 "Using max fifo-size value from DT\n");
+-				ep->fifo_size = val;
+-			} else {
++					 "Using default max fifo-size value\n");
++			else
+ 				ep->fifo_size = udc->fifo_cfg[i].fifo_size;
+-			}
+-		} else {
+-			ep->fifo_size = val;
+ 		}
+ 
+-		ret = of_property_read_u32(pp, "atmel,nb-banks", &val);
+-		if (ret) {
+-			dev_err(&pdev->dev, "of_probe: nb-banks error(%d)\n", ret);
+-			goto err;
+-		}
++		ep->nr_banks = ep_cfg->nr_banks;
+ 		if (fifo_mode) {
+-			if (val < udc->fifo_cfg[i].nr_banks) {
++			if (ep->nr_banks < udc->fifo_cfg[i].nr_banks)
+ 				dev_warn(&pdev->dev,
+-					 "Using max nb-banks value from DT\n");
+-				ep->nr_banks = val;
+-			} else {
++					 "Using default max nb-banks value\n");
++			else
+ 				ep->nr_banks = udc->fifo_cfg[i].nr_banks;
+-			}
+-		} else {
+-			ep->nr_banks = val;
+ 		}
+ 
+-		ep->can_dma = of_property_read_bool(pp, "atmel,can-dma");
+-		ep->can_isoc = of_property_read_bool(pp, "atmel,can-isoc");
++		ep->can_dma = ep_cfg->can_dma;
++		ep->can_isoc = ep_cfg->can_isoc;
+ 
+ 		sprintf(ep->name, "ep%d", ep->index);
+ 		ep->ep.name = ep->name;
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
+index a0225e4543d4..48e332439ed5 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.h
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
+@@ -290,6 +290,12 @@ struct usba_ep {
+ #endif
+ };
+ 
++struct usba_ep_config {
++	u8					nr_banks;
++	unsigned int				can_dma:1;
++	unsigned int				can_isoc:1;
++};
++
+ struct usba_request {
+ 	struct usb_request			req;
+ 	struct list_head			queue;
+@@ -307,6 +313,12 @@ struct usba_udc_errata {
+ 	void (*pulse_bias)(struct usba_udc *udc);
+ };
+ 
++struct usba_udc_config {
++	const struct usba_udc_errata *errata;
++	const struct usba_ep_config *config;
++	const int num_ep;
++};
++
+ struct usba_udc {
+ 	/* Protect hw registers from concurrent modifications */
+ 	spinlock_t lock;
+-- 
+2.26.2
+
