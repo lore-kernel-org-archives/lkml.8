@@ -2,150 +2,202 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FEFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C954CC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6273120736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9726C206B9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="MahP03Mj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWjU8nee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgEGUjl (ORCPT
+        id S1726926AbgEGUj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:39:41 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41222 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgEGUjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:39:41 -0400
-IronPort-SDR: FBdgYHiDR5PBckoJ37qcu5aA+Keyj44dIWaJ9xAxHDWsyXg1FXJUSDZ6Veo8PeHCHcpP8mcrFL
- SKxBk4/g/btg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 13:39:39 -0700
-IronPort-SDR: F47B8PGoN4/DU8rwYvTi1lXLd1/H2jOcWoV+5FCnwDoRN2Hmf8ZIts+xWRx6EUqx8BaTFhzDka
- yElIjpmjC9pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="296649024"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga008.jf.intel.com with ESMTP; 07 May 2020 13:39:39 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 7 May 2020 13:39:39 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 7 May 2020 13:39:36 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 7 May 2020 13:39:36 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 7 May 2020 13:39:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lmk84Tf3UBVWJxqf4JCg6qMH9LqTqqdv0LBs/vq1jtp+tl/D/B6hk0ZKISNInfsgBf79lN8HWK6TUChueRl1gwq29SW3l6V/McLm4GTFrdEWfKLwWwuOh7D+fKOqbIqkxMm4YFQk58b10tlZ8I8UCfJNeSl6/eqi9DcXRccd4CsdnC+AcsGHMjnz7RdBpNGT7fax5MQHe19tld0YFZin6E7DhYzwFMh4OvM0FV2I3aEl/0AlrGaEB9bS1dqqQh5wsgMy6A70TOEu6rqPihymgaJ1kS8/21vMHmvlyBmS8S3t3haLXhkZChcODBKLqdHzI6KjPknASZEluCQbYooulQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yvCoGxLIrkzTRNRpCRUsvA3H9AOOxbkQsaMHuavp+3E=;
- b=ESv9D5vfG3BEH1FAzRcKTOLW8KHdKoLn2zGfcXeKalHn6ACNgL/VuRuxTtuc8SFcmAkP8SFruBeZUR8lM1rcGn9EBekTvFK8geZbGzuUEKQPlNG5on7RJP2H1vWpKZTANKsVQ9yeKuWkRVFpZxZfQO6hX65K4AQsyhxIcgxb64LOyk21L0kDcL1psKZj+51+mpvrDmidGJzfslkRI0Do+7/NNpCNsPfLAx3ITq61Ar3o4YlbvJykloWkyGdm0TaK94AoR3qIE0R773tvubxghccFJhBkDH6R/nPzXeLFNFRt3YAectfGTwdzTgRqN6kdts5lk3a5Pk2GQZCRIWlkSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yvCoGxLIrkzTRNRpCRUsvA3H9AOOxbkQsaMHuavp+3E=;
- b=MahP03MjvlhORi4XFSgbBdktci1aB5pBL220wXCD+9Bfp+Qht/Vz394MrbwMH9UdZLySk/tWlbm3PKz3KRmEYci6KuOYTtT3RBZE8zzAUmR1JdtifUWFfDVGaYQnpEhmvJmFcHcx1t2v9p3chUm/MnDnc/PIgWRqUl7NhSmwxXw=
-Received: from DM5PR11MB1659.namprd11.prod.outlook.com (2603:10b6:4:6::20) by
- DM5PR11MB1916.namprd11.prod.outlook.com (2603:10b6:3:10a::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.26; Thu, 7 May 2020 20:39:19 +0000
-Received: from DM5PR11MB1659.namprd11.prod.outlook.com
- ([fe80::34e5:3ad6:73cd:4783]) by DM5PR11MB1659.namprd11.prod.outlook.com
- ([fe80::34e5:3ad6:73cd:4783%12]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 20:39:19 +0000
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH net-next] ixgbe: Remove conversion to
- bool in ixgbe_device_supports_autoneg_fc()
-Thread-Topic: [Intel-wired-lan] [PATCH net-next] ixgbe: Remove conversion to
- bool in ixgbe_device_supports_autoneg_fc()
-Thread-Index: AQHWIrDcl6alaI9TTkSIYAEivEhB8KidGalQ
-Date:   Thu, 7 May 2020 20:39:19 +0000
-Message-ID: <DM5PR11MB16593FCAC4EB2174D93F8ADC8CA50@DM5PR11MB1659.namprd11.prod.outlook.com>
-References: <20200505074157.40938-1-yanaijie@huawei.com>
-In-Reply-To: <20200505074157.40938-1-yanaijie@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: lists.osuosl.org; dkim=none (message not signed)
- header.d=none;lists.osuosl.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.207]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 513b6e9d-a57b-45f5-3479-08d7f2c6b774
-x-ms-traffictypediagnostic: DM5PR11MB1916:
-x-microsoft-antispam-prvs: <DM5PR11MB19168C63B0F5D666257F94BC8CA50@DM5PR11MB1916.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HHY4UjTUuvl7U88Hpf6qY2vo1xPl9XQUcMj91La3WqHfgS0ugFYVo8i6UU0gUZcZHH0Xm9tz7bnZFvJY7XEgz1MByzXDLbbAvPXbvkz2BnqVec8UvetlcKm2ImdtEiGwdkGyraSE+XvxUVBmrTEBU1LD6GOw63LvfBeLa0gAfk9RCPFq4wxs87/nQpGm2s3PZqVQLeu1G+5l9fHWZcxCV8QOrPxjdhQJAzJA0d2toUJ0beKePMi8mByR7Owb+jE5UfYvyHplYw+hlMt3pzQBeMWgstaXlRw8fQE4V9viYenVCnr7NOMeU2tTrnn6CeKtABV/GVi+CbIapdpwSbVsuPOtZrxuAicFVIRZjsI1lBsi7HaiYQh2jz5Z7ZzkFB+kgYV/ZlW+XeYrafgH/TzYPQGhpy+/HHoZP51jd8snccliqCyLpoY8vi3tlRTtJGEtBbdvCUq7XCXavTMty+wIR6b0HCphZ1NsLPTtuWSLhRONJcrzh9REKtdKpZSSx9A1l/aCZRWWmSQ9sXoBEi9p+A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1659.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(39860400002)(346002)(396003)(33430700001)(76116006)(7696005)(66446008)(8936002)(186003)(9686003)(71200400001)(66556008)(66476007)(52536014)(55016002)(66946007)(110136005)(83300400001)(8676002)(26005)(86362001)(83280400001)(33656002)(83320400001)(83290400001)(83310400001)(4744005)(53546011)(5660300002)(6506007)(2906002)(478600001)(64756008)(33440700001)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ekPOq1A3V4Tc8cM+iu81qG21UPsDRE25r88kghPGR/5lj+4xwhrdgkyDB63AxxdGK5tfdbKWRBjODTSCRaGLSjJyHmb5YhAI7ieDOjQbT07GRk4LaYDo/qN+3hjxO9TRSRepBYAirtVL/jep5BEbIOnyQ9P/R+9PPcpIhrUXbX1W72Z5kNkK3uACnzqwYL5D2h8zXhk1TRvwqBcvIPVQsExknHX929em385pLPXUVaZeIO80K7Y9AOhGGdtk4R+uEUgMLoW4WQsubWguoU0aq0jLxWKSy/oaF6rQrTSEBfbQhlGnVOMOpo76SdWF7JXiO4gtaeAJ9SiIwXYkxAWnzB3ogqdway7+buYcRpCNiRjhZ1+9jaI6Hw001awW5z9X+j6laVuMMDL8So1erg2DOWMHPEVktG9AfiavKYdV1oPTSlflnxsQBGZVA8Ou1l7W8OPXjderSOPdFiuw8PKAGNd9WksGqfy7Esd1IsR7qBpNjbbLKpaULgQpl3c0B6hV+pxlfB+OJuH1rYVMv3OPX2w29aRid+s6fpnQ2Jb+ztOrrirxovJGIYfR4Qh8Me4gzFPPJJS+yu1DGLuEeU38P6fsqhtGnSbBelwRMZgWZNL7zs7BBVOU3O+T/OKw0Cu+PDuqvXqEyq7EjMdAaiMo1FKffSggPCH9EaLaiZ8DrvBICjQIl0ktupxwfuvbB0xg3iCoy34JnS4sDsFmfXtpjiUHJnj4mN3pdLST3mFOT8DVo8gLLRB/QWvJihEJYCh8jEG51hbDL7HsruHSLdn8xKectBmPs/N0YpzYEJVC4cE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 May 2020 16:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726093AbgEGUj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 16:39:56 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D915C05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 13:39:56 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so8349952wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 13:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DXskb/U1rfTLrQamxPnaslHrIBvE9Q8wGx7sKVUquCs=;
+        b=nWjU8neek1jkTd5k46MxzmPKEdK4LUWxb02CTjbKs+/rbvNriAUC1jj2lL11+w2Yig
+         wavUdNEH6nKd7Wc/eesp8xTT2jYFRNY28imtWPswr8UjcMEXyJgSk8V8lM13A713W8yu
+         LZuZ3mgoXZhZ24+nCPVgq+4hrkimkyBUF/P8bdozbd4BTI3nhZz6+Hadr40dna21NJqE
+         o5cFi99J3JTJvKld3101AY6tH6Gw+xBuW7NiHZojjMXuTenzIboycox3/yJg2PwKE3cl
+         cztmTZElbSEJAsEZx6OMDvAy1vtRiN1GC+NzVsYQ0nUVjhSFAvysNDTuDIxxT1i1JA0x
+         stkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DXskb/U1rfTLrQamxPnaslHrIBvE9Q8wGx7sKVUquCs=;
+        b=nhvtm6/VKiSVPj3PTKiTACJaks09ey/NZVPIFji9tm5hS7TNJeuVeMzA1e63hBhsnl
+         YAV/zvTFrPfdfmt7qA2dmMtS0+QW3cSTtKGUQNDabNeyCZftwiQ6A/G58vSnLfpxA1u2
+         eCLKuTR/nDeHEI+nJHyDJlpnzQEGV+SmvJSDblwqXXWYxWgNfbX1/EJbY4moWYQulhWw
+         7OyoJzSjTlRmGwY0VsyHyWp4dJvq9GO203r9DVVWuLkGC+RkjCwEDiuhWl8MZDBeYvV/
+         afjWS+guk2sC4JTHZCbpp7tOvryw8VVGhX1N6viBlCN4ZCd1PdcpNS3Br+dwRfcWp3Ju
+         zCnQ==
+X-Gm-Message-State: AGi0PuZFxtqFBp4cm9ppOT+hddmc8T6GJNkxYBOIjYG7kc7AG9pXG6vP
+        hIvoz7u7M9vAMoyXfSX4MUJc4d8C8VzwMQ==
+X-Google-Smtp-Source: APiQypIe8aYj0LpthnAy1cmC+N58Li+3DTCxZohNo6wbhStE61FVn/fczz7X4dwdYQOkO0vNsEddrw==
+X-Received: by 2002:a7b:ca53:: with SMTP id m19mr3868667wml.182.1588883993935;
+        Thu, 07 May 2020 13:39:53 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-166.ip.btc-net.bg. [212.5.158.166])
+        by smtp.googlemail.com with ESMTPSA id d1sm9214133wrx.65.2020.05.07.13.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 13:39:53 -0700 (PDT)
+Subject: Re: [PATCH] media: venus: Replace zero-length array with
+ flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200507190750.GA15755@embeddedor>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <a249b3b7-56dc-8bed-f079-2cf163b46712@linaro.org>
+Date:   Thu, 7 May 2020 23:39:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 513b6e9d-a57b-45f5-3479-08d7f2c6b774
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 20:39:19.0387
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OFwVwMPMumT5g8tTW3SzLA+8HBy7NMYo+sYlR3hn43SH+8Qt8gb1r3Saf/JtotTQwo9HaOz3KDGNBabrJxhQa+dkmqy+R+Iauc3mXjfpFuw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1916
-X-OriginatorOrg: intel.com
+In-Reply-To: <20200507190750.GA15755@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------Original Message-----
-From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of Jas=
-on Yan
-Sent: Tuesday, May 5, 2020 12:42 AM
-To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net; =
-intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-kernel@vger=
-.kernel.org
-Cc: Jason Yan <yanaijie@huawei.com>
-Subject: [Intel-wired-lan] [PATCH net-next] ixgbe: Remove conversion to boo=
-l in ixgbe_device_supports_autoneg_fc()
+Hi Gustavo,
 
-No need to convert '=3D=3D' expression to bool. This fixes the following co=
-ccicheck warning:
+Two patches from you are already queued in media_tree for v5.8.
 
-drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:68:11-16: WARNING:
-conversion to bool not needed here
+0f61e171e4bbac4595175070c75707f1b12f4e37 media: venus: hfi_msgs.h:
+Replace zero-length array with flexible-array member
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+380f3bbd9562dc93be2e3cadc329b15284fbedae media: venus: hfi_cmds.h:
+Replace zero-length array with flexible-array member
 
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+On 5/7/20 10:07 PM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/media/platform/qcom/venus/hfi_cmds.h |    2 +-
+>  drivers/media/platform/qcom/venus/hfi_msgs.h |   10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> index cae9d5d61c0c..83705e237f1c 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> @@ -107,7 +107,7 @@ struct hfi_session_abort_pkt {
+>  struct hfi_session_set_property_pkt {
+>  	struct hfi_session_hdr_pkt shdr;
+>  	u32 num_properties;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_session_set_buffers_pkt {
+> diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
+> index 7694b1d25d9d..526d9f5b487b 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_msgs.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
+> @@ -155,7 +155,7 @@ struct hfi_msg_session_empty_buffer_done_pkt {
+>  	u32 input_tag;
+>  	u32 packet_buffer;
+>  	u32 extradata_buffer;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_fbd_compressed_pkt {
+> @@ -175,7 +175,7 @@ struct hfi_msg_session_fbd_compressed_pkt {
+>  	u32 picture_type;
+>  	u32 packet_buffer;
+>  	u32 extradata_buffer;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
+> @@ -202,7 +202,7 @@ struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
+>  	u32 picture_type;
+>  	u32 packet_buffer;
+>  	u32 extradata_buffer;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
+> @@ -211,7 +211,7 @@ struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
+>  	u32 filled_len;
+>  	u32 offset;
+>  	u32 packet_buffer2;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
+> @@ -220,7 +220,7 @@ struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
+>  	u32 filled_len;
+>  	u32 offset;
+>  	u32 packet_buffer3;
+> -	u32 data[0];
+> +	u32 data[];
+>  };
+>  
+>  struct hfi_msg_session_parse_sequence_header_done_pkt {
+> 
 
-
+-- 
+regards,
+Stan
