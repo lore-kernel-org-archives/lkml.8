@@ -2,104 +2,89 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6476AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E69C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F22208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5B921473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588895176;
+	bh=v7cjrS6d93OQFBJhTl5Ioe67MhGi9wE72gyBF2JkO/o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ASJfSifFSfuXtnJJpi84LNw67ZoW6rWysZEBlhhgtfEvMfF1ZDteOjC5ELF+qeHcm
+	 S4xkMKYJY+y1mgxao160hf1iB7IRT2yGkF5vekCANtDv4QNPckwzUyrmYbAYwlxN6m
+	 9m0B/ZXttZskv+oUDkYw/8thI+ee8f5A67/p4BpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgEGXpR (ORCPT
+        id S1726712AbgEGXqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:45:17 -0400
-Received: from namei.org ([65.99.196.166]:57630 "EHLO namei.org"
+        Thu, 7 May 2020 19:46:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgEGXpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:45:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 047NjBCx016267;
-        Thu, 7 May 2020 23:45:11 GMT
-Date:   Fri, 8 May 2020 09:45:11 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, KP Singh <kpsingh@google.com>
-Subject: [GIT PULL] security: Fix the default value of fs_context_parse_param
- hook
-Message-ID: <alpine.LRH.2.21.2005080942390.15191@namei.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
-MIME-Version: 1.0
+        id S1726476AbgEGXqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 19:46:15 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EDA6208E4;
+        Thu,  7 May 2020 23:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588895174;
+        bh=v7cjrS6d93OQFBJhTl5Ioe67MhGi9wE72gyBF2JkO/o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i+7a50XW0+kgIesPy+uhKFEt/MwSiX4KDSnPrT1IbL1Ji3cwSSFIM1KxGMSR5/IhI
+         e+6g8kvlz/fGJxFniZpvI89OEsEFakhTSTJ6GH174nvOYiJP4FVoJoW8RklFOVdijC
+         cn4P1n0OhzztdqwqzfxOZvxxGcskT7pZHCHQVybc=
+Date:   Thu, 7 May 2020 16:46:14 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Tan Hu <tan.hu@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] lib/flex_proportions.c: aging counts when fraction
+ smaller than max_frac/FPROP_FRAC_BASE
+Message-Id: <20200507164614.4a816d2aa1b341be937b128a@linux-foundation.org>
+In-Reply-To: <1588746088-38605-1-git-send-email-tan.hu@zte.com.cn>
+References: <1588746088-38605-1-git-send-email-tan.hu@zte.com.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull this fix from KP Singh (several folks are reporting issues 
-around this):
+On Wed, 6 May 2020 14:21:28 +0800 Tan Hu <tan.hu@zte.com.cn> wrote:
 
-The following changes since commit c45e8bccecaf633480d378daff11e122dfd5e96d:
+> If the given type has fraction smaller than max_frac/FPROP_FRAC_BASE,
+> __fprop_inc_percpu_max should follow the design formula and aging
+> fraction too.
+> 
+> Signed-off-by: Tan Hu <tan.hu@zte.com.cn>
+> ---
+>  lib/flex_proportions.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
+> index 7852bfff5..451543937 100644
+> --- a/lib/flex_proportions.c
+> +++ b/lib/flex_proportions.c
+> @@ -266,8 +266,7 @@ void __fprop_inc_percpu_max(struct fprop_global *p,
+>  		if (numerator >
+>  		    (((u64)denominator) * max_frac) >> FPROP_FRAC_SHIFT)
+>  			return;
+> -	} else
+> -		fprop_reflect_period_percpu(p, pl);
+> -	percpu_counter_add_batch(&pl->events, 1, PROP_BATCH);
+> -	percpu_counter_add(&p->events, 1);
+> +	}
+> +
+> +	__fprop_inc_percpu(p, pl);
+>  }
 
-  Merge tag 'for-5.7/dm-fixes-2' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm (2020-04-30 16:45:08 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git for-v5.7
-
-for you to fetch changes up to 54261af473be4c5481f6196064445d2945f2bdab:
-
-  security: Fix the default value of fs_context_parse_param hook (2020-04-30 20:29:34 -0700)
-
-----------------------------------------------------------------
-KP Singh (1):
-      security: Fix the default value of fs_context_parse_param hook
-
- include/linux/lsm_hook_defs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
----
-
-commit 54261af473be4c5481f6196064445d2945f2bdab
-Author: KP Singh <kpsingh@google.com>
-Date:   Thu Apr 30 17:52:40 2020 +0200
-
-    security: Fix the default value of fs_context_parse_param hook
-    
-    security_fs_context_parse_param is called by vfs_parse_fs_param and
-    a succussful return value (i.e 0) implies that a parameter will be
-    consumed by the LSM framework. This stops all further parsing of the
-    parmeter by VFS. Furthermore, if an LSM hook returns a success, the
-    remaining LSM hooks are not invoked for the parameter.
-    
-    The current default behavior of returning success means that all the
-    parameters are expected to be parsed by the LSM hook and none of them
-    end up being populated by vfs in fs_context
-    
-    This was noticed when lsm=bpf is supplied on the command line before any
-    other LSM. As the bpf lsm uses this default value to implement a default
-    hook, this resulted in a failure to parse any fs_context parameters and
-    a failure to mount the root filesystem.
-    
-    Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-    Reported-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
-    Signed-off-by: KP Singh <kpsingh@google.com>
-    Signed-off-by: James Morris <jmorris@namei.org>
-
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 9cd4455528e5..1bdd027766d4 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -55,7 +55,7 @@ LSM_HOOK(void, LSM_RET_VOID, bprm_committing_creds, struct linux_binprm *bprm)
- LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
- LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
- 	 struct fs_context *src_sc)
--LSM_HOOK(int, 0, fs_context_parse_param, struct fs_context *fc,
-+LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
- 	 struct fs_parameter *param)
- LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
+(Cc Jan)
