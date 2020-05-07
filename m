@@ -2,145 +2,99 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C94CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4051CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E462070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EC420643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgEGOor (ORCPT
+        id S1726542AbgEGOtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:44:47 -0400
-Received: from mga14.intel.com ([192.55.52.115]:13074 "EHLO mga14.intel.com"
+        Thu, 7 May 2020 10:49:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:33192 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgEGOor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:44:47 -0400
-IronPort-SDR: y4XDnlcFXx1rnW1BhOFtYUp2Vwbc59k8Eh4Y2HlqnwP0h5BUF7uuUC7cAgYifzQ2lZcmcnhhIN
- wXF3SKIXLlCg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 07:44:45 -0700
-IronPort-SDR: 9i3xISujTRUf3ti8cieSFQSZ916JIV3ob91xq5STMWcgLzGqBILU2lddGBJB4zPBKrCadZ8weZ
- sjKSe2RlgVNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="263956282"
-Received: from smericks-mobl.amr.corp.intel.com (HELO [10.252.140.100]) ([10.252.140.100])
-  by orsmga006.jf.intel.com with ESMTP; 07 May 2020 07:44:44 -0700
-Subject: Re: [PATCH 1/2] arch/x86: Rename config
- X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com>
- <158880253347.11615.8499618616856685179.stgit@naples-babu.amd.com>
- <4d86b207-77af-dc5d-88a4-f092be0043f6@intel.com>
- <20200507072934.d5l6cpqyy54lrrla@linutronix.de>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <034cfb90-7f75-8e36-5b1e-ceaef0dfa50d@intel.com>
-Date:   Thu, 7 May 2020 07:44:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507072934.d5l6cpqyy54lrrla@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726134AbgEGOtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:49:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDBE9D6E;
+        Thu,  7 May 2020 07:49:12 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B65283F68F;
+        Thu,  7 May 2020 07:49:11 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] firmware: arm_scmi: fix psci dependency
+Date:   Thu,  7 May 2020 15:49:05 +0100
+Message-Id: <20200507144905.11397-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 12:29 AM, Sebastian Andrzej Siewior wrote:
->>> -config X86_INTEL_MEMORY_PROTECTION_KEYS
->>> -	prompt "Intel Memory Protection Keys"
->>> +config X86_MEMORY_PROTECTION_KEYS
->>> +	prompt "Memory Protection Keys"
->>>  	def_bool y
->>>  	# Note: only available in 64-bit mode
->>> -	depends on CPU_SUP_INTEL && X86_64
->>> +	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
->>>  	select ARCH_USES_HIGH_VMA_FLAGS
->>>  	select ARCH_HAS_PKEYS
->>>  	---help---
->> It's a bit of a bummer that we're going to prompt everybody doing
->> oldconfig's for this new option.  But, I don't know any way for Kconfig
->> to suppress it if the name is changed.  Also, I guess the def_bool=y
->> means that menuconfig and olddefconfig will tend to do the right thing.
-> You could add a new option (X86_MEMORY_PROTECTION_KEYS) which is
-> def_bool X86_INTEL_MEMORY_PROTECTION_KEYS and avoiding the prompt line.
-> Soo it is selected based on the old option and the user isn't bother. A
-> few cycles later you could remove intel option and add prompt to other.
-> But still little work for…
+When CONFIG_ARM_PSCI_FW is disabled but CONFIG_HAVE_ARM_SMCCC is enabled,
+arm-scmi runs into a link failure:
 
-That does sound viable, if we decide it's all worth it.
+arm-linux-gnueabi-ld: drivers/firmware/arm_scmi/smc.o: in function `smc_send_message':
+smc.c:(.text+0x200): undefined reference to `arm_smccc_1_1_get_conduit'
 
-So, for now my preference would be to change the prompt, but leave the
-CONFIG_ naming in place.  If we decide that transitioning the config is
-the right thing (I don't feel super strongly either way), let's use
-Sebastian's trick to avoid the Kconfig prompts.
+Change from HAVE_ARM_SMCCC to ARM_PSCI_FW config dependency for now.
+We rely on PSCI bindings anyways for the conduit and this should be
+fine.
+
+Fixes: 1dc6558062da ("firmware: arm_scmi: Add smc/hvc transport")
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_scmi/Makefile | 2 +-
+ drivers/firmware/arm_scmi/driver.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Hi Arnd,
+
+I am planning to push this patch in favour of [1]. Once we have a
+separate config[2] for SMCCC v1.1+, I will change to use it instead of
+ARM_PSCI_FW.
+
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/r/20200505140820.536615-1-arnd@arndb.de
+[2] https://lore.kernel.org/r/20200506164411.3284-1-sudeep.holla@arm.com/
+
+
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 11b238f81923..1cad32b38b29 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -4,6 +4,6 @@ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+ scmi-transport-y = shmem.o
+ scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
+-scmi-transport-$(CONFIG_HAVE_ARM_SMCCC) += smc.o
++scmi-transport-$(CONFIG_ARM_PSCI_FW) += smc.o
+ scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+ obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index fec308e47b9d..7483cacf63f9 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -901,7 +901,7 @@ ATTRIBUTE_GROUPS(versions);
+ /* Each compatible listed below must have descriptor associated with it */
+ static const struct of_device_id scmi_of_match[] = {
+ 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
+-#ifdef CONFIG_HAVE_ARM_SMCCC
++#ifdef CONFIG_ARM_PSCI_FW
+ 	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
+ #endif
+ 	{ /* Sentinel */ },
+-- 
+2.17.1
+
