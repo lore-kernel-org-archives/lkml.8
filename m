@@ -6,41 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D59C54E7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8719C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0F62083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA10220857
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgEGPJM (ORCPT
+        id S1727837AbgEGPJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:09:12 -0400
+        Thu, 7 May 2020 11:09:08 -0400
 Received: from mga09.intel.com ([134.134.136.24]:51959 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727870AbgEGPJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:09:11 -0400
-IronPort-SDR: JHQzZOrils+cnIZOkyZRmmyzfrwStKKt/C1/5UoOeub1TdyXxvMXw4eiWtR6CyiHSLxJ3Ku1X9
- 3BWGRIDcxA0g==
+        id S1726074AbgEGPJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:09:06 -0400
+IronPort-SDR: gS1L6o4TKnqL34qvH0708YlAerJyLAN5izssj4p92lZ6FoJVJjYjKGDSS5g3/fiD8vdJGY/uWT
+ 5YYFfw+h+bDA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:09:10 -0700
-IronPort-SDR: gmynGHQk0IViEpQLa+rwu7lXsYyoaa0EehZq5Gaps5+TSIqRYNHFlq0Hvxxr0LepVVQ/Vvh3iI
- Kkg3LQiYcEaA==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 08:09:05 -0700
+IronPort-SDR: QC+4mudJ9wfcqdNd0xGussco6cO6WWj0JFCpTHA8voeqeFU9tklzAMCAFiyXnmomrdpqwOANda
+ zMqM74xOhS2w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="370143323"
+   d="scan'208";a="370143308"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 May 2020 08:09:08 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 07 May 2020 08:09:03 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Prashant Malani <pmalani@chromium.org>,
         Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH 3/4] usb: typec: Add firmware documentation for the Intel PMC mux control
-Date:   Thu,  7 May 2020 18:08:59 +0300
-Message-Id: <20200507150900.12102-4-heikki.krogerus@linux.intel.com>
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: [PATCH 1/4] usb: typec: Add typec_find_orientation()
+Date:   Thu,  7 May 2020 18:08:57 +0300
+Message-Id: <20200507150900.12102-2-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
 References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
@@ -51,174 +50,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding documentation that describes how the PMC mux-agent
-function is described in the ACPI tables.
+Function that converts orientation string into orientation
+value.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- .../firmware-guide/acpi/intel-pmc-mux.rst     | 153 ++++++++++++++++++
- 1 file changed, 153 insertions(+)
- create mode 100644 Documentation/firmware-guide/acpi/intel-pmc-mux.rst
+ drivers/usb/typec/class.c | 36 ++++++++++++++++++++++++------------
+ include/linux/usb/typec.h |  1 +
+ 2 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/firmware-guide/acpi/intel-pmc-mux.rst b/Documentation/firmware-guide/acpi/intel-pmc-mux.rst
-new file mode 100644
-index 000000000000..99b86710f02b
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/intel-pmc-mux.rst
-@@ -0,0 +1,153 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 8d894bdff77d..c9234748537a 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -917,6 +917,12 @@ EXPORT_SYMBOL_GPL(typec_unregister_cable);
+ /* ------------------------------------------------------------------------- */
+ /* USB Type-C ports */
+ 
++static const char * const typec_orientations[] = {
++	[TYPEC_ORIENTATION_NONE]	= "unknown",
++	[TYPEC_ORIENTATION_NORMAL]	= "normal",
++	[TYPEC_ORIENTATION_REVERSE]	= "reverse",
++};
 +
-+=====================
-+Intel North Mux-Agent
-+=====================
+ static const char * const typec_roles[] = {
+ 	[TYPEC_SINK]	= "sink",
+ 	[TYPEC_SOURCE]	= "source",
+@@ -1248,18 +1254,9 @@ static ssize_t orientation_show(struct device *dev,
+ 				   struct device_attribute *attr,
+ 				   char *buf)
+ {
+-	struct typec_port *p = to_typec_port(dev);
+-	enum typec_orientation orientation = typec_get_orientation(p);
+-
+-	switch (orientation) {
+-	case TYPEC_ORIENTATION_NORMAL:
+-		return sprintf(buf, "%s\n", "normal");
+-	case TYPEC_ORIENTATION_REVERSE:
+-		return sprintf(buf, "%s\n", "reverse");
+-	case TYPEC_ORIENTATION_NONE:
+-	default:
+-		return sprintf(buf, "%s\n", "unknown");
+-	}
++	struct typec_port *port = to_typec_port(dev);
 +
-+Introduction
-+============
++	return sprintf(buf, "%s\n", typec_orientations[port->orientation]);
+ }
+ static DEVICE_ATTR_RO(orientation);
+ 
+@@ -1451,6 +1448,21 @@ void typec_set_pwr_opmode(struct typec_port *port,
+ }
+ EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
+ 
++/**
++ * typec_find_orientation - Convert orientation string to enum typec_orientation
++ * @name: Orientation string
++ *
++ * This routine is used to find the typec_orientation by its string name @name.
++ *
++ * Returns the orientation value on success, otherwise negative error code.
++ */
++int typec_find_orientation(const char *name)
++{
++	return match_string(typec_orientations, ARRAY_SIZE(typec_orientations),
++			    name);
++}
++EXPORT_SYMBOL_GPL(typec_find_orientation);
 +
-+North Mux-Agent is a function of the Intel PMC firmware that is supported on
-+most Intel based platforms that have the PMC microcontroller. It's used for
-+configuring the various USB Multiplexer/DeMultiplexers on the system. The
-+platforms that allow the mux-agent to be configured from the operating system
-+have an ACPI device object (node) with HID "INTC105C" that represents it.
-+
-+The North Mux-Agent (aka. Intel PMC Mux Control, or just mux-agent) driver
-+communicates with the PMC microcontroller by using the PMC IPC method
-+(drivers/platform/x86/intel_scu_ipc.c). The driver registers with the USB Type-C
-+Mux Class which allows the USB Type-C Controller and Interface drivers to
-+configure the cable plug orientation and mode (with Alternate Modes). The driver
-+also registers with the USB Role Class in order to support both USB Host and
-+Device modes. The driver is located here: drivers/usb/typec/mux/intel_pmc_mux.c.
-+
-+Port nodes
-+==========
-+
-+General
-+-------
-+
-+For every USB Type-C connector under the mux-agent control on the system, there
-+is a separate child node under the PMC mux-agent device node. Those nodes do not
-+represent the actual connectors, but instead the "channels" in the mux-agent
-+that are associated with the connectors::
-+
-+	Scope (_SB.PCI0.PMC.MUX)
-+	{
-+	    Device (CH0)
-+	    {
-+		Name (_ADR, 0)
-+	    }
-+
-+	    Device (CH1)
-+	    {
-+		Name (_ADR, 1)
-+	    }
-+	}
-+
-+_PLD (Physical Location of Device)
-+----------------------------------
-+
-+The optional _PLD object can be used with the port (the channel) nodes. If _PLD
-+is supplied, it should match the connector node _PLD::
-+
-+	Scope (_SB.PCI0.PMC.MUX)
-+	{
-+	    Device (CH0)
-+	    {
-+		Name (_ADR, 0)
-+	        Method (_PLD, 0, NotSerialized)
-+                {
-+		    /* Consider this as pseudocode. */
-+		    Return (\_SB.USBC.CON0._PLD())
-+		}
-+	    }
-+	}
-+
-+Mux-agent specific _DSD Device Properties
-+-----------------------------------------
-+
-+Port Numbers
-+~~~~~~~~~~~~
-+
-+In order to configure the muxes behind a USB Type-C connector, the PMC firmware
-+needs to know the USB2 port and the USB3 port that is associated with the
-+connector. The driver extracts the correct port numbers by reading specific _DSD
-+device properties named "usb2-port-number" and "usb3-port-number". These
-+properties have integer value that means the port index. The port index number
-+is 1's based, and value 0 is illegal. The driver uses the numbers extracted from
-+these device properties as-is when sending the mux-agent specific messages to
-+the PMC::
-+
-+	Name (_DSD, Package () {
-+	    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+	    Package() {
-+	        Package () {"usb2-port-number", 6},
-+	        Package () {"usb3-port-number", 3},
-+	    },
-+	})
-+
-+Orientation
-+~~~~~~~~~~~
-+
-+Depending on the platform, the data and SBU lines coming from the connector may
-+be "fixed" from the mux-agent's point of view, which means the mux-agent driver
-+should not configure them according to the cable plug orientation. This can
-+happen for example if a retimer on the platform handles the cable plug
-+orientation. The driver uses a specific device properties "sbu-orientation"
-+(SBU) and "hsl-orientation" (data) to know if those lines are "fixed", and to
-+which orientation. The value that these properties have is a string value, and
-+it can be one that is defined for the USB Type-C connector orientation: "normal"
-+or "reversed"::
-+
-+	Name (_DSD, Package () {
-+	    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+	    Package() {
-+	        Package () {"sbu-orientation", "normal"},
-+	        Package () {"hsl-orientation", "normal"},
-+	    },
-+	})
-+
-+Example ASL
-+===========
-+
-+The following ASL is an example that shows the mux-agent node, and two
-+connectors under its control::
-+
-+	Scope (_SB.PCI0.PMC)
-+	{
-+	    Device (MUX)
-+	    {
-+	        Name (_HID, "INTC105C")
-+
-+	        Device (CH0)
-+	        {
-+	            Name (_ADR, 0)
-+
-+	            Name (_DSD, Package () {
-+	                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+	                Package() {
-+	                    Package () {"usb2-port-number", 6},
-+	                    Package () {"usb3-port-number", 3},
-+	                    Package () {"sbu-orientation", "normal"},
-+	                    Package () {"hsl-orientation", "normal"},
-+	                },
-+	            })
-+	        }
-+
-+	        Device (CH1)
-+	        {
-+	            Name (_ADR, 1)
-+
-+	            Name (_DSD, Package () {
-+	                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+	                Package() {
-+	                    Package () {"usb2-port-number", 5},
-+	                    Package () {"usb3-port-number", 2},
-+	                    Package () {"sbu-orientation", "normal"},
-+	                    Package () {"hsl-orientation", "normal"},
-+	                },
-+	            })
-+	        }
-+	    }
-+	}
+ /**
+  * typec_find_port_power_role - Get the typec port power capability
+  * @name: port power capability string
+diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+index b00a2642a9cd..5daa1c49761c 100644
+--- a/include/linux/usb/typec.h
++++ b/include/linux/usb/typec.h
+@@ -254,6 +254,7 @@ int typec_set_mode(struct typec_port *port, int mode);
+ 
+ void *typec_get_drvdata(struct typec_port *port);
+ 
++int typec_find_orientation(const char *name);
+ int typec_find_port_power_role(const char *name);
+ int typec_find_power_role(const char *name);
+ int typec_find_port_data_role(const char *name);
 -- 
 2.26.2
 
