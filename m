@@ -2,133 +2,159 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E01AC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4385C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4D5207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="o4pOCmV7"
+	by mail.kernel.org (Postfix) with ESMTP id 8A41720747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgEGAj0 (ORCPT
+        id S1726815AbgEGAlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        Wed, 6 May 2020 20:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgEGAj0 (ORCPT
+        with ESMTP id S1725966AbgEGAlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:39:26 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BB0C061A0F;
-        Wed,  6 May 2020 17:39:26 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49HZNC2qRzz9sNH;
-        Thu,  7 May 2020 10:39:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588811964;
-        bh=lnz5qifj/f5yuy80RCBGy/x8tiCdNK0Rtoutdr1n0sc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=o4pOCmV7h0EVpskonTI1ZzTjTFdky0H30+7D1QlfwYHqIlFSz93fvy1rg8Z9JUOUq
-         xTIXjp2/XIFZ33ouvGn6yKRYIageZiwvwgvv52zLaLT0oEBHnIybRb0NGSRlLYpHPb
-         AUUbQQCQdWi0gGs73Hj0CJWf2xJJJ4SkSQ3WYfq3EehORDppVqsur25TjtrpoBk69M
-         Q7F0ylOH0Frte+OeVnp9kK2wOeN5TMFGcXVS53tcAdNMxW4dNoPec+bgY+CuoFMnLI
-         CLQ9AGwtl4q0Afnol8nYuPVWAkbMsb5Ud9VPYS46gumUM6lfDxEcv1rMblIL+lpPjI
-         wzmTTY70q+8Aw==
-Date:   Thu, 7 May 2020 10:39:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: linux-next: build failure after merge of the vfs tree
-Message-ID: <20200507103921.371b1329@canb.auug.org.au>
+        Wed, 6 May 2020 20:41:50 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAD5C061A0F;
+        Wed,  6 May 2020 17:41:50 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWUbT-0006e2-IH; Thu, 07 May 2020 02:41:31 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id DE860102652; Thu,  7 May 2020 02:41:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Dr. Greg" <greg@enjellic.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+In-Reply-To: <20200426165753.GA11046@wind.enjellic.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <20200426165753.GA11046@wind.enjellic.com>
+Date:   Thu, 07 May 2020 02:41:30 +0200
+Message-ID: <87d07gk24l.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Oyipoo0ZqYJQKtfUUYlWf_d";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Oyipoo0ZqYJQKtfUUYlWf_d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Greg,
 
-Hi all,
+"Dr. Greg" <greg@enjellic.com> writes:
+> As an aside, for those who haven't spent the last 5+ years of their
+> life working with this technology.  SGX2 hardware platforms have the
+> ability to allow unrestricted code execution in enclave context.
 
-After merging the vfs tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Unrestricted code execution even before loaded? Unrestricted by
+priviledge levels?
 
-fs/eventfd.c: In function 'eventfd_read':
-fs/eventfd.c:226:6: error: implicit declaration of function 'iov_iter_count=
-' [-Werror=3Dimplicit-function-declaration]
-  226 |  if (iov_iter_count(to) < sizeof(ucnt))
-      |      ^~~~~~~~~~~~~~
-In file included from include/linux/file.h:9,
-                 from fs/eventfd.c:9:
-fs/eventfd.c:257:15: error: implicit declaration of function 'copy_to_iter'=
-; did you mean 'copy_to_user'? [-Werror=3Dimplicit-function-declaration]
-  257 |  if (unlikely(copy_to_iter(&ucnt, sizeof(ucnt), to) !=3D sizeof(ucn=
-t)))
-      |               ^~~~~~~~~~~~
+> No amount of LSM or IMA interventions can provide any control over
+> that.
 
-Caused by commit
+They can restrict what is started and loaded before anything SGX
+happens.
 
-  a6515b3a7410 ("eventfd: convert to f_op->read_iter()")
+If you want to make real technical arguments then please be specific and
+precise and spare us the handwaving marketing speak.
 
-I have applied the following patch for today:
+> In fact, the Confidential Computing Consortium, sponsored by none
+> other then the Linux Foundation, has at its fundamental tenant,
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 7 May 2020 10:35:52 +1000
-Subject: [PATCH] eventfd: include uio.h
+And that's relevant to the technical question in which way?
 
-Fixes: a6515b3a7410 ("eventfd: convert to f_op->read_iter()")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/eventfd.c | 1 +
- 1 file changed, 1 insertion(+)
+> the notion of developing an eco-system that allows the execution of
+> code and processing of data, over which, the owner or administrator of
+> the platform has no visibility or control.  It would seem only logical
+> that adversarial interests would indulge themseleves in those
+> capabilities as well.
+>
+> With respect to SGX and these issues, cryptographic policy management
+> is important for the same reason that 2-factor authentication is now
+> considered standard practice in the security industry.
+>
+> We appreciate, Jarkko, that you feel that such infrastructure is
+> optional, like virtualization support, and is something that can go in
+> after the driver is mainlined.  As the diffstat for our patch points
+> out, the proposed support has virtually no impact on the driver, the
+> same cannot be said for virtualization capabilities.
 
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 20f0fd4d56e1..df466ef81ddd 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -23,6 +23,7 @@
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/idr.h>
-+#include <linux/uio.h>
-=20
- DEFINE_PER_CPU(int, eventfd_wake_count);
-=20
---=20
-2.26.2
+The diffstat of your patch is irrelevant. What's relevant is the fact
+that it is completely unreviewed and that it creates yet another user
+space visible ABI with a noticable lack of documentation. 
 
---=20
-Cheers,
-Stephen Rothwell
+> Moreover, adding support for key based policy management later would
+> require the addition of another ioctl in order to avoid ABI
+> compatibility issues.
 
---Sig_/Oyipoo0ZqYJQKtfUUYlWf_d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+And that's a problem because? 
 
------BEGIN PGP SIGNATURE-----
+> The current initialization ioctl is best suited, from an engineering
+> perspective, to support this type of infrastructure.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zWLkACgkQAVBC80lX
-0GygYwf+OO1zDE6KFObTAQEc8IzxFXg6wFHjBGkB23xy13bEjbJZ9n77Z0D2lv26
-PJRZg9n3mC+obu2abkjDcjPonPHSkhM6vjGiSQ+JYcg6xXPK78e9Ly7rCCVDUppR
-Yb4NWzFWN0tzkzc16cfU24hiuTe7aIlXaozI0v6F5bQInLMOG1/3fDajInxsCUDa
-NpORtS0cWK9IEJxiaYoaiu3CQueiC7TdLXuL02hhEW94cBmZmxKd3Ma5du57AdqM
-aWchDM2hvrBsSUAPNTBKFHMQBYkFxo3fVSWzra0ua9cimvBaphw1zZT4kvTuRaWr
-cEjj/QZUol7oUhtXWL7j70coTswFJg==
-=Wti3
------END PGP SIGNATURE-----
+What's wrong with having IOCTL_INIT_TYPE_A and IOCTL_INIT_TYPE_B?
 
---Sig_/Oyipoo0ZqYJQKtfUUYlWf_d--
+Nothing at all. It's pretty straight forward and in fact a better
+solution than a duct taped multiplexing all in one IOCTL_INIT_PONIES
+approach.
+
+> In fact, the necessary support was removed from the ioctl for
+> political reasons rather then for any valid engineering rationale on
+> flexible launch control platforms, particularly with our patch or an
+> equivalent approach.
+
+You're surely making a convincing technical argument by claiming that
+this was a political decision. The amount of non-technical, i.e.
+political arguments in your mail is definitely larger than the technical
+content.
+
+> Hopefully this is a reasoned technical approach to what has been a
+> long standing issue surrounding this technology.
+
+It's an approach which guarantees that the driver will miss the next
+merge window. If that's your intention, then please let us know.
+
+Merging the current set of patches does not prevent anything you want to
+be added. It's an extension to the base implementation and not a
+prerequisite.
+
+> Best wishes for a productive week.
+>
+> Dr. Greg
+
+Thanks a lot for the best wishes. Unfortunately reading this email was
+not necessarily productive for me, but I surely wish that you can make
+productive use of my reply.
+
+Thanks,
+
+	tglx
+
+> ------------------------------------------------------------------------------
+> "Opportunity is missed by most people because it is dressed in overalls
+>  and looks like work."
+>                                 -- Thomas Edison
+
+------------------------------------------------------------------------------
+ "Failure is simply the opportunity to begin again, this time more
+  intelligently"
+
+				--  Henry Ford
