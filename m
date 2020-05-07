@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0CAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7198C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34DC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9906C2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588878040;
-	bh=vrENF+GO20eVEagD1CaCNbMV3TQAdn3o+B0P5GilDE4=;
+	s=default; t=1588878073;
+	bh=nahneUqYpBDA+fIQmeNNoV4oxPN2jOZllVzWp4NDAEw=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JOirHyk3M1ZtVFJmUUuBLEbhtiELE5Lbt7a9HadlwXOnig5M1kwFRYhQlUFsOPX2Z
-	 QGwoad9mtLb8lRQgwAErl1UbYFmXf+YRVGKSyvdipgARYIdualOFL9p0ze2uoMKV37
-	 dqDBSfmuQCb1PKdqnu3EZCA68uuSQY+ozmKI1OtM=
+	b=iKdBKNAnrHRfYlcRs94NEWH7boyDHgm3L1d6D7jGUjQxEZ5hWB8VMwzeoVDB8nn8H
+	 MbkDaC2Ub0gP7wpipqWyrQcCQgRsSYaMgSgpeaFg29V3QHWVpXZHDJNbZX2Y4K3UOW
+	 7zM64/ge51YmlhVOScsRXD6kmLxdMF6ChHIB89Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgEGTAk (ORCPT
+        id S1728371AbgEGTBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgEGTAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:00:39 -0400
+        id S1726320AbgEGTBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:01:12 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C197A21835;
-        Thu,  7 May 2020 19:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D743A2083B;
+        Thu,  7 May 2020 19:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588878039;
-        bh=vrENF+GO20eVEagD1CaCNbMV3TQAdn3o+B0P5GilDE4=;
+        s=default; t=1588878072;
+        bh=nahneUqYpBDA+fIQmeNNoV4oxPN2jOZllVzWp4NDAEw=;
         h=Date:From:To:Cc:Subject:From;
-        b=N6N7iFNjE706CS7j+ejMYHj5Ah0GA2rBA8+4XN8QPJika/wlYWXt7uIel8i1hW6py
-         bJU45QXuLKNEDYIMVAcM5Mu82nieM+D2BJe4nFFrW4hWfGj3nvtVz1lgR7j1/tEij5
-         51NTjUd0H6IEywVIOtvD2TH1pxXfNuCBkjWTVmKc=
-Date:   Thu, 7 May 2020 14:05:05 -0500
+        b=E87V8uf6OHPsAIuN0PgNMbYm2YBnJAR3V3SWVZro8R9X5W/GrpQljQxHHVCaUNAqs
+         F4vdb5SqOpD+wx3uQmifzKWahD8IWCoT4hJCNS16PkuM7zC29rbzwFJJylHgy2YdUF
+         uzjjYTju2ipP+Q7naAugPQjBFvN12vH/Yodx6hOc=
+Date:   Thu, 7 May 2020 14:05:38 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Robert Richter <rric@kernel.org>
-Cc:     oprofile-list@lists.sf.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] oprofile: Replace zero-length array with flexible-array
-Message-ID: <20200507190505.GA15577@embeddedor>
+To:     Khalid Aziz <khalid@gonehiking.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] pcdp: Replace zero-length array with flexible-array
+Message-ID: <20200507190538.GA15601@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +91,19 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/oprofile/cpu_buffer.h |    2 +-
+ drivers/firmware/pcdp.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/oprofile/cpu_buffer.h b/drivers/oprofile/cpu_buffer.h
-index e1d097e250ae..31478c0cff87 100644
---- a/drivers/oprofile/cpu_buffer.h
-+++ b/drivers/oprofile/cpu_buffer.h
-@@ -33,7 +33,7 @@ void flush_cpu_work(void);
- struct op_sample {
- 	unsigned long eip;
- 	unsigned long event;
--	unsigned long data[0];
-+	unsigned long data[];
- };
- 
- struct op_entry;
+diff --git a/drivers/firmware/pcdp.h b/drivers/firmware/pcdp.h
+index ce75d1da9e84..e02540571c52 100644
+--- a/drivers/firmware/pcdp.h
++++ b/drivers/firmware/pcdp.h
+@@ -103,6 +103,6 @@ struct pcdp {
+ 	u8			creator_id[4];
+ 	u32			creator_rev;
+ 	u32			num_uarts;
+-	struct pcdp_uart	uart[0];	/* actual size is num_uarts */
++	struct pcdp_uart	uart[];	/* actual size is num_uarts */
+ 	/* remainder of table is pcdp_device structures */
+ } __attribute__((packed));
 
