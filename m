@@ -2,51 +2,53 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11369C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9615C2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66502083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861940;
-	bh=c6F0SfDno8bwIa2WXMcHLY6iMO/tVO0MyXsKQqwbNrY=;
+	s=default; t=1588861942;
+	bh=06ndIgCZI4ggrsVfN2LGTIb2q7MnraO4TFqut1b1ySg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ccaZiq1tKyNCntrIB2unjAM4x7XPWGKFB0aBuQgkEA8d9LO2AHW0rmymC4usEPA77
-	 xIiA62lsi4EzkESDncQjxgZMvfYZHrbbYX/JxteCvC0WRYFVoA1EriULeHRPo4ktHw
-	 1gtkDoeA6GJxVzGfot0669G936z3JIyOnpfonsfE=
+	b=YB/WlnA7hW3KGFOJm6KaxBjcEwpmiwRB6Poxo5HDHhkW2SPWXVfJTQZ+fzHT1l2tv
+	 10caFk6GwiucLD+0Z/5MsD6pik+ApCH3CMoSVuOlXBMSP0Qy3d6hS3i3v6Zp7M2PaF
+	 ln6h0U6pTMOwFuhzMYLum7CW//GfxXJiMSGRvSEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgEGOcU (ORCPT
+        id S1728718AbgEGO35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58284 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgEGO36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:58 -0400
+        id S1728670AbgEGO3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D47218AC;
-        Thu,  7 May 2020 14:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA9AA208D6;
+        Thu,  7 May 2020 14:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861797;
-        bh=c6F0SfDno8bwIa2WXMcHLY6iMO/tVO0MyXsKQqwbNrY=;
+        s=default; t=1588861788;
+        bh=06ndIgCZI4ggrsVfN2LGTIb2q7MnraO4TFqut1b1ySg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2Uyc2bO9HmFs9XH6NEajnoISBeCH7BGjib2VfrKOKoWOfI8+9RDqXIbXi+AdgajM
-         C3u1mFN2AIyIR0kXx3l2sSc10F9nodilO2Lc26UH554eypWpeHPIfcCpxMdPTNapXi
-         N/9RgBaDfnzwelhN0TcuF82DYMwRipQnri50+1e4=
+        b=bdkgS+74VBvwOCfa5Ya4QTsI8rIdcLXhaWhSjzfoaiatCScGzu5uWxRMiyS60Tdb6
+         wrw1W0nFhZJ6bl3jjX2QPyKMQDj7GguqYGhm82YO72YZ29wSn4b7owW78ARAVxZRNN
+         gWlrmnlo6SSJgiIEGrJ3O2aU22d1a8tkrMtIOyoo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 12/16] ALSA: hda/hdmi: fix race in monitor detection during probe
-Date:   Thu,  7 May 2020 10:29:39 -0400
-Message-Id: <20200507142943.26848-12-sashal@kernel.org>
+Cc:     David Disseldorp <ddiss@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/16] scsi: target/iblock: fix WRITE SAME zeroing
+Date:   Thu,  7 May 2020 10:29:31 -0400
+Message-Id: <20200507142943.26848-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
 References: <20200507142943.26848-1-sashal@kernel.org>
@@ -59,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: David Disseldorp <ddiss@suse.de>
 
-[ Upstream commit ca76282b6faffc83601c25bd2a95f635c03503ef ]
+[ Upstream commit 1d2ff149b263c9325875726a7804a0c75ef7112e ]
 
-A race exists between build_pcms() and build_controls() phases of codec
-setup. Build_pcms() sets up notifier for jack events. If a monitor event
-is received before build_controls() is run, the initial jack state is
-lost and never reported via mixer controls.
+SBC4 specifies that WRITE SAME requests with the UNMAP bit set to zero
+"shall perform the specified write operation to each LBA specified by the
+command".  Commit 2237498f0b5c ("target/iblock: Convert WRITE_SAME to
+blkdev_issue_zeroout") modified the iblock backend to call
+blkdev_issue_zeroout() when handling WRITE SAME requests with UNMAP=0 and a
+zero data segment.
 
-The problem can be hit at least with SOF as the controller driver. SOF
-calls snd_hda_codec_build_controls() in its workqueue-based probe and
-this can be delayed enough to hit the race condition.
+The iblock blkdev_issue_zeroout() call incorrectly provides a flags
+parameter of 0 (bool false), instead of BLKDEV_ZERO_NOUNMAP.  The bool
+false parameter reflects the blkdev_issue_zeroout() API prior to commit
+ee472d835c26 ("block: add a flags argument to (__)blkdev_issue_zeroout")
+which was merged shortly before 2237498f0b5c.
 
-Fix the issue by invalidating the per-pin ELD information when
-build_controls() is called. The existing call to hdmi_present_sense()
-will update the ELD contents. This ensures initial monitor state is
-correctly reflected via mixer controls.
-
-BugLink: https://github.com/thesofproject/linux/issues/1687
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200428123836.24512-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200419163109.11689-1-ddiss@suse.de
+Fixes: 2237498f0b5c ("target/iblock: Convert WRITE_SAME to blkdev_issue_zeroout")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/target/target_core_iblock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 12913368c2314..7dacdf9414f58 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2210,7 +2210,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
- 
- 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
- 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-+		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
- 
-+		pin_eld->eld_valid = false;
- 		hdmi_present_sense(per_pin, 0);
- 	}
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 60429011292a2..2a9e023f54291 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -447,7 +447,7 @@ iblock_execute_zero_out(struct block_device *bdev, struct se_cmd *cmd)
+ 				target_to_linux_sector(dev, cmd->t_task_lba),
+ 				target_to_linux_sector(dev,
+ 					sbc_get_write_same_sectors(cmd)),
+-				GFP_KERNEL, false);
++				GFP_KERNEL, BLKDEV_ZERO_NOUNMAP);
+ 	if (ret)
+ 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
  
 -- 
 2.20.1
