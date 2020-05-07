@@ -2,145 +2,143 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4B1C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31B0C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5459320725
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7D82075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 03:58:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G+TsXu8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgEGDtX (ORCPT
+        id S1726356AbgEGD6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 23:49:23 -0400
-Received: from mail-co1nam11olkn2042.outbound.protection.outlook.com ([40.92.18.42]:60609
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgEGDtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 23:49:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YMSaXUqIB4D8s/6a3KdOakYsLpOxLzmh8pcLLdH8+RKW4jE0GVQTTCdNor/J6RLvrADJlMPB5Oicts+Y1r1MnTNYXDimYdNElXizv7NBbKi1JQtm8Cct+FEJLzXtPvcatqkQDN5pL005EMNCA6/wTmo31usXwiZKnRXX5P4vqVYqkE+i7WC85eltGDnZkwEIMa03CfJ7UT8ZJbmuh97KMKsTWGSjkm3+WEBV4yRTdGOGdwDiqVR6I8TcYTSkba3mCBVDTAqXK0cFWUuVX+5yHJDRL5R9NRkKWk0FJptEapv5h9QNUcwJs5VWsUj1Dpt7zho2E6Khda1gsjyATiV5sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n7WS0ep6Pof67yFRn3nDZEba4oGZkhMCcHX7e4vT7vE=;
- b=A4RCxDHP2vdqAQwTaV2UAmCW/RHDNTTFcrNcZYB49QG/BCDLHcw+TdsR/zxCTO4ZxKGb0waAnKTEPLedPHDXvd1r1p4ssbUtjIU152gf2JuW8HhAQFaSgfz3ZTh8Gwn6GjeeQ5yYKdZhYQzOC2LfFS6FzBjDA37UeE9+k/3TR9SZXJ1CoifGT6JNP/+vaMt7RQyCbhvKAe3ezdPYCJgQ7FFVIhUgt5u41LGbtuk7epkl4BODZjzaEMUJ4/aa2UFEDn7kTqpkZa9uzZAJBcZWEDIla+FiChnyIzZEk2ok+m16eqf6Sa1ChOHCRtvfUCyF8wYphM9Qk1upqdJ3CMgvcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from DM6NAM11FT046.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4d::52) by
- DM6NAM11HT211.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4d::260)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Thu, 7 May
- 2020 03:49:21 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4d::50) by DM6NAM11FT046.mail.protection.outlook.com
- (2a01:111:e400:fc4d::121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
- Transport; Thu, 7 May 2020 03:49:21 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:D62C5FD99AA6B2C7BB5B5814B373DA82F85035C1579510770DE4DCDFC959F25C;UpperCasedChecksum:E72F6D97373CD4F15348698307B3CF6FE7D5D32898808A3C7BC0E0F56EC93F3D;SizeAsReceived:9609;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
- 03:49:21 +0000
-Subject: Re: [PATCH 0/5] iio: accel: Add bma023 support to bma180
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Input <linux-input@vger.kernel.org>
-References: <BN6PR04MB0660046ABD79433EA94A85A9A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
- <CACRpkdbb89q2FRJZ1=2QoQs8JFYcwWpNZwJUbnjsVvZYEE-LKw@mail.gmail.com>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660BD7ABF64EC0C19A65A03A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Wed, 6 May 2020 20:49:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <CACRpkdbb89q2FRJZ1=2QoQs8JFYcwWpNZwJUbnjsVvZYEE-LKw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR13CA0014.namprd13.prod.outlook.com
- (2603:10b6:300:16::24) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <1bb115be-fb1a-2024-d42f-4886f4cf207d@live.ca>
+        Wed, 6 May 2020 23:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725857AbgEGD6n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 23:58:43 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD95C061A0F;
+        Wed,  6 May 2020 20:58:43 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hfp62wDYz9sP7;
+        Thu,  7 May 2020 13:58:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588823918;
+        bh=LOy2SlV/dD8DyFlu9uTpohWt2SZoFQNafEKHqBdmpaI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=G+TsXu8/WyJb2RM7ovF0p+vZlf/9AcnQArDxsxt7mVaodVQwatN2N7q4ow7tcN6j9
+         OCpqASNAXJZjZpuBEuEMBZ06p2FiSHlYuUMMq3Q5YNjZs9XEFbuwyHLO18aFDcO9K2
+         lmTYTmik0AK7Z7eI6G6gMZYYrgem1KqNa0xqsv59bWxHeh3NP5dvQiWbKa7Vxqnod6
+         p/VZ/RBj9R8cXnxTEPlyNjsVCQ1whYtBGyDL7iFv4vNYmRVIeN6JqqQtTwJkYKXB7B
+         9VUB6b2ZVwIm8b+ypvWCN4xjDY5pU4OeNxSRKlmppOLUoQu09Mo5ixElJcf0skcsJS
+         mH1/6eo3Sc7vA==
+Date:   Thu, 7 May 2020 13:58:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: linux-next: manual merge of the iommu tree with the s390 tree
+Message-ID: <20200507135835.05e300b5@canb.auug.org.au>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR13CA0014.namprd13.prod.outlook.com (2603:10b6:300:16::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Thu, 7 May 2020 03:49:19 +0000
-X-Microsoft-Original-Message-ID: <1bb115be-fb1a-2024-d42f-4886f4cf207d@live.ca>
-X-TMN:  [guzGGOMzR893nySBwTW0D24rgCeYJMv37PiOHM3O8jvitFAJljdWPSVHhpCYxaG9]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 76cc8ac4-9800-48a5-0dfe-08d7f239a006
-X-MS-TrafficTypeDiagnostic: DM6NAM11HT211:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: H0SlhJ89kHbXu+2bL3mhpeRiKukjGmTJntsSk8GLGk32f7onWt3yOjIv5YWSIf0SGgmPP7NesMkPg2i2eQCJYRYuYlNeqCcymhiEwbxFJIlYGYUS/yk081BNEoA+PxF40SFSPysnz7dl+gSzIrMTQNBc10GRN8rhmzOULe/BEWOHxp3SSJz5WXTLmJO4K1t+FB3jS1j6E5D77A8yfnbWWg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: KdSp707CMaCaKb/T+6/RBiFX+R6hGsSF48youbVNqH7rSIqb2emCzhDCE4m40CgAf+OQPBGyLDzOdobsj6Oju4U91aTREh2mQDClzRjHVIOPlgi4Ii3ppEen+QJlDNGsplangyM7FUejLM8VdBH5DeAYJ7gBX4rGNna3yRL2LyEQ50tu5mTGd91ZcEOl5h1wLDrq2LBMsUo/1hKLzdahKA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76cc8ac4-9800-48a5-0dfe-08d7f239a006
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 03:49:21.1701
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6NAM11HT211
+Content-Type: multipart/signed; boundary="Sig_/7NA8SXrCRGGvYvaG9LEuxnh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+--Sig_/7NA8SXrCRGGvYvaG9LEuxnh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2020-05-06 5:47 a.m., Linus Walleij wrote:
-> On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
-> 
->> This patchset adds support for the bma023 three axis accelerometer
->> to the bma180 IIO driver.  The bma023 is found on several ~2010
->> phones, including the first-gen Galaxy S series.
->>
->> The bma023 differs from later chips (bma180, bma25x) in that it
->> has no low power but still working mode and no temperature
->> channel.
->>
->> The bma023 is already supported by a misc input driver (bma150), so
->> when both are enabled, the iio driver is preferred.  The bma150
->> is very similar to the bma023, but has a temperature channel.
->> Support for the bma150 is not added in this patchset.
-> 
-> I'd say, if it's not too much trouble please also patch in
-> support for BMA150 and SMB380 to the IIO driver so
-> we can delete this old Input driver, we have done this
-> before and thes "input drivers" are just causing headaches
-> and wasting time for the Input maintainer.
-> 
+Hi all,
 
-Looking at the bma150, it looks the same.  The temperature is implemented
-slightly differently than on the bma180+ (unsigned vs signed) but should
-be quite easy to add.  I'll add a new patch for it in v2.
+Today's linux-next merge of the iommu tree got a conflict in:
 
-> It can be in a separate patch set from this one if you
-> don't want to get stuck on this.
-> 
-> Yours,
-> Linus Walleij
-> 
+  drivers/iommu/s390-iommu.c
 
-Thanks,
-Jonathan
+between commit:
+
+  d08d6f5d7524 ("s390/pci: adaptation of iommu to multifunction")
+
+from the s390 tree and commit:
+
+  522af649e57b ("iommu/s390: Convert to probe/release_device() call-backs")
+
+from the iommu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/iommu/s390-iommu.c
+index c60d5c776fc6,610f0828f22d..000000000000
+--- a/drivers/iommu/s390-iommu.c
++++ b/drivers/iommu/s390-iommu.c
+@@@ -166,23 -166,16 +166,16 @@@ static void s390_iommu_detach_device(st
+  	}
+  }
+ =20
+- static int s390_iommu_add_device(struct device *dev)
++ static struct iommu_device *s390_iommu_probe_device(struct device *dev)
+  {
+- 	struct iommu_group *group =3D iommu_group_get_for_dev(dev);
+ -	struct zpci_dev *zdev =3D to_pci_dev(dev)->sysdata;
+ +	struct zpci_dev *zdev =3D to_zpci_dev(dev);
+ =20
+- 	if (IS_ERR(group))
+- 		return PTR_ERR(group);
+-=20
+- 	iommu_group_put(group);
+- 	iommu_device_link(&zdev->iommu_dev, dev);
+-=20
+- 	return 0;
++ 	return &zdev->iommu_dev;
+  }
+ =20
+- static void s390_iommu_remove_device(struct device *dev)
++ static void s390_iommu_release_device(struct device *dev)
+  {
+ -	struct zpci_dev *zdev =3D to_pci_dev(dev)->sysdata;
+ +	struct zpci_dev *zdev =3D to_zpci_dev(dev);
+  	struct iommu_domain *domain;
+ =20
+  	/*
+
+--Sig_/7NA8SXrCRGGvYvaG9LEuxnh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zh2sACgkQAVBC80lX
+0Gz7bwf9G9oc8hRb/nGw/zptGD5ymiGw7BS/+CD/mkrSY53cc0nddxhNaUKVm6p6
+4id49u0nfxy73/QhQhypMpg7Sg4LOwKoiquepPKhesvyCHAjIxMgSYYfGThvXv8V
+rJAXqyG2MarR8ibVpOWMDfzF5rgj/4WlxCcg0BYXc24FdGtezkDsmR4fZ4CbJ8q/
+GvGCr2tCwkcZrOGTRSlGYu6/8Pj6QFQQSsJxQSyqgP0vKi+s61lwQuY2vvglKC+b
+IdZqi145KOTNHqG9RM50W1pbitd3FJtrFdhv3TIlUdGP6EnxG0cNqDySghHT3Zaw
+j4LmnrT922VUkSyyXiaVZ+viUKS+2w==
+=wrdL
+-----END PGP SIGNATURE-----
+
+--Sig_/7NA8SXrCRGGvYvaG9LEuxnh--
