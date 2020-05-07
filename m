@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3902DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A551EC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A21F20857
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C06B2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861676;
-	bh=jbQDkrhi+Hu1rfCVyIs1uuWtB/cadv2biPUK+kuj+hk=;
+	s=default; t=1588861681;
+	bh=jpYLgPba2W2cjLL8grkS1iQbCs1US7rxH2gsLmc3ELo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=De7KnGO4dkfMWcCGTdGAH6H7N5anJXemvQPVQkCE/mcUgObHLf4Nz1JOxoAb/SI6b
-	 WbpOr7dcR6Uvhk9IY9aa/g7Yt9fA1CmoYWCfLXfkYQT355LqV3Q38ycvRpLBIBSrys
-	 jmFGVh3530n10qiErX0MYKliMXr7GKoeecQyfa5E=
+	b=lLAvJsvM9b3eYuRrd7YO4V80vCzFuSvdLXLtGWGsqYICp3hfULIztp7fIsMOPnPL0
+	 Tzs8ok5HXCy8PealiKMInvByhZ1xRJ9NVBsceMxXq5ZAq+x9i4fN3yaZ7LJ4FK9juW
+	 lIJA8NgU1+1WHNPspRi77CZZ1NBWvgneLPzvnnVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEGO1y (ORCPT
+        id S1727907AbgEGO2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53810 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgEGO1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:51 -0400
+        id S1727867AbgEGO16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C8020857;
-        Thu,  7 May 2020 14:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A1020A8B;
+        Thu,  7 May 2020 14:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861671;
-        bh=jbQDkrhi+Hu1rfCVyIs1uuWtB/cadv2biPUK+kuj+hk=;
+        s=default; t=1588861677;
+        bh=jpYLgPba2W2cjLL8grkS1iQbCs1US7rxH2gsLmc3ELo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ZDx7c2DHOhHYVJZeGz+Vwkr9p9hlhaxg+Tep8iU/wCG/WyAGu9aSZ0ZfwCT6UK0T
-         xYWaeOT/M+1ZMAJ6oL3WZ3O/0xniqTLdE7i3cC/XFLzhZpOYg6qswa0A2Iq8ykGkzy
-         9MzHDc5mTXkZgxG30zLg/nh5yhqkKa0fPs5Sb3TI=
+        b=TOEBOY4lqdVDquf5/8fqLBrAfG5BLUYyJdAcFl6XXosQ1pmx5nTTs6ak9zglXwbZ5
+         koE8l0y8c1hoYUAfJAAX4Ct+eeeylD8N6X/dk2GMm7zPyYyO3tHqh3M8xCvC17u4xJ
+         QusFnX9MGM3zojYJgbhSfK/2j0d/a5xxX4TRAglM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 20/50] ALSA: hda: Match both PCI ID and SSID for driver blacklist
-Date:   Thu,  7 May 2020 10:26:56 -0400
-Message-Id: <20200507142726.25751-20-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        minchan@kernel.org, surenb@google.com, jenhaochen@google.com,
+        Martin Liu <liumartin@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 25/50] dma-buf: Fix SET_NAME ioctl uapi
+Date:   Thu,  7 May 2020 10:27:01 -0400
+Message-Id: <20200507142726.25751-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -58,56 +66,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Daniel Vetter <daniel.vetter@intel.com>
 
-[ Upstream commit 977dfef40c8996b69afe23a9094d184049efb7bb ]
+[ Upstream commit a5bff92eaac45bdf6221badf9505c26792fdf99e ]
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+The uapi is the same on 32 and 64 bit, but the number isn't. Everyone
+who botched this please re-read:
 
-Since the empty codec problem appear on the certain AMD platform (PCI
-ID 1022:1487), this patch changes the blacklist matching to both PCI
-ID and SSID using pci_match_id().  Also, the entry that was removed by
-the previous fix for ASUS ROG Zenigh II is re-added.
+https://www.kernel.org/doc/html/v5.4-preprc-cpu/ioctl/botching-up-ioctls.html
 
-Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Also, the type argument for the ioctl macros is for the type the void
+__user *arg pointer points at, which in this case would be the
+variable-sized char[] of a 0 terminated string. So this was botched in
+more than just the usual ways.
+
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Greg Hackmann <ghackmann@google.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: minchan@kernel.org
+Cc: surenb@google.com
+Cc: jenhaochen@google.com
+Cc: Martin Liu <liumartin@google.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Tested-by: Martin Liu <liumartin@google.com>
+Reviewed-by: Martin Liu <liumartin@google.com>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+  [sumits: updated some checkpatch fixes, corrected author email]
+Link: https://patchwork.freedesktop.org/patch/msgid/20200407133002.3486387-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/dma-buf/dma-buf.c    | 3 ++-
+ include/uapi/linux/dma-buf.h | 6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 59b60b1f26f80..8b015b27e9c73 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2075,9 +2075,10 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
-  * some HD-audio PCI entries are exposed without any codecs, and such devices
-  * should be ignored from the beginning.
-  */
--static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
--	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+static const struct pci_device_id driver_blacklist[] = {
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
- 	{}
- };
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index c343c7c10b4cc..e7589d91de8fb 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -388,7 +388,8 @@ static long dma_buf_ioctl(struct file *file,
  
-@@ -2097,7 +2098,7 @@ static int azx_probe(struct pci_dev *pci,
- 	bool schedule_probe;
- 	int err;
+ 		return ret;
  
--	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+	if (pci_match_id(driver_blacklist, pci)) {
- 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
- 		return -ENODEV;
- 	}
+-	case DMA_BUF_SET_NAME:
++	case DMA_BUF_SET_NAME_A:
++	case DMA_BUF_SET_NAME_B:
+ 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+ 
+ 	default:
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index dbc7092e04b5a..7f30393b92c3b 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -39,6 +39,12 @@ struct dma_buf_sync {
+ 
+ #define DMA_BUF_BASE		'b'
+ #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++
++/* 32/64bitness of this uapi was botched in android, there's no difference
++ * between them in actual uapi, they're just different numbers.
++ */
+ #define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_SET_NAME_A	_IOW(DMA_BUF_BASE, 1, u32)
++#define DMA_BUF_SET_NAME_B	_IOW(DMA_BUF_BASE, 1, u64)
+ 
+ #endif
 -- 
 2.20.1
 
