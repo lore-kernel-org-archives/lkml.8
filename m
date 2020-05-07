@@ -2,127 +2,80 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B28C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940B4C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDABF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588848000;
-	bh=YP541EjI3NoCkfDw9IO4IUFLqhgliUbaju7ZvUnMZFI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mXzth4p6IkZhriGsUg7br+2FJJWk7KejXqXcQMPxWKFy8IBAQ0Rv/v+B8sNg3FESV
-	 oCYu97lhayuZq88cJDglZ7zHlwesqAhCFmTHtcpVSfh1duKNj+jDWE/tFvGKyal423
-	 wCRbFBUh5wwfpwFYGi0rpDmIzQMH5VqsaRvIGOjA=
+	by mail.kernel.org (Postfix) with ESMTP id 6F93C20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgEGKkA (ORCPT
+        id S1726580AbgEGKlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:40:00 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:19592 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEGKj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:39:59 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 047AdRIF003000
-        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 19:39:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 047AdRIF003000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588847968;
-        bh=lOxb8f86Kz4Qx/da1Nx9cKkfwC10sWdTZOHVkCSBvsY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FxIPosAPHVFKoVTylyUva1ucqgjg4LPf4iojY6P3QW531JJzC7dH6l109yc916HAL
-         ismKMTRrXALTf3m49Ie4wf1R4KUujOUqss+X3wXc7Vz6YrdkvEHegt2+RXoligaGjk
-         ru+I0JZGfuBbCRHj3azFfYrzs1PhEpkyTf+hn2kjcu6PeM/MOSflM6gCyjP4ZvtLiN
-         Sx1UI67sZsIwLrqQ9Y6eVR7zwHO0lH4AVtCQNUta5fA76WNX/aI9MCm2YP9jIfwYef
-         TjdfQ7K/NOaSszySwxhHsSfHxeg6xXhAVZPQ983C50UHh1nWAxsd79SxNrjwG1OdRS
-         AM68MnHgyjzBA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id z1so3038276vsn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 03:39:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYG03zqCyH5t+y+RE3ubb0YEJ/B1PL5NxEJI10SvB9pW6xQH6X5
-        wwToEBupgKJcV4y0OojFcm2DzzeUt0sCsUXUc3g=
-X-Google-Smtp-Source: APiQypLvQgdvpB6JF3Ctp0ZVQgz8+NQtkk0Pl86Zh+WWbuPjqKN4pC2owQPYtXJ/IQp2D5MLksXgq7PN1vXGRLIe0u0=
-X-Received: by 2002:a67:e94d:: with SMTP id p13mr11206427vso.215.1588847967057;
- Thu, 07 May 2020 03:39:27 -0700 (PDT)
+        Thu, 7 May 2020 06:41:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:56132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgEGKlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:41:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11DCD6E;
+        Thu,  7 May 2020 03:41:02 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8B73F71F;
+        Thu,  7 May 2020 03:41:01 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Tamas Zsoldos <tamas.zsoldos@arm.com>
+Subject: [PATCH] arm64: vdso: Add --eh-frame-hdr to ldflags
+Date:   Thu,  7 May 2020 11:40:49 +0100
+Message-Id: <20200507104049.47834-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <CGME20200430125001epcas5p2a6f02e9888481cef96f32ba14450bc63@epcas5p2.samsung.com>
- <1588250972-8507-1-git-send-email-maninder1.s@samsung.com> <1588250972-8507-4-git-send-email-maninder1.s@samsung.com>
-In-Reply-To: <1588250972-8507-4-git-send-email-maninder1.s@samsung.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 7 May 2020 19:38:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASf687MLf1oWqrUiOHtw=p9Ug02bi1r-KevsxnFtQni2g@mail.gmail.com>
-Message-ID: <CAK7LNASf687MLf1oWqrUiOHtw=p9Ug02bi1r-KevsxnFtQni2g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] scripts/checkstack.pl: fix arm sp regex
-To:     Maninder Singh <maninder1.s@samsung.com>
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        a.sahrawat@samsung.com, Vaneet Narang <v.narang@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 9:50 PM Maninder Singh <maninder1.s@samsung.com> wrote:
->
-> if objdump has below entries;
-> c01ed608 <X>:
-> c01ed614:       e24ddff7        sub     sp, sp, #120    ; 0x78
->
-> c01f0d50 <Y>:
-> c01f0d50:       e24dd094        sub     sp, sp, #140    ; 0x8c
->
-> scripts fails to read stack usage.
-> so making regex $re for ARM similar to aarch64
->
-> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+LLVM's unwinder depends on the .eh_frame_hdr being present for
+unwinding. However, when compiling Linux with GCC, the section
+is not present in the vdso library object and when compiling
+with Clang, it is present, but it has zero length.
 
+With GCC the problem was not spotted because libgcc unwinder does
+not require the .eh_frame_hdr section to be present.
 
-This looks good to me, and it is a bug fix.
+Add --eh-frame-hdr to ldflags to correctly generate and populate
+the section for both GCC and LLVM.
 
-Just a question about the SOB.
+Fixes: 28b1a824a4f44 ("arm64: vdso: Substitute gettimeofday() with C implementation")
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Tamas Zsoldos <tamas.zsoldos@arm.com>
+Tested-by: Tamas Zsoldos <tamas.zsoldos@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/arm64/kernel/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Maninder Singh is the author and also the submitter, right?
-
-What does "Signed-off-by: Vaneet Narang <v.narang@samsung.com>" mean?
-
-Co-developed-by or something else?
-
-
-
-
-
-
-> ---
->  scripts/checkstack.pl | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-> index b292ef4..e80de70 100755
-> --- a/scripts/checkstack.pl
-> +++ b/scripts/checkstack.pl
-> @@ -60,7 +60,7 @@ my (@stack, $re, $dre, $sub, $x, $xs, $funcre, $min_stack);
->                 $dre = qr/^.*sub.*sp, sp, #(0x$x{1,8})/o;
->         } elsif ($arch eq 'arm') {
->                 #c0008ffc:      e24dd064        sub     sp, sp, #100    ; 0x64
-> -               $re = qr/.*sub.*sp, sp, #(([0-9]{2}|[3-9])[0-9]{2})/o;
-> +               $re = qr/.*sub.*sp, sp, #([0-9]{1,4})/o;
->                 $sub = \&arm_push_handling;
->         } elsif ($arch =~ /^x86(_64)?$/ || $arch =~ /^i[3456]86$/) {
->                 #c0105234:       81 ec ac 05 00 00       sub    $0x5ac,%esp
-> --
-> 1.9.1
->
-
-
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index 3862cad2410c..54008ec39e3a 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -18,7 +18,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
+ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+ 
+ ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
+-		--build-id -n -T
++		--eh-frame-hdr --build-id -n -T
+ 
+ ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
 -- 
-Best Regards
-Masahiro Yamada
+2.26.2
+
