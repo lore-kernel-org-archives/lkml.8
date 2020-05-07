@@ -2,188 +2,123 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADD5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25C0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0387120736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956D72064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eDBZ91s7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSM6qpbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgEGAr0 (ORCPT
+        id S1729085AbgEGArb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:47:26 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50620 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgEGArT (ORCPT
+        Wed, 6 May 2020 20:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728010AbgEGAr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:47:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bff3064527;
-        Thu, 7 May 2020 00:46:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=lgTPbgWuooIASoan6azS78lSy4rZcz4p1fF1/JwE5D8=;
- b=eDBZ91s7uE20PGEknQieoApNYK/X77uRpkvgWH4Ntib2svHdQgiuVmaJOv/DQs9lsO5n
- Twu1RFkZRs4PyGgLJQAG5PbOyCndVv6DYU3uXRbClF2JqmHgmO3VXeOGA9djveUI7PRF
- zWqffMx29K81BhOHkusXw6BhLtvyWnbGl3cqATmwXxDdiiV0w8G+DMJWe2IeW7RRRhSZ
- t87VaSvZf3/XtFgn3AATvs0EzrZwQa3MGceKqVcDL/6MzWCdRvPsW9EJwqks/OlsamJG
- GO6ldoFj7hHx9C2S6ZgaXzJ0HpHph4rTLbT/IQjT/xY7kkJOLnQKfwtNX6bhlYU+vAYU hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30s09rdfh3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:46:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470ausi170938;
-        Thu, 7 May 2020 00:44:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30us7p2p25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:19 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470iGkU026090;
-        Thu, 7 May 2020 00:44:16 GMT
-Received: from ayz-linux.localdomain (/68.7.158.207)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:44:16 -0700
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        rppt@linux.ibm.com, akpm@linux-foundation.org, hughd@google.com,
-        ebiederm@xmission.com, masahiroy@kernel.org, ardb@kernel.org,
-        ndesaulniers@google.com, dima@golovin.in, daniel.kiper@oracle.com,
-        nivedita@alum.mit.edu, rafael.j.wysocki@intel.com,
-        dan.j.williams@intel.com, zhenzhong.duan@oracle.com,
-        jroedel@suse.de, bhe@redhat.com, guro@fb.com,
-        Thomas.Lendacky@amd.com, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, minchan@kernel.org,
-        mhocko@kernel.org, ying.huang@intel.com,
-        yang.shi@linux.alibaba.com, gustavo@embeddedor.com,
-        ziqian.lzq@antfin.com, vdavydov.dev@gmail.com,
-        jason.zeng@intel.com, kevin.tian@intel.com, zhiyuan.lv@intel.com,
-        lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: [RFC 29/43] memblock: PKRAM: mark memblocks that contain preserved pages
-Date:   Wed,  6 May 2020 17:41:55 -0700
-Message-Id: <1588812129-8596-30-git-send-email-anthony.yznaga@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=2
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070001
+        Wed, 6 May 2020 20:47:26 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDFFC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 17:47:26 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id y26so4383075ioj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 17:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uYSzKMOk3or2uFoTZZzRJZRiS035mjjJocvNWlKm6tM=;
+        b=dSM6qpbUf+qLjqBHYANWC6rRaGEkZVYX7hCaUGcJC4jffs2/nlqOD1bGMOPdjX+0+u
+         a0tj0jTWA0vqVQieHoGIHDnsiNYn7Dw+2q0mr2Gkf68qDvpGO82TQyegMyE/Z4LiOJ3b
+         GRJ84a2QIlYNH31ggzEgMyWSqShuOj+CH5JvSNPUzWdeAQutmWJ3P1ZvJ86vbBd6iuHN
+         n7389hKng19UxWWQQEuY62XlkhD1bR4w7Zd7sbnyOUdPU72sUqC4eCcSP5J7GiTdAQQB
+         9y6MfecM3KC1F5nVtFVqksBFcaWUYIxAFWHlo3HuzbCvAuzZoI38OKi7Mr/JvPGr4KE1
+         /whA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uYSzKMOk3or2uFoTZZzRJZRiS035mjjJocvNWlKm6tM=;
+        b=QpP+NCcMVW06ru0/D321URWLNfvWsENlaVZXxvzYQBmbuluCyl0+K6lHsFjV40drNr
+         4ATvIxcu5TDqOBgzXDnX7mHPkOHH8KHORoMz/GIIxzAcmwLPwWc9EDDQcg3cex26ZaNU
+         aLN8B9c/qlVCosr2TXlB4jCJaGueU7h6FE41v+7v5Fj0aMq+UmQLI8NqsFQ5l6y7I7LN
+         46y8CiW1MLsFXgCDX7b9eG7Vjhokeg4Wg78ue1V6BIXm+0jeiYpyYolRHE3lnCStILzp
+         chP26bTBjfq3HZGE9OchDzjt+0rIpqk04tj6mHfeS4f5UdcxmjK0T/Fyx5djwAsRxChB
+         ANeg==
+X-Gm-Message-State: AGi0PubCv7iUKbRAbXg5fbGYWX5zaS6PPtEPneh/c7VUSxfgEJIigUUw
+        gSV2k1OG7h+ewW7FjXiq67bkBhjaNw2f74obkSLGnw==
+X-Google-Smtp-Source: APiQypJvM5QMB5Afb5RNgm1KdSj0U7xDMShFulj/eorpksz8gZajXOONziEH5xmbd7Mj52enCkEHqDk9ToBBgmsDRQU=
+X-Received: by 2002:a02:cd03:: with SMTP id g3mr10773598jaq.61.1588812445532;
+ Wed, 06 May 2020 17:47:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420231427.63894-1-zenczykowski@gmail.com>
+ <20200506233259.112545-1-zenczykowski@gmail.com> <20200506165517.140d39ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200506165517.140d39ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Date:   Wed, 6 May 2020 17:47:12 -0700
+Message-ID: <CANP3RGc4aWPM09SoD3gk1R9f1UL4Ef57LHGiTKMBvYBLotwPGQ@mail.gmail.com>
+Subject: Re: [PATCH v2] net: bpf: permit redirect from L3 to L2 devices at
+ near max mtu
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support deferred initialization of page structs for preserved pages,
-separate memblocks containing preserved pages by setting a new flag
-when adding them to the memblock reserved list.
+> I thought we have established that checking device MTU (m*T*u)
+> at ingress makes a very limited amount of sense, no?
+>
+> Shooting from the hip here, but won't something like:
+>
+>     if (!skb->dev || skb->tc_at_ingress)
+>         return SKB_MAX_ALLOC;
+>     return skb->dev->mtu + skb->dev->hard_header_len;
+>
+> Solve your problem?
 
-Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
----
- include/linux/memblock.h | 7 +++++++
- mm/memblock.c            | 8 +++++++-
- mm/pkram.c               | 4 ++--
- 3 files changed, 16 insertions(+), 3 deletions(-)
+I believe that probably does indeed solve the ingress case of tc
+ingress hook on cellular redirecting to wifi.
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 6bc37a731d27..27ab2b30ae1d 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -37,6 +37,7 @@ enum memblock_flags {
- 	MEMBLOCK_HOTPLUG	= 0x1,	/* hotpluggable region */
- 	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
- 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
-+	MEMBLOCK_PRESERVED	= 0x8,	/* preserved pages region */
- };
- 
- /**
-@@ -111,6 +112,7 @@ void memblock_allow_resize(void);
- int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
- int memblock_add(phys_addr_t base, phys_addr_t size);
- int memblock_remove(phys_addr_t base, phys_addr_t size);
-+int __memblock_reserve(phys_addr_t base, phys_addr_t size, enum memblock_flags flags);
- int memblock_free(phys_addr_t base, phys_addr_t size);
- int memblock_reserve(phys_addr_t base, phys_addr_t size);
- #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-@@ -215,6 +217,11 @@ static inline bool memblock_is_nomap(struct memblock_region *m)
- 	return m->flags & MEMBLOCK_NOMAP;
- }
- 
-+static inline bool memblock_is_preserved(struct memblock_region *m)
-+{
-+	return m->flags & MEMBLOCK_PRESERVED;
-+}
-+
- #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
- int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
- 			    unsigned long  *end_pfn);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 69ae883b8d21..1a9a2055ed11 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -831,6 +831,12 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
- 	return memblock_remove_range(&memblock.reserved, base, size);
- }
- 
-+int __init_memblock __memblock_reserve(phys_addr_t base, phys_addr_t size,
-+					enum memblock_flags flags)
-+{
-+	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, flags);
-+}
-+
- int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
- {
- 	phys_addr_t end = base + size - 1;
-@@ -838,7 +844,7 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
- 	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
- 		     &base, &end, (void *)_RET_IP_);
- 
--	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
-+	return __memblock_reserve(base, size, 0);
- }
- 
- #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-diff --git a/mm/pkram.c b/mm/pkram.c
-index 97a7dd0a5b7d..b83d31740619 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -170,7 +170,7 @@ static int __init pkram_reserve_page(unsigned long pfn)
- 	size = PAGE_SIZE;
- 
- 	if (memblock_is_region_reserved(base, size) ||
--	    memblock_reserve(base, size) < 0)
-+	    __memblock_reserve(base, size, MEMBLOCK_PRESERVED) < 0)
- 		err = -EBUSY;
- 
- 	if (!err)
-@@ -1446,7 +1446,7 @@ static void pkram_remove_identity_map(struct page *page)
- static int __init pkram_reserve_range_cb(struct pkram_pg_state *st, unsigned long base, unsigned long size)
- {
- 	if (memblock_is_region_reserved(base, size) ||
--	    memblock_reserve(base, size) < 0) {
-+	    __memblock_reserve(base, size, MEMBLOCK_PRESERVED) < 0) {
- 		pr_warn("PKRAM: reservations exist in [0x%lx,0x%lx]\n", base, base + size - 1);
- 		/*
- 		 * Set a lower bound so another walk can undo the earlier,
--- 
-2.13.3
+However, there's 2 possible uplinks - cellular (rawip, L3), and wifi
+(ethernet, L2).
+Thus, there's actually 4 things I'm trying to support:
 
+- ipv6 ingress on cellular uplink (L3/rawip), translate to ipv4,
+forward to wifi/ethernet <- need to add ethernet header
+
+- ipv6 ingress on wifi uplink (L2/ether), translate to ipv4, forward
+to wifi/ethernet <- trivial, no packet size change
+
+- ipv4 egressing through tun (L3), translate to ipv6, forward to
+cellular uplink <- trivial, no packet size change
+
+- ipv4 egressing through tun (L3), translate to ipv6, forward to wifi
+uplink <- need to add ethernet header [*]
+
+I think your approach doesn't solve the reverse path (* up above):
+
+ie. ipv4 packets hitting a tun device (owned by a clat daemon doing
+ipv4<->ipv6 translation in userspace), being stolen by a tc egress
+ebpf hook, mutated to ipv6 by ebpf and bpf_redirect'ed to egress
+through a wifi ipv6-only uplink.
+
+Though arguably in this case I could probably simply increase the tun
+device mtu by another 14, while keeping ipv4 route mtus low...
+(tun mtu already has to be 28 bytes lower then wifi mtu to allow
+replacement of ipv4 with ipv6 header (20 bytes extra), with possibly
+an ipv6 frag header (8 more bytes))
+
+Any further thoughts?
