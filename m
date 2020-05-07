@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EC6C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7A8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 638C120B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C425B2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861921;
-	bh=OgiSzzFetVMTDXRgemWrmC6dvpnAqP9JTAjvhUhTXaU=;
+	s=default; t=1588861931;
+	bh=yFlji5jLb6IzZ/u+uU3q7flsMPM3D7UdsfEjxDcr2PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dh5Y56qUcMcxKo3bxv6cqjGmvbI2gji9OQ8ICM5UhsED4kl+Ev2naOVhYh4NoU5Ie
-	 42gURG4xqC02R/FwnrvvQJcSzY+19TXDnLZ30l/SCd3GVmpHconhyCUesVj1EnokI3
-	 CZwKhXZT+E0b4porxsewwuoPEWLiIoof5ifv4VxQ=
+	b=kGwjJdgXoiv4/gxcpuLT5NmRS3s7tFReiZrQ/GOuy+NO5LJFkdDUPdhjys3HJGyaf
+	 o+UacEhDJgzQVRuxMYLNUKCT/rtD+UhGZcTjkt2xmhPFsoUTCGYATTYWf4+jPYmeGu
+	 e9dMXOHpagB0wzv70pmZmaOmxUxTCFO0xCFgNpqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgEGOcA (ORCPT
+        id S1728685AbgEGOcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbgEGOaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:08 -0400
+        id S1728735AbgEGOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43ED220870;
-        Thu,  7 May 2020 14:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58D142145D;
+        Thu,  7 May 2020 14:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861808;
-        bh=OgiSzzFetVMTDXRgemWrmC6dvpnAqP9JTAjvhUhTXaU=;
+        s=default; t=1588861800;
+        bh=yFlji5jLb6IzZ/u+uU3q7flsMPM3D7UdsfEjxDcr2PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEp6wXG28EFoUDA+PTACNfGl8HCWJOlPkQbwYJ0PIve/PBtenY0IJu8Smf9y2UObz
-         wJnbbsA4fXncvKThE4bxTp8Jwetex5GCM3RfLv3QRGRMD4oEvOHBEFWZ4uppJ9WZ7r
-         OBQHKf6v7CdfVQ6/u6bPjTgZh1WN3WIIxefumg+c=
+        b=zrmzR1Q54IPwF4oVTJb5W0z3NFfQ34mOuSmuHsaBlDnqP+aP/HTWgRxHIvgqMNc8/
+         ZNrP6Z4Ke6f3F/s3EexLdaEiHvpTcUIaZwimKcF80EVhl4H91ioUFe70q751kABpJZ
+         po4LeaC7lBEgtjathKM3yjjJc5RjGZa+lFJshaNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/11] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-Date:   Thu,  7 May 2020 10:29:55 -0400
-Message-Id: <20200507143003.27047-3-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 14/16] ALSA: opti9xx: shut up gcc-10 range warning
+Date:   Thu,  7 May 2020 10:29:41 -0400
+Message-Id: <20200507142943.26848-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143003.27047-1-sashal@kernel.org>
-References: <20200507143003.27047-1-sashal@kernel.org>
+In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
+References: <20200507142943.26848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
+[ Upstream commit 5ce00760a84848d008554c693ceb6286f4d9c509 ]
 
-pd->dma.dev is read in irq handler pd_irq().
-However, it is set to pdev->dev after request_irq().
-Therefore, set pd->dma.dev to pdev->dev before request_irq() to
-avoid data race between pch_dma_probe() and pd_irq().
+gcc-10 points out a few instances of suspicious integer arithmetic
+leading to value truncation:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+sound/isa/opti9xx/opti92x-ad1848.c: In function 'snd_opti9xx_configure':
+sound/isa/opti9xx/opti92x-ad1848.c:322:43: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_opti9xx_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
+  322 |   (snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/opti92x-ad1848.c:351:3: note: in expansion of macro 'snd_opti9xx_write_mask'
+  351 |   snd_opti9xx_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/miro.c: In function 'snd_miro_configure':
+sound/isa/opti9xx/miro.c:873:40: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_miro_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
+  873 |   (snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/miro.c:1010:3: note: in expansion of macro 'snd_miro_write_mask'
+ 1010 |   snd_miro_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
+      |   ^~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+These are all harmless here as only the low 8 bit are passed down
+anyway. Change the macros to inline functions to make the code
+more readable and also avoid the warning.
+
+Strictly speaking those functions also need locking to make the
+read/write pair atomic, but it seems unlikely that anyone would
+still run into that issue.
+
+Fixes: 1841f613fd2e ("[ALSA] Add snd-miro driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200429190216.85919-1-arnd@arndb.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pch_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/isa/opti9xx/miro.c           | 9 ++++++---
+ sound/isa/opti9xx/opti92x-ad1848.c | 9 ++++++---
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index df95727dc2fba..8a0c70e4f7277 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -876,6 +876,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 	}
+diff --git a/sound/isa/opti9xx/miro.c b/sound/isa/opti9xx/miro.c
+index 8894c7c18ad67..d92c3c6b6051d 100644
+--- a/sound/isa/opti9xx/miro.c
++++ b/sound/isa/opti9xx/miro.c
+@@ -875,10 +875,13 @@ static void snd_miro_write(struct snd_miro *chip, unsigned char reg,
+ 	spin_unlock_irqrestore(&chip->lock, flags);
+ }
  
- 	pci_set_master(pdev);
-+	pd->dma.dev = &pdev->dev;
++static inline void snd_miro_write_mask(struct snd_miro *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_miro_read(chip, reg);
  
- 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
- 	if (err) {
-@@ -891,7 +892,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
- 		goto err_free_irq;
- 	}
+-#define snd_miro_write_mask(chip, reg, value, mask)	\
+-	snd_miro_write(chip, reg,			\
+-		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
  
--	pd->dma.dev = &pdev->dev;
+ /*
+  *  Proc Interface
+diff --git a/sound/isa/opti9xx/opti92x-ad1848.c b/sound/isa/opti9xx/opti92x-ad1848.c
+index 505cd81e19fa5..4ef3caaf4354b 100644
+--- a/sound/isa/opti9xx/opti92x-ad1848.c
++++ b/sound/isa/opti9xx/opti92x-ad1848.c
+@@ -327,10 +327,13 @@ static void snd_opti9xx_write(struct snd_opti9xx *chip, unsigned char reg,
+ }
  
- 	INIT_LIST_HEAD(&pd->dma.channels);
  
+-#define snd_opti9xx_write_mask(chip, reg, value, mask)	\
+-	snd_opti9xx_write(chip, reg,			\
+-		(snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++static inline void snd_opti9xx_write_mask(struct snd_opti9xx *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_opti9xx_read(chip, reg);
+ 
++	snd_opti9xx_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
+ 
+ static int snd_opti9xx_configure(struct snd_opti9xx *chip,
+ 					   long port,
 -- 
 2.20.1
 
