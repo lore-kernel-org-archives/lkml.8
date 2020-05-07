@@ -2,136 +2,185 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89DCC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9CEC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0AE2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF95207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 17:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="AG5WDF/C"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tbjCYpXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgEGRAZ (ORCPT
+        id S1727930AbgEGRBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 13:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726922AbgEGRAW (ORCPT
+        Thu, 7 May 2020 13:01:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28878 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726778AbgEGRBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 13:00:22 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBFCC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 10:00:22 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id l18so955041qtp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 10:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zrl4Q5RwimOaOPzJ4SvHWrYvKD/IGDnpYrEl4Dr0Twg=;
-        b=AG5WDF/CkoslEjDZdSnwRk5sEa28EkvkUYjjtyS8kME1e7eqJzm6NLMS+vuGLDU4zK
-         tN76V8FpTQbDTXdWqjWKBymdDZ5VcKbbzrQcHbEJUmrVCWz6vjVg3T5iCV7P9aRTddXe
-         lblNzqxepfUMxXN2Z7BTzvgcd6sMFvFLRRMjmC1RW/CVijzI+BeIpgrzKr6mIpNHX+BC
-         H32PGtDDeG1AGNL+H52cyl0/53UHRQtbpIjur0GcBp2n+vjBm41bJlHnVeuzq81IxO8p
-         gx+vbUP9uqMMjviTOyQFFuIT0fZSyTqdkn5bDc1dlRR6h8Yiin4SpgnzjNjYBAAzhVtK
-         3Tdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zrl4Q5RwimOaOPzJ4SvHWrYvKD/IGDnpYrEl4Dr0Twg=;
-        b=CtSGQIk+evo66cRhf/jjUyVtpZwcxaHXTJ81Yw+5Mw9svc4k5HxW8j3rxQC6czaE/i
-         hhICh/7QD1LW2I6H6HuKRh8OKvFNfDzJg7uQ/vtCuZovQX9BzmkiKpXvuhzmembe5JfX
-         k0BN9P4JMXGpe8ryHDIOc72iQwoevxubdWtnF1kXM8GklInQ0FgIozh7Vlabz0mKt9kA
-         tRYCL9YcjQFHLOz2vQeiy9+sbxRcaKw8UWOW7R/AAMYr0thJlusOOYMHONK1IKlz16Jc
-         YZDb4VRegFV6gusmJLo98V741SuC2+KsYg0LPKxXIzwntmDSCENH346/yusgKBij9Y8C
-         UnAQ==
-X-Gm-Message-State: AGi0PubzheSgoLry7QHjj980qiH4XdckUfldtCq2bdrvxSb12beTGccD
-        XGORH+uWI0WIPnnj+PtMeRMFwg==
-X-Google-Smtp-Source: APiQypJix8z3BJDzc3/nMXJNVLJU+fpdTdhM5AUcNziovXv/1ZEfZhczdAgwriND7njS3zR/txvJkQ==
-X-Received: by 2002:ac8:67d9:: with SMTP id r25mr15785986qtp.338.1588870821922;
-        Thu, 07 May 2020 10:00:21 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id s15sm4843057qtc.31.2020.05.07.10.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 10:00:21 -0700 (PDT)
-Date:   Thu, 7 May 2020 13:00:06 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     paulmck@kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-ID: <20200507170006.GA155220@cmpxchg.org>
-References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
- <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
+        Thu, 7 May 2020 13:01:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588870880; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Q6e681XAMJUtZBJD87mrFbPc1YIIh9lR85Q2LRLTHXs=; b=tbjCYpXWd3B4rTtKkTy9rQoaBI3PC2bDM+5sxnNNqaNO5erikTnvl424MWF2i1uew4/Tv+aS
+ xKCjPEhpiTEmetCaMJW6bnV/piP97Lw2OZDbyRHQpjcEQ5TmyKTid/ARXrTQjR18Y1fw+7N5
+ 3DyWRNwifqxsBUgI0KCPuFaixHU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb43ec2.7fc2d7a710a0-smtp-out-n03;
+ Thu, 07 May 2020 17:00:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B138FC432C2; Thu,  7 May 2020 17:00:49 +0000 (UTC)
+Received: from [10.131.209.195] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5532C433D2;
+        Thu,  7 May 2020 17:00:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5532C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 2/6] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
+ <1588507469-31889-3-git-send-email-rnayak@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <acc7baf9-86a3-6c78-4d62-99d4b1baa12e@codeaurora.org>
+Date:   Thu, 7 May 2020 22:30:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
+In-Reply-To: <1588507469-31889-3-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:55:35PM -0700, Andrew Morton wrote:
-> On Wed, 6 May 2020 17:42:40 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+
+On 5/3/2020 5:34 PM, Rajendra Nayak wrote:
+> geni spi needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
 > 
-> > This commit adds a shrinker so as to inform RCU when memory is scarce.
-> > RCU responds by shifting into the same fast and inefficient mode that is
-> > used in the presence of excessive numbers of RCU callbacks.  RCU remains
-> > in this state for one-tenth of a second, though this time window can be
-> > extended by another call to the shrinker.
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+> This patch has a dependency on the 'PATCH 1/6' in this series,
+> due to the changes in include/linux/qcom-geni-se.h
+> Its ideal if this and the previous patch gets merged via the
+> msm tree (once reviewed and ack'ed)
+> Greg has already responded he is fine with it for serial.
 
-We may be able to use shrinkers here, but merely being invoked does
-not carry a reliable distress signal.
+Mark, would you be able to review/ack this patch so it can be
+taken in via the msm tree? 'PATCH 1/6' is Ack'd by Greg, and its
+going to land via the msm tree as well.
 
-Shrinkers get invoked whenever vmscan runs. It's a useful indicator
-for when to age an auxiliary LRU list - test references, clear and
-rotate or reclaim stale entries. The urgency, and what can and cannot
-be considered "stale", is encoded in the callback frequency and scan
-counts, and meant to be relative to the VM's own rate of aging: "I've
-tested X percent of mine for recent use, now you go and test the same
-share of your pool." It doesn't translate well to other
-interpretations of the callbacks, although people have tried.
-
-> > If it proves feasible, a later commit might add a function call directly
-> > indicating the end of the period of scarce memory.
 > 
-> (Cc David Chinner, who often has opinions on shrinkers ;))
+>   drivers/spi/spi-geni-qcom.c | 26 +++++++++++++++++++++++---
+>   1 file changed, 23 insertions(+), 3 deletions(-)
 > 
-> It's a bit abusive of the intent of the slab shrinkers, but I don't
-> immediately see a problem with it.  Always returning 0 from
-> ->scan_objects might cause a problem in some situations(?).
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index c397242..bc2916f 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -7,6 +7,7 @@
+>   #include <linux/log2.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>   #include <linux/pm_runtime.h>
+>   #include <linux/qcom-geni-se.h>
+>   #include <linux/spi/spi.h>
+> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>   {
+>   	unsigned long sclk_freq;
+>   	unsigned int actual_hz;
+> -	struct geni_se *se = &mas->se;
+>   	int ret;
+>   
+>   	ret = geni_se_clk_freq_match(&mas->se,
+> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>   
+>   	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>   				actual_hz, sclk_freq, *clk_idx, *clk_div);
+> -	ret = clk_set_rate(se->clk, sclk_freq);
+> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>   	if (ret)
+> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>   	return ret;
+>   }
+>   
+> @@ -561,6 +561,17 @@ static int spi_geni_probe(struct platform_device *pdev)
+>   	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>   	mas->se.base = base;
+>   	mas->se.clk = clk;
+> +	mas->se.opp_table = dev_pm_opp_set_clkname(&pdev->dev, "se");
+> +	if (IS_ERR(mas->se.opp_table))
+> +		return PTR_ERR(mas->se.opp_table);
+> +	/* OPP table is optional */
+> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+> +	if (!ret) {
+> +		mas->se.has_opp_table = true;
+> +	} else if (ret != -ENODEV) {
+> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
+> +		return ret;
+> +	}
+>   
+>   	spi->bus_num = -1;
+>   	spi->dev.of_node = dev->of_node;
+> @@ -596,6 +607,9 @@ static int spi_geni_probe(struct platform_device *pdev)
+>   spi_geni_probe_runtime_disable:
+>   	pm_runtime_disable(dev);
+>   	spi_master_put(spi);
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>   	return ret;
+>   }
+>   
+> @@ -604,6 +618,9 @@ static int spi_geni_remove(struct platform_device *pdev)
+>   	struct spi_master *spi = platform_get_drvdata(pdev);
+>   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>   
+> +	if (mas->se.has_opp_table)
+> +		dev_pm_opp_of_remove_table(&pdev->dev);
+> +	dev_pm_opp_put_clkname(mas->se.opp_table);
+>   	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
+>   	spi_unregister_master(spi);
+>   
+> @@ -617,6 +634,9 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+>   	struct spi_master *spi = dev_get_drvdata(dev);
+>   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>   
+> +	/* Drop the performance state vote */
+> +	dev_pm_opp_set_rate(dev, 0);
+> +
+>   	return geni_se_resources_off(&mas->se);
+>   }
+>   
 > 
-> Perhaps we should have a formal "system getting low on memory, please
-> do something" notification API.
 
-It's tricky to find a useful definition of what low on memory
-means. In the past we've used sc->priority cutoffs, the vmpressure
-interface (reclaimed/scanned - reclaim efficiency cutoffs), oom
-notifiers (another reclaim efficiency cutoff). But none of these
-reliably capture "distress", and they vary highly between different
-hardware setups. It can be hard to trigger OOM itself on fast IO
-devices, even when the machine is way past useful (where useful is
-somewhat subjective to the user). Userspace OOM implementations that
-consider userspace health (also subjective) are getting more common.
-
-> How significant is this?  How much memory can RCU consume?
-
-I think if rcu can end up consuming a significant share of memory, one
-way that may work would be to do proper shrinker integration and track
-the age of its objects relative to the age of other allocations in the
-system. I.e. toss them all on a clock list with "new" bits and shrink
-them at VM velocity. If the shrinker sees objects with new bit set,
-clear and rotate. If it sees objects without them, we know rcu_heads
-outlive cache pages etc. and should probably cycle faster too.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
