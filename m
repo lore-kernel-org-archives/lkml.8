@@ -2,111 +2,137 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9116FC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD1C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7594B207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0D42082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:23:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9JVeMJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgEGEKi (ORCPT
+        id S1725985AbgEGEXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 00:10:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3875 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgEGEKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 00:10:38 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5E42A59B51338C268F28;
-        Thu,  7 May 2020 12:10:33 +0800 (CST)
-Received: from [127.0.0.1] (10.166.212.180) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
- 12:10:28 +0800
-Subject: Re: [PATCH -next] iwlwifi: pcie: Use bitwise instead of arithmetic
- operator for flags
-To:     Joe Perches <joe@perches.com>,
-        Luciano Coelho <luciano.coelho@intel.com>,
-        <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
-        <linuxwifi@intel.com>, <kvalo@codeaurora.org>,
-        <davem@davemloft.net>, "Julia Lawall" <julia.lawall@lip6.fr>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, cocci <cocci@systeme.lip6.fr>
-References: <1588734423-33988-1-git-send-email-zou_wei@huawei.com>
- <f8b258e0c8bb073c445090e637195df2fc989543.camel@perches.com>
- <bfd6b3a7db0c50cd3d084510bd43c9e540688edd.camel@intel.com>
- <2208e464cd8bd399cfb9b49abb5aed211f27b3a8.camel@perches.com>
-From:   Samuel Zou <zou_wei@huawei.com>
-Message-ID: <8431ed30-b9c7-e91b-e6e6-2afd03dde360@huawei.com>
-Date:   Thu, 7 May 2020 12:10:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 00:23:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbgEGEXW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 00:23:22 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DD6C061A0F;
+        Wed,  6 May 2020 21:23:22 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u10so1545950pls.8;
+        Wed, 06 May 2020 21:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6G+6eM+WUd8jnoXez9hLJ5VPYRmDs4q7SM6DwmQSnA4=;
+        b=L9JVeMJqgEQBzurgIqXdi3L9TtEo0pjexujwUfiAFa1SI6mhcCSpGS/l35i+s6+o74
+         2fQykf8CgPob+2Ha8noFcvBGOyYTRa3SxkLPC3tuqNh9nNQTk8tvBGykuRKpvRqNjbbQ
+         AbBEfqHEbCSbpKO0KTyk/2E5t907BFOMx+a8Te+gtqMD99dg6iNafZoyoBAON3J2meKl
+         gPi2rZYIhTuEnzLjXH8yDRsKMv4h/PsufacBHXtr7D3ivThthxaRlG+IfI3VB/sfmOBj
+         2Cmbm8iellbywzHSGnlmK+T+7VmCaPAljBChuo6geyQjReshvrIKCjuEGsv4hU0tu1p+
+         oWyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6G+6eM+WUd8jnoXez9hLJ5VPYRmDs4q7SM6DwmQSnA4=;
+        b=NcKUH67/gfZZnhAsYHyvTEqJq9rLwVuC5XzFhFkodeIDm8fSTjY93Pzl3Xn+qxljq2
+         NB8QwG7GuoLzXeQoEVTxLeHLOPs0X/95N/RxOyfTVINfqRYEnmkmNFIBVASMSxvB+Fel
+         kzutREfIaE1qii43ImLV3UViMQMdh8AUQX7EwLeYOgeQtdxdY5Jik89yoZ016uhIsDJR
+         CExVs8TadJYqpePEi3JK4xV087GyKQMgpReoMKjL+knYwENxw3CoxS+HM179woaNI21U
+         aShmsgEhfhRgyVl1IQz3gCRzlGOsJl3hOkVk2qwQ1bm6a+0VJN6EiJ3Oq1+354BNfYeb
+         kbag==
+X-Gm-Message-State: AGi0PuadYi09YDNuedcTz4eRndwV2L+PW332nTyNRg1NzW06eQM3mB1T
+        Z+2fhu6g0Bxc+ky1z9frI+s=
+X-Google-Smtp-Source: APiQypKfVQJJDaMh/+EdjgY2icxQ8eu1eW9hG6nbY1dwgWodpmUB8r4EHl2DChcWe82TXYKcYbfrUw==
+X-Received: by 2002:a17:90a:32ea:: with SMTP id l97mr13148734pjb.50.1588825401246;
+        Wed, 06 May 2020 21:23:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id x7sm3461022pfj.122.2020.05.06.21.23.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 21:23:20 -0700 (PDT)
+Date:   Wed, 6 May 2020 21:23:18 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Input <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/5] input: misc: bma150: Conditionally disable bma023
+ support
+Message-ID: <20200507042318.GD89269@dtor-ws>
+References: <20200503172206.13782-1-xc-racer2@live.ca>
+ <BN6PR04MB0660B420EFA83668BBF4F315A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <CACRpkdb3kG=7SQg8RGh1F=8=_mivV6p_zxpodFT=M-f3PmiyYQ@mail.gmail.com>
+ <BN6PR04MB0660BA0E181869F866594E98A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <2208e464cd8bd399cfb9b49abb5aed211f27b3a8.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.212.180]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB0660BA0E181869F866594E98A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both of you are right.
-I neglected, and this patch is wrong.
+On Wed, May 06, 2020 at 08:46:12PM -0700, Jonathan Bakker wrote:
+> Hi Linus,
+> 
+> On 2020-05-06 5:46 a.m., Linus Walleij wrote:
+> > On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
+> > 
+> >> The bma180 IIO driver has been extended for support for bma023.
+> >> However, this could cause conflicts with this driver.  Since some
+> >> setups may depend upon the evdev setup, disable support in this
+> >> driver for the bma023 only when the IIO driver is being built.
+> >>
+> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> > 
+> > I would just fix this with KConfig instead, like add mutually
+> > exclusive depends on these two drivers.
+> > 
+> > Set this input driver as:
+> > depends on BMA180=n
+> > 
+> > And the IIO driver as:
+> > depends on INPUT_BMA150=n
+> > 
+> > It's a rough measure but this input driver should anyway
+> > go away.
+
+Isn't the driver handle more than bma023? I see bma150 and smb380 ID's.
+If we go Kconfig route we will be disabling it for them as well when IIO
+driver is enabled.
+
+> > 
+> 
+> Ok, sounds good to me.  If I include a patch removing the input
+> driver, can I just drop this patch entirely?
+
+> 
+> The only in-tree user of the input driver (based on i2c ids) is Intel
+> Mid.  Not sure what the kernel policy on dropping drivers is.
+
+Do we still support this platform? I'd start there.
 
 Thanks.
 
-On 2020/5/6 23:15, Joe Perches wrote:
-> On Wed, 2020-05-06 at 16:51 +0300, Luciano Coelho wrote:
->> On Tue, 2020-05-05 at 20:19 -0700, Joe Perches wrote:
->>> On Wed, 2020-05-06 at 11:07 +0800, Samuel Zou wrote:
->>>> This silences the following coccinelle warning:
->>>>
->>>> "WARNING: sum of probable bitmasks, consider |"
->>>
->>> I suggest instead ignoring bad and irrelevant warnings.
->>>
->>> PREFIX_LEN is 32 not 0x20 or BIT(5)
->>> PCI_DUMP_SIZE is 352
->>>
->>>> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
->>> []
->>>> @@ -109,9 +109,9 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
->>>>   
->>>>   	/* Alloc a max size buffer */
->>>>   	alloc_size = PCI_ERR_ROOT_ERR_SRC +  4 + PREFIX_LEN;
->>>> -	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE + PREFIX_LEN);
->>>> -	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE + PREFIX_LEN);
->>>> -	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE + PREFIX_LEN);
->>>> +	alloc_size = max_t(u32, alloc_size, PCI_DUMP_SIZE | PREFIX_LEN);
->>>> +	alloc_size = max_t(u32, alloc_size, PCI_MEM_DUMP_SIZE | PREFIX_LEN);
->>>> +	alloc_size = max_t(u32, alloc_size, PCI_PARENT_DUMP_SIZE | PREFIX_LEN);
->>>>   
->>>>   	buf = kmalloc(alloc_size, GFP_ATOMIC);
->>>>   	if (!buf)
->>
->> Yeah, those macros are clearly not bitmasks.  I'm dropping this patch.
-> 
-> Can the cocci script that generated this warning
-> 
-> scripts/coccinelle/misc/orplus.cocci
-> 
-> be dropped or improved to validate the likelihood that
-> the defines or constants used are more likely than
-> not are bit values?
-> 
-> Maybe these should be defined as hex or BIT or BIT_ULL
-> or GENMASK or the like?
-> 
-> 
-> Right now it seems it just tests for two constants.
-> 
-> 
-> 
-> .
-> 
-
+-- 
+Dmitry
