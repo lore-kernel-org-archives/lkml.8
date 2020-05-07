@@ -2,174 +2,148 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC12C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0B5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34F9A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wa9oZVvB"
+	by mail.kernel.org (Postfix) with ESMTP id 2897D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEGKeF (ORCPT
+        id S1726007AbgEGKgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:34:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32375 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727816AbgEGKdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588847610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3gQ6eL9ADbM2wkypLrRFdn/IN6JfuTzMbKSfurnS/AY=;
-        b=Wa9oZVvBEybMYpv/X+vrQbzwnyCWgXpVD6orTy+3y8A1VAMYe4bNqs4Vf5Vq24OgaMGNXB
-        72sPZ37vkvLV/+ougrU4ceUvJ6Rzn9Gb897znoVo059Vmtfm6aa44GBbvFGyR57OARMyT9
-        0VCi6gEPASpq3zZjxBcNaInhescPbRQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-LSxa9YxtO16Q-JqjRgDGww-1; Thu, 07 May 2020 06:33:29 -0400
-X-MC-Unique: LSxa9YxtO16Q-JqjRgDGww-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8885C19200C1;
-        Thu,  7 May 2020 10:33:27 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CA715D9C5;
-        Thu,  7 May 2020 10:33:25 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: [PATCH v3 12/15] virtio-mem: Drop manual check for already present memory
-Date:   Thu,  7 May 2020 12:31:16 +0200
-Message-Id: <20200507103119.11219-13-david@redhat.com>
-In-Reply-To: <20200507103119.11219-1-david@redhat.com>
-References: <20200507103119.11219-1-david@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+        Thu, 7 May 2020 06:36:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57824 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgEGKgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:36:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3F974AE30;
+        Thu,  7 May 2020 10:36:18 +0000 (UTC)
+Date:   Thu, 07 May 2020 12:36:14 +0200
+Message-ID: <s5hpnbg3uch.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Amadeusz SX2awiX4ski <amadeuszx.slawinski@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        security@kernel.org, alsa-devel@alsa-project.org,
+        butt3rflyh4ck <butterflyhuangxx@gmail.com>, tiwai@suse.com,
+        linux-kernel@vger.kernel.org,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: KASAN: use-after-free Write in snd_rawmidi_kernel_write1
+In-Reply-To: <ecc5f76f-2e87-f634-b98c-9fbcad177d72@linux.intel.com>
+References: <CAFcO6XMGT42wFBxEa01Ee5Msuecm+WiXnn4rc-VWkC4vTzycPg@mail.gmail.com>
+        <20200507082302.GF1024567@kroah.com>
+        <s5h8si45ard.wl-tiwai@suse.de>
+        <ecc5f76f-2e87-f634-b98c-9fbcad177d72@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Registering our parent resource will fail if any memory is still present
-(e.g., because somebody unloaded the driver and tries to reload it). No
-need for the manual check.
+On Thu, 07 May 2020 12:27:41 +0200,
+Amadeusz SX2awiX4ski wrote:
+> 
+> 
+> 
+> On 5/7/2020 11:56 AM, Takashi Iwai wrote:
+> > On Thu, 07 May 2020 10:23:02 +0200,
+> > Greg Kroah-Hartman wrote:
+> >>
+> >> On Thu, May 07, 2020 at 04:04:25PM +0800, butt3rflyh4ck wrote:
+> >>> I report a bug (in linux-5.7-rc1) found by syzkaller.
+> >>>
+> >>> kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/v5.7.0-rc1.config
+> >>> reproducer: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/repro.cprog
+> >>>
+> >>> I test the reproducer in linux-5.7-rc4 and crash too.
+> >>
+> >> Great, care to create a fix for this and send it to the proper
+> >> maintainers?  That's the best way to get it fixed, otherwise it just
+> >> goes in the file with the rest of the syzbot reports we are burried
+> >> under.
+> >
+> > Don't worry, I already prepared a fix patch below :)
+> >
+> >
+> > thanks,
+> >
+> > Takashi
+> >
+> > -- 8< --
+> > From: Takashi Iwai <tiwai@suse.de>
+> > Subject: [PATCH] ALSA: rawmidi: Fix racy buffer resize under concurrent
+> >   accesses
+> >
+> > The rawmidi core allows user to resize the runtime buffer via ioctl,
+> > and this may lead to UAF when performed during concurrent reads or
+> > writes.
+> >
+> > This patch fixes the race by introducing a reference counter for the
+> > runtime buffer access and returns -EBUSY error when the resize is
+> > performed concurrently.
+> >
+> > Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+> > Cc: <stable@vger.kernel.org>
+> > Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > ---
+> >   include/sound/rawmidi.h |  1 +
+> >   sound/core/rawmidi.c    | 29 ++++++++++++++++++++++++++++-
+> >   2 files changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+> > index a36b7227a15a..334842daa904 100644
+> > --- a/include/sound/rawmidi.h
+> 
+> (...)
+> 
+> > @@ -1021,6 +1039,7 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+> >   	unsigned long appl_ptr;
+> >     	spin_lock_irqsave(&runtime->lock, flags);
+> > +	snd_rawmidi_buffer_ref(runtime);
+> >   	while (count > 0 && runtime->avail) {
+> >   		count1 = runtime->buffer_size - runtime->appl_ptr;
+> >   		if (count1 > count)
+> > @@ -1040,13 +1059,17 @@ static long snd_rawmidi_kernel_read1(struct snd_rawmidi_substream *substream,
+> >   			spin_unlock_irqrestore(&runtime->lock, flags);
+> First unlock
+> >   			if (copy_to_user(userbuf + result,
+> >   					 runtime->buffer + appl_ptr, count1)) {
+> > -				return result > 0 ? result : -EFAULT;
+> > +				if (!result)
+> > +					result = -EFAULT;
+> > +				goto out;
+> 
+> goto -> Second unlock
+> >   			}
+> >   			spin_lock_irqsave(&runtime->lock, flags);
+> >   		}
+> >   		result += count1;
+> >   		count -= count1;
+> >   	}
+> > + out:
+> > +	snd_rawmidi_buffer_unref(runtime);
+> >   	spin_unlock_irqrestore(&runtime->lock, flags);
+> Second unlock
+> >   	return result;
+> >   }
+> 
+> So if I follow this correctly, you call spin_unlock_irqrestore twice
+> in case of error?
 
-Move our "unplug all" handling to after registering the resource.
+Erm no, this is obviously wrong.  The error path needs re-lock.
+Will respin the fix.
 
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/virtio/virtio_mem.c | 55 ++++++++-----------------------------
- 1 file changed, 12 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 80cdb9e6b3c4..8dd57b61b09b 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -1616,23 +1616,6 @@ static int virtio_mem_init_vq(struct virtio_mem *v=
-m)
- 	return 0;
- }
-=20
--/*
-- * Test if any memory in the range is present in Linux.
-- */
--static bool virtio_mem_any_memory_present(unsigned long start,
--					  unsigned long size)
--{
--	const unsigned long start_pfn =3D PFN_DOWN(start);
--	const unsigned long end_pfn =3D PFN_UP(start + size);
--	unsigned long pfn;
--
--	for (pfn =3D start_pfn; pfn !=3D end_pfn; pfn++)
--		if (present_section_nr(pfn_to_section_nr(pfn)))
--			return true;
--
--	return false;
--}
--
- static int virtio_mem_init(struct virtio_mem *vm)
- {
- 	const uint64_t phys_limit =3D 1UL << MAX_PHYSMEM_BITS;
-@@ -1664,32 +1647,6 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 	virtio_cread(vm->vdev, struct virtio_mem_config, region_size,
- 		     &vm->region_size);
-=20
--	/*
--	 * If we still have memory plugged, we might have to unplug all
--	 * memory first. However, if somebody simply unloaded the driver
--	 * we would have to reinitialize the old state - something we don't
--	 * support yet. Detect if we have any memory in the area present.
--	 */
--	if (vm->plugged_size) {
--		uint64_t usable_region_size;
--
--		virtio_cread(vm->vdev, struct virtio_mem_config,
--			     usable_region_size, &usable_region_size);
--
--		if (virtio_mem_any_memory_present(vm->addr,
--						  usable_region_size)) {
--			dev_err(&vm->vdev->dev,
--				"reloading the driver is not supported\n");
--			return -EINVAL;
--		}
--		/*
--		 * Note: it might happen that the device is busy and
--		 * unplugging all memory might take some time.
--		 */
--		dev_info(&vm->vdev->dev, "unplugging all memory required\n");
--		vm->unplug_all_required =3D 1;
--	}
--
- 	/*
- 	 * We always hotplug memory in memory block granularity. This way,
- 	 * we have to wait for exactly one memory block to online.
-@@ -1760,6 +1717,8 @@ static int virtio_mem_create_resource(struct virtio=
-_mem *vm)
- 	if (!vm->parent_resource) {
- 		kfree(name);
- 		dev_warn(&vm->vdev->dev, "could not reserve device region\n");
-+		dev_info(&vm->vdev->dev,
-+			 "reloading the driver is not supported\n");
- 		return -EBUSY;
- 	}
-=20
-@@ -1816,6 +1775,16 @@ static int virtio_mem_probe(struct virtio_device *=
-vdev)
- 	if (rc)
- 		goto out_del_vq;
-=20
-+	/*
-+	 * If we still have memory plugged, we have to unplug all memory first.
-+	 * Registering our parent resource makes sure that this memory isn't
-+	 * actually in use (e.g., trying to reload the driver).
-+	 */
-+	if (vm->plugged_size) {
-+		vm->unplug_all_required =3D 1;
-+		dev_info(&vm->vdev->dev, "unplugging all memory is required\n");
-+	}
-+
- 	/* register callbacks */
- 	vm->memory_notifier.notifier_call =3D virtio_mem_memory_notifier_cb;
- 	rc =3D register_memory_notifier(&vm->memory_notifier);
---=20
-2.25.3
+thanks,
 
+Takashi
