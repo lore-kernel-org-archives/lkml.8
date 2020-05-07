@@ -2,114 +2,191 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C9DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D49C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 491A9208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1671216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3o3rbnz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IPI0L4Ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEGT2Q (ORCPT
+        id S1728395AbgEGT3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:28:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35976 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGT2P (ORCPT
+        Thu, 7 May 2020 15:29:07 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:5100 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgEGT3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:28:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588879694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t9obrI+I5ySmag9Pa2ybFm1Lh3tAlP9Wg1QXo7JHVYM=;
-        b=Y3o3rbnzf7mPu1EQGYeWPRg1C8Qgz/rSHXPkgwL7jAj31/VK0oZmaqzU5MjekJi4vJNXVq
-        tt7WX+7kF+bIZL/Z1OlkeJenZibv4kW9AVA3HClgbaLfUfNS2PIdJa4UvaYaqfwJnO4boX
-        C0W2QQaqUE+Bl+EJqrHw0kHN/uh3WYw=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-126-Ks9XDQMiNdGgVmj6UVtq7A-1; Thu, 07 May 2020 15:28:11 -0400
-X-MC-Unique: Ks9XDQMiNdGgVmj6UVtq7A-1
-Received: by mail-qt1-f198.google.com with SMTP id w6so7927409qtt.21
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 12:28:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t9obrI+I5ySmag9Pa2ybFm1Lh3tAlP9Wg1QXo7JHVYM=;
-        b=X73DQ8S7nVkD9Gq/m2UQDwQ87220vsjbD9InZqH93hyJ/l2kxx+DhgkYv0fekbTrZW
-         Ri2io0KothGdNOwyjwr24+9ryKOYiLVlWbNzTXXv4Ukm/PoERmG6nfRvAAFcE/Zgfpky
-         t3HEjZfRgsdNbpj/IYeE/IRuCuJ0rma62NYLpaidmWOvLJAfP5SHKXMTjC+soAZHmOZ+
-         lFf4HFRuvfqsfwZ1i61Mtf9H/3bBkkxxmDaRVIeUmm5mGbO6dAUgkdwcULCn0dUizhT2
-         PzXL4SmzPd2BNQM9wCBOrTubC/F7QT/Vio7OqvvlzDM/6dQlCArCqlT8vpoDjTABEEPf
-         /gbw==
-X-Gm-Message-State: AGi0PuZLGXekRgChtDtIXtXzScoosX/j+x5eDpPeRcyWNxlGqoprfqAG
-        8pjcXgQRYRsjSG5f0OUmoX8XkOMFQNL0iazTTQjDlLBQe8HPWhnmjg4JLWCZGiTGYaUM5El7x0y
-        xBmN1jOClhaUwPm3/v2OYjtZc
-X-Received: by 2002:ac8:27b4:: with SMTP id w49mr11286824qtw.111.1588879691164;
-        Thu, 07 May 2020 12:28:11 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJpH33jmgoLRBXKHI5mRYHl+RR5ikyN0bvOn1bz5L/I4wON5UkdlgUfdaK8Jrk2hZUurzzYGQ==
-X-Received: by 2002:ac8:27b4:: with SMTP id w49mr11286802qtw.111.1588879690866;
-        Thu, 07 May 2020 12:28:10 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id q6sm5111564qte.72.2020.05.07.12.28.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 12:28:09 -0700 (PDT)
-Date:   Thu, 7 May 2020 15:28:08 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
- vmcb->save.dr6
-Message-ID: <20200507192808.GK228260@xz-x1>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
- <20200507115011.494562-9-pbonzini@redhat.com>
+        Thu, 7 May 2020 15:29:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1588879745; x=1620415745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kUD9Cq9Eg8ZUdHPqFwtCoPURI8ru60H4eEns1xViiDA=;
+  b=IPI0L4Ld8Isq9gzEcfU5EWq8hg0Z/x/OfVcwok82FWFiy8VBNKWURSn2
+   5POY55TcbRexO9tQLdlxlizWjY9qI6wfS3V9DktVANapLqr1c/EjpyLOp
+   YDbceQ845CeTo77g3SIeikLbiGtK6X/grbi8kZ8DDfBitb9RbxPEHWTii
+   YRhCaeFIUN8+cmcFqoI6OS/1i//PClbi0zEgljndY3iXOhOzvsVh1v6DF
+   lpcr8CyaUF1Ypsfrbl3gPS1Y/5xUMqFNCGuKog3UXVSN/AH7cidiXnJY/
+   K/Z0q5P8A7BGcXu4yw77HJG2U+lgFw63ckmat50R8a74IXHaVdrn6vpc7
+   A==;
+IronPort-SDR: ZCUPRRcnf/MRnKA9qCq6C0dwZ3PinEIW3bMjCNlH1zDuOMehmOXu2tGFZuLt7UU7W+m/kxgYPs
+ K8FLFUKJnBP/OAEHjabKiovbWrr9NuMmG2aI77FjGAwF8MYV5q3TlYxdSPy7i6jqfM4wEPRQsn
+ LwNZIpVKM4aUwgz3liRLtZrnOJ/RBTgA/TOaGgDz168j6F1/k4zCN6BBdqAh1JvDekJJg3WTph
+ ftAcXQMyi7/N7pCLxiv2JqiZFLAYNjsW3O4Ae0m1+wZYU19WBpQ8O8vxU+Ms12QwZ/OxpYm9us
+ fvg=
+X-IronPort-AV: E=Sophos;i="5.73,364,1583218800"; 
+   d="scan'208";a="78739973"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 May 2020 12:29:04 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 7 May 2020 12:29:04 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 7 May 2020 12:29:04 -0700
+Date:   Thu, 7 May 2020 21:29:03 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+CC:     Vladimir Oltean <olteanv@gmail.com>, Po Liu <po.liu@nxp.com>,
+        "Claudiu Manoil" <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "Leo Li" <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jiri Pirko" <jiri@resnulli.us>, Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
+Subject: Re: [EXT] Re: [PATCH v1 net-next 4/6] net: mscc: ocelot: VCAP IS1
+ support
+Message-ID: <20200507192903.whnx2j3f35ga7jzx@ws.localdomain>
+References: <20200506074900.28529-1-xiaoliang.yang_1@nxp.com>
+ <20200506074900.28529-5-xiaoliang.yang_1@nxp.com>
+ <20200506094345.n4zdgjvctwiz4pkh@ws.localdomain>
+ <CA+h21hoqJC_CJB=Sg=-JanXw3S_WANgjsfYjU+ffqn6YCDMzrA@mail.gmail.com>
+ <20200506211551.cf6mlad7ysmuqfvq@ws.localdomain>
+ <DB8PR04MB5785BE9AC6FAC6F395C8A20DF0A50@DB8PR04MB5785.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200507115011.494562-9-pbonzini@redhat.com>
+In-Reply-To: <DB8PR04MB5785BE9AC6FAC6F395C8A20DF0A50@DB8PR04MB5785.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:50:10AM -0400, Paolo Bonzini wrote:
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 1a547e3ac0e5..9a2a62e5afeb 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -633,10 +633,18 @@ static int nested_svm_intercept_db(struct vcpu_svm *svm)
->  
->  reflected_db:
->  	/*
-> -	 * Synchronize guest DR6 here just like in db_interception; it will
-> -	 * be moved into the nested VMCB by nested_svm_vmexit.
-> +	 * Synchronize guest DR6 here just like in kvm_deliver_exception_payload;
-> +	 * it will be moved into the nested VMCB by nested_svm_vmexit.  Once
-> +	 * exceptions will be moved to svm_check_nested_events, all this stuff
-> +	 * will just go away and we could just return NESTED_EXIT_HOST
-> +	 * unconditionally.  db_interception will queue the exception, which
-> +	 * will be processed by svm_check_nested_events if a nested vmexit is
-> +	 * required, and we will just use kvm_deliver_exception_payload to copy
-> +	 * the payload to DR6 before vmexit.
->  	 */
-> -	svm->vcpu.arch.dr6 = dr6;
-> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
-> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
-> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+On 07.05.2020 11:23, Xiaoliang Yang wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>Hi Allan,
+>
+>
+>> Hi Vladimir,
+>>
+>> On 06.05.2020 13:53, Vladimir Oltean wrote:
+>[snip]
+>> >At the moment, the driver does not support more than 1 action. We might
+>> >need to change that, but we can still install more filters with the
+>> >same key and still be fine (see more below). When there is more than 1
+>> >action, the IS1 stuff will be combined into a single rule programmed
+>> >into IS1, and the IS2 stuff will be combined into a single new rule
+>> >with the same keys installed into VCAP IS2. Would that not work?
+>> >
+>> >> The SW model have these two rules in the same table, and can stop
+>> >> process at the first match. SW will do the action of the first frame
+>> >> matching.
+>> >>
+>> >
+>> >Actually I think this is an incorrect assumption - software stops at
+>> >the first action only if told to do so. Let me copy-paste a text from a
+>> >different email thread.
+>>
+>> I'm still not able to see how this proposal will give us the same behavioral in SW and in HW.
+>>
+>> A simple example:
+>>
+>> tc qdisc add dev enp0s3 ingress
+>> tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
+>>      prio 10 flower vlan_id 5 action vlan modify id 10 tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
+>>      prio 20 flower src_mac 00:00:00:00:00:08 action drop
+>>
+>> We can then inject a frame with VID 5 and smac ::08:
+>> $ ef tx tap0 eth smac 00:00:00:00:00:08 ctag vid 5
+>>
+>> We can then check the filter and see that it only hit the first rule:
+>>
+>> $ tc -s filter show dev enp0s3 ingress
+>> filter protocol 802.1Q pref 10 flower chain 0 filter protocol 802.1Q pref 10 flower chain 0 handle 0x1
+>>    vlan_id 5
+>>    not_in_hw
+>>          action order 1: vlan  modify id 10 protocol 802.1Q priority 0 pipe
+>>           index 1 ref 1 bind 1 installed 19 sec used 6 sec
+>>          Action statistics:
+>>          Sent 42 bytes 1 pkt (dropped 0, overlimits 0 requeues 0)
+>>          backlog 0b 0p requeues 0
+>>
+>> filter protocol 802.1Q pref 20 flower chain 0 filter protocol 802.1Q pref 20 flower chain 0 handle 0x1
+>>   src_mac 00:00:00:00:00:08
+>>   not_in_hw
+>>         action order 1: gact action drop
+>>          random type none pass val 0
+>>          index 1 ref 1 bind 1 installed 11 sec used 11 sec
+>>         Action statistics:
+>>         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+>>         backlog 0b 0p requeues 0
+>>
+>> If this was done with the proposed HW offload, then both rules would have been hit and we would have a different behavioral.
+>>
+>> This can be fixed by adding the "continue" action to the first rule:
+>
+>> tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
+>>      prio 10 flower vlan_id 5 action vlan modify id 10 continue tc filter add dev enp0s3 protocol 802.1Q parent ffff: \
+>>      prio 20 flower src_mac 00:00:00:00:00:08 action drop
+>>
+>> But that would again break if we add 2 rules manipulating the VLAN (as the HW does not continue with in a single TCAM).
+>>
+>> My point is: I do not think we can hide the fact that this is done in independent TCAMs in the silicon.
+>>
+>> I think it is possible to do this with the chain feature (even though it is not a perfect match), but it would require more analysis.
+>>
+>> /Allan
+>
+>Do you mean it's better to set vlan modify filters in a different chain, and write the filter entries with a same chain in the same VCAP TCAM?
+>For example:
+>        tc filter add dev enp0s3 protocol 802.1Q chain 11 parent ffff: prio 10 flower skip_sw vlan_id 5 action vlan modify id 10
+>        tc filter add dev enp0s3 protocol 802.1Q chain 22 parent ffff: prio 20 flower skip_sw src_mac 00:00:00:00:00:08 action drop
+>for this usage, we only need to ensure a chain corresponding to a VCAP in ocelot ace driver. I'm not sure is my understanding right?
 
-I failed to figure out what the above calculation is going to do...  E.g., I
-think the old "BT|BS|BD" bits in the old arch.dr6 cache will be leftover even
-if none of them is set in save.dr6, while we shouldn't?
+I still have not found a satisfying solution to this. As I understand
+the chains, they require the "goto" action to be used to tie them
+together.
 
-Thanks,
+We could use that to represent a single lookup in is1 and link that to a
+lookup in is2. Not sure if we should, it will also require
+(non-backwards compatible) changes in how the existing IS2 support is
+working.
 
--- 
-Peter Xu
+Again, I do not have the answer (I'm also looking for it), but I think
+we need something where it is clear to the user that this end up in
+different lists.
+
+/Allan
+
 
