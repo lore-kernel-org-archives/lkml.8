@@ -2,106 +2,66 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC21C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE2EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E534C2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F299D2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HZX+bkQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgEGQSC (ORCPT
+        id S1727825AbgEGQTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:18:02 -0400
-Received: from mail.netline.ch ([148.251.143.178]:33051 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEGQSC (ORCPT
+        Thu, 7 May 2020 12:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726616AbgEGQTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:18:02 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 May 2020 12:18:00 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id B4E2B2A6176;
-        Thu,  7 May 2020 18:11:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id ahgL4LOqw5AX; Thu,  7 May 2020 18:11:18 +0200 (CEST)
-Received: from thor (252.80.76.83.dynamic.wline.res.cust.swisscom.ch [83.76.80.252])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 380502A60F7;
-        Thu,  7 May 2020 18:11:18 +0200 (CEST)
-Received: from localhost ([::1])
-        by thor with esmtp (Exim 4.93)
-        (envelope-from <michel@daenzer.net>)
-        id 1jWj7F-001f40-F2; Thu, 07 May 2020 18:11:17 +0200
-Subject: Re: [PATCH AUTOSEL 5.6 33/50] drm/amdgpu: bump version for invalidate
- L2 before SDMA IBs
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20200507142726.25751-1-sashal@kernel.org>
- <20200507142726.25751-33-sashal@kernel.org>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Message-ID: <349b2cb9-71f9-a0cd-aceb-308512d7501a@daenzer.net>
-Date:   Thu, 7 May 2020 18:11:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507142726.25751-33-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+        Thu, 7 May 2020 12:19:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B857C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 09:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Subject:Cc:To:From:Date:Message-Id:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=nRNvqqpNkZTiRT2IQrXGfSLl9ddKI6Js3+fjyzp6+VE=; b=HZX+bkQrQQhdtQE8qb6WXEzsIG
+        UV4V8LkJUsiby1mdJjz32CBh356RSy/mqmMn+bcr9j5i0JkcVhiCtzOtKRM6XSvnkE89uYllvV03a
+        CHOFlfGiuPXpHr98ugd2lFOPhJvZVGIIf27iEA512nzooOQUIzNRw2pqsg2HYNOMKMAO0cHvo7O3n
+        Jnf2a0pRDxZiB6693/RyevzDMJptNAcb1Iyy7eTWxctxDbc/8cYktvDlhpYfM3CflAuupjFCKJm2p
+        mSSzBia/zZ2RqeaNowf18CYliQhL9bg4LInYQo6j5R52bhdMCC6oy+oKW+5MLgudOoljDB0XUGX3C
+        l95B9djQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWjEf-0003RD-QY; Thu, 07 May 2020 16:18:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D2193012DC;
+        Thu,  7 May 2020 18:18:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 484562038FB66; Thu,  7 May 2020 18:18:55 +0200 (CEST)
+Message-Id: <20200507161020.783541450@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 07 May 2020 18:10:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de
+Cc:     jpoimboe@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        luto@kernel.org, peterz@infradead.org
+Subject: [RFC][PATCH 0/3] objtool vs irqstack swizzles
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-07 4:27 p.m., Sasha Levin wrote:
-> From: Marek Olšák <marek.olsak@amd.com>
-> 
-> [ Upstream commit 9017a4897a20658f010bebea825262963c10afa6 ]
-> 
-> This fixes GPU hangs due to cache coherency issues.
-> Bump the driver version. Split out from the original patch.
-> 
-> Signed-off-by: Marek Olšák <marek.olsak@amd.com>
-> Reviewed-by: Christian König <christian.koenig@amd.com>
-> Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> index 42f4febe24c6d..8d45a2b662aeb 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> @@ -85,9 +85,10 @@
->   * - 3.34.0 - Non-DC can flip correctly between buffers with different pitches
->   * - 3.35.0 - Add drm_amdgpu_info_device::tcc_disabled_mask
->   * - 3.36.0 - Allow reading more status registers on si/cik
-> + * - 3.37.0 - L2 is invalidated before SDMA IBs, needed for correctness
->   */
->  #define KMS_DRIVER_MAJOR	3
-> -#define KMS_DRIVER_MINOR	36
-> +#define KMS_DRIVER_MINOR	37
->  #define KMS_DRIVER_PATCHLEVEL	0
->  
->  int amdgpu_vram_limit = 0;
-> 
+These few patches are on top of the very latest tarball tglx gave me and do not
+apply to hit posted patches or his git-tree (although I suspect that might
+change at some point in the near future).
 
-This requires the parent commit fdf83646c0542ecfb9adc4db8f741a1f43dca058
-"drm/amdgpu: invalidate L2 before SDMA IBs (v2)". KMS_DRIVER_MINOR is
-bumped to signal to userspace the fix in that commit is present.
+Aside from relying on tip/objtool/core, this also relies on the patch I just
+pushed into tip/objtool/urgent.
 
-
--- 
-Earthling Michel Dänzer               |               https://redhat.com
-Libre software enthusiast             |             Mesa and X developer
