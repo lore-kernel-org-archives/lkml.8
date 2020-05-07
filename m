@@ -2,128 +2,84 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B5EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C0CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2695D208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07F221473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 22:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588891846;
+	bh=i+twVoWgvvE+sIIP8RfgWgYxL/0MZSnTVluZHAQYh3Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XLFnx0eA1ez4Z6izS3CbkCLvxh52H+y+rvkowQJD4fnWC9LYgrpq6XkOpOH/GSuAM
+	 W+u8WPTjibzOnoCoFeFUHuDJrVaXVVdcN2h5xZzyz9Gp+tQwCCrmi+0Tmwa8INb7pG
+	 RMUYsapuYb8YLRv4+q7pFoD0soGbYobmkOyNWmL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEGWum (ORCPT
+        id S1727117AbgEGWup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 18:50:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62950 "EHLO mga18.intel.com"
+        Thu, 7 May 2020 18:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgEGWum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 18:50:42 -0400
-IronPort-SDR: RjZvXOEqyBvSauYfgqDB9pF/wYilMCoFFAk8qkHwD1DpNoz2FLFas2I/BmmR0VJvaV5dM6o1YG
- 7TQrydJZzprg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 15:50:41 -0700
-IronPort-SDR: A94YOimG+GBTCtRnotihIHXo/4uYOm9rsXy8xtuLX5Aw2+CVkRWX3diLimU1sfCOXtFd1OcX1r
- bTWfMT7evkVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="278753786"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 15:50:40 -0700
-Date:   Thu, 7 May 2020 15:50:40 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH V3 13/15] parisc/kmap: Remove duplicate kmap code
-Message-ID: <20200507225039.GA1428632@iweiny-DESK2.sc.intel.com>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
- <20200507150004.1423069-14-ira.weiny@intel.com>
- <20200507135258.f430182578c0d63b7488916e@linux-foundation.org>
+        id S1726515AbgEGWuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 18:50:44 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B6B52083B;
+        Thu,  7 May 2020 22:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588891843;
+        bh=i+twVoWgvvE+sIIP8RfgWgYxL/0MZSnTVluZHAQYh3Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ICncuhdNNndVuoB1VtwfIDdgvPbWU7TqOUOopbLTG92SjYIh2Y+ZXN7dZ7uv9QN/N
+         cGD88cOB2d5XW7sFR+z2oKehsB3Xwxpp8roB7DvPSFKiT4X0MihPS6+mwq4PxGMaJH
+         8DzcqHio0DrqnqsYLTTKoxab0nHtwN3l3kwaeu+M=
+Date:   Thu, 7 May 2020 15:50:41 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Leon Romanovsky <leon@leon.nu>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-netdev <netdev@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 06/11] net: ethernet: mtk-eth-mac: new driver
+Message-ID: <20200507155041.4f1c71e7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200507055547.GB78674@unreal>
+References: <20200505140231.16600-1-brgl@bgdev.pl>
+        <20200505140231.16600-7-brgl@bgdev.pl>
+        <CALq1K=Lu0hv9UCgxgrwCVoOe9L7A4sgBEM=RW2d9JkizHmdBPQ@mail.gmail.com>
+        <20200506122329.0a6b2ac4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200507055547.GB78674@unreal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507135258.f430182578c0d63b7488916e@linux-foundation.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:52:58PM -0700, Andrew Morton wrote:
-> On Thu,  7 May 2020 08:00:01 -0700 ira.weiny@intel.com wrote:
+On Wed, May 06, 2020 at 12:23:29PM -0700, Jakub Kicinski wrote:
+> Please trim your replies.  
 > 
-> > parisc reimplements the kmap calls except to flush it's dcache.  This is
-> > arguably an abuse of kmap but regardless it is messy and confusing.
-> > 
-> > Remove the duplicate code and have parisc define
-> > ARCH_HAS_FLUSH_ON_KUNMAP for a kunmap_flush_on_unmap() architecture
-> > specific call to flush the cache.
+> Off-topic.
 > 
-> checkpatch says:
+> Is there any simple way to trim replies semi-automatically in VIM?
 > 
-> ERROR: #define of 'ARCH_HAS_FLUSH_ON_KUNMAP' is wrong - use Kconfig variables or standard guards instead
-> #69: FILE: arch/parisc/include/asm/cacheflush.h:103:
-> +#define ARCH_HAS_FLUSH_ON_KUNMAP
-> 
-> which is fair enough, I guess.  More conventional would be
-> 
-> arch/parisc/include/asm/cacheflush.h:
-> 
-> static inline void kunmap_flush_on_unmap(void *addr)
-> {
-> 	...
-> }
-> #define kunmap_flush_on_unmap kunmap_flush_on_unmap
-> 
-> 
-> include/linux/highmem.h:
-> 
-> #ifndef kunmap_flush_on_unmap
-> static inline void kunmap_flush_on_unmap(void *addr)
-> {
-> }
-> #define kunmap_flush_on_unmap kunmap_flush_on_unmap
-> #endif
-> 
-> 
-> static inline void kunmap_atomic_high(void *addr)
-> {
-> 	/* Mostly nothing to do in the CONFIG_HIGHMEM=n case as kunmap_atomic()
-> 	 * handles re-enabling faults + preemption */
-> 	kunmap_flush_on_unmap(addr);
-> }
-> 
-> 
-> but I don't really think it's worth bothering changing it.	
-> 
-> (Ditto patch 3/15)
+> Right now, I'm doing it manually, but maybe there is some better
+> way to do it.
 
-Yes I was following the pattern already there.
-
-I'll fix up the last patch now.
-Ira
-
+I'm also doing it manually :(
