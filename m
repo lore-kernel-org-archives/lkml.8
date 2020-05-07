@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C685EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA00C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E4F2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D252064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B2ieybBw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JpV7XO6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgEGAqP (ORCPT
+        id S1728954AbgEGAqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:46:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbgEGAqK (ORCPT
+        Wed, 6 May 2020 20:46:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40334 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbgEGAqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:46:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470ep5K098400;
-        Thu, 7 May 2020 00:45:12 GMT
+        Wed, 6 May 2020 20:46:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bjvQ092893;
+        Thu, 7 May 2020 00:44:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=GHyTm1dF4tuIvRr/Sme8g0LfjNUADURL5kv1ja2d5gg=;
- b=B2ieybBw6yGUeCUHVlAsRBnlc2/4Xd/KOmp96lhPgAt8aY+OY0nx5m0HV49zY4rmmwNJ
- C2s+DocZP+0TkwaFub5pxJI6VLiZDTcntuJuwRiK6BhA4pqOyBsR5hSUgs8TBMEtVRwq
- OElN/qCU2uFHMkJBBKXftNAEdERNSddgfIfiOzBTs8P4ylt3KV1I3R+rr5nplsc4zmhK
- ndh51F39UD6VOjw/FzRcndPUY74810gTKBZWOztHuZiGWlEMz8N9DZFuEnfShhYFDYJm
- 6QwLRCsTOBx7pn2Mq4SU4ShEr7RZ2iKufkGsu48ZeUFaikGwL8cPgZL4TT7Ejf7MNy1O 3A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30usgq4h41-1
+ bh=sXz+5MX/e43ODGutAI7Eoi78pN72CvHNRozhR5OcLiY=;
+ b=JpV7XO6RwQPucJ1rzxFOrsUoGfS6PaZu4Xq59fbTr7D8gnurRyXVepNkiKrUY7ZWdWuE
+ FYeu8glZtcMNsarunOq7+eS23s7Grd371BkO8UvWf6hmDlnYU0BmdCDtAUPCfpzLMU2Z
+ oeHzKLxttnshWsKX5tF9pbl/opBNAylWQ5ags9r7Cd5eMsMDy+lwlbODzH9+jE1pE2e5
+ OXzO8JyJy8+aoI+pYt1R4fe7cwE3cX9/TpBvxJnvozO0ov0IrK7M8483f84Le4WlP4ot
+ fVHYkurQo2RH3pmEkEgSB5l3vGC/x4CImxxdoGFnkDifY5a4l1ye4OafH3qm6fqBMYMX 0w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gnd8pe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:45:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bUBT098659;
-        Thu, 7 May 2020 00:45:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30sjnma71q-1
+        Thu, 07 May 2020 00:44:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470aqPn170885;
+        Thu, 7 May 2020 00:44:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30us7p2np8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:45:11 +0000
+        Thu, 07 May 2020 00:44:08 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0470j8I8025069;
-        Thu, 7 May 2020 00:45:08 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0470i6Ko029955;
+        Thu, 7 May 2020 00:44:06 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:45:08 -0700
+        with ESMTP ; Wed, 06 May 2020 17:44:05 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,68 +71,83 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 43/43] PKRAM: improve index alignment of pkram_link entries
-Date:   Wed,  6 May 2020 17:42:09 -0700
-Message-Id: <1588812129-8596-44-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 26/43] mm: shmem: when inserting, handle pages already charged to a memcg
+Date:   Wed,  6 May 2020 17:41:52 -0700
+Message-Id: <1588812129-8596-27-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070001
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To take advantage of optimizations when adding pages to the page cache
-via shmem_insert_pages(), improve the likelihood that the pages array
-passed to shmem_insert_pages() starts on an aligned index.  Do this
-when preserving pages by starting a new pkram_link page when the current
-page is aligned and the next aligned page will not fit on the pkram_link
-page.
+If shmem_insert_page() is called to insert a page that was preserved
+using PKRAM on the current boot (i.e. preserved page is restored without
+an intervening kexec boot), the page will still be charged to a memory
+cgroup because it is never freed. Don't try to charge it again.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ mm/shmem.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index ef092aa5ce7a..416c3ca4411b 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -913,11 +913,21 @@ static int __pkram_save_page(struct pkram_stream *ps,
- {
- 	struct pkram_link *link = ps->link;
- 	struct pkram_obj *obj = ps->obj;
-+	int order, align, align_cnt;
- 	pkram_entry_t p;
--	int order;
-+
-+	if (PageTransHuge(page)) {
-+		align = 1 << (HPAGE_PMD_ORDER + XA_CHUNK_SHIFT - (HPAGE_PMD_ORDER % XA_CHUNK_SHIFT));
-+		align_cnt = align >> HPAGE_PMD_ORDER;
-+	} else {
-+		align = XA_CHUNK_SIZE;
-+		align_cnt = XA_CHUNK_SIZE;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 13475073fb52..1f3b43b8fa34 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -693,6 +693,7 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 	struct mem_cgroup *memcg;
+ 	pgoff_t hindex = index;
+ 	bool on_lru = PageLRU(page);
++	bool has_memcg = page->mem_cgroup ? true : false;
+ 
+ 	if (index > (MAX_LFS_FILESIZE >> PAGE_SHIFT))
+ 		return -EFBIG;
+@@ -738,20 +739,24 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 
+ 	__SetPageReferenced(page);
+ 
+-	err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
+-					PageTransHuge(page));
+-	if (err)
+-		goto out_unlock;
++	if (!has_memcg) {
++		err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
++						PageTransHuge(page));
++		if (err)
++			goto out_unlock;
 +	}
  
- 	if (!link || ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
--	    index != ps->next_index) {
-+	    index != ps->next_index ||
-+	    (IS_ALIGNED(index, align) &&
-+	    (ps->entry_idx + align_cnt > PKRAM_LINK_ENTRIES_MAX))) {
- 		struct page *link_page;
+ 	err = shmem_add_to_page_cache(page, mapping, hindex,
+ 					NULL, gfp & GFP_RECLAIM_MASK);
+ 	if (err) {
+-		mem_cgroup_cancel_charge(page, memcg,
+-			PageTransHuge(page));
++		if (!has_memcg)
++			mem_cgroup_cancel_charge(page, memcg,
++						PageTransHuge(page));
+ 		goto out_unlock;
+ 	}
+-	mem_cgroup_commit_charge(page, memcg, on_lru,
+-			PageTransHuge(page));
++	if (!has_memcg)
++		mem_cgroup_commit_charge(page, memcg, on_lru,
++					PageTransHuge(page));
  
- 		link_page = pkram_alloc_page((ps->gfp_mask & GFP_RECLAIM_MASK) |
+ 	if (!on_lru)
+ 		lru_cache_add_anon(page);
 -- 
 2.13.3
 
