@@ -2,150 +2,196 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F770C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23253C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1A324962
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D7624962
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0pXP0IU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgEGKqX (ORCPT
+        id S1726538AbgEGKq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:46:23 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:45936 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgEGKqW (ORCPT
+        Thu, 7 May 2020 06:46:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60011 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726393AbgEGKq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:46:22 -0400
-Received: by mail-il1-f199.google.com with SMTP id t10so5474552ilf.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 03:46:21 -0700 (PDT)
+        Thu, 7 May 2020 06:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588848414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jwFSP1qKPzAiDWVK6ecZi/lZRSGtCCdB3pW0dxf0VHw=;
+        b=D0pXP0IUIMyXohYPb51/MwOqKX3cwc8P3CtBT1BmWOlAcovCp183l3rbTn1Px4Btyw5R//
+        gNbfNHE5PRtqKcHOKz3qDV2dfoh6wXYpAbT2gtuddFNAXOUazg5TNJzXN041miT2NcPORQ
+        dtQTNv7YqmwPF3o9p+o4GAb5jQ97E2Y=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-52-NbxiJMuVNJKQVEfv9nsKaQ-1; Thu, 07 May 2020 06:46:53 -0400
+X-MC-Unique: NbxiJMuVNJKQVEfv9nsKaQ-1
+Received: by mail-wr1-f70.google.com with SMTP id 30so3176583wrq.15
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 03:46:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9YRWNw876Bp8+RmqR18Bh/B8o4vq3mVySMJDoaPo78I=;
-        b=LlwjGPRjuxDaN+Sv58UKXb2VOvIgwXEZqCF+VjqsvFGphCzfI4cLCe4k9QhfMbZgwq
-         s+3c1MhE4cgjPViu8eFk2u2urlOShBEuDtJsXMi+LQg+XaHMQW3CeGV0aPwH7H5b0Asj
-         LG1bGXGFYTDa8R5qcjOOUyYwWKMxs110Csnsmwpot2JDVrzgzkjK0cEmx3sc8LMqfmhW
-         zd7dTIFjSvDiJrDS8viAqWMkT51Q9/X2ThHMXQb5llSRLEFbt0Va2HKUCdlETZfYQ+I3
-         e8+AH6tvQR5Gjk8pXxxNgkTwAOBcfU10l+ygzPNNJ1j4AbPxA5oPbEWEDBWT32wuPOc/
-         cLxQ==
-X-Gm-Message-State: AGi0PuY4ZdaOqKVhb7/OoiH3QC7HQaG7GXv0P5/rO0wKe4MllR8+EkI/
-        ra0NIcqU705XWZ/Z3+ZAAtnLlWFGQ/5DU+aHN+VM0EH+KYNP
-X-Google-Smtp-Source: APiQypLZ1mH9vdaWQ7RH36ivcn/YcJmE7731qHRTs1kDszQknDE/kUGrr1WNJytmBVo8urs1em4AwKOhaHu8zZNEjv4Z9sCTNHGb
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jwFSP1qKPzAiDWVK6ecZi/lZRSGtCCdB3pW0dxf0VHw=;
+        b=oHFtQ1J1+29vv/d6gAlhqK7/a6fspfhlIr6XGyj97ZExryBlUBh98BpzqO/mv+9Iex
+         LWAp1IHB7z0MnYPXzlwqmKTWmN/B+t56V67VaLqU4XNYrlevbj+5yoM2Nny14v2f00K3
+         aXvtMcCUv4EUGLjgxKU+2KKLq4/Y6QTJAX1pYHzoXjpZTMKq77Fzl8VAPnmuOPYqh0j2
+         KQsnk0sGE63StJhL+vKwNcTvZpbvxztlY7/9o7pVTGPzlYtTOsW/tuEp8pA5kAZizNge
+         YYCHl5tnEXfnm1UrkhqdMH2hJWJVrCcQe5UDSviM0Xon7Se/wmH91lufCqY0msGONQZh
+         jV4w==
+X-Gm-Message-State: AGi0PuYrHC2d5sB9pO/8Xf2Brj7bR4hHLFvsTTU0/yVUEZM3k0rXFovj
+        oi951C/NnZWCnVsYgrAPa/QTQgrhZ6/HG5pLe7mDznXPqGLNzZsF0Nadr4QAcTRr6AHMw41OwjK
+        AnVkH+bU4swgyUWJ2GC7A+wPN
+X-Received: by 2002:a1c:4b16:: with SMTP id y22mr9704516wma.170.1588848411507;
+        Thu, 07 May 2020 03:46:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJwkpcsvMDTihRmO/58UI/oBdWetzX3zNTW+RN5tQqtGOSRJ/Ox4DqJrFYHImjL7fq9CHlvYA==
+X-Received: by 2002:a1c:4b16:: with SMTP id y22mr9704494wma.170.1588848411214;
+        Thu, 07 May 2020 03:46:51 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id v11sm7638062wrv.53.2020.05.07.03.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 03:46:50 -0700 (PDT)
+Date:   Thu, 7 May 2020 06:46:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v3 07/15] mm/memory_hotplug: Introduce
+ offline_and_remove_memory()
+Message-ID: <20200507064558-mutt-send-email-mst@kernel.org>
+References: <20200507103119.11219-1-david@redhat.com>
+ <20200507103119.11219-8-david@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:a408:: with SMTP id c8mr13213757jal.143.1588848380014;
- Thu, 07 May 2020 03:46:20 -0700 (PDT)
-Date:   Thu, 07 May 2020 03:46:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004af71905a50c973a@google.com>
-Subject: KASAN: use-after-free Write in get_block
-From:   syzbot <syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, danarag@gmail.com,
-        deepa.kernel@gmail.com, jack@suse.cz, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507103119.11219-8-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    ac935d22 Add linux-next specific files for 20200415
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f7824c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bc498783097e9019
-dashboard link: https://syzkaller.appspot.com/bug?extid=c7d9ec7a1a7272dd71b3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100a1660100000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=135471e4100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10d471e4100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=175471e4100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in alloc_branch fs/minix/itree_common.c:92 [inline]
-BUG: KASAN: use-after-free in get_block+0x1202/0x1380 fs/minix/itree_common.c:191
-Write of size 2 at addr ffff888083a817b8 by task syz-executor.0/7219
-
-CPU: 0 PID: 7219 Comm: syz-executor.0 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- alloc_branch fs/minix/itree_common.c:92 [inline]
- get_block+0x1202/0x1380 fs/minix/itree_common.c:191
- minix_get_block+0xe5/0x110 fs/minix/inode.c:376
- __block_write_begin_int+0x490/0x1b00 fs/buffer.c:2039
- __block_write_begin fs/buffer.c:2089 [inline]
- block_write_begin+0x58/0x2e0 fs/buffer.c:2148
- minix_write_begin+0x35/0xe0 fs/minix/inode.c:412
- generic_perform_write+0x20a/0x4e0 mm/filemap.c:3308
- __generic_file_write_iter+0x24c/0x610 mm/filemap.c:3437
- generic_file_write_iter+0x3f3/0x630 mm/filemap.c:3469
- call_write_iter include/linux/fs.h:1907 [inline]
- new_sync_write+0x4a2/0x700 fs/read_write.c:484
- __vfs_write+0xc9/0x100 fs/read_write.c:497
- __kernel_write+0x11c/0x3a0 fs/read_write.c:516
- do_acct_process+0xcdc/0x10e0 kernel/acct.c:522
- acct_pin_kill+0x29/0xf0 kernel/acct.c:174
- pin_kill+0x175/0x7c0 fs/fs_pin.c:44
- mnt_pin_kill+0x6c/0x1c0 fs/fs_pin.c:81
- cleanup_mnt+0x3c4/0x4b0 fs/namespace.c:1092
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
- do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45f257
-Code: 64 89 04 25 d0 02 00 00 58 5f ff d0 48 89 c7 e8 8f be ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 ad 8c fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff1bed8a48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000045f257
-RDX: 0000000000402ff8 RSI: 0000000000000002 RDI: 00007fff1bed8af0
-RBP: 0000000000000014 R08: 0000000000000000 R09: 0000000000000009
-R10: 0000000000000005 R11: 0000000000000246 R12: 00007fff1bed9b80
-R13: 0000000001b28940 R14: 0000000000000000 R15: 00007fff1bed9b80
-
-The buggy address belongs to the page:
-page:ffffea00020ea040 refcount:0 mapcount:0 mapping:0000000033e8f566 index:0x1
-flags: 0xfffe0000000000()
-raw: 00fffe0000000000 ffffea00021c95c8 ffffea00020e9d48 0000000000000000
-raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888083a81680: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888083a81700: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff888083a81780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                        ^
- ffff888083a81800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888083a81880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+On Thu, May 07, 2020 at 12:31:11PM +0200, David Hildenbrand wrote:
+> virtio-mem wants to offline and remove a memory block once it unplugged
+> all subblocks (e.g., using alloc_contig_range()). Let's provide
+> an interface to do that from a driver. virtio-mem already supports to
+> offline partially unplugged memory blocks. Offlining a fully unplugged
+> memory block will not require to migrate any pages. All unplugged
+> subblocks are PageOffline() and have a reference count of 0 - so
+> offlining code will simply skip them.
+> 
+> All we need is an interface to offline and remove the memory from kernel
+> module context, where we don't have access to the memory block devices
+> (esp. find_memory_block() and device_offline()) and the device hotplug
+> lock.
+> 
+> To keep things simple, allow to only work on a single memory block.
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Tested-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+didn't you lose Andrew Morton's ack here?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  include/linux/memory_hotplug.h |  1 +
+>  mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+
+I get:
+
+error: sha1 information is lacking or useless (mm/memory_hotplug.c).
+error: could not build fake ancestor
+
+which version is this against? Pls post patches on top of some tag
+in Linus' tree if possible.
+
+
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 7dca9cd6076b..d641828e5596 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -318,6 +318,7 @@ extern void try_offline_node(int nid);
+>  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+>  extern int remove_memory(int nid, u64 start, u64 size);
+>  extern void __remove_memory(int nid, u64 start, u64 size);
+> +extern int offline_and_remove_memory(int nid, u64 start, u64 size);
+>  
+>  #else
+>  static inline void try_offline_node(int nid) {}
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 936bfe208a6e..bf1941f02a60 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1748,4 +1748,41 @@ int remove_memory(int nid, u64 start, u64 size)
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(remove_memory);
+> +
+> +/*
+> + * Try to offline and remove a memory block. Might take a long time to
+> + * finish in case memory is still in use. Primarily useful for memory devices
+> + * that logically unplugged all memory (so it's no longer in use) and want to
+> + * offline + remove the memory block.
+> + */
+> +int offline_and_remove_memory(int nid, u64 start, u64 size)
+> +{
+> +	struct memory_block *mem;
+> +	int rc = -EINVAL;
+> +
+> +	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
+> +	    size != memory_block_size_bytes())
+> +		return rc;
+> +
+> +	lock_device_hotplug();
+> +	mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
+> +	if (mem)
+> +		rc = device_offline(&mem->dev);
+> +	/* Ignore if the device is already offline. */
+> +	if (rc > 0)
+> +		rc = 0;
+> +
+> +	/*
+> +	 * In case we succeeded to offline the memory block, remove it.
+> +	 * This cannot fail as it cannot get onlined in the meantime.
+> +	 */
+> +	if (!rc) {
+> +		rc = try_remove_memory(nid, start, size);
+> +		WARN_ON_ONCE(rc);
+> +	}
+> +	unlock_device_hotplug();
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(offline_and_remove_memory);
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+> -- 
+> 2.25.3
+
