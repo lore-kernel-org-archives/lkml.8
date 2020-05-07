@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8359FC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61530C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 583FE20736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3950120736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lBRYYVji"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R133pfJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgEGApw (ORCPT
+        id S1728846AbgEGAqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:45:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38572 "EHLO
+        Wed, 6 May 2020 20:46:00 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38772 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbgEGApl (ORCPT
+        with ESMTP id S1728011AbgEGAp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:45:41 -0400
+        Wed, 6 May 2020 20:45:57 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470dEUJ097500;
-        Thu, 7 May 2020 00:44:50 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470eGfM098246;
+        Thu, 7 May 2020 00:42:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=tOzDN5QRiW0NbdfQAY9h5DJPaKglehgjEjrdEdmx1f4=;
- b=lBRYYVjiwnboBLdsbCnfuIKuUvyV4Tb1PrnqIJzVMBtICdZ9jaFnmAsVtSqdufLw8Lkj
- R/rLVnwt21p57My0cE/rC/CpuNQ4Mzukt/dxNwn87fyXSXioV/8VV0X4ro8aZ60ZGB7x
- CS07279N98Ai7FAC4KfEWCksHQTXacRnj6rWSwdiGHc/dZ8N+XKy+sYelKE4Cy8d/1to
- FMWAPMfC1fvp/xhjRmQylo2gn9PzBstNHezUodSJte6uzxyt2tjCSrKc/4DPgyG6py+N
- qH/XacX69hs+noVnHM24ROyLnA8wJFKZcLGbbMgSIA76DkT9aK5lV+sxssGBjrJ03+js nQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30usgq4h2f-1
+ bh=rwgijllW6M4XeYhmgrj3fFunHwUOc+7hS8CUFmbdL+Y=;
+ b=R133pfJPycmJwf2nkOwOYFHZc44QZzHbHBW+GOTn/ard0CwPxFr1B5n0o2GLQy9oM38i
+ HZE8RpmIPtKkvpdd5MKkyYJhpzkhaF3dJcsXnWRKGChHTCZNIUWkvV+5PjaK4cUQun9t
+ Y56I+jDYIJcdEE8u1OnTCbSuRbZnSYOhcJQA3d/t0x1aiUlpWnvz2Ek1PEQyTT50cFnR
+ QIrrys3PpUBpnz6QcXuClvEAQ/0styrGCrveOGqL2sc2a7+VJ3zrrnYu7Z80jADYzIb7
+ tyUfLzsFfZA88gGJjIe6f7HTeRRJO909+XwIkCu1/FQlDhfbzDB7Vj/RIM/XxLdmflX6 Ug== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30usgq4gw0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470am50170751;
-        Thu, 7 May 2020 00:44:50 GMT
+        Thu, 07 May 2020 00:42:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bmCE131715;
+        Thu, 7 May 2020 00:42:38 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30us7p2pjm-1
+        by userp3030.oracle.com with ESMTP id 30t1r957v3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:49 +0000
+        Thu, 07 May 2020 00:42:38 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470iksR026299;
-        Thu, 7 May 2020 00:44:46 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470gZvx025355;
+        Thu, 7 May 2020 00:42:35 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:44:46 -0700
+        with ESMTP ; Wed, 06 May 2020 17:42:35 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,76 +71,127 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 37/43] shmem: PKRAM: enable bulk loading of preserved pages into shmem
-Date:   Wed,  6 May 2020 17:42:03 -0700
-Message-Id: <1588812129-8596-38-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 05/43] mm: PKRAM: support preserving transparent hugepages
+Date:   Wed,  6 May 2020 17:41:31 -0700
+Message-Id: <1588812129-8596-6-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
  priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
  mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of new interfaces for loading and inserting preserved pages
-into a shmem file in bulk.
+Support preserving a transparent hugepage by recording the page order and
+a flag indicating it is a THP.  Use these values when the page is
+restored to reconstruct the THP.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/shmem_pkram.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ include/linux/pkram.h |  2 ++
+ mm/pkram.c            | 20 ++++++++++++++++----
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/mm/shmem_pkram.c b/mm/shmem_pkram.c
-index 4992b6c3e54e..435488368104 100644
---- a/mm/shmem_pkram.c
-+++ b/mm/shmem_pkram.c
-@@ -315,18 +315,29 @@ static inline void pkram_load_report_one_done(void)
- static int do_load_file_content(struct pkram_stream *ps)
- {
- 	unsigned long index;
--	struct page *page;
--	int err = 0;
-+	int i, err;
-+
-+	err = pkram_prepare_load_pages(ps);
-+	if (err)
-+		return err;
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index f338d1c2aeb6..584cadb662b4 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -33,6 +33,8 @@ int pkram_prepare_load_obj(struct pkram_stream *ps);
+ void pkram_finish_load(struct pkram_stream *ps);
+ void pkram_finish_load_obj(struct pkram_stream *ps);
  
- 	do {
--		page = pkram_load_page(ps, &index, NULL);
--		if (!page)
-+		err = pkram_load_pages(ps, &index);
-+		if (err) {
-+			if (err == -ENODATA)
-+				err = 0;
- 			break;
-+		}
- 
--		err = shmem_insert_page(ps->mm, ps->mapping->host, index, page);
--		put_page(page);
-+		err = shmem_insert_pages(ps->mm, ps->mapping->host, index,
-+					 ps->pages, ps->nr_pages);
++#define PKRAM_PAGE_TRANS_HUGE	0x1	/* page is a transparent hugepage */
 +
-+		for (i = 0; i < ps->nr_pages; i++)
-+			put_page(ps->pages[i]);
- 	} while (!err);
+ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags);
+ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index,
+ 			     short *flags);
+diff --git a/mm/pkram.c b/mm/pkram.c
+index ab3053ca3539..9164060e36f5 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -21,6 +21,7 @@ typedef __u64 pkram_entry_t;
  
-+	pkram_finish_load_pages(ps);
+ #define PKRAM_ENTRY_FLAGS_SHIFT	0x5
+ #define PKRAM_ENTRY_FLAGS_MASK	0x7f
++#define PKRAM_ENTRY_ORDER_MASK	0x1f
+ 
+ /*
+  * Keeps references to data pages saved to PKRAM.
+@@ -434,6 +435,7 @@ static int __pkram_save_page(struct pkram_stream *ps,
+ 	struct pkram_link *link = ps->link;
+ 	struct pkram_obj *obj = ps->obj;
+ 	pkram_entry_t p;
++	int order;
+ 
+ 	if (!link || ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
+ 	    index != ps->next_index) {
+@@ -452,10 +454,15 @@ static int __pkram_save_page(struct pkram_stream *ps,
+ 		ps->next_index = link->index = index;
+ 	}
+ 
+-	ps->next_index++;
++	if (PageTransHuge(page))
++		flags |= PKRAM_PAGE_TRANS_HUGE;
 +
- 	return err;
++	order = compound_order(page);
++	ps->next_index += (1 << order);
+ 
+ 	get_page(page);
+ 	p = page_to_phys(page);
++	p |= order;
+ 	p |= ((flags & PKRAM_ENTRY_FLAGS_MASK) << PKRAM_ENTRY_FLAGS_SHIFT);
+ 	link->entry[ps->entry_idx] = p;
+ 	ps->entry_idx++;
+@@ -485,8 +492,6 @@ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
+ 
+-	BUG_ON(PageCompound(page));
+-
+ 	return __pkram_save_page(ps, page, flags, page->index);
  }
  
+@@ -499,6 +504,7 @@ static struct page *__pkram_load_page(struct pkram_stream *ps, unsigned long *in
+ 	struct pkram_link *link = ps->link;
+ 	struct page *page;
+ 	pkram_entry_t p;
++	int order;
+ 	short flgs;
+ 
+ 	if (!link) {
+@@ -517,14 +523,20 @@ static struct page *__pkram_load_page(struct pkram_stream *ps, unsigned long *in
+ 	BUG_ON(!p);
+ 
+ 	flgs = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
++	order = p & PKRAM_ENTRY_ORDER_MASK;
+ 	page = pfn_to_page(PHYS_PFN(p));
+ 
++	if (flgs & PKRAM_PAGE_TRANS_HUGE) {
++		prep_compound_page(page, order);
++		prep_transhuge_page(page);
++	}
++
+ 	if (flags)
+ 		*flags = flgs;
+ 	if (index)
+ 		*index = ps->next_index;
+ 
+-	ps->next_index++;
++	ps->next_index += (1 << order);
+ 
+ 	/* clear to avoid double free (see pkram_truncate_link()) */
+ 	link->entry[ps->entry_idx] = 0;
 -- 
 2.13.3
 
