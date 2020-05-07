@@ -6,111 +6,138 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BA6C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDA9C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F0D21973
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660C021473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgEGMCg (ORCPT
+        id S1726635AbgEGMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:02:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45016 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbgEGMCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:02:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7FD70ADC8;
-        Thu,  7 May 2020 12:02:34 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH] Documentation: update numastat explanation
-Date:   Thu,  7 May 2020 14:02:17 +0200
-Message-Id: <20200507120217.12313-1-vbabka@suse.cz>
-X-Mailer: git-send-email 2.26.2
+        Thu, 7 May 2020 08:02:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbgEGMCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 08:02:07 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A63FE10C1DAEE116B8E2;
+        Thu,  7 May 2020 20:02:04 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 20:01:57 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
+        <irogers@google.com>, <robin.murphy@arm.com>,
+        <zhangshaokun@hisilicon.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH RFC v3 04/12] perf vendor events arm64: Add Architected events smmuv3-pmcg.json
+Date:   Thu, 7 May 2020 19:57:43 +0800
+Message-ID: <1588852671-61996-5-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
+References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During recent patch discussion [1] it became apparent that the "other_node"
-definition in the numastat documentation has always been different from actual
-implementation. It was also noted that the stats can be innacurate on systems
-with memoryless nodes.
+Add JSON for Architected events from [0], Section 10.3 .
 
-This patch corrects the other_node definition (with minor tweaks to two more
-definitions), adds a note about memoryless nodes and also two introductory
-paragraphs to the numastat documentation.
+[0] https://static.docs.arm.com/ihi0070/a/IHI_0070A_SMMUv3.pdf
 
-[1] https://lore.kernel.org/linux-mm/20200504070304.127361-1-sandipan@linux.ibm.com/T/#u
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- Documentation/admin-guide/numastat.rst | 31 +++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json | 58 +++++++++++++++++++++++
+ tools/perf/pmu-events/jevents.c                   |  2 +
+ 2 files changed, 60 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
 
-diff --git a/Documentation/admin-guide/numastat.rst b/Documentation/admin-guide/numastat.rst
-index aaf1667489f8..08ec2c2bdce3 100644
---- a/Documentation/admin-guide/numastat.rst
-+++ b/Documentation/admin-guide/numastat.rst
-@@ -6,6 +6,21 @@ Numa policy hit/miss statistics
- 
- All units are pages. Hugepages have separate counters.
- 
-+The numa_hit, numa_miss and numa_foreign counters reflect how well processes
-+are able to allocate memory from nodes they prefer. If they succeed, numa_hit
-+is incremented on the preferred node, otherwise numa_foreign is incremented on
-+the preferred node and numa_miss on the node where allocation succeeded.
-+
-+Usually preferred node is the one local to the CPU where the process executes,
-+but restrictions such as mempolicies can change that, so there are also two
-+counters based on CPU local node. local_node is similar to numa_hit and is
-+incremented on allocation from a node by CPU on the same node. other_node is
-+similar to numa_miss and is incremented on the node where allocation succeeds
-+from a CPU from a different node. Note there is no counter analogical to
-+numa_foreign.
-+
-+In more detail:
-+
- =============== ============================================================
- numa_hit	A process wanted to allocate memory from this node,
- 		and succeeded.
-@@ -14,11 +29,13 @@ numa_miss	A process wanted to allocate memory from another node,
- 		but ended up with memory from this node.
- 
- numa_foreign	A process wanted to allocate on this node,
--		but ended up with memory from another one.
-+		but ended up with memory from another node.
- 
--local_node	A process ran on this node and got memory from it.
-+local_node	A process ran on this node's CPU,
-+		and got memory from this node.
- 
--other_node	A process ran on this node and got memory from another node.
-+other_node	A process ran on a different node's CPU
-+		and got memory from this node.
- 
- interleave_hit 	Interleaving wanted to allocate from this node
- 		and succeeded.
-@@ -28,3 +45,11 @@ For easier reading you can use the numastat utility from the numactl package
- (http://oss.sgi.com/projects/libnuma/). Note that it only works
- well right now on machines with a small number of CPUs.
- 
-+Note that on systems with memoryless nodes (where a node has CPUs but no
-+memory) the numa_hit, numa_miss and numa_foreign statistics can be skewed
-+heavily. In the current kernel implementation, if a process prefers a
-+memoryless node (i.e.  because it is running on one of its local CPU), the
-+implementation actually treats one of the nearest nodes with memory as the
-+preferred node. As a result, such allocation will not increase the numa_foreign
-+counter on the memoryless node, and will skew the numa_hit, numa_miss and
-+numa_foreign statistics of the nearest node.
+diff --git a/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json b/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
+new file mode 100644
+index 000000000000..8a59ce48bf06
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/smmuv3-pmcg.json
+@@ -0,0 +1,58 @@
++[
++    {
++        "PublicDescription": "Clock cycles",
++        "EventCode": "0x00",
++        "EventName": "smmuv3_pmcg.CYCLES",
++        "BriefDescription": "Clock cycles"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "Transaction",
++        "EventCode": "0x01",
++        "EventName": "smmuv3_pmcg.TRANSACTION",
++        "BriefDescription": "Transaction"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "TLB miss caused by incoming transaction or (ATS or non-ATS) translation request",
++        "EventCode": "0x02",
++        "EventName": "smmuv3_pmcg.TLB_MISS",
++        "BriefDescription": "TLB miss caused by incoming transaction or (ATS or non-ATS) translation request"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "Configuration cache miss caused by transaction or(ATS or non-ATS)translation request",
++        "EventCode": "0x03",
++        "EventName": "smmuv3_pmcg.CONFIG_CACHE_MISS",
++        "BriefDescription": "Configuration cache miss caused by transaction or(ATS or non-ATS)translation request"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "Translation table walk access",
++        "EventCode": "0x04",
++        "EventName": "smmuv3_pmcg.TRANS_TABLE_WALK_ACCESS",
++        "BriefDescription": "Translation table walk access"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "Configuration structure access",
++        "EventCode": "0x05",
++        "EventName": "smmuv3_pmcg.CONFIG_STRUCT_ACCESS",
++        "BriefDescription": "Configuration structure access"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "PCIe ATS Translation Request received",
++        "EventCode": "0x06",
++        "EventName": "smmuv3_pmcg.PCIE_ATS_TRANS_RQ",
++        "BriefDescription": "PCIe ATS Translation Request received"
++        "Unit": "smmuv3_pmcg",
++    },
++    {
++        "PublicDescription": "PCIe ATS Translated Transaction passed through SMMU",
++        "EventCode": "0x07",
++        "EventName": "smmuv3_pmcg.PCIE_ATS_TRANS_PASSED",
++        "BriefDescription": "PCIe ATS Translated Transaction passed through SMMU"
++        "Unit": "smmuv3_pmcg",
++    }
++]
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index acb6b77bddc0..76a84ec2ffc8 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -256,6 +256,8 @@ static struct map {
+ 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
+ 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+ 	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
++	/* it's not realistic to keep adding these, we need something more scalable ... */
++	{ "smmuv3_pmcg", "smmuv3_pmcg" },
+ 	{ "L3PMC", "amd_l3" },
+ 	{}
+ };
 -- 
-2.26.2
+2.16.4
 
