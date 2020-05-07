@@ -2,156 +2,174 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D8AC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330CCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387F220735
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3DA2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQei5SeV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GIJuQejX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgEGLxi (ORCPT
+        id S1726074AbgEGL5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:53:38 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35138 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726538AbgEGLxh (ORCPT
+        Thu, 7 May 2020 07:57:00 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:12750 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgEGL47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:53:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588852416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=oJNhrRBC0c+BFGHFCS+s7JJ0R5CeLnnrd6LkdO80vW4=;
-        b=HQei5SeVaDd6hPqjS4D1PRRpCbpdlC7Ci8jM9g2KMtmvCuwmcqWrY1k9F/oDe1dnJNqu8H
-        w1XI4CixLnftHTe8Qt6RwBNn2VQEK9YXkq86Yri5bjiZ6g9TFoC37oiq2/fel5mSVvgQ7C
-        C3JP8mlpF088z/nOGwhuAgn5Q2X0Wn8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-r-JReGUDMy6MKKvTDqstzw-1; Thu, 07 May 2020 07:53:34 -0400
-X-MC-Unique: r-JReGUDMy6MKKvTDqstzw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 821341005510;
-        Thu,  7 May 2020 11:53:33 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11C1F1C933;
-        Thu,  7 May 2020 11:53:32 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for Linux 5.7-rc5
-Date:   Thu,  7 May 2020 07:53:32 -0400
-Message-Id: <20200507115332.495930-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Thu, 7 May 2020 07:56:59 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047BlNbU019120;
+        Thu, 7 May 2020 13:56:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Abi1sauqthy0o7ll0iZzcPHhpwrLBTxb2uGa7fPFiLQ=;
+ b=GIJuQejXla90HpGmtZDbiJfaJf/Te3VxqU5xQ8jWvu3wploWyszCvSsKUweezDFW9JZD
+ v5I2NIwxgtJi/DD25NO3uhdFTdXffkshL548goU2CzpT/tgDv7+6lueMj5trNVk/JlVA
+ 6816KnHtUHmmKtpwzbz+My1gAJfm7Hm/cV/yyNvPncYAi7gE3K/GpvUor8dQ6QQPP1RA
+ jR73rI7qcu/ULlX0lnFWMyfzPlffis242A6KJaw9sipz0R1U4bYM89ZJGUfbUc56l0n4
+ 8T5FTzGDE61OHZxhMe9cOgXpjTURWb1qRWIG8vqgeYYtPYkOX/3IqktROmpagvnOVud+ MQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rxb2bhgj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 13:56:49 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D088B10002A;
+        Thu,  7 May 2020 13:56:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE4582B42A0;
+        Thu,  7 May 2020 13:56:48 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 7 May
+ 2020 13:56:44 +0200
+Subject: Re: [PATCH V2 3/4] ARM: dts: stm32: enable stmpe811 on stm32429-disco
+ board
+To:     <dillon.minfei@gmail.com>, <mcoquelin.stm32@gmail.com>,
+        <philippe.schenker@toradex.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1588850125-24344-1-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <98d6d44c-ff23-ac15-c17b-8f5f49ad2274@st.com>
+Date:   Thu, 7 May 2020 13:56:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1588850125-24344-1-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_06:2020-05-07,2020-05-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi Dillon
 
-The following changes since commit 00a6a5ef39e7db3648b35c86361058854db84c83:
+On 5/7/20 1:15 PM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+> 
+> Enable the stmpe811 touch screen on stm32429-disco board.
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> 
+> [PATCH 3/4]: ARM: dts: stm32: enable stmpe811 on stm32429-disco
+> 
+> V2:
+> patch 3: remove unused id, blocks, irq-trigger
+> 
+> V1:
+> patch 4: fix read touch screen xyz timeout bug
+> patch 3: enable stmpe_touchscreen on stm32f429-disco board
+> patch 2: add i2c3 pin mux for stm32f4
+> patch 1: add i2c3 controller interface for stm32f4
 
-  Merge tag 'kvm-ppc-fixes-5.7-1' of git://git.kernel.org/pub/scm/linux/kernel/git/paulus/powerpc into kvm-master (2020-04-21 09:39:55 -0400)
+Good idea to add changes log for this patch. But this log has to be 
+placed  after "---" below. This log has not to appear in your commit 
+message. Furthermore, you should only add changes for this patch without 
+talking about other patches .
 
-are available in the Git repository at:
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+Add patch change log here.
 
-for you to fetch changes up to 2673cb6849722a4ffd74c27a9200a9ec43f64be3:
-
-  Merge tag 'kvm-s390-master-5.7-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD (2020-05-06 08:09:17 -0400)
-
-----------------------------------------------------------------
-Bugfixes, mostly for ARM and AMD, and more documentation.
-
-----------------------------------------------------------------
-
-Slightly bigger than usual because I couldn't send out what was pending
-for rc4, but there is nothing worrisome going on.  I have more
-fixes pending for guest debugging support (gdbstub) but I will send them
-next week.
-
-Thanks,
-
-Paolo
-
-Christian Borntraeger (1):
-      KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction
-
-Fangrui Song (1):
-      KVM: arm64: Delete duplicated label in invalid_vector
-
-Kashyap Chamarthy (1):
-      docs/virt/kvm: Document configuring and running nested guests
-
-Marc Zyngier (11):
-      KVM: arm: vgic: Fix limit condition when writing to GICD_I[CS]ACTIVER
-      KVM: arm64: PSCI: Narrow input registers when using 32bit functions
-      KVM: arm64: PSCI: Forbid 64bit functions for 32bit guests
-      KVM: arm: vgic: Synchronize the whole guest on GIC{D,R}_I{S,C}ACTIVER read
-      KVM: arm: vgic: Only use the virtual state when userspace accesses enable bits
-      KVM: arm: vgic-v2: Only use the virtual state when userspace accesses pending bits
-      Merge branch 'kvm-arm64/psci-fixes-5.7' into kvmarm-master/master
-      Merge branch 'kvm-arm64/vgic-fixes-5.7' into kvmarm-master/master
-      KVM: arm64: Save/restore sp_el0 as part of __guest_enter
-      KVM: arm64: vgic-v4: Initialize GICv4.1 even in the absence of a virtual ITS
-      KVM: arm64: Fix 32bit PC wrap-around
-
-Paolo Bonzini (6):
-      KVM: SVM: fill in kvm_run->debug.arch.dr[67]
-      Merge tag 'kvmarm-fixes-5.7-1' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-      Merge tag 'kvmarm-fixes-5.7-2' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-      kvm: ioapic: Restrict lazy EOI update to edge-triggered interrupts
-      kvm: x86: Use KVM CPU capabilities to determine CR4 reserved bits
-      Merge tag 'kvm-s390-master-5.7-3' of git://git.kernel.org/.../kvms390/linux into HEAD
-
-Peter Xu (2):
-      KVM: selftests: Fix build for evmcs.h
-      KVM: X86: Declare KVM_CAP_SET_GUEST_DEBUG properly
-
-Sean Christopherson (2):
-      KVM: nVMX: Replace a BUG_ON(1) with BUG() to squash clang warning
-      KVM: VMX: Explicitly clear RFLAGS.CF and RFLAGS.ZF in VM-Exit RSB path
-
-Suravee Suthikulpanit (1):
-      KVM: x86: Fixes posted interrupt check for IRQs delivery modes
-
-Zenghui Yu (2):
-      KVM: arm64: vgic-v3: Retire all pending LPIs on vcpu destroy
-      KVM: arm64: vgic-its: Fix memory leak on the error path of vgic_add_lpi()
-
- Documentation/virt/kvm/index.rst                 |   2 +
- Documentation/virt/kvm/running-nested-guests.rst | 276 +++++++++++++++++++++++
- arch/arm64/kvm/guest.c                           |   7 +
- arch/arm64/kvm/hyp/entry.S                       |  23 ++
- arch/arm64/kvm/hyp/hyp-entry.S                   |   1 -
- arch/arm64/kvm/hyp/sysreg-sr.c                   |  17 +-
- arch/powerpc/kvm/powerpc.c                       |   1 +
- arch/s390/kvm/kvm-s390.c                         |   1 +
- arch/s390/kvm/priv.c                             |   4 +-
- arch/x86/include/asm/kvm_host.h                  |   4 +-
- arch/x86/kvm/ioapic.c                            |  10 +-
- arch/x86/kvm/svm/svm.c                           |   2 +
- arch/x86/kvm/vmx/nested.c                        |   2 +-
- arch/x86/kvm/vmx/vmenter.S                       |   3 +
- arch/x86/kvm/x86.c                               |  21 +-
- tools/testing/selftests/kvm/include/evmcs.h      |   4 +-
- tools/testing/selftests/kvm/lib/x86_64/vmx.c     |   3 +
- virt/kvm/arm/hyp/aarch32.c                       |   8 +-
- virt/kvm/arm/psci.c                              |  40 ++++
- virt/kvm/arm/vgic/vgic-init.c                    |  19 +-
- virt/kvm/arm/vgic/vgic-its.c                     |  11 +-
- virt/kvm/arm/vgic/vgic-mmio-v2.c                 |  16 +-
- virt/kvm/arm/vgic/vgic-mmio-v3.c                 |  31 +--
- virt/kvm/arm/vgic/vgic-mmio.c                    | 228 ++++++++++++++-----
- virt/kvm/arm/vgic/vgic-mmio.h                    |  19 ++
- 25 files changed, 628 insertions(+), 125 deletions(-)
- create mode 100644 Documentation/virt/kvm/running-nested-guests.rst
-
+>   arch/arm/boot/dts/stm32f429-disco.dts | 47 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+> index 30c0f67..fad1ec1 100644
+> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+> @@ -49,6 +49,8 @@
+>   #include "stm32f429.dtsi"
+>   #include "stm32f429-pinctrl.dtsi"
+>   #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>   
+>   / {
+>   	model = "STMicroelectronics STM32F429i-DISCO board";
+> @@ -127,3 +129,48 @@
+>   	pinctrl-names = "default";
+>   	status = "okay";
+>   };
+> +
+> +&i2c3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c3_pins>;
+> +	clock-frequency = <100000>;
+> +	status = "okay";
+> +
+> +	stmpe811@41 {
+> +		compatible = "st,stmpe811";
+> +		reg = <0x41>;
+> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupt-parent = <&gpioa>;
+> +		/* 3.25 MHz ADC clock speed */
+> +		st,adc-freq = <1>;
+> +		/* 12-bit ADC */
+> +		st,mod-12b = <1>;
+> +		/* internal ADC reference */
+> +		st,ref-sel = <0>;
+> +		/* ADC converstion time: 80 clocks */
+> +		st,sample-time = <4>;
+> +
+> +		stmpe_touchscreen {
+> +			compatible = "st,stmpe-ts";
+> +			/* 8 sample average control */
+> +			st,ave-ctrl = <3>;
+> +			/* 7 length fractional part in z */
+> +			st,fraction-z = <7>;
+> +			/*
+> +			 * 50 mA typical 80 mA max touchscreen drivers
+> +			 * current limit value
+> +			 */
+> +			st,i-drive = <1>;
+> +			/* 1 ms panel driver settling time */
+> +			st,settling = <3>;
+> +			/* 5 ms touch detect interrupt delay */
+> +			st,touch-det-delay = <5>;
+> +		};
+> +
+> +		stmpe_adc {
+> +			compatible = "st,stmpe-adc";
+> +			/* forbid to use ADC channels 3-0 (touch) */
+> +			st,norequest-mask = <0x0F>;
+> +		};
+> +	};
+> +};
+> 
