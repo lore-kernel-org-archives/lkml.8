@@ -2,138 +2,138 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D18C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9534C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B85D21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588886406;
-	bh=TVbO1JPweoJt8ivNceXzSyjSql5Ug2m73FZ4wBPQtPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HTl/WQLYuoDTnlWqsEfJFXOOaIo+TywggzDj43kE5ny7rOUsJaFOervldC0aWa7J6
-	 8kZP4/KILWR0iLguHJfjz0GuLKMxUcm80LcHLVZTVXiEL3Hs3x4kBBOEZtD4VcGI8r
-	 aZKZeWEjme2xlpDufnOeaTgUhMJVv+oL7/ZIHSJc=
+	by mail.kernel.org (Postfix) with ESMTP id 843FE20731
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hhdJwocm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEGVUF (ORCPT
+        id S1726946AbgEGVUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:20:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39877 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVUE (ORCPT
+        Thu, 7 May 2020 17:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgEGVUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:20:04 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b18so6548109oic.6;
-        Thu, 07 May 2020 14:20:04 -0700 (PDT)
+        Thu, 7 May 2020 17:20:43 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3E3C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 14:20:42 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id p16so6675241edm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 14:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PHG6yTghcibf497dWa0jTcy5wb1cOxvUkXcsCAAAnu0=;
+        b=hhdJwocmiOmhRbStlbTJF+p2HOJLzKjtHBW7/pWc2QtLmrhNBExIXrUO2uQY5aJFic
+         NPqwRqO/FhcKBHF/m/7sj8CrG7BnmqViC07cpNI3aHZjYqvifvmstOVxRyhtVNXzcaw/
+         odCvKvCvH1ts+K/benGuSU6XoYNbAe9XYRePBEsMfRJi35r79vMwY/Cf/d9exGoIO/cM
+         i0K74AdGR8TY4T7Qk9WwZjhxA1Y5OmygaBA8PACbgoOiEb3IK8NwuA9XAFhB6Kl4J0w5
+         r81WRBbrVsb5OZs5KYgcZZylE6FCNIL9AkQr2yo6e9K3nuwFOmCkxlf5SdIXs7sUpoAI
+         LMRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=d3PEl6Inu73ePv6FD+B3jJSnNwDZeos3VStUNbCfw6E=;
-        b=qTZ8A7w6uBASDSjRMlOr0ZX2Bmf6TbXHFvUZtkD448XMdZY/aFNyvuBpriY2NKOklG
-         gqWd94WwhK7AV18Fv4Z3k6LP8KviweFT5MI5EdEwNLopLoEWMChPhChTWeQblPPNxpRj
-         5FqFBFC6eaPnztNmMd5obehU5Std6nMKjTuUsDBF4QR+7RR/fsNfS9zryMLXYNsEgO6+
-         +lcex1j16MNBxVTyu6McTa3e77WhVsDFvpKBnD7WZAKGiQBiv/sbYAjO7Mp7dG03Nulf
-         d9llbN2PkYyvb72agrN/UWpLX4N4HkXqB1lnkDBrtKPJK7YwXLlef9NaL8awh9DYU6HR
-         gK3g==
-X-Gm-Message-State: AGi0Puar4zhukmb9G083NmT4X+BlWDsKSrtMIaeDGjCNXiNBVwuCa6pb
-        7FXwaOafbaOF+hRnzpj5RA==
-X-Google-Smtp-Source: APiQypJ0lAYKQczSXzNFplC2k2/PIhkY1dFsQ4AqWTM2JY27WVaesjXx16IEFuhcJtZM2+KRJqbREg==
-X-Received: by 2002:aca:ccc6:: with SMTP id c189mr8111145oig.161.1588886403797;
-        Thu, 07 May 2020 14:20:03 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o10sm1615289oti.52.2020.05.07.14.20.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:20:03 -0700 (PDT)
-Received: (nullmailer pid 15895 invoked by uid 1000);
-        Thu, 07 May 2020 21:20:02 -0000
-Date:   Thu, 7 May 2020 16:20:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 05/12] PCI: aardvark: Issue PERST via GPIO
-Message-ID: <20200507212002.GA32182@bogus>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200430080625.26070-6-pali@kernel.org>
- <20200430082245.xblvb7xeamm4e336@pali>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PHG6yTghcibf497dWa0jTcy5wb1cOxvUkXcsCAAAnu0=;
+        b=jXP+1URpSI70vPixC0HPa4KHw6DYSUscZe+EDqV5oJ5IelzEBnQcsDUWHsZEES1ikh
+         esJvEbevgQMkpn86Dm9Q2XIQyf/w7yCZZcSyTS7SG5O1zv2PfxTu0leTHnbpVvWd8CoL
+         mJ7Zu35Rmh0iOgdkWFsuc8/q0YXhyP2n6ERb0NFP2cAQ3l07R7d7AP/NIiKr0xG57pHr
+         N+IKU2t5L2J5pTMa2YtwovE1MMUEFUg9lDA4bYII92aKPZXp9Vl2154zONKEUqnhm6aA
+         Va3yHQH46al/TGEGqi2UTLqqklewrgKoAk43W/DqWGaAJ52XzJ5Sc8Bn6VoseSXM34Kk
+         lffw==
+X-Gm-Message-State: AGi0PuaKt7maTREeNo7ycODobzPjY4CnEbSlNeG4MQbWRSuA7ZNommWN
+        4FWpcHH3GZfbfBx4IA2vf7YX1zLx6b9XM4Sqq0XxiQ==
+X-Google-Smtp-Source: APiQypIDiQajRa4tQ5UpB7rmME33WGj2fRXc8YbBkxmSYjWsrm7ee61hgisYO4/M3hOn/3+7xRKMFnT6KU6LZryG7mc=
+X-Received: by 2002:aa7:c643:: with SMTP id z3mr13702521edr.154.1588886441435;
+ Thu, 07 May 2020 14:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430082245.xblvb7xeamm4e336@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <158880834905.2183490.15616329469420234017.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <bd3963f3-c6d6-f138-331c-9ac065633491@intel.com>
+In-Reply-To: <bd3963f3-c6d6-f138-331c-9ac065633491@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 7 May 2020 14:20:30 -0700
+Message-ID: <CAPcyv4ikWy9E8ScM2k1wdxUuPegftvOFwyLr86MupYpHsmxnUg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: Drop rcu usage for MMIO mappings
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:22:45AM +0200, Pali Rohár wrote:
-> On Thursday 30 April 2020 10:06:18 Pali Rohár wrote:
-> > +static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> > +{
-> > +	u32 reg;
-> > +
-> > +	if (!pcie->reset_gpio)
-> > +		return;
-> > +
-> > +	/* PERST does not work for some cards when link training is enabled */
-> > +	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-> > +	reg &= ~LINK_TRAINING_EN;
-> > +	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> > +
-> > +	/* 10ms delay is needed for some cards */
-> > +	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-> > +	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> > +	usleep_range(10000, 11000);
-> > +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> > +}
-> 
-> Just note about delay between changing GPIO reset:
-> 
-> In V2 there as only 1ms, but be figured out that it is not enough for
-> WLE900VX cards when they were already initialized in u-boot.
-> 
-> I tried to find in PCI specs if there is a defined timeout for this
-> operation. I found following 3 delay definitions which could be related:
-> 
-> TPVPERL - PERST# must remain active at least this long after power becomes valid
-> TPERST - When asserted, PERST# must remain asserted at least this long
-> TPERSTCLK - PERST# must remain active at least this long after any supplied reference clock is stable
-> 
-> In another spec they have defined also minimal values:
-> 
-> TPVPERL - Power stable to PERST# inactive - Min 100 ms
-> TPERST - PERST# active time - Min 100 us
-> TPERSTCLK - REFCLK stable before PERST# inactive - Min 100 us
-> 
-> After experimenting with those Compex WLE900VX cards, I know that 100us
-> delay is not enough. And I'm not sure if TPVPERL is really relevant for
-> this case. I understood that TPVPERL is needed when initializing power
-> again. And because delaying boot by another 100ms is does not have to be
-> acceptable if there is not strict reason for it, I rather decided to
-> stay with just 10ms delay.
-> 
-> If you know what is the correct timeout between changing GPIO reset,
-> please let me know and in future I can fix/reimplement it.
+On Thu, May 7, 2020 at 9:43 AM Rafael J. Wysocki
+<rafael.j.wysocki@intel.com> wrote:
+>
+> On 5/7/2020 1:39 AM, Dan Williams wrote:
+> > Recently a performance problem was reported for a process invoking a
+> > non-trival ASL program. The method call in this case ends up
+> > repetitively triggering a call path like:
+> >
+> >      acpi_ex_store
+> >      acpi_ex_store_object_to_node
+> >      acpi_ex_write_data_to_field
+> >      acpi_ex_insert_into_field
+> >      acpi_ex_write_with_update_rule
+> >      acpi_ex_field_datum_io
+> >      acpi_ex_access_region
+> >      acpi_ev_address_space_dispatch
+> >      acpi_ex_system_memory_space_handler
+> >      acpi_os_map_cleanup.part.14
+> >      _synchronize_rcu_expedited.constprop.89
+> >      schedule
+> >
+> > The end result of frequent synchronize_rcu_expedited() invocation is
+> > tiny sub-millisecond spurts of execution where the scheduler freely
+> > migrates this apparently sleepy task. The overhead of frequent scheduler
+> > invocation multiplies the execution time by a factor of 2-3X.
+> >
+> > For example, performance improves from 16 minutes to 7 minutes for a
+> > firmware update procedure across 24 devices.
+> >
+> > Perhaps the rcu usage was intended to allow for not taking a sleeping
+> > lock in the acpi_os_{read,write}_memory() path which ostensibly could be
+> > called from an APEI NMI error interrupt? Neither rcu_read_lock() nor
+> > ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
+> > was not serving as a mechanism to avoid direct calls to ioremap(). Even
+> > the original implementation had a spin_lock_irqsave(), but that is not
+> > NMI safe.
+> >
+> > APEI itself already has some concept of avoiding ioremap() from
+> > interrupt context (see erst_exec_move_data()), if the new warning
+> > triggers it means that APEI either needs more instrumentation like that
+> > to pre-emptively fail, or more infrastructure to arrange for pre-mapping
+> > the resources it needs in NMI context.
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: 620242ae8c3d ("ACPI: Maintain a list of ACPI memory mapped I/O remappings")
+> > Cc: Len Brown <lenb@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Erik Kaneda <erik.kaneda@intel.com>
+> > Cc: Myron Stowe <myron.stowe@redhat.com>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> linux-acpi is kind of relevant for this too, so please CC it.
 
-I don't know, but seems like something each driver author shouldn't be 
-making up.
-
-Rob
-
+Whoops, my bad. Will resend with some of Andy's cleanup suggestions.
