@@ -2,50 +2,149 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF56C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90546C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D020E208D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E732207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S82WCrt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgEGG1s (ORCPT
+        id S1726471AbgEGG15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:27:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:44818 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgEGG1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:27:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6109268C7B; Thu,  7 May 2020 08:27:44 +0200 (CEST)
-Date:   Thu, 7 May 2020 08:27:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: PING for Re: bdi: fix use-after-free for dev_name(bdi->dev) v3
- (resend)
-Message-ID: <20200507062743.GA5814@lst.de>
-References: <20200504124801.2832087-1-hch@lst.de>
+        Thu, 7 May 2020 02:27:57 -0400
+Received: from mail-eopbgr00072.outbound.protection.outlook.com ([40.107.0.72]:42979
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726445AbgEGG14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:27:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j4SMazWrkKCqOc1ght1gLZmwq1i9ER8KbkxvoXJqH1q7vYWyv7X4bJxtjfzAbn/btcLZXZc+VHCiC798hxpIMOV1KTkuwy6ypHrRJXRbV6sEvEX+YhIibbK6AmQca3S5KCRE0KaLxv4brbgstNJc1oFD87mDILkf8q7ZO4RSr3IBKgj38Gc1EfFIZepiVuPadFJyeFnqc5E73ms+mHEKWjF0avadpV9f3EasbF05aahDohWcxtGcKZPbfiQL9c/PrepRT5n9HMpZXqPofQNO77//7QLV+LCG9roCWuIWG+nIKyQz7B7En9fgCLTcg8fv4QqYGx2YHcKk47KSTzxKvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOSlTuAYTVOeERwVGR3p+KKM6Me67p7yluJUhfPgZAg=;
+ b=YRl3kQlVozmdzMkwTtbzSj/2kVTm3yloMgV0TIWJEK0SxUiYKWLdssXCL7o7UlyFtB4lWL7FPL0zHny3aau5ysnc5Jinqjb6qKwn7o7iGQKsyri418M8xSxGzpd4E7ae1H7gSFZyk/HbhENfqr87dj6A9gCgaRZXZPYtLSeytd4wV5BxhRl1ifAo+ZjrFE6sUISD2uEFVonWgFRvvsYN6MfkBzVI3fxyV+npSOtvgitFErenAd0xXgGYEFllGR22iACHVZDcogX9dLWa7V7LuLqGoK27VdCIvA54+AtuQghmMoebrKUIAzo6hgLe4iR57Kz1WYu61eNRbreh6/whXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOSlTuAYTVOeERwVGR3p+KKM6Me67p7yluJUhfPgZAg=;
+ b=S82WCrt1Bq2yTYSZD5i4cq+k7LB5la3EiN2S4rEx5yseh9LWfte1im+uyw6r+h5u5GuEp1XzrdmDhn2og/Au2BpcAQyiwCK2MQ5dA+PTiBpAC21OALduQqADttAbgxvRXlVziCpYUQR2pKcetNh4hoiesqctMh9n37zLFqO8rhk=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2744.eurprd04.prod.outlook.com (2603:10a6:4:94::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Thu, 7 May
+ 2020 06:27:53 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 06:27:53 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V4 0/4] ARM: imx7ulp: support HSRUN mode
+Thread-Topic: [PATCH V4 0/4] ARM: imx7ulp: support HSRUN mode
+Thread-Index: AQHWEyQ/X9paQMeqe02bO3iMGW/zi6icStCw
+Date:   Thu, 7 May 2020 06:27:52 +0000
+Message-ID: <DB6PR0402MB27607B567D3FD7731A41E75688A50@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <1586954449-17463-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1586954449-17463-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 04ae1dc3-490b-439e-619a-08d7f24fc5df
+x-ms-traffictypediagnostic: DB6PR0402MB2744:|DB6PR0402MB2744:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB2744C3886AEFEF565064F66D88A50@DB6PR0402MB2744.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4+Zw9putWZBwlZ55k0+CYjxEmrqfjgDabEz7AB0waPUEMij3ewkjvCjzVCp8sk6BFnNBe/bvCiF4qFLf3K/LD+tA0B63/1SlI8BS5XCP6rL/zcVH51Skns7HBHSAKyPaTSMJUEi2JQEIIY24Lafm2SDY66RMY8FbAxnWxaFgkmITXDdH7FUQi96KQtPpF7q3lO1xjTp4t0og9vsa/auiwq7ulOZKJRuxZ+YJq8BHcSs99yQuXttrtQjLydJQN3ep/CVU+/rvsRG+RnfPgX1asfIQSHFILJWFrgzWlY26NhtkSPAeACqTQOt/45VR31D4FByPrV7uxJdlOGCuHTgpbr35kwJjcUsPMzVM7Zms6umIE4wWO4Ymvj8wMuf4bvYlXfzV7sdeEgi7HZ4DXYMhzHnCGFdM1Ab5KpJQ86kLMOQ3k0PI9gDWTGOEoXycSTC7LWRARwlwJ62dDFgm6g5mrlvK18i/xiYfQXtEjeAeQxCOELUS3SDS2Q3nsHD9NUQ3HPOYzubLfdWPH8FNOL07lXEnBD5tjlQ6jmKmzudrgNTQ1I+PW/MTBFtm1F2Z8fC/SsRC3s79E4uKWqZWmoc/rN+9nuFALXAF5w+a0WCjpSI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(33430700001)(66476007)(64756008)(66946007)(66556008)(76116006)(66446008)(186003)(8676002)(33440700001)(71200400001)(8936002)(966005)(4326008)(26005)(7696005)(5660300002)(6506007)(52536014)(33656002)(55016002)(54906003)(44832011)(9686003)(478600001)(2906002)(83320400001)(86362001)(83280400001)(316002)(83300400001)(83310400001)(83290400001)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: u/s6uEjVIpyGgHYyXKYuFlC+Jh93FlHh2GKDP60CAuFpUVjX/AwHttgah7aqnmGmgCO3FqDrcAr+MZLRrCv+LhPzK3hxjgW45cxfug45F6NxRs4/S5D3/Oceg5D9QvbCFEp4aZl/vkW/yQ8GfOD/bNVMvsGEpRZWKDHV4/5xT7wmqGnFejKmVDePAgwqazArTlzE6FTt6I1qicxiq46ER+iTccuQJHeWPgngj/1aHSd09fNO8XVPQqqJu9k64cWe6BHvWh1bW3WW2UpBt+Vm9VrjcAW2tilEKM4MSXGXV8TMzSRsFmPa+H2avnkZHK/LjZlmEPzEk2AOhOwnLBLEnI8fBnUF6xtn1nRv3cEYU3rKvrpzsMlkPjxns6VuKau5bTfl6nAVqhubjKr8Qvw83fg2LyjqGhDPgQl9baJE4Dgy6RepBi/XODvcewIafWmN5h5af3hSYjEekGQrO7+WXZMaxVhCRZkvRVJpUMqs4Fr3vx6UplC9GxNEZ3wnhvWzZpRM+uBdyQ1pQOyAm82MreMgExmT/JCxIgH5gHwXnoJNPocieoVvUJVVWov1nrwmBgvCs/Mrc59BKLK66blSN3a2EgcW7lvVeEKunxfg/wQnmoYa4JqyibIlnbB8mOh0a3yL151YdbBcxUoYf/xGAMPf8/Pghn7Yf2W295b+slmTg0s5rKoHeHHb1HgznEvumVMBT6avhfdChZM65fYTIrFAyEr1WCfYe9FUQTPWrjMBVWRjDWMaHX6FiB9P4mHgsBEfL78W5+li6CFcPreJch01Vvjn6Ozn93oM1UT5wZQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504124801.2832087-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04ae1dc3-490b-439e-619a-08d7f24fc5df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 06:27:53.1274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qQEfdXQwLvF0qJzhouPXTpeDBuA8c/sTTgtuCD48VXY+VBBIZXcCspbx4/L82WFb0HQY0u8mSl4aZILyoBaB7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 02:47:52PM +0200, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> can you pick up this series?
+> Subject: [PATCH V4 0/4] ARM: imx7ulp: support HSRUN mode
 
-ping?  Especially as 1-4 fix a kernel crash and should probably be
-5.7 material.
+Ping..
+
+Thanks,
+Peng.
+
+>=20
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> V4:
+>   Fix dt_bindings check
+>   The same patchset was wrongly posted as V2,
+>   https://patchwork.kernel.org/cover/11485107/
+>=20
+> This is a splited part from V2:
+> ARM: imx7ulp: add cpufreq using cpufreq-dt
+> https://patchwork.kernel.org/cover/11390589/
+> Nothing changed
+>=20
+> The original V2 patchset is to support i.MX7ULP cpufreq, still waiting th=
+e
+> virtual clk being accepted. so to decouple, this patchset only takes the =
+run
+> mode part.
+>=20
+> Peng Fan (4):
+>   dt-bindings: fsl: add i.MX7ULP PMC binding doc
+>   ARM: dts: imx7ulp: add pmc node
+>   ARM: imx: imx7ulp: support HSRUN mode
+>   ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
+>=20
+>  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32
+> ++++++++++++++++++++++
+>  arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
+>  arch/arm/mach-imx/common.h                         |  1 +
+>  arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14 ++++++++--
+>  arch/arm/mach-imx/pm-imx7ulp.c                     | 25
+> +++++++++++++++++
+>  5 files changed, 79 insertions(+), 3 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+>=20
+> --
+> 2.16.4
+
