@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E01C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A09C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07AB24957
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBE124955
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877344;
-	bh=9FfT5ytYuVZhMpl5DmSdFr17qoYPHAktygqL1MmAtH4=;
+	s=default; t=1588877350;
+	bh=4GCVx+2RHoZeWNOgLAGUpHALfHphcxV+yPDeC6Otr4Q=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wZ4tD7m4GRXwFF31KQxF4nNeFJWtveZLCIDazeekPPI2/t6HkU47RRVQ77/7h5Dt4
-	 55i9Zs6owTu5rzNiP9TtKg11hW0JZkyeGyyHkafsTkOlfZ1uygqQIfeLueFsPuIbOO
-	 6nGfZeNwjPWQRNwvZlNedX9i77r3NnpkFCkJviq0=
+	b=l/1eHYogEygay/NZp97W8JOkqgPET5N35Uc1/NeNSaxVxBAp2HV2fdV5QNcjj+v1U
+	 Vo5OKG0p8H9TCzBRKP46Kt9EqjcTRTduXse4hiHx8dbciTfRBIdvaxlrasBrLG/kQ0
+	 4mDsuTJQ+5FigWtTCliQr/itEmwPks4tSQqDC8OQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgEGStE (ORCPT
+        id S1728669AbgEGStJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgEGStD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:49:03 -0400
+        id S1728018AbgEGStI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:49:08 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43CC124955;
-        Thu,  7 May 2020 18:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE3E24955;
+        Thu,  7 May 2020 18:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877342;
-        bh=9FfT5ytYuVZhMpl5DmSdFr17qoYPHAktygqL1MmAtH4=;
+        s=default; t=1588877348;
+        bh=4GCVx+2RHoZeWNOgLAGUpHALfHphcxV+yPDeC6Otr4Q=;
         h=Date:From:To:Cc:Subject:From;
-        b=g9Axh4DeD69j75cW+0/OJiqkixbSS1yIGuftScR6tclyt8KYgScdUTPi3sssCN6Si
-         OnFwHCWNx6jwnHpgXs585yBwRRlnAS/bMgY8xmtCvrmRQQvfQOzz3oho020afb3CXD
-         +LXcsXZFFLf06bVY/eWUP/6TJXmgweZQddN3jXQc=
-Date:   Thu, 7 May 2020 13:53:29 -0500
+        b=orbhB2V2scM3I+LsVS/m9YyjsPbMlFhuTcvqz0sPGcQCFuu32wMkViHmA0vAd0X4D
+         40VPLekXIR4qc9ZFLc26a+v+aZj9+3uPx1MbvYE2Tx5fZMUTny+wxpbaJBofbfGgpm
+         9P1j1mW/xtWuBZYgYd/Jh4ZcgtC2DT4Nv5dfh/S0=
+Date:   Thu, 7 May 2020 13:53:34 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: mux: Replace zero-length array with flexible-array
-Message-ID: <20200507185329.GA14436@embeddedor>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
+Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] treewide: Replace zero-length array with flexible-array
+Message-ID: <20200507185334.GA14456@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/i2c-mux.h |    2 +-
+ arch/ia64/kernel/unwind_i.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/i2c-mux.h b/include/linux/i2c-mux.h
-index c5a977320f82..98ef73b7c8fd 100644
---- a/include/linux/i2c-mux.h
-+++ b/include/linux/i2c-mux.h
-@@ -29,7 +29,7 @@ struct i2c_mux_core {
+diff --git a/arch/ia64/kernel/unwind_i.h b/arch/ia64/kernel/unwind_i.h
+index 67994a7e5816..1dd57ba44327 100644
+--- a/arch/ia64/kernel/unwind_i.h
++++ b/arch/ia64/kernel/unwind_i.h
+@@ -42,7 +42,7 @@ enum unw_register_index {
  
- 	int num_adapters;
- 	int max_adapters;
--	struct i2c_adapter *adapter[0];
-+	struct i2c_adapter *adapter[];
+ struct unw_info_block {
+ 	u64 header;
+-	u64 desc[0];		/* unwind descriptors */
++	u64 desc[];		/* unwind descriptors */
+ 	/* personality routine and language-specific data follow behind descriptors */
  };
  
- struct i2c_mux_core *i2c_mux_alloc(struct i2c_adapter *parent,
 
