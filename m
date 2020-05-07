@@ -2,151 +2,262 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B870C54E4A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F0C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F218E20936
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Bu1qIIMJ"
+	by mail.kernel.org (Postfix) with ESMTP id AC62B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgEGGUn (ORCPT
+        id S1725964AbgEGGWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:20:43 -0400
-Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:45398
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbgEGGUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:20:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gHjXJKxVFgdqNn50SuUaTxcd82sNXxbG3mx3KQgxNOFuNvY/Xt8gaYmqLJCzO0IqWrg+fcUte+YFdqlXP3P8NgEnG44d5xz/v3psIKyCtwm28q6Wv8CEOLEEh3GxGouY97V1eYdrlAnEhxMEyAEwIpYdjdkhpREGw2EqzPUR8NxfTScwP77Jdo7eOV0miLWc7txLaSUDA+n1F222whtP7GdKnDLar0SqkV0T925hH14VpxJVDyJ/Zj2U5uJkBiBjFkQfIFyhEEDgDmOkazoYDjhhq64jjNW3cngxvF1AXx8VBTKrq+grgZcUkoKTlNhw30uBwG8fiysmU1+7ODqiow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HyO2yXujx74N8FgysyCNeJX8kOSCOAdmsqVABZLKcZA=;
- b=A+Xs/RDCYglNyLtL6PX1DDY9L65qEi03idF+zT60Oy0bcH7uAPb3ZgRIIco9+w/3eZ4FS3nX04jfDnv3nis4fjttK1Fq8jdDhwkB3bqiz1L7stAqI2rSsICKVzPEhJ4QM/iuKCYYDDuEK3UknwYoLKFXvO49CF7k9Ix6wgbkE2afwmETPgMG/INUBLqHBXkTNV/WhMR6tQArOU4b1uMajy89Nqe4PW3oA63URA5z4vjh/e9lZeq7eHBLYJrhPTvAChhmZ24J+eWY0a1bABbj5irtrm9rch3v/FLgcYk3QNQX88J0b5jEsPp/wgww85Mdl0vHVXJvkMjfthrJJ5MRJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HyO2yXujx74N8FgysyCNeJX8kOSCOAdmsqVABZLKcZA=;
- b=Bu1qIIMJ5O+WYX2PmxVYPHBMC7ttfvgSTEpSJ1OR+NZeE4tjoUvf4TFkh7E8mhuZWk0JsMBqbRiVxj2mIv20KUh+GY3SjOjcmbNYAI+/UfeN0sZVGhpKhnHnea2G4c0s1srpxKomdAyWzjV5ob/zVN5/Z6WqnDjhwjmodGjlywM=
-Received: from DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22)
- by DBBPR04MB6170.eurprd04.prod.outlook.com (2603:10a6:10:c9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
- 2020 06:20:37 +0000
-Received: from DBBPR04MB6090.eurprd04.prod.outlook.com
- ([fe80::107d:2130:2140:23ec]) by DBBPR04MB6090.eurprd04.prod.outlook.com
- ([fe80::107d:2130:2140:23ec%5]) with mapi id 15.20.2958.033; Thu, 7 May 2020
- 06:20:37 +0000
-From:   Andy Tang <andy.tang@nxp.com>
-To:     Andy Tang <andy.tang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
-Thread-Topic: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
-Thread-Index: AQHWE9T1oBx+6VlpcEKikHBaKEggH6icR4Wg
-Date:   Thu, 7 May 2020 06:20:37 +0000
-Message-ID: <DBBPR04MB60904584EBDB9E2577C5016CF3A50@DBBPR04MB6090.eurprd04.prod.outlook.com>
-References: <20200416093940.34371-1-andy.tang@nxp.com>
-In-Reply-To: <20200416093940.34371-1-andy.tang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cffdac0d-8e90-4970-bfb9-08d7f24ec260
-x-ms-traffictypediagnostic: DBBPR04MB6170:|DBBPR04MB6170:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DBBPR04MB617088C3DAD3DFF0C075DFC0F3A50@DBBPR04MB6170.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 03965EFC76
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hkLggWFWXO8G4gnJDsb//sYJ1YRpfH1sqHWxH9fHku+dlMHpq47PA3PIWvBKkYdu4tvCuMjZPpy4rDbUlQ+NZnLsestduy3iyQHWnYRgLkmgarF4IQ2TkwLq1UiWHQUflZFeknaZgWAktdUepOIH1jCuKwS7XdRKjVAEZd1c2EwNxfornTBkT1StD+cOtgldYAvn+gVVZ5hCS8X7akaMJMWSZnNLJFoFJx7nkk0+MoZ+oxb7lKorWg4+z4CBdIwZz1KUaONEKAgNlz5Byuc+w1YEBXhd2r7dwXQjQdSPusSEDRJh2h+enGGmjkqYI29m/DF1WqgIzKmyRYpVAVlCml8Wpp9hPdvhsM8guNS1sn4KRLkAFc0+Iw1RFLz03XfJdGqCHdMc4j3umTc+y6TLJj7mabktvUH8af8WvuTTkiiYSS/PigsJY7MeiWFVM0WHXsV/zCow8msIcmaG0yo2X3SS1MOP8MjAvf0ZmxK7GjFukurAXizKwSi58H8sITCCDtyiBm+yU3d5PVtr9vh25Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB6090.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(33430700001)(9686003)(15650500001)(33656002)(52536014)(66556008)(53546011)(6506007)(26005)(64756008)(7696005)(186003)(4326008)(66946007)(66446008)(2906002)(66476007)(8676002)(55016002)(76116006)(5660300002)(44832011)(478600001)(8936002)(33440700001)(54906003)(110136005)(71200400001)(86362001)(316002)(83280400001)(83320400001)(83300400001)(83290400001)(83310400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: S0ALT9fVD4XBAhoOJTN7wzVlWgkTK1veQ0tPSWjHQi8kAYiFGyoFrX8hWhNk0wKYnyvKlsywTAL5mjUcXMqs66HYjOC73odlaJAgHlKYMAoPfl5Pkhf9cL1TTS6HdsyyWEFbGguLhlq+1nJMFl3OJtn1AUunTdSiuRLCuMNlEsiNE4a71LxRsIuYenAgaoShzhXpeG4qBdkAl/qnyT3a1jxbs+a9lYknU7wbI461WYYhSuxvsp4AIja3JFIe91pBW+1Hp1GnE7XtDolXrUayas8Cm8l+3XNJbuhqP7hHil9HUYIxZgQneczSX3SJqfTeUgx19G7DwjOcF+Fqykb7cYOyNG/6JCbOqu8LcfODwGzX7DhWEJ+qe3IiG2I+agkp42b6vYDWo30tOS/xNgEpwxBIs4M9xOs1ZYgAjMjKOx08ljfcS2E74QTKguL6En6GGEKYwBHnZ8c6K1s/ooy4QTgsHgNPOLw/dIYAB+5XtUrXAUFcWC5AnygZ+3m+JbXJTIZKQ9nvt9CtHXYZgclYbXIh6bRycDOoCXF2E5qJUbm/APIsCQFsf0ehg5h8oBrEHHfgbeG+Kfyjz0YfZgC3b9P3IGA/sXHMNOgiOkHYw4/cIx4fMHtSYcC0YUFYsOkh8p/PDu80ZDbvptTz4la2xvIZUeZEIk9kkCvBkHsThRrYiFb+rIDVmOAzcz0sRbWLTpkZiBICG83lGwBopkYPuUQ2wS0nUypGUn9BFdot2v+IoPCDLpQSVgleeWfFXEi6Bnd/i40Uqjsw3uunFM84JYSPgZyzhOfEHY+Y+SDYOYs=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 7 May 2020 02:22:07 -0400
+Received: from atl4mhfb04.myregisteredsite.com ([209.17.115.120]:47608 "EHLO
+        atl4mhfb04.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725763AbgEGGWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:22:06 -0400
+X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 May 2020 02:22:05 EDT
+Received: from jax4mhob21.registeredsite.com (jax4mhob21.registeredsite.com [64.69.218.109])
+        by atl4mhfb04.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 0476G0YS025511
+        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 02:16:00 -0400
+Received: from mailpod.hostingplatform.com ([10.30.71.203])
+        by jax4mhob21.registeredsite.com (8.14.4/8.14.4) with ESMTP id 0476FtAO179886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Thu, 7 May 2020 02:15:56 -0400
+Received: (qmail 7574 invoked by uid 0); 7 May 2020 06:15:55 -0000
+X-TCPREMOTEIP: 83.128.90.119
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
+  by 0 with ESMTPA; 7 May 2020 06:15:55 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] clk: clk-si5341: Add support for the Si5345 series
+Date:   Thu,  7 May 2020 08:15:44 +0200
+Message-Id: <20200507061544.11388-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cffdac0d-8e90-4970-bfb9-08d7f24ec260
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 06:20:37.7946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fIvO0qDCqru1mSJKdGzjUWhZPVpBIHFvaq7xew9W8g+lK1whx/DP61eRNbvYEXHjOZW8cA1stXDmbxjAb+3QCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB6170
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UElORy4NCg0KQlIsDQpBbmR5DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
-bTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IFNlbnQ6IDIwMjDE6jTUwjE2
-yNUgMTc6NDANCj4gVG86IHJ1aS56aGFuZ0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207
-IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmcNCj4gQ2M6IGxpbnV4LXBtQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBUYW5nDQo+IDxhbmR5LnRhbmdA
-bnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHYyXSB0aGVybWFsOiBxb3JpcTogVXBkYXRlIHRo
-ZSBzZXR0aW5ncyBmb3IgVE1VdjINCj4gDQo+IEZvciBUTVUgdjIsIFRNU0FSIHJlZ2lzdGVycyBu
-ZWVkIHRvIGJlIHNldCBwcm9wZXJseSB0byBnZXQgdGhlIGFjY3VyYXRlDQo+IHRlbXBlcmF0dXJl
-IHZhbHVlcy4NCj4gQWxzbyB0ZW1wZXJhdHVyZSByZWFkaW5nIG5lZWRzIHRvIGNvbnZlcnQgdG8g
-ZGVncmVlIENlbHNpdXMgc2luY2UgaXQgaXMgaW4NCj4gZGVncmVlcyBLZWx2aW4uDQo+IA0KPiBT
-aWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gLS0tDQo+
-IHYyOg0KPiAJLSBjaGFuZ2UgdGhlIHRlbXAgaW4gbWlsbGljZWxzaXVzDQo+IA0KPiAgZHJpdmVy
-cy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYyB8IDE1ICsrKysrKysrKysrKysrLQ0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+IGIvZHJpdmVycy90aGVybWFs
-L3FvcmlxX3RoZXJtYWwuYyBpbmRleCAwMjhhNmJiZjc1ZGMuLmY2MzcxMTI3ZjcwNw0KPiAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYw0KPiArKysgYi9kcml2
-ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+IEBAIC0yMyw2ICsyMyw3IEBADQo+ICAjZGVm
-aW5lIFRNVE1JUl9ERUZBVUxUCTB4MDAwMDAwMGYNCj4gICNkZWZpbmUgVElFUl9ESVNBQkxFCTB4
-MA0KPiAgI2RlZmluZSBURVVNUjBfVjIJCTB4NTEwMDljMDANCj4gKyNkZWZpbmUgVE1TQVJBX1Yy
-CQkweGUNCj4gICNkZWZpbmUgVE1VX1ZFUjEJCTB4MQ0KPiAgI2RlZmluZSBUTVVfVkVSMgkJMHgy
-DQo+IA0KPiBAQCAtNTAsNiArNTEsOSBAQA0KPiAgCQkJCQkgICAgKiBTaXRlIFJlZ2lzdGVyDQo+
-ICAJCQkJCSAgICAqLw0KPiAgI2RlZmluZSBUUklUU1JfVglCSVQoMzEpDQo+ICsjZGVmaW5lIFJF
-R1NfVjJfVE1TQVIobikJKDB4MzA0ICsgMTYgKiAobikpCS8qIFRNVSBtb25pdG9yaW5nDQo+ICsJ
-CQkJCQkqIHNpdGUgYWRqdXN0bWVudCByZWdpc3Rlcg0KPiArCQkJCQkJKi8NCj4gICNkZWZpbmUg
-UkVHU19UVFJuQ1IobikJKDB4ZjEwICsgNCAqIChuKSkgLyogVGVtcGVyYXR1cmUgUmFuZ2Ugbg0K
-PiAgCQkJCQkgICAqIENvbnRyb2wgUmVnaXN0ZXINCj4gIAkJCQkJICAgKi8NCj4gQEAgLTEwMCw3
-ICsxMDQsMTEgQEAgc3RhdGljIGludCB0bXVfZ2V0X3RlbXAodm9pZCAqcCwgaW50ICp0ZW1wKQ0K
-PiAgCQkJCSAgICAgMTAgKiBVU0VDX1BFUl9NU0VDKSkNCj4gIAkJcmV0dXJuIC1FTk9EQVRBOw0K
-PiANCj4gLQkqdGVtcCA9ICh2YWwgJiAweGZmKSAqIDEwMDA7DQo+ICsJLyogRm9yIFRNVXYyLCB0
-ZW1wZXJhdHVyZSByZWFkaW5nIGluIGRlZ3JlZXMgS2VsdmluICovDQo+ICsJaWYgKHFkYXRhLT52
-ZXIgPT0gVE1VX1ZFUjEpDQo+ICsJCSp0ZW1wID0gKHZhbCAmIDB4ZmYpICogMTAwMDsNCj4gKwll
-bHNlDQo+ICsJCSp0ZW1wID0gKCh2YWwgJiAweDFmZikgLSAyNzMpICogMTAwMDsNCj4gDQo+ICAJ
-cmV0dXJuIDA7DQo+ICB9DQo+IEBAIC0xOTIsNiArMjAwLDggQEAgc3RhdGljIGludCBxb3JpcV90
-bXVfY2FsaWJyYXRpb24oc3RydWN0IGRldmljZSAqZGV2LA0KPiANCj4gIHN0YXRpYyB2b2lkIHFv
-cmlxX3RtdV9pbml0X2RldmljZShzdHJ1Y3QgcW9yaXFfdG11X2RhdGEgKmRhdGEpICB7DQo+ICsJ
-aW50IGk7DQo+ICsNCj4gIAkvKiBEaXNhYmxlIGludGVycnVwdCwgdXNpbmcgcG9sbGluZyBpbnN0
-ZWFkICovDQo+ICAJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgUkVHU19USUVSLCBUSUVSX0RJ
-U0FCTEUpOw0KPiANCj4gQEAgLTIwMiw2ICsyMTIsOCBAQCBzdGF0aWMgdm9pZCBxb3JpcV90bXVf
-aW5pdF9kZXZpY2Uoc3RydWN0DQo+IHFvcmlxX3RtdV9kYXRhICpkYXRhKQ0KPiAgCX0gZWxzZSB7
-DQo+ICAJCXJlZ21hcF93cml0ZShkYXRhLT5yZWdtYXAsIFJFR1NfVjJfVE1UTUlSLA0KPiBUTVRN
-SVJfREVGQVVMVCk7DQo+ICAJCXJlZ21hcF93cml0ZShkYXRhLT5yZWdtYXAsIFJFR1NfVjJfVEVV
-TVIoMCksIFRFVU1SMF9WMik7DQo+ICsJCWZvciAoaSA9IDA7IGkgPCA3OyBpKyspDQo+ICsJCQly
-ZWdtYXBfd3JpdGUoZGF0YS0+cmVnbWFwLCBSRUdTX1YyX1RNU0FSKGkpLA0KPiBUTVNBUkFfVjIp
-Ow0KPiAgCX0NCj4gDQo+ICAJLyogRGlzYWJsZSBtb25pdG9yaW5nICovDQo+IEBAIC0yMTIsNiAr
-MjI0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfcmFuZ2UgcW9yaXFfeWVzX3Jhbmdl
-c1tdDQo+ID0gew0KPiAgCXJlZ21hcF9yZWdfcmFuZ2UoUkVHU19UTVIsIFJFR1NfVFNDRkdSKSwN
-Cj4gIAlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfVFRSbkNSKDApLCBSRUdTX1RUUm5DUigzKSksDQo+
-ICAJcmVnbWFwX3JlZ19yYW5nZShSRUdTX1YyX1RFVU1SKDApLCBSRUdTX1YyX1RFVU1SKDIpKSwN
-Cj4gKwlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfVjJfVE1TQVIoMCksIFJFR1NfVjJfVE1TQVIoMTUp
-KSwNCj4gIAlyZWdtYXBfcmVnX3JhbmdlKFJFR1NfSVBCUlIoMCksIFJFR1NfSVBCUlIoMSkpLA0K
-PiAgCS8qIFJlYWQgb25seSByZWdpc3RlcnMgYmVsb3cgKi8NCj4gIAlyZWdtYXBfcmVnX3Jhbmdl
-KFJFR1NfVFJJVFNSKDApLCBSRUdTX1RSSVRTUigxNSkpLA0KPiAtLQ0KPiAyLjE3LjENCg0K
+Add support for the Si5342, Si5344 and Si5345 chips. These are equivalent
+to the Si5341 family, but with more clock input options (which are not
+supported yet by this driver).
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ .../bindings/clock/silabs,si5341.txt          | 11 ++-
+ drivers/clk/clk-si5341.c                      | 69 +++++++++++++++++--
+ 2 files changed, 74 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+index a70c333e4cd4..504cce3abe46 100644
+--- a/Documentation/devicetree/bindings/clock/silabs,si5341.txt
++++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+@@ -1,15 +1,21 @@
+-Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
++Binding for Silicon Labs Si5340, Si5341 Si5342, Si5344 and Si5345 programmable
++i2c clock generator.
+ 
+ Reference
+ [1] Si5341 Data Sheet
+     https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
+ [2] Si5341 Reference Manual
+     https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
++[3] Si5345 Reference Manual
++    https://www.silabs.com/documents/public/reference-manuals/Si5345-44-42-D-RM.pdf
+ 
+ The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
+ clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
+ in turn can be directed to any of the 10 (or 4) outputs through a divider.
+ The internal structure of the clock generators can be found in [2].
++The Si5345 is similar to the Si5341 with the addition of fractional input
++dividers and automatic input selection, as described in [3].
++The Si5342 and Si5344 are smaller versions of the Si5345, with 2 or 4 outputs.
+ 
+ The driver can be used in "as is" mode, reading the current settings from the
+ chip at boot, in case you have a (pre-)programmed device. If the PLL is not
+@@ -28,6 +34,9 @@ Required properties:
+ - compatible: shall be one of the following:
+ 	"silabs,si5340" - Si5340 A/B/C/D
+ 	"silabs,si5341" - Si5341 A/B/C/D
++	"silabs,si5342" - Si5342 A/B/C/D
++	"silabs,si5344" - Si5344 A/B/C/D
++	"silabs,si5345" - Si5345 A/B/C/D
+ - reg: i2c device address, usually 0x74
+ - #clock-cells: from common clock binding; shall be set to 2.
+ 	The first value is "0" for outputs, "1" for synthesizers.
+diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
+index 3c228b018116..3d7acab9d280 100644
+--- a/drivers/clk/clk-si5341.c
++++ b/drivers/clk/clk-si5341.c
+@@ -1,8 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Driver for Silicon Labs Si5341/Si5340 Clock generator
++ * Driver for Silicon Labs Si5340, Si5341, Si5342, Si5344 and Si5345
+  * Copyright (C) 2019 Topic Embedded Products
+  * Author: Mike Looijmans <mike.looijmans@topic.nl>
++ *
++ * The Si5341 has 10 outputs and 5 synthesizers.
++ * The Si5340 is a smaller version of the Si5341 with only 4 outputs.
++ * The Si5345 is similar to the Si5341, with the addition of fractional input
++ * dividers and automatic input selection.
++ * The Si5342 and Si5344 are smaller versions of the Si5345.
+  */
+ 
+ #include <linux/clk.h>
+@@ -18,11 +24,17 @@
+ 
+ #define SI5341_NUM_INPUTS 4
+ 
+-#define SI5341_MAX_NUM_OUTPUTS 10
+ #define SI5340_MAX_NUM_OUTPUTS 4
++#define SI5341_MAX_NUM_OUTPUTS 10
++#define SI5342_MAX_NUM_OUTPUTS 2
++#define SI5344_MAX_NUM_OUTPUTS 4
++#define SI5345_MAX_NUM_OUTPUTS 10
+ 
+-#define SI5341_NUM_SYNTH 5
+ #define SI5340_NUM_SYNTH 4
++#define SI5341_NUM_SYNTH 5
++#define SI5342_NUM_SYNTH 2
++#define SI5344_NUM_SYNTH 4
++#define SI5345_NUM_SYNTH 5
+ 
+ /* Range of the synthesizer fractional divider */
+ #define SI5341_SYNTH_N_MIN	10
+@@ -65,6 +77,7 @@ struct clk_si5341 {
+ 	u64 freq_vco; /* 13500–14256 MHz */
+ 	u8 num_outputs;
+ 	u8 num_synth;
++	u16 chip_id;
+ };
+ #define to_clk_si5341(_hw)	container_of(_hw, struct clk_si5341, hw)
+ 
+@@ -142,6 +155,7 @@ static const char * const si5341_input_clock_names[] = {
+ };
+ 
+ /* Output configuration registers 0..9 are not quite logically organized */
++/* Also for si5345 */
+ static const u16 si5341_reg_output_offset[] = {
+ 	0x0108,
+ 	0x010D,
+@@ -155,6 +169,7 @@ static const u16 si5341_reg_output_offset[] = {
+ 	0x013A,
+ };
+ 
++/* for si5340, si5342 and si5344 */
+ static const u16 si5340_reg_output_offset[] = {
+ 	0x0112,
+ 	0x0117,
+@@ -974,12 +989,32 @@ static int si5341_probe_chip_id(struct clk_si5341 *data)
+ 		data->reg_output_offset = si5341_reg_output_offset;
+ 		data->reg_rdiv_offset = si5341_reg_rdiv_offset;
+ 		break;
++	case 0x5342:
++		data->num_outputs = SI5342_MAX_NUM_OUTPUTS;
++		data->num_synth = SI5342_NUM_SYNTH;
++		data->reg_output_offset = si5340_reg_output_offset;
++		data->reg_rdiv_offset = si5340_reg_rdiv_offset;
++		break;
++	case 0x5344:
++		data->num_outputs = SI5344_MAX_NUM_OUTPUTS;
++		data->num_synth = SI5344_NUM_SYNTH;
++		data->reg_output_offset = si5340_reg_output_offset;
++		data->reg_rdiv_offset = si5340_reg_rdiv_offset;
++		break;
++	case 0x5345:
++		data->num_outputs = SI5345_MAX_NUM_OUTPUTS;
++		data->num_synth = SI5345_NUM_SYNTH;
++		data->reg_output_offset = si5341_reg_output_offset;
++		data->reg_rdiv_offset = si5341_reg_rdiv_offset;
++		break;
+ 	default:
+ 		dev_err(&data->i2c_client->dev, "Model '%x' not supported\n",
+ 			model);
+ 		return -EINVAL;
+ 	}
+ 
++	data->chip_id = model;
++
+ 	return 0;
+ }
+ 
+@@ -1054,6 +1089,11 @@ static const struct si5341_reg_default si5341_preamble[] = {
+ 	{ 0x0B4E, 0x1A },
+ };
+ 
++static const struct si5341_reg_default si5345_preamble[] = {
++	{ 0x0B25, 0x00 },
++	{ 0x0540, 0x01 },
++};
++
+ static int si5341_send_preamble(struct clk_si5341 *data)
+ {
+ 	int res;
+@@ -1068,8 +1108,14 @@ static int si5341_send_preamble(struct clk_si5341 *data)
+ 	res = regmap_write(data->regmap, 0xB24, revision < 2 ? 0xD8 : 0xC0);
+ 	if (res < 0)
+ 		return res;
+-	res = si5341_write_multiple(data,
+-		si5341_preamble, ARRAY_SIZE(si5341_preamble));
++
++	/* The si5342..si5345 require a different preamble */
++	if (data->chip_id > 0x5341)
++		res = si5341_write_multiple(data,
++			si5345_preamble, ARRAY_SIZE(si5345_preamble));
++	else
++		res = si5341_write_multiple(data,
++			si5341_preamble, ARRAY_SIZE(si5341_preamble));
+ 	if (res < 0)
+ 		return res;
+ 
+@@ -1095,6 +1141,13 @@ static int si5341_finalize_defaults(struct clk_si5341 *data)
+ 	if (res < 0)
+ 		return res;
+ 
++	/* The si5342..si5345 have an additional post-amble */
++	if (data->chip_id > 0x5341) {
++		res = regmap_write(data->regmap, 0x540, 0x0);
++		if (res < 0)
++			return res;
++	}
++
+ 	/* Datasheet does not explain these nameless registers */
+ 	res = regmap_write(data->regmap, 0xB24, revision < 2 ? 0xDB : 0xC3);
+ 	if (res < 0)
+@@ -1499,6 +1552,9 @@ static int si5341_probe(struct i2c_client *client,
+ static const struct i2c_device_id si5341_id[] = {
+ 	{ "si5340", 0 },
+ 	{ "si5341", 1 },
++	{ "si5342", 2 },
++	{ "si5344", 4 },
++	{ "si5345", 5 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, si5341_id);
+@@ -1506,6 +1562,9 @@ MODULE_DEVICE_TABLE(i2c, si5341_id);
+ static const struct of_device_id clk_si5341_of_match[] = {
+ 	{ .compatible = "silabs,si5340" },
+ 	{ .compatible = "silabs,si5341" },
++	{ .compatible = "silabs,si5342" },
++	{ .compatible = "silabs,si5344" },
++	{ .compatible = "silabs,si5345" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, clk_si5341_of_match);
+-- 
+2.17.1
+
