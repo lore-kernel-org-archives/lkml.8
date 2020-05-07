@@ -2,164 +2,120 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB0EC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C26AC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F6E20643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65742208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LENSQd08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgEGUp0 (ORCPT
+        id S1726641AbgEGUpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:45:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37794 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726093AbgEGUpZ (ORCPT
+        Thu, 7 May 2020 16:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726093AbgEGUpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:45:25 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047KXHcV055062;
-        Thu, 7 May 2020 16:45:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g5q56q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 16:45:19 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047KXRih055831;
-        Thu, 7 May 2020 16:45:19 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g5q566-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 16:45:18 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047KeALF017294;
-        Thu, 7 May 2020 20:45:17 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5v2q4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 20:45:17 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047KjEfJ5832932
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 20:45:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D7D8C11C04A;
-        Thu,  7 May 2020 20:45:14 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD8E711C052;
-        Thu,  7 May 2020 20:45:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.135.201])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 20:45:13 +0000 (GMT)
-Message-ID: <1588884313.5685.110.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Thu, 07 May 2020 16:45:13 -0400
-In-Reply-To: <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_13:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070159
+        Thu, 7 May 2020 16:45:39 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA544C05BD09;
+        Thu,  7 May 2020 13:45:39 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 188so8034126wmc.2;
+        Thu, 07 May 2020 13:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EgSenpJ9WdkZ8OKwBXP2DgQKftDc5f3xLrRoRS99rrY=;
+        b=LENSQd08QX5NaqMQv2LT6RIu0jqhyK1RA9jx74+JCuyjPGutBwzMG1dggwylsZeGry
+         zcHma3C9ZM9PMeoGg8/AEkpAaDsrbTW6jSpiysq1eAo7nnR72upnpLcCWRgbNMWb5i2+
+         FLcoKaTjjpl2+IVGe+jWgpwcac4SNjKsDq79VncKZlK5ZNsPMff5Qu5U62EsBlmn6hAP
+         +PPd57+B2mw4lwDsHNlkjO/y6IttDvZOqt5mvLdgcaiZY0XL3i4kKV83/PvOGtop+nfz
+         rN3Q+1gp1pJq4fDV/qddFhuTepVjeKqMlcabI5hUhhsHr5sih40lklDBoxgLn3gXNaq+
+         zHqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EgSenpJ9WdkZ8OKwBXP2DgQKftDc5f3xLrRoRS99rrY=;
+        b=DpejmjBt+E5HIGgMCaXpkHEAYvY9qQ7t06V9dTxF4RBK7TxJ/FP4hVF3MIfvcXCckT
+         SfNctV+IB4iMgX7kuCRmfIY8BHs7MlxCUqQ9biaLReNW2h+FeVM/0QNlBFlxw56rZ4pB
+         IADdo7K4gPyN5hnv5DhjATp7cT7AwfL14IFX4GklZSbmvdrBrBjnd+5EWc69RKbHxEPX
+         G86ABpD81ZdtjP7gu+FIb6hFDvPmpzq7bJcR4HaHX/nLJbtFldrcX/BgIWqMXFcFryVn
+         sJi5TAd/ZzJJvA3lKPFkDNEW5smoQRQqTNU2eT/GyHwYrzOn5Tj1e5j8j9/wdysPG5w4
+         udzQ==
+X-Gm-Message-State: AGi0PuZutK0pavTz7exCQbJAeh8B8JAhPGBeeqUfWS9j/1FngIRtEm3R
+        FxKpclizP9BAgkmgJXUNglpQ9kh3/Rk=
+X-Google-Smtp-Source: APiQypJDPtO7u5KS/TvTk4SarG2mbA6/1SMRO98Kuhx1nMuJH/xjhRVJBu9DL7rHxZEaEaKeYQlR3Q==
+X-Received: by 2002:a05:600c:2941:: with SMTP id n1mr12743483wmd.25.1588884337413;
+        Thu, 07 May 2020 13:45:37 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:5df1:24f5:998f:ae84? ([2a01:110f:b59:fd00:5df1:24f5:998f:ae84])
+        by smtp.gmail.com with ESMTPSA id 19sm9451068wmo.3.2020.05.07.13.45.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 13:45:36 -0700 (PDT)
+Subject: Re: [PATCH v1] Add support for MediaTek regulator vibrator driver
+To:     Pavel Machek <pavel@ucw.cz>, Xing Zhang <Xing.Zhang@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20200429081759.26964-1-Xing.Zhang@mediatek.com>
+ <20200507174519.GD1216@bug>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <49089bf3-d64b-2a50-269c-623a6ea9c14c@gmail.com>
+Date:   Thu, 7 May 2020 22:45:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200507174519.GD1216@bug>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 16:47 +0000, Roberto Sassu wrote:
-> > > > On Wed, 2020-05-06 at 15:44 -0400, Mimi Zohar wrote:
-> > > > > Since copying the EVM HMAC or original signature isn't applicable, I
-> > > > > would prefer exploring an EVM portable and immutable signature only
-> > > > > solution.
-> > > >
-> > > > To prevent copying the EVM xattr, we added "security.evm" to
-> > > > /etc/xattr.conf.  To support copying just the EVM portable and
-> > > > immutable signatures will require a different solution.
-> > >
-> > > This patch set removes the need for ignoring security.evm. It can be
-> > always
-> > > copied, even if it is an HMAC. EVM will update it only when verification in
-> > > the pre hook is successful. Combined with the ability of protecting a
-> > subset
-> > > of files without introducing an EVM policy, these advantages seem to
-> > > outweigh the effort necessary to make the switch.
-> > 
-> > As the EVM file HMAC and original signature contain inode specific
-> > information (eg. i_version, i_generation), these xattrs cannot ever be
-> > copied.  The proposed change is in order to support just the new EVM
-> > signatures.
-> 
-> Right, I didn't consider it.
-> 
-> Would it make sense instead to introduce an alias like security.evm_immutable
-> so that this xattr can be copied?
+Hi Pavel,
 
-Being portable, not the attribute of being immutable, allows copying
-the EVM xattr.  Your original problem - the order in which the xattrs
-are copied - might still be an issue.  We need to look at "cp" closer
-to understand what it is doing.  For example, are the xattrs written
-while the target file is tagged as a new file?
-
-There have been similar problems in the past.  For example, tar calls
-mknodat to create the file, but doesn't write the file data.  The
-solution there was to tag the file as a new file.
-
-We need to understand the problem better, before deciding how to
-resolve it.
-
+On 5/7/20 7:45 PM, Pavel Machek wrote:
+> Hi!
 > 
-> > At least IMA file hashes should always be used in conjunction with
-> > EVM.  EVM xattrs should always require a security.ima xattr to bind
+>> This patchset add regulator vibrator driver for MTK Soc. The driver
+>> controls vibrator through regulator's enable and disable.
 > 
-> I proposed to enforce this restriction some time ago:
+> We'd prefer not to have vibrators in led subsystem.
 > 
-> https://patchwork.kernel.org/patch/10979351/
+>>
+>> Xing Zhang (3):
+>>    dt-bindings: add regulator vibrator documentation
+>>    arm64: mediatek: Add regulator vibrator support
+>>    Vibrator: Add regulator vibrator driver
+>>
+>>   .../bindings/leds/regulator-vibrator.txt      |  39 ++
+>>   arch/arm64/configs/defconfig                  |   1 +
+>>   drivers/leds/Kconfig                          |  10 +
+>>   drivers/leds/Makefile                         |   1 +
+>>   drivers/leds/regulator-vibrator.c             | 450 ++++++++++++++++++
 > 
-> Is it ok to enforce it globally?
+> OTOH, connecting LED to regulator might make some sense. I can take the driver with
+> vibrator functionality stripped, provided it is named the usual way...
 
-Doing this would then be dependent on upstreaming the initramfs xattr
-patches first, wouldn't it?  :)
+We already had an attempt of solving this in more generic way [0],
+but you opposed then [1]. Just for the record.
 
-> 
-> > the file metadata to the file data.  The IMA and EVM policies really
-> > need to be in sync.
-> 
-> It would be nice, but at the moment EVM considers also files that are
-> not selected by the IMA policy. An example of why this is a problem is
-> the audit service that fails to start when it tries to adjust the permissions
-> of the log files. Those files don't have security.evm because they are
-> not appraised by IMA, but EVM denies the operation.
+[0] 
+https://lore.kernel.org/linux-leds/20170913175400.42744-1-dtwlin@google.com/
+[1] https://lore.kernel.org/linux-leds/20170914205804.GA24339@amd/
 
-No, this is a timing issue as to whether or not the builtin policy or
-a custom policy has been loaded.  A custom policy could exclude the
-log files based on LSM labels, but they are included in the builtin
-policy.
-
-Mimi
+-- 
+Best regards,
+Jacek Anaszewski
