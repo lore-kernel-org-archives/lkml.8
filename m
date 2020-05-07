@@ -2,149 +2,81 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0644DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19DB02078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC742080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588833949;
+	bh=gm75SLJLcH+JMNI3GZMkQmuSFwAf5JbNY0WtEMPJqUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P/Pqn3ul5C4QRXVbXbXYP2DuT4jcLXzf7cK+pB6ps7hZUEgZ0MC+f7cQXtWotR2I+
+	 OYH6thLEhMcNWQHmoCsGRkKI97csTq0q313coTCpbDQNAA/K0DLDFXYUrh9JMyQq+x
+	 EB+Jfpmw6OXLbt0kEcQBtmHn3hWxLLuHJSANJIc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgEGGpY (ORCPT
+        id S1726689AbgEGGps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:45:24 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:27832 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725914AbgEGGpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:45:23 -0400
-X-IronPort-AV: E=Sophos;i="5.73,362,1583164800"; 
-   d="scan'208";a="91512021"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 07 May 2020 14:45:18 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 071414BCC8A6;
-        Thu,  7 May 2020 14:45:18 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 7 May 2020 14:45:17 +0800
-Message-ID: <5EB3AE7C.5@cn.fujitsu.com>
-Date:   Thu, 7 May 2020 14:45:16 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Thu, 7 May 2020 02:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgEGGps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:45:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 951262078C;
+        Thu,  7 May 2020 06:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588833948;
+        bh=gm75SLJLcH+JMNI3GZMkQmuSFwAf5JbNY0WtEMPJqUY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wGxD1c5COzsllDgnff5fUZ8KoK3yIZEqdaBc/68jMU7MQ/3AKuqnNp/9aiy6avTnz
+         ncAnmKDGHXjVkeUjq7l6TiVZnQ/pcwenIdSH2vV50XzXppzWQ5SgO4eZPpUtJCNdI+
+         wrZt4neRbzHokNBrxQy+oB0poCslOEPNme2B527A=
+Date:   Thu, 7 May 2020 08:45:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Peter Chen <peter.chen@kernel.org>
+Cc:     linux-usb@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/1] usb: chipidea: msm: Ensure proper controller reset
+ using role switch API
+Message-ID: <20200507064545.GB787064@kroah.com>
+References: <20200507004918.25975-1-peter.chen@kernel.org>
+ <20200507004918.25975-2-peter.chen@kernel.org>
 MIME-Version: 1.0
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     Shuah Khan <shuah@kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-References: <158834025077.28357.15141584656220094821.stgit@devnote2> <158834028054.28357.398159034694277189.stgit@devnote2>
-In-Reply-To: <158834028054.28357.398159034694277189.stgit@devnote2>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 071414BCC8A6.AFDAF
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507004918.25975-2-peter.chen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/1 21:38, Masami Hiramatsu wrote:
-> Since the built-in echo has different behavior in POSIX shell
-> (dash) and bash, we forcibly use /bin/echo -E (not interpret
-> backslash escapes) by default.
->
-> This also fixes some test cases which expects built-in
-> echo command.
->
-> Reported-by: Liu Yiding<yidingx.liu@intel.com>
-> Signed-off-by: Masami Hiramatsu<mhiramat@kernel.org>
-> ---
->   tools/testing/selftests/ftrace/test.d/functions    |    3 +++
->   .../test.d/trigger/trigger-trace-marker-hist.tc    |    2 +-
->   .../trigger-trace-marker-synthetic-kernel.tc       |    4 ++++
->   .../trigger/trigger-trace-marker-synthetic.tc      |    4 ++--
->   4 files changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 5d4550591ff9..ea59b6ea2c3e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -1,3 +1,6 @@
-> +# Since the built-in echo has different behavior in POSIX shell (dash) and
-> +# bash, we forcibly use /bin/echo -E (not interpret backslash escapes).
-> +alias echo="/bin/echo -E"
-Hi Masami, Steven
+On Thu, May 07, 2020 at 08:49:18AM +0800, Peter Chen wrote:
+> From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> 
+> Currently we check to make sure there is no error state on the extcon
+> handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
+> the USB role-switch API we still need to write to this register absent an
+> extcon handle.
+> 
+> This patch makes the appropriate update to ensure the write happens if
+> role-switching is true.
+> 
+> Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
+> 
+> Cc: Peter Chen <Peter.Chen@nxp.com>
 
-It seems that only kprobe_syntax_errors.tc is impacted by the issue 
-currently.  Is it necessary for all tests to use /bin/echo and could we 
-just make kprobe_syntax_errors.tc use /bin/echo?
+No blank line needed, and you can drop your own Cc: in the patch :)
 
-Best Regards,
-Xiao Yang
+I'll edit it by hand...
 
->
->   clear_trace() { # reset trace output
->       echo>  trace
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> index ab6bedb25736..b3f70f53ee69 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> @@ -30,7 +30,7 @@ fi
->
->   echo "Test histogram trace_marker tigger"
->
-> -echo 'hist:keys=common_pid'>  events/ftrace/print/trigger
-> +echo 'hist:keys=ip'>  events/ftrace/print/trigger
->   for i in `seq 1 10` ; do echo "hello">  trace_marker; done
->   grep 'hitcount: *10$' events/ftrace/print/hist>  /dev/null || \
->       fail "hist trigger did not trigger correct times on trace_marker"
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> index 18b4d1c2807e..c1625d945f4d 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> @@ -44,6 +44,10 @@ echo 'latency u64 lat'>  synthetic_events
->   echo 'hist:keys=pid:ts0=common_timestamp.usecs'>  events/sched/sched_waking/trigger
->   echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).latency($lat)'>  events/ftrace/print/trigger
->   echo 'hist:keys=common_pid,lat:sort=lat'>  events/synthetic/latency/trigger
-> +
-> +# We have to use the built-in echo here because waking up pid must be same
-> +# as echoing pid.
-> +alias echo=echo
->   sleep 1
->   echo "hello">  trace_marker
->
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> index dd262d6d0db6..23e52c8d71de 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> @@ -36,8 +36,8 @@ fi
->   echo "Test histogram trace_marker to trace_marker latency histogram trigger"
->
->   echo 'latency u64 lat'>  synthetic_events
-> -echo 'hist:keys=common_pid:ts0=common_timestamp.usecs if buf == "start"'>  events/ftrace/print/trigger
-> -echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"'>>  events/ftrace/print/trigger
-> +echo 'hist:keys=ip:ts0=common_timestamp.usecs if buf == "start"'>  events/ftrace/print/trigger
-> +echo 'hist:keys=ip:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"'>>  events/ftrace/print/trigger
->   echo 'hist:keys=common_pid,lat:sort=lat'>  events/synthetic/latency/trigger
->   echo -n "start">  trace_marker
->   echo -n "end">  trace_marker
->
->
->
-> .
->
-
-
-
+greg k-h
