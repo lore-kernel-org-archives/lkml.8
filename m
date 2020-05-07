@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82B1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C2DC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83D3420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCAC216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877204;
-	bh=/TMN0lGZvihKadpmMuNf26UHOuRy1VAvFM+rEIbmEWw=;
+	s=default; t=1588877214;
+	bh=8y1X0s6ChezuHL2SQivauYuiwtYVtJLamswoo4d7aOU=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kiIMMaJQNhqNeyjW5e11QFlmn6abq71vuCLMzThtI3MXvEU4klqpKT6xL9epx5XBC
-	 A7KRO3nl3W5zMYapPn5E24eGHryjUzbvOSo5FNwlR3ojUhbhBbJfSWRP61SSlcjtXH
-	 lA8Dnd+Z3pxdlxsO9S/JkExxgKzcCsp9z9g79BCo=
+	b=QaUpXHz3z53vD4mbgMtiojSksN+teLIHo0JC3Wcdvc02FgdHlxS9hxjkT76Jq4KzY
+	 aNeAjDcuEfhPDNtfMGExGW2eOEYF5VqyqGUEtMaB2DzXlvAxw1bSLUnvXe2pnWPo2S
+	 rUX8mdcGXpCTVq5WWifzip+FzimqNCJIfJr+qfTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgEGSqo (ORCPT
+        id S1728455AbgEGSqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47264 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEGSqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:46:43 -0400
+        id S1726467AbgEGSqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:46:53 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926952145D;
-        Thu,  7 May 2020 18:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F1A20870;
+        Thu,  7 May 2020 18:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877203;
-        bh=/TMN0lGZvihKadpmMuNf26UHOuRy1VAvFM+rEIbmEWw=;
+        s=default; t=1588877212;
+        bh=8y1X0s6ChezuHL2SQivauYuiwtYVtJLamswoo4d7aOU=;
         h=Date:From:To:Cc:Subject:From;
-        b=mlWwbPq2jZykelvTIJ9s6B5u8cek58y3jhaZyweFDN9pJri2yF42B5jVsOe9pzupO
-         qNPWAhrdQoLXs0GTAbLIPHgEOko5vNGqxGuQlaBCK17SjCRy40htWKzNCReWlDvJjE
-         sLM6eAoaY0sRuPdr2CjPDv2a+aoULpdQXKRY/f/w=
-Date:   Thu, 7 May 2020 13:51:09 -0500
+        b=PZnNClT+lg6ffcbI+UN0rLjs9ggoy1CMTteo1UmYrZyGaYYmxl/XJB9rJVLhNMTKe
+         S+DhD7/Ma0tctRvxEfiVTYM4FlWArq4S2RFUWMLXtF///otoRsihdHvAMWESUhV255
+         e3isMjfS4dZfDv+s5aWAGWMoPgTW+aVuKPqSGXLU=
+Date:   Thu, 7 May 2020 13:51:18 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
         Marc Kleine-Budde <mkl@pengutronix.de>
 Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] can: peak_canfd: Replace zero-length array with
- flexible-array
-Message-ID: <20200507185109.GA14002@embeddedor>
+Subject: [PATCH] can: Replace zero-length array with flexible-array
+Message-ID: <20200507185118.GA14022@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,29 +92,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/can/peak_canfd/peak_pciefd_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/can/skb.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/peak_canfd/peak_pciefd_main.c b/drivers/net/can/peak_canfd/peak_pciefd_main.c
-index d08a3d559114..6ad83a881039 100644
---- a/drivers/net/can/peak_canfd/peak_pciefd_main.c
-+++ b/drivers/net/can/peak_canfd/peak_pciefd_main.c
-@@ -146,7 +146,7 @@ struct pciefd_rx_dma {
- 	__le32 irq_status;
- 	__le32 sys_time_low;
- 	__le32 sys_time_high;
--	struct pucan_rx_msg msg[0];
-+	struct pucan_rx_msg msg[];
- } __packed __aligned(4);
- 
- /* Tx Link record */
-@@ -194,7 +194,7 @@ struct pciefd_board {
- 	struct pci_dev *pci_dev;
- 	int can_count;
- 	spinlock_t cmd_lock;		/* 64-bits cmds must be atomic */
--	struct pciefd_can *can[0];	/* array of network devices */
-+	struct pciefd_can *can[];	/* array of network devices */
+diff --git a/include/linux/can/skb.h b/include/linux/can/skb.h
+index a954def26c0d..900b9f4e0605 100644
+--- a/include/linux/can/skb.h
++++ b/include/linux/can/skb.h
+@@ -34,7 +34,7 @@
+ struct can_skb_priv {
+ 	int ifindex;
+ 	int skbcnt;
+-	struct can_frame cf[0];
++	struct can_frame cf[];
  };
  
- /* supported device ids. */
+ static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
 
