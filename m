@@ -2,318 +2,167 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D45BC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC1BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5A52075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD5220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cYTApWxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgEGGEn (ORCPT
+        id S1725966AbgEGGFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:04:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37212 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgEGGEn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:04:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t11so3410865lfe.4;
-        Wed, 06 May 2020 23:04:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=yg86lNUJtaO2OALTMAoBcXWuVDjDz1cz2LE5Df3qyAI=;
-        b=T5wypKIWyxJK+re9kzkn2zus/NJPwXniO6WLvP5cI8YETj+wfsgMCLO+wpbr0MsDi3
-         k4FT4TGtl2yaZO2AX06wh9H9xBatIJAVsCZMJMhAqMtat92Ln49hmTTkLAGH4x+NLh0d
-         6W00HdOV2jehSsSsPU/jYrhiqFPnf9mmWEhyMuMx7CmH3jHBPaDfJ7ETtpgoQQgpLcAf
-         WyVnJwprSuJo2IlyVk/k2UjowPCShsuf/CQ6t+tqk+rCyiNNOjEHUftoHTnbhi4xuyG3
-         6irX63dzbQCGxyqNJ9slfxm7tEQvGJDfR+tJ61hlH6sGw73UpCehW2Y2zRsydE3hes9x
-         lRKA==
-X-Gm-Message-State: AGi0PuYXyr32nIbgPAZnXx+dtp5GJ+HD7P8hcqcdGnhcNYj6Uv5wUTlE
-        NeDIDv57ZwT0BpLrjbnMRBI=
-X-Google-Smtp-Source: APiQypL57Ch1NnIB3iK+pLJbD16xSUoAhGXqLM8R2H1tz1Asxwtw9wW6dykcUmYQMXoRKz5DdzcZWw==
-X-Received: by 2002:a19:7418:: with SMTP id v24mr7643016lfe.15.1588831479014;
-        Wed, 06 May 2020 23:04:39 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id a10sm2636617ljp.16.2020.05.06.23.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 23:04:38 -0700 (PDT)
-Date:   Thu, 7 May 2020 09:03:06 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 00/11] Support ROHM BD99954 charger IC
-Message-ID: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 7 May 2020 02:05:40 -0400
+Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:52182
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725763AbgEGGFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:05:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NMB8QKb1uzZju1F6PguZmpgiFWtOJXfckvjF0m3Rm6bcrvX7tuRnIT6k9Sh0V/sSehn/EHhXzvgaPc48k0wJuAoD0LI1w4wLHHimEthLFnUBC/83zMFRnrnTHSgxG3uYOGhIPSFDBY6k/HukNxkDQ1I5ygoYoWIViC7IkPkZTKQKJclsPaKg0bmtHq8pViw6hlHUYmlkYNjYBOP87ncgQDaPkZEphKxPLv+650sVS3wL+YmCAKdz/honEDUtOxm+XwW5rlPhPTWGLYLfwHonVvr8qYJU5Eih7EzJca9njhT0RDenV8Sn/p2kITCQRrIz2O2cmLYhaeXepXH+hLZrPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ar6Czx/TezE8j5XbVIC+AYzW2sKAS85fp3d2AJzNPA=;
+ b=hGsnKpUQiymTgTqXbi7ECWjPRWURWWFz1biPD44cLrB2l39mkDpeOL0y1tsGzGfNq8PkXXHjIoLnJchPPHMcsWAeRm16u6LbTtwTShJRCOlaJILr903Okamjvh1niB9YvDk/wyZaz4xZyVwIxnmMZUEH8acIv+S3ccTLFyGzfZbZQzZohSif0EZ+IiIyifPEtKXNwcRN2myIPcyuYcKY1PL2gt8tp/8Lo7x6EwTTDjuy+B4OjatuxwORFgfFRuTaMZPs5hys3J0pMRcQ/c1aKeMeIEEs+FvXsnTmlTrWfQ/AJ3BVs7WHIi+Xe5+nKKYOCmWHtI6dtm0KvwzFCRF8gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ar6Czx/TezE8j5XbVIC+AYzW2sKAS85fp3d2AJzNPA=;
+ b=cYTApWxQ0H6hBwEH+maN8lCMBnZKXtsFbyHgAzUZ0ra9oBA4GzVDMvAV1ZsdpQW/ZdgoryLpCWLwZUssj0YIb3LD1zDFdoSDodEw7szeb+fPQ0OqB0BGW2WS3TnA5keuqxMhRERBVvxaVhNCj+I6tqV8bxhhiS7FjlCtgtWlEdE=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2710.eurprd04.prod.outlook.com (2603:10a6:4:95::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 7 May
+ 2020 06:05:35 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 06:05:34 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, aisheng.dong@nxp.com
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 00/10] clk: imx: fixes and improve for i.MX8M
+Date:   Thu,  7 May 2020 13:56:09 +0800
+Message-Id: <1588830979-11586-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR01CA0147.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::27) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0147.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 06:05:30 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 02a6064c-16a9-43e1-3c33-08d7f24ca7f5
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2710:|DB6PR0402MB2710:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB271014BBCD40325ADBBB8C2D88A50@DB6PR0402MB2710.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
+X-Forefront-PRVS: 03965EFC76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 69C5UPZIlP2kpsBMD0rlpsa/vyxXA3k2zWsjnj4/aEmUEP7X9+O2EE4M9OVJYL2cCj2FmVE7HB2EZOajmi3/93eHIn1oRJLm2hIXGUxlWTy+UmcHAHSbJtNdCXHzv+JYUy4S1RSBBV+YzdGnR5VP2nROM338hU68ydkN5EdPywLMZdv0hQuaFfv5eIT17v56mKBKPdarUnspqQyVRKdUDBOtmwbnjJIPcnQA/mlx1lhhakRTt4ELILJ+CoSD6iuwnxhUjBX26HsYhShZ5E+Z5plvXfhtbBdrHZTqFSriAIjFXHWQTOjFtzYENhwptTvyGX7lwfQhGWOpiBUoUZ+NmbNkay31AwW26TSfRAK3tT//+2241v0ZiK4X7qePpsQIORxsaQ4Qb6/34apKNuA4JAF17OHUh/zxBLt7zHmJi56SdRjGHTEXbj+EZ/yLDe82X3E1Rkxl/Qtwb7rEx1EwNTkKWadigy3s4deLIKfsmH7SERhIRKqXzN3W/euPWAXUbMqTfJNnR1kISaa41gkx84UmYM9fMh2YTHtbOqKdn8L52zJVWc8k4+nj11E1iJp5mvGj5d0N3QgMPAWTZ7P3plxhIw7tP4F79XOAT+bhlUM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(33430700001)(316002)(33440700001)(478600001)(2616005)(16526019)(966005)(6666004)(4326008)(66476007)(66946007)(86362001)(2906002)(66556008)(956004)(6486002)(52116002)(36756003)(8676002)(26005)(6506007)(8936002)(5660300002)(186003)(6512007)(9686003)(83320400001)(83280400001)(83300400001)(83310400001)(83290400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: sDmWfNqIVpa5quykLxRir7anePHe3TZvoWVcKcH2b4kv/K2SV+O/DK5alhs1GATwF7RswsjCaBP/NJvIW+z7JpufZBj9ZDD9WWZMF286uGDkeTojOyQ8ZErShoHlo687dsiV9CwYBPWAEjvpxjMsKsa53RzaBgizJlmmjRbNzBwmXNpFFjsAplp3kD7425kdpSK20HRDNvhdbPLytij8uhJDuE1WWzxQbJd3n72HQrTDUUc6aThaEOBd3z1DdvZhtLKmiYOLBImNu/UYAOm48ZhBdykdds58lmuxPI5TUcWDwCHCD7nJ1LH9yoNmo7bBpdGsnXE9x4DYacUIwPi5kfn8xMdVLfS/uv6Oaijymk0LrpXxfJUeBQESiQGJp+c0jSf6o+HT7J08a2lNe9N0gqCaaP32gr/S4Gyo0N2AR2/N/SnWFr+FPnF85866Ntg6tHGfLIxioizBor6/pha8yl1uYNUtopPk+W7CtBf7OghfF8P8R6ezv77cm3Y1loufWHYDJhS9wH/SqK84qfjZivvmSZoJPZCWTdZGlG1yawcIFfvdrwPetdCl95FSX8hEtZqH6k6mE8YCFRItA9ojUPehLlEGhUNQsVoPql0EOZfjskcrzi+PF7XVS94ZNXh41feloYpn5JXFH4AfribLmHzsPJm4M6FbsAwY4dFA7zXHoR97RDScU7PFYtMpx71pSxlYS3yULTY8UcFpehppg/swmBGZ8GkZ5bGRnLy6jAzZMJcjPz5xBMxAi8LHbac3LwyNEkWS69tW60eofXMTH/rvexqfKD17mnbLeJSNERs=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02a6064c-16a9-43e1-3c33-08d7f24ca7f5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 06:05:34.8346
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dJQJWG4lhIZkf/fv4uc6NySBm+ggWBKVrn1vjM3F5sp4SSRdCYYDFs83sJtP5Oj73p2T3ZuylJAytZuimzQRKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2710
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry folks for excessive amount of emails. I am resending this once
-more (I already resent v10 and v11 has no changes but was just rebased)
-because I am afraid the previous version did not reach Mark. If this is
-true - I am the one to blame. I see I sent original v10 to all other
-recipients and lists - except the LKML. So perhaps it evaded Mark's
-email filters. And the resend was also sent with the same message-id as
-original v10 so even though it did include the LKML it might still have
-gone unnoticed. I send this version to limited audience as it has no
-changes compared to original v10 - and it already has pretty much all
-the acks.
+From: Peng Fan <peng.fan@nxp.com>
 
+Patches rebased on for-next
 
-Support ROHM BD99954 Battery Management IC
+V3:
+ Add R-b tag for patch 1-6,10
+ Use clk_mux_ops in patch 7, explain more details in commit log
+ Boot test on i.MX8MM/N/MQ/P
 
-ROHM BD99954 is a Battery Management IC for 1-4 cell Lithium-Ion
-secondary battery. BD99954 is intended to be used in space-constraint
-equipment such as Low profile Notebook PC, Tablets and other
-applications.
+V2:
+ Patch 7, drop wait after write, add one line comment for write twice
 
-Series extracts a "linear ranges" helper out of the regulator
-framework. Linear ranges helper is intended to help converting
-real-world values to register values when conversion is linear. I
-suspect this is useful also for power subsystem and possibly for clk.
+V1:
+Patch 1,2 is to fix the lockdep warning reported by Leonard
+Patch 3 is to fix pll mux bit
+Patch 4 is align with other i.MX8M using gate
+Patch 5 is to simplify i.MX8MP clk root using composite
 
-Current implementation does not support inversely proportional ranges
-but adding support for that could be helpful.
+Patch 3~5 is actually https://patchwork.kernel.org/patch/11402761/
+with a minimal change to patch 5 here.
 
-This version of series introduces new battry DT binding entries and
-adds the parsing in power_supply_get_battery_info().
+Patch 6 is to use composite core clk for A53 clk root
+Patch 7,8,9 is actually to fix CORE/BUS clk slice issue.
+ This issue is triggerred after we update U-Boot to include
+ the A53 clk fixes to sources from PLL, not from A53 root clk,
+ because of the signoff timing is 1GHz. U-Boot set the A53 root
+ mux to 2, sys pll2 500MHz. Kernel will set the A53 root mux to
+ 4, sys pll1 800MHz, then gate off sys pll2 500MHz. Then kernel
+ will gate off A53 root because clk_ignore_unsed, A53 directly sources
+ PLL, so it is ok to gate off A53 root. However when gate off A53
+ root clk, system hang, because the original mux sys pll2 500MHz
+ gated off with CLK_OPS_PARENT_ENABLE flag.
 
-Changelog v11:
- - Rebased on top of v5.7-rc4
+ It is lucky that we not met issue for other core/bus clk slice
+ except A53 ROOT core slice. But it is always triggerred after
+ U-Boot and Linux both switch to use ARM PLL for A53 core, but
+ have different mux settings for A53 root clk slice.
 
-Changelog v10:
- - Add patch 11 which removes the "default n" from power/supply KConfig
-   (Please just drop from series if you disagree)
- - Fix the regulator_linear_ranges added to qcom_smd-regulator.c at
-   v5.7-rc1
- - Minor styling to BD70528 power/supply driver as suggested by Andy
+ So the three patches is to address this issue.
 
-Changelog v9:
- General:
-   - rebased on top of v5.7-rc1
-   - re-ordered patches as suggested by Sebastian Reichel
-   - added few acks
- BD99954 driver:
-   - Moved bd99954-charger.h to drivers/power/supply
-   - fixed a typo from print
-   - used devm_add_action_or_reset and removed remove callback
+Patch 10 is make memrepair as critical.
 
-Changelog v8:
- Linear ranges
-   - small improvements suggested by Andy Shevchenko, no functional changes
+Peng Fan (10):
+  arm64: dts: imx8m: assign clocks for A53
+  clk: imx8m: drop clk_hw_set_parent for A53
+  clk: imx: imx8mp: fix pll mux bit
+  clk: imx8mp: Define gates for pll1/2 fixed dividers
+  clk: imx8mp: use imx8m_clk_hw_composite_core to simplify code
+  clk: imx8m: migrate A53 clk root to use composite core
+  clk: imx: add mux ops for i.MX8M composite clk
+  clk: imx: add imx8m_clk_hw_composite_bus
+  clk: imx: use imx8m_clk_hw_composite_bus for i.MX8M bus clk slice
+  clk: imx8mp: mark memrepair clock as critical
 
-Changelog v7:
- General:
-   - rebased on top of v5.6
- bd99954 driver:
-   - fixed bunch of styling issues spotted by Andy Shevchenko
-   - dropped ACPI table as ACPI properties are not supported at this
-     version of driver.
-   - added few acks
-
-Changelog v6:
- generic:
-   - rebased on top of 5.6-rc7.
- linear ranges:
-   - moved to lib as requested by Greg KH
-   - EXPORT_SYMBOL => EXPORT_SYMBOL_GPL
-   - licence GPL-2.0, not later
-   - added KUnit test for linear ranges
-
-Changelog v5:
- generic:
-   - rebased on top of 5.6-rc6.
- DT-bindings:
-   - Dropped -charger extension from compatible and removed wildcard x.
- regulators:
-   - squashed the regulator changes in one patch.
- power-supply KConfig:
-   - fixed indentiation
-   - dropped unnecessary 'default N' from BD99954.
-
-Changelog v4:
- generic:
-   - rebase and drop RFC.
- DT-bindings:
-   - add I2C node address-cells and size-cells to fix yaml check errors
-   - uncomment multipleOf:
- bd70528:
-   - add patch which renames driver internal linear_range struct to
-     avoid collision when regulator/driver.h (which gets included from
-     rohm generic header) introduces the linear_range struct.
- regulators:
-   - rebase to v5.6-rc2 and convert also the two newly introduced
-     drivers to use linear_range struct instead of
-     regulator_linear_range.
- linear_ranges:
-   - Fix kerneldoc.
-
-Changelog RFC-v3:
- DT-bindings:
-   - fix the BD99954 binding (the *-microvolt Vs. *-microvolts issue is
-     still there. Not sure which one is correct)
-   - renabe tricklecharge-* binding to trickle-charge-* as suggested by
-     Rob.
- - drop the linear-ranges helper which was written for BD70528 and
-   extract the linear-range code from regulator framework instead.
- - refactor regulator framework to utilize extracted linear-ranges
-   code.
- - change the struct regulator_linear_range to linear_range from
-   regulator drivers.
- - refactor BD70528 to use regulator framework originated
-   linear-ranges code.
- - change BD99954 to use linear-ranges code from regulator framework
-
-Changelog RFC-v2:
- DT-bindings:
-   - Used the battery parameters described in battery.txt
-   - Added few new parameters to battery.txt
-   - Added ASCII art charging profile chart for BD99954 to explain
-     states and limits.
- Linear ranges:
-   - Fixed division by zero error from linear-ranges code if step 0 is
-     used.
- Power-supply core:
-   - Added parsing of new battery parameters.
- BD99954 driver:
-   - converted to use battery parameters from battery node
-   - Added step 0 ranges for reg values which do not change voltage
-   - added dt-node to psy-config
-
-Patch 1:
-	Linear ranges helpers
-Patch 2:
-	Test for linear ranges helpers
-Patch 3:
-	Rename driver internal struct linear_range from bd70528-power
-Patch 4:
-	Use linear-ranges helpers in regulator framework and
-	convert regulator drivers to use new linear_range struct.
-Patch 5:
-	Use linear-ranges helpers in bd70528 driver
-Patch 6:
-	DT binding docs for the new battery parameters
-Patch 7:
-	Parsing of new battery parameters
-Patch 8:
-	BD99954 charger DT binding docs
-Patch 9:
-	ROHM BD99954 charger IC driver
-Patch 10:
-	Fix Kconfig help text indentiation for other entries as well.
-Patch 11:
-	Fix Kconfig by removing the "default n".
-
----
-
-
-Matti Vaittinen (11):
-  lib: add linear ranges helpers
-  lib/test_linear_ranges: add a test for the 'linear_ranges'
-  power: supply: bd70528: rename linear_range to avoid collision
-  regulator: use linear_ranges helper
-  power: supply: bd70528: use linear ranges
-  dt-bindings: battery: add new battery parameters
-  power: supply: add battery parameters
-  dt_bindings: ROHM BD99954 Charger
-  power: supply: Support ROHM bd99954 charger
-  power: supply: Fix Kconfig help text indentiation
-  power: supply: KConfig cleanup default n
-
- .../bindings/power/supply/battery.txt         |    6 +
- .../bindings/power/supply/rohm,bd99954.yaml   |  155 +++
- drivers/power/supply/Kconfig                  |   36 +-
- drivers/power/supply/Makefile                 |    1 +
- drivers/power/supply/bd70528-charger.c        |  140 +-
- drivers/power/supply/bd99954-charger.c        | 1142 +++++++++++++++++
- drivers/power/supply/bd99954-charger.h        | 1075 ++++++++++++++++
- drivers/power/supply/power_supply_core.c      |    8 +
- drivers/regulator/88pg86x.c                   |    4 +-
- drivers/regulator/88pm800-regulator.c         |    4 +-
- drivers/regulator/Kconfig                     |    1 +
- drivers/regulator/act8865-regulator.c         |    4 +-
- drivers/regulator/act8945a-regulator.c        |    2 +-
- drivers/regulator/arizona-ldo1.c              |    2 +-
- drivers/regulator/arizona-micsupp.c           |    4 +-
- drivers/regulator/as3711-regulator.c          |    6 +-
- drivers/regulator/as3722-regulator.c          |    4 +-
- drivers/regulator/axp20x-regulator.c          |   16 +-
- drivers/regulator/bcm590xx-regulator.c        |    8 +-
- drivers/regulator/bd70528-regulator.c         |    8 +-
- drivers/regulator/bd71828-regulator.c         |   10 +-
- drivers/regulator/bd718x7-regulator.c         |   26 +-
- drivers/regulator/da903x.c                    |    2 +-
- drivers/regulator/helpers.c                   |  130 +-
- drivers/regulator/hi6421-regulator.c          |    4 +-
- drivers/regulator/lochnagar-regulator.c       |    4 +-
- drivers/regulator/lp873x-regulator.c          |    4 +-
- drivers/regulator/lp87565-regulator.c         |    2 +-
- drivers/regulator/lp8788-buck.c               |    2 +-
- drivers/regulator/max77650-regulator.c        |    2 +-
- drivers/regulator/mcp16502.c                  |    4 +-
- drivers/regulator/mp8859.c                    |    2 +-
- drivers/regulator/mt6323-regulator.c          |    6 +-
- drivers/regulator/mt6358-regulator.c          |    8 +-
- drivers/regulator/mt6380-regulator.c          |    6 +-
- drivers/regulator/mt6397-regulator.c          |    6 +-
- drivers/regulator/palmas-regulator.c          |    4 +-
- drivers/regulator/qcom-rpmh-regulator.c       |    2 +-
- drivers/regulator/qcom_rpm-regulator.c        |   14 +-
- drivers/regulator/qcom_smd-regulator.c        |   78 +-
- drivers/regulator/rk808-regulator.c           |   10 +-
- drivers/regulator/s2mps11.c                   |   14 +-
- drivers/regulator/sky81452-regulator.c        |    2 +-
- drivers/regulator/stpmic1_regulator.c         |   18 +-
- drivers/regulator/tps65086-regulator.c        |   10 +-
- drivers/regulator/tps65217-regulator.c        |    4 +-
- drivers/regulator/tps65218-regulator.c        |    6 +-
- drivers/regulator/tps65912-regulator.c        |    4 +-
- drivers/regulator/twl-regulator.c             |    4 +-
- drivers/regulator/twl6030-regulator.c         |    2 +-
- drivers/regulator/wm831x-dcdc.c               |    2 +-
- drivers/regulator/wm831x-ldo.c                |    4 +-
- drivers/regulator/wm8350-regulator.c          |    2 +-
- drivers/regulator/wm8400-regulator.c          |    2 +-
- include/linux/linear_range.h                  |   48 +
- include/linux/power_supply.h                  |    4 +
- include/linux/regulator/driver.h              |   27 +-
- lib/Kconfig                                   |    3 +
- lib/Kconfig.debug                             |   11 +
- lib/Makefile                                  |    2 +
- lib/linear_ranges.c                           |  241 ++++
- lib/test_linear_ranges.c                      |  228 ++++
- 62 files changed, 3228 insertions(+), 362 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
- create mode 100644 drivers/power/supply/bd99954-charger.c
- create mode 100644 drivers/power/supply/bd99954-charger.h
- create mode 100644 include/linux/linear_range.h
- create mode 100644 lib/linear_ranges.c
- create mode 100644 lib/test_linear_ranges.c
-
-
-base-commit: 0e698dfa282211e414076f9dc7e83c1c288314fd
--- 
-2.21.0
-
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi |  10 +-
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi |  10 +-
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi |  11 ++-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi |   9 +-
+ drivers/clk/imx/clk-composite-8m.c        |  56 ++++++++++-
+ drivers/clk/imx/clk-imx8mm.c              |  27 +++---
+ drivers/clk/imx/clk-imx8mn.c              |  25 +++--
+ drivers/clk/imx/clk-imx8mp.c              | 150 +++++++++++++++---------------
+ drivers/clk/imx/clk-imx8mq.c              |  29 +++---
+ drivers/clk/imx/clk.h                     |   7 ++
+ include/dt-bindings/clock/imx8mp-clock.h  |  28 +++++-
+ 11 files changed, 229 insertions(+), 133 deletions(-)
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+2.16.4
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
