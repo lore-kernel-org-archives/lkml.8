@@ -2,138 +2,144 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3FEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9577CC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C052083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749062083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588861863;
+	bh=nJmfhY9D/0skg46TMs3g17rdzK0TZirhJxFZH/IWd0s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qunR6n5DM5xDNYQS1nLEshVk7wyBEEl+cX8SjWMoTwRMSLOnqk6dH9xYsKMHw5yia
+	 Y5wbMgm1mkiu0KUv2nJAN8ebb4a5OiVanUds4hy+0w+GicfB5exHRM9xRjocnjxidc
+	 OztnHtz/x2RbDH4V2cWU/KzwWoOerjc2FIZMzWsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgEGObA (ORCPT
+        id S1728828AbgEGOa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:31:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:60882 "EHLO foss.arm.com"
+        Thu, 7 May 2020 10:30:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbgEGOac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3908D6E;
-        Thu,  7 May 2020 07:30:30 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5393F68F;
-        Thu,  7 May 2020 07:30:29 -0700 (PDT)
-Subject: Re: [PATCH 2/2] drm/panfrost: add devfreq regulator support
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200411200632.4045-1-peron.clem@gmail.com>
- <20200411200632.4045-2-peron.clem@gmail.com>
- <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com>
- <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
- <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
- <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com>
- <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
- <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
- <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com>
- <CAJiuCcfrMhu5Mi7YZTttw2k+hGui0GFAmOhPh_9fv4Te27M0+A@mail.gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <13285d84-5a5e-c695-2a8b-7ca50c976b90@arm.com>
-Date:   Thu, 7 May 2020 15:30:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728845AbgEGOa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF482073A;
+        Thu,  7 May 2020 14:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588861829;
+        bh=nJmfhY9D/0skg46TMs3g17rdzK0TZirhJxFZH/IWd0s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G148YOHdMoAxOApMwbg4GlRwHZKC6eaQa5M6WvLx/pbZK3Hidd1ZXLhWdhX8pWdLo
+         BTAnqf9V8E2Ug0HWxpqE9GLqrAsxDlD4z+xcv3Vory96OBhPobC+ubCtMYemuY9w8T
+         uJXTnQ8xphjaYYPyN+WJEJPFQvYhKK96KLJEb22c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 9/9] ALSA: opti9xx: shut up gcc-10 range warning
+Date:   Thu,  7 May 2020 10:30:18 -0400
+Message-Id: <20200507143018.27195-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
+References: <20200507143018.27195-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAJiuCcfrMhu5Mi7YZTttw2k+hGui0GFAmOhPh_9fv4Te27M0+A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/2020 23:07, Clément Péron wrote:
-> Hi Steven,
-> 
-> On Tue, 14 Apr 2020 at 15:10, Steven Price <steven.price@arm.com> wrote:
->>
->> Hi Clément,
->>
->> On 13/04/2020 18:28, Clément Péron wrote:
->>> Hi Steven,
->>>
-> 
-> <snip>
-> 
->> Getting a backtrace from the two occurrences, I see one added from:
->>
->>     (debugfs_create_dir) from [<c04633f8>] (create_regulator+0xe0/0x220)
->>     (create_regulator) from [<c04681d8>] (_regulator_get+0x168/0x204)
->>     (_regulator_get) from [<c04682e0>] (regulator_bulk_get+0x64/0xf4)
->>     (regulator_bulk_get) from [<c04696f0>]
->> (devm_regulator_bulk_get+0x40/0x74)
->>     (devm_regulator_bulk_get) from [<bf00af44>]
->> (panfrost_device_init+0x1b4/0x48c [panfrost])
->>     (panfrost_device_init [panfrost]) from [<bf00a4d4>]
->> (panfrost_probe+0x94/0x184 [panfrost])
->>     (panfrost_probe [panfrost]) from [<c04ee694>]
->> (platform_drv_probe+0x48/0x94)
->>
->> And the other:
->>
->>     (debugfs_create_dir) from [<c04633f8>] (create_regulator+0xe0/0x220)
->>     (create_regulator) from [<c04681d8>] (_regulator_get+0x168/0x204)
->>     (_regulator_get) from [<c05c1280>] (dev_pm_opp_set_regulators+0x6c/0x184)
->>     (dev_pm_opp_set_regulators) from [<bf00b4ac>]
->> (panfrost_devfreq_init+0x38/0x1ac [panfrost])
->>     (panfrost_devfreq_init [panfrost]) from [<bf00a508>]
->> (panfrost_probe+0xc8/0x184 [panfrost])
->>     (panfrost_probe [panfrost]) from [<c04ee694>]
->> (platform_drv_probe+0x48/0x94)
->>
->> Both are created at /regulator/vdd_gpu
-> 
-> I'm preparing a new version with some clean from lima devfreq.
-> My working branch :
-> https://github.com/clementperon/linux/commits/panfrost_devfreq
+From: Arnd Bergmann <arnd@arndb.de>
 
-I had a look at that branch and gave it a quick spin on my Firefly 
-RK3288 and didn't notice any issues.
+[ Upstream commit 5ce00760a84848d008554c693ceb6286f4d9c509 ]
 
-> Two strange things I observe:
->   - After 30sec the regulator is released by OPP ???
-> [   33.757627] vdd-gpu: disabling
-> Introduce the regulator support in this commit:
-> https://github.com/clementperon/linux/commit/be310c37b82010e293b7f129ccdcb711a2abb2ce
+gcc-10 points out a few instances of suspicious integer arithmetic
+leading to value truncation:
 
-I can't see anything wrong with this commit, but equally in my DTS I 
-have a "regulator-always-on" for vdd_gpu. My initial thought was that 
-this could be runtime PM of the GPU - but I can't see how 
-panfrost_device_suspend() would end up turning off the regulator. So 
-unless there's some way that the regulator itself suspends (but it 
-should know it's in use) I've no clue why this would be happening.
+sound/isa/opti9xx/opti92x-ad1848.c: In function 'snd_opti9xx_configure':
+sound/isa/opti9xx/opti92x-ad1848.c:322:43: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_opti9xx_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
+  322 |   (snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/opti92x-ad1848.c:351:3: note: in expansion of macro 'snd_opti9xx_write_mask'
+  351 |   snd_opti9xx_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/miro.c: In function 'snd_miro_configure':
+sound/isa/opti9xx/miro.c:873:40: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_miro_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
+  873 |   (snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+sound/isa/opti9xx/miro.c:1010:3: note: in expansion of macro 'snd_miro_write_mask'
+ 1010 |   snd_miro_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
+      |   ^~~~~~~~~~~~~~~~~~~
 
-Since you've got a reproduction - can you get a backtrace where the 
-regulator is getting disabled?
+These are all harmless here as only the low 8 bit are passed down
+anyway. Change the macros to inline functions to make the code
+more readable and also avoid the warning.
 
->   - The Cooling map is not probe correctly :
-> [    2.545756] panfrost 1800000.gpu: [drm:panfrost_devfreq_init
-> [panfrost]] Failed to register cooling device
-> Introduce in this commit :
-> https://github.com/clementperon/linux/commit/0252c38fd55ad78366ac4b1714e285c88db34557
-> 
-> Do you have an hint about what I'm missing ?
+Strictly speaking those functions also need locking to make the
+read/write pair atomic, but it seems unlikely that anyone would
+still run into that issue.
 
-Sorry, my knowledge of the cooling framework is very limited. What 
-you've got looks plausible, but I'm afraid I can't really help beyond 
-that! As before - can you try adding some printk()s in e.g. 
-of_devfreq_cooling_register_power() and find out where it is bailing out?
+Fixes: 1841f613fd2e ("[ALSA] Add snd-miro driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200429190216.85919-1-arnd@arndb.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/isa/opti9xx/miro.c           | 9 ++++++---
+ sound/isa/opti9xx/opti92x-ad1848.c | 9 ++++++---
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-Steve
+diff --git a/sound/isa/opti9xx/miro.c b/sound/isa/opti9xx/miro.c
+index 3a9067db1a842..7fbac24607bcf 100644
+--- a/sound/isa/opti9xx/miro.c
++++ b/sound/isa/opti9xx/miro.c
+@@ -875,10 +875,13 @@ static void snd_miro_write(struct snd_miro *chip, unsigned char reg,
+ 	spin_unlock_irqrestore(&chip->lock, flags);
+ }
+ 
++static inline void snd_miro_write_mask(struct snd_miro *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_miro_read(chip, reg);
+ 
+-#define snd_miro_write_mask(chip, reg, value, mask)	\
+-	snd_miro_write(chip, reg,			\
+-		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
+ 
+ /*
+  *  Proc Interface
+diff --git a/sound/isa/opti9xx/opti92x-ad1848.c b/sound/isa/opti9xx/opti92x-ad1848.c
+index 0a52660037866..6777ae84b59e8 100644
+--- a/sound/isa/opti9xx/opti92x-ad1848.c
++++ b/sound/isa/opti9xx/opti92x-ad1848.c
+@@ -327,10 +327,13 @@ static void snd_opti9xx_write(struct snd_opti9xx *chip, unsigned char reg,
+ }
+ 
+ 
+-#define snd_opti9xx_write_mask(chip, reg, value, mask)	\
+-	snd_opti9xx_write(chip, reg,			\
+-		(snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++static inline void snd_opti9xx_write_mask(struct snd_opti9xx *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_opti9xx_read(chip, reg);
+ 
++	snd_opti9xx_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
+ 
+ static int snd_opti9xx_configure(struct snd_opti9xx *chip,
+ 					   long port,
+-- 
+2.20.1
+
