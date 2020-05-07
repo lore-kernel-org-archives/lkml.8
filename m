@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FA8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FDCC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF89205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7122205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2fQu2u1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iV8HkdBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgEGODY (ORCPT
+        id S1727849AbgEGODd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:03:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20145 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgEGODX (ORCPT
+        Thu, 7 May 2020 10:03:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22804 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727104AbgEGODc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:03:23 -0400
+        Thu, 7 May 2020 10:03:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860202;
+        s=mimecast20190719; t=1588860208;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=m6dfIUEjs/h5dLD4Q4Bj2mnMK58/7/bwe2OMjRm9IJU=;
-        b=O2fQu2u1eLjSMaobilrw+dfjBTRH8GS6PHPJqLc48f/L3sjPogRT6XGn3iMu0S7isMfHKD
-        AKtOomwGdY8tF0ruZFENf1EZl9HJWhehBhxe+jITbQtiIaAc+ZvaWHvVXcsdkR0zRz/8DS
-        5pP/iKW1eg+n1umEaH4b/9bNCnG6zOg=
+        bh=8pO3JHY1hAu4Su9QfIAK9KliBSj8I09PIxlH0fBNT4A=;
+        b=iV8HkdBMscb/qZ2B3ahRUj+w5mECpqDPbUF6WZktjW1WdWL/FloK4jy+N2cAejjxkV//r/
+        3MmO7cbxAF43/Kk75gW/Yun2qRQmN4tYa2Kewr+3DxAL5riSttmhrg+P4OuvJi2Z49X1B2
+        dgCIybsxRIACByKam3Ydgl0C0YrLuaY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-UdQ5DMgUMnWGruHd4aOkjg-1; Thu, 07 May 2020 10:03:15 -0400
-X-MC-Unique: UdQ5DMgUMnWGruHd4aOkjg-1
+ us-mta-55-J5nlHLpzNAuk756jZsup_A-1; Thu, 07 May 2020 10:03:22 -0400
+X-MC-Unique: J5nlHLpzNAuk756jZsup_A-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF15E1009616;
-        Thu,  7 May 2020 14:03:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 295A6835B43;
+        Thu,  7 May 2020 14:03:20 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56F6660BEC;
-        Thu,  7 May 2020 14:03:05 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 232186109E;
+        Thu,  7 May 2020 14:03:13 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
@@ -53,15 +53,18 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S . Tsirkin" <mst@redhat.com>,
         David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-Subject: [PATCH v4 08/15] mm/memory_hotplug: Introduce offline_and_remove_memory()
-Date:   Thu,  7 May 2020 16:01:32 +0200
-Message-Id: <20200507140139.17083-9-david@redhat.com>
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v4 09/15] virtio-mem: Offline and remove completely unplugged memory blocks
+Date:   Thu,  7 May 2020 16:01:33 +0200
+Message-Id: <20200507140139.17083-10-david@redhat.com>
 In-Reply-To: <20200507140139.17083-1-david@redhat.com>
 References: <20200507140139.17083-1-david@redhat.com>
 MIME-Version: 1.0
@@ -72,96 +75,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio-mem wants to offline and remove a memory block once it unplugged
-all subblocks (e.g., using alloc_contig_range()). Let's provide
-an interface to do that from a driver. virtio-mem already supports to
-offline partially unplugged memory blocks. Offlining a fully unplugged
-memory block will not require to migrate any pages. All unplugged
-subblocks are PageOffline() and have a reference count of 0 - so
-offlining code will simply skip them.
+Let's offline+remove memory blocks once all subblocks are unplugged. We
+can use the new Linux MM interface for that. As no memory is in use
+anymore, this shouldn't take a long time and shouldn't fail. There might
+be corner cases where the offlining could still fail (especially, if
+another notifier NACKs the offlining request).
 
-All we need is an interface to offline and remove the memory from kernel
-module context, where we don't have access to the memory block devices
-(esp. find_memory_block() and device_offline()) and the device hotplug
-lock.
-
-To keep things simple, allow to only work on a single memory block.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Tested-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Qian Cai <cai@lca.pw>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/memory_hotplug.h |  1 +
- mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ drivers/virtio/virtio_mem.c | 47 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 93d9ada74ddd..cb7499843f5c 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -319,6 +319,7 @@ extern void try_offline_node(int nid);
- extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
- extern int remove_memory(int nid, u64 start, u64 size);
- extern void __remove_memory(int nid, u64 start, u64 size);
-+extern int offline_and_remove_memory(int nid, u64 start, u64 size);
- 
- #else
- static inline bool is_mem_section_removable(unsigned long pfn,
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 008e4a7ed8bc..4acb99aa9bf4 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1821,4 +1821,41 @@ int remove_memory(int nid, u64 start, u64 size)
- 	return rc;
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index b0b41c73ce89..a2edb87e5ed8 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -446,6 +446,28 @@ static int virtio_mem_mb_remove(struct virtio_mem *vm, unsigned long mb_id)
+ 	return remove_memory(nid, addr, memory_block_size_bytes());
  }
- EXPORT_SYMBOL_GPL(remove_memory);
-+
+ 
 +/*
-+ * Try to offline and remove a memory block. Might take a long time to
-+ * finish in case memory is still in use. Primarily useful for memory devices
-+ * that logically unplugged all memory (so it's no longer in use) and want to
-+ * offline + remove the memory block.
++ * Try to offline and remove a memory block from Linux.
++ *
++ * Must not be called with the vm->hotplug_mutex held (possible deadlock with
++ * onlining code).
++ *
++ * Will not modify the state of the memory block.
 + */
-+int offline_and_remove_memory(int nid, u64 start, u64 size)
++static int virtio_mem_mb_offline_and_remove(struct virtio_mem *vm,
++					    unsigned long mb_id)
 +{
-+	struct memory_block *mem;
-+	int rc = -EINVAL;
++	const uint64_t addr = virtio_mem_mb_id_to_phys(mb_id);
++	int nid = vm->nid;
 +
-+	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
-+	    size != memory_block_size_bytes())
-+		return rc;
++	if (nid == NUMA_NO_NODE)
++		nid = memory_add_physaddr_to_nid(addr);
 +
-+	lock_device_hotplug();
-+	mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
-+	if (mem)
-+		rc = device_offline(&mem->dev);
-+	/* Ignore if the device is already offline. */
-+	if (rc > 0)
-+		rc = 0;
-+
-+	/*
-+	 * In case we succeeded to offline the memory block, remove it.
-+	 * This cannot fail as it cannot get onlined in the meantime.
-+	 */
-+	if (!rc) {
-+		rc = try_remove_memory(nid, start, size);
-+		WARN_ON_ONCE(rc);
-+	}
-+	unlock_device_hotplug();
-+
-+	return rc;
++	dev_dbg(&vm->vdev->dev, "offlining and removing memory block: %lu\n",
++		mb_id);
++	return offline_and_remove_memory(nid, addr, memory_block_size_bytes());
 +}
-+EXPORT_SYMBOL_GPL(offline_and_remove_memory);
- #endif /* CONFIG_MEMORY_HOTREMOVE */
++
+ /*
+  * Trigger the workqueue so the device can perform its magic.
+  */
+@@ -537,7 +559,13 @@ static void virtio_mem_notify_offline(struct virtio_mem *vm,
+ 		break;
+ 	}
+ 
+-	/* trigger the workqueue, maybe we can now unplug memory. */
++	/*
++	 * Trigger the workqueue, maybe we can now unplug memory. Also,
++	 * when we offline and remove a memory block, this will re-trigger
++	 * us immediately - which is often nice because the removal of
++	 * the memory block (e.g., memmap) might have freed up memory
++	 * on other memory blocks we manage.
++	 */
+ 	virtio_mem_retry(vm);
+ }
+ 
+@@ -1284,7 +1312,8 @@ static int virtio_mem_mb_unplug_any_sb_offline(struct virtio_mem *vm,
+  * Unplug the desired number of plugged subblocks of an online memory block.
+  * Will skip subblock that are busy.
+  *
+- * Will modify the state of the memory block.
++ * Will modify the state of the memory block. Might temporarily drop the
++ * hotplug_mutex.
+  *
+  * Note: Can fail after some subblocks were successfully unplugged. Can
+  *       return 0 even if subblocks were busy and could not get unplugged.
+@@ -1340,9 +1369,19 @@ static int virtio_mem_mb_unplug_any_sb_online(struct virtio_mem *vm,
+ 	}
+ 
+ 	/*
+-	 * TODO: Once all subblocks of a memory block were unplugged, we want
+-	 * to offline the memory block and remove it.
++	 * Once all subblocks of a memory block were unplugged, offline and
++	 * remove it. This will usually not fail, as no memory is in use
++	 * anymore - however some other notifiers might NACK the request.
+ 	 */
++	if (virtio_mem_mb_test_sb_unplugged(vm, mb_id, 0, vm->nb_sb_per_mb)) {
++		mutex_unlock(&vm->hotplug_mutex);
++		rc = virtio_mem_mb_offline_and_remove(vm, mb_id);
++		mutex_lock(&vm->hotplug_mutex);
++		if (!rc)
++			virtio_mem_mb_set_state(vm, mb_id,
++						VIRTIO_MEM_MB_STATE_UNUSED);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.25.3
 
