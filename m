@@ -2,110 +2,103 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D76FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEECC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763BB21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRS3YV17"
+	by mail.kernel.org (Postfix) with ESMTP id 8C3D12495A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588850130;
+	bh=m5j26vopqsarHASCUs41VneRgz6W4ivAN8SWIs8XUAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f09nXYjaSJi8PHLTTHnNXESrZyo1ewKDWlcXfm3igxNan/KGr3LJewgYX/JDUL6AS
+	 8bUXE8WzA29r9+dm8ROCnnprSm0zTb5fu5BEJINZkVkkFQjNrhwVtLjL612N98FsG7
+	 thytS8zJBpOa6Bv7GhyaMuAN0iScNoHcwMgGba2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgEGLPU (ORCPT
+        id S1726942AbgEGLPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgEGLPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:15:19 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7103AC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 04:15:18 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d184so2863212pfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 04:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LPVqop7eYhlKO1AOSFfnjZfL6zhGOb1jJx61piurnL8=;
-        b=tRS3YV17LbENu+VpnAc6CsLvuTRwOuDXc5iJ+rNe7z1ZO6/Sggfny1+zIo8dgIBpZl
-         kg+jH7StyEUzti01YgpBJvS50xXVsSZk3qBOmgrdfdK/6mJRSYp9xCTa9h8RTdgk+zNR
-         MOGHWMYooC5XgYl2CVraN6sJlD4oyzkNOJ9qfqDgN0PBukAP0vj1efJfVDp/2rElpjnz
-         aPHvuRIN45z334PdXh+xEyNJR9cLcN0kv8bjI7cdDr+f9JnUN6DCrIgnToM8gTA9sXTt
-         duS1BlGzDgKWYzGKSaOp1DKNfzojLz4Dnecot1rd0U6jMcjqBnEEmoQLRuAtBF4kGyVD
-         YFuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LPVqop7eYhlKO1AOSFfnjZfL6zhGOb1jJx61piurnL8=;
-        b=W6gOGDuo88EtcADVnrPBOfLM7GBQgSDzK6Y2t4HIpbc9p73l+F7VmxLDFXI7N7gy+b
-         QdYUncZ/EZR9p99LM624DqjbqGc+68Jnk17RFGR1QoqM5aYrM4vsbgb0tNiv9UIlhYZP
-         hUOeSf++afTgIAZpWWGhictsax3yQZ/JIvQgi8Y/dmS42SZqPuAF0q3qlTgBxWBmp9hw
-         eolnaMC3o0V3PWGjnh7DfJYTH9Jf+j79YB0L3tZwDT0O5aeE552nZquO6Xgtt1HQSa54
-         Rfg/yJRw64SQbfIkPMjDJKBWLQ+owCarSXzDlgxmk5BDwiRLzvVwysW5uMhbZm/NU8vZ
-         SAmw==
-X-Gm-Message-State: AGi0PuZuFf3pRmH3WwzRF85x7ckB3hXtVuxeCiB5Kqjcbry2Js7XIYN5
-        XOu+KZQtF5gk7CG0hcCxhd4=
-X-Google-Smtp-Source: APiQypIPageHHo5o6CT94w6iXvoqpKWIPl0+2Om0RAPGaNvLr57cPx3lh7dN6T0Lq0Wney2FP8ukbg==
-X-Received: by 2002:a62:7555:: with SMTP id q82mr13021927pfc.136.1588850117599;
-        Thu, 07 May 2020 04:15:17 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id t74sm4729687pfc.64.2020.05.07.04.15.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 May 2020 04:15:17 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        philippe.schenker@toradex.com
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH V2 2/4] ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
-Date:   Thu,  7 May 2020 19:15:12 +0800
-Message-Id: <1588850112-24297-1-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 7 May 2020 07:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgEGLP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:15:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839FD20870;
+        Thu,  7 May 2020 11:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588850129;
+        bh=m5j26vopqsarHASCUs41VneRgz6W4ivAN8SWIs8XUAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=io0+5PU2Jeftf20wluUzmyi6annaxFgvMBpalV5HD+3n1J20l9FbtshQAzuO3We6G
+         WoUGLmhyX19mn3i2NhD5tGOlVldDjiTX0Iy1pXVWMgvHqvvYFc+I35BG5JPIcCsOYj
+         XIS5ok98Sh/Aiopp4KLuMTh3HNg0bPK7aW4zOP5M=
+Date:   Thu, 7 May 2020 13:15:26 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     mchehab@kernel.org, allison@lohutok.net, tglx@linutronix.de,
+        rfontana@redhat.com, tomasbortoli@gmail.com, sean@mess.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: usb: ttusb-dec: reduce the number of memory reads
+ in ttusb_dec_handle_irq()
+Message-ID: <20200507111526.GA1498671@kroah.com>
+References: <20200507102521.17602-1-baijiaju1990@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507102521.17602-1-baijiaju1990@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+On Thu, May 07, 2020 at 06:25:21PM +0800, Jia-Ju Bai wrote:
+> In ttusb_dec_handle_irq(), buffer[4] is continuously read from memory 
+> three times, without being modified.
+> To reduce the number of memory reads, buffer[4] is first assigned to a
+> local variable index, and then index is used to replace buffer[4].
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/media/usb/ttusb-dec/ttusb_dec.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+> index 3198f9624b7c..8543c552515b 100644
+> --- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
+> +++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+> @@ -250,6 +250,7 @@ static void ttusb_dec_handle_irq( struct urb *urb)
+>  	struct ttusb_dec *dec = urb->context;
+>  	char *buffer = dec->irq_buffer;
+>  	int retval;
+> +	int index = buffer[4];
+>  
+>  	switch(urb->status) {
+>  		case 0: /*success*/
+> @@ -281,11 +282,11 @@ static void ttusb_dec_handle_irq( struct urb *urb)
+>  		 * this should/could be added later ...
+>  		 * for now lets report each signal as a key down and up
+>  		 */
+> -		if (buffer[4] - 1 < ARRAY_SIZE(rc_keys)) {
+> -			dprintk("%s:rc signal:%d\n", __func__, buffer[4]);
+> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 1);
+> +		if (index - 1 < ARRAY_SIZE(rc_keys)) {
+> +			dprintk("%s:rc signal:%d\n", __func__, index);
+> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 1);
+>  			input_sync(dec->rc_input_dev);
+> -			input_report_key(dec->rc_input_dev, rc_keys[buffer[4] - 1], 0);
+> +			input_report_key(dec->rc_input_dev, rc_keys[index - 1], 0);
+>  			input_sync(dec->rc_input_dev);
+>  		}
+>  	}
+> -- 
+> 2.17.1
+> 
 
-This patch adds the pin configuration for I2C3 controller on
-stm32f4.
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-index 392fa14..051f336 100644
---- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-@@ -316,6 +316,18 @@
- 				};
- 			};
- 
-+			i2c3_pins: i2c3-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('C', 9, AF4)>,
-+						/* I2C3_SDA */
-+						 <STM32_PINMUX('A', 8, AF4)>;
-+						/* I2C3_SCL */
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <3>;
-+				};
-+			};
-+
- 			dcmi_pins: dcmi-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
--- 
-2.7.4
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
