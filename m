@@ -2,113 +2,94 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9117DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0253AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71720215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvyOT1Ef"
+	by mail.kernel.org (Postfix) with ESMTP id C73D12145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588874688;
+	bh=T9rkg8uqlS5E7KWzJgD3COhvBHTW96g2v1NcZviUg6k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bGA4ZD8go161vBSBgxIaSTnf0+fK+0gGAfB5HUKN978WsYkrlF3WI/J40bWD0mkjG
+	 NSHPFba3RuuF5umlmoksrvbEhDDiMwotX0OiqArE8AD9naiit/OxrwOq8nA+/Qjv55
+	 /1a2T9/Z7EveGOTDG9n1zwDZmCQgsPG2f2dOHfec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgEGSEh (ORCPT
+        id S1728366AbgEGSEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728073AbgEGSEf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:04:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB22C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:04:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id b8so2821697pgi.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oPdDzYdT7lq792vB2W2IICBi0aPxUsQi5JdgRLaM8DE=;
-        b=mvyOT1EfMtTIMiyqWwuFA04fPAW6A3fhyPcQYaNMProcOmtHYJb+m3xgi4wA3jLajJ
-         0/+FxWryJeRpZO6qoIDw8HCGDcluMT5vD6KSyflLwL4sWR4NWkx/CTjAMPrjcD9Qo+LL
-         yXfNX0vri2Wv4UK70vKw8jXT4Kx/RlaYek7TY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oPdDzYdT7lq792vB2W2IICBi0aPxUsQi5JdgRLaM8DE=;
-        b=WTXU2LjVEhnXfQcTWe1YamtobxLqLcsd1WyNOcoRjb6NwoxU0trtwI/viaeOO0rGFr
-         XhQJ4x4Hn2cS9Iz50CdRiy5Z+GDNbQauDctkosdHpsEk+gfDKx5Yebb9Nm8Hp5NPc9ZH
-         7fOvz8xprWRcTP0b/bZDGUypPIvCflZcRMtuYhqJNjWLI6whTs8bWRRW1UEhWwCiKhF9
-         GKNIAE8m1x4JLrgA0nl64wWhdWBI7xJVMOmKnlSu8lWP15fSlh6JIYlN7uMV64Ob3s1s
-         PbZK0uMVogdh0kVkZg1nQFwggbmSlrxYwjHUfpmbeGdZwckbuRbK9OCNFDbmLr0jUAe0
-         /BLg==
-X-Gm-Message-State: AGi0PuYer1cw/smTMFveWyZ9RKGklOzGik4fsOswIdyifkzpKQw4Vekn
-        LLbaO0RSRbTbuawpxkKgGLEbCg==
-X-Google-Smtp-Source: APiQypKvA1tcaT6o5w99vrDSSQJendwU+OBaqZIhGVGhaS/hGCH2qmFU6zieh7bYSXERa2QoSC5VMA==
-X-Received: by 2002:a62:b514:: with SMTP id y20mr14582234pfe.49.1588874674588;
-        Thu, 07 May 2020 11:04:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q21sm5547240pfg.131.2020.05.07.11.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:04:33 -0700 (PDT)
-Date:   Thu, 7 May 2020 11:04:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] pstore/ram: Refactor DT size parsing
-Message-ID: <202005071103.EDD880257@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-4-keescook@chromium.org>
- <CA+CK2bCu8eFomiU+NeBjVn-o2dbuECxwRfssNjB3ys3caCbXeA@mail.gmail.com>
+        Thu, 7 May 2020 14:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728324AbgEGSEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:04:47 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA492145D
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 18:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588874687;
+        bh=T9rkg8uqlS5E7KWzJgD3COhvBHTW96g2v1NcZviUg6k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wim1l6W3chef9YaxPnPte9jBg7O7X2C0S+yMJ2W/MJsIXE2vKjs2z1x+SpYyDOQUX
+         +I0qKKYVJQ7yqw9eSVUcCpfj8wbSrL3ndjSfZzGmJIvzA0JrIXsIYahOt/bWGMhW6P
+         TaXLHSVd0UWntiK+0d3keJ/c17psVGGCSZk0DgMc=
+Received: by mail-wm1-f54.google.com with SMTP id 188so7551637wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:04:46 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYasp6CSCZ/O49KZ+nRHt9WUpC+Zaw38OSy9MwjFGsbg87K+7ab
+        quzR9BEPOiPW3sbzZ/yEGZlWKCjygaSYBrD8FuZXaw==
+X-Google-Smtp-Source: APiQypIc/fzuVPEMb5iaQFfb3GsJ/KtVABEVlHy/7XBj1SRGVAjFihWffkPiWu63VKj0SJuTwDFUfnhMUoClw4MWgN0=
+X-Received: by 2002:a7b:c5d3:: with SMTP id n19mr4587126wmk.21.1588874685305;
+ Thu, 07 May 2020 11:04:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bCu8eFomiU+NeBjVn-o2dbuECxwRfssNjB3ys3caCbXeA@mail.gmail.com>
+References: <20200505131602.633487962@linutronix.de> <20200505134101.525508608@linutronix.de>
+In-Reply-To: <20200505134101.525508608@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 May 2020 11:04:34 -0700
+X-Gmail-Original-Message-ID: <CALCETrXfemPJrVx+Nfp7k_PvKGezSK46_+dL5oNNV3o5i1qWVw@mail.gmail.com>
+Message-ID: <CALCETrXfemPJrVx+Nfp7k_PvKGezSK46_+dL5oNNV3o5i1qWVw@mail.gmail.com>
+Subject: Re: [patch V4 part 1 35/36] x86: Replace ist_enter() with nmi_enter()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:57:50AM -0400, Pavel Tatashin wrote:
-> On Wed, May 6, 2020 at 5:15 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Refactor device tree size parsing routines to be able to pass a non-zero
-> > default value for providing a configurable default for the coming
-> > "max_reason" field.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> ramoops_parse_dt_size
-> parse_size
-> 
-> Are used to parse flags, and max-reason properties, so the "size" in
-> their names become outdated. How about:
-> ramoops_parse_dt_prop
-> parse_prop
+On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> A few exceptions (like #DB and #BP) can happen at any location in the code,
+> this then means that tracers should treat events from these exceptions as
+> NMI-like. The interrupted context could be holding locks with interrupts
+> disabled for instance.
+>
+> Similarly, #MC is an actual NMI-like exception.
 
-Yeah, I struggled with that thought too.
+Is it permissible to send a signal from inside nmi_enter()?  I imagine
+so, but I just want to make sure.
 
-> Otherwise it looks good.
-
-Okay, great, I'll find a better name and apply this series. Thanks!
-
--- 
-Kees Cook
+--Andy
