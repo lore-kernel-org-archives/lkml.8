@@ -2,136 +2,71 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3069EC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705A3C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B35C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ki7DJEmw"
+	by mail.kernel.org (Postfix) with ESMTP id 599672075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgEGCnY (ORCPT
+        id S1728307AbgEGCn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEGCnY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:43:24 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFCD8C061A0F;
-        Wed,  6 May 2020 19:43:23 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hd791Vtpz9sRf;
-        Thu,  7 May 2020 12:43:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588819400;
-        bh=3cql5VsIEDZ9sh1yQV7laVUfWk6ZJHdw0wTQwojE088=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ki7DJEmwamfoa/Ep0E/cK9nhK9D+Li1kKZb9dkJznsy8NWu6H9KYFbBHbBAscTqS1
-         QhtByVVNwwVFkv6+zjC7VqiCAKShxF2z5lNTEB3/JlD1mCGsuNXmC57q1HVDTMDsHJ
-         5VYnwSHdRH/o/BbwpJnMenT+mXCXI/7qr6F1D66Ts1/LhYEf4ZsmSxebRLN0RtFQDL
-         Plpmi+jO5vx3cX0Rsc1zJevOBvQ2kWdCqvuMKihTajjj+LgJGeJyUe8cr7pZ89mjgN
-         +IPntnmeP6gAAVsbvd89BOdk1dQ82ldil/6ZvWvNr9Zod5S8l+zHB0JbvfyGaNPcWZ
-         ynNU/lUbV7jRQ==
-Date:   Thu, 7 May 2020 12:43:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>
-Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
- tree
-Message-ID: <20200507124311.3838e2a0@canb.auug.org.au>
+        Wed, 6 May 2020 22:43:29 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55102 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726625AbgEGCn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:43:28 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0D9524A2EEAD7A4C5AE1;
+        Thu,  7 May 2020 10:43:26 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 7 May 2020 10:43:19 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <linux@armlinux.org.uk>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Samuel Zou" <zou_wei@huawei.com>
+Subject: [PATCH -next] drm/i2c/tda998x: Make tda998x_audio_digital_mute static
+Date:   Thu, 7 May 2020 10:49:28 +0800
+Message-ID: <1588819768-11818-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/avDbmjoaGsC/ysa+PA0FSf8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/avDbmjoaGsC/ysa+PA0FSf8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Fix the following sparse warning:
 
-Hi all,
+drivers/gpu/drm/i2c/tda998x_drv.c:1136:5: warning:
+symbol 'tda998x_audio_digital_mute' was not declared. Should it be static?
 
-Today's linux-next merge of the drm tree got a conflict in:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ drivers/gpu/drm/i2c/tda998x_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  drivers/gpu/drm/i915/display/intel_fbc.c
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index 3c90d7a..9517f52 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -1133,7 +1133,8 @@ static void tda998x_audio_shutdown(struct device *dev, void *data)
+ 	mutex_unlock(&priv->audio_mutex);
+ }
+ 
+-int tda998x_audio_digital_mute(struct device *dev, void *data, bool enable)
++static int tda998x_audio_digital_mute(struct device *dev, void *data,
++				      bool enable)
+ {
+ 	struct tda998x_priv *priv = dev_get_drvdata(dev);
+ 
+-- 
+2.6.2
 
-between commit:
-
-  82152d424b6c ("Make the "Reducing compressed framebufer size" message be =
-DRM_INFO_ONCE()")
-
-from the drm-intel-fixes tree and commit:
-
-  97ed48b5c8b1 ("drm/i915/fbc: convert to drm_device based logging macros.")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/display/intel_fbc.c
-index c125ca9ab9b3,56bcd6c52a02..000000000000
---- a/drivers/gpu/drm/i915/display/intel_fbc.c
-+++ b/drivers/gpu/drm/i915/display/intel_fbc.c
-@@@ -485,7 -485,9 +485,8 @@@ static int intel_fbc_alloc_cfb(struct d
-  	if (!ret)
-  		goto err_llb;
-  	else if (ret > 1) {
-- 		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead =
-to less power savings than a non-reduced-size. Try to increase stolen memor=
-y size if available in BIOS.\n");
- -		drm_info(&dev_priv->drm,
-++		drm_info_once(&dev_priv->drm,
-+ 			 "Reducing the compressed framebuffer size. This may lead to less powe=
-r savings than a non-reduced-size. Try to increase stolen memory size if av=
-ailable in BIOS.\n");
- -
-  	}
- =20
-  	fbc->threshold =3D ret;
-
---Sig_/avDbmjoaGsC/ysa+PA0FSf8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zdb8ACgkQAVBC80lX
-0GyuIgf+OkbDDmJb3xBZ3z4ltKh2Eq6GPhl9KgWPSF5jdRke+TGBjjiB66zZyGLL
-dDLb9Ff96UIASj6ArDPb3E2TlAzxJ9TvOzBL32ggHlkBnmJk4xmlQqf6yoL49OYR
-Iqzw5Ei+HSJCMP98oiCBKGKCSf3AhkT2dLoJfs503pflnfvSJ+AZCDWWkUDZYVGh
-EUlrkEozwqs01u4zK8GlhYf7A4zsg9W0RQOn56CzkLMvtH5kn4fnLGiXkVkdHH4l
-2XlC6v9UK/PSNs27mcZdI99vRgoLkkWimII7CM0s785UellFTSnsmhKm5czkZ1ZS
-N/sRtKMcGNYod1a1zSLgTPwiQLH62w==
-=fiYA
------END PGP SIGNATURE-----
-
---Sig_/avDbmjoaGsC/ysa+PA0FSf8--
