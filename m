@@ -2,69 +2,109 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0607C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39229C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB78F20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA582078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588833800;
+	bh=eoewxEcztPKZgseIqH5a8ofrxeV00nYAqCkx5/jYb3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aGbiJFl51QvaWtW1f4WMBf7O5nLAjM0zJpMj1L3MeFQ4ypu+/7prLyL3ByqlanPnr
+	 5avkSazQu0O7ys1bJSPy1a8JQfejj/WSpNAFU47lbeq6wnSGWphi8Hm2TWG+zN3rDj
+	 /ZW/x2Ivu58AxQ55Dh4CXsneBGi+DTuV2T6bLTrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgEGGm7 (ORCPT
+        id S1726579AbgEGGnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:42:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbgEGGm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:42:56 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 42318413693EF0A90151;
-        Thu,  7 May 2020 14:42:54 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 14:42:45 +0800
-From:   Samuel Zou <zou_wei@huawei.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Samuel Zou <zou_wei@huawei.com>
-Subject: [PATCH -next] ALSA: portman2x4: Use bitwise instead of arithmetic operator for flags
-Date:   Thu, 7 May 2020 14:48:55 +0800
-Message-ID: <1588834135-14842-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Thu, 7 May 2020 02:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgEGGnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 02:43:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28B3620753;
+        Thu,  7 May 2020 06:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588833798;
+        bh=eoewxEcztPKZgseIqH5a8ofrxeV00nYAqCkx5/jYb3Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XPvD8KgwxMH5sL4bPiyyMBBEfy5TBjmlq04Aw0XMsUJjEQ8jvSzlTzfHiEmKlHW+r
+         2ahOmscHtP7Qc1qH/Is0de9nXTf57xUtlFyEC5mTta8lWBwRXQFeYPrT54AURx+oOT
+         36QF7pPCbOA45gItKGPKpB0Uf6Mka4US0fky+UOE=
+Date:   Thu, 7 May 2020 08:43:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alan Cooper <alcooperx@gmail.com>
+Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 3/4] usb: ehci: Add new EHCI driver for Broadcom STB
+ SoC's
+Message-ID: <20200507064316.GC777100@kroah.com>
+References: <20200430111258.6091-1-alcooperx@gmail.com>
+ <20200430111258.6091-4-alcooperx@gmail.com>
+ <20200505110036.GB93160@kroah.com>
+ <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOGqxeXboYz2OQhgJsYmH5_7qEwKeWR5AA4Ljq_iFdSX=H2fkA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccinelle warning:
+On Wed, May 06, 2020 at 04:23:01PM -0400, Alan Cooper wrote:
+> > > +     irq = platform_get_irq(pdev, 0);
+> > > +     if (irq < 0)
+> >
+> > "<=" right?
+> 
+> The example in the comment above platform_get_irq in platform.c says
+> "if (irq < 0)"
 
-sound/drivers/portman2x4.c:460:34-35: WARNING: sum of probable bitmasks, consider |
+There is work to fix that up on the mailing lists, 0 is not a valid irq :)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Samuel Zou <zou_wei@huawei.com>
----
- sound/drivers/portman2x4.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +static int __init ehci_brcm_init(void)
+> > > +{
+> > > +     if (usb_disabled())
+> > > +             return -ENODEV;
+> >
+> > You check this here, so why are you also checking it in the probe
+> > function?
+> 
+> Good point. I'll remove the one in probe. This was another thing that
+> came from the ehci and ohci platform drivers.  About a third of the
+> drivers in this directory do this, probably because they started with
+> the platform drivers. Do you think it's worth me submitting a patch to
+> clean this up at some point?
 
-diff --git a/sound/drivers/portman2x4.c b/sound/drivers/portman2x4.c
-index ecefa7c..38603cb 100644
---- a/sound/drivers/portman2x4.c
-+++ b/sound/drivers/portman2x4.c
-@@ -457,7 +457,7 @@ static int portman_probe(struct parport *p)
- 
- 	/* Set for RXDATA0 where no damage will be done. */
- 	/* 5 */
--	parport_write_control(p, RXDATA0 + STROBE);	/* Write Strobe=1 to command reg. */
-+	parport_write_control(p, RXDATA0 | STROBE);	/* Write Strobe=1 to command reg. */
- 
- 	/* 6 */
- 	if ((parport_read_status(p) & ESTB) != ESTB)
--- 
-2.6.2
+Yes please.
 
+> 
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> I'll wait for your response before sending a V7.
+
+Never wait for someone who you have no idea how much email they get :)
+
+thanks,
+
+greg k-h
