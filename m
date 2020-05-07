@@ -2,95 +2,120 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0292C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A157C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D918B20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494D2207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgEGHxi (ORCPT
+        id S1726267AbgEGHxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:53:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2161 "EHLO huawei.com"
+        Thu, 7 May 2020 03:53:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3834 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725900AbgEGHxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 03:53:37 -0400
-Received: from lhreml737-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7AAF388BEEFFBA9EA804;
-        Thu,  7 May 2020 08:53:35 +0100 (IST)
-Received: from fraeml705-chm.china.huawei.com (10.206.15.54) by
- lhreml737-chm.china.huawei.com (10.201.108.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Thu, 7 May 2020 08:53:35 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 7 May 2020 09:53:34 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Thu, 7 May 2020 09:53:34 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "John Johansen" <john.johansen@canonical.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IA==
-Date:   Thu, 7 May 2020 07:53:34 +0000
-Message-ID: <ab879f9e66874736a40e9c566cadc272@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
- <1588799408.4624.28.camel@linux.ibm.com>
-In-Reply-To: <1588799408.4624.28.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.65.97]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725862AbgEGHxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 03:53:46 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1481E6579506A334BFF2;
+        Thu,  7 May 2020 15:53:44 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 7 May 2020
+ 15:53:38 +0800
+Subject: ping; [PATCH v4] mtd: clear cache_state to avoid writing to bad
+ blocks repeatedly
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <wangle6@huawei.com>, <zhangweimin12@huawei.com>,
+        <yebin10@huawei.com>, <houtao1@huawei.com>
+References: <1585618319-119741-1-git-send-email-nixiaoming@huawei.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <528b61f3-bddb-d508-8f18-37cebec9e5eb@huawei.com>
+Date:   Thu, 7 May 2020 15:53:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <1585618319-119741-1-git-send-email-nixiaoming@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
-em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgNiwgMjAyMCAxMTox
-MCBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsgZGF2
-aWQuc2FmZm9yZEBnbWFpbC5jb207DQo+IHZpcm9AemVuaXYubGludXgub3JnLnVrOyBqbW9ycmlz
-QG5hbWVpLm9yZzsgSm9obiBKb2hhbnNlbg0KPiA8am9obi5qb2hhbnNlbkBjYW5vbmljYWwuY29t
-Pg0KPiBDYzogbGludXgtZnNkZXZlbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWludGVncml0eUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBzZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTaWx2aXUNCj4gVmxhc2NlYW51IDxTaWx2
-aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDXVtQQVRDSCAxLzNd
-IGV2bTogTW92ZSBob29rcyBvdXRzaWRlIExTTSBpbmZyYXN0cnVjdHVyZQ0KPiANCj4gT24gV2Vk
-LCAyMDIwLTA1LTA2IGF0IDE1OjQ0IC0wNDAwLCBNaW1pIFpvaGFyIHdyb3RlOg0KPiA+IFNpbmNl
-IGNvcHlpbmcgdGhlIEVWTSBITUFDIG9yIG9yaWdpbmFsIHNpZ25hdHVyZSBpc24ndCBhcHBsaWNh
-YmxlLCBJDQo+ID4gd291bGQgcHJlZmVyIGV4cGxvcmluZyBhbiBFVk0gcG9ydGFibGUgYW5kIGlt
-bXV0YWJsZSBzaWduYXR1cmUgb25seQ0KPiA+IHNvbHV0aW9uLg0KPiANCj4gVG8gcHJldmVudCBj
-b3B5aW5nIHRoZSBFVk0geGF0dHIsIHdlIGFkZGVkICJzZWN1cml0eS5ldm0iIHRvDQo+IC9ldGMv
-eGF0dHIuY29uZi4gwqBUbyBzdXBwb3J0IGNvcHlpbmcganVzdCB0aGUgRVZNIHBvcnRhYmxlIGFu
-ZA0KPiBpbW11dGFibGUgc2lnbmF0dXJlcyB3aWxsIHJlcXVpcmUgYSBkaWZmZXJlbnQgc29sdXRp
-b24uDQoNClRoaXMgcGF0Y2ggc2V0IHJlbW92ZXMgdGhlIG5lZWQgZm9yIGlnbm9yaW5nIHNlY3Vy
-aXR5LmV2bS4gSXQgY2FuIGJlIGFsd2F5cw0KY29waWVkLCBldmVuIGlmIGl0IGlzIGFuIEhNQUMu
-IEVWTSB3aWxsIHVwZGF0ZSBpdCBvbmx5IHdoZW4gdmVyaWZpY2F0aW9uIGluDQp0aGUgcHJlIGhv
-b2sgaXMgc3VjY2Vzc2Z1bC4gQ29tYmluZWQgd2l0aCB0aGUgYWJpbGl0eSBvZiBwcm90ZWN0aW5n
-IGEgc3Vic2V0DQpvZiBmaWxlcyB3aXRob3V0IGludHJvZHVjaW5nIGFuIEVWTSBwb2xpY3ksIHRo
-ZXNlIGFkdmFudGFnZXMgc2VlbSB0bw0Kb3V0d2VpZ2ggdGhlIGVmZm9ydCBuZWNlc3NhcnkgdG8g
-bWFrZSB0aGUgc3dpdGNoLg0KDQpSb2JlcnRvDQoNCkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3Nl
-bGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2luZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlh
-biwgU2hpIFlhbmxpDQo=
+ping
+
+On 2020/3/31 9:31, Xiaoming Ni wrote:
+> The function call process is as follows:
+> 	mtd_blktrans_work()
+> 	  while (1)
+> 	    do_blktrans_request()
+> 	      mtdblock_writesect()
+> 	        do_cached_write()
+> 	          write_cached_data() /*if cache_state is STATE_DIRTY*/
+> 	            erase_write()
+> 
+> write_cached_data() returns failure without modifying cache_state
+> and cache_offset. So when do_cached_write() is called again,
+> write_cached_data() will be called again to perform erase_write()
+> on the same cache_offset.
+> 
+> But if this cache_offset points to a bad block, erase_write() will
+> always return -EIO. Writing to this mtdblk is equivalent to losing
+> the current data, and repeatedly writing to the bad block.
+> 
+> Repeatedly writing a bad block has no real benefits,
+> but brings some negative effects:
+> 1 Lost subsequent data
+> 2 Loss of flash device life
+> 3 erase_write() bad blocks are very time-consuming. For example:
+> 	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
+> 	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+> 
+> Therefore, when erase_write() returns -EIO in write_cached_data(),
+> clear cache_state to avoid writing to bad blocks repeatedly.
+> 
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>   drivers/mtd/mtdblock.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
+> index 078e0f6..32e52d8 100644
+> --- a/drivers/mtd/mtdblock.c
+> +++ b/drivers/mtd/mtdblock.c
+> @@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+>   
+>   	ret = erase_write (mtd, mtdblk->cache_offset,
+>   			   mtdblk->cache_size, mtdblk->cache_data);
+> -	if (ret)
+> -		return ret;
+>   
+>   	/*
+>   	 * Here we could arguably set the cache state to STATE_CLEAN.
+> @@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+>   	 * be notified if this content is altered on the flash by other
+>   	 * means.  Let's declare it empty and leave buffering tasks to
+>   	 * the buffer cache instead.
+> +	 *
+> +	 * If this cache_offset points to a bad block, data cannot be
+> +	 * written to the device. Clear cache_state to avoid writing to
+> +	 * bad blocks repeatedly.
+>   	 */
+> -	mtdblk->cache_state = STATE_EMPTY;
+> -	return 0;
+> +	if (ret == 0 || ret == -EIO)
+> +		mtdblk->cache_state = STATE_EMPTY;
+> +	return ret;
+>   }
+>   
+>   
+> 
+
+
