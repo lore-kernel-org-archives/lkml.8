@@ -2,170 +2,73 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DDDC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D32C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9618E208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTHNk0ZJ"
+	by mail.kernel.org (Postfix) with ESMTP id 1226F208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgEGLhr (ORCPT
+        id S1726897AbgEGLhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:37:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20916 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725903AbgEGLhq (ORCPT
+        Thu, 7 May 2020 07:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgEGLhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:37:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588851464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=/1Y1rEIgorgDtIzXrfE+9YlewIwGKnH0WZNfOWzA8lc=;
-        b=RTHNk0ZJYiDgNw58OMXP3abfnXaKWCJKfPUcQO9MmmOYX6QRqk1rXTZLp/SoLU6MLbtkR2
-        JcITODhEDFVVrvGMQIsZi2Qq65/xXrNqgHcjtdVVwHoArftUSrIt6vIdvxeHPWct392aPn
-        TXCXhXclRXPhCA9BKJcO5tbYotTWxEc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-PhwZsza4PZmoSOaLcWq3jg-1; Thu, 07 May 2020 07:37:40 -0400
-X-MC-Unique: PhwZsza4PZmoSOaLcWq3jg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8229D884E64;
-        Thu,  7 May 2020 11:37:37 +0000 (UTC)
-Received: from [10.36.113.245] (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC85A1001920;
-        Thu,  7 May 2020 11:37:31 +0000 (UTC)
-Subject: Re: [PATCH v3 07/15] mm/memory_hotplug: Introduce
- offline_and_remove_memory()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-References: <20200507103119.11219-1-david@redhat.com>
- <20200507103119.11219-8-david@redhat.com>
- <20200507064558-mutt-send-email-mst@kernel.org>
- <a915653f-232e-aa13-68f7-f988704fa84c@redhat.com>
- <441bfb92-ecfa-f54e-3661-b219ea166e55@redhat.com>
- <20200507073408-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <3bed2d1d-d94a-45ca-afe3-5e6ee660b0fc@redhat.com>
-Date:   Thu, 7 May 2020 13:37:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507073408-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 7 May 2020 07:37:54 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDC0C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 04:37:54 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:6572:4a1f:d283:9ae8])
+        by michel.telenet-ops.be with bizsmtp
+        id bnds2200Z3ZRV0X06ndsE6; Thu, 07 May 2020 13:37:52 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWeqe-0007Eu-B3; Thu, 07 May 2020 13:37:52 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jWeqe-0006JS-9i; Thu, 07 May 2020 13:37:52 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>, Ken Xue <Ken.Xue@amd.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: amd: Add ACPI dependency
+Date:   Thu,  7 May 2020 13:37:51 +0200
+Message-Id: <20200507113751.24213-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.05.20 13:34, Michael S. Tsirkin wrote:
-> On Thu, May 07, 2020 at 01:33:23PM +0200, David Hildenbrand wrote:
->>>> I get:
->>>>
->>>> error: sha1 information is lacking or useless (mm/memory_hotplug.c).
->>>> error: could not build fake ancestor
->>>>
->>>> which version is this against? Pls post patches on top of some tag
->>>> in Linus' tree if possible.
->>>
->>> As the cover states, latest linux-next. To be precise
->>>
->>> commit 6b43f715b6379433e8eb30aa9bcc99bd6a585f77 (tag: next-20200507,
->>> next/master)
->>> Author: Stephen Rothwell <sfr@canb.auug.org.au>
->>> Date:   Thu May 7 18:11:31 2020 +1000
->>>
->>>     Add linux-next specific files for 20200507
->>>
->>
->> The patches seem to apply cleanly on top of
->>
->> commit a811c1fa0a02c062555b54651065899437bacdbe (linus/master)
->> Merge: b9388959ba50 16f8036086a9
->> Author: Linus Torvalds <torvalds@linux-foundation.org>
->> Date:   Wed May 6 20:53:22 2020 -0700
->>
->>     Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> 
-> Because you have the relevant hashes in your git tree not pruned yet.
-> Do a new clone and they won't apply.
-> 
+Currently the AMD pin controller driver supports ACPI platform only.
+Make the PINCTRL_AMD config symbol depend on ACPI, to avoid asking the
+user about it when configuring a kernel without ACPI support.
 
-Yeah, most probably, it knows how to merge. I'm used to sending all my
--mm stuff based on -next, so this here is different.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/pinctrl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'll wait a bit and then send v4 based on latest linus/master, adding
-the two acks and reshuffling the MAINTAINERS patch. Thanks.
-
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index f646f070d98fc2cb..f0ce4ce3e0f52456 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -95,6 +95,7 @@ config PINCTRL_AT91PIO4
+ config PINCTRL_AMD
+ 	tristate "AMD GPIO pin control"
+ 	depends on HAS_IOMEM
++	depends on ACPI || COMPILE_TEST
+ 	select GPIOLIB
+ 	select GPIOLIB_IRQCHIP
+ 	select PINMUX
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
