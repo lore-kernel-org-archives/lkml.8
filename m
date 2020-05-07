@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0831C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F922C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1362495F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619012495D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877588;
-	bh=OEDtrIDACeSx6XMGXUnVv6Jt/6XKkuNxDujuTveFYTI=;
+	s=default; t=1588877594;
+	bh=XpmnuWyINxI6zEyO54yHC9Og/GemuFdZ9nKETjSbd5U=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=MWP3ZFeKj2BVoi2z5p6so7ElOixEHGdyTpzR5+TdQ42k2pf7PYf5vAFLgCK2LSPJ6
-	 dmXX5pWOWiwveYtNIcxfcHtIp8V59zwoeo5rdLQukzHn06J3+EYqSXK2s+j4gSLLN9
-	 nDA3XxUZljnKl1Sy1BZfigFOXaMbsXyjrQmBf8DI=
+	b=op3blTxbA5QwN20DkyTqucIbBn7Djo3jXcisKiCeYnT0XOgwUAbWeaneLt5hIKRpo
+	 Sht2eHgF0MlDWR7PlQewtzLZLflkbSn72D9oSR4OtsBDTeW7xcm09fpAlLIGqpRznX
+	 ZIbio8dzOu2rF85+A6z1jLowUuZuyf/loT61BOpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEGSxH (ORCPT
+        id S1728633AbgEGSxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgEGSxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:53:07 -0400
+        id S1726514AbgEGSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:53:13 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 499D32495D;
-        Thu,  7 May 2020 18:53:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DBDF2495D;
+        Thu,  7 May 2020 18:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877586;
-        bh=OEDtrIDACeSx6XMGXUnVv6Jt/6XKkuNxDujuTveFYTI=;
+        s=default; t=1588877592;
+        bh=XpmnuWyINxI6zEyO54yHC9Og/GemuFdZ9nKETjSbd5U=;
         h=Date:From:To:Cc:Subject:From;
-        b=JSSP75dJCFD8LstJJsk+ol8lTwNF8QOBTIxpqCKvg1RHVIgcUdggnfXok/EijCgld
-         shpMAc7T6qudGXdulGsRU0yOg73jF5WzP7msdXqocdDlRps+QAClJ8wZxLsCOW4+QV
-         Q7e6qpgROdHplOcJgg+2wCUSCsTB/yJ1eFNRIA1w=
-Date:   Thu, 7 May 2020 13:57:33 -0500
+        b=lMoFYUDydm03VqI+1i1Fb5lKhT2cTh7yj3c4YOCIcJ8r3E4n6lIGTQIUPr9rU8EKt
+         82ibY3rkXPCY5nGecchZS1qXr9S4ZFQ4PW3onBme++iRwcllh0FgbG5tcm4EGdIcM0
+         6gXhqmXXcaP9YJTiA0VrTbrBMWab8ew8oLRLAAYE=
+Date:   Thu, 7 May 2020 13:57:39 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kprobes: Replace zero-length array with flexible-array
-Message-ID: <20200507185733.GA14931@embeddedor>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] libata: Replace zero-length array with flexible-array
+Message-ID: <20200507185739.GA14954@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -94,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/kprobes.h |    2 +-
+ include/linux/libata.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 04bdaf01112c..4477205e3e92 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -161,7 +161,7 @@ struct kretprobe_instance {
- 	kprobe_opcode_t *ret_addr;
- 	struct task_struct *task;
- 	void *fp;
--	char data[0];
-+	char data[];
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index cffa4714bfa8..cbc95456dd23 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -609,7 +609,7 @@ struct ata_host {
+ 	struct task_struct	*eh_owner;
+ 
+ 	struct ata_port		*simplex_claimed;	/* channel owning the DMA */
+-	struct ata_port		*ports[0];
++	struct ata_port		*ports[];
  };
  
- struct kretprobe_blackpoint {
+ struct ata_queued_cmd {
 
