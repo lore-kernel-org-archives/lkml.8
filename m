@@ -2,140 +2,333 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3344C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F602C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC85A206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1D320735
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 12:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHvFJmKY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NyRHDhaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgEGMlK (ORCPT
+        id S1726521AbgEGMnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 08:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbgEGMlJ (ORCPT
+        Thu, 7 May 2020 08:43:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39616 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbgEGMnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 08:41:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D40C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 05:41:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id q124so2451681pgq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 05:41:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8c9q9HwIlY5AfaLgnx0KWStuV7A8AOhfcyJqN4XE9wo=;
-        b=KHvFJmKYoTlB97pcuu+A6InFN+r4daaWv7gWek1RY91j0qeNFUupsImboDff56xBd5
-         BO6ZlKOf5WS8vPDk6/PcFUI3EOZ2xRK4CZkqAUGlKiL9pWsmB3QVYoNDY+gglIIXdszk
-         lshDP30zDYG2eZ61SszIgjcUoUT/yF5RuBp2LWxoZWp8BF8yfjBe3mpnpj3p1zdc8VlE
-         kF+aBnI99THFLj8XnEWMmsLZ0orL/TI96AmGlxxFiDMSiff58ABP9RfCdRFxHnMN75Qm
-         ibXMAcLeTRsKBodcikwthbbhqELSVWyn8FOg/8fdCiYrIj3sBahftCWOeJEBS9Wm1Ql5
-         N60Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8c9q9HwIlY5AfaLgnx0KWStuV7A8AOhfcyJqN4XE9wo=;
-        b=G+3o3hNJTMMMuvklEU2+zjg0rMvJpVhUTGiN96xe7zMMDPoRTl93WO4+kgRk+JsKqe
-         +0yRfn0iFN6clDP/fCOh8oPaV6BYhbtDVaM5hZ+EbHMwiV1enzBwGKBWWeXiz/DGe1OX
-         K7YP4RmH/oVl2D9PRbidTSZDnktN+w70YZYmop/iGo++oq2KPUXISoDocYofetJocHP3
-         iQARspeSqDbtC+y57qbstxgzQcuNTuUfywPRN/FPMHAgkVM4q14HjLkYeyjgPdwfgqmG
-         hDzgMF/CJ2/bYEg/zXXd/NEWwNCbDDgITSCzzk87WWzx71lDjTl9Ljkk7T+iUY3R//04
-         0bPQ==
-X-Gm-Message-State: AGi0PuaBEQZby7EN85mS31sg4WOnvmiw/IrCsc42BuQcyJ3S2o4+quHp
-        jnOK6FDo8fPf64ZwR051GegDwop9
-X-Google-Smtp-Source: APiQypIskh99Mv3+wLyayZ2yGu04d2ofDHLLrUDtwB/E9yBSuSBUwZ0Mbq3Ic+GEk8PRHoB0B1gatw==
-X-Received: by 2002:aa7:842b:: with SMTP id q11mr13774173pfn.302.1588855268841;
-        Thu, 07 May 2020 05:41:08 -0700 (PDT)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id cc8sm2904652pjb.11.2020.05.07.05.41.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 May 2020 05:41:07 -0700 (PDT)
-Date:   Thu, 7 May 2020 20:41:04 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        iwtbavbm@gmail.com, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, vincent.guittot@linaro.org
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-Message-ID: <20200507124104.GA2769@iZj6chx1xj0e0buvshuecpZ>
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
- <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
- <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ>
- <20200505142711.GA12952@vingu-book>
- <jhjftcd1hmx.mognet@arm.com>
- <CAKfTPtCM7mE7a63rXB4cG5gHn03ArjTB1ZBje=qEWOGR9mj67g@mail.gmail.com>
- <jhjv9l9yrtb.mognet@arm.com>
+        Thu, 7 May 2020 08:43:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588855401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OG3JE38lwxuyLAgRodvgnPB51r94pnQaal5AV+KG0iw=;
+        b=NyRHDhaJukysvn0kdnluY4nCpqLFIjjqG6yE4q077/xD6yu32VxI1cAx5IpL8r1hKqcSCP
+        I7vPICNhlZzSbGezpcePKUi270Jp423VxtMyt9LhiBhM3e+PxLyt8q/r8C9smdDe8mb4w5
+        deaRNmTW0gKPt8b0aCVJNvzXCPYW/IQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-116-myxMfRcWP8GEcxz_RDspdQ-1; Thu, 07 May 2020 08:43:12 -0400
+X-MC-Unique: myxMfRcWP8GEcxz_RDspdQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47CF118FF660;
+        Thu,  7 May 2020 12:43:11 +0000 (UTC)
+Received: from [10.36.114.214] (ovpn-114-214.ams2.redhat.com [10.36.114.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0261762952;
+        Thu,  7 May 2020 12:43:04 +0000 (UTC)
+Subject: Re: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap supported
+ by endpoint
+To:     Bharat Bhushan <bbhushan2@marvell.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>
+References: <20200505093004.1935-1-bbhushan2@marvell.com>
+ <20200505200659-mutt-send-email-mst@kernel.org>
+ <MWHPR1801MB19669FA26D44E1C31DF89BDBE3A50@MWHPR1801MB1966.namprd18.prod.outlook.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d5d320fc-036e-0fc5-ed91-90cbf9b9c17f@redhat.com>
+Date:   Thu, 7 May 2020 14:43:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jhjv9l9yrtb.mognet@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <MWHPR1801MB19669FA26D44E1C31DF89BDBE3A50@MWHPR1801MB1966.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:02:56PM +0100, Valentin Schneider wrote:
-> 
-> On 06/05/20 14:45, Vincent Guittot wrote:
-> >> But then we may skip an update if we goto abort, no? Imagine we have just
-> >> NOHZ_STATS_KICK, so we don't call any rebalance_domains(), and then as we
-> >> go through the last NOHZ CPU in the loop we hit need_resched(). We would
-> >> end in the abort part without any update to nohz.next_balance, despite
-> >> having accumulated relevant data in the local next_balance variable.
-> >
-> > Yes but on the other end, the last CPU has not been able to run the
-> > rebalance_domain so we must not move  nohz.next_balance otherwise it
-> > will have to wait for at least another full period
-> > In fact, I think that we have a problem with current implementation
-> > because if we abort because  local cpu because busy we might end up
-> > skipping idle load balance for a lot of idle CPUs
-> >
-> > As an example, imagine that we have 10 idle CPUs with the same
-> > rq->next_balance which equal nohz.next_balance.  _nohz_idle_balance
-> > starts on CPU0, it processes idle lb for CPU1 but then has to abort
-> > because of need_resched. If we update nohz.next_balance like
-> > currently, the next idle load balance  will happen after a full
-> > balance interval whereas we still have 8 CPUs waiting for running an
-> > idle load balance.
-> >
-> > My proposal also fixes this problem
-> >
-> 
-> That's a very good point; so with NOHZ_BALANCE_KICK we can reduce
-> nohz.next_balance via rebalance_domains(), and otherwise we would only
-> increase it if we go through a complete for_each_cpu() loop in
-> _nohz_idle_balance().
-> 
-> That said, if for some reason we keep bailing out of the loop, we won't
-> push nohz.next_balance forward and thus may repeatedly nohz-balance only
-> the first few CPUs in the NOHZ mask. I think that can happen if we have
-> say 2 tasks pinned to a single rq, in that case nohz_balancer_kick() will
-> kick a NOHZ balance whenever now >= nohz.next_balance.
+Hi Bharat,
 
-If we face the risk of "repeatly nohz-balance only the first few CPUs",
-Maybe we could remember the interrupted CPU and start nohz-balance from
-it next time. Just replace the loop in _nohz_idle_balance() like:
+On 5/7/20 1:24 PM, Bharat Bhushan wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Michael S. Tsirkin <mst@redhat.com>
+>> Sent: Wednesday, May 6, 2020 5:53 AM
+>> To: Bharat Bhushan <bbhushan2@marvell.com>
+>> Cc: jean-philippe@linaro.org; joro@8bytes.org; jasowang@redhat.com;
+>> virtualization@lists.linux-foundation.org; iommu@lists.linux-foundation.org;
+>> linux-kernel@vger.kernel.org; eric.auger.pro@gmail.com; eric.auger@redhat.com
+>> Subject: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap supported by
+>> endpoint
+>>
+>> External Email
+>>
+>> ----------------------------------------------------------------------
+>> On Tue, May 05, 2020 at 03:00:04PM +0530, Bharat Bhushan wrote:
+>>> Different endpoint can support different page size, probe endpoint if
+>>> it supports specific page size otherwise use global page sizes.
+>>>
+>>> Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+>>> ---
+>>> v4->v5:
+>>>  - Rebase to Linux v5.7-rc4
+>>>
+>>> v3->v4:
+>>>  - Fix whitespace error
+>>>
+>>> v2->v3:
+>>>  - Fixed error return for incompatible endpoint
+>>>  - __u64 changed to __le64 in header file
+>>>
+>>>  drivers/iommu/virtio-iommu.c      | 48 ++++++++++++++++++++++++++++---
+>>>  include/uapi/linux/virtio_iommu.h |  7 +++++
+>>>  2 files changed, 51 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/virtio-iommu.c
+>>> b/drivers/iommu/virtio-iommu.c index d5cac4f46ca5..9513d2ab819e 100644
+>>> --- a/drivers/iommu/virtio-iommu.c
+>>> +++ b/drivers/iommu/virtio-iommu.c
+>>> @@ -78,6 +78,7 @@ struct viommu_endpoint {
+>>>  	struct viommu_dev		*viommu;
+>>>  	struct viommu_domain		*vdomain;
+>>>  	struct list_head		resv_regions;
+>>> +	u64				pgsize_bitmap;
+>>>  };
+>>>
+>>>  struct viommu_request {
+>>> @@ -415,6 +416,19 @@ static int viommu_replay_mappings(struct
+>> viommu_domain *vdomain)
+>>>  	return ret;
+>>>  }
+>>>
+>>> +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
+>>> +				    struct virtio_iommu_probe_pgsize_mask *mask,
+>>> +				    size_t len)
+>>> +{
+>>> +	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
+>>> +
+>>> +	if (len < sizeof(*mask))
+>>
+>> This is too late to validate length, you have dereferenced it already.
+>> do it before the read pls.
+> 
+> Yes, Will change here and other places as well
+> 
+>>
+>>> +		return -EINVAL;
+>>
+>> OK but note that guest will then just proceed to ignore the property. Is that really
+>> OK? Wouldn't host want to know?
+> 
+> 
+> Guest need to be in sync with device, so yes seems like guest need to tell device which page-size-mask it is using.
+> 
+> Corresponding spec change patch (https://www.mail-archive.com/virtio-dev@lists.oasis-open.org/msg06214.html)
+> 
+> Would like Jean/Eric to comment here as well.
+why can't we fail the probe request in that case? This is a misbehaving
+device that reports malformed property, right?
 
-for_each_cpu_wrap(cpu, nohz.idle_cpus_mask, nohz.anchor) {
-	...
-	if (need_resched()) {
-		...
-		nohz.anchor = cpu;
-		...
-	}
-	...
-}
+Thanks
 
-This can mitigate the problem, but this can't help the extreme situation
-as @Vincent put, it always failed in the same CPU.
+Eric
+
+
+> 
+>>
+>>
+>>> +
+>>> +	vdev->pgsize_bitmap = pgsize_bitmap;
+>>
+>> what if bitmap is 0? Is that a valid size? I see a bunch of BUG_ON with that value ...
+> 
+> As per spec proposed device is supposed to set at-least one bit.
+> Will add a bug_on her.
+> Should we add bug_on or switch to global config page-size mask if this is zero (notify device which page-size-mask it is using).
+> 
+>>
+>> I also see a bunch of code like e.g. this:
+>>
+>>         pg_size = 1UL << __ffs(pgsize_bitmap);
+>>
+>> which probably won't DTRT on a 32 bit guest if the bitmap has bits set in the high
+>> word.
+>>
+> 
+> My thought is that in that case viommu_domain_finalise() will fail, do not proceed.
+> 
+>>
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
+>>>  			       struct virtio_iommu_probe_resv_mem *mem,
+>>>  			       size_t len)
+>>> @@ -499,6 +513,9 @@ static int viommu_probe_endpoint(struct viommu_dev
+>> *viommu, struct device *dev)
+>>>  		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
+>>>  			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
+>>>  			break;
+>>> +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
+>>> +			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
+>>> +			break;
+>>>  		default:
+>>>  			dev_err(dev, "unknown viommu prop 0x%x\n", type);
+>>>  		}
+>>> @@ -630,7 +647,7 @@ static int viommu_domain_finalise(struct
+>>> viommu_endpoint *vdev,
+>>>
+>>>  	vdomain->id		= (unsigned int)ret;
+>>>
+>>> -	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
+>>> +	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
+>>>  	domain->geometry	= viommu->geometry;
+>>>
+>>>  	vdomain->map_flags	= viommu->map_flags;
+>>> @@ -654,6 +671,29 @@ static void viommu_domain_free(struct iommu_domain
+>> *domain)
+>>>  	kfree(vdomain);
+>>>  }
+>>>
+>>> +/*
+>>> + * Check whether the endpoint's capabilities are compatible with
+>>> +other
+>>> + * endpoints in the domain. Report any inconsistency.
+>>> + */
+>>> +static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
+>>> +					  struct viommu_domain *vdomain) {
+>>> +	struct device *dev = vdev->dev;
+>>> +
+>>> +	if (vdomain->viommu != vdev->viommu) {
+>>> +		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+>>> +		return false;
+>>> +	}
+>>> +
+>>> +	if (vdomain->domain.pgsize_bitmap != vdev->pgsize_bitmap) {
+>>> +		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
+>>> +			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
+>>> +		return false;
+>>> +	}
+>>
+>> I'm confused by this. So let's assume host supports pages sizes of 4k, 2M, 1G. It
+>> signals this in the properties. Nice.
+>> Now domain supports 4k, 2M and that's all. Why is that a problem?
+>> Just don't use 1G ...
+> 
+> Is not it too to change the existing domain properties, for devices already attached to domain? New devices must match to domain page-size.
+> 
+>>
+>>
+>>> +
+>>> +	return true;
+>>> +}
+>>> +
+>>>  static int viommu_attach_dev(struct iommu_domain *domain, struct
+>>> device *dev)  {
+>>>  	int i;
+>>> @@ -670,9 +710,8 @@ static int viommu_attach_dev(struct iommu_domain
+>> *domain, struct device *dev)
+>>>  		 * owns it.
+>>>  		 */
+>>>  		ret = viommu_domain_finalise(vdev, domain);
+>>> -	} else if (vdomain->viommu != vdev->viommu) {
+>>> -		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+>>> -		ret = -EXDEV;
+>>> +	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
+>>> +		ret = -EINVAL;
+>>>  	}
+>>>  	mutex_unlock(&vdomain->mutex);
+>>>
+>>> @@ -886,6 +925,7 @@ static int viommu_add_device(struct device *dev)
+>>>
+>>>  	vdev->dev = dev;
+>>>  	vdev->viommu = viommu;
+>>> +	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
+>>>  	INIT_LIST_HEAD(&vdev->resv_regions);
+>>>  	dev_iommu_priv_set(dev, vdev);
+>>>
+>>> diff --git a/include/uapi/linux/virtio_iommu.h
+>>> b/include/uapi/linux/virtio_iommu.h
+>>> index 48e3c29223b5..2cced7accc99 100644
+>>> --- a/include/uapi/linux/virtio_iommu.h
+>>> +++ b/include/uapi/linux/virtio_iommu.h
+>>
+>> As any virtio UAPI change, you need to copy virtio TC at some point before this is
+>> merged ...
+> 
+> Jean already send patch for same
+> https://www.mail-archive.com/virtio-dev@lists.oasis-open.org/msg06214.html
+> 
+> Do we need to do anything additional?
+> 
+>>
+>>> @@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
+>>>
+>>>  #define VIRTIO_IOMMU_PROBE_T_NONE		0
+>>>  #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
+>>> +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
+>>>
+>>>  #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
+>>>
+>>
+>> Does host need to know that guest will ignore the page size mask?
+>> Maybe we need a feature bit.
+>>
+>>> @@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
+>>>  	__le16					length;
+>>>  };
+>>>
+>>> +struct virtio_iommu_probe_pgsize_mask {
+>>> +	struct virtio_iommu_probe_property	head;
+>>> +	__u8					reserved[4];
+>>> +	__le64					pgsize_bitmap;
+>>> +};
+>>> +
+>>
+>> This is UAPI. Document the format of pgsize_bitmap please.
+> 
+> Ok,
+> 
+> Thanks
+> -Bharat
+> 
+>>
+>>
+>>>  #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
+>>>  #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
+>>>
+>>> --
+>>> 2.17.1
+> 
+
