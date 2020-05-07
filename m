@@ -2,119 +2,183 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1961C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7511C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4020936
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N59dd6p7"
+	by mail.kernel.org (Postfix) with ESMTP id 8102A20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgEGQip (ORCPT
+        id S1726807AbgEGQlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:38:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29306 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726222AbgEGQip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:38:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588869523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0GJUSBwd6yajjE7Du/EDRG7BQr30DrFCiogxpggmT4Y=;
-        b=N59dd6p78IBw8jtprf9//xA2yIt38Yhy3cDFctLXoaEGOn73ZjEyFXEjakZKizpB8UEAgw
-        EXHZXrCQcNoWx7si+B8YCA7zOdp3TAyTX9dHN+1nMjzQLJe6NFmlAufUatI9QmJL79GbwV
-        L1+crcOGl8jIQ0FcUyMs6Gva5ek6AW0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-AoOccD20PjGvcgKTKSvKGg-1; Thu, 07 May 2020 12:38:41 -0400
-X-MC-Unique: AoOccD20PjGvcgKTKSvKGg-1
-Received: by mail-qt1-f200.google.com with SMTP id y31so7386975qta.16
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 09:38:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0GJUSBwd6yajjE7Du/EDRG7BQr30DrFCiogxpggmT4Y=;
-        b=c+mj1+0RVp7zkTHyTwobwFYASTDmaTdeu96DK9agEl95iv3/M0WHWhoiMu1831wYOp
-         dR76WXJTatO31bl6FZOzTF2ZiQ+HZPWHzyKCvO10CpoTeg1nMHjNM4zXUIiYeCAC5ZfN
-         Bsb5QzvDN2b5veofDaVyQyUyufidJFJEiD++jqlwcX5Pmc+o3li1Eea/E2ehmO9FsdwR
-         Keh0Z8LnoknRxgJl6o3OG/yL0mbqJ5zW6/o0TbchX9UophIFr4Mjq6VX5l3Zt2tBP9h4
-         GJm1QIId4M4qtA3KlT72y9Ug68oKunL1rcf/jmOipp0OZTkT0secjD/oszS/j2ndIwDM
-         WHhA==
-X-Gm-Message-State: AGi0PuYuCEI82rpDWe5grQUVksRZsKhLwPP5NR7I21Uh8K6jlU7sXceZ
-        ja4Ezr8LEmBXjXmojWtpN+AMWOWjLVxk27tziuWG94VWGHNoqdW2spQPLFaD5szuj1CHh/ix6zo
-        5slgjuTdxeZbNapFudsEaPoOY
-X-Received: by 2002:a37:68c9:: with SMTP id d192mr15660757qkc.168.1588869521151;
-        Thu, 07 May 2020 09:38:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIMOsald+8dpvEMLnkxwF+4OesJDv1LTD2qOjQwQClxhhNqfZeDggoBqidjPHz/P9Dh64NRpg==
-X-Received: by 2002:a37:68c9:: with SMTP id d192mr15660728qkc.168.1588869520871;
-        Thu, 07 May 2020 09:38:40 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id a194sm4596136qkb.21.2020.05.07.09.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 09:38:40 -0700 (PDT)
-Date:   Thu, 7 May 2020 12:38:39 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 9/9] KVM: VMX: pass correct DR6 for GD userspace exit
-Message-ID: <20200507163839.GG228260@xz-x1>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
- <20200507115011.494562-10-pbonzini@redhat.com>
- <20200507161854.GF228260@xz-x1>
- <7abe5f7b-2b5a-4e32-34e2-f37d0afef00a@redhat.com>
+        Thu, 7 May 2020 12:41:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21292 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgEGQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:41:01 -0400
+IronPort-SDR: V+EVhH54npwUFooFSyBXESkwVRG1IV/ZUbtx9PuskHbq5ySbJf3W9vTlFNTzY0wYYsad+tWjz4
+ PiHm4gSFQPoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:41:00 -0700
+IronPort-SDR: y/fdpHUpuRWavjaCIWw/VG9lnFOMSx4/mDNd/RiY3KqeeUtX9aU7JBbcyzHWw5kNUzNIfcmL29
+ 7V3gnCOklWRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
+   d="scan'208";a="407699732"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 07 May 2020 09:40:59 -0700
+Date:   Thu, 7 May 2020 09:47:06 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 2/5] iommu/vt-d: debugfs: Add support to show inv
+ queue internals
+Message-ID: <20200507094706.6f6a605f@jacob-builder>
+In-Reply-To: <20200507005534.3080-3-baolu.lu@linux.intel.com>
+References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
+        <20200507005534.3080-3-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7abe5f7b-2b5a-4e32-34e2-f37d0afef00a@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 06:21:18PM +0200, Paolo Bonzini wrote:
-> On 07/05/20 18:18, Peter Xu wrote:
-> >>  		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) {
-> >> -			vcpu->run->debug.arch.dr6 = vcpu->arch.dr6;
-> >> +			vcpu->run->debug.arch.dr6 = DR6_BD | DR6_RTM | DR6_FIXED_1;
-> > After a second thought I'm thinking whether it would be okay to have BS set in
-> > that test case.  I just remembered there's a test case in the kvm-unit-test
-> > that checks explicitly against BS leftover as long as dr6 is not cleared
-> > explicitly by the guest code, while the spec seems to have no explicit
-> > description on this case.
+Hi Baolu,
+
+Very helpful feature, thanks for doing this. Just a small suggestion.
+
+On Thu,  7 May 2020 08:55:31 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
+
+> Export invalidation queue internals of each iommu device through the
+> debugfs.
 > 
-> Yes, I noticed that test as well.  But I don't like having different
-> behavior for Intel and AMD, and the Intel behavior is more sensible.
-> Also...
-
-Do you mean the AMD behavior is more sensible instead? :)
-
+> Example of such dump on a Skylake machine:
 > 
-> > Intead of above, I'm thinking whether we should allow the userspace to also
-> > change dr6 with the KVM_SET_GUEST_DEBUG ioctl when they wanted to (right now
-> > iiuc dr6 from userspace is completely ignored), instead of offering a fake dr6.
-> > Or to make it simple, maybe we can just check BD bit only?
+> $ sudo cat /sys/kernel/debug/iommu/intel/invalidation_queue
+> Invalidation queue on IOMMU: dmar1
+>  Base: 0x1672c9000      Head: 80        Tail: 80
+> Index           qw0                     qw1                     status
+>     0   0000000000000004        0000000000000000
+> 0000000000000000 1   0000000200000025        00000001672be804
+> 0000000000000000 2   0000000000000011        0000000000000000
+> 0000000000000000 3   0000000200000025        00000001672be80c
+> 0000000000000000 4   00000000000000d2        0000000000000000
+> 0000000000000000 5   0000000200000025        00000001672be814
+> 0000000000000000 6   0000000000000014        0000000000000000
+> 0000000000000000 7   0000000200000025        00000001672be81c
+> 0000000000000000 8   0000000000000014        0000000000000000
+> 0000000000000000 9   0000000200000025        00000001672be824
+> 0000000000000000
 > 
-> ... I'm afraid that this would be a backwards-incompatible change, and
-> it would require changes in userspace.  If you look at v2, emulating the
-> Intel behavior in AMD turns out to be self-contained and relatively
-> elegant (will be better when we finish cleaning up nested SVM).
+Head and Tail shows the offset, and queue is dump with index. Would it
+be nice to mark where the Head and Tail is in the list?
+In your example, the queue is empty (H=T), would be nice to see where
+the previous entry is if there were any faults.
 
-I'm still trying to read the other patches (I need some more digest because I'm
-even less familiar with nested...).  I agree that it would be good to keep the
-same behavior across Intel/AMD.  Actually that also does not violate Intel spec
-because the AMD one is stricter.  However I guess then we might also want to
-fixup the kvm-unit-test too to aligh with the behaviors on leftover set bits.
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu-debugfs.c | 62
+> +++++++++++++++++++++++++++++ 1 file changed, 62 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu-debugfs.c
+> b/drivers/iommu/intel-iommu-debugfs.c index
+> 3eb1fe240fb0..e3089865b8f3 100644 ---
+> a/drivers/iommu/intel-iommu-debugfs.c +++
+> b/drivers/iommu/intel-iommu-debugfs.c @@ -372,6 +372,66 @@ static int
+> domain_translation_struct_show(struct seq_file *m, void *unused) }
+>  DEFINE_SHOW_ATTRIBUTE(domain_translation_struct);
+>  
+> +static void invalidation_queue_entry_show(struct seq_file *m,
+> +					  struct intel_iommu *iommu)
+> +{
+> +	int index, shift = qi_shift(iommu);
+> +	struct qi_desc *desc;
+> +	int offset;
+> +
+> +	if (ecap_smts(iommu->ecap))
+> +		seq_puts(m,
+> "Index\t\tqw0\t\t\tqw1\t\t\tqw2\t\t\tqw3\t\t\tstatus\n");
+> +	else
+> +		seq_puts(m, "Index\t\tqw0\t\t\tqw1\t\t\tstatus\n");
+> +
+> +	for (index = 0; index < QI_LENGTH; index++) {
+> +		offset = index << shift;
+> +		desc = iommu->qi->desc + offset;
+> +		if (ecap_smts(iommu->ecap))
+> +			seq_printf(m,
+> "%5d\t%016llx\t%016llx\t%016llx\t%016llx\t%016x\n",
+> +				   index, desc->qw0, desc->qw1,
+> +				   desc->qw2, desc->qw3,
+> +				   iommu->qi->desc_status[index]);
+> +		else
+> +			seq_printf(m,
+> "%5d\t%016llx\t%016llx\t%016x\n",
+> +				   index, desc->qw0, desc->qw1,
+> +				   iommu->qi->desc_status[index]);
+> +	}
+> +}
+> +
+> +static int invalidation_queue_show(struct seq_file *m, void *unused)
+> +{
+> +	struct dmar_drhd_unit *drhd;
+> +	struct intel_iommu *iommu;
+> +	unsigned long flags;
+> +	struct q_inval *qi;
+> +	int shift;
+> +
+> +	rcu_read_lock();
+> +	for_each_active_iommu(iommu, drhd) {
+> +		qi = iommu->qi;
+> +		shift = qi_shift(iommu);
+> +
+> +		if (!qi || !ecap_qis(iommu->ecap))
+> +			continue;
+> +
+> +		seq_printf(m, "Invalidation queue on IOMMU: %s\n",
+> iommu->name); +
+> +		raw_spin_lock_irqsave(&qi->q_lock, flags);
+> +		seq_printf(m, " Base: 0x%llx\tHead: %lld\tTail:
+> %lld\n",
+> +			   virt_to_phys(qi->desc),
+> +			   dmar_readq(iommu->reg + DMAR_IQH_REG) >>
+> shift,
+> +			   dmar_readq(iommu->reg + DMAR_IQT_REG) >>
+> shift);
+> +		invalidation_queue_entry_show(m, iommu);
+> +		raw_spin_unlock_irqrestore(&qi->q_lock, flags);
+> +		seq_putc(m, '\n');
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(invalidation_queue);
+> +
+>  #ifdef CONFIG_IRQ_REMAP
+>  static void ir_tbl_remap_entry_show(struct seq_file *m,
+>  				    struct intel_iommu *iommu)
+> @@ -490,6 +550,8 @@ void __init intel_iommu_debugfs_init(void)
+>  	debugfs_create_file("domain_translation_struct", 0444,
+>  			    intel_iommu_debug, NULL,
+>  			    &domain_translation_struct_fops);
+> +	debugfs_create_file("invalidation_queue", 0444,
+> intel_iommu_debug,
+> +			    NULL, &invalidation_queue_fops);
+>  #ifdef CONFIG_IRQ_REMAP
+>  	debugfs_create_file("ir_translation_struct", 0444,
+> intel_iommu_debug, NULL, &ir_translation_struct_fops);
 
-Thanks,
-
--- 
-Peter Xu
-
+[Jacob Pan]
