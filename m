@@ -2,180 +2,147 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DFDC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE05C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4E520747
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C1820747
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 02:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Z2UIsTa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgEGCTX (ORCPT
+        id S1727822AbgEGCTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 22:19:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37906 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725809AbgEGCTX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 22:19:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04722XsG012543;
-        Wed, 6 May 2020 22:19:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8t7js3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 22:19:22 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04722ond014599;
-        Wed, 6 May 2020 22:19:22 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8t7js2y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 22:19:22 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0472GDLZ029397;
-        Thu, 7 May 2020 02:19:21 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04wdc.us.ibm.com with ESMTP id 30s0g765tb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 02:19:21 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0472JJT650397670
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 02:19:19 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9CF8BE05A;
-        Thu,  7 May 2020 02:19:19 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D2DBBE04F;
-        Thu,  7 May 2020 02:19:18 +0000 (GMT)
-Received: from [9.160.6.78] (unknown [9.160.6.78])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 02:19:18 +0000 (GMT)
-Subject: Re: [PATCH v4 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-To:     Jared Rossi <jrossi@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200506212440.31323-1-jrossi@linux.ibm.com>
- <20200506212440.31323-2-jrossi@linux.ibm.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <b223f68e-c8bb-7c3a-605e-296869ba07a6@linux.ibm.com>
-Date:   Wed, 6 May 2020 22:19:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200506212440.31323-2-jrossi@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 6 May 2020 22:19:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19537 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbgEGCTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 22:19:51 -0400
+IronPort-SDR: heEV03yyJmEWDXemWAewTC+BWyoRu/d9gE2StGm8+xc3dbHMqR6nRi5ofeu8QocI+CQQcg66pl
+ +gzRmC9rdJVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 19:19:50 -0700
+IronPort-SDR: hYNd45gk+1H1xwqQte0wPFuvvcKu6q5d/4dwJNTEQy/VluTp7bB2s5zIcaObJyt/gs07qD+iui
+ gHX9wSfuam0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
+   d="scan'208";a="284836540"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga004.fm.intel.com with ESMTP; 06 May 2020 19:19:49 -0700
+Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 6 May 2020 19:19:49 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX154.amr.corp.intel.com (10.22.226.12) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 6 May 2020 19:19:48 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 6 May 2020 19:19:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AOQTtxsdPyy5Xbet5i0ykc/Lf3Zip5rsOPr0e8JFMkk3yLtck3fIrwywdNVNowiaQyP6FKC6dIbTYhu42QxYP7UgRt3ObPJ8QTgV+QhErtTblnPMDEaBLkL5+pR+kqrhLLxLrEfnKUfrJOjs/CFcCCzA0k2eGhMJ/vR88M1z1k3k3uEph6xyYfC3QCKkastGNPFbs/y2Ck55VciBwnzCn6AtWcdl+Wo0ZOUJv3YpIQHK5rid5l2YK0mE5zpQjuloZP+yI5NxaYBhLKMUBY5lGzaj4ih0+2YyDJWBBnOTz03CxPOA2ZeYOOZEbOzSxFvo8kaEddrbYYVpbJzl0S1cBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+ukuXCYu0SZ/97fQaxD2AFwkDHPtoogHJEhbgWLs8s=;
+ b=QNOoc+g8yus6eLA6b/QKsnXZp/MPUmK6DN/ZP70CrbuRxqF0Yj92QHUO+SS/oVuBJUTHF51aRbHJMsW2//hC0caaYvbw4jbpljZZGMAav+9UniW8kKbXpXgQy2/5GxmEA46b2h0g+bwL1dM5Mwz6U7+s2rPom4t9ZSnhxgyndQSj5leNE8rt+v5iMYscNMjHJPIJTFkNhedw0S+olG4XImcT/O7/VIxNTn01dhEG08AnRvWAtyS/jU2sO0kvu0C8gHNw1skAmdp4rjv1sBps85g/TiBueFmg+PNAqhq9o2x2kU947mH2KaCxxjXdjnfzxgs/JluXDJpzmpe9h8Ztyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+ukuXCYu0SZ/97fQaxD2AFwkDHPtoogHJEhbgWLs8s=;
+ b=Z2UIsTa0x2YURbq6u8Hb6sbqlQDeqOtJrOQohEui/4n1lt8RewZjegrb940l6BcxvJiaFoupqkUX2tbuxmSIYrzfOOajLNH35ogZ3WPID8xFeYDCGNpxQzQ1h51Q0fKEcxbfN8XTKGpzVIPgJT9Kt73pX/m2tfJAorsLErswFPw=
+Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
+ (2603:10b6:405:5b::22) by BN6PR1101MB2228.namprd11.prod.outlook.com
+ (2603:10b6:405:52::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
+ 2020 02:19:47 +0000
+Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
+ ([fe80::5419:a938:2a3:ee27]) by BN6PR1101MB2132.namprd11.prod.outlook.com
+ ([fe80::5419:a938:2a3:ee27%5]) with mapi id 15.20.2979.028; Thu, 7 May 2020
+ 02:19:41 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Keyon Jie <yang.jie@linux.intel.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     Kate Stewart <kstewart@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "amadeuszx.slawinski@linux.intel.com" 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: RE: [PATCH] ASoC: Intel: sst: ipc command timeout
+Thread-Topic: [PATCH] ASoC: Intel: sst: ipc command timeout
+Thread-Index: AQHWDxGPcERmvVi2FUaZ0GDzXVeqv6h4uesAgAAAnRCAAFQWgIAEY1sggB0N0ACAAYzUsA==
+Date:   Thu, 7 May 2020 02:19:40 +0000
+Message-ID: <BN6PR1101MB2132623374C6A708160CE11D97A50@BN6PR1101MB2132.namprd11.prod.outlook.com>
+References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
+ <4f495cf1-4740-cf3b-196f-cc850c503b43@linux.intel.com>
+ <BN6PR1101MB21328B6F4147640D07F9E40A97DA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+ <c8309abf-cbfb-a3db-5aa7-2e2f748a6d34@intel.com>
+ <BN6PR1101MB21328C54E66082227B9F497A97D50@BN6PR1101MB2132.namprd11.prod.outlook.com>
+ <4623d6b9-8dc6-b301-c8ff-74dfb6baf2a3@linux.intel.com>
+In-Reply-To: <4623d6b9-8dc6-b301-c8ff-74dfb6baf2a3@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 phishscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070007
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [36.230.11.97]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 80c496d5-5914-4bc9-209b-08d7f22d19a5
+x-ms-traffictypediagnostic: BN6PR1101MB2228:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR1101MB222811D509439E6B243E6E7E97A50@BN6PR1101MB2228.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03965EFC76
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y8yD+KhFL79iQMPDl+3BGeEc1g405IwNN+h9UDIvw6IdtAlhdwmzVLNOFJ958XOq6TakRvjv5QUOMXcWzz4ILrQa0V581n8YgxzqhcRWxgzqv6OHZrCDO0pqhNveJHNsumJ21aS7l0y+mBqgb9Zjde/TINImbxsh16vdZoeZOoPWP4Ok+ndj2CeLUUlEnDOjcZ+uPL9IaHD2k39Ag6dxwC+/Syw68pu4ij/l6uzGXsply5CnW+GWMAjZ4NKwfPhSTDqf7vk3THdwPJGtFB3njhyDtFlO3BZJMFrA9iZgBwgWt4j71LRU2qPn+z/zkW6H3YmBJQSgXSeTOKSj8SxGuuYJ+lMqVVplWCxywti5QasrW/DqY1xcj1//sEaEt0WfA/ntTOmVjm+9oFU5vWpfY8B55SCOhdbnf/uQB4HkwqreZbVKDVeUdPgb7Vw+yDuS6zNtd6Q70is2nCwBnZL5ogmbUJnEgK1OiInX8Fmfnh1C+G1TT1Xsc6FS1+iDQNtkH/+sRgqM8qmQOnHzWoyzWQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(39860400002)(366004)(136003)(33430700001)(66946007)(76116006)(6506007)(9686003)(186003)(71200400001)(26005)(83290400001)(83310400001)(83320400001)(83280400001)(316002)(7416002)(86362001)(7696005)(83300400001)(66446008)(8936002)(64756008)(66556008)(52536014)(66476007)(8676002)(4326008)(54906003)(478600001)(110136005)(5660300002)(33656002)(2906002)(33440700001)(4744005)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: OHmjZiq4FFmZFOTETEJ5z0Skj/hyMjGmDN3cOQyksbyAPjfgPPUlVvQpxSzCvCLmjKFdf7OAK/iEmemAhAeGZ/aL82eC3mfQM5zIxjeIqfyS2IGzYVcKKkcmIN1vEacXoRVdaw4Bb7Dw82s1rj2XdVirJS9gKb+HsPa1p1tfAtgVVl3WismUpCtlDin4kjP9ncpW/Ff6f1t80LUpYOhh+9dfnH/aqLnEYSMkvWYL1Z8yV3qfrhvnFPBmkrEr3eDchJ2fAEMfwCvJ3UbV8okCSBwH1vu8XnSVHVQVSERQD5a/9YQA0OTyD9ecIQeN3F6FmM0zt57NXfQG1OghLUHmuRrsiCQumVhGb/CLiQ5uSJgZaKZHmEweh6b8nfPr971KzNlL3pSYDcJW/4iOQ/omGP0PIQTNkEQ6QvJncaVo7A+3gOV3IWP9HmFWCuf3RWvePY+nGm1sh9IJXopzlghryofCgqDpueKI8U05OieHXmSMmQAhPrcGJpN6l0SX3WDVGjWbHnutKOu49hkMOpFfAscmcbAjVuEktUzv17SlPZHq6n/YZ6kcxJrv78TPSaDLs+oWr14OF3kt3tNFDbpqND0pojimtkMEcGGZIhePfQ4YzvWVgjB+rmBwZLRrfp3+t32ANElCCEqM1ZCe0zNBxKYUJ2oZPvcAw4uwakrzrX+ov6UcvuwTZxhO6pvzEplh2yGcSBz+LCoVcPR32xne+dbmvPzK/85tijT+Ipc9v4QTFCBUE1zioAXNEfJQjVOgMamX4VHpSs2TAn8ni1FjkVr2dPqGboWg80qqdX4OqoQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80c496d5-5914-4bc9-209b-08d7f22d19a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2020 02:19:40.9648
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pel6A/hVx4MMm94Y0SDlujl5uwHT6vysfBwtefvM3z/Z5IYDkY/NVLFuqbQWY+1vp5+OUlADAR7MH3J4n7PSjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2228
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/6/20 5:24 PM, Jared Rossi wrote:
-> Remove the explicit prefetch check when using vfio-ccw devices.
-> This check does not trigger in practice as all Linux channel programs
-> are intended to use prefetch.
-> 
-> It is expected that all ORBs issued by Linux will request prefetch.
-> Although non-prefetching ORBs are not rejected, they will prefetch
-> nonetheless. A warning is issued up to once per 5 seconds when a
-> forced prefetch occurs.
-> 
-> A non-prefetch ORB does not necessarily result in an error, however
-> frequent encounters with non-prefetch ORBs indicate that channel
-> programs are being executed in a way that is inconsistent with what
-> the guest is requesting. While there is currently no known case of an
-> error caused by forced prefetch, it is possible in theory that forced
-> prefetch could result in an error if applied to a channel program that
-> is dependent on non-prefetch.
-> 
-> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
-
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-
-> ---
->  Documentation/s390/vfio-ccw.rst |  6 ++++++
->  drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
->  2 files changed, 18 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
-> index fca9c4f5bd9c..23e7d136f8b4 100644
-> --- a/Documentation/s390/vfio-ccw.rst
-> +++ b/Documentation/s390/vfio-ccw.rst
-> @@ -335,6 +335,12 @@ device.
->  The current code allows the guest to start channel programs via
->  START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.
->  
-> +Currently all channel programs are prefetched, regardless of the
-> +p-bit setting in the ORB.  As a result, self modifying channel
-> +programs are not supported.  For this reason, IPL has to be handled as
-> +a special case by a userspace/guest program; this has been implemented
-> +in QEMU's s390-ccw bios as of QEMU 4.1.
-> +
->  vfio-ccw supports classic (command mode) channel I/O only. Transport
->  mode (HPF) is not supported.
->  
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-> index 3645d1720c4b..f237480c3d43 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> @@ -8,6 +8,7 @@
->   *            Xiao Feng Ren <renxiaof@linux.vnet.ibm.com>
->   */
->  
-> +#include <linux/ratelimit.h>
->  #include <linux/mm.h>
->  #include <linux/slab.h>
->  #include <linux/iommu.h>
-> @@ -625,23 +626,27 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
->   * the target channel program from @orb->cmd.iova to the new ccwchain(s).
->   *
->   * Limitations:
-> - * 1. Supports only prefetch enabled mode.
-> - * 2. Supports idal(c64) ccw chaining.
-> - * 3. Supports 4k idaw.
-> + * 1. Supports idal(c64) ccw chaining.
-> + * 2. Supports 4k idaw.
->   *
->   * Returns:
->   *   %0 on success and a negative error value on failure.
->   */
->  int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
->  {
-> +	/* custom ratelimit used to avoid flood during guest IPL */
-> +	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
->  	int ret;
->  
->  	/*
-> -	 * XXX:
-> -	 * Only support prefetch enable mode now.
-> +	 * We only support prefetching the channel program. We assume all channel
-> +	 * programs executed by supported guests likewise support prefetching.
-> +	 * Executing a channel program that does not specify prefetching will
-> +	 * typically not cause an error, but a warning is issued to help identify
-> +	 * the problem if something does break.
->  	 */
-> -	if (!orb->cmd.pfch)
-> -		return -EOPNOTSUPP;
-> +	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
-> +		dev_warn(mdev, "Prefetching channel program even though prefetch not specified in ORB");
->  
->  	INIT_LIST_HEAD(&cp->ccwchain_list);
->  	memcpy(&cp->orb, orb, sizeof(*orb));
-> 
+PiANCj4gTG9va3MgdGhlcmUgaXMgcmFjZSBiZXR3ZWVuIHRoZSBwcmV2aW91cyBzdHJlYW0gc3Rv
+cCBhbmQgdGhlIGN1cnJlbnQNCj4gc3RyZWFtIHN0YXJ0IGhlcmUuIENhbiB5b3UgaGVscCB0cnkg
+Y2hhbmdpbmcgdGhlDQo+IHNzdF9ieXRfc3RyZWFtX3N0YXJ0L3N0b3AoKSBmcm9tICdub3dhaXQn
+IG1vZGUgdG8gJ3dhaXQnIG1vZGUsIGFuZCBzZWUgaWYNCj4gdGhlIGlzc3VlIGNhbiBiZSByZXBy
+b2R1Y2VkIHdpdGggaXQ/DQoNCkhpIEtleW9uLA0KDQpLZXJuZWwgcGFuaWMgaWYgdGhlIG1vZGUg
+aXMgY2hhbmdlZC4gVGhlIGRlZmVjdCBjb3VsZCBoYXBwZW4gdG8gdGhlIGZpcnN0DQpBTExPQ19T
+VFJFQU0gY29tbWFuZCBhZnRlciBib290c3RyYXAgc28gSSB0aGluayB0aGUgU1RBUlQvRFJPUF9T
+VFJBTQ0KbWF5IG5vdCB3b3JrLiANCg0KDQpSZWdhcmRzLA0KQnJlbnQNCj4gDQo+IA0KPiBUaGFu
+a3MsDQo+IH5LZXlvbg0KPiANCg==
