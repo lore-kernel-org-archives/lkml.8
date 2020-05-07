@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320D5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44DAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01EC220736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9F920936
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Osuou/V5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kcHW/TPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEGAoO (ORCPT
+        id S1728394AbgEGAoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:44:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38394 "EHLO
+        Wed, 6 May 2020 20:44:13 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38392 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728318AbgEGAoL (ORCPT
+        with ESMTP id S1728301AbgEGAoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:44:11 -0400
+        Wed, 6 May 2020 20:44:12 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bkGi092899;
-        Thu, 7 May 2020 00:43:15 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bn87092995;
+        Thu, 7 May 2020 00:43:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=Y+m+s4ZCNURBXj766gTT4gE1Fj6SOZhPn+YCjxoGrp4=;
- b=Osuou/V5BI3MblqKTJFUzzNZy5OpWrI3Z+5ocCwhhrXYW+JJzCx0NkO8086TAGBTLoYT
- s3fYplzuOKAnB5WqFvph6yEsPcA060kp2bvo4eNFLyiTYAFZ7ZUw63SqJFZoVX0Dl8h1
- dMwjlznlZQAijOgiMVgOoPPt7hnNh0xZfB+dxRn7N285j88JFRLnI3jeBeo9l1g2S41n
- AlJwLFakJc4Ic1WhMIhDiwJtwuOc0bYX90EdYdetzBpWkKcNwTSOgGJYDuqG/Vky1+GZ
- rvMIc9aZLxizoWSytjjXotor/lxxqCB9KUE5nSF+Zf7EAwKsQeT0gNJwbUTt9nDHf6t8 TA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30s1gnd8kv-1
+ bh=7FlNkRF1oblAeXIUyymeHAqshs+dkh2quuYtBUHergU=;
+ b=kcHW/TPO1YMNUkHh0blDwat1m2OeaHhivZ//2tjB83CvkHLWVfxwAMzKQjxlyklkvESi
+ xSqemzMlgECWBv4ppxad67bEfH1xwDDIoxsBgLWFpZ4RPaz7deQs6LQFMr4rGoQNM0HY
+ iCRzbXY6UJCYRXPu8Ab20cpqQZv3UBKqrPv2MBDT6rohUz5+JcXi2NTYEgB2aILy3ykj
+ OhkqeIxFrE/mglKShKR10Gp2Vdq15HYSME8zuWBCGdtB5uZ0YOuRPCNkK5mcgxXtzDLm
+ Gr0aeDT2ATIBEPPK6peQvmiTmlhx09vYA8AMq0GMJ3eapI+0BRIbyrVzyGUHC8OAi/5m NA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30s1gnd8kd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:43:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470auqu170921;
-        Thu, 7 May 2020 00:43:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30us7p2ma0-1
+        Thu, 07 May 2020 00:43:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bm3P131725;
+        Thu, 7 May 2020 00:43:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 30t1r958s2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:43:14 +0000
+        Thu, 07 May 2020 00:43:06 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470hB01025731;
-        Thu, 7 May 2020 00:43:11 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470h5NU019964;
+        Thu, 7 May 2020 00:43:05 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:43:11 -0700
+        with ESMTP ; Wed, 06 May 2020 17:43:04 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,15 +71,15 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 16/43] kexec: PKRAM: prevent kexec clobbering preserved pages in some cases
-Date:   Wed,  6 May 2020 17:41:42 -0700
-Message-Id: <1588812129-8596-17-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 14/43] mm: memblock: PKRAM: prevent memblock resize from clobbering preserved pages
+Date:   Wed,  6 May 2020 17:41:40 -0700
+Message-Id: <1588812129-8596-15-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
- mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
@@ -93,76 +93,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When loading a kernel for kexec, dynamically update the list of physical
-ranges that are not to be used for storing preserved pages with the ranges
-where kexec segments will be copied to on reboot. This ensures no pages
-preserved after the new kernel has been loaded will reside in these ranges
-on reboot.
-
-Not yet handled is the case where pages have been preserved before a
-kexec kernel is loaded.  This will be covered by a later patch.
+The size of the memblock reserved array may be increased while preserved
+pages are being reserved. When this happens, preserved pages that have
+not yet been reserved are at risk for being clobbered when space for a
+larger array is allocated.
+When called from memblock_double_array(), a wrapper around
+memblock_find_in_range() walks the preserved pages pagetable to find
+sufficiently sized ranges without preserved pages and passes them to
+memblock_find_in_range().
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- kernel/kexec.c      |  9 +++++++++
- kernel/kexec_file.c | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+ include/linux/pkram.h |  3 +++
+ mm/memblock.c         | 15 +++++++++++++--
+ mm/pkram.c            | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index f977786fe498..c44598fc42a1 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index edc5d8bef9d3..409022e1472f 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -62,6 +62,9 @@ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index,
+ ssize_t pkram_write(struct pkram_stream *ps, const void *buf, size_t count);
+ size_t pkram_read(struct pkram_stream *ps, void *buf, size_t count);
+ 
++phys_addr_t pkram_memblock_find_in_range(phys_addr_t start, phys_addr_t end,
++					 phys_addr_t size, phys_addr_t align);
++
+ #ifdef CONFIG_PKRAM
+ extern unsigned long pkram_reserved_pages;
+ void pkram_reserve(void);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index c79ba6f9920c..69ae883b8d21 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
 @@ -16,6 +16,7 @@
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
+ #include <linux/kmemleak.h>
+ #include <linux/seq_file.h>
+ #include <linux/memblock.h>
 +#include <linux/pkram.h>
  
- #include "kexec_internal.h"
+ #include <asm/sections.h>
+ #include <linux/io.h>
+@@ -349,6 +350,16 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+ 	return ret;
+ }
  
-@@ -163,6 +164,14 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	if (ret)
- 		goto out;
- 
-+	for (i = 0; i < nr_segments; i++) {
-+		unsigned long mem = image->segment[i].mem;
-+		size_t memsz = image->segment[i].memsz;
++phys_addr_t __init_memblock __memblock_find_in_range(phys_addr_t start,
++					phys_addr_t end, phys_addr_t size,
++					phys_addr_t align)
++{
++	if (IS_ENABLED(CONFIG_PKRAM))
++		return pkram_memblock_find_in_range(start, end, size, align);
++	else
++		return memblock_find_in_range(start, end, size, align);
++}
 +
-+		if (memsz)
-+			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
+ static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
+ {
+ 	type->total_size -= type->regions[r].size;
+@@ -447,11 +458,11 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
+ 		if (type != &memblock.reserved)
+ 			new_area_start = new_area_size = 0;
+ 
+-		addr = memblock_find_in_range(new_area_start + new_area_size,
++		addr = __memblock_find_in_range(new_area_start + new_area_size,
+ 						memblock.current_limit,
+ 						new_alloc_size, PAGE_SIZE);
+ 		if (!addr && new_area_size)
+-			addr = memblock_find_in_range(0,
++			addr = __memblock_find_in_range(0,
+ 				min(new_area_start, memblock.current_limit),
+ 				new_alloc_size, PAGE_SIZE);
+ 
+diff --git a/mm/pkram.c b/mm/pkram.c
+index dd3c89614010..e49c9bcd3854 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1238,3 +1238,54 @@ void pkram_free_pgt(void)
+ 	__free_pages_core(virt_to_page(pkram_pgd), 0);
+ 	pkram_pgd = NULL;
+ }
++
++static int __init_memblock pkram_memblock_find_cb(struct pkram_pg_state *st, unsigned long base, unsigned long size)
++{
++	unsigned long end = base + size;
++	unsigned long addr;
++
++	if (size < st->min_size)
++		return 0;
++
++	addr =  memblock_find_in_range(base, end, st->min_size, PAGE_SIZE);
++	if (!addr)
++		return 0;
++
++	st->retval = addr;
++	return 1;
++}
++
++/*
++ * It may be necessary to allocate a larger reserved memblock array
++ * while populating it with ranges of preserved pages.  To avoid
++ * trampling preserved pages that have not yet been added to the
++ * memblock reserved list this function implements a wrapper around
++ * memblock_find_in_range() that restricts searches to subranges
++ * that do not contain preserved pages.
++ */
++phys_addr_t __init_memblock pkram_memblock_find_in_range(phys_addr_t start,
++					phys_addr_t end, phys_addr_t size,
++					phys_addr_t align)
++{
++	struct pkram_pg_state st = {
++		.range_cb = pkram_memblock_find_cb,
++		.min_addr = start,
++		.max_addr = end,
++		.min_size = PAGE_ALIGN(size),
++		.find_holes = true,
++	};
++
++	if (!pkram_reservation_in_progress)
++		return memblock_find_in_range(start, end, size, align);
++
++	if (!pkram_pgd) {
++		WARN_ONCE(1, "No preserved pages pagetable\n");
++		return memblock_find_in_range(start, end, size, align);
 +	}
 +
- 	/* Install the new kernel and uninstall the old */
- 	image = xchg(dest_image, image);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index faa74d5f6941..f57f72237859 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -26,6 +26,8 @@
- #include <linux/kernel.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
-+#include <linux/pkram.h>
++	WARN_ONCE(memblock_bottom_up(), "PKRAM: bottom up memblock allocation not yet supported\n");
 +
- #include "kexec_internal.h"
- 
- static int kexec_calculate_store_digests(struct kimage *image);
-@@ -445,6 +447,14 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	if (ret)
- 		goto out;
- 
-+	for (i = 0; i < image->nr_segments; i++) {
-+		unsigned long mem = image->segment[i].mem;
-+		size_t memsz = image->segment[i].memsz;
++	pkram_walk_pgt_rev(&st, pkram_pgd);
 +
-+		if (memsz)
-+			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
-+	}
-+
- 	/*
- 	 * Free up any temporary buffers allocated which are not needed
- 	 * after image has been loaded
++	return st.retval;
++}
 -- 
 2.13.3
 
