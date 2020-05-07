@@ -2,109 +2,123 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22382C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E5BC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A7C216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588870024;
-	bh=JaW3D7120Nzfwb5MoQD531DtZQa+T/FsFULmIHrLiho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FBtu+fEQUej9flAANCDVXz4GlLZFcnm6XPx8coCR6ajYDG+kB47i6BSb0oqoYOm2T
-	 3Q8Tp6uVIIaKDrfeHZhX/X1Jl5zLokxCFks+w4TgAqI2JsIUrdIH0KcW5NNCk0RoEw
-	 EZVi25LcfoJugddTvnjrzKYJmnBgjd0ybaXXIS40=
+	by mail.kernel.org (Postfix) with ESMTP id 4E40020870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgEGQrD (ORCPT
+        id S1727887AbgEGQsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:47:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35802 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEGQrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:47:02 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r26so7628844wmh.0;
-        Thu, 07 May 2020 09:47:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EIgmxX814C2jT2rV+jySB1AamDNAJaeVnCN6Yqs05Yc=;
-        b=Xef9qLQjR2f/kicB9gNJl7Eej+C7MRdgXG2das2uFdQx/D30LcYEg1afokNFfdRhev
-         QuJq3i2XC7Udf7KH4wCIG6AgZ2tIXXPAbig2bpvhbHsB+m0vuhyy1Mmstl15r5JW/pCI
-         gsPSoZrgAJiGjGlHrxVI5A8FwbCqGH1dc5c4CibhT/topZJfPsCoytqAcXUVVdqhVueO
-         g++JNmVKZvPw3PHlR+uPWTEq/vBRiPnySxOMkDZQBrE7l//JF3fLCuVVPVrQi4bwlxPa
-         owGOJeq1ltuQkQMet2JORaDA6cBNobgOcVm2OcJppbUypDcC0sw4CNsn6ecx4EBX/R+l
-         VfDw==
-X-Gm-Message-State: AGi0PuZmeZ+u1p1LDiwv4Ken/9QZNN+TMdgWdLZGBAmvyEoaGLBC9kKk
-        38UV8zoCWuMWxYpWzIoDHTw=
-X-Google-Smtp-Source: APiQypIRx74HYY9YS+imm0npI96iz1lm4ynkT4c22/lcqv53j+jdbFjzODq4YvtVDcRdtqQ+RrqWeQ==
-X-Received: by 2002:a1c:ed04:: with SMTP id l4mr11315095wmh.93.1588870020627;
-        Thu, 07 May 2020 09:47:00 -0700 (PDT)
-Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
-        by smtp.gmail.com with ESMTPSA id q2sm3554922wrm.42.2020.05.07.09.46.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 09:46:59 -0700 (PDT)
-Date:   Thu, 7 May 2020 18:46:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: effective memory.high reclaim for remote charging
-Message-ID: <20200507164653.GM6345@dhcp22.suse.cz>
-References: <20200507163301.229070-1-shakeelb@google.com>
+        Thu, 7 May 2020 12:48:01 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2163 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726074AbgEGQsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:48:01 -0400
+Received: from lhreml741-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id F1CB7F4FD0BDC45C14F0;
+        Thu,  7 May 2020 17:47:58 +0100 (IST)
+Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
+ lhreml741-chm.china.huawei.com (10.201.108.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Thu, 7 May 2020 17:47:58 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 7 May 2020 18:47:58 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Thu, 7 May 2020 18:47:58 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "John Johansen" <john.johansen@canonical.com>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IIAAb0AAgAApg3A=
+Date:   Thu, 7 May 2020 16:47:58 +0000
+Message-ID: <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+ <1588864628.5685.78.camel@linux.ibm.com>
+In-Reply-To: <1588864628.5685.78.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.65.97]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507163301.229070-1-shakeelb@google.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 07-05-20 09:33:01, Shakeel Butt wrote:
-[...]
-> @@ -2600,8 +2596,23 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  				schedule_work(&memcg->high_work);
->  				break;
->  			}
-> -			current->memcg_nr_pages_over_high += batch;
-> -			set_notify_resume(current);
-> +
-> +			if (gfpflags_allow_blocking(gfp_mask))
-> +				reclaim_over_high(memcg, gfp_mask, batch);
-> +
-> +			if (page_counter_read(&memcg->memory) <=
-> +			    READ_ONCE(memcg->high))
-> +				break;
-
-I am half way to a long weekend so bear with me. Shouldn't this be continue? The
-parent memcg might be still in excess even the child got reclaimed,
-right?
-
-> +			/*
-> +			 * The above reclaim might not be able to do much. Punt
-> +			 * the high reclaim to return to userland if the current
-> +			 * task shares the hierarchy.
-> +			 */
-> +			if (current->mm && mm_match_cgroup(current->mm, memcg)) {
-> +				current->memcg_nr_pages_over_high += batch;
-> +				set_notify_resume(current);
-> +			} else
-> +				schedule_work(&memcg->high_work);
->  			break;
->  		}
->  	} while ((memcg = parent_mem_cgroup(memcg)));
-> -- 
-> 2.26.2.526.g744177e7f7-goog
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
+em9oYXJAbGludXguaWJtLmNvbV0NCj4gT24gVGh1LCAyMDIwLTA1LTA3IGF0IDA3OjUzICswMDAw
+LCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gPiA+IEZyb206IE1pbWkgWm9oYXIgW21haWx0bzp6b2hhckBsaW51eC5pYm0uY29tXQ0KPiA+
+ID4gU2VudDogV2VkbmVzZGF5LCBNYXkgNiwgMjAyMCAxMToxMCBQTQ0KPiA+ID4gVG86IFJvYmVy
+dG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT47DQo+IGRhdmlkLnNhZmZvcmRAZ21h
+aWwuY29tOw0KPiA+ID4gdmlyb0B6ZW5pdi5saW51eC5vcmcudWs7IGptb3JyaXNAbmFtZWkub3Jn
+OyBKb2huIEpvaGFuc2VuDQo+ID4gPiA8am9obi5qb2hhbnNlbkBjYW5vbmljYWwuY29tPg0KPiA+
+ID4gQ2M6IGxpbnV4LWZzZGV2ZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pbnRlZ3JpdHlAdmdl
+ci5rZXJuZWwub3JnOw0KPiBsaW51eC0NCj4gPiA+IHNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdQ0KPiA+ID4gVmxhc2Nl
+YW51IDxTaWx2aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1JG
+Q11bUEFUQ0ggMS8zXSBldm06IE1vdmUgaG9va3Mgb3V0c2lkZSBMU00NCj4gaW5mcmFzdHJ1Y3R1
+cmUNCj4gDQo+IFJvYmVydG8sIHBsZWFzZSBmaXggeW91ciBtYWlsZXIgb3IgYXQgbGVhc3QgbWFu
+dWFsbHkgcmVtb3ZlIHRoaXMgc29ydA0KPiBvZiBpbmZvIGZyb20gdGhlIGVtYWlsLg0KPiANCj4g
+PiA+DQo+ID4gPiBPbiBXZWQsIDIwMjAtMDUtMDYgYXQgMTU6NDQgLTA0MDAsIE1pbWkgWm9oYXIg
+d3JvdGU6DQo+ID4gPiA+IFNpbmNlIGNvcHlpbmcgdGhlIEVWTSBITUFDIG9yIG9yaWdpbmFsIHNp
+Z25hdHVyZSBpc24ndCBhcHBsaWNhYmxlLCBJDQo+ID4gPiA+IHdvdWxkIHByZWZlciBleHBsb3Jp
+bmcgYW4gRVZNIHBvcnRhYmxlIGFuZCBpbW11dGFibGUgc2lnbmF0dXJlIG9ubHkNCj4gPiA+ID4g
+c29sdXRpb24uDQo+ID4gPg0KPiA+ID4gVG8gcHJldmVudCBjb3B5aW5nIHRoZSBFVk0geGF0dHIs
+IHdlIGFkZGVkICJzZWN1cml0eS5ldm0iIHRvDQo+ID4gPiAvZXRjL3hhdHRyLmNvbmYuIMKgVG8g
+c3VwcG9ydCBjb3B5aW5nIGp1c3QgdGhlIEVWTSBwb3J0YWJsZSBhbmQNCj4gPiA+IGltbXV0YWJs
+ZSBzaWduYXR1cmVzIHdpbGwgcmVxdWlyZSBhIGRpZmZlcmVudCBzb2x1dGlvbi4NCj4gPg0KPiA+
+IFRoaXMgcGF0Y2ggc2V0IHJlbW92ZXMgdGhlIG5lZWQgZm9yIGlnbm9yaW5nIHNlY3VyaXR5LmV2
+bS4gSXQgY2FuIGJlDQo+IGFsd2F5cw0KPiA+IGNvcGllZCwgZXZlbiBpZiBpdCBpcyBhbiBITUFD
+LiBFVk0gd2lsbCB1cGRhdGUgaXQgb25seSB3aGVuIHZlcmlmaWNhdGlvbiBpbg0KPiA+IHRoZSBw
+cmUgaG9vayBpcyBzdWNjZXNzZnVsLiBDb21iaW5lZCB3aXRoIHRoZSBhYmlsaXR5IG9mIHByb3Rl
+Y3RpbmcgYQ0KPiBzdWJzZXQNCj4gPiBvZiBmaWxlcyB3aXRob3V0IGludHJvZHVjaW5nIGFuIEVW
+TSBwb2xpY3ksIHRoZXNlIGFkdmFudGFnZXMgc2VlbSB0bw0KPiA+IG91dHdlaWdoIHRoZSBlZmZv
+cnQgbmVjZXNzYXJ5IHRvIG1ha2UgdGhlIHN3aXRjaC4NCj4gDQo+IEFzIHRoZSBFVk0gZmlsZSBI
+TUFDIGFuZCBvcmlnaW5hbCBzaWduYXR1cmUgY29udGFpbiBpbm9kZSBzcGVjaWZpYw0KPiBpbmZv
+cm1hdGlvbiAoZWcuIGlfdmVyc2lvbiwgaV9nZW5lcmF0aW9uKSwgdGhlc2UgeGF0dHJzIGNhbm5v
+dCBldmVyIGJlDQo+IGNvcGllZC4gwqBUaGUgcHJvcG9zZWQgY2hhbmdlIGlzIGluIG9yZGVyIHRv
+IHN1cHBvcnQganVzdCB0aGUgbmV3IEVWTQ0KPiBzaWduYXR1cmVzLg0KDQpSaWdodCwgSSBkaWRu
+J3QgY29uc2lkZXIgaXQuDQoNCldvdWxkIGl0IG1ha2Ugc2Vuc2UgaW5zdGVhZCB0byBpbnRyb2R1
+Y2UgYW4gYWxpYXMgbGlrZSBzZWN1cml0eS5ldm1faW1tdXRhYmxlDQpzbyB0aGF0IHRoaXMgeGF0
+dHIgY2FuIGJlIGNvcGllZD8NCg0KPiBBdCBsZWFzdCBJTUEgZmlsZSBoYXNoZXMgc2hvdWxkIGFs
+d2F5cyBiZSB1c2VkIGluIGNvbmp1bmN0aW9uIHdpdGgNCj4gRVZNLiDCoEVWTSB4YXR0cnMgc2hv
+dWxkIGFsd2F5cyByZXF1aXJlIGEgc2VjdXJpdHkuaW1hIHhhdHRyIHRvIGJpbmQNCg0KSSBwcm9w
+b3NlZCB0byBlbmZvcmNlIHRoaXMgcmVzdHJpY3Rpb24gc29tZSB0aW1lIGFnbzoNCg0KaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDk3OTM1MS8NCg0KSXMgaXQgb2sgdG8gZW5m
+b3JjZSBpdCBnbG9iYWxseT8NCg0KPiB0aGUgZmlsZSBtZXRhZGF0YSB0byB0aGUgZmlsZSBkYXRh
+LiDCoFRoZSBJTUEgYW5kIEVWTSBwb2xpY2llcyByZWFsbHkNCj4gbmVlZCB0byBiZSBpbiBzeW5j
+Lg0KDQpJdCB3b3VsZCBiZSBuaWNlLCBidXQgYXQgdGhlIG1vbWVudCBFVk0gY29uc2lkZXJzIGFs
+c28gZmlsZXMgdGhhdCBhcmUNCm5vdCBzZWxlY3RlZCBieSB0aGUgSU1BIHBvbGljeS4gQW4gZXhh
+bXBsZSBvZiB3aHkgdGhpcyBpcyBhIHByb2JsZW0gaXMNCnRoZSBhdWRpdCBzZXJ2aWNlIHRoYXQg
+ZmFpbHMgdG8gc3RhcnQgd2hlbiBpdCB0cmllcyB0byBhZGp1c3QgdGhlIHBlcm1pc3Npb25zDQpv
+ZiB0aGUgbG9nIGZpbGVzLiBUaG9zZSBmaWxlcyBkb24ndCBoYXZlIHNlY3VyaXR5LmV2bSBiZWNh
+dXNlIHRoZXkgYXJlDQpub3QgYXBwcmFpc2VkIGJ5IElNQSwgYnV0IEVWTSBkZW5pZXMgdGhlIG9w
+ZXJhdGlvbi4NCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9HSUVTIER1ZXNzZWxkb3JmIEdt
+YkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExpIEppYW4sIFNoaSBZ
+YW5saQ0K
