@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFC4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D59C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC6EF20736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1B82064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H1det3gM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vm1xGfzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgEGAqF (ORCPT
+        id S1728903AbgEGAqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:46:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49504 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728832AbgEGAqA (ORCPT
+        Wed, 6 May 2020 20:46:09 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38868 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgEGAqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:46:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470befJ064522;
-        Thu, 7 May 2020 00:44:53 GMT
+        Wed, 6 May 2020 20:46:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470dOG7097631;
+        Thu, 7 May 2020 00:44:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=cg4oKTlkz7COgexHCFzVJnE42b7eeQownh5JuIB+IVo=;
- b=H1det3gMfdv8Nw3uK+9bx7D1A8RL3637W4FILQ5ULMPvVpbUEtQITqpXr4+XhPK9zRiK
- tN+YtTCWcgh/a2asuQqUOQhmNLxg90x07tg/FXahQhekcuk1eJaJfZsrxHNSJmE+RhkY
- 5+aPjy98gm4Vsqu++p0KOgzDfqxT7HtS3ieI8FuYttljU0J4BqilSgeWNUrVO803/Igm
- pLPSqbMCekuQJXTezhoBDdwyWLzQc0AWcg7Jdu4cH12b4Nw88bHSlV+wFvoZVsfqfzy2
- TcwOgt0ZwUNcd9sLaRDnyfiMreokb+K23IwOHa0KXvhozdKyJMLhzgtCZU+LtD4ZoVOi GA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30s09rdfd0-1
+ bh=U5kSpS0/Dc5fgEe6X16U4eAHbnbPBtC/T/domT4TH8s=;
+ b=vm1xGfzfTCm7LXxnLDJHzBg+kv+2Q3Gu1b70Z2+C7lDFsCCkSq2aF5KU4TaJWKovUTbm
+ 4ZCOEQ05F0FY1NqHr63zFBE+93CAKFygbJaDM38ipDP0MjM3ZnKCMwqPxeYsyU2jqMgs
+ EBDvlOYXbwTwEFkmLSqhwG/YD/Rh/FaeX3jxgpBiaR2ZyrHOjnpcWNgOcb0XCceJeF1f
+ BdYiGLFJmlbWo697vNbyzh7SOZaBzfqwlhp4wsjkyOoz34sQb6Ti3HK26oJnEH9zCczv
+ olmk4xH+Sda92kPCQl7VvYBJq/Bv8KAwazzL+LEYXb1xcT74Gb7QSPUdgly1DKhBX9I6 XQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30usgq4h2u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:52 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bmIF131679;
-        Thu, 7 May 2020 00:42:52 GMT
+        Thu, 07 May 2020 00:44:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470alL4170703;
+        Thu, 7 May 2020 00:44:55 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 30t1r958af-1
+        by userp3020.oracle.com with ESMTP id 30us7p2pnn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:42:52 +0000
+        Thu, 07 May 2020 00:44:55 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470go88019800;
-        Thu, 7 May 2020 00:42:50 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470irBD020628;
+        Thu, 7 May 2020 00:44:53 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:42:50 -0700
+        with ESMTP ; Wed, 06 May 2020 17:44:53 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,253 +71,72 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 10/43] PKRAM: add code for walking the preserved pages pagetable
-Date:   Wed,  6 May 2020 17:41:36 -0700
-Message-Id: <1588812129-8596-11-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 39/43] shmem: optimize adding pages to the LRU in shmem_insert_pages()
+Date:   Wed,  6 May 2020 17:42:05 -0700
+Message-Id: <1588812129-8596-40-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to walk the pkram pagetable from high to low addresses
-and execute a callback for each contiguous range of preserved or not
-preserved memory found.  The reason for walking high to low is to align
-with high to low memblock allocation when finding holes that memblocks
-can safely be allocated from as will be seen in a later patch.
+Reduce LRU lock contention when inserting shmem pages by staging pages
+to be added to the same LRU and adding them en masse.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |  15 +++++
- mm/Makefile           |   2 +-
- mm/pkram_pagetable.c  | 169 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 185 insertions(+), 1 deletion(-)
- create mode 100644 mm/pkram_pagetable.c
+ mm/shmem.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index a58dd2ea835a..b6fa973d37cc 100644
---- a/include/linux/pkram.h
-+++ b/include/linux/pkram.h
-@@ -25,6 +25,21 @@ struct pkram_stream {
+diff --git a/mm/shmem.c b/mm/shmem.c
+index ca5edf580f24..678a396ba8d3 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -789,9 +789,12 @@ int shmem_insert_pages(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 	struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
+ 	gfp_t gfp = mapping_gfp_mask(mapping);
+ 	struct mem_cgroup *memcg;
++	struct lru_splice splice;
+ 	int i, err;
+ 	int nr = 0;
  
- #define PKRAM_NAME_MAX		256	/* including nul */
++	memset(&splice, 0, sizeof(splice));
++
+ 	for (i = 0; i < npages; i++)
+ 		nr += compound_nr(pages[i]);
  
-+struct pkram_pg_state {
-+	int (*range_cb)(struct pkram_pg_state *state, unsigned long base,
-+			unsigned long size);
-+	unsigned long curr_addr;
-+	unsigned long end_addr;
-+	unsigned long min_addr;
-+	unsigned long max_addr;
-+	unsigned long min_size;
-+	bool tracking;
-+	bool find_holes;
-+	unsigned long retval;
-+};
+@@ -866,7 +869,7 @@ int shmem_insert_pages(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 		}
+ 
+ 		if (!PageLRU(pages[i]))
+-			lru_cache_add_anon(pages[i]);
++			lru_splice_add_anon(pages[i], &splice);
+ 
+ 		flush_dcache_page(pages[i]);
+ 		SetPageUptodate(pages[i]);
+@@ -875,6 +878,9 @@ int shmem_insert_pages(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 		unlock_page(pages[i]);
+ 	}
+ 
++	if (splice.pgdat)
++		add_splice_to_lru_list(&splice);
 +
-+void pkram_walk_pgt_rev(struct pkram_pg_state *st, pgd_t *pgd);
-+
- int pkram_prepare_save(struct pkram_stream *ps, const char *name,
- 		       gfp_t gfp_mask);
- int pkram_prepare_save_obj(struct pkram_stream *ps);
-diff --git a/mm/Makefile b/mm/Makefile
-index 59cd381194af..c4ad1c56e237 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -112,4 +112,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
- obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
- obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
- obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
--obj-$(CONFIG_PKRAM) += pkram.o
-+obj-$(CONFIG_PKRAM) += pkram.o pkram_pagetable.o
-diff --git a/mm/pkram_pagetable.c b/mm/pkram_pagetable.c
-new file mode 100644
-index 000000000000..d31aa36207ba
---- /dev/null
-+++ b/mm/pkram_pagetable.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/bitops.h>
-+#include <asm/pgtable.h>
-+#include <linux/pkram.h>
-+
-+#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
-+
-+static int note_page_rev(struct pkram_pg_state *st, unsigned long curr_size, bool present)
-+{
-+	unsigned long curr_addr = st->curr_addr;
-+	bool track_page = present ^ st->find_holes;
-+
-+	if (!st->tracking && track_page) {
-+		unsigned long end_addr = curr_addr + curr_size;
-+
-+		if (end_addr <= st->min_addr)
-+			return 1;
-+
-+		st->end_addr = min(end_addr, st->max_addr);
-+		st->tracking = true;
-+	} else if (st->tracking) {
-+		unsigned long base, size;
-+
-+		/* Continue tracking if lower bound has not been reached */
-+		if (track_page && curr_addr && curr_addr >= st->min_addr)
-+			return 0;
-+
-+		if (!track_page)
-+			base = max(curr_addr + curr_size, st->min_addr);
-+		else
-+			base = st->min_addr;
-+
-+		size = st->end_addr - base;
-+		st->tracking = false;
-+
-+		return st->range_cb(st, base, size);
-+	}
-+
-+	return 0;
-+}
-+
-+static int walk_pte_level_rev(struct pkram_pg_state *st, pmd_t addr, unsigned long P)
-+{
-+	unsigned long *bitmap;
-+	int present;
-+	int i, ret;
-+
-+	bitmap = __va(pmd_val(addr));
-+	for (i = PTRS_PER_PTE - 1; i >= 0; i--) {
-+		unsigned long curr_addr = P + i * PAGE_SIZE;
-+
-+		if (curr_addr >= st->max_addr)
-+			continue;
-+		st->curr_addr = curr_addr;
-+
-+		present = test_bit(i, bitmap);
-+		ret = note_page_rev(st, PAGE_SIZE, present);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int walk_pmd_level_rev(struct pkram_pg_state *st, pud_t addr, unsigned long P)
-+{
-+	pmd_t *start;
-+	int i, ret;
-+
-+	start = (pmd_t *)pud_page_vaddr(addr) + PTRS_PER_PMD - 1;
-+	for (i = PTRS_PER_PMD - 1; i >= 0; i--, start--) {
-+		unsigned long curr_addr = P + i * PMD_SIZE;
-+
-+		if (curr_addr >= st->max_addr)
-+			continue;
-+		st->curr_addr = curr_addr;
-+
-+		if (!pmd_none(*start)) {
-+			if (pmd_large(*start))
-+				ret = note_page_rev(st, PMD_SIZE, true);
-+			else
-+				ret = walk_pte_level_rev(st, *start, curr_addr);
-+		} else
-+			ret = note_page_rev(st, PMD_SIZE, false);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int walk_pud_level_rev(struct pkram_pg_state *st, p4d_t addr, unsigned long P)
-+{
-+	pud_t *start;
-+	int i, ret;
-+
-+	start = (pud_t *)p4d_page_vaddr(addr) + PTRS_PER_PUD - 1;
-+	for (i = PTRS_PER_PUD - 1; i >= 0 ; i--, start--) {
-+		unsigned long curr_addr = P + i * PUD_SIZE;
-+
-+		if (curr_addr >= st->max_addr)
-+			continue;
-+		st->curr_addr = curr_addr;
-+
-+		if (!pud_none(*start)) {
-+			if (pud_large(*start))
-+				ret = note_page_rev(st, PUD_SIZE, true);
-+			else
-+				ret = walk_pmd_level_rev(st, *start, curr_addr);
-+		} else
-+			ret = note_page_rev(st, PUD_SIZE, false);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int walk_p4d_level_rev(struct pkram_pg_state *st, pgd_t addr, unsigned long P)
-+{
-+	p4d_t *start;
-+	int i, ret;
-+
-+	if (PTRS_PER_P4D == 1)
-+		return walk_pud_level_rev(st, __p4d(pgd_val(addr)), P);
-+
-+	start = (p4d_t *)pgd_page_vaddr(addr) + PTRS_PER_P4D - 1;
-+	for (i = PTRS_PER_P4D - 1; i >= 0; i--, start--) {
-+		unsigned long curr_addr = P + i * P4D_SIZE;
-+
-+		if (curr_addr >= st->max_addr)
-+			continue;
-+		st->curr_addr = curr_addr;
-+
-+		if (!p4d_none(*start)) {
-+			if (p4d_large(*start))
-+				ret = note_page_rev(st, P4D_SIZE, true);
-+			else
-+				ret = walk_pud_level_rev(st, *start, curr_addr);
-+		} else
-+			ret = note_page_rev(st, P4D_SIZE, false);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+void pkram_walk_pgt_rev(struct pkram_pg_state *st, pgd_t *pgd)
-+{
-+	pgd_t *start;
-+	int i, ret;
-+
-+	start = pgd + PTRS_PER_PGD - 1;
-+	for (i = PTRS_PER_PGD - 1; i >= 0; i--, start--) {
-+		unsigned long curr_addr = i * PGDIR_SIZE;
-+
-+		if (curr_addr >= st->max_addr)
-+			continue;
-+		st->curr_addr = curr_addr;
-+
-+		if (!pgd_none(*start))
-+			ret = walk_p4d_level_rev(st, *start, curr_addr);
-+		else
-+			ret = note_page_rev(st, PGDIR_SIZE, false);
-+		if (ret)
-+			break;
-+	}
-+}
+ 	return 0;
+ 
+ out_truncate:
 -- 
 2.13.3
 
