@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCC5C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D6AC47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6731D2184D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9511121BE5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877234;
-	bh=f+LUv1Y7A4BpaBDHCwe6DTNBpqkkYTWihjXsRz71OLM=;
+	s=default; t=1588877242;
+	bh=kmGDD3oC3EB4KQRIO7ZBSOzgTGdqiOKS8/Gs5OxyZzQ=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2e0FgjBctOqsZr+3BzfPrsHaZG5kc90mkht/fATrpMRaf/YnEMxCEfSLi3ULn4+Go
-	 MwI2f5lSefnHGmtBOLt3xs3Dd88pvCCyu80mYCOEU7iPNWuPY/XLs3AKKe2HtEaMt7
-	 IvysLxdiw37Mr7Al2NMNiWTle2WTZktkEz0dwF2g=
+	b=km9l5ZK/R55QGA2e5DiO0y5KqZLopC6W0M8a8Vh4BEngpKd3+DLCdrDqKC3x5Duvm
+	 bLV6hLHAvk/KleghdkN5dxsfypafklTetDwDmFMe4Oi7C1G4sY6AQi2fPndFjCA9wy
+	 Ch0tKe3tiVvD39KRqfD/Ohfdjol/s73m+rnfgAt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgEGSrN (ORCPT
+        id S1728518AbgEGSrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEGSrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:47:13 -0400
+        id S1728056AbgEGSrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:47:19 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D1421835;
-        Thu,  7 May 2020 18:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A782184D;
+        Thu,  7 May 2020 18:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877232;
-        bh=f+LUv1Y7A4BpaBDHCwe6DTNBpqkkYTWihjXsRz71OLM=;
+        s=default; t=1588877239;
+        bh=kmGDD3oC3EB4KQRIO7ZBSOzgTGdqiOKS8/Gs5OxyZzQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=e54Ef6Dxw35dosckI9n+IIoNelf/NcaMvUZzlp44lRwX+kmktdYylj9TVGR1o1h0Q
-         bVAPouqFdqyNXBnlCsTWz9Mu1+aA3bIYB5j2uqIi0J8ABL9wRepsAL9owWSFcnLI+i
-         EEU3kC5WCWnCyBmMQ5VykK/HzqNbmiSMImUslmgM=
-Date:   Thu, 7 May 2020 13:51:38 -0500
+        b=aQxNvVL4LnuUDIlx7X8iJ3ft1lNV6QVFUbl5bZMcJufApldo3SFTFMFJplJfTqMaa
+         aQhG09ZmEJVF2CZLRxbvL8/rWJJi394/CcJOQZaO4qhDgaUmkMlfQd5uFA1pti9SQX
+         jSuf6bWpyzrCCe3uuZ9amCXb2unSpP7HAZCZO5xo=
+Date:   Thu, 7 May 2020 13:51:45 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] libceph: Replace zero-length array with flexible-array
-Message-ID: <20200507185138.GA14076@embeddedor>
+To:     Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: Replace zero-length array with flexible-array
+Message-ID: <20200507185145.GA14096@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,34 +93,47 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/ceph/mon_client.h |    2 +-
- include/linux/crush/crush.h     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/chelsio/chcr_crypto.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/ceph/mon_client.h b/include/linux/ceph/mon_client.h
-index dbb8a6959a73..ce4ffeb384d7 100644
---- a/include/linux/ceph/mon_client.h
-+++ b/include/linux/ceph/mon_client.h
-@@ -19,7 +19,7 @@ struct ceph_monmap {
- 	struct ceph_fsid fsid;
- 	u32 epoch;
- 	u32 num_mon;
--	struct ceph_entity_inst mon_inst[0];
-+	struct ceph_entity_inst mon_inst[];
+diff --git a/drivers/crypto/chelsio/chcr_crypto.h b/drivers/crypto/chelsio/chcr_crypto.h
+index 542bebae001f..1cc522a07aac 100644
+--- a/drivers/crypto/chelsio/chcr_crypto.h
++++ b/drivers/crypto/chelsio/chcr_crypto.h
+@@ -223,7 +223,7 @@ struct chcr_authenc_ctx {
+ 
+ struct __aead_ctx {
+ 	struct chcr_gcm_ctx gcm[0];
+-	struct chcr_authenc_ctx authenc[0];
++	struct chcr_authenc_ctx authenc[];
  };
  
- struct ceph_mon_client;
-diff --git a/include/linux/crush/crush.h b/include/linux/crush/crush.h
-index 54741295c70b..38b0e4d50ed9 100644
---- a/include/linux/crush/crush.h
-+++ b/include/linux/crush/crush.h
-@@ -87,7 +87,7 @@ struct crush_rule_mask {
- struct crush_rule {
- 	__u32 len;
- 	struct crush_rule_mask mask;
--	struct crush_rule_step steps[0];
-+	struct crush_rule_step steps[];
+ struct chcr_aead_ctx {
+@@ -235,7 +235,7 @@ struct chcr_aead_ctx {
+ 	u8 nonce[4];
+ 	u16 hmac_ctrl;
+ 	u16 mayverify;
+-	struct	__aead_ctx ctx[0];
++	struct	__aead_ctx ctx[];
  };
  
- #define crush_rule_size(len) (sizeof(struct crush_rule) + \
+ struct hmac_ctx {
+@@ -247,7 +247,7 @@ struct hmac_ctx {
+ struct __crypto_ctx {
+ 	struct hmac_ctx hmacctx[0];
+ 	struct ablk_ctx ablkctx[0];
+-	struct chcr_aead_ctx aeadctx[0];
++	struct chcr_aead_ctx aeadctx[];
+ };
+ 
+ struct chcr_context {
+@@ -257,7 +257,7 @@ struct chcr_context {
+ 	unsigned int  ntxq;
+ 	unsigned int  nrxq;
+ 	struct completion cbc_aes_aio_done;
+-	struct __crypto_ctx crypto_ctx[0];
++	struct __crypto_ctx crypto_ctx[];
+ };
+ 
+ struct chcr_hctx_per_wr {
 
