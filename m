@@ -2,146 +2,123 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB08C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F9EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E2C24956
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="UvC3XuDb"
+	by mail.kernel.org (Postfix) with ESMTP id 1A50A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgEGNZT (ORCPT
+        id S1726521AbgEGN0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:25:19 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53614 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbgEGNZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:25:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 5E2C24C842;
-        Thu,  7 May 2020 13:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1588857907; x=
-        1590672308; bh=9C9PVAvhrkZd1qlXzdIJDP96sBVG2rbEzvt7nhtTCXs=; b=U
-        vC3XuDb7OxyKSjsLeyhfxwEGJxWupbBVAgi4YQD/EkKXwgOzL9rFIZx+L1SmnoOE
-        0+GWtZIWdjubBxwyK8bc1AH11U2dZ9cx+iTuetIPrKUOdkv7Z48BrMh43zPoTBoa
-        Wsg0ZV7jgZmsKpCXGKmjri2Q0V61MtPBWXWPe+wdfw=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dK40BI2aw03v; Thu,  7 May 2020 16:25:07 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 6BB79404CF;
-        Thu,  7 May 2020 16:25:06 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.0.174) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 7 May 2020 16:25:07 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v13 0/2] iio: proximity: driver for vcnl3020
-Date:   Thu, 7 May 2020 16:25:58 +0300
-Message-ID: <20200507132600.8801-1-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
+        Thu, 7 May 2020 09:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725914AbgEGN0Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:26:25 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA95C05BD43;
+        Thu,  7 May 2020 06:26:24 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWgXc-0001F7-Qb; Thu, 07 May 2020 15:26:20 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DF7C31C001A;
+        Thu,  7 May 2020 15:26:19 +0200 (CEST)
+Date:   Thu, 07 May 2020 13:26:19 -0000
+From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] cpu/hotplug: Remove __freeze_secondary_cpus()
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200430114004.17477-2-qais.yousef@arm.com>
+References: <20200430114004.17477-2-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.0.174]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+Message-ID: <158885797977.8414.5020896178410312608.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add proximity sensor driver for Vishay vcnl3020. Only on-demand
-measurement is supported for now.
+The following commit has been merged into the smp/core branch of tip:
 
-Changes from v12:
-   1. forgot to change path inside yaml.
+Commit-ID:     fb7fb84a0c4e8021ddecb157802d58241a3f1a40
+Gitweb:        https://git.kernel.org/tip/fb7fb84a0c4e8021ddecb157802d58241a3f1a40
+Author:        Qais Yousef <qais.yousef@arm.com>
+AuthorDate:    Thu, 30 Apr 2020 12:40:04 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 07 May 2020 15:18:41 +02:00
 
-Changes from v11:
-   1. minor changes to yaml.
+cpu/hotplug: Remove __freeze_secondary_cpus()
 
-Changes from v10:
-   1. add vcnl3020_property struct for optional properties.
+The refactored function is no longer required as the codepaths that call
+freeze_secondary_cpus() are all suspend/resume related now.
 
-Changes from v9:
-   1. minor changes.
-   2. pass microamps from dts, not register value.
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Link: https://lkml.kernel.org/r/20200430114004.17477-2-qais.yousef@arm.com
 
-Changes from v8:
-   1. add vcnl3020 prefix into get_and_apply_property function.
-   2. add bsd license into yaml.
-   3. vishay,led-current-milliamp -> vishay,led-current-microamp.
-   4. add default value into vishay,led-current-microamp and change
-      register values into microamps.
+---
+ include/linux/cpu.h | 7 +------
+ kernel/cpu.c        | 4 ++--
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-Changes from v7:
-   1. forgot to add Reviewed-by tag.
-
-Changes from v6:
-   1. minor changes
-     1.1 remove VCNL_DRV_NAME
-     1.2 add braces in get_and_apply_property
-
-Changes from v5:
-   1. add get_and_apply_property function for optional parameters.
-   2. minor changes.
-
-Changes from v4:
-   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
-   2. led-current -> vishay,led-current-milliamp in yaml.
-   3. add possible values enum list.
-   4. add bulk_read for result hi/lo registers.
-   5. add description of vcnl3020_data structure.
-   6. vcnl3020 id table is removed.
-   7. make "vishay,led-current-milliamp" optional in yaml and code.
-
-Changes from v3:
-   1. minor changes.
-   2. add i2c block to fix dts section in yaml.
-
-Changes from v2:
-   1. using regmap_read_poll_timeout instead of do-while in measurement
-      function.
-   2. change struct i2client* in vcnl3020_data to struct dev*
-   3. enable REGMAP_I2C in Kconfig
-
-Changes from v1:
-   1. using regmap interface instead of i2c_smbus_* calls.
-   2. switch from probe to probe_new.
-   3. s32/int32_t -> int
-
-Ivan Mikhaylov (2):
-  dt-bindings: proximity: provide vcnl3020 device tree binding document
-  iio: proximity: Add driver support for vcnl3020 proximity sensor
-
- .../iio/proximity/vishay,vcnl3020.yaml        |  65 +++++
- drivers/iio/proximity/Kconfig                 |  11 +
- drivers/iio/proximity/Makefile                |   1 +
- drivers/iio/proximity/vcnl3020.c              | 258 ++++++++++++++++++
- 4 files changed, 335 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
- create mode 100644 drivers/iio/proximity/vcnl3020.c
-
--- 
-2.21.1
-
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 9d34dc3..5269258 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -144,12 +144,7 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
+ static inline void put_online_cpus(void) { cpus_read_unlock(); }
+ 
+ #ifdef CONFIG_PM_SLEEP_SMP
+-int __freeze_secondary_cpus(int primary, bool suspend);
+-static inline int freeze_secondary_cpus(int primary)
+-{
+-	return __freeze_secondary_cpus(primary, true);
+-}
+-
++extern int freeze_secondary_cpus(int primary);
+ extern void thaw_secondary_cpus(void);
+ 
+ static inline int suspend_disable_secondary_cpus(void)
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d766929..9f89214 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+-int __freeze_secondary_cpus(int primary, bool suspend)
++int freeze_secondary_cpus(int primary)
+ {
+ 	int cpu, error = 0;
+ 
+@@ -1352,7 +1352,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
+ 		if (cpu == primary)
+ 			continue;
+ 
+-		if (suspend && pm_wakeup_pending()) {
++		if (pm_wakeup_pending()) {
+ 			pr_info("Wakeup pending. Abort CPU freeze\n");
+ 			error = -EBUSY;
+ 			break;
