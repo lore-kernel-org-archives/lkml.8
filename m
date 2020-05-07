@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF385C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F6C54E7F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EADF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122182073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861948;
-	bh=o4IiigD2Jk5p91BBpPHwUpc39b0yMW8rQoupf9HplT8=;
+	s=default; t=1588861952;
+	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k03xkJNKJviDy6HOzAEkwkJN/iSWMwslER6C9jVTGu4SyCFtpGQTlDBCeAN2NnIRC
-	 08mVWmSZaSLOPl4xeApUWgaezsWTd6kojUw1cix3VXKIvEnYt2xnr8fpRRPlVqmEmo
-	 G8XPf1fXNhE54PdfQo3W5M2VKGMwr9kh+ZnHsxV8=
+	b=rLngwlPsOwZdxCVIMpv4aQwKJOJ2b1SVB5aAKNE0LvMeucN5nkup6VWecMX4EnOHr
+	 TY0/zWJ3weEkWMBT9/7Ha6EXt2BwBF8Niuz675rAJ1bX6872KZRcIIF0kNl0rtAGgn
+	 h9Gde9IZXMHXVWYHKkzjZQw06BAFuo7k3tiJuerg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgEGOc1 (ORCPT
+        id S1728692AbgEGO3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgEGO3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:29:54 -0400
+        id S1728618AbgEGO3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:29:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A725C20870;
-        Thu,  7 May 2020 14:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3F220838;
+        Thu,  7 May 2020 14:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861794;
-        bh=o4IiigD2Jk5p91BBpPHwUpc39b0yMW8rQoupf9HplT8=;
+        s=default; t=1588861778;
+        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uAeh8gzzF6WV1aoNDFPU4rNbWhZYqdGMnF9u3HkDGbjCwlwwcalvO47AYjCBfaK/T
-         NQ8u2WFGfJ6OVPUvbeWb22smLbUDtEPY//ZmWV1GoH4XYm4NFb/sjz9/7fSvaP0QPw
-         +qsA9M7YNWPa3Dmdk8DdmpzyoL9RRX+XIJgbJTVw=
+        b=slr2g7Cagc1liVqlVFosb/vpwckkCxlsPBwCMhj9/PikACaCpmV/XlQwEQS/o4M+Q
+         kp+bFy/a2U5zyaVJLqshujpj3I4FJ2YqeM1DFadhtFJKH8cAsTiHq2AVLvSEzCZIjV
+         hTYftuPjZh1vYyg/LOpZf08jobCl+xEWs8E6jM1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 09/16] ALSA: hda: Match both PCI ID and SSID for driver blacklist
-Date:   Thu,  7 May 2020 10:29:36 -0400
-Message-Id: <20200507142943.26848-9-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 17/20] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+Date:   Thu,  7 May 2020 10:29:13 -0400
+Message-Id: <20200507142917.26612-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507142943.26848-1-sashal@kernel.org>
-References: <20200507142943.26848-1-sashal@kernel.org>
+In-Reply-To: <20200507142917.26612-1-sashal@kernel.org>
+References: <20200507142917.26612-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,56 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 977dfef40c8996b69afe23a9094d184049efb7bb ]
+[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+v2: removed TODO reminder
 
-Since the empty codec problem appear on the certain AMD platform (PCI
-ID 1022:1487), this patch changes the blacklist matching to both PCI
-ID and SSID using pci_match_id().  Also, the entry that was removed by
-the previous fix for ASUS ROG Zenigh II is re-added.
-
-Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 46670da047074..7779f54607156 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2172,9 +2172,10 @@ static const struct hdac_io_ops pci_hda_io_ops = {
-  * some HD-audio PCI entries are exposed without any codecs, and such devices
-  * should be ignored from the beginning.
-  */
--static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
--	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+static const struct pci_device_id driver_blacklist[] = {
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
- 	{}
- };
- 
-@@ -2197,7 +2198,7 @@ static int azx_probe(struct pci_dev *pci,
- 	bool schedule_probe;
- 	int err;
- 
--	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+	if (pci_match_id(driver_blacklist, pci)) {
- 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
- 		return -ENODEV;
+diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
+index 7fbcc35e8ad35..c89c10055641e 100644
+--- a/drivers/gpu/drm/qxl/qxl_image.c
++++ b/drivers/gpu/drm/qxl/qxl_image.c
+@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
+ 		break;
+ 	default:
+ 		DRM_ERROR("unsupported image bit depth\n");
+-		return -EINVAL; /* TODO: cleanup */
++		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
++		return -EINVAL;
  	}
+ 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
+ 	image->u.bitmap.x = width;
 -- 
 2.20.1
 
