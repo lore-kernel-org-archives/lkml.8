@@ -6,57 +6,58 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925C0C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09040C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752D220CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DB820CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 20:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgEGUEl (ORCPT
+        id S1728625AbgEGUEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 16:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
+        Thu, 7 May 2020 16:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGUEj (ORCPT
+        by vger.kernel.org with ESMTP id S1726320AbgEGUEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 16:04:39 -0400
+        Thu, 7 May 2020 16:04:45 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8944CC05BD43;
-        Thu,  7 May 2020 13:04:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC58C05BD43;
+        Thu,  7 May 2020 13:04:45 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 431931195077E;
-        Thu,  7 May 2020 13:04:39 -0700 (PDT)
-Date:   Thu, 07 May 2020 13:04:38 -0700 (PDT)
-Message-Id: <20200507.130438.579883511397409999.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF35F1195077D;
+        Thu,  7 May 2020 13:04:44 -0700 (PDT)
+Date:   Thu, 07 May 2020 13:04:44 -0700 (PDT)
+Message-Id: <20200507.130444.617282849452789073.davem@davemloft.net>
 To:     yanaijie@huawei.com
-Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: tulip: de4x5: make PCI_signature()
- return void
+Cc:     tariqt@mellanox.com, ast@kernel.org, daniel@iogearbox.net,
+        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mlx4: remove unneeded variable "err" in
+ mlx4_en_ethtool_add_mac_rule()
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200507110847.37940-1-yanaijie@huawei.com>
-References: <20200507110847.37940-1-yanaijie@huawei.com>
+In-Reply-To: <20200507110857.38035-1-yanaijie@huawei.com>
+References: <20200507110857.38035-1-yanaijie@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 13:04:39 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 13:04:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Yan <yanaijie@huawei.com>
-Date: Thu, 7 May 2020 19:08:47 +0800
+Date: Thu, 7 May 2020 19:08:57 +0800
 
-> This function always return 0 now, we can make it return void to
-> simplify the code. This fixes the following coccicheck warning:
+> Fix the following coccicheck warning:
 > 
-> drivers/net/ethernet/dec/tulip/de4x5.c:3908:11-17: Unneeded variable:
-> "status". Return "0" on line 3912
+> drivers/net/ethernet/mellanox/mlx4/en_ethtool.c:1396:5-8: Unneeded
+> variable: "err". Return "0" on line 1411
 > 
 > Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
