@@ -2,153 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADDBC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4E4C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A4520643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bpu/bzKj"
+	by mail.kernel.org (Postfix) with ESMTP id BA45520643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEGNhQ (ORCPT
+        id S1726860AbgEGNhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:37:16 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28806 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725879AbgEGNhQ (ORCPT
+        Thu, 7 May 2020 09:37:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbgEGNht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:37:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588858635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=O3AKRuRPzjJT+CpU5kRHKo5Cn8muPZpj6Vd3OBhKeIM=;
-        b=Bpu/bzKjF61qbb0sEEjA3pxNLM38Ru+PvqVUEvEoOVjeXWQWurKIm/ODKLI60qLZNCa3Oe
-        /37AvNGYRmlz2/7jP7ACFW32U1v2f2daDguc4bTZWMjKECQ/dzFTi2yYIQrS7J9YAcc78e
-        fkOa5zBTyt5OS9T/2Seio7GlltoiRl0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-E11N9G6-PR-QtmuWiG1amA-1; Thu, 07 May 2020 09:37:10 -0400
-X-MC-Unique: E11N9G6-PR-QtmuWiG1amA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DC7F1005510;
-        Thu,  7 May 2020 13:37:09 +0000 (UTC)
-Received: from lszubowi.redhat.com (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 575CC649A9;
-        Thu,  7 May 2020 13:37:08 +0000 (UTC)
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-To:     ardb@kernel.org, eric.snowberg@oracle.com, mingo@kernel.org,
-        nivedita@alum.mit.edu, tglx@linutronix.de,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
-Date:   Thu,  7 May 2020 09:37:07 -0400
-Message-Id: <20200507133707.7123-1-lszubowi@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 7 May 2020 09:37:49 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047DXLcf089550;
+        Thu, 7 May 2020 09:37:37 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ux6ex67m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 09:37:37 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047DXQQ5089814;
+        Thu, 7 May 2020 09:37:36 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ux6ex65w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 09:37:36 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047DV7Z3002197;
+        Thu, 7 May 2020 13:37:34 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 30s0g5mmre-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 13:37:33 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047DbVmh64422016
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 13:37:31 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B2AEAE053;
+        Thu,  7 May 2020 13:37:31 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9521AAE051;
+        Thu,  7 May 2020 13:37:28 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.85.97.135])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 May 2020 13:37:28 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, qais.yousef@arm.com,
+        chris.hyser@oracle.com, pkondeti@codeaurora.org,
+        valentin.schneider@arm.com, rjw@rjwysocki.net
+Subject: [RFC 1/4] sched/core: Introduce per_cpu counter to track latency sensitive tasks
+Date:   Thu,  7 May 2020 19:07:20 +0530
+Message-Id: <20200507133723.18325-2-parth@linux.ibm.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200507133723.18325-1-parth@linux.ibm.com>
+References: <20200507133723.18325-1-parth@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_08:2020-05-07,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ spamscore=0 suspectscore=1 phishscore=0 priorityscore=1501 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In allocate_e820(), call the EFI get_memory_map() service directly
-instead of indirectly via efi_get_memory_map(). This avoids allocation
-of a buffer and return of the full EFI memory map, which is not needed
-here and would otherwise need to be freed.
+The "nr_lat_sensitive" per_cpu variable provides hints on the possible
+number of latency-sensitive tasks occupying the CPU. This hints further
+helps in inhibiting the CPUIDLE governor from calling deeper IDLE states
+(next patches includes this).
 
-Routine allocate_e820() only needs to know how many EFI memory
-descriptors there are in the map to allocate an adequately sized
-e820ext buffer, if it's needed. Note that since efi_get_memory_map()
-returns a memory map buffer sized with extra headroom, allocate_e820()
-now needs to explicitly factor that into the e820ext size calculation.
-
-Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
---
-v2:
-  - Instead of freeing the EFI memory map buffer allocated by
-    efi_get_memory_map(), avoid the allocation in the first place.
-
-  - Changed the title of the patch because the v1 title no longer
-    applies. v1 ref:
-    https://lore.kernel.org/lkml/20200505190016.4350-1-lszubowi@redhat.com/
---
+Signed-off-by: Parth Shah <parth@linux.ibm.com>
 ---
- drivers/firmware/efi/libstub/efistub.h  |  2 ++
- drivers/firmware/efi/libstub/mem.c      |  5 +++++
- drivers/firmware/efi/libstub/x86-stub.c | 22 ++++++++--------------
- 3 files changed, 15 insertions(+), 14 deletions(-)
+ kernel/sched/core.c  | 2 ++
+ kernel/sched/sched.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 67d26949fd26..191468b771b6 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -616,6 +616,8 @@ void efi_printk(char *str);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2576fd8cacf9..2d8b76f41d61 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6606,6 +6606,7 @@ static struct kmem_cache *task_group_cache __read_mostly;
  
- void efi_free(unsigned long size, unsigned long addr);
+ DECLARE_PER_CPU(cpumask_var_t, load_balance_mask);
+ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
++DEFINE_PER_CPU(int, nr_lat_sensitive);
  
-+unsigned int efi_get_mmap_nr_slack_slots(void);
-+
- char *efi_convert_cmdline(efi_loaded_image_t *image, int *cmd_line_len,
- 			  unsigned long max_addr);
- 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-index 869a79c8946f..fc8b4fb08505 100644
---- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -7,6 +7,11 @@
- 
- #define EFI_MMAP_NR_SLACK_SLOTS	8
- 
-+unsigned int efi_get_mmap_nr_slack_slots(void)
-+{
-+	return EFI_MMAP_NR_SLACK_SLOTS;
-+}
-+
- static inline bool mmap_has_headroom(unsigned long buff_size,
- 				     unsigned long map_size,
- 				     unsigned long desc_size)
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 05ccb229fb45..9a5ee0678434 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -606,24 +606,18 @@ static efi_status_t allocate_e820(struct boot_params *params,
- 				  struct setup_data **e820ext,
- 				  u32 *e820ext_size)
+ void __init sched_init(void)
  {
--	unsigned long map_size, desc_size, buff_size;
--	struct efi_boot_memmap boot_map;
--	efi_memory_desc_t *map;
-+	unsigned long map_size, desc_size;
- 	efi_status_t status;
- 	__u32 nr_desc;
+@@ -6737,6 +6738,7 @@ void __init sched_init(void)
+ #endif /* CONFIG_SMP */
+ 		hrtick_rq_init(rq);
+ 		atomic_set(&rq->nr_iowait, 0);
++		per_cpu(nr_lat_sensitive, i) = 0;
+ 	}
  
--	boot_map.map		= &map;
--	boot_map.map_size	= &map_size;
--	boot_map.desc_size	= &desc_size;
--	boot_map.desc_ver	= NULL;
--	boot_map.key_ptr	= NULL;
--	boot_map.buff_size	= &buff_size;
-+	/* Only need the size of the mem map and size of each mem descriptor */
-+	map_size = 0;
-+	status = efi_bs_call(get_memory_map, &map_size, NULL, NULL,
-+			     &desc_size, NULL);
-+	if (status != EFI_BUFFER_TOO_SMALL)
-+		return (status != EFI_SUCCESS) ? status : EFI_UNSUPPORTED;
+ 	set_load_weight(&init_task, false);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b2c86dfe913e..5c41020c530e 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1439,6 +1439,8 @@ DECLARE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
+ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_numa);
+ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_packing);
+ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
++DECLARE_PER_CPU(int, nr_lat_sensitive);
++
+ extern struct static_key_false sched_asym_cpucapacity;
  
--	status = efi_get_memory_map(&boot_map);
--	if (status != EFI_SUCCESS)
--		return status;
--
--	nr_desc = buff_size / desc_size;
-+	nr_desc = map_size / desc_size + efi_get_mmap_nr_slack_slots();
- 
- 	if (nr_desc > ARRAY_SIZE(params->e820_table)) {
- 		u32 nr_e820ext = nr_desc - ARRAY_SIZE(params->e820_table);
+ struct sched_group_capacity {
 -- 
-2.18.4
+2.17.2
 
