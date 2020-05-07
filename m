@@ -2,98 +2,81 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E73C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D155E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WrN8B/Fh"
+	by mail.kernel.org (Postfix) with ESMTP id 24D4B20736
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgEGO5l (ORCPT
+        id S1726951AbgEGO6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        Thu, 7 May 2020 10:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725985AbgEGO5k (ORCPT
+        by vger.kernel.org with ESMTP id S1725985AbgEGO6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:57:40 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D254C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 07:57:40 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id z2so4657000iol.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 07:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b5LGB9U5mr0ssbQpTapfFOTOTVm3j7jCi0JK44bqEyw=;
-        b=WrN8B/FhVmqT7+rHqd9W58bKtQYTI02+ycf8FUg/7vrUtF87HaMP/IE6eiI80zAxh6
-         sSjLlHhf7rlZkQx8+nTUVrSu+WO+bt7ci87LoHw2F7ZggtxNr+C1WnSFGqN0jL8zEcHC
-         qxzkr6SlGFQiPlKTHENPwbr6kj6BLbzBaLdSl0+eynrrA0vKj4ybsgELTISuEnfW42Yv
-         dQok9g3ruMJ/rCKZ8pk4s++xxyjTo5Qc/jouz356inWtvxr0sPBd+y7q8U8gREY0yHtR
-         i9tDU6K8xUYh8/k9swuBk8t2ji6cxGJgOCx244/tZwrzVKIn/zpxfVxsGi02lUa+sThP
-         nBug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b5LGB9U5mr0ssbQpTapfFOTOTVm3j7jCi0JK44bqEyw=;
-        b=k3QdC9EnJINyHyZBuxPhMOEuBFxNCxw2bQjJcP2hGjZyFBA5DNlVuS8H1+HrJ8peNR
-         IUsVNX/QxxCUTyHf/HRILGnhnricnmzu1/NB08O2TG/dg1pS4iYNYwo1XUVOzh0ZTGxM
-         eKldHnlarx1QBk500HcUcBFlmLDMS60JAnwM8fM7++wNX3d+XOBNz8Bz21x+WODnQPpc
-         JUqt6KO03nCq1j/K0wi3yFOmh7mqevYBeH3UFdLOAYyuVGOM/n9WdKFSO/Ps3rARY4Ug
-         l5rL+o+5yj2KDwL88Xn3T7fWP/dIRqhgEkzJ+4fPu/aV+yf5roh9iA2rfhCSt8ZLKba2
-         +/8w==
-X-Gm-Message-State: AGi0PuZZWHitcQWhK7uf2fnLrmzH3v7dH9PC7lmoU0nI4rC2Utu3QpDl
-        d1ahbfxgsxL9Gldx2t+EyQDkriNNS3s=
-X-Google-Smtp-Source: APiQypJ2pfnQ5mtWTdwxdgb+WT1d5T3KXYSjVr1M6UMi0PTH+3ibjDMAUvwZW7JwXzLLFSk/FGvg9g==
-X-Received: by 2002:a05:6638:155:: with SMTP id y21mr14505534jao.79.1588863459503;
-        Thu, 07 May 2020 07:57:39 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r18sm2662960ioj.15.2020.05.07.07.57.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 07:57:38 -0700 (PDT)
-Subject: Re: PING for Re: bdi: fix use-after-free for dev_name(bdi->dev) v3
- (resend)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200504124801.2832087-1-hch@lst.de>
- <20200507062743.GA5814@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1753814d-377a-f98e-e670-161b3f17cc43@kernel.dk>
-Date:   Thu, 7 May 2020 08:57:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507062743.GA5814@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 7 May 2020 10:58:08 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B54C05BD43;
+        Thu,  7 May 2020 07:58:07 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 14AF415C7D92E;
+        Thu,  7 May 2020 07:58:07 -0700 (PDT)
+Date:   Thu, 07 May 2020 07:58:04 -0700 (PDT)
+Message-Id: <20200507.075804.1424387208635118.davem@davemloft.net>
+To:     mst@redhat.com
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        eric.dumazet@gmail.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2] virtio_net: fix lockdep warning on 32 bit
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200507072525.355222-1-mst@redhat.com>
+References: <20200507072525.355222-1-mst@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 07:58:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 12:27 AM, Christoph Hellwig wrote:
-> On Mon, May 04, 2020 at 02:47:52PM +0200, Christoph Hellwig wrote:
->> Hi Jens,
->>
->> can you pick up this series?
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Date: Thu, 7 May 2020 03:25:56 -0400
+
+> When we fill up a receive VQ, try_fill_recv currently tries to count
+> kicks using a 64 bit stats counter. Turns out, on a 32 bit kernel that
+> uses a seqcount. sequence counts are "lock" constructs where you need to
+> make sure that writers are serialized.
 > 
-> ping?  Especially as 1-4 fix a kernel crash and should probably be
-> 5.7 material.
+> In turn, this means that we mustn't run two try_fill_recv concurrently.
+> Which of course we don't. We do run try_fill_recv sometimes from a
+> softirq napi context, and sometimes from a fully preemptible context,
+> but the later always runs with napi disabled.
+> 
+> However, when it comes to the seqcount, lockdep is trying to enforce the
+> rule that the same lock isn't accessed from preemptible and softirq
+> context - it doesn't know about napi being enabled/disabled. This causes
+> a false-positive warning:
+> 
+> WARNING: inconsistent lock state
+> ...
+> inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+> 
+> As a work around, shut down the warning by switching
+> to u64_stats_update_begin_irqsave - that works by disabling
+> interrupts on 32 bit only, is a NOP on 64 bit.
+> 
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-I've added 1-4 for 5.7, and the rest for 5.8.
-
--- 
-Jens Axboe
-
+Applied and queued up for -stable, thanks Michael.
