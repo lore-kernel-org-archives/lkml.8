@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32620C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38B6C47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068A32083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40B32083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862261;
-	bh=g8MXi/Qh+MMLXU3CQUCfIqQ+603ZewnyD4kz1EXjib0=;
+	s=default; t=1588862266;
+	bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKvR/CXy9B04kIa1+wHx8oSrsEzUrwjPZBzCjqUIuGaPT2rtOvaKiVaR1wfdHzwxx
-	 wPQWgimcCPrEh1L0QDOCKCnGN+JJYXZh68NUZ0YlE7vlh0AWSX1hz7862HWekSzfYF
-	 ompv/jK3mdwl9d5InDSc4a3A49Eo4G0qMy974ZYY=
+	b=bjJBInCGQyCihKZZoyhIzLDnwxYC1dOeycgr64czv2R5fcdhDKxnP+7qAIl83KaVO
+	 aof5dBvKQm2Mf30JjIlIyU2+rvR/1OJA6+2XTjORXaZA1p/3vb/DHc1fVGqskM5p8t
+	 SghIfSdV0P7JocT348FoL7UPsx2zH4Jv3sbmhsuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEGOhk (ORCPT
+        id S1728388AbgEGOhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:37:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:37:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbgEGO14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:56 -0400
+        id S1727827AbgEGO1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2B62084D;
-        Thu,  7 May 2020 14:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4C62145D;
+        Thu,  7 May 2020 14:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861676;
-        bh=g8MXi/Qh+MMLXU3CQUCfIqQ+603ZewnyD4kz1EXjib0=;
+        s=default; t=1588861673;
+        bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3IxI38ZB0Bj7ExzarEeFBn2lKOr7d07tq/B/aszBzIql7kbnPvFNzTg29g8HtEzu
-         EAiop2tcx/tveSyfzTa0oGJmGQgrY54dzre5LpLBtdZsFEfx8AxqTotWUh5yYzZzf0
-         82EIUCclqZyY77EX4zUUfEsff+28QGAwZIvn0xGw=
+        b=gKVkNj9v1J3UhmTVnvMrE7zBsxSefiWMsNaWn8du3C288RelNEN4QhRvAbtGM8hPH
+         2PXOG5gSrtSWIs7Zvon9hAPP0bbAqSWjPRPAOJD009fubXPU+XTlUfNmw8Dgrq9gRl
+         kS3H4E7c44Mh13VFt27WQ/O0Hhs8XUTn6eQ08Xuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 24/50] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
-Date:   Thu,  7 May 2020 10:27:00 -0400
-Message-Id: <20200507142726.25751-24-sashal@kernel.org>
+Cc:     Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 22/50] selftests/ftrace: Check the first record for kprobe_args_type.tc
+Date:   Thu,  7 May 2020 10:26:58 -0400
+Message-Id: <20200507142726.25751-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -59,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
+[ Upstream commit f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba ]
 
-Make a note of the first time we discover the turbo mode has been
-disabled by the BIOS, as otherwise we complain every time we try to
-update the mode.
+It is possible to get multiple records from trace during test and then more
+than 4 arguments are assigned to ARGS.  This situation results in the failure
+of kprobe_args_type.tc.  For example:
+-----------------------------------------------------------
+grep testprobe trace
+   ftracetest-5902  [001] d... 111195.682227: testprobe: (_do_fork+0x0/0x460) arg1=334823024 arg2=334823024 arg3=0x13f4fe70 arg4=7
+     pmlogger-5949  [000] d... 111195.709898: testprobe: (_do_fork+0x0/0x460) arg1=345308784 arg2=345308784 arg3=0x1494fe70 arg4=7
+ grep testprobe trace
+ sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'
+ARGS='334823024 334823024 0x13f4fe70 7
+345308784 345308784 0x1494fe70 7'
+-----------------------------------------------------------
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+We don't care which process calls do_fork so just check the first record to
+fix the issue.
+
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 2 +-
+ .../testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc  | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index c81e1ff290697..b4c014464a208 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1058,7 +1058,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+index 1bcb67dcae267..81490ecaaa927 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+@@ -38,7 +38,7 @@ for width in 64 32 16 8; do
+   echo 0 > events/kprobes/testprobe/enable
  
- 	update_turbo_state();
- 	if (global.turbo_disabled) {
--		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
-+		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
- 		mutex_unlock(&intel_pstate_limits_lock);
- 		mutex_unlock(&intel_pstate_driver_lock);
- 		return -EPERM;
+   : "Confirm the arguments is recorded in given types correctly"
+-  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
++  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+   check_types $ARGS $width
+ 
+   : "Clear event for next loop"
 -- 
 2.20.1
 
