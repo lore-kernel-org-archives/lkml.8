@@ -2,91 +2,52 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACACC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ACFC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E354207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ss3kDmHo"
+	by mail.kernel.org (Postfix) with ESMTP id F23FD207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 15:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEGPpc (ORCPT
+        id S1727071AbgEGPp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 11:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725914AbgEGPpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 11:45:31 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BFCC05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 08:45:30 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id j21so2972714pgb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 08:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=NYaUg5HujR7sQmyawubmYl3hcJlxfTXuEKXFBZh5EIc=;
-        b=Ss3kDmHogDZdKj41KkjFqKo8fnHPDSj2KSuSggY8NZeJYcML53gyEaOC3De8TBWgFD
-         yuf3Ue9z5v7Vaa7FsC9cHzDfA+CwRr7M41isRpX4c5KEfIoPICoNXdM9e/0IL2Y8S9Je
-         Is9tdNgj2qmYAdh+fWyO/3nJOzTa+aGUcdWIVGo0xdN+vdX766K1s6/woXwyb+/nyYbN
-         rign7egMM/NP/46hy7V6yL7M3yylWxV3+kzkKbrWJOCG0pvOTCGSmSi8Vl+2KkZIcN84
-         D3OUKtQRgVtGUfVa15GznJy0ZCl7sZEUqYzHObPBkL8k70mKDbJ0kU9fsu9O/YvcqCOC
-         jz/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NYaUg5HujR7sQmyawubmYl3hcJlxfTXuEKXFBZh5EIc=;
-        b=J1F/brAB4MjpFM6d/LyNNZl2jL5/Bm4D0XA3P8Mel/XRnkFpnTB9kqSsvRVrYexJJB
-         sFT9wFQ4nypnQd5mYuavNz7CcbEBpOz2+eyc4bCT16eCz/rIIWpOJOPQiIOxyZPT0R52
-         TzmeySrZ1yzIvnLtS2KuvO7gGmOaoO0TWx2qyQ/+Z47nchz09X4t1cenHPBo/u6X5mSi
-         Z3j2qaEcJUPvltWxwj5z2nuYgx0A7Ra9GnbdrslPSq9gZJqPJUjoXqZ09D/5HTFjN37X
-         hWPWcRnQTn3vLESZXuT3P2F5hO+NjfbJDqqoQ521Y5pkAYWgrfdRs2Ua+QVUFSMukHTo
-         Xhug==
-X-Gm-Message-State: AGi0PuYH32RMwIE75b/7Z91mwU0INQgJAnMOkOrGBgyGJ4UPwNP5OOfH
-        4pXF1uSsodYzpWXWo6VUb6UnK8tI6HI=
-X-Google-Smtp-Source: APiQypKBENGmsna8fKffRP5V2fMNHw/Sxc/xNdBGETyIGoaWr6WO+p7BbERfqYmoehmrWiUYKA2iHg==
-X-Received: by 2002:a62:764b:: with SMTP id r72mr14420954pfc.207.1588866329524;
-        Thu, 07 May 2020 08:45:29 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21e8::1239? ([2620:10d:c090:400::5:ddfe])
-        by smtp.gmail.com with ESMTPSA id n9sm210681pjt.29.2020.05.07.08.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 08:45:28 -0700 (PDT)
-Subject: Re: [PATCH for-5.7] splice: move f_mode checks to do_{splice,tee}()
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e960f9f6-76ed-5c37-286f-9f8630336520@kernel.dk>
-Date:   Thu, 7 May 2020 09:45:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 11:45:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:47463 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgEGPp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 11:45:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F2D2D68B05; Thu,  7 May 2020 17:45:54 +0200 (CEST)
+Date:   Thu, 7 May 2020 17:45:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
+Message-ID: <20200507154554.GA32006@lst.de>
+References: <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com> <20200506045258.GB9846@lst.de> <10918cd1-a4a9-7872-9672-efcd28ef0751@linux.ibm.com> <20200507152906.GA31257@lst.de> <35ee027b-7892-23ab-c31d-7c17750da8f4@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <51b4370ef70eebf941f6cef503943d7f7de3ea4d.1588621153.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35ee027b-7892-23ab-c31d-7c17750da8f4@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 1:39 PM, Pavel Begunkov wrote:
-> do_splice() is used by io_uring, as will be do_tee(). Move f_mode
-> checks from sys_{splice,tee}() to do_{splice,tee}(), so they're
-> enforced for io_uring as well.
+On Thu, May 07, 2020 at 05:43:40PM +0200, Stefan Haberland wrote:
+> Not checked till now. I just was thinking about the basicapproach.
+> 
+> I could either check the block_device_operations like you suggested
+> or I could verify that the gendisk pointer is already in our devmap
+> and therefor belongs to the DASD driver.
 
-Applied for 5.7, thanks.
-
--- 
-Jens Axboe
-
+The ops pointer check is simpler and cheaper, so I'd suggest that.
