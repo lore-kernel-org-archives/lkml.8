@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD08C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907C2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D31B12084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760E02083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEGQWS (ORCPT
+        id S1727964AbgEGQWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:22:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:35006 "EHLO foss.arm.com"
+        Thu, 7 May 2020 12:22:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:35042 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgEGQWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:22:17 -0400
+        id S1726308AbgEGQWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 12:22:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09FB3101E;
-        Thu,  7 May 2020 09:22:17 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03F271045;
+        Thu,  7 May 2020 09:22:21 -0700 (PDT)
 Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C5BD3F71F;
-        Thu,  7 May 2020 09:22:14 -0700 (PDT)
-Subject: Re: [PATCH v9 11/18] arm64: kexec: arm64_relocate_new_kernel
- clean-ups
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58EBD3F71F;
+        Thu,  7 May 2020 09:22:18 -0700 (PDT)
+Subject: Re: [PATCH v9 13/18] arm64: kexec: add expandable argument to
+ relocation function
 To:     Pavel Tatashin <pasha.tatashin@soleen.com>
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-12-pasha.tatashin@soleen.com>
+ <20200326032420.27220-14-pasha.tatashin@soleen.com>
 From:   James Morse <james.morse@arm.com>
 Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
         kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -39,12 +39,12 @@ Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
         bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com,
         steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de,
         selindag@gmail.com
-Message-ID: <dc47bee6-69ee-2ece-12d4-258bd964b954@arm.com>
-Date:   Thu, 7 May 2020 17:22:13 +0100
+Message-ID: <012e19d9-97d6-805a-bfec-8c6e7104f852@arm.com>
+Date:   Thu, 7 May 2020 17:22:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-12-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-14-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -56,168 +56,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Remove excessive empty lines from arm64_relocate_new_kernel.
+> Currently, kexec relocation function (arm64_relocate_new_kernel) accepts
+> the following arguments:
+> 
+> head:		start of array that contains relocation information.
+> entry:		entry point for new kernel or purgatory.
+> dtb_mem:	first and only argument to entry.
 
-To make it harder to read? Or just for the churn ...
-
-> Also, use comments on the same lines with instructions where
-> appropriate.
-
-Churn,
-
-
-> Change ENDPROC to END it never returns.
-
-It might be more useful to convert this to the new style annotations, which should be a
-separate patch. See Documentation/asm-annotations.rst
-
-
-> copy_page(dest, src, tmps...)
-> Increments dest and src by PAGE_SIZE, so no need to store dest
-> prior to calling copy_page and increment it after. Also, src is not
-> used after a copy, not need to copy either.
-
-This bit sounds like cleanup, but I can't isolate it from the noise below....
+> The number of arguments cannot be easily expended, because this
+> function is also called from HVC_SOFT_RESTART, which preserves only
+> three arguments. And, also arm64_relocate_new_kernel is written in
+> assembly but called without stack, thus no place to move extra
+> arguments to free registers.
+> 
+> Soon, we will need to pass more arguments: once we enable MMU we
+> will need to pass information about page tables.
 
 
-> Call raw_dcache_line_size()  only when relocation is actually going to
-> happen.
+> Another benefit of allowing this function to accept more arguments, is that
+> kernel can actually accept up to 4 arguments (x0-x3), however currently
+> only one is used, but if in the future we will need for more (for example,
+> pass information about when previous kernel exited to have a precise
+> measurement in time spent in purgatory), we won't be easilty do that
+> if arm64_relocate_new_kernel can't accept more arguments.
 
-Why?
-
-The pattern in this code is to setup register that don't change at the top, then do all
-the work. I think this was an attempt to make it more readable.
-
-Nothing branches back to that label, so this is fine, its just less obviously correct.
-
-
-> Since '.align 3' is intended to align globals at the end of the file,
-> move it there.
+This is a niche debug hack.
+We really don't want an ABI with purgatory. I think the register values it gets were added
+early for compatibility with kexec_file_load().
 
 
-Please don't make noisy changes to whitespace and comments, its never worth it.
+> So, add a new struct: kern_reloc_arg, and place it in kexec safe page (i.e
+> memory that is not overwritten during relocation).
+> Thus, make arm64_relocate_new_kernel to only take one argument, that
+> contains all the needed information.
+
+Do we really not have enough registers?
+
+The PCS[0] gives you 8 arguments. In this patch you use 6.
 
 
-Thanks,
+If this is really about the hyp-stub abi, please state that.
+
+
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index cee3be586384..b1122eea627e 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -59,13 +60,35 @@ void machine_kexec_cleanup(struct kimage *kimage)
+
+>  int machine_kexec_post_load(struct kimage *kimage)
+>  {
+>  	void *reloc_code = page_to_virt(kimage->control_code_page);
+> +	struct kern_reloc_arg *kern_reloc_arg = kexec_page_alloc(kimage);
+> +
+> +	if (!kern_reloc_arg)
+> +		return -ENOMEM;
+>  
+>  	memcpy(reloc_code, arm64_relocate_new_kernel,
+>  	       arm64_relocate_new_kernel_size);
+>  	kimage->arch.kern_reloc = __pa(reloc_code);
+> +	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
+> +	kern_reloc_arg->head = kimage->head;
+> +	kern_reloc_arg->entry_addr = kimage->start;
+> +	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
+
+These kern_reloc_arg values are written via the cacheable linear map.
+They are read in arm64_relocate_new_kernel() where the MMU is disabled an all memory
+access are non-cacheable.
+
+To ensure you read the values you wrote, you must clean kern_reloc_arg to the PoC.
+
+
+>  	kexec_image_info(kimage);
+>  
+>  	return 0;Thanks,
 
 James
 
-
-> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-> index c1d7db71a726..e9c974ea4717 100644
-> --- a/arch/arm64/kernel/relocate_kernel.S
-> +++ b/arch/arm64/kernel/relocate_kernel.S
-> @@ -8,7 +8,6 @@
->  
->  #include <linux/kexec.h>
->  #include <linux/linkage.h>
-> -
->  #include <asm/assembler.h>
->  #include <asm/kexec.h>
->  #include <asm/page.h>
-> @@ -17,25 +16,21 @@
->  /*
->   * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
->   *
-> - * The memory that the old kernel occupies may be overwritten when coping the
-> + * The memory that the old kernel occupies may be overwritten when copying the
->   * new image to its final location.  To assure that the
->   * arm64_relocate_new_kernel routine which does that copy is not overwritten,
->   * all code and data needed by arm64_relocate_new_kernel must be between the
->   * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
->   * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-> - * control_code_page, a special page which has been set up to be preserved
-> - * during the copy operation.
-> + * safe memory that has been set up to be preserved during the copy operation.
->   */
->  ENTRY(arm64_relocate_new_kernel)
-> -
->  	/* Setup the list loop variables. */
->  	mov	x18, x2				/* x18 = dtb address */
->  	mov	x17, x1				/* x17 = kimage_start */
->  	mov	x16, x0				/* x16 = kimage_head */
-> -	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
->  	mov	x14, xzr			/* x14 = entry ptr */
->  	mov	x13, xzr			/* x13 = copy dest */
-> -
->  	/* Clear the sctlr_el2 flags. */
->  	mrs	x0, CurrentEL
->  	cmp	x0, #CurrentEL_EL2
-> @@ -46,14 +41,11 @@ ENTRY(arm64_relocate_new_kernel)
->  	pre_disable_mmu_workaround
->  	msr	sctlr_el2, x0
->  	isb
-> -1:
-> -
-> -	/* Check if the new image needs relocation. */
-> +1:	/* Check if the new image needs relocation. */
->  	tbnz	x16, IND_DONE_BIT, .Ldone
-> -
-> +	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
->  .Lloop:
->  	and	x12, x16, PAGE_MASK		/* x12 = addr */
-> -
->  	/* Test the entry flags. */
->  .Ltest_source:
->  	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
-> @@ -69,34 +61,18 @@ ENTRY(arm64_relocate_new_kernel)
->  	b.lo    2b
->  	dsb     sy
->  
-> -	mov x20, x13
-> -	mov x21, x12
-> -	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
-> -
-> -	/* dest += PAGE_SIZE */
-> -	add	x13, x13, PAGE_SIZE
-> +	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
->  	b	.Lnext
-> -
->  .Ltest_indirection:
->  	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
-> -
-> -	/* ptr = addr */
-> -	mov	x14, x12
-> +	mov	x14, x12			/* ptr = addr */
->  	b	.Lnext
-> -
->  .Ltest_destination:
->  	tbz	x16, IND_DESTINATION_BIT, .Lnext
-> -
-> -	/* dest = addr */
-> -	mov	x13, x12
-> -
-> +	mov	x13, x12			/* dest = addr */
->  .Lnext:
-> -	/* entry = *ptr++ */
-> -	ldr	x16, [x14], #8
-> -
-> -	/* while (!(entry & DONE)) */
-> -	tbz	x16, IND_DONE_BIT, .Lloop
-> -
-> +	ldr	x16, [x14], #8			/* entry = *ptr++ */
-> +	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
->  .Ldone:
->  	/* wait for writes from copy_page to finish */
->  	dsb	nsh
-> @@ -110,16 +86,12 @@ ENTRY(arm64_relocate_new_kernel)
->  	mov	x2, xzr
->  	mov	x3, xzr
->  	br	x17
-> -
-> -ENDPROC(arm64_relocate_new_kernel)
-> -
->  .ltorg
-> -
-> -.align 3	/* To keep the 64-bit values below naturally aligned. */
-> +END(arm64_relocate_new_kernel)
->  
->  .Lcopy_end:
->  .org	KEXEC_CONTROL_PAGE_SIZE
-> -
-> +.align 3	/* To keep the 64-bit values below naturally aligned. */
->  /*
->   * arm64_relocate_new_kernel_size - Number of bytes to copy to the
->   * control_code_page.
-> 
-
+[0]
+https://developer.arm.com/docs/ihi0055/d/procedure-call-standard-for-the-arm-64-bit-architecture
