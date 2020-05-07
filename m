@@ -2,97 +2,129 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE8BC35280
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15363C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B3920CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c6zNwiO/"
+	by mail.kernel.org (Postfix) with ESMTP id 007C2206B9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgEGXgw (ORCPT
+        id S1726689AbgEGXi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:36:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25243 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726514AbgEGXgv (ORCPT
+        Thu, 7 May 2020 19:38:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39356 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgEGXi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:36:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588894610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IF1gr0Ej8dhAMBdv+LPk159EvF5Y2nzU/01Tj5qgwcY=;
-        b=c6zNwiO/lJR7P9dtH6tyWdXJ550UydTrH0JPmEW7F6N3bxtmJ/Fiqf2ak0D9H4zMBoszod
-        8dU8LPrqdrpMUUXtf3AIudkIYw3tXC98bwMNrK0xQLKJJiza6sJjm4sADyxLocNk4Yndaq
-        Fjb4j29tQBeFu0fNpzIgzIfiIBnGBpY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-wTxwCdqhMDe1rHI9QmCmlw-1; Thu, 07 May 2020 19:36:46 -0400
-X-MC-Unique: wTxwCdqhMDe1rHI9QmCmlw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 196B21899520;
-        Thu,  7 May 2020 23:36:45 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E6101707B0;
-        Thu,  7 May 2020 23:36:37 +0000 (UTC)
-Date:   Thu, 7 May 2020 19:36:34 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, Baoquan He <bhe@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] kernel: add panic_on_taint
-Message-ID: <20200507233634.GA367616@optiplex-lnx>
-References: <20200507221503.GL205881@optiplex-lnx>
- <6B423101-ACF4-49A3-AD53-ACBF87F1ABE0@lca.pw>
+        Thu, 7 May 2020 19:38:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 86648803087C;
+        Thu,  7 May 2020 23:38:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HxFt07LMQQVN; Fri,  8 May 2020 02:38:50 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] syscon: Alter syscon and reboot drivers
+Date:   Fri, 8 May 2020 02:38:43 +0300
+Message-ID: <20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
+References: <20200306130356.6ABDD8030703@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6B423101-ACF4-49A3-AD53-ACBF87F1ABE0@lca.pw>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:07:20PM -0400, Qian Cai wrote:
-> 
-> 
-> > On May 7, 2020, at 6:15 PM, Rafael Aquini <aquini@redhat.com> wrote:
-> > 
-> > It's a reasonable and self-contained feature that we have a valid use for. 
-> > I honestly fail to see it causing that amount of annoyance as you are 
-> > suggesting here.
-> 
-> It is not a big trouble yet, but keeping an obsolete patch that not very straightforward to figure out that it will be superseded by the panic_on_taint patch will only cause more confusion the longer it has stayed in linux-next.
-> 
-> The thing is that even if you can’t get this panic_on_taint (the superior solution) patch accepted for some reasons, someone else could still work on it until it get merged.
-> 
-> Thus, I failed to see any possibility we will go back to the inferior solution (mm-slub-add-panic_on_error-to-the-debug-facilities.patch) by all means.
->
+This is a small patchset about tuning the syscon infrastructure a bit.
+As it's going to be general in the framework of the Baikal-T1 SoC support
+integration into the kernel, we suggest to replace the legacy text-based
+syscon-reboot-mode dts-bindings file with yaml-based one. Then seeing a
+syscon reboot block is normally expected to be a part of a system
+controller and based on the discussion
+https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+we decided to alter the syscon reboot driver so one would also try to fetch
+the syscon registers map from a parental DT node. regmap property is left
+supported although it's marked as deprecated from now.
 
-There are plenty of examples of things being added, changed, and
-removed in -next. IOW, living in a transient state. I think it's 
-a reasonable compromise to keep it while the other one is beind 
-ironed out.
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-The fact that you prefer one solution to another doesn't
-invalidate the one you dislike. 
+Changelog v2:
+- Add Sebastian' Acked-by tag to patch 1.
+- Use a shorter summary describing the bindings modification patches.
+- Our corporate email server doesn't change Message-Id anymore, so the patchset
+  is resubmitted being in the cover-letter-threaded format.
+- Discard patch with syscon "-endian" property support. As Rob said It shall be
+  in the common dt-schema.
+- Replace patches of adding a regmap property support to the syscon-reboot-mode
+  with patches making syscon-reboot a sub-node of a system controller node.
+- Mark regmap property as deprecated from now.
 
-Cheers,
--- Rafael
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (3):
+  dt-bindings: power: reset: Convert syscon-reboot-mode to DT schema
+  dt-bindings: power: reset: Unrequire regmap property in syscon-reboot
+    node
+  power: reset: syscon-reboot: Add parental syscon support
+
+ .../power/reset/syscon-reboot-mode.txt        | 35 ------------
+ .../power/reset/syscon-reboot-mode.yaml       | 55 +++++++++++++++++++
+ .../bindings/power/reset/syscon-reboot.yaml   | 15 +++--
+ drivers/power/reset/syscon-reboot.c           |  7 ++-
+ 4 files changed, 70 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+
+-- 
+2.25.1
 
