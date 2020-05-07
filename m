@@ -2,183 +2,177 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B26C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACD5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79CB520708
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jmBKqgml"
+	by mail.kernel.org (Postfix) with ESMTP id D34F020838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 13:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgEGNRj (ORCPT
+        id S1727067AbgEGNSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 09:17:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55744 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgEGNRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 09:17:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047D9FjA072838;
-        Thu, 7 May 2020 13:16:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=fUbGWLFS+jWKkk/BdI0Cv8l5aoGUDqGExKPATn7zLRM=;
- b=jmBKqgmlhAFGfYi4Z6xdQ35U3FsQGU0hPSeP5Rs5V5nPF9vY+1aa2quInKl7/+imF4w5
- zbKh/6bjg+JNvHZnRtp+GHy/oDoAkqbKoXSz1uL+bhivLkELVX2VW0RPCdY8rzZPIcwf
- joJ62mtbveiGA/aU5SMTmVuOgMnL1q7Uq6YT4QEKADKOQWhDRfr9aIo7Sr7fP44EibNc
- ny6I3HFkeSgMVRCGrq/YeXbBJ7meEgQ5CWJpf4MJX2tcCAVjCX0V0z/47GApjH1dRy7m
- WPEbN7ocxcKr9+wx8ORKQHlXGmTI2hTYdOolbVovbAyUkfW055ZWFNDpsKcK9E1bdzSp ow== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30usgq74ra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 13:16:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 047D7ojp011987;
-        Thu, 7 May 2020 13:16:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30t1rakxdx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 13:16:41 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 047DGbEt028126;
-        Thu, 7 May 2020 13:16:37 GMT
-Received: from linux-1.home (/92.157.36.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 May 2020 06:16:37 -0700
-Subject: Re: [patch V4 part 2 02/18] x86/entry/32: Move non entry code into
- .text section
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-References: <20200505134112.272268764@linutronix.de>
- <20200505134340.320164650@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <6e8a7549-9c0a-f863-fc7d-fcbfcb642bc4@oracle.com>
-Date:   Thu, 7 May 2020 15:15:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 7 May 2020 09:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbgEGNSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 09:18:10 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BA720708;
+        Thu,  7 May 2020 13:18:09 +0000 (UTC)
+Date:   Thu, 7 May 2020 09:18:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some
+ kconfigs
+Message-ID: <20200507091807.0a789fbd@gandalf.local.home>
+In-Reply-To: <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
+References: <20200503001141.9647-1-changbin.du@gmail.com>
+        <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200505134340.320164650@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 7 May 2020 12:19:57 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-On 5/5/20 3:41 PM, Thomas Gleixner wrote:
-> All ASM code which is not part of the entry functionality can move out into
-> the .text section. No reason to keep it in the non-instrumentable entry
-> section.
+> On Sun, May 3, 2020 at 9:11 AM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > Sometimes it is useful to preserve batches of configs when making
+> > localmodconfig. For example, I usually don't want any usb and fs
+> > modules to be disabled. Now we can do it by:
+> >
+> >  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > ---
+> > v4: fix typo.
+> > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
+> > v2: fix typo in documentation. (Randy Dunlap)
+> > ---  
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/entry/entry_32.S |   11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -729,7 +729,8 @@
->   /*
->    * %eax: prev task
->    * %edx: next task
-> - */
-> +*/
+> Personally, I do not mind the long LOCALMODCONFIG_PRESERVE,
 
-Misaligned comment end, this line shouldn't change.
+Perhasp we allow both? ;-)
 
-alex.
+And just have one set to the other.
 
-> +.pushsection .text, "ax"
->   SYM_CODE_START(__switch_to_asm)
->   	/*
->   	 * Save callee-saved registers
-> @@ -776,6 +777,7 @@ SYM_CODE_START(__switch_to_asm)
->   
->   	jmp	__switch_to
->   SYM_CODE_END(__switch_to_asm)
-> +.popsection
->   
->   /*
->    * The unwinder expects the last frame on the stack to always be at the same
-> @@ -784,6 +786,7 @@ SYM_CODE_END(__switch_to_asm)
->    * asmlinkage function so its argument has to be pushed on the stack.  This
->    * wrapper creates a proper "end of stack" frame header before the call.
->    */
-> +.pushsection .text, "ax"
->   SYM_FUNC_START(schedule_tail_wrapper)
->   	FRAME_BEGIN
->   
-> @@ -794,6 +797,8 @@ SYM_FUNC_START(schedule_tail_wrapper)
->   	FRAME_END
->   	ret
->   SYM_FUNC_END(schedule_tail_wrapper)
-> +.popsection
-> +
->   /*
->    * A newly forked process directly context switches into this address.
->    *
-> @@ -801,6 +806,7 @@ SYM_FUNC_END(schedule_tail_wrapper)
->    * ebx: kernel thread func (NULL for user thread)
->    * edi: kernel thread arg
->    */
-> +.pushsection .text, "ax"
->   SYM_CODE_START(ret_from_fork)
->   	call	schedule_tail_wrapper
->   
-> @@ -825,6 +831,7 @@ SYM_CODE_START(ret_from_fork)
->   	movl	$0, PT_EAX(%esp)
->   	jmp	2b
->   SYM_CODE_END(ret_from_fork)
-> +.popsection
->   
->   /*
->    * Return to user mode is not as complex as all this looks,
-> @@ -1693,6 +1700,7 @@ SYM_CODE_START(general_protection)
->   	jmp	common_exception
->   SYM_CODE_END(general_protection)
->   
-> +.pushsection .text, "ax"
->   SYM_CODE_START(rewind_stack_do_exit)
->   	/* Prevent any naive code from trying to unwind to our caller. */
->   	xorl	%ebp, %ebp
-> @@ -1703,3 +1711,4 @@ SYM_CODE_START(rewind_stack_do_exit)
->   	call	do_exit
->   1:	jmp 1b
->   SYM_CODE_END(rewind_stack_do_exit)
-> +.popsection
+> but this tends to be bike-sheding.
+> I do not have a strong opinion.
 > 
+> 
+> >  Documentation/admin-guide/README.rst |  8 +++++++-
+> >  scripts/kconfig/Makefile             |  1 +
+> >  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
+> >  3 files changed, 31 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> > index cc6151fc0845..1371deab8bc7 100644
+> > --- a/Documentation/admin-guide/README.rst
+> > +++ b/Documentation/admin-guide/README.rst
+> > @@ -209,10 +209,16 @@ Configuring the kernel
+> >                             store the lsmod of that machine into a file
+> >                             and pass it in as a LSMOD parameter.
+> >
+> > +                           Also, you can preserve modules in certain folders
+> > +                           or kconfig files by specifying their paths in
+> > +                           parameter LMC_KEEP.
+> > +
+> >                     target$ lsmod > /tmp/mylsmod
+> >                     target$ scp /tmp/mylsmod host:/tmp
+> >
+> > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
+> > +                   host$ make LSMOD=/tmp/mylsmod \
+> > +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \  
+> 
+> 
+> This might be another bike-sheding item, but
+> can you use a space for the delimiter?
+> 
+> 
+> LMC_KEEP="drivers/usb drivers/gpu fs"
+> 
+> If you pass multiple directories,
+> you will need to surround them with double-quotes.
+
+I agree that spaces look better.
+
+> 
+> 
+> 
+> 
+> > +                           localmodconfig
+> >
+> >                             The above also works when cross compiling.
+> >
+> > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> > index c9d0a4a8efb3..e0abbf5805f5 100644
+> > --- a/scripts/kconfig/Makefile
+> > +++ b/scripts/kconfig/Makefile
+> > @@ -123,6 +123,7 @@ help:
+> >         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
+> >         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
+> >         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
+> > +       @echo  '                    except those preserved by LMC_KEEP environment variable'
+> >         @echo  '  localyesconfig  - Update current config converting local mods to core'
+> >         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
+> >         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
+> > diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+> > index e2f8504f5a2d..d26543a807c9 100755
+> > --- a/scripts/kconfig/streamline_config.pl
+> > +++ b/scripts/kconfig/streamline_config.pl
+> > @@ -143,6 +143,7 @@ my %depends;
+> >  my %selects;
+> >  my %prompts;
+> >  my %objects;
+> > +my %config2kfile;
+> >  my $var;
+> >  my $iflevel = 0;
+> >  my @ifdeps;
+> > @@ -201,6 +202,7 @@ sub read_kconfig {
+> >         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+> >             $state = "NEW";
+> >             $config = $2;
+> > +           $config2kfile{"CONFIG_$config"} = $kconfig;
+> >
+> >             # Add depends for 'if' nesting
+> >             for (my $i = 0; $i < $iflevel; $i++) {
+> > @@ -592,6 +594,22 @@ while ($repeat) {
+> >
+> >  my %setconfigs;
+> >
+> > +my @preserved_kconfigs;
+> > +@preserved_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));  
+> 
+> Maybe, you can do 'my' declaration and the assignment
+> in a single line?
+> 
+> Can you drop the 'if ...' conditional?
+> 
+> 
+> Does this work for you?
+> 
+> my @preserved_kconfigs = split(/;/,$ENV{LMC_KEEP});
+> 
+> 
+
+Will an undefined warning happen if LMC_KEEP isn't defined?
+
+-- Steve
