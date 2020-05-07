@@ -2,99 +2,111 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54108C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE1820708
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588812577;
-	bh=6dM9PvAApVzyT0m8Cbbv9yowJQZ8Y9LI5uoElqgxx2g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJ4dAqNb2oSIIjpkPMLeeFA4eAlcocF7stlpD+8XdLZ6h/SZxnjQIlE3yJR3d3CT/
-	 9Tybx9BNtVSZJz2I1x878axYPP+/XeWBgHlfoCsWsxl0+pC17JzZXlib5fAemWGR7p
-	 jMBgbugKFdeVoaKjQtVDx3kYGaPKQIQ8v5+omF/k=
+	by mail.kernel.org (Postfix) with ESMTP id 4F18820708
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgEGAtg (ORCPT
+        id S1728101AbgEGAua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:49:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgEGAtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:49:35 -0400
-Received: from localhost.localdomain (unknown [180.171.74.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 809F020736;
-        Thu,  7 May 2020 00:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588812575;
-        bh=6dM9PvAApVzyT0m8Cbbv9yowJQZ8Y9LI5uoElqgxx2g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aC4XblCAXelcpdT4g5npOeH0svbcWQnL9zwy+1a5AogvuNDzvRENS1pL0Y4X1sOnN
-         esDustmO4MR+8PzyZKkVoGTvvoDD+9P7FD139/HMXdYX019p4evUijHQGNQca2CDGT
-         V1jy1ciCsuvvrV0yMnvkxTGg2gO/oTK6GAI0evM4=
-From:   Peter Chen <peter.chen@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 1/1] usb: chipidea: msm: Ensure proper controller reset using role switch API
-Date:   Thu,  7 May 2020 08:49:18 +0800
-Message-Id: <20200507004918.25975-2-peter.chen@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507004918.25975-1-peter.chen@kernel.org>
-References: <20200507004918.25975-1-peter.chen@kernel.org>
+        Wed, 6 May 2020 20:50:30 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54202 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgEGAua (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 May 2020 20:50:30 -0400
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0470oSn8075002;
+        Thu, 7 May 2020 09:50:28 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
+ Thu, 07 May 2020 09:50:28 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0470oS9h074998
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 7 May 2020 09:50:28 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Joe Perches <joe@perches.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200425004609.GE8982@jagdpanzerIV.localdomain>
+ <842ff40b-a232-6098-4333-996a3033b30a@i-love.sakura.ne.jp>
+ <20200427062117.GC486@jagdpanzerIV.localdomain>
+ <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+ <344199f1-639b-ee93-2388-57b0549641f9@i-love.sakura.ne.jp>
+ <dfe10cb0359c37dff46c93dfacf909dd33b2593f.camel@perches.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <0d513c80-8c8e-17b6-5b9c-73c7bca77252@i-love.sakura.ne.jp>
+Date:   Thu, 7 May 2020 09:50:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <dfe10cb0359c37dff46c93dfacf909dd33b2593f.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+On 2020/05/07 0:26, Joe Perches wrote:
+> On Wed, 2020-05-06 at 18:45 +0900, Tetsuo Handa wrote:
+>> On 2020/04/28 20:33, Tetsuo Handa wrote:
+>>> On 2020/04/27 15:21, Sergey Senozhatsky wrote:
+>>>>> KERN_NO_CONSOLES is for type of messages where "saved for later analysis" is
+>>>>> important but "printed for immediate notification" is not important.
+>>>>> In other words, KERN_NO_CONSOLES is NOT for dying messages where "printed for
+>>>>> immediate notification" is important.
+>>>>
+>>>> per-console loglevel is a user configurable parameter.
+>>>> KERN_NO_CONSOLES is a hard-coded policy.
+>>>
+>>> But given that whether to use KERN_NO_CONSOLES is configurable via e.g. sysctl,
+>>> KERN_NO_CONSOLES will become a user configurable parameter. What's still wrong?
+>>>
+>>
+>> Any problems remaining?
+> 
+> printk_get_level / printk_skip_level and the various
+> uses of %pV using printk_get_level
+> 
 
-Currently we check to make sure there is no error state on the extcon
-handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
-the USB role-switch API we still need to write to this register absent an
-extcon handle.
+Excuse me, but what do you mean?
 
-This patch makes the appropriate update to ensure the write happens if
-role-switching is true.
+I wish printk() accepts "loglevel" argument detached from "fmt" argument (e.g.
 
-Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
+  int printkl(int loglevel, const char *fmt_without_loglevel, ...);
+  int vprintkl(int loglevel, const char *fmt_without_loglevel, va_list args);
 
-Cc: Peter Chen <Peter.Chen@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/chipidea/ci_hdrc_msm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+) so that users of KERN_NO_CONSOLES need not to do like
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
-index af648ba6544d..46105457e1ca 100644
---- a/drivers/usb/chipidea/ci_hdrc_msm.c
-+++ b/drivers/usb/chipidea/ci_hdrc_msm.c
-@@ -114,7 +114,7 @@ static int ci_hdrc_msm_notify_event(struct ci_hdrc *ci, unsigned event)
- 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
- 					HS_PHY_ULPI_TX_PKT_EN_CLR_FIX, 0);
- 
--		if (!IS_ERR(ci->platdata->vbus_extcon.edev)) {
-+		if (!IS_ERR(ci->platdata->vbus_extcon.edev) || ci->role_switch) {
- 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
- 					HS_PHY_SESS_VLD_CTRL_EN,
- 					HS_PHY_SESS_VLD_CTRL_EN);
--- 
-2.17.1
+  if (sysctl_no_console_for_XX)
+    printk(KERN_INFO KERN_NO_CONSOLES pr_fmt(fmt) "%s\n", "hello");
+  else
+    printk(KERN_INFO pr_fmt(fmt) "%s\n", "hello");
 
+or
+
+  printk("%s" pr_fmt(fmt) "%s\n", sysctl_no_console_for_XX ? KERN_INFO KERN_NO_CONSOLES : KERN_INFO, "hello");
+
+in order to conditionally embed KERN_NO_CONSOLES into
+
+  pr_info("%s\n", "hello");
+
+. But this patch is about whether KERN_NO_CONSOLES is acceptable. How to
+pass KERN_NO_CONSOLES (if KERN_NO_CONSOLES is acceptable) is a future patch.
