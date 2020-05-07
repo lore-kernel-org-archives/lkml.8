@@ -2,81 +2,118 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D3EC54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A12FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F8F2186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588880982;
-	bh=3BFFez11ssEZqJXanr8tMIJWo0jrdd8+mi41ZiiNFeM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=XPRHOZMstbQWMG6GgTsxZtkogcIJSAr6+PjFDEkQCWTyvq6SdafOf1GsvuRs1kkbU
-	 oDh++xg6cozNGNhWah8eYQNiTWuP1yVsz9XScDGcWgeKkR/MsCNO+VhIjjUfZUFAXk
-	 /w+SSEIV/bjqAc/IkRDLiWCkk2SIoZ5vjIDV4XmQ=
+	by mail.kernel.org (Postfix) with ESMTP id 58683208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 19:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEGTtm (ORCPT
+        id S1728045AbgEGTyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 15:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 15:54:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:38360 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgEGTtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 15:49:41 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427EE208E4;
-        Thu,  7 May 2020 19:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588880981;
-        bh=3BFFez11ssEZqJXanr8tMIJWo0jrdd8+mi41ZiiNFeM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JCOa7Rse7JB6N+5ceUwmomOh/fUwbhzciB1fjEKCZ4P9hwt7LCcA6xjlWVpbSfl0W
-         K9WobNpo7/gtNna+drJTplZg7iggn/2qcYb1lD+LoaGru6cNq26602ReVnO0yzoKXr
-         WM49CbDcNJ/6KUwWVxjXs4m35x7wmjHVje8Pe2H4=
-Date:   Thu, 7 May 2020 14:49:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
-        rgummal@xilinx.com
-Subject: Re: [PATCH v7 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200507194939.GA21050@bjorn-Precision-5520>
+        id S1726320AbgEGTyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 15:54:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E7961FB;
+        Thu,  7 May 2020 12:54:11 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D60F83F68F;
+        Thu,  7 May 2020 12:54:09 -0700 (PDT)
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+Date:   Thu, 7 May 2020 14:54:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588852716-23132-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:28:36PM +0530, Bharat Kumar Gogada wrote:
-> - Add support for Versal CPM as Root Port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific interrupt line.
+Hi,
 
-> +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+On 5/7/20 12:27 PM, Andy Shevchenko wrote:
+> On Thu, May 7, 2020 at 4:26 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
+>> On 5/5/20 8:29 AM, Calvin Johnson wrote:
+> 
+>>> +             if (sscanf(cp, "ethernet-phy-id%4x.%4x",
+>>> +                        &upper, &lower) == 2) {
+>>> +                     *phy_id = ((upper & 0xFFFF) << 16) | (lower & 0xFFFF);
+>>> +                     return 0;
+>>> +             }
+> 
+>> Isn't the ACPI _CID() conceptually similar to the DT compatible
+>> property?
+> 
+> Where?
 
-Almost all of the *_link_up() functions return "int".  I don't know if
-there's really any benefit to using "bool", but if you do, you should
-probably return "true" or "false" instead of 1/0.
+Not, sure I understand exactly what your asking. AFAIK, in general the 
+dt property is used to select a device driver/etc based on a more to 
+less compatible set of substrings. The phy case is a bit different 
+because it codes a numerical part number into the string rather than 
+just using arbitrary strings to select a driver and device. But it uses 
+that as a vendor selector for binding to the correct driver/device.
 
-> +	port->irq_misc = platform_get_irq(pdev, 0);
-> +	if (port->irq_misc <= 0) {
+Rephrasing the ACPI spec, the _CID() is either a single compatible id, 
+or a list of ids in order of preference. Each id is either a HID (string 
+or EISA type id) or a bus specific string encoding vendor/device/etc. 
+(https://elixir.bootlin.com/linux/v5.7-rc4/source/drivers/acpi/acpica/utids.c#L186). 
+One of the examples is "PCI\VEN_vvvv&DEV_dddd"
 
-Use:
+So that latter case seems to be almost exactly what we have here.
 
-  if (port->irq_misc < 0) {
+> 
+>> It even appears to be getting used in a similar way to
+>> identify particular phy drivers in this case.
+> 
+> _CID() is a string. It can't be used as pure number.
+> 
 
-See https://lore.kernel.org/r/20200501224042.141366-3-helgaas@kernel.org
+It does have a numeric version defined for EISA types. OTOH I suspect 
+that your right. If there were a "PHY\VEN_IDvvvv&ID_DDDD" definition, it 
+may not be ideal to parse it. Instead the normal ACPI model of exactly 
+matching the complete string in the phy driver might be more appropriate.
+
+Similarly to how I suspect the next patch's use of "compatible" isn't 
+ideal either, because whether a device is c45 or not, should tend to be 
+fixed to a particular vendor/device implementation and not a firmware 
+provided property.
