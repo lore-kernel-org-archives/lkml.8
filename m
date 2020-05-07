@@ -2,173 +2,254 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A12C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484A3C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0D720A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115F6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZtgNyXC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvAO2IcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgEGSas (ORCPT
+        id S1728097AbgEGSa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGSar (ORCPT
+        Thu, 7 May 2020 14:30:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58170 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726320AbgEGSaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:30:47 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BCBEC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:30:47 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so2396090plk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R9h9q1Cl5L9jBOGkjpl3YKNQYZ81ZJlVZdV6ucpz6gk=;
-        b=AZtgNyXCDwUGPGp1PM9cWIAZauBdoePqX96vjEBL/kvdk1EJxcVbZwl+Ls50tv+BrX
-         IotQbUkrC74MmZVi3nI5TQ3F/d8sqmeLnoyno6J13vewS/bnga9JnEOSJcuflDSOkR2e
-         Xhk1FnSXKBLUN92SM7mB7rfvSLGP3LK/wIEKWyDyPm/i0WkBpFY7mziTrocjzeRjwOsf
-         5++itW52O2SNa6DV0nQDuODtY/FRcB6S99imGW9J2vKESgnr0lruQ/x9Rjd4W3BZQ56I
-         DIg66yAs4Aoe+ug+Ub3SJrgEX8wqlCVu95yTI8axeaRFNmaw/I378kSF5UmTN4eH6rQP
-         yUSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R9h9q1Cl5L9jBOGkjpl3YKNQYZ81ZJlVZdV6ucpz6gk=;
-        b=tlXsdtSSvR8bDVRGnx6ZT9620yQEVCwsB8dPCY6+6CLkR2m2R5f4mnHeN86lSbnSsg
-         xK+3VypXcwB3JEn/j9n2/+mDHL9fsnSeqiHq8EErwlROktuteEOQhSnyaLJ6+aX9Cr1Q
-         mXCCeh9UQg7aFpF6eqPAD86vGfB1Z3V8PXinA/CaSy+PpTUfsnl5T/1rfDvPAUpijCFJ
-         hW02SsBDrlYWfsFoyaQBo5l+gsUHKfrYpvyay86IiA5wKYbDwx7jDb1zMKSHVNDzmO8F
-         uiDYTPSh8pIFSTcWC4QdyWWqBkKZz5ZDx602tFV5ItP3V330L/hue/cKQUnG9xsAU+1u
-         S6Rw==
-X-Gm-Message-State: AGi0PuagO1UZ3ndmpBx2r9wPDaFGnlmGYozr7pVlb4wLyk3K7Nxo8zok
-        xkO0v9+OrMX8QDLOCsSL0YNZNkDVwymzZfw/isSwtQ==
-X-Google-Smtp-Source: APiQypK9IbN+TgxOKUhhzPc9GeBCFFkrYnPPl+d23ZIB6mFcEt9OGKw/yU0L2ZxW41dT7BLjGdCFm/MeV5NXVHNDke0=
-X-Received: by 2002:a17:90a:6d03:: with SMTP id z3mr1563529pjj.32.1588876246349;
- Thu, 07 May 2020 11:30:46 -0700 (PDT)
+        Thu, 7 May 2020 14:30:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588876254;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RSRvijYc9WX/jZopH9zHcMuBedu6Zvp4s9Ed1skZi5k=;
+        b=IvAO2IcAj/yGWsabQIOqxkim7VrePKG+puid3pEiC+3vEuF9TcD07kWQI6oMEDuC7Ht/TP
+        ztikGMkVskPpi0ZqWBgDcMXK4qii6D+wbjAMGualgqary8QNx3zRv5VieyOqr/fPCSTH10
+        UVnRN2oUA8Zk33FRo/k5VaviBUAhKVg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-485-YZzciQXvM0iXslwumt9qvw-1; Thu, 07 May 2020 14:30:52 -0400
+X-MC-Unique: YZzciQXvM0iXslwumt9qvw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6CEC80183C;
+        Thu,  7 May 2020 18:30:50 +0000 (UTC)
+Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4170560C47;
+        Thu,  7 May 2020 18:30:50 +0000 (UTC)
+Date:   Thu, 7 May 2020 13:30:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        luto@kernel.org
+Subject: Re: [RFC][PATCH 3/3] x86/entry, ORC: Teach objtool/unwind_orc about
+ stack irq swizzles
+Message-ID: <20200507183048.rlf2bgj4cf2g4jy6@treble>
+References: <20200507161020.783541450@infradead.org>
+ <20200507161828.801097834@infradead.org>
+ <20200507173809.GK5298@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <CA6078C3-3489-40E4-B756-A0AF6DB3A3A5@lca.pw>
-In-Reply-To: <CA6078C3-3489-40E4-B756-A0AF6DB3A3A5@lca.pw>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 May 2020 11:30:34 -0700
-Message-ID: <CAKwvOdmMjwoTZFSp2DnzeKePxgczfOJyOH_T-vyzHGcm5cFXgA@mail.gmail.com>
-Subject: Re: Clang and UBSAN: member access within null pointer of type
-To:     Qian Cai <cai@lca.pw>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200507173809.GK5298@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 6:42 AM Qian Cai <cai@lca.pw> wrote:
->
-> Running a Clang (9.0.1) build kernel with UBSAN generated a few warnings during boot,
+On Thu, May 07, 2020 at 07:38:09PM +0200, Peter Zijlstra wrote:
+> On Thu, May 07, 2020 at 06:10:23PM +0200, Peter Zijlstra wrote:
+> > Thomas would very much like objtool to understand and generate correct
+> > ORC unwind information for the minimal stack swizzle sequence:
+> > 
+> > 	mov %rsp, (%[ts])
+> > 	mov %[ts], %rsp
+> > 	...
+> > 	pop %rsp
+> > 
+> > This sequence works for the fp and guess unwinders -- all they need is
+> > that top-of-stack link set up by the first instruction.
+> > 
+> > The previous entry_64.S code worked with "UNWIND_HINT_REGS indirect=1"
+> > hints to inform the unwinder about the stack-swizzle, but because
+> > we've now already entered C, we can no longer point to a REGS. In
+> > fact, due to being in C we don't even have a reliable sp_offset to
+> > anything.
+> > 
+> > None of the existing UNWIND_HINT() functionality is quite sufficient
+> > to generate the right thing, but SP_INDIRECT is still the closest, so
+> > extend it.
+> > 
+> > When SP_INDIRECT is combined with .end=1 (which is otherwise unused,
+> > except for sp_reg == UNDEFINED):
+> > 
+> >  - change it from (sp+sp_offset) to (sp)+sp_offset
+> >  - have objtool preserve sp_offset from the previous state
+> >  - change "pop %rsp" handling to restore the CFI state from before the
+> >    hint.
+> > 
+> > NOTES:
+> > 
+> >  - We now have an instruction with stackops and a hint; make hint take
+> >    precedence over stackops.
+> > 
+> >  - Due to the reverse search in "pop %rsp" we must
+> >    fill_alternative_cfi() before validate_branch().
+> > 
+> >  - This all isn't really pretty, but it works and gets Thomas the code
+> >    sequence he wants.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> 
+> Much simpler, also works.
 
-Very cool, these reports are so nice! They hand you everything on a
-silver platter.  Thanks for testing/sending!  Let's take a look.
+Doing the stack switch in inline asm is just nasty.
 
->
-> [    0.000000] UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
-> [    0.000000] member access within null pointer of type 'struct acpi_table_fadt'
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc4-next-20200507 #2
-> [    0.000000] Call trace:
-> [    0.000000]  dump_backtrace+0x0/0x22c
-> [    0.000000]  show_stack+0x28/0x34
-> [    0.000000]  dump_stack+0x104/0x194
-> [    0.000000]  handle_null_ptr_deref+0xdc/0x10c
-> [    0.000000]  __ubsan_handle_type_mismatch_v1+0x64/0x78
-> [    0.000000]  acpi_tb_create_local_fadt+0x104/0x6ec
+Also, a frame pointer makes this SO much easier for ORC/objtool, no
+funky hints needed.  In fact maybe we can get rid of the indirect hint
+things altogether, which means even more deleted code.
 
-ok so acpi_tb_create_local_fadt() dereferenced a `null pointer of type
-'struct acpi_table_fadt'` in null-ptr-deref in
-drivers/acpi/acpica/tbfadt.c:459.
+This is much cleaner, and it boots:
 
-That line number doesn't line up with linux-next; which tree was this?
- That will probably help track these down faster.
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 3f9b2555e6fb..4a25f72f969f 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -718,15 +718,6 @@ __visible void __xen_pv_evtchn_do_upcall(void)
+ 	irq_exit_rcu();
+ }
+ 
+-/*
+- * Separate function as objtool is unhappy about having
+- * the macro at the call site.
+- */
+-static noinstr void run_on_irqstack(void)
+-{
+-	RUN_ON_IRQSTACK(__xen_pv_evtchn_do_upcall);
+-}
+-
+ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ {
+ 	struct pt_regs *old_regs;
+@@ -739,7 +730,7 @@ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ 		__xen_pv_evtchn_do_upcall();
+ 		instr_end();
+ 	} else {
+-		run_on_irqstack();
++		RUN_ON_IRQSTACK(__xen_pv_evtchn_do_upcall);
+ 	}
+ 
+ 	set_irq_regs(old_regs);
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 3046dfc69b8c..d036dc831a23 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1295,3 +1295,31 @@ SYM_CODE_START(rewind_stack_do_exit)
+ 	call	do_exit
+ SYM_CODE_END(rewind_stack_do_exit)
+ .popsection
++
++/*
++ * rdi: new stack pointer
++ * rsi: function pointer
++ * rdx: arg1 (can be NULL if none)
++ */
++SYM_FUNC_START(call_on_stack)
++	/*
++	 * Save the frame pointer unconditionally.  This allows the ORC
++	 * unwinder to handle the stack switch.
++	 */
++	pushq	%rbp
++	mov	%rsp, %rbp
++
++	 /*
++	  * The unwinder relies on the word at the end of the new stack page
++	  * linking back to the previous RSP.
++	 */
++	mov	%rsp, -8(%rdi)
++	lea	-8(%rdi), %rsp
++	mov	%rdx, %rdi
++	CALL_NOSPEC rsi
++
++	/* Restore the previous stack pointer from RBP. */
++	leaveq
++
++	ret
++SYM_FUNC_END(call_on_stack)
+diff --git a/arch/x86/include/asm/irq_stack.h b/arch/x86/include/asm/irq_stack.h
+index f307d4c27f84..131a6c689b1c 100644
+--- a/arch/x86/include/asm/irq_stack.h
++++ b/arch/x86/include/asm/irq_stack.h
+@@ -7,42 +7,26 @@
+ #include <asm/processor.h>
+ 
+ #ifdef CONFIG_X86_64
++
++void call_on_stack(void *stack, void *func, void *arg);
++
+ static __always_inline bool irqstack_active(void)
+ {
+ 	return __this_cpu_read(irq_count) != -1;
+ }
+ 
+-#define __RUN_ON_IRQSTACK(_asm, ...)					\
++#define __RUN_ON_IRQSTACK(func, arg)					\
+ do {									\
+-	unsigned long tos;						\
+-									\
+ 	lockdep_assert_irqs_disabled();					\
+-									\
+-	tos = ((unsigned long)__this_cpu_read(hardirq_stack_ptr)) - 8;	\
+-									\
+-	__this_cpu_add(irq_count, 1);					\
+-	asm volatile(							\
+-		"movq	%%rsp, (%[ts])				\n"	\
+-		"movq	%[ts], %%rsp				\n"	\
+-		ASM_INSTR_BEGIN						\
+-		_asm "                                          \n"	\
+-		ASM_INSTR_END						\
+-		"popq	%%rsp					\n"	\
+-		:							\
+-		: [ts] "r" (tos), ##__VA_ARGS__				\
+-		: "memory"						\
+-		);							\
++	call_on_stack(__this_cpu_read(hardirq_stack_ptr), func, arg);	\
+ 	__this_cpu_sub(irq_count, 1);					\
+ } while (0)
+ 
+-/*
+- * Macro to emit code for running @func on the irq stack.
+- */
+ #define RUN_ON_IRQSTACK(func) \
+-	__RUN_ON_IRQSTACK("call" __ASM_FORM(func))
++	__RUN_ON_IRQSTACK(func, NULL)
+ 
+ #define RUN_ON_IRQSTACK_ARG1(func, arg) \
+-	__RUN_ON_IRQSTACK("call" __ASM_FORM(func), "D" (arg))
++	__RUN_ON_IRQSTACK(func, arg)
+ 
+ #else /* CONFIG_X86_64 */
+ static __always_inline bool irqstack_active(void) { return false; }
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index c41b0a2859d7..30b6ddf64dc7 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -74,7 +74,7 @@ int irq_init_percpu_irqstack(unsigned int cpu)
+ 
+ static noinstr void handle_irq_on_irqstack(struct irq_desc *desc)
+ {
+-	__RUN_ON_IRQSTACK(CALL_NOSPEC, THUNK_TARGET(desc->handle_irq), "D" (desc));
++	RUN_ON_IRQSTACK_ARG1(desc->handle_irq, desc);
+ }
+ 
+ void handle_irq(struct irq_desc *desc, struct pt_regs *regs)
 
-> [    0.000000]  acpi_tb_parse_fadt+0xa0/0x1a0
-> [    0.000000]  acpi_tb_parse_root_table+0x284/0x2ac
-> [    0.000000]  acpi_initialize_tables+0xb4/0xd0
-> [    0.000000]  acpi_table_init+0x68/0x88
-> [    0.000000]  acpi_boot_table_init+0x108/0x1a0
-> [    0.000000]  setup_arch+0xec/0x1f4
-> [    0.000000]  start_kernel+0x94/0x56c
->
-> [    0.000000] UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-> [    0.000000] member access within null pointer of type 'struct acpi_madt_generic_interrupt'
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc4-next-20200507 #2
-> [    0.000000] Call trace:
-> [    0.000000]  dump_backtrace+0x0/0x22c
-> [    0.000000]  show_stack+0x28/0x34
-> [    0.000000]  dump_stack+0x104/0x194
-> [    0.000000]  handle_null_ptr_deref+0xdc/0x10c
-> [    0.000000]  __ubsan_handle_type_mismatch_v1+0x64/0x78
-> [    0.000000]  acpi_parse_gic_cpu_interface+0x40/0xa8
-> [    0.000000]  acpi_parse_entries_array+0x1d4/0x2e8
-> [    0.000000]  acpi_table_parse_entries_array+0x11c/0x138
-> [    0.000000]  acpi_table_parse_madt+0x84/0xb0
-> [    0.000000]  acpi_parse_and_init_cpus+0x24/0x80
-> [    0.000000]  smp_init_cpus+0x38/0x17c
-> [    0.000000]  setup_arch+0x140/0x1f4
-> [    0.000000]  start_kernel+0x94/0x56c
->
-> [  255.388250] UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-> [  255.394898] member access within null pointer of type 'struct xfs_kobj'
-> [  255.402346] CPU: 230 PID: 2364 Comm: modprobe Tainted: G             L    5.7.0-rc4-next-20200507 #2
-> [  255.412191] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-> [  255.422641] Call trace:
-> [  255.425811]  dump_backtrace+0x0/0x22c
-> [  255.430188]  show_stack+0x28/0x34
-> [  255.434225]  dump_stack+0x104/0x194
-> [  255.438441]  handle_null_ptr_deref+0xdc/0x10c
-> [  255.443511]  __ubsan_handle_type_mismatch_v1+0x64/0x78
-> [  255.450016]  init_module+0x130/0x1d4 [xfs]
-> [  255.454831]  do_one_initcall+0x6c/0x144
-> [  255.459383]  do_init_module+0x100/0x388
-> [  255.463931]  load_module+0x2518/0x2b9c
-> [  255.468404]  __se_sys_finit_module+0x144/0x150
-> [  255.473560]  __arm64_sys_finit_module+0x54/0x88
-> [  255.478804]  do_el0_svc+0x128/0x1dc
-> [  255.483010]  el0_sync_handler+0xd0/0x268
-> [  255.487655]  el0_sync+0x164/0x180
-> [  255.491782] ================================================================================
-> [  255.769799] ================================================================================
-> [  255.779164] UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-> [  255.785816] member access within null pointer of type 'struct xfs_kobj'
-> [  255.793268] CPU: 132 PID: 2363 Comm: mount Tainted: G             L    5.7.0-rc4-next-20200507 #2
-> [  255.802854] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-> [  255.813306] Call trace:
-> [  255.816471]  dump_backtrace+0x0/0x22c
-> [  255.820849]  show_stack+0x28/0x34
-> [  255.824882]  dump_stack+0x104/0x194
-> [  255.829090]  handle_null_ptr_deref+0xdc/0x10c
-> [  255.834163]  __ubsan_handle_type_mismatch_v1+0x64/0x78
-> [  255.840665]  xfs_mountfs+0x310/0xc64 [xfs]
-> [  255.846071]  xfs_fc_fill_super+0x5cc/0x75c [xfs]
-> [  255.851411]  get_tree_bdev+0x24c/0x328
-> [  255.856463]  xfs_fc_get_tree+0x24/0x30 [xfs]
-> [  255.861453]  vfs_get_tree+0x54/0x158
-> [  255.865754]  do_mount+0x80c/0xaf0
-> [  255.869786]  __arm64_sys_mount+0xe0/0x18c
-> [  255.874510]  do_el0_svc+0x128/0x1dc
-> [  255.878720]  el0_sync_handler+0xd0/0x268
-> [  255.883357]  el0_sync+0x164/0x180
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
