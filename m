@@ -4,61 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B291C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E59C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4CAE205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E2920838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588860311;
-	bh=WSIu7Z5FH7Emv/oKuxSvVTdQZPPJK253Dm+oh4ENuGI=;
+	s=default; t=1588860313;
+	bh=UGMaIlmDe2PXXTCKVFDLhA4MiqbreTvt2g9+e67JfNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldkjeXYVtx5AwCC8qdM8QVuCl/MxSi04dls7N3H1MZ3Fdgyq/YpGWUiGp9Nqikyhx
-	 4So3E2cxkK8xWgurPky/EJtSECvHXTPagGA3Qdso87priZc3iNhJbtaKa7U4Ok1INm
-	 R8Fi6TDzDIKjPHMr+GszEoHoDTbJ21Kk39b3tYjA=
+	b=PYm2P03ZmNmOUBR/fuM45HSsLMVPgry62Nm058AHSSO7loFdOUgXxVhy6DSnAw79R
+	 fjJIgPzBn6kENyDnw4R6wtRXqdL1wEXvWdjyj5ZCjumiMlmFCc2Clx1GZfJgFFu4Fq
+	 hxUCMzEEeYe4I+6EkLWjHY+17gBP3D98TN2Ateao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgEGOFK (ORCPT
+        id S1728011AbgEGOFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgEGOFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:05:09 -0400
+        id S1726558AbgEGOFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:05:11 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FCB2083B;
-        Thu,  7 May 2020 14:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79592082E;
+        Thu,  7 May 2020 14:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588860309;
-        bh=WSIu7Z5FH7Emv/oKuxSvVTdQZPPJK253Dm+oh4ENuGI=;
+        s=default; t=1588860311;
+        bh=UGMaIlmDe2PXXTCKVFDLhA4MiqbreTvt2g9+e67JfNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m14WVEGgqdY1BxkifsScKEe4PKnbecF54jWpO3WQvo76eVuDN39EOCgIiCQzGcK+W
-         +pa/U27p31NMVqGymANvioEXgq3KJtJPrve852KmfbwHjm3SMPons+m2enqrwX3v/4
-         kzw9D2KzefXg71rr3X5MGEHlREkOpIsMRpKQHFxs=
+        b=zWjmSSzhb+E9LNn9Z+3SfSebl0OxqpT9NebL/MFNLynazreXVZlpJguuZojkRlq+4
+         IStMR7EFrTps/BTPAntLRtv9KJML9JuFnWVl6Caz4peuX90hr5R0F5E4naRYX2MaIw
+         zaIaIiP+z1LcjeJ1v0to2hGmQ40JoPpCUbnt5uFQ=
 From:   Will Deacon <will@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
 Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv4 0/6] iommu/arm-smmu: Allow client devices to select identity mapping
-Date:   Thu,  7 May 2020 15:04:55 +0100
-Message-Id: <158885770316.87552.2164546926384187579.b4-ty@kernel.org>
+        Tamas Zsoldos <tamas.zsoldos@arm.com>
+Subject: Re: [PATCH] arm64: vdso: Add --eh-frame-hdr to ldflags
+Date:   Thu,  7 May 2020 15:04:56 +0100
+Message-Id: <158885881702.237249.11426070057323434764.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200507104049.47834-1-vincenzo.frascino@arm.com>
+References: <20200507104049.47834-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,33 +58,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 00:03:48 +0530, Sai Prakash Ranjan wrote:
-> This series allows DRM, Modem devices to set a default
-> identity mapping in qcom smmu implementation.
+On Thu, 7 May 2020 11:40:49 +0100, Vincenzo Frascino wrote:
+> LLVM's unwinder depends on the .eh_frame_hdr being present for
+> unwinding. However, when compiling Linux with GCC, the section
+> is not present in the vdso library object and when compiling
+> with Clang, it is present, but it has zero length.
 > 
-> Patch 1 is cleanup to support other SoCs to call into
-> QCOM specific  implementation.
-> Patch 2 sets the default identity domain for DRM devices.
-> Patch 3 implements def_domain_type callback for arm-smmu.
-> Patch 4 sets the default identity domain for modem device.
-> Patch 5-6 adds the iommus property for mss pil.
+> With GCC the problem was not spotted because libgcc unwinder does
+> not require the .eh_frame_hdr section to be present.
 > 
 > [...]
 
-Applied to will (for-joerg/arm-smmu/updates), thanks!
+Applied to arm64 (for-next/vdso), thanks!
 
-[1/6] iommu: arm-smmu-impl: Convert to a generic reset implementation
-      https://git.kernel.org/will/c/64510ede3684
-[2/6] iommu/arm-smmu: Implement iommu_ops->def_domain_type call-back
-      https://git.kernel.org/will/c/232c5ae8a361
-[3/6] iommu/arm-smmu: Allow client devices to select direct mapping
-      https://git.kernel.org/will/c/0e764a01015d
-[4/6] iommu/arm-smmu-qcom: Request direct mapping for modem device
-      (not applied)
-[5/6] dt-bindings: remoteproc: qcom: Add iommus property
-      https://git.kernel.org/will/c/23cf515c6042
-[6/6] arm64: dts: qcom: sdm845-cheza: Add iommus property
-      https://git.kernel.org/will/c/68aee4af5f62
+[1/1] arm64: vdso: Add --eh-frame-hdr to ldflags
+      https://git.kernel.org/arm64/c/7e9f5e6629f6
 
 Cheers,
 -- 
