@@ -2,134 +2,127 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AB1C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E94C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59092080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588840663;
-	bh=UfbG32gghEnagxdM/s07RMhpIOEDCca3UVjRhkdrfA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K3PHk2k7mFD78Y4/qAslU/H+2IF3e4brx5YrdFzvzCSwdoTTuH91P8QHmqxwzGfbm
-	 7aIIzYO7xDokvc4LtJhDSm5SLVwLnDHRSrwTF/QlM1QVoAoi2PM63cUHcSTYv1JzfC
-	 k6rcUkn40ElutZYOM09ABx1CYS3WUNoLKuvzMGyk=
+	by mail.kernel.org (Postfix) with ESMTP id 860982078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pWbvTKbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgEGIhn (ORCPT
+        id S1725985AbgEGIjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:37:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgEGIhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:37:42 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2FA82078C;
-        Thu,  7 May 2020 08:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588840661;
-        bh=UfbG32gghEnagxdM/s07RMhpIOEDCca3UVjRhkdrfA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2YThvRAXTq/axvNiQxDIgMsKSH75GoJAMMVFJySLe+uVCUTq7iUq88GILs6BOyM+X
-         asd4QgHl3ocvp+CbSFScegyXFuiCm/7QBw/QnYnzvuzEJlD/9kPlspqPiKJcfL4kgw
-         Gvf3mvDdhrZjtAlXoCZHPKvWEB4sKspWBbNUyqQI=
-Date:   Thu, 7 May 2020 09:37:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com
-Subject: Re: [PATCH] arm64/mm: Remove add_huge_page_size()
-Message-ID: <20200507083737.GB28215@willie-the-truck>
-References: <20200506064635.20114-1-gshan@redhat.com>
- <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
- <20200506071927.GB7021@willie-the-truck>
- <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
+        Thu, 7 May 2020 04:39:00 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33073 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgEGIjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:39:00 -0400
+Received: from [IPv6:2601:646:8600:3281:6547:66ee:1a90:d675] ([IPv6:2601:646:8600:3281:6547:66ee:1a90:d675])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0478cW5L3345498
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 7 May 2020 01:38:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0478cW5L3345498
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588840714;
+        bh=Sizgvkow12UlMRPJ88fhJx797WUVfBKXkAG1rgsf2c0=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=pWbvTKbdT3Z9ZpBWKXPBwtJZAXHQfyZjxv1fcHlmU8Y2WI0GKZS+bXW4jKfNVOxuB
+         Q1aUV/RIeBosekLXwBmHgCOLaXwaEdyrEzND79HYWl7bbg/rat7qzgs/z1XbXJIh7K
+         g5fexfthTHnVCZVWCEsfogbhr8EJmZSoD+dWOFmVK5+SQXg0rAMwIB6Sn0qpAjOryn
+         UEmjvXWYSGbNW/8dkn9FMpSsobxxiWlOXcLQrRhPSW1fUj4IZxpXndZ7adrC+MFIGJ
+         Q465ut3P1RuXTNwH70HdrtMO4CKS6QfXVYt9OO4xmM+otX7z5fCnDmByw9gRabNsxA
+         HOQo13cFyMatg==
+Date:   Thu, 07 May 2020 01:38:26 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <ef7d077424554abebbd0d46738c90163@AcuMS.aculab.com>
+References: <20200505174423.199985-1-ndesaulniers@google.com> <CAMzpN2idWF2_4wtPebM2B2HVyksknr9hAqK8HJi_vjQ06bgu2g@mail.gmail.com> <60b16c05ca9e4954a7e4fcdd3075e23d@AcuMS.aculab.com> <7C32CF96-0519-4C32-B66B-23AD9C1F1F52@zytor.com> <ef7d077424554abebbd0d46738c90163@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [PATCH] x86: bitops: fix build regression
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Brian Gerst'" <brgerst@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+From:   hpa@zytor.com
+Message-ID: <3559DCF4-0E59-48DF-8500-D4BA2852975D@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 10:15:59AM +1000, Gavin Shan wrote:
-> On 5/6/20 5:19 PM, Will Deacon wrote:
-> > On Wed, May 06, 2020 at 12:36:43PM +0530, Anshuman Khandual wrote:
-> > > 
-> > > 
-> > > On 05/06/2020 12:16 PM, Gavin Shan wrote:
-> > > > The function add_huge_page_size(), wrapper of hugetlb_add_hstate(),
-> > > > avoids to register duplicated huge page states for same size. However,
-> > > > the same logic has been included in hugetlb_add_hstate(). So it seems
-> > > > unnecessary to keep add_huge_page_size() and this just removes it.
-> > > 
-> > > Makes sense.
-> > > 
-> > > > 
-> > > > Signed-off-by: Gavin Shan <gshan@redhat.com>
-> > > > ---
-> > > >   arch/arm64/mm/hugetlbpage.c | 18 +++++-------------
-> > > >   1 file changed, 5 insertions(+), 13 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> > > > index bbeb6a5a6ba6..ed7530413941 100644
-> > > > --- a/arch/arm64/mm/hugetlbpage.c
-> > > > +++ b/arch/arm64/mm/hugetlbpage.c
-> > > > @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
-> > > >   	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
-> > > >   }
-> > > > -static void __init add_huge_page_size(unsigned long size)
-> > > > -{
-> > > > -	if (size_to_hstate(size))
-> > > > -		return;
-> > > > -
-> > > > -	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-> > > > -}
-> > > > -
-> > > >   static int __init hugetlbpage_init(void)
-> > > >   {
-> > > >   #ifdef CONFIG_ARM64_4K_PAGES
-> > > > -	add_huge_page_size(PUD_SIZE);
-> > > > +	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-> > > >   #endif
-> > > > -	add_huge_page_size(CONT_PMD_SIZE);
-> > > > -	add_huge_page_size(PMD_SIZE);
-> > > > -	add_huge_page_size(CONT_PTE_SIZE);
-> > > > +	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
-> > > > +	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
-> > > > +	hugetlb_add_hstate(CONT_PTE_SHIFT);
-> > 
-> > Something similar has already been done in linux-next.
-> > 
-> 
-> Thanks, Will. I didn't check linux-next before posting this patch.
-> Please ignore it then :)
-> 
-> > > Should these page order values be converted into macros instead. Also
-> > > we should probably keep (CONT_PTE_SHIFT + PAGE_SHIFT - PAGE_SHIFT) as
-> > > is to make things more clear.
-> > 
-> > I think the real confusion stems from us not being consistent with your
-> > *_SHIFT definitions on arm64. It's madness for CONT_PTE_SHIFT to be smaller
-> > than PAGE_SHIFT imo, but it's just cosmetic I guess.
-> > 
-> 
-> Yeah, Do you want me to post a patch, to fix it?
+On May 7, 2020 1:35:01 AM PDT, David Laight <David=2ELaight@ACULAB=2ECOM> w=
+rote:
+>From: hpa@zytor=2Ecom
+>> Sent: 07 May 2020 08:59
+>> On May 7, 2020 12:44:44 AM PDT, David Laight
+><David=2ELaight@ACULAB=2ECOM> wrote:
+>> >From: Brian Gerst
+>> >> Sent: 07 May 2020 07:18
+>> >=2E=2E=2E
+>> >> > --- a/arch/x86/include/asm/bitops=2Eh
+>> >> > +++ b/arch/x86/include/asm/bitops=2Eh
+>> >> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long
+>> >*addr)
+>> >> >         if (__builtin_constant_p(nr)) {
+>> >> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>> >> >                         : CONST_MASK_ADDR(nr, addr)
+>> >> > -                       : "iq" (CONST_MASK(nr) & 0xff)
+>> >> > +                       : "iq" ((u8)(CONST_MASK(nr) & 0xff))
+>> >>
+>> >> I think a better fix would be to make CONST_MASK() return a u8
+>value
+>> >> rather than have to cast on every use=2E
+>> >
+>> >Or assign to a local variable - then it doesn't matter how
+>> >the value is actually calculated=2E So:
+>> >			u8 mask =3D CONST_MASK(nr);
+>> >			asm volatile(LOCK_PREFIX "orb %1,%0"
+>> >				: CONST_MASK_ADDR(nr, addr)
+>> >				: "iq" mask
+>> >
+>> >	David
+>> >
+>> >-
+>> >Registered Address Lakeside, Bramley Road, Mount Farm, Milton
+>Keynes,
+>> >MK1 1PT, UK
+>> >Registration No: 1397386 (Wales)
+>>=20
+>> "const u8" please=2E=2E=2E
+>
+>Why, just a waste of disk space=2E
+>
+>	David
+>
+>-
+>Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
+>MK1 1PT, UK
+>Registration No: 1397386 (Wales)
 
-Let's wait until 5.8 is out the door first, since we've already got a fair
-amount of activity in this area and it would be a pity if we broke something
-as a result of cleanup!
-
-Cheers,
-
-Will
+Descriptive=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
