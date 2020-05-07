@@ -2,83 +2,82 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44416C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7169C35280
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21CA521582
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ED1208D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 23:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZvvpLly"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lQLfQGLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEGXBw (ORCPT
+        id S1727096AbgEGXDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 19:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        Thu, 7 May 2020 19:03:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgEGXBv (ORCPT
+        with ESMTP id S1726518AbgEGXDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 19:01:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FB6C05BD43;
-        Thu,  7 May 2020 16:01:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v4so8546042wme.1;
-        Thu, 07 May 2020 16:01:51 -0700 (PDT)
+        Thu, 7 May 2020 19:03:21 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3209FC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 16:03:21 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d184so3771772pfd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 16:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
-        b=JZvvpLly/WeFwEdPOAjsfNLtdVO1/saQlF77s8DN/ZF0BWu1MgILCIAn0AhqV/pkzw
-         A0z4h7Q7Qvesyxx0pJK9xiME+nqD+bD7+zezYnuvLxdVrG7bfR2xuNnCOZbd7Dp6Aw9W
-         FlL9tVfTviOY30rRUZm/SMF+6ks0eCV/FFZHuBJ0WdDjEBUfnVt31v0t9gAzu0jsoLVH
-         AwOgqjj5EJZcN1de/fTVXyjqZ+mIoyGc2+9/yRLieRQErLNiDBjfrZDxmp+4ReKs+gkd
-         qbJraJ6Wg1CzU+dZlm9aoFQFOrDAszZLkvflSUVLE3Z17CrA2vSTtqaGC/3MMcKqRqSQ
-         qsvA==
+        bh=QSHssQjKD6+vYMmq/gxw+OjPipIa2F9Y4+vFL26ooGI=;
+        b=lQLfQGLzYXAlL8dJX5jl559roV3lhBENjWgWt4fbxsf1RmSYMZCU+el0VVO9T+0FiC
+         c8pZKsm+RwuijEVirPevAoquCHjBi24Cnw/I/VPkgUT7hF8pH3ZOrZNMWHVdI2J74gr4
+         ll/a1QfmqtjnCH5ncjYKRJ/wa2SCEYZfNEgBWPI5u4rY+YFGanCcD83VRoPeno5hm5qA
+         KB1DB05IosCcEQBt8x0WABe6eDaRjA8dN3iAM6dVgQqFqsiJPRwzLH4+jOJBBXbrzDGL
+         bJQ8EiNFqcd0jxu/s366TT/u3FPHT9JbejK/tVslMtIIl74v2PPdHQQvx4ZpU35iHot7
+         Q7oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Amh3I1P5I6BDFw+wjiIvKdrZM+vTRzn1yeHAQhH/mXQ=;
-        b=p/rg0Wa6yv46m788z5w0d3V2XuL+bOmX7K9qDmi0ZCTLK1FoTIElswqCajarVw83nc
-         CpKc76+lnNrUbDaM+HECwcecKFzvFEwic4dAJzPw1FUth+4FP6jWyC6V34MW7xzcOT4/
-         aaDoOgsRyc8OemaCDiF6dkfbEl7CJ7bshMMfTDtW3f9HRnxKNL2TuPNFZo1bd7vYfZXc
-         i5hqIh7eSrOBzAx20oEOzHMI7oMNOtCPQqhsNrqVVgrr+XcKVhUF4eA9B5oW1Oltwuqh
-         t0xj5ZF9EE9F8E/e969tLmjrtIY3kcIHN2dmaERTvIknGc7DBz1L6EoUuOCEPNMl7FJn
-         dlUA==
-X-Gm-Message-State: AGi0PuYot0Kvt7tfVomYwa39SbAm6ruAtwjbDtsN/3POpPGQaWrDNnFl
-        Am/t0N7AwB9pZASXijWfQeQ=
-X-Google-Smtp-Source: APiQypIXEPr64bDK5N2O7Q4uwKSHEOYR2e4k2roCXqGS0mC2od1qBH2YrfIpQ9yDJcfBWvqV0nWskg==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr12876858wma.150.1588892510056;
-        Thu, 07 May 2020 16:01:50 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o6sm10910992wrw.63.2020.05.07.16.01.48
+        bh=QSHssQjKD6+vYMmq/gxw+OjPipIa2F9Y4+vFL26ooGI=;
+        b=iPWFQ1+FJiKdd4ll8DnIVddmuwa/U9lOCOuZexRUNv1qj5psMJSC6w8Ee9UZ+S9pg5
+         WtE0EZinUo3FY+ybiFecg+NYFxrQQztBb4pMOKorJo3augY3gxEhnhYJjSxd/O0h7VhP
+         vQzXxCuefSy6IiPSDx2h+lC92BjuFgx9YfykodwzbeUM1ofIpv+JLM2tFCfW1DZczZWN
+         GKJ+kOG8bjcqGLy+EBIXc3eeBHcksexEUZHUgL26f2hrEmS4kYI7Ca0upCh6kraon8G9
+         XGCZk/+AzaKw4BhSy0/HbFUyPb6f0f6LHYb07PkVpQmHmb15G0adzGj+vb7msZNGlFPa
+         mF3A==
+X-Gm-Message-State: AGi0PubeLpImdWOgaSZz1obCJypr2Ux1aBp7chqa/GR1XnqVGhTbzqcX
+        YO3xQEkn/6AlB4qgJz4wklhkXw==
+X-Google-Smtp-Source: APiQypKwoJfk4HPHvT4IexdeCehxEsTZnAGLXVeoookLh5pz2Z0Qh+aUk2uqWMm7ZmzGofBDoD932g==
+X-Received: by 2002:a63:c306:: with SMTP id c6mr13444816pgd.311.1588892600499;
+        Thu, 07 May 2020 16:03:20 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id f9sm4477969pgj.2.2020.05.07.16.03.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 16:01:49 -0700 (PDT)
-Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
-        hansverk@cisco.com, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
- <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
- <20200507202337.GJ2422122@aptenodytes>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <b3d65325-7383-f89b-f493-6219904c8931@gmail.com>
-Date:   Fri, 8 May 2020 01:01:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+        Thu, 07 May 2020 16:03:19 -0700 (PDT)
+Subject: Re: [PATCH] fs/io_uring: fix O_PATH fds in openat, openat2, statx
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Max Kellermann <mk@cm4all.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20200507185725.15840-1-mk@cm4all.com>
+ <20200507190131.GF23230@ZenIV.linux.org.uk>
+ <4cac0e53-656c-50f0-3766-ae3cc6c0310a@kernel.dk>
+ <20200507192903.GG23230@ZenIV.linux.org.uk>
+ <8e3c88cc-027b-4f90-b4f8-a20d11d35c4b@kernel.dk>
+ <20200507220637.GH23230@ZenIV.linux.org.uk>
+ <283c8edb-fea2-5192-f1d6-3cc57815b1e2@kernel.dk>
+ <20200507224447.GI23230@ZenIV.linux.org.uk>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e16125f2-c3ec-f029-c607-19bede54fa17@kernel.dk>
+Date:   Thu, 7 May 2020 17:03:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200507202337.GJ2422122@aptenodytes>
+In-Reply-To: <20200507224447.GI23230@ZenIV.linux.org.uk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,102 +86,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-With help of enum each additional compatibility string with fall back
-'rockchip,rk3288-rga' adds only 1 extra line instead of 3.
-
-See my and Heiko's response at the review of 'rockchip-saradc.yaml'.
-
-Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc
-bindings to yaml
-https://lore.kernel.org/lkml/a35bdff4-601e-6186-584e-9a0b88cf3dbb@gmail.com/
-
-The response of robh when I did something similar wrong as this patch.
-
-Re: [PATCH 1/2] dt-bindings: usb: dwc2: add compatible property for
-rk3328 usb
-https://lore.kernel.org/lkml/20200310192933.GA15236@bogus/
-
-Example of an approved patch with enum.
-
-[PATCH v2 1/2] dt-bindings: usb: dwc2: add compatible property for
-rk3328 usb
-https://lore.kernel.org/lkml/20200311122121.8912-1-jbx6244@gmail.com/
-
-Kind regards,
-
-Johan
-
-On 5/7/20 10:23 PM, Paul Kocialkowski wrote:
-> Hi,
+On 5/7/20 4:44 PM, Al Viro wrote:
+> On Thu, May 07, 2020 at 04:25:24PM -0600, Jens Axboe wrote:
 > 
-> On Thu 30 Apr 20, 23:24, Johan Jonker wrote:
->> Hi Paul,
->>
->>>
->>> Add a new compatible for the PX30 Rockchip SoC, which also features
->>> a RGA block. It is compatible with the RK3288 RGA block.
->>>
->>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->>> ---
->>>  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> index dd645ddccb07..740586299da9 100644
->>> --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
->>> @@ -23,6 +23,9 @@ properties:
->>
->>
->>>        - items:
->>>            - const: rockchip,rk3228-rga
->>>            - const: rockchip,rk3288-rga
->>> +      - items:
->>> +          - const: rockchip,px30-rga
->>> +          - const: rockchip,rk3288-rga
->>
->> Use enum.
->>
->>       - items:
->>           - enum:
->>             - rockchip,px30-rga
->>             - rockchip,rk3228-rga
->>           - const: rockchip,rk3288-rga
+>>  static int io_close(struct io_kiocb *req, bool force_nonblock)
+>>  {
+>> +	struct files_struct *files = current->files;
+>>  	int ret;
+>>  
+>>  	req->close.put_file = NULL;
+>> -	ret = __close_fd_get_file(req->close.fd, &req->close.put_file);
+>> +	spin_lock(&files->file_lock);
+>> +	if (req->file->f_op == &io_uring_fops ||
+>> +	    req->close.fd == req->ctx->ring_fd) {
+>> +		spin_unlock(&files->file_lock);
+>> +		return -EBADF;
+>> +	}
+>> +
+>> +	ret = __close_fd_get_file_locked(files, req->close.fd,
+>> +						&req->close.put_file);
 > 
-> Are you sure about this? The rk3228 above does it as I did it and other examples
-> like allwinner,sun4i-a10-csi.yaml appear to be doing the same too.
+> Pointless.  By that point req->file might have nothing in common with
+> anything in any descriptor table.
 
-The use of enum starts from 2 or more identical fall back strings.
-'allwinner,sun4i-a10-csi.yaml' has 2 different fall back strings.
+How about the below then? Stop using req->file, defer the lookup until
+we're in the handler instead. Not sure the 'fd' check makes sense
+at this point, but at least we should be consistent in terms of
+once we lookup the file and check the f_op.
 
-properties:
-  compatible:
-    oneOf:
-      - const: allwinner,sun4i-a10-csi1
-      - const: allwinner,sun7i-a20-csi0
-      - items:
-        - const: allwinner,sun7i-a20-csi1
-        - const: allwinner,sun4i-a10-csi1
-      - items:
-        - const: allwinner,sun8i-r40-csi0
-        - const: allwinner,sun7i-a20-csi0
+> Al, carefully _not_ saying anything about the taste and style of the
+> entire thing...
 
-> 
-> The case with rockchip,rk3288-rga alone already seems covered.
-See yaml examples in the links above.
+It's just a quickie, didn't put much concern into the style and naming
+of the locked helper. What do you prefer there? Normally I'd do __,
+but it's already that, so... There's only one other user of it, so
+we could just make the regular one be close_fd_get_file() and use
+the __ prefix for the new locked variant.
 
-> 
-> Cheers,
-> 
-> Paul
-> 
->>>  
->>>    reg:
->>>      maxItems: 1
->>> -- 
->>> 2.26.0
->>
-> 
+But I figured it was more important to get the details right first,
+the style is easier to polish.
+
+
+diff --git a/fs/file.c b/fs/file.c
+index c8a4e4c86e55..50ee73b76d17 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -646,18 +646,13 @@ int __close_fd(struct files_struct *files, unsigned fd)
+ }
+ EXPORT_SYMBOL(__close_fd); /* for ksys_close() */
+ 
+-/*
+- * variant of __close_fd that gets a ref on the file for later fput.
+- * The caller must ensure that filp_close() called on the file, and then
+- * an fput().
+- */
+-int __close_fd_get_file(unsigned int fd, struct file **res)
++int __close_fd_get_file_locked(struct files_struct *files, unsigned int fd,
++			       struct file **res)
++	__releases(&files->file_lock)
+ {
+-	struct files_struct *files = current->files;
+ 	struct file *file;
+ 	struct fdtable *fdt;
+ 
+-	spin_lock(&files->file_lock);
+ 	fdt = files_fdtable(files);
+ 	if (fd >= fdt->max_fds)
+ 		goto out_unlock;
+@@ -677,6 +672,19 @@ int __close_fd_get_file(unsigned int fd, struct file **res)
+ 	return -ENOENT;
+ }
+ 
++/*
++ * variant of __close_fd that gets a ref on the file for later fput.
++ * The caller must ensure that filp_close() called on the file, and then
++ * an fput().
++ */
++int __close_fd_get_file(unsigned int fd, struct file **res)
++{
++	struct files_struct *files = current->files;
++
++	spin_lock(&files->file_lock);
++	return __close_fd_get_file_locked(files, fd, res);
++}
++
+ void do_close_on_exec(struct files_struct *files)
+ {
+ 	unsigned i;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 979d9f977409..54ef10240bf3 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -786,7 +786,6 @@ static const struct io_op_def io_op_defs[] = {
+ 		.needs_fs		= 1,
+ 	},
+ 	[IORING_OP_CLOSE] = {
+-		.needs_file		= 1,
+ 		.file_table		= 1,
+ 	},
+ 	[IORING_OP_FILES_UPDATE] = {
+@@ -3399,10 +3398,6 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		return -EBADF;
+ 
+ 	req->close.fd = READ_ONCE(sqe->fd);
+-	if (req->file->f_op == &io_uring_fops ||
+-	    req->close.fd == req->ctx->ring_fd)
+-		return -EBADF;
+-
+ 	return 0;
+ }
+ 
+@@ -3430,10 +3425,21 @@ static void io_close_finish(struct io_wq_work **workptr)
+ 
+ static int io_close(struct io_kiocb *req, bool force_nonblock)
+ {
++	struct files_struct *files = current->files;
++	struct file *file;
+ 	int ret;
+ 
+ 	req->close.put_file = NULL;
+-	ret = __close_fd_get_file(req->close.fd, &req->close.put_file);
++	spin_lock(&files->file_lock);
++	if (req->close.fd == req->ctx->ring_fd)
++		goto badf;
++
++	file = fcheck_files(files, req->close.fd);
++	if (!file || file->f_op == &io_uring_fops)
++		goto badf;
++
++	ret = __close_fd_get_file_locked(files, req->close.fd,
++						&req->close.put_file);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -3458,6 +3464,9 @@ static int io_close(struct io_kiocb *req, bool force_nonblock)
+ 	 */
+ 	__io_close_finish(req);
+ 	return 0;
++badf:
++	spin_unlock(&files->file_lock);
++	return -EBADF;
+ }
+ 
+ static int io_prep_sfr(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
+index f07c55ea0c22..11d19303af46 100644
+--- a/include/linux/fdtable.h
++++ b/include/linux/fdtable.h
+@@ -122,6 +122,8 @@ extern void __fd_install(struct files_struct *files,
+ extern int __close_fd(struct files_struct *files,
+ 		      unsigned int fd);
+ extern int __close_fd_get_file(unsigned int fd, struct file **res);
++extern int __close_fd_get_file_locked(struct files_struct *files,
++				      unsigned int fd, struct file **res);
+ 
+ extern struct kmem_cache *files_cachep;
+ 
+
+-- 
+Jens Axboe
 
