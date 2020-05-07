@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB87C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA79C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B112083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA212083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 07:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgEGH4X (ORCPT
+        id S1726950AbgEGH42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 03:56:23 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43222 "EHLO huawei.com"
+        Thu, 7 May 2020 03:56:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43190 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726630AbgEGH4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726618AbgEGH4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 03:56:01 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7689DCDF2CE26A1BADFD;
+        by Forcepoint Email with ESMTP id 6EC65A859BAE067234FF;
         Thu,  7 May 2020 15:55:58 +0800 (CST)
 Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 15:55:52 +0800
+ 14.3.487.0; Thu, 7 May 2020 15:55:47 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
@@ -40,9 +40,9 @@ To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         linux-raid <linux-raid@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 09/10] md: use existing definition RESYNC_SECTORS
-Date:   Thu, 7 May 2020 15:50:59 +0800
-Message-ID: <20200507075100.1779-10-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 04/10] zram: abolish macro SECTORS_PER_PAGE_SHIFT
+Date:   Thu, 7 May 2020 15:50:54 +0800
+Message-ID: <20200507075100.1779-5-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
 In-Reply-To: <20200507075100.1779-1-thunder.leizhen@huawei.com>
 References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
@@ -56,40 +56,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"RESYNC_BLOCK_SIZE/512" is equal to "RESYNC_BLOCK_SIZE >> 9", replace it
-with RESYNC_SECTORS.
+The name of SECTORS_PER_PAGE_SHIFT is quite hard to read. So use
+sectors_to_npage() to replace ">> SECTORS_PER_PAGE_SHIFT"
 
+Suggested-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/md/raid10.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/block/zram/zram_drv.c | 4 ++--
+ drivers/block/zram/zram_drv.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 948afe720fca..ac4273f804e8 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -4483,8 +4483,8 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
- 		last = conf->reshape_progress - 1;
- 		sector_nr = last & ~(sector_t)(conf->geo.chunk_mask
- 					       & conf->prev.chunk_mask);
--		if (sector_nr + RESYNC_BLOCK_SIZE/512 < last)
--			sector_nr = last + 1 - RESYNC_BLOCK_SIZE/512;
-+		if (sector_nr + RESYNC_SECTORS < last)
-+			sector_nr = last + 1 - RESYNC_SECTORS;
- 	} else {
- 		/* 'next' is after the last device address that we
- 		 * might write to for this chunk in the new layout
-@@ -4506,8 +4506,8 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
- 		last  = sector_nr | (conf->geo.chunk_mask
- 				     & conf->prev.chunk_mask);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index e2fbf7a847e7..918b77f9bce4 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1549,7 +1549,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
  
--		if (sector_nr + RESYNC_BLOCK_SIZE/512 <= last)
--			last = sector_nr + RESYNC_BLOCK_SIZE/512 - 1;
-+		if (sector_nr + RESYNC_SECTORS <= last)
-+			last = sector_nr + RESYNC_SECTORS - 1;
+-	index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
++	index = sectors_to_npage(bio->bi_iter.bi_sector);
+ 	offset = (bio->bi_iter.bi_sector &
+ 		  (PAGE_SECTORS - 1)) << SECTOR_SHIFT;
+ 
+@@ -1644,7 +1644,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
+ 		goto out;
  	}
  
- 	if (need_flush ||
+-	index = sector >> SECTORS_PER_PAGE_SHIFT;
++	index = sectors_to_npage(sector);
+ 	offset = (sector & (PAGE_SECTORS - 1)) << SECTOR_SHIFT;
+ 
+ 	bv.bv_page = page;
+diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
+index 10fdf413dd6e..12309175d55e 100644
+--- a/drivers/block/zram/zram_drv.h
++++ b/drivers/block/zram/zram_drv.h
+@@ -21,7 +21,6 @@
+ 
+ #include "zcomp.h"
+ 
+-#define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+ #define ZRAM_LOGICAL_BLOCK_SHIFT 12
+ #define ZRAM_LOGICAL_BLOCK_SIZE	(1 << ZRAM_LOGICAL_BLOCK_SHIFT)
+ #define ZRAM_SECTOR_PER_LOGICAL_BLOCK	\
 -- 
 2.26.0.106.g9fadedd
 
