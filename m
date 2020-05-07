@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B405EC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0895C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8933824956
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7F624955
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877306;
-	bh=4UwgB4pEdhhDwE0Vi3P7TXaWRto19eGF34jli3AKVNU=;
+	s=default; t=1588877311;
+	bh=71KkHS6CWvgF2ZJ7u+HnXKXGjPAZKfm5qx6YYtMLnTw=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Dmm3N4+I1iSa1J3xsoP0oA3Nr4VJz/wjzTrhXRO/4LYIT4dwHVgEHriZ/Sh42Mzi1
-	 lwQ7Hi95S32dTM2moK6pGD4AbNZy7J1/WOnx2aSSa1t/0wRj5eHvbjpH+Dh5CBM+j1
-	 knnJShUZ6qwN3CwONVzYOoEvUk0fx46ehSGtBWK0=
+	b=GB9qr8m++0qDzqM3LZQmpEGy+7+S8oOQ+Dd0Qe5ZuGDNKJL/0EYkZkbkr5XGtPPd9
+	 GZQJLSif/HgAtUZqu8RdN0wsiVvL9o7m4zmcOm/H4j8vWC0WaALiUGOjfDdeGTTkpf
+	 ChzX34UXYxWYwRvzVgAJfQlf5QTledjjWvFneMPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgEGSsZ (ORCPT
+        id S1728607AbgEGSsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgEGSsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:48:25 -0400
+        id S1728110AbgEGSsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:48:30 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3705121BE5;
-        Thu,  7 May 2020 18:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B87724955;
+        Thu,  7 May 2020 18:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877304;
-        bh=4UwgB4pEdhhDwE0Vi3P7TXaWRto19eGF34jli3AKVNU=;
+        s=default; t=1588877309;
+        bh=71KkHS6CWvgF2ZJ7u+HnXKXGjPAZKfm5qx6YYtMLnTw=;
         h=Date:From:To:Cc:Subject:From;
-        b=BFatDpXiYufb1iEB9KedA/kbpUg3ymmg4Z8Toa/K6ebGqNZQCYlUI0pm0zXDGt1UZ
-         pIiVC0gj8ZUOLMfXY5ka9AfMdjP6+yxY44k+GMITgoDdHX2EzOvSVJi3FUoqlhaOsJ
-         AFQVDBp4K88/MzM6HqsFckcb2xjq62RerQQpb72Q=
-Date:   Thu, 7 May 2020 13:52:51 -0500
+        b=JLkZyB3N4vnxXrFo3L5FiN1MB37vTxsslqhBShcfEL5rIUTeAElYnta0RTMuH0HGd
+         eqxRKWN/4X/6iY+An1GAKYyxho06AWLXoUsLbzzbpQx+lPZzs2X5O2ZHsLeHsfW2a1
+         XgXtODNFxYJvXtelTpt2r466QcAoHAmpszNM6188=
+Date:   Thu, 7 May 2020 13:52:56 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] firewire: ohci: Replace zero-length array with flexible-array
-Message-ID: <20200507185251.GA14293@embeddedor>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fpga: dfl: Replace zero-length array with flexible-array
+Message-ID: <20200507185256.GA14313@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -91,76 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/firewire/core-cdev.c        |    2 +-
- drivers/firewire/core-transaction.c |    2 +-
- drivers/firewire/core.h             |    2 +-
- drivers/firewire/nosy.c             |    2 +-
- drivers/firewire/ohci.c             |    2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/fpga/dfl.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index 6e291d8f3a27..e6fc20dff687 100644
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -117,7 +117,7 @@ struct inbound_transaction_resource {
- struct descriptor_resource {
- 	struct client_resource resource;
- 	struct fw_descriptor descriptor;
--	u32 data[0];
-+	u32 data[];
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 9f0e656de720..1cd51ea52ce1 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -235,7 +235,7 @@ struct dfl_feature_platform_data {
+ 	unsigned long dev_status;
+ 	void *private;
+ 	int num;
+-	struct dfl_feature features[0];
++	struct dfl_feature features[];
  };
  
- struct iso_resource {
-diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
-index 404a035f104d..439d918bbaaf 100644
---- a/drivers/firewire/core-transaction.c
-+++ b/drivers/firewire/core-transaction.c
-@@ -620,7 +620,7 @@ struct fw_request {
- 	u32 request_header[4];
- 	int ack;
- 	u32 length;
--	u32 data[0];
-+	u32 data[];
- };
- 
- static void free_response_callback(struct fw_packet *packet,
-diff --git a/drivers/firewire/core.h b/drivers/firewire/core.h
-index 4b0e4ee655a1..71d5f16f311c 100644
---- a/drivers/firewire/core.h
-+++ b/drivers/firewire/core.h
-@@ -191,7 +191,7 @@ struct fw_node {
- 	/* Upper layer specific data. */
- 	void *data;
- 
--	struct fw_node *ports[0];
-+	struct fw_node *ports[];
- };
- 
- static inline struct fw_node *fw_node_get(struct fw_node *node)
-diff --git a/drivers/firewire/nosy.c b/drivers/firewire/nosy.c
-index 6ca2f5ab6c57..5fd6a60b6741 100644
---- a/drivers/firewire/nosy.c
-+++ b/drivers/firewire/nosy.c
-@@ -52,7 +52,7 @@ struct pcl {
- 
- struct packet {
- 	unsigned int length;
--	char data[0];
-+	char data[];
- };
- 
- struct packet_buffer {
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 33269316f111..54fdc39cd0bc 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -111,7 +111,7 @@ struct descriptor_buffer {
- 	dma_addr_t buffer_bus;
- 	size_t buffer_size;
- 	size_t used;
--	struct descriptor buffer[0];
-+	struct descriptor buffer[];
- };
- 
- struct context {
+ static inline
 
