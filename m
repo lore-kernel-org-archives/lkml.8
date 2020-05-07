@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9784CC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23081C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780572082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3C920838
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgEGONb (ORCPT
+        id S1728000AbgEGONe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
+        Thu, 7 May 2020 10:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgEGONa (ORCPT
+        with ESMTP id S1727788AbgEGONb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:13:30 -0400
+        Thu, 7 May 2020 10:13:31 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7B2C05BD43;
-        Thu,  7 May 2020 07:13:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A67FC05BD43;
+        Thu,  7 May 2020 07:13:31 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jWhHD-0002c1-3d; Thu, 07 May 2020 16:13:27 +0200
+        id 1jWhHD-0002c5-RK; Thu, 07 May 2020 16:13:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8D9031C001A;
-        Thu,  7 May 2020 16:13:26 +0200 (CEST)
-Date:   Thu, 07 May 2020 14:13:26 -0000
-From:   "tip-bot2 for Kyung Min Park" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 476A11C0451;
+        Thu,  7 May 2020 16:13:27 +0200 (CEST)
+Date:   Thu, 07 May 2020 14:13:27 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/timers] x86/delay: Introduce TPAUSE delay
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+Subject: [tip: x86/timers] x86/delay: Preparatory code cleanup
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Kyung Min Park <kyung.min.park@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1587757076-30337-4-git-send-email-kyung.min.park@intel.com>
-References: <1587757076-30337-4-git-send-email-kyung.min.park@intel.com>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1587757076-30337-2-git-send-email-kyung.min.park@intel.com>
+References: <1587757076-30337-2-git-send-email-kyung.min.park@intel.com>
 MIME-Version: 1.0
-Message-ID: <158886080647.8414.11660472060680982514.tip-bot2@tip-bot2>
+Message-ID: <158886080725.8414.13575285074483659672.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,165 +59,183 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/timers branch of tip:
 
-Commit-ID:     cec5f268cd02d25d2d74807843d8ae0292fe0fb7
-Gitweb:        https://git.kernel.org/tip/cec5f268cd02d25d2d74807843d8ae0292fe0fb7
-Author:        Kyung Min Park <kyung.min.park@intel.com>
-AuthorDate:    Fri, 24 Apr 2020 12:37:56 -07:00
+Commit-ID:     e8824890249355656968d8846908a313fe231f11
+Gitweb:        https://git.kernel.org/tip/e8824890249355656968d8846908a313fe231f11
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 24 Apr 2020 12:37:54 -07:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 07 May 2020 16:06:20 +02:00
+CommitterDate: Thu, 07 May 2020 16:06:19 +02:00
 
-x86/delay: Introduce TPAUSE delay
+x86/delay: Preparatory code cleanup
 
-TPAUSE instructs the processor to enter an implementation-dependent
-optimized state. The instruction execution wakes up when the time-stamp
-counter reaches or exceeds the implicit EDX:EAX 64-bit input value.
-The instruction execution also wakes up due to the expiration of
-the operating system time-limit or by an external interrupt
-or exceptions such as a debug exception or a machine check exception.
+The naming conventions in the delay code are confusing at best.
 
-TPAUSE offers a choice of two lower power states:
- 1. Light-weight power/performance optimized state C0.1
- 2. Improved power/performance optimized state C0.2
+All delay variants use a loops argument and or variable which originates
+from the original delay_loop() implementation. But all variants except
+delay_loop() are based on TSC cycles.
 
-This way, it can save power with low wake-up latency in comparison to
-spinloop based delay. The selection between the two is governed by the
-input register.
+Rename the argument to cycles and make it type u64 to avoid these weird
+expansions to u64 in the functions.
 
-TPAUSE is available on processors with X86_FEATURE_WAITPKG.
+Rename MWAITX_MAX_LOOPS to MWAITX_MAX_WAIT_CYCLES for the same reason
+and fixup the comment of delay_mwaitx() as well.
 
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Mark the delay_fn function pointer __ro_after_init and fixup the comment
+for it.
+
+No functional change and preparation for the upcoming TPAUSE based delay
+variant.
+
+[ Kyung Min Park: Added __init to use_tsc_delay() ]
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/1587757076-30337-4-git-send-email-kyung.min.park@intel.com
+Link: https://lkml.kernel.org/r/1587757076-30337-2-git-send-email-kyung.min.park@intel.com
 
 ---
- arch/x86/Kconfig.assembler   |  4 ++++
- arch/x86/include/asm/delay.h |  1 +
- arch/x86/include/asm/mwait.h | 22 ++++++++++++++++++++++
- arch/x86/kernel/time.c       |  3 +++
- arch/x86/lib/delay.c         | 27 +++++++++++++++++++++++++++
- 5 files changed, 57 insertions(+)
+ arch/x86/include/asm/delay.h |  3 +-
+ arch/x86/include/asm/mwait.h |  2 +-
+ arch/x86/lib/delay.c         | 45 ++++++++++++++++++-----------------
+ 3 files changed, 27 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
-index 13de0db..26b8c08 100644
---- a/arch/x86/Kconfig.assembler
-+++ b/arch/x86/Kconfig.assembler
-@@ -15,3 +15,7 @@ config AS_SHA256_NI
- 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
- 	help
- 	  Supported by binutils >= 2.24 and LLVM integrated assembler
-+config AS_TPAUSE
-+	def_bool $(as-instr,tpause %ecx)
-+	help
-+	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
 diff --git a/arch/x86/include/asm/delay.h b/arch/x86/include/asm/delay.h
-index 9aa38de..630891d 100644
+index de9e784..9aa38de 100644
 --- a/arch/x86/include/asm/delay.h
 +++ b/arch/x86/include/asm/delay.h
-@@ -6,6 +6,7 @@
- #include <linux/init.h>
+@@ -3,8 +3,9 @@
+ #define _ASM_X86_DELAY_H
  
- void __init use_tsc_delay(void);
-+void __init use_tpause_delay(void);
+ #include <asm-generic/delay.h>
++#include <linux/init.h>
+ 
+-void use_tsc_delay(void);
++void __init use_tsc_delay(void);
  void use_mwaitx_delay(void);
  
  #endif /* _ASM_X86_DELAY_H */
 diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index a43b35b..73d997a 100644
+index b809f11..a43b35b 100644
 --- a/arch/x86/include/asm/mwait.h
 +++ b/arch/x86/include/asm/mwait.h
-@@ -22,6 +22,8 @@
+@@ -20,7 +20,7 @@
+ 
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
  #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_WAIT_CYCLES		UINT_MAX
+-#define MWAITX_MAX_LOOPS		((u32)-1)
++#define MWAITX_MAX_WAIT_CYCLES		UINT_MAX
  #define MWAITX_DISABLE_CSTATES		0xf0
-+#define TPAUSE_C01_STATE		1
-+#define TPAUSE_C02_STATE		0
  
  u32 get_umwait_control_msr(void);
- 
-@@ -122,4 +124,24 @@ static inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
- 	current_clr_polling();
- }
- 
-+/*
-+ * Caller can specify whether to enter C0.1 (low latency, less
-+ * power saving) or C0.2 state (saves more power, but longer wakeup
-+ * latency). This may be overridden by the IA32_UMWAIT_CONTROL MSR
-+ * which can force requests for C0.2 to be downgraded to C0.1.
-+ */
-+static inline void __tpause(u32 ecx, u32 edx, u32 eax)
-+{
-+	/* "tpause %ecx, %edx, %eax;" */
-+	#ifdef CONFIG_AS_TPAUSE
-+	asm volatile("tpause %%ecx\n"
-+		     :
-+		     : "c"(ecx), "d"(edx), "a"(eax));
-+	#else
-+	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1\t\n"
-+		     :
-+		     : "c"(ecx), "d"(edx), "a"(eax));
-+	#endif
-+}
-+
- #endif /* _ASM_X86_MWAIT_H */
-diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-index 106e7f8..371a6b3 100644
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -103,6 +103,9 @@ static __init void x86_late_time_init(void)
- 	 */
- 	x86_init.irqs.intr_mode_init();
- 	tsc_init();
-+
-+	if (static_cpu_has(X86_FEATURE_WAITPKG))
-+		use_tpause_delay();
- }
- 
- /*
 diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index fe91dc1..65d15df 100644
+index c126571..887d52d 100644
 --- a/arch/x86/lib/delay.c
 +++ b/arch/x86/lib/delay.c
-@@ -97,6 +97,27 @@ static void delay_tsc(u64 cycles)
- }
+@@ -27,9 +27,19 @@
+ # include <asm/smp.h>
+ #endif
  
- /*
-+ * On Intel the TPAUSE instruction waits until any of:
-+ * 1) the TSC counter exceeds the value provided in EDX:EAX
-+ * 2) global timeout in IA32_UMWAIT_CONTROL is exceeded
-+ * 3) an external interrupt occurs
-+ */
-+static void delay_halt_tpause(u64 start, u64 cycles)
-+{
-+	u64 until = start + cycles;
-+	u32 eax, edx;
-+
-+	eax = lower_32_bits(until);
-+	edx = upper_32_bits(until);
-+
-+	/*
-+	 * Hard code the deeper (C0.2) sleep state because exit latency is
-+	 * small compared to the "microseconds" that usleep() will delay.
-+	 */
-+	__tpause(TPAUSE_C02_STATE, edx, eax);
-+}
++static void delay_loop(u64 __loops);
 +
 +/*
-  * On some AMD platforms, MWAITX has a configurable 32-bit timer, that
-  * counts with TSC frequency. The input value is the number of TSC cycles
-  * to wait. MWAITX will also exit when the timer expires.
-@@ -156,6 +177,12 @@ void __init use_tsc_delay(void)
- 		delay_fn = delay_tsc;
++ * Calibration and selection of the delay mechanism happens only once
++ * during boot.
++ */
++static void (*delay_fn)(u64) __ro_after_init = delay_loop;
++
+ /* simple loop based delay: */
+-static void delay_loop(unsigned long loops)
++static void delay_loop(u64 __loops)
+ {
++	unsigned long loops = (unsigned long)__loops;
++
+ 	asm volatile(
+ 		"	test %0,%0	\n"
+ 		"	jz 3f		\n"
+@@ -49,9 +59,9 @@ static void delay_loop(unsigned long loops)
  }
  
-+void __init use_tpause_delay(void)
-+{
-+	delay_halt_fn = delay_halt_tpause;
-+	delay_fn = delay_halt;
-+}
-+
- void use_mwaitx_delay(void)
+ /* TSC based delay: */
+-static void delay_tsc(unsigned long __loops)
++static void delay_tsc(u64 cycles)
  {
- 	delay_halt_fn = delay_halt_mwaitx;
+-	u64 bclock, now, loops = __loops;
++	u64 bclock, now;
+ 	int cpu;
+ 
+ 	preempt_disable();
+@@ -59,7 +69,7 @@ static void delay_tsc(unsigned long __loops)
+ 	bclock = rdtsc_ordered();
+ 	for (;;) {
+ 		now = rdtsc_ordered();
+-		if ((now - bclock) >= loops)
++		if ((now - bclock) >= cycles)
+ 			break;
+ 
+ 		/* Allow RT tasks to run */
+@@ -77,7 +87,7 @@ static void delay_tsc(unsigned long __loops)
+ 		 * counter for this CPU.
+ 		 */
+ 		if (unlikely(cpu != smp_processor_id())) {
+-			loops -= (now - bclock);
++			cycles -= (now - bclock);
+ 			cpu = smp_processor_id();
+ 			bclock = rdtsc_ordered();
+ 		}
+@@ -87,24 +97,24 @@ static void delay_tsc(unsigned long __loops)
+ 
+ /*
+  * On some AMD platforms, MWAITX has a configurable 32-bit timer, that
+- * counts with TSC frequency. The input value is the loop of the
+- * counter, it will exit when the timer expires.
++ * counts with TSC frequency. The input value is the number of TSC cycles
++ * to wait. MWAITX will also exit when the timer expires.
+  */
+-static void delay_mwaitx(unsigned long __loops)
++static void delay_mwaitx(u64 cycles)
+ {
+-	u64 start, end, delay, loops = __loops;
++	u64 start, end, delay;
+ 
+ 	/*
+ 	 * Timer value of 0 causes MWAITX to wait indefinitely, unless there
+ 	 * is a store on the memory monitored by MONITORX.
+ 	 */
+-	if (loops == 0)
++	if (!cycles)
+ 		return;
+ 
+ 	start = rdtsc_ordered();
+ 
+ 	for (;;) {
+-		delay = min_t(u64, MWAITX_MAX_LOOPS, loops);
++		delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
+ 
+ 		/*
+ 		 * Use cpu_tss_rw as a cacheline-aligned, seldomly
+@@ -121,22 +131,15 @@ static void delay_mwaitx(unsigned long __loops)
+ 
+ 		end = rdtsc_ordered();
+ 
+-		if (loops <= end - start)
++		if (cycles <= end - start)
+ 			break;
+ 
+-		loops -= end - start;
+-
++		cycles -= end - start;
+ 		start = end;
+ 	}
+ }
+ 
+-/*
+- * Since we calibrate only once at boot, this
+- * function should be set once at boot and not changed
+- */
+-static void (*delay_fn)(unsigned long) = delay_loop;
+-
+-void use_tsc_delay(void)
++void __init use_tsc_delay(void)
+ {
+ 	if (delay_fn == delay_loop)
+ 		delay_fn = delay_tsc;
