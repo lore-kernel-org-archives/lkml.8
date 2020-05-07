@@ -2,233 +2,158 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D6DC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C47C38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27B921473
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588846842;
-	bh=0bAZxfsZrjyG8UEteUk52k5X4lZS+0bSc7QHa3lIG8s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XidynyjdxnlNA+GZA+1xAN9b5q8unPcYQ4UfuS9rROXcwi7uPH4tlMW+6j+RNu5jO
-	 TcORinpLga0Lmhs2Byz5GaiPhBnGuE5ztSZhseshdU6+Cg++uWZQ0p/n2WhvHopGF/
-	 uMCtk8stD7T0lquwRm7KCfUJf3dTkGgDK67kiOOA=
+	by mail.kernel.org (Postfix) with ESMTP id EE9F22075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 10:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgEGKUl (ORCPT
+        id S1726222AbgEGKVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 06:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgEGKUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 06:20:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2BF2075E;
-        Thu,  7 May 2020 10:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588846832;
-        bh=0bAZxfsZrjyG8UEteUk52k5X4lZS+0bSc7QHa3lIG8s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U9RFb4IwizbCj89tTzIMBggzRuPOhfG5PA9yz8A6yYL4U7Bu5axtJr5izuGur49ND
-         dcZ/pJwNBaHDgacs9arWMdo6dvbHFiol0AZ0HLWhdXz3WGsstsOdbKbjkmzB9AyaSO
-         7CdJZVRlVRIzC/pt0bQwjPj+VrgXy9KShP5QwG+o=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jWddm-00ADjn-9B; Thu, 07 May 2020 11:20:30 +0100
-Date:   Thu, 7 May 2020 11:20:28 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/cpufeature: Verify KVM capabilities during CPU
- hotplug
-Message-ID: <20200507112028.4a5cc279@why>
-In-Reply-To: <1588832387-8489-1-git-send-email-anshuman.khandual@arm.com>
-References: <1588832387-8489-1-git-send-email-anshuman.khandual@arm.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 7 May 2020 06:21:42 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2162 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbgEGKVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 06:21:41 -0400
+Received: from lhreml716-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A05E31662E4C4547931E;
+        Thu,  7 May 2020 11:21:38 +0100 (IST)
+Received: from fraeml712-chm.china.huawei.com (10.206.15.61) by
+ lhreml716-chm.china.huawei.com (10.201.108.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 7 May 2020 11:21:38 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 7 May 2020 12:21:38 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Thu, 7 May 2020 12:21:37 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "mjg59@google.com" <mjg59@google.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
+ portable signatures
+Thread-Topic: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
+ portable signatures
+Thread-Index: AQHWF772Ra31Za7Rnki0v4dh4iikmaiHEPYAgAEEbgCAFGpBIA==
+Date:   Thu, 7 May 2020 10:21:37 +0000
+Message-ID: <1e206d0da3dd485b90f88ba07dfdf140@huawei.com>
+References: <20200421092418.25151-1-roberto.sassu@huawei.com>
+ <1587675102.5610.66.camel@linux.ibm.com>
+ <735d0814399f430a8809af8c28b1a62d@huawei.com>
+In-Reply-To: <735d0814399f430a8809af8c28b1a62d@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.65.97]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, james.morse@arm.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 May 2020 11:49:47 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-
-Hi Anshuman,
-
-> This validates KVM capabilities like VMID width, IPA range for hotplug CPU
-> against system finalized values. While here, it factors out get_vmid_bits()
-> for general use and also defines ID_AA64MMFR0_PARANGE_MASK.
-
-nit: these are not KVM-specific capabilities, but general
-virtualization features.
-
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: kvmarm@lists.cs.columbia.edu
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Suggested-by: Suzuki Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/include/asm/cpufeature.h | 22 +++++++++++++++++++
->  arch/arm64/include/asm/kvm_mmu.h    |  2 +-
->  arch/arm64/include/asm/sysreg.h     |  1 +
->  arch/arm64/kernel/cpufeature.c      |  2 ++
->  arch/arm64/kvm/reset.c              | 33 +++++++++++++++++++++++++++--
->  5 files changed, 57 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index afe08251ff95..6808a2091de4 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -745,6 +745,28 @@ static inline bool cpu_has_hw_af(void)
->  extern bool cpu_has_amu_feat(int cpu);
->  #endif
->  
-> +static inline unsigned int get_vmid_bits(u64 mmfr1)
-> +{
-> +	int vmid_bits;
-> +
-> +	vmid_bits = cpuid_feature_extract_unsigned_field(mmfr1,
-> +						ID_AA64MMFR1_VMIDBITS_SHIFT);
-> +	if (vmid_bits == ID_AA64MMFR1_VMIDBITS_16)
-> +		return 16;
-> +
-> +	/*
-> +	 * Return the default here even if any reserved
-> +	 * value is fetched from the system register.
-> +	 */
-> +	return 8;
-> +}
-> +
-> +#ifdef CONFIG_KVM_ARM_HOST
-> +void verify_kvm_capabilities(void);
-> +#else
-> +static inline void verify_kvm_capabilities(void) { }
-> +#endif
-> +
->  #endif /* __ASSEMBLY__ */
->  
->  #endif
-> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-> index 30b0e8d6b895..a7137e144b97 100644
-> --- a/arch/arm64/include/asm/kvm_mmu.h
-> +++ b/arch/arm64/include/asm/kvm_mmu.h
-> @@ -416,7 +416,7 @@ static inline unsigned int kvm_get_vmid_bits(void)
->  {
->  	int reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
->  
-> -	return (cpuid_feature_extract_unsigned_field(reg,
-> ID_AA64MMFR1_VMIDBITS_SHIFT) == 2) ? 16 : 8;
-> +	return get_vmid_bits(reg);
->  }
->  
->  /*
-> diff --git a/arch/arm64/include/asm/sysreg.h
-> b/arch/arm64/include/asm/sysreg.h index c4ac0ac25a00..3510a4668970
-> 100644 --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -705,6 +705,7 @@
->  #define ID_AA64MMFR0_TGRAN16_SUPPORTED	0x1
->  #define ID_AA64MMFR0_PARANGE_48		0x5
->  #define ID_AA64MMFR0_PARANGE_52		0x6
-> +#define ID_AA64MMFR0_PARANGE_MASK	0x7
->  
->  #ifdef CONFIG_ARM64_PA_BITS_52
->  #define ID_AA64MMFR0_PARANGE_MAX	ID_AA64MMFR0_PARANGE_52
-> diff --git a/arch/arm64/kernel/cpufeature.c
-> b/arch/arm64/kernel/cpufeature.c index 9fac745aa7bb..041dd610b0f8
-> 100644 --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -2206,6 +2206,8 @@ static void verify_local_cpu_capabilities(void)
->  
->  	if (system_supports_sve())
->  		verify_sve_features();
-> +
-> +	verify_kvm_capabilities();
-
-You should only check this if booted at EL2. Otherwise, it doesn't
-really matter.
-
->  }
->  
->  void check_local_cpu_capabilities(void)
-> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-> index 30b7ea680f66..1eebcc2a8396 100644
-> --- a/arch/arm64/kvm/reset.c
-> +++ b/arch/arm64/kvm/reset.c
-> @@ -340,11 +340,39 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->  	return ret;
->  }
->  
-> +void verify_kvm_capabilities(void)
-
-This is really in the wrong file. reset.c is supposed to contain things
-that are meaningful to the guest reset state. This clearly isn't. I'd
-suggest you add an accessor for the kvm_ipa_limit variable, and keep
-the function next to the other verify_* functions in cpufeature.c.
-
-> +{
-> +	u64 safe_mmfr1, mmfr0, mmfr1;
-> +	int parange, ipa_max;
-> +	unsigned int safe_vmid_bits, vmid_bits;
-> +
-> +	safe_mmfr1 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
-> +	mmfr0 = read_cpuid(ID_AA64MMFR0_EL1);
-> +	mmfr1 = read_cpuid(ID_AA64MMFR1_EL1);
-> +
-> +	/* Verify VMID bits */
-> +	safe_vmid_bits = get_vmid_bits(safe_mmfr1);
-> +	vmid_bits = get_vmid_bits(mmfr1);
-> +	if (vmid_bits < safe_vmid_bits) {
-> +		pr_crit("CPU%d: VMID width mismatch\n",
-> smp_processor_id());
-> +		cpu_die_early();
-> +	}
-> +
-> +	/* Verify IPA range */
-> +	parange = mmfr0 & ID_AA64MMFR0_PARANGE_MASK;
-> +	ipa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
-> +	if (ipa_max < kvm_ipa_limit) {
-> +		pr_crit("CPU%d: IPA range mismatch\n",
-> smp_processor_id());
-> +		cpu_die_early();
-> +	}
-> +}
-> +
-
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
+ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
+Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBSb2JlcnRvIFNhc3N1DQo+IFNlbnQ6IEZyaWRheSwg
+QXByaWwgMjQsIDIwMjAgMTI6NDAgUE0NCj4gVG86IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4Lmli
+bS5jb20+OyBtamc1OUBnb29nbGUuY29tDQo+IENjOiBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTaWx2aXUgVmxhc2NlYW51DQo+IDxTaWx2aXUuVmxhc2Nl
+YW51QGh1YXdlaS5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIGltYTogQWxsb3cgaW1hc2ln
+IHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieSBFVk0NCj4gcG9ydGFibGUgc2lnbmF0dXJl
+cw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IE1pbWkgWm9o
+YXIgW21haWx0bzp6b2hhckBsaW51eC5pYm0uY29tXQ0KPiA+IFNlbnQ6IFRodXJzZGF5LCBBcHJp
+bCAyMywgMjAyMCAxMDo1MiBQTQ0KPiA+IFRvOiBSb2JlcnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1
+QGh1YXdlaS5jb20+OyBtamc1OUBnb29nbGUuY29tDQo+ID4gQ2M6IGxpbnV4LWludGVncml0eUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LQ0KPiBtb2R1bGVAdmdlci5rZXJuZWwub3Jn
+Ow0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4g
+PiA8U2lsdml1LlZsYXNjZWFudUBodWF3ZWkuY29tPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
+IGltYTogQWxsb3cgaW1hc2lnIHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieQ0KPiBFVk0N
+Cj4gPiBwb3J0YWJsZSBzaWduYXR1cmVzDQo+ID4NCj4gPiBPbiBUdWUsIDIwMjAtMDQtMjEgYXQg
+MTE6MjQgKzAyMDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPiBTeXN0ZW0gYWRtaW5pc3Ry
+YXRvcnMgY2FuIHJlcXVpcmUgdGhhdCBhbGwgYWNjZXNzZWQgZmlsZXMgaGF2ZSBhIHNpZ25hdHVy
+ZQ0KPiA+ID4gYnkgc3BlY2lmeWluZyBhcHByYWlzZV90eXBlPWltYXNpZyBpbiBhIHBvbGljeSBy
+dWxlLg0KPiA+ID4NCj4gPiA+IEN1cnJlbnRseSwgb25seSBJTUEgc2lnbmF0dXJlcyBzYXRpc2Z5
+IHRoaXMgcmVxdWlyZW1lbnQuIEhvd2V2ZXIsIGFsc28NCj4gPiBFVk0NCj4gPiA+IHBvcnRhYmxl
+IHNpZ25hdHVyZXMgY2FuIHNhdGlzZnkgaXQuIE1ldGFkYXRhLCBpbmNsdWRpbmcgc2VjdXJpdHku
+aW1hLCBhcmUNCj4gPiA+IHNpZ25lZCBhbmQgY2Fubm90IGNoYW5nZS4NCj4gPg0KPiA+IFBsZWFz
+ZSBleHBhbmQgdGhpcyBwYXJhZ3JhcGggd2l0aCBhIHNob3J0IGNvbXBhcmlzb24gb2YgdGhlIHNl
+Y3VyaXR5DQo+ID4gZ3VhcmFudGVlcyBwcm92aWRlZCBieSBFVk0gaW1tdXRhYmxlLCBwb3J0YWJs
+ZSBzaWduYXR1cmVzIHZlcnN1cyBpbWEtDQo+ID4gc2lnLg0KPiA+DQo+ID4gPg0KPiA+ID4gVGhp
+cyBwYXRjaCBoZWxwcyBpbiB0aGUgc2NlbmFyaW9zIHdoZXJlIHN5c3RlbSBhZG1pbmlzdHJhdG9y
+cyB3YW50IHRvDQo+ID4gPiBlbmZvcmNlIHRoaXMgcmVzdHJpY3Rpb24gYnV0IG9ubHkgRVZNIHBv
+cnRhYmxlIHNpZ25hdHVyZXMgYXJlIGF2YWlsYWJsZS4NCj4gPg0KPiA+IFllcywgSSBhZ3JlZSBp
+dCAiaGVscHMiLCBidXQgd2Ugc3RpbGwgbmVlZCB0byBhZGRyZXNzIHRoZSBhYmlsaXR5IG9mDQo+
+ID4gc2V0dGluZy9yZW1vdmluZyBzZWN1cml0eS5pbWEsIHdoaWNoIGlzbid0IHBvc3NpYmxlIHdp
+dGggYW4gSU1BDQo+ID4gc2lnbmF0dXJlLiDCoFRoaXMgc291bmRzIGxpa2Ugd2UgbmVlZCB0byBk
+ZWZpbmUgYW4gaW1tdXRhYmxlIGZpbGUgaGFzaC4NCj4gDQo+IEkgZGlkbid0IHVuZGVyc3RhbmQu
+IENhbiB5b3UgZXhwbGFpbiBiZXR0ZXI/DQoNCk9rLCBnb3QgaXQuDQoNCkkgd291bGRuJ3QgZ3Jh
+bnQgYWNjZXNzIHRvIG5ldyBmaWxlIGRlcGVuZGluZyBvbiB0aGUgc2VjdXJpdHkuaW1hIHR5cGUN
+CmJ1dCBkZXBlbmRpbmcgb24gdGhlIElNQV9ESUdTSUcgYml0LiBJbiBib3RoIGNhc2VzLCBJTUEg
+c2lnbmF0dXJlIGFuZA0KRVZNIHBvcnRhYmxlIHNpZ25hdHVyZSwgdGhlIGJpdCBpcyBzZXQuDQoN
+ClRoZXJlIGlzIG9uZSByZW1haW5pbmcgaXNzdWUuIE1heWJlIHRoZSBzaWduYXR1cmUgaXMgcG9y
+dGFibGUsIGJ1dCB5b3UNCmRvbid0IGdldCBpdCBmcm9tIGV2bV92ZXJpZnl4YXR0cigpIGlmIHZl
+cmlmaWNhdGlvbiBmYWlscy4gVGhlcmUgaXMgYSBsZWdpdGltYXRlDQpjYXNlIHdoZW4gaXQgaGFw
+cGVucywgd2hpY2ggaXMgd2hlbiB5b3UgZXh0cmFjdCBhIGZpbGUgd2l0aCBhIHBvcnRhYmxlDQpz
+aWduYXR1cmUgd2l0aCB0YXIsIGFuZCB0aGUgaW5vZGUgdWlkL2dpZCBhcmUgbm90IHlldCBjb3Jy
+ZWN0IChmY2hvd24oKSBpcw0KY2FsbGVkIGxhdGVyIGFmdGVyIHRoZSBvcGVuKCkpLiBJbiB0aGlz
+IGNhc2UsIElNQV9ESUdTSUcgaXMgbm90IHNldCBhbmQgdGhlDQpvcGVuKCkgZmFpbHMuDQoNClRv
+IGF2b2lkIHRoaXMgaXNzdWUgSSB3b3VsZCBpbnRyb2R1Y2UgdGhlIG5ldyBzdGF0dXMgSU5URUdS
+SVRZX0ZBSUxfSU1NVVRBQkxFLA0Kc28gdGhhdCBJTUFfRElHU0lHIGlzIHNldCBldmVuIGlmIHRo
+ZSB2ZXJpZmljYXRpb24gb2YgdGhlIHBvcnRhYmxlIHNpZ25hdHVyZQ0KZmFpbHMuDQoNClJvYmVy
+dG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1h
+bmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg0KDQo+IFRoYW5r
+cw0KPiANCj4gUm9iZXJ0bw0KPiANCj4gSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBH
+bWJILCBIUkIgNTYwNjMNCj4gTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExpIEppYW4sIFNo
+aSBZYW5saQ0KPiANCj4gDQo+ID4gwqBXaGF0IGRvIHlvdSB0aGluaz8NCj4gPg0KPiA+ID4gVGhl
+IHBhdGNoIG1ha2VzIHRoZSBmb2xsb3dpbmcgY2hhbmdlczoNCj4gPiA+DQo+ID4gPiBmaWxlIHhh
+dHRyIHR5cGVzOg0KPiA+ID4gc2VjdXJpdHkuaW1hOiBJTUFfWEFUVFJfRElHRVNUL0lNQV9YQVRU
+Ul9ESUdFU1RfTkcNCj4gPiA+IHNlY3VyaXR5LmV2bTogRVZNX1hBVFRSX1BPUlRBQkxFX0RJR1NJ
+Rw0KPiA+ID4NCj4gPiA+IGV4ZWN2ZSgpLCBtbWFwKCksIG9wZW4oKSBiZWhhdmlvciAod2l0aCBh
+cHByYWlzZV90eXBlPWltYXNpZyk6DQo+ID4gPiBiZWZvcmU6IGRlbmllZCAoZmlsZSB3aXRob3V0
+IElNQSBzaWduYXR1cmUsIGltYXNpZyByZXF1aXJlbWVudCBub3QgbWV0KQ0KPiA+ID4gYWZ0ZXI6
+IGFsbG93ZWQgKGZpbGUgd2l0aCBFVk0gcG9ydGFibGUgc2lnbmF0dXJlLCBpbWFzaWcgcmVxdWly
+ZW1lbnQNCj4gbWV0KQ0KPiA+ID4NCj4gPiA+IG9wZW4oT19XUk9OTFkpIGJlaGF2aW9yICh3aXRo
+b3V0IGFwcHJhaXNlX3R5cGU9aW1hc2lnKToNCj4gPiA+IGJlZm9yZTogYWxsb3dlZCAoZmlsZSB3
+aXRob3V0IElNQSBzaWduYXR1cmUsIG5vdCBpbW11dGFibGUpDQo+ID4gPiBhZnRlcjogZGVuaWVk
+IChmaWxlIHdpdGggRVZNIHBvcnRhYmxlIHNpZ25hdHVyZSwgaW1tdXRhYmxlKQ0KPiA+ID4NCj4g
+PiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNv
+bT4NCj4gPiA+IC0tLQ0KPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2FwcHJhaXNl
+LmMgfCAxNCArKysrKysrKystLS0tLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlv
+bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5
+L2ludGVncml0eS9pbWEvaW1hX2FwcHJhaXNlLmMNCj4gPiBiL3NlY3VyaXR5L2ludGVncml0eS9p
+bWEvaW1hX2FwcHJhaXNlLmMNCj4gPiA+IGluZGV4IGE5NjQ5YjA0YjlmMS4uNjlhNmE5NThmODEx
+IDEwMDY0NA0KPiA+ID4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBwcmFpc2Uu
+Yw0KPiA+ID4gKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBwcmFpc2UuYw0KPiA+
+ID4gQEAgLTIxOSwxMiArMjE5LDE2IEBAIHN0YXRpYyBpbnQgeGF0dHJfdmVyaWZ5KGVudW0gaW1h
+X2hvb2tzIGZ1bmMsDQo+ID4gc3RydWN0IGludGVncml0eV9paW50X2NhY2hlICppaW50LA0KPiA+
+ID4gIAkJaGFzaF9zdGFydCA9IDE7DQo+ID4gPiAgCQkvKiBmYWxsIHRocm91Z2ggKi8NCj4gPiA+
+ICAJY2FzZSBJTUFfWEFUVFJfRElHRVNUOg0KPiA+ID4gLQkJaWYgKGlpbnQtPmZsYWdzICYgSU1B
+X0RJR1NJR19SRVFVSVJFRCkgew0KPiA+ID4gLQkJCSpjYXVzZSA9ICJJTUEtc2lnbmF0dXJlLXJl
+cXVpcmVkIjsNCj4gPiA+IC0JCQkqc3RhdHVzID0gSU5URUdSSVRZX0ZBSUw7DQo+ID4gPiAtCQkJ
+YnJlYWs7DQo+ID4gPiArCQlpZiAoKnN0YXR1cyAhPSBJTlRFR1JJVFlfUEFTU19JTU1VVEFCTEUp
+IHsNCj4gPiA+ICsJCQlpZiAoaWludC0+ZmxhZ3MgJiBJTUFfRElHU0lHX1JFUVVJUkVEKSB7DQo+
+ID4gPiArCQkJCSpjYXVzZSA9ICJJTUEtc2lnbmF0dXJlLXJlcXVpcmVkIjsNCj4gPiA+ICsJCQkJ
+KnN0YXR1cyA9IElOVEVHUklUWV9GQUlMOw0KPiA+ID4gKwkJCQlicmVhazsNCj4gPiA+ICsJCQl9
+DQo+ID4gPiArCQkJY2xlYXJfYml0KElNQV9ESUdTSUcsICZpaW50LT5hdG9taWNfZmxhZ3MpOw0K
+PiA+ID4gKwkJfSBlbHNlIHsNCj4gPiA+ICsJCQlzZXRfYml0KElNQV9ESUdTSUcsICZpaW50LT5h
+dG9taWNfZmxhZ3MpOw0KPiA+ID4gIAkJfQ0KPiA+ID4gLQkJY2xlYXJfYml0KElNQV9ESUdTSUcs
+ICZpaW50LT5hdG9taWNfZmxhZ3MpOw0KPiA+ID4gIAkJaWYgKHhhdHRyX2xlbiAtIHNpemVvZih4
+YXR0cl92YWx1ZS0+dHlwZSkgLSBoYXNoX3N0YXJ0ID49DQo+ID4gPiAgCQkJCWlpbnQtPmltYV9o
+YXNoLT5sZW5ndGgpDQo+ID4gPiAgCQkJLyoNCj4gPg0KPiA+IE5pY2UhDQo+ID4NCj4gPiBNaW1p
+DQoNCg==
