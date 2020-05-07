@@ -2,89 +2,113 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F3C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589B7C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FFD2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlXlxsjd"
+	by mail.kernel.org (Postfix) with ESMTP id 4236820659
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 16:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgEGQCC (ORCPT
+        id S1727811AbgEGQCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 12:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbgEGQCB (ORCPT
+        Thu, 7 May 2020 12:02:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbgEGQCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 12:02:01 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A3CC05BD43;
-        Thu,  7 May 2020 09:02:01 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id js4so775712pjb.5;
-        Thu, 07 May 2020 09:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cZncqyqJ4SE1LeXF8cnICnZ5Px31ttNZ1KwHvvQo43s=;
-        b=IlXlxsjddN+AXDLhOToZqXjHLdt5dCVyQa08jO8PsAbTcmmCQaSj1z2LeZWX+0c8vx
-         V0ZOiBusAlL+IJAKhHZAH0RPMrEJzFus0KCSmPGxJ6sc/hiqLyuOwv8/PPIY9yaiTcwt
-         GJboArtSFUdyMDEK2JqfBHPU8Y5T5igb2g47t+RJiE+ZzMPTKAm9t8zQB5+PDEkDjob/
-         WwKG6ICxDQTjX5duPAJ5TuMqCh818L39g91ncYHSonNM0wKghD+j2bv3V9HjjK23gpZL
-         JW4tMCLMjJl4D3f0R1bIQ3K3NE8dyR0MPonfq9Np/e5zIuMVZphoawXxmH6wdPNWtdjE
-         v+wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cZncqyqJ4SE1LeXF8cnICnZ5Px31ttNZ1KwHvvQo43s=;
-        b=TAESNY1xBkPHjWyVzaO1m7vdU0l5qK/U9WHYTemKNZt7/nG47dkf7Tz+2KyqlnEwpM
-         KZjIdx24wbLOvmBnnnwc3sQnFkzBSHgVl0wHtZ51Lk3NMxF2rTCII54USKrJBKb1z+k4
-         LK7xJQe/LQlngUe/SwrYI73QxQXWkTFgQsSL8ffWVrf3s+lZoXhaZuCehqcBz3mz7ZE1
-         QOgCzrWq/588Fk2I7Lh4mURyWt3GTNef9G4ZDrkEc9mGzWOddPHKJWocgWdCY+P4RqQw
-         P8VUWI25bdQQFt1ESMZ3vJCx1KxqzsHqiyKknV/Q9+kOfX18BFTY25RH3r5mP3CqKZYe
-         hmXA==
-X-Gm-Message-State: AGi0PuZVd+7xaIP/ByG9/ztcg6BEU1knNviyhR/KQ4O8MpzbG6Mg4bMt
-        36Vf714jhfsK6jTmtTePOe8=
-X-Google-Smtp-Source: APiQypKShS1unDIC1XzeAcZq+Zp0YzE+wYcvNoRYml/HYTMb7V4yF8q2NwbsvnfNMpQWdYY771H27A==
-X-Received: by 2002:a17:902:6f09:: with SMTP id w9mr14054236plk.245.1588867320825;
-        Thu, 07 May 2020 09:02:00 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id k5sm236889pjl.32.2020.05.07.09.02.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 09:02:00 -0700 (PDT)
-Date:   Thu, 7 May 2020 09:01:58 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     patches@opensource.cirrus.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: wm831x-ts - add missed input_unregister_device
-Message-ID: <20200507160158.GI89269@dtor-ws>
-References: <20200507151259.792697-1-hslester96@gmail.com>
+        Thu, 7 May 2020 12:02:23 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047G125h092262;
+        Thu, 7 May 2020 12:02:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gx89nu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 12:02:03 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047FVgvZ092738;
+        Thu, 7 May 2020 12:01:59 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gx89ex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 12:01:59 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047G0ut7017669;
+        Thu, 7 May 2020 16:01:48 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5upmq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 16:01:48 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047G1kEX66781672
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 16:01:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3144D42041;
+        Thu,  7 May 2020 16:01:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D10E84204D;
+        Thu,  7 May 2020 16:01:45 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.19.24])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 May 2020 16:01:45 +0000 (GMT)
+Date:   Thu, 7 May 2020 18:01:44 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v4 05/11] s390: Change s390_kernel_write() return type
+ to match memcpy()
+Message-ID: <20200507180144.165a6edf@thinkpad>
+In-Reply-To: <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
+        <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
+        <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507151259.792697-1-hslester96@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_09:2020-05-07,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 11:12:59PM +0800, Chuhong Yuan wrote:
-> This driver calls input_register_device() in probe, but misses
-> input_unregister_device() in remove.
-> Add the missed function call to fix it.
+On Thu, 7 May 2020 15:36:48 +0200 (CEST)
+Jiri Kosina <jikos@kernel.org> wrote:
 
-The input device in question is devm-managed and therefore does not need
-explicit unregistering.
+> On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
+> 
+> > s390_kernel_write()'s function type is almost identical to memcpy().
+> > Change its return type to "void *" so they can be used interchangeably.
+> > 
+> > Cc: linux-s390@vger.kernel.org
+> > Cc: heiko.carstens@de.ibm.com
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+> > Acked-by: Miroslav Benes <mbenes@suse.cz>
+> 
+> Also for this one -- s390 folks, could you please provide your Ack for 
+> taking things through livepatching.git as part of this series?
+> 
+> Thanks.
+> 
 
-Thanks.
+Ah, forgot about that one, sorry. Also looks good.
 
--- 
-Dmitry
+Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
