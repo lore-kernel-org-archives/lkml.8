@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E971FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF2AC47247
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA75B2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310442073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862124;
-	bh=vjM1O94rgx2tx7HK6gBqTpJ9GjaQq+alA5IdlOKPtJg=;
+	s=default; t=1588862130;
+	bh=GjhrTJxYMJSMnaRUAoW/B/AGmJWe5qpbLarQZYDt7Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmqOt6l5aFs4sMT/xLWH7q+35BxJ+EvmiqkA9V/jDz1ghwICtoOvrW8fCV3K33dQR
-	 i4pjjzA9Hqvp8yGlDuZ0VfD2jsdNlH3ASzrifeJ+OcuZhuntHmAOAskdFEtetWSWR/
-	 Jcc+Zz3dYL0zsANEh6jm7qFqlFSCLPdjkvrpymqE=
+	b=nW9W6fEDmf23ycL23kqrr/m5XTkPw5+6RRHL/LijZHXc46Hdlw0wmzQX5KlQNWvVC
+	 4nR5v4te1rv4+vfmya8TRbnZtjOUJd5Q8teZNwXUSvXdbIeNgt4Ozp3dZO/rINafvE
+	 qAPiZDvy+6t2YDBrSHK9HFJBovtNs9iHOIG5TJvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgEGOfX (ORCPT
+        id S1728474AbgEGOf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:35:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55644 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbgEGO2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:47 -0400
+        id S1728255AbgEGO2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6B84208DB;
-        Thu,  7 May 2020 14:28:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CBB21473;
+        Thu,  7 May 2020 14:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861726;
-        bh=vjM1O94rgx2tx7HK6gBqTpJ9GjaQq+alA5IdlOKPtJg=;
+        s=default; t=1588861722;
+        bh=GjhrTJxYMJSMnaRUAoW/B/AGmJWe5qpbLarQZYDt7Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2FMk5mOkmYwVySTCS9Q1BB8tH52b8+iAInF/vdHOWAegIFSgKc2j188WC9rSuvap
-         cnZ4xLkHBPG0wn6AE7kR6B6yADvzewFFnEOZJioR94R5dmlW30/zBdmxngM8pSWif6
-         afAKMRmoV5qMFN33xW/bVSlznIcpfYVvYzEb9sBM=
+        b=dZA/MkBogqyLbkx5sO90asteJ5lTNbe4zelS5IPlJzukwn9SU5Cv4mrBsydIrskx8
+         unw2KtoNw3EVjFQipBEDeeD7C+zNWkvIogOL6JheR2Qx0yom2N4n7JK6DL+8Sn/QbW
+         bpp+GVTWYg/yIA5QEyHTgRWJQ0Bz37zFzD1IIphA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/35] dmaengine: mmp_tdma: Do not ignore slave config validation errors
-Date:   Thu,  7 May 2020 10:28:06 -0400
-Message-Id: <20200507142830.26239-12-sashal@kernel.org>
+Cc:     Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/35] RDMA/mlx5: Set GRH fields in query QP on RoCE
+Date:   Thu,  7 May 2020 10:28:03 -0400
+Message-Id: <20200507142830.26239-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -58,38 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit 363c32701c7fdc8265a84b21a6a4f45d1202b9ca ]
+[ Upstream commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 ]
 
-With an invalid dma_slave_config set previously,
-mmp_tdma_prep_dma_cyclic() would detect an error whilst configuring the
-channel, but proceed happily on:
+GRH fields such as sgid_index, hop limit, et. are set in the QP context
+when QP is created/modified.
 
-  [  120.756530] mmp-tdma d42a0800.adma: mmp_tdma: unknown burst size.
+Currently, when query QP is performed, we fill the GRH fields only if the
+GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
+the check so we will set all relevant data for the RoCE too.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-2-lkundrak@v3.sk
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Since this data is returned to userspace, the below is an ABI regression.
+
+Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
+Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mmp_tdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/qp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index e7d1e12bf4643..4d5b987e4841a 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -443,7 +443,8 @@ static struct dma_async_tx_descriptor *mmp_tdma_prep_dma_cyclic(
- 	if (!desc)
- 		goto err_out;
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 881decb1309a3..96edc5c30204d 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -5496,7 +5496,9 @@ static void to_rdma_ah_attr(struct mlx5_ib_dev *ibdev,
+ 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
+ 	rdma_ah_set_static_rate(ah_attr,
+ 				path->static_rate ? path->static_rate - 5 : 0);
+-	if (path->grh_mlid & (1 << 7)) {
++
++	if (path->grh_mlid & (1 << 7) ||
++	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
+ 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
  
--	mmp_tdma_config_write(chan, direction, &tdmac->slave_config);
-+	if (mmp_tdma_config_write(chan, direction, &tdmac->slave_config))
-+		goto err_out;
- 
- 	while (buf < buf_len) {
- 		desc = &tdmac->desc_arr[i];
+ 		rdma_ah_set_grh(ah_attr, NULL,
 -- 
 2.20.1
 
