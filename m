@@ -2,95 +2,157 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6B8C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B629DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0B9F2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552142075A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 01:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FHpyZjmU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFmQCxk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgEGBL4 (ORCPT
+        id S1728199AbgEGBRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 21:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37904 "EHLO
+        Wed, 6 May 2020 21:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgEGBLz (ORCPT
+        with ESMTP id S1727970AbgEGBRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 21:11:55 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3407FC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed,  6 May 2020 18:11:55 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so3855693edq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 May 2020 18:11:55 -0700 (PDT)
+        Wed, 6 May 2020 21:17:44 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A982BC061A0F;
+        Wed,  6 May 2020 18:17:43 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x73so3011698lfa.2;
+        Wed, 06 May 2020 18:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BHSYd56y/P/AUtkor9mWMhsnnvoYQniivekGDDl33VE=;
-        b=FHpyZjmUtqznPles3ZOTSsJgpog1COpvoPMjD4c8pV3qSNINY3kTWbwgeD/3h14vwQ
-         u6+VJrr41RD7Cx7piBakvcqtkTnpXlg7a3XnQKnc7zDPWgC8wzc8O6Zlg0qEWpdoIdP9
-         xfYDLRUDIJLvol0oqXI+WWsJ4+pebSiR5PWtk09UPNnK9Xy+ZKNh2SEQnPc2cuUtSh53
-         Dqd+3WO2tSpZl6wg/vNecAc1LHLQxjU0i/sWs5x+aHCa09JgabVTNo9IcdVncaBrYfK8
-         FlNC21LUJSdWTDOAxByum/NdwDE40+ga7HxCQvzdhNY9wLP+VZ83km3qt1TDd81/z/TS
-         tRrQ==
+        bh=+tVD16UIK2HUykZoQLbybGCDlOmlMC4/rb1eL7D7CrE=;
+        b=NFmQCxk3oJ3nTxMshA4z3OOVS1VtKP/Vgprl4bISM0TZG2ApE18sHobhx/PFWs6/uc
+         LC9lVUthwUINP/zaL4xoNEmJ2VFnnxeJ3cFln6hDdaE2aTPpEr62Bj8r7E0MKKk9jT0O
+         m1V2IayvHJJhJ7fYQSMMF8jRiIXmH19hJBIse2JqsrjGxt54AyUf8R6KitlF84mtReRY
+         nMSSLxoB9m+SpecnSO58V7CxIsCF6c0lf3Uh37a8FWs6ijVJAkWY3Y7QcVir9SGAQW4B
+         fglrDWoY0sG3qRiBG7U0YqoZIxIej4+Wih4kJfqJVqefaIZEq2bL4PWXmOxmQHowkE+a
+         u5BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BHSYd56y/P/AUtkor9mWMhsnnvoYQniivekGDDl33VE=;
-        b=HSWkVaV0f2xrPgpi1n0ze0vGKoxSx/5vnoh03IEAKTi0B4xhJweHy3mUz6FZHPSC/N
-         ohhmSRG+Q/eCiJpjFPXCdVloR8gbXfC+jPXWVRkGxkxpMFWF17qolOKHPX3pAk0jT0+U
-         7kYdPLuHyNdeYHRxw1EI2B9RhliMCGfmult6Jo019dDwt6d8okGMSR7mM68RRcxxTtt1
-         fqXcnC5Os4r3wD1rNdwAlsQdOIQGFeGab9oKjXG+NWU1V6f/B8nmhmxAQ/pN/L80crvW
-         5aPNRwxX6/eN2dkEX5zJKmjlGqHbhnSfweYw/nR+OG2hvuP0qbmjnydzAeihmMdX7+jh
-         BoUQ==
-X-Gm-Message-State: AGi0PuY4FEC88QmkqW7pUbVwbaIOuEAeC9727FG84l5LItK+L/CgOt16
-        E/ZKS89ygipFZ98K+wuJ+pZJ5O8jhHgepK0koICKRQ==
-X-Google-Smtp-Source: APiQypJi40Eci4aiL9uRsmX+8iVMgQz9PK0rFJdqmVeRclEGT3sprJ6Ip6a/6WRwPbVZiZPzz88EuAPuMw3ojMIJwNo=
-X-Received: by 2002:a50:eb0a:: with SMTP id y10mr9645097edp.312.1588813913603;
- Wed, 06 May 2020 18:11:53 -0700 (PDT)
+        bh=+tVD16UIK2HUykZoQLbybGCDlOmlMC4/rb1eL7D7CrE=;
+        b=PtShuWE0VR9RNpB81+/xzCDRY2M5+IsyzvQ+h2CzVuVQxzYCVpcXLjaZLe5tJDsSDk
+         RPRBwM7GIg8aCOZtAgBWjT2F8GY8QVUi1pmHQOEqEj67gzB65UoCHrDKrEsiCGejpyf5
+         aHwSq5sTFYlqVdD3BXsKtkEEKgJT9YVMZlyBytKxbmpfhDtqTVl8h1Qckp/dVqXjMINi
+         dGzckHaahrIC72mhu1hBn8ROQERWfMbBeNahtCRnxHspF7VMnFc/UbP7QQPVhHkBsfEz
+         wcpoQ1zOjjVwYenlK+jdwKUXHZKwdLai57EHUNFxsEDA12IS9t7lRjQPMb/2OkQXK6R/
+         yUuw==
+X-Gm-Message-State: AGi0PuZb180e1AUnIzzbRMxSUiiDHQF5brCf2QdFN4yLW/oVPmmA/OvT
+        0nRPV+9xubXrWHxBDxsNORyRTUfbP/9AmvUz9Hy8PA==
+X-Google-Smtp-Source: APiQypLIcEJVXCrwurHq/Ev2YP2PtFWYe5xadzI8BVmHoWL7CPL4HhQlOGm2xi8BYSGTzrBLuWglxpRe70k0sQfX/hE=
+X-Received: by 2002:a05:6512:3384:: with SMTP id h4mr7095093lfg.150.1588814259888;
+ Wed, 06 May 2020 18:17:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200506172158.218366-1-bgeffon@google.com> <CAEXW_YS_rAxHuj_Jr+0xWQSUyiOX3WKnJNevh2ReE=O+Xsp6SA@mail.gmail.com>
-In-Reply-To: <CAEXW_YS_rAxHuj_Jr+0xWQSUyiOX3WKnJNevh2ReE=O+Xsp6SA@mail.gmail.com>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Wed, 6 May 2020 18:11:17 -0700
-Message-ID: <CADyq12wW-j9vi0oxXB_+sjSyP=FgaNWkRM2Yo9YqkEwGnOb0bA@mail.gmail.com>
-Subject: Re: [PATCH] userfaultfd: fix remap event with MREMAP_DONTUNMAP.
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
+References: <1587370303-25568-1-git-send-email-yilun.xu@intel.com> <20200506051040.GB31302@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200506051040.GB31302@yilunxu-OptiPlex-7050>
+From:   Moritz Fischer <moritz.fischer.private@gmail.com>
+Date:   Wed, 6 May 2020 18:17:27 -0700
+Message-ID: <CAJYdmeMjeHNX9c6_gZ2HAdYO=JthEqxvAWG1+6M5_SAXMD8Fpg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] Add interrupt support to FPGA DFL drivers
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     linux-fpga@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        trix@redhat.com, bhu@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > -       mremap_userfaultfd_complete(&uf, addr, new_addr, old_len);
-> > +       mremap_userfaultfd_complete(&uf, addr, ret, old_len);
+Hi Xu,
+
+On Tue, May 5, 2020 at 10:13 PM Xu Yilun <yilun.xu@intel.com> wrote:
 >
-> Not super familiar with this code, but thought I'd ask, does ret
-> to be checked for -ENOMEM before calling mremap_userfaultfd_complete?
-> Sorry if I missed something.
+> Hi Moritz:
+>
+> Hao and I did several rounds of review and fix in the mailing list. Now
+> the patches are all acked by Hao.
+>
+> Could you please help review it when you have time?
 
-No, mremap_userfaultfd_complete will do a check similar to
-offset_in_page() by checking the page mask.
-It does (to & ~PAGE_MASK) to check for a non-aligned "to" value, so we're good.
+I'll get to it this weekend. Sorry for the delay,
 
-Additionally, earlier in the process then ctx will be null because we
-will have never called mremap_userfaultfd_prep,
-and mremap_userfaultfd_complete will check if there is a context
-before proceeding.
-
-Brian
+Moritz
+>
+> Thanks! :)
+>
+> On Mon, Apr 20, 2020 at 04:11:36PM +0800, Xu Yilun wrote:
+> > This patchset add interrupt support to FPGA DFL drivers.
+> >
+> > With these patches, DFL driver will parse and assign interrupt resources
+> > for enumerated feature devices and their sub features.
+> >
+> > This patchset also introduces a set of APIs for user to monitor DFL
+> > interrupts. Three sub features (DFL FME error, DFL AFU error and user
+> > interrupt) drivers now support these APIs.
+> >
+> > Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+> >           driver, and add interrupt parsing and assignment for feature
+> >           sub devices.
+> > Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+> > Patch #3: DFL framework change. Add helper functions for feature sub
+> >           device drivers to handle interrupt and notify users.
+> > Patch #4: Add interrupt support for AFU error reporting sub feature.
+> > Patch #5: Add interrupt support for FME global error reporting sub
+> >           feature.
+> > Patch #6: Add interrupt support for a new sub feature, to handle user
+> >           interrupts implemented in AFU.
+> > Patch #7: Documentation for DFL interrupt handling.
+> >
+> > Main changes from v1:
+> >  - Early validating irq table for each feature in parse_feature_irq()
+> >    in Patch #1.
+> >  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+> >    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+> >    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+> >
+> > Main changes from v2:
+> >  - put parse_feature_irqs() inside create_feature_instance().
+> >  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+> >  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+> >
+> > Main changes from v3:
+> >  - rebased to 5.7-rc1.
+> >  - fail the dfl enumeration when irq parsing error happens.
+> >  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+> >    drivers.
+> >
+> > Main changes from v4:
+> >  - Minor fixes for Hao's comments.
+> >
+> > Xu Yilun (7):
+> >   fpga: dfl: parse interrupt info for feature devices on enumeration
+> >   fpga: dfl: pci: add irq info for feature devices enumeration
+> >   fpga: dfl: introduce interrupt trigger setting API
+> >   fpga: dfl: afu: add interrupt support for port error reporting
+> >   fpga: dfl: fme: add interrupt support for global error reporting
+> >   fpga: dfl: afu: add AFU interrupt support
+> >   Documentation: fpga: dfl: add descriptions for interrupt related
+> >     interfaces.
+> >
+> >  Documentation/fpga/dfl.rst    |  19 +++
+> >  drivers/fpga/dfl-afu-error.c  |  17 +++
+> >  drivers/fpga/dfl-afu-main.c   |  32 +++++
+> >  drivers/fpga/dfl-fme-error.c  |  18 +++
+> >  drivers/fpga/dfl-fme-main.c   |   6 +
+> >  drivers/fpga/dfl-pci.c        |  80 +++++++++--
+> >  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/fpga/dfl.h            |  57 ++++++++
+> >  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+> >  9 files changed, 612 insertions(+), 9 deletions(-)
+> >
+> > --
+> > 2.7.4
