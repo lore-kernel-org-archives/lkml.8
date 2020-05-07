@@ -2,140 +2,95 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F32C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEB2C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9414C20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYiTTDGk"
+	by mail.kernel.org (Postfix) with ESMTP id 4F0C920CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 11:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgEGLuk (ORCPT
+        id S1727798AbgEGLun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 07:50:40 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40184 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726950AbgEGLu0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 07:50:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588852224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=s1G05H8imO2zOk7SJkYTBhX0Snvn61zgHbE4+WonJ+8=;
-        b=QYiTTDGkV1GyxxN8UuJRZAPNd0EvHOXEC8507AndsPEIvMbTte/QbJ2Gy+V4vyhrTJE10R
-        hTaU1Z+4Be7CcvZcjusQnlOS0cydMIsp4fTXYEwed3poUGY4NRN6HrcG8gYz1FZ4SIdIj7
-        SISxTMze6bWoNcOmwKgL7qcf97vdwNk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-v2py6EUQMsiAnkEtzZ14nQ-1; Thu, 07 May 2020 07:50:20 -0400
-X-MC-Unique: v2py6EUQMsiAnkEtzZ14nQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66A1E464;
-        Thu,  7 May 2020 11:50:19 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09F7B1C933;
-        Thu,  7 May 2020 11:50:18 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterx@redhat.com
-Subject: [PATCH 9/9] KVM: VMX: pass correct DR6 for GD userspace exit
-Date:   Thu,  7 May 2020 07:50:11 -0400
-Message-Id: <20200507115011.494562-10-pbonzini@redhat.com>
-In-Reply-To: <20200507115011.494562-1-pbonzini@redhat.com>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Thu, 7 May 2020 07:50:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59334 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727769AbgEGLuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 07:50:39 -0400
+IronPort-SDR: K8gq3h49VHpmZS0MqG+na4IjNG4n8aYqR44k2kPT7ga/PdFvCxmtm3VS4/lVxK7fQe9PcX4MJu
+ I5+IApngKnPA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 04:50:39 -0700
+IronPort-SDR: 8bD02u6o+OKmozbXo9UsSMMfj9zmgxWFMnYTnkoWDvJi3GAkjFa/S1BKe4rDWplcn9g2Bgpyfn
+ 2caRx6V10iYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
+   d="scan'208";a="370094733"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 07 May 2020 04:50:35 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 07 May 2020 14:50:34 +0300
+Date:   Thu, 7 May 2020 14:50:34 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
+Message-ID: <20200507115034.GI487496@lahna.fi.intel.com>
+References: <20200506061438.GR487496@lahna.fi.intel.com>
+ <20200506212947.GA455758@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506212947.GA455758@bjorn-Precision-5520>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When KVM_EXIT_DEBUG is raised for the disabled-breakpoints case (DR7.GD),
-DR6 was incorrectly copied from the value in the VM.  Instead,
-DR6.BD should be set in order to catch this case.
+On Wed, May 06, 2020 at 04:29:47PM -0500, Bjorn Helgaas wrote:
+> On Wed, May 06, 2020 at 09:14:38AM +0300, Mika Westerberg wrote:
+> > On Wed, May 06, 2020 at 01:34:21AM +0800, Kai-Heng Feng wrote:
+> > > The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> > > state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+> > > power. On Windows ASPM L1 is enabled on the device and its upstream
+> > > bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+> > > power.
+> > > 
+> > > In short, ASPM always gets disabled on bridge-to-bridge link.
+> > 
+> > Excelent finding :) I've heard several reports complaining that we can't
+> > enter PC10 when TBT is enabled and I guess this explains it.
+> 
+> I'm curious about this.  I first read this patch as affecting
+> garden-variety Links between a Root Port or Downstream Port and the
+> Upstream Port of a switch.  But the case we're talking about is
+> specifically when the downstream device is PCI_EXP_TYPE_PCI_BRIDGE,
+> i.e., a PCIe to PCI/PCI-X bridge, not a switch.
+> 
+> AFAICT, a Link to a PCI bridge is still a normal Link and ASPM should
+> still work.  I'm sort of surprised that you'd find such a PCIe to
+> PCI/PCI-X bridge in a Thunderbolt topology, but maybe that's a common
+> thing?
 
-On AMD this does not need any special code because the processor triggers
-a #DB exception that is intercepted.  However, the testcase would fail
-without the previous patch because both DR6.BS and DR6.BD would be set.
+It actually is not common and now that you mention I'm wondering how
+this can help at all. I also thought this applies to all ports which
+would explain the issue we have but if it only applies to PCIe to
+PCI/PCI-X bridge it should not make any difference in TBT systems.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c                        |  2 +-
- .../testing/selftests/kvm/x86_64/debug_regs.c | 24 ++++++++++++++++++-
- 2 files changed, 24 insertions(+), 2 deletions(-)
+> I guess "PC8" and "PC10" are some sort of Intel-specific power states?
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e2b71b0cdfce..e45cf89c5821 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4927,7 +4927,7 @@ static int handle_dr(struct kvm_vcpu *vcpu)
- 		 * guest debugging itself.
- 		 */
- 		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP) {
--			vcpu->run->debug.arch.dr6 = vcpu->arch.dr6;
-+			vcpu->run->debug.arch.dr6 = DR6_BD | DR6_RTM | DR6_FIXED_1;
- 			vcpu->run->debug.arch.dr7 = dr7;
- 			vcpu->run->debug.arch.pc = kvm_get_linear_rip(vcpu);
- 			vcpu->run->debug.arch.exception = DB_VECTOR;
-diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-index 077f25d61d1a..8162c58a1234 100644
---- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-+++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-@@ -11,10 +11,13 @@
- 
- #define VCPU_ID 0
- 
-+#define DR6_BD		(1 << 13)
-+#define DR7_GD		(1 << 13)
-+
- /* For testing data access debug BP */
- uint32_t guest_value;
- 
--extern unsigned char sw_bp, hw_bp, write_data, ss_start;
-+extern unsigned char sw_bp, hw_bp, write_data, ss_start, bd_start;
- 
- static void guest_code(void)
- {
-@@ -43,6 +46,8 @@ static void guest_code(void)
- 		     "rdmsr\n\t"
- 		     : : : "rax", "ecx");
- 
-+	/* DR6.BD test */
-+	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
- 	GUEST_DONE();
- }
- 
-@@ -165,6 +170,23 @@ int main(void)
- 			    target_dr6);
- 	}
- 
-+	/* Finally test global disable */
-+	CLEAR_DEBUG();
-+	debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
-+	debug.arch.debugreg[7] = 0x400 | DR7_GD;
-+	APPLY_DEBUG();
-+	vcpu_run(vm, VCPU_ID);
-+	target_dr6 = 0xffff0ff0 | DR6_BD;
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
-+		    run->debug.arch.exception == DB_VECTOR &&
-+		    run->debug.arch.pc == CAST_TO_RIP(bd_start) &&
-+		    run->debug.arch.dr6 == target_dr6,
-+			    "DR7.GD: exit %d exception %d rip 0x%llx "
-+			    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
-+			    run->exit_reason, run->debug.arch.exception,
-+			    run->debug.arch.pc, target_rip, run->debug.arch.dr6,
-+			    target_dr6);
-+
- 	/* Disable all debug controls, run to the end */
- 	CLEAR_DEBUG();
- 	APPLY_DEBUG();
--- 
-2.18.2
-
+Package C-state 8 and Package C-state 10. These are power states the
+whole (Intel) CPU package can enter when individual CPU cores are in
+correct low power states.
