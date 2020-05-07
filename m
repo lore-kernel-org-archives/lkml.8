@@ -2,144 +2,136 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04649C47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C266FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD2F20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588875055;
-	bh=KaNl+AoGB+XzVAkjgAl4iy8wCzLm8z52Wf6FOEs/dCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UwH1Lr3QRnA0K03Tn6L7lGR06JHtmjhldQmM+YsOLDMvEbE1YdWW5F0rmwubt4oza
-	 22vAyWJsWheuCp5uE1AQOkltVXLzybDL7sNalAVnu1H3NJatb5Hi6HEnEiM8n0xDEO
-	 HtWn/ZUfZTmHo/PQ41yKfDCJKJGQl0CNGcb52vrk=
+	by mail.kernel.org (Postfix) with ESMTP id 9F32B20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJ5DdgiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgEGSKz (ORCPT
+        id S1728518AbgEGSK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:10:55 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:42285 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728364AbgEGSKr (ORCPT
+        Thu, 7 May 2020 14:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728486AbgEGSKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 May 2020 14:10:47 -0400
-Received: by mail-oo1-f66.google.com with SMTP id e18so1547996oot.9;
-        Thu, 07 May 2020 11:10:46 -0700 (PDT)
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297AEC05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 11:10:46 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id v18so7682486qtq.22
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 11:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=tQJRWNXZ73jupkckFeVqSyiJPuHFNUXk3losPzo+jg0=;
+        b=OJ5DdgiCF2sqkpLYesteMXNORwEGKDR0Y0KA0Y5rnVPYA7hNXSv1oL/MShKoOyUxtV
+         ry7nKG2JXxTPRL9bLbxFdeT9Y2YqTlL4Fei31TaPiPOjMOkdUPfTils+SnDcvYFhfDJQ
+         jjCzkIM36yfW/s841TyY6iK9sscitEH4sJ4DlMMBcV5YAQU5KOKQLO1T6Aa31KbeLycu
+         LgOLgeWtLfvKc7O1SaUqq8AjMtDmYgxHFLOcjWdmib1seFPbUx4qpqmtUeU2/m1tBGXO
+         m3ec7zNB0QRGtS6NtlA9VDThwYF7JCq4VENLUDeG20hKDR8IlSt+VL8f+ePs8xq03gJ3
+         LoJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hKmS6Bg4CcoosQWiCpcHNn0plXy0Vmb8kMKxS1isGgw=;
-        b=sB9QsRKIsc6mIBliJh/cPtUWn3H2/sF9AQq37CefkmlVvK34H0ariRfEPltO6CS4a7
-         /wL+gR7U/5UE6c0YlqfKyz0ev/0I4w52GMy1979fPhtaHaEHKaytaVzrfFmI4SOrJuUm
-         hM/vmqML2nTYBn8KMbkFPpzktFc7I9Lz+l50+EubdKLBP8RqP3ZOGikd1a0ooqP4AIK7
-         /Pu9wLMJGSBNOVDtrpmHEBVulEddBiiRTg6JyH05w05jYAbV9dJTTEr5WW4rDpI3s96P
-         Jzc7Gb0AqHIw5D6+ohcwtYcY2sDVmc+up3mUgpd70f8PuFFQ+pMDb1tC5F2QjRzli9yY
-         OdGg==
-X-Gm-Message-State: AGi0Pub1z5B0U3aU2ZsYF6KZFHVAE+i0qSVI8OeQiwPQU1LZ3SOeAODu
-        XjNktwcI0PZFbescDdsnDqDMewE=
-X-Google-Smtp-Source: APiQypLxLD7Z5qjpV5iAc4Sn8XItc1HRXVZlZO0OIEuf4nO+dnJ4UizUwjUtv7qPrOmi8Gvmnca0cQ==
-X-Received: by 2002:a4a:92d1:: with SMTP id j17mr12892021ooh.13.1588875045762;
-        Thu, 07 May 2020 11:10:45 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t9sm1548864oie.24.2020.05.07.11.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:10:45 -0700 (PDT)
-Received: (nullmailer pid 19680 invoked by uid 1000);
-        Thu, 07 May 2020 18:10:44 -0000
-Date:   Thu, 7 May 2020 13:10:44 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/11] devicetree: bindings: pci: document PARF params
- bindings
-Message-ID: <20200507181044.GA15159@bogus>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-9-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-9-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=tQJRWNXZ73jupkckFeVqSyiJPuHFNUXk3losPzo+jg0=;
+        b=I/J6wgxHKr3rAC5HkC4v786ehT10tv4krSzM3zUkGnQdgi/1SND2UJtSlNWaTgAs4d
+         +q6XpRARRVXq9zW/VjO+5ITs4xOOuwoe4XxZxcaE8X21QhbpaMnUHAXPa2Cs0Uz8AhBi
+         NReg/6ymx/9zj8GtH4MeC6GnnH9P0+uZxpjSNR/yBBhM4cWMZfemScJhHC7lhOrmACPG
+         qsU10yXQVcLiAtQOM6ASMbXU8pmsRkUVUX8I7eCT4RXo7O+xozdjgPD9moUKY5E7RMGT
+         /vgW0LuYutiObFH3AmdKc3xs99spoNlZUPF2jnwZx2S0aufqcshHB5rA0g5xizzsVBrl
+         7i5A==
+X-Gm-Message-State: AGi0PuYDggBWNoawyQfXvnzaq4K9eofFmeJlnEo7zfDj6WGab+ELpXTN
+        H1XlTWd37I2KoBUvCC+o0i1BgAgzGgS1NF8Z5b1FEo4ccUy8QalOy5t9o10nxeDYuWJw0ezjA5j
+        3M30prKsDPkkeTrgxI9tWf5sOUOJBshykeI7yNhSdYAYEHKyBA2J8jko8AXQ+br3co1pzkM3u
+X-Google-Smtp-Source: APiQypLWF74i2ubQ61UdlGU8XHa46X4VRO8h//dR1bpYaMIS2zPs03r4Fxjeh4NMjh22GrvVAsE+nhm84qFL
+X-Received: by 2002:ad4:58eb:: with SMTP id di11mr14503909qvb.39.1588875045240;
+ Thu, 07 May 2020 11:10:45 -0700 (PDT)
+Date:   Thu,  7 May 2020 19:10:12 +0100
+In-Reply-To: <20200507181012.29791-1-qperret@google.com>
+Message-Id: <20200507181012.29791-15-qperret@google.com>
+Mime-Version: 1.0
+References: <20200507181012.29791-1-qperret@google.com>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH 14/14] sched: cpufreq: Modularize schedutil
+From:   Quentin Perret <qperret@google.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com, qperret@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
-> It is now supported the editing of Tx De-Emphasis, Tx Swing and
-> Rx equalization params on ipq8064. Document this new optional params.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.txt     | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 6efcef040741..8cc5aea8a1da 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -254,6 +254,42 @@
->  			- "perst-gpios"	PCIe endpoint reset signal line
->  			- "wake-gpios"	PCIe endpoint wake signal line
->  
-> +- qcom,tx-deemph-gen1:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: Gen1 De-emphasis value.
-> +		    For ipq806x should be set to 24.
+Now that all requirements to modularize schedutil are met, make the
+Kconfig option tristate and add the missing MODULE_*() declarations in
+cpufreq_schedutil.c.
 
-Unless these need to be tuned per board, then the compatible string for 
-ipq806x should imply all these settings.
+Signed-off-by: Quentin Perret <qperret@google.com>
+---
+ drivers/cpufreq/Kconfig          |  2 +-
+ kernel/sched/cpufreq_schedutil.c | 15 ++++++++++-----
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-> +
-> +- qcom,tx-deemph-gen2-3p5db:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: Gen2 (3.5db) De-emphasis value.
-> +		    For ipq806x should be set to 24.
-> +
-> +- qcom,tx-deemph-gen2-6db:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: Gen2 (6db) De-emphasis value.
-> +		    For ipq806x should be set to 34.
-> +
-> +- qcom,tx-swing-full:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: TX launch amplitude swing_full value.
-> +		    For ipq806x should be set to 120.
-> +
-> +- qcom,tx-swing-low:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: TX launch amplitude swing_low value.
-> +		    For ipq806x should be set to 120.
-> +
-> +- qcom,rx0-eq:
-> +	Usage: optional (available for ipq/apq8064)
-> +	Value type: <u32>
-> +	Definition: RX0 equalization value.
-> +		    For ipq806x should be set to 4.
-> +
->  * Example for ipq/apq8064
->  	pcie@1b500000 {
->  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
-> -- 
-> 2.25.1
-> 
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index c3e6bd59e920..49942f422a57 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -185,7 +185,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
+ 	  If in doubt, say N.
+ 
+ config CPU_FREQ_GOV_SCHEDUTIL
+-	bool "'schedutil' cpufreq policy governor"
++	tristate "'schedutil' cpufreq policy governor"
+ 	depends on CPU_FREQ && SMP
+ 	select CPU_FREQ_GOV_ATTR_SET
+ 	select IRQ_WORK
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index aeb04cc5b740..ea2778422efd 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -786,15 +786,20 @@ struct cpufreq_governor schedutil_gov = {
+ #endif /* CONFIG_ENERGY_MODEL */
+ };
+ 
++static int __init sugov_register(void)
++{
++	return cpufreq_register_governor(&schedutil_gov);
++}
++
+ #ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+ struct cpufreq_governor *cpufreq_default_governor(void)
+ {
+ 	return &schedutil_gov;
+ }
++core_initcall(sugov_register);
++#else
++module_init(sugov_register);
+ #endif
+ 
+-static int __init sugov_register(void)
+-{
+-	return cpufreq_register_governor(&schedutil_gov);
+-}
+-core_initcall(sugov_register);
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Schedutil CPUFreq Governor");
+-- 
+2.26.2.526.g744177e7f7-goog
+
