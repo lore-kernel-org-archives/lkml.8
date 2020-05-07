@@ -2,107 +2,110 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D0C54E49
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FE3C54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FB020663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2DD20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 21:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588885821;
+	bh=EFmtHjFZLnql7id7dydgW0zEPtomPgKv+eg6JMFJ1Oc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qrZ0zNNE+7H0Njyi2ocRtZ64tvaDMB9macs1qm8VABsqkjqKHmwiH9eYm5L7odsCd
+	 qHQsqkLpgcl0iBGkmZbFg/Ae1b7YTRAiBeInQYSUU47JfTa/XmZjSw7PIXT+dvJ8dy
+	 QGjsMiZn06m+QwHoZH8Bt6ilOkD3+pM0E308U8rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEGVJ5 (ORCPT
+        id S1726616AbgEGVKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 17:09:57 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:40690 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVJ5 (ORCPT
+        Thu, 7 May 2020 17:10:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38001 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGVKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 17:09:57 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 38AD11C0257; Thu,  7 May 2020 23:09:55 +0200 (CEST)
-Date:   Thu, 7 May 2020 23:09:54 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Xing Zhang <Xing.Zhang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v1] Add support for MediaTek regulator vibrator driver
-Message-ID: <20200507210954.GB19557@duo.ucw.cz>
-References: <20200429081759.26964-1-Xing.Zhang@mediatek.com>
- <20200507174519.GD1216@bug>
- <49089bf3-d64b-2a50-269c-623a6ea9c14c@gmail.com>
+        Thu, 7 May 2020 17:10:20 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r66so6525706oie.5;
+        Thu, 07 May 2020 14:10:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vOJAT5al1D5jfLK3KCZe+EiKaiKoKpmEc2pvPJsPSMI=;
+        b=Z2hHdYFTCOCunFIh8PZ1MiclTsSpNzzJeSfr2gnLT/Nwumc+K0vDpSJYVVhTbG44tL
+         x0weV1osoeDSUDY/Szfmyj5cFBUuP5P6N+aoFlz9YxgA1LSdnbxm+SGnLfCrQh2A8tsf
+         PVrbMHUXWfWtj8QypCcvVH/Cq2rzhBkG6kUolLuJLo7jf0U/xjsOcgrBHTlQRzf65pQK
+         RFLtCsf+WvHy9oTX1BzVgUu1KAMpbcApbppSFTaANNwgzjCvkba++DRbtRBsO0SzTaZ0
+         awaOzkvqU+BpHGQMvelEGgHNatPielw7hLZ6XKUhqva2HwDkVrNxLlEkOGmDUu4B24y5
+         NSTA==
+X-Gm-Message-State: AGi0PuaKrUh+K1bFcEP5xhGoMM2Azvo84C3BuzESmQf0S8TEIbmkDc6k
+        MOwOXSiTYawkAs9wXEuxSDKfUrU=
+X-Google-Smtp-Source: APiQypKC8n4GIaDfFsylvmEQK/cN0izFWrgqXOZf1olkbDe/mTybNEvl2zkbWwcKLeEyl0uWqLvP3Q==
+X-Received: by 2002:aca:f454:: with SMTP id s81mr7657610oih.138.1588885817620;
+        Thu, 07 May 2020 14:10:17 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p13sm1735241oom.34.2020.05.07.14.10.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:10:17 -0700 (PDT)
+Received: (nullmailer pid 32069 invoked by uid 1000);
+        Thu, 07 May 2020 21:10:15 -0000
+Date:   Thu, 7 May 2020 16:10:15 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 04/12] PCI: aardvark: Improve link training
+Message-ID: <20200507211015.GA31477@bogus>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200430080625.26070-5-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <49089bf3-d64b-2a50-269c-623a6ea9c14c@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430080625.26070-5-pali@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 Apr 2020 10:06:17 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
+> From: Marek Behún <marek.behun@nic.cz>
+> 
+> Currently the aardvark driver trains link in PCIe gen2 mode. This may
+> cause some buggy gen1 cards (such as Compex WLE900VX) to be unstable or
+> even not detected. Moreover when ASPM code tries to retrain link second
+> time, these cards may stop responding and link goes down. If gen1 is
+> used this does not happen.
+> 
+> Unconditionally forcing gen1 is not a good solution since it may have
+> performance impact on gen2 cards.
+> 
+> To overcome this, read 'max-link-speed' property (as defined in PCI
+> device tree bindings) and use this as max gen mode. Then iteratively try
+> link training at this mode or lower until successful. After successful
+> link training choose final controller gen based on Negotiated Link Speed
+> from Link Status register, which should match card speed.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 114 ++++++++++++++++++++------
+>  1 file changed, 89 insertions(+), 25 deletions(-)
+> 
 
---cvVnyQ+4j833TQvp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2020-05-07 22:45:35, Jacek Anaszewski wrote:
-> Hi Pavel,
->=20
-> On 5/7/20 7:45 PM, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > This patchset add regulator vibrator driver for MTK Soc. The driver
-> > > controls vibrator through regulator's enable and disable.
-> >=20
-> > We'd prefer not to have vibrators in led subsystem.
-> >=20
-> > >=20
-> > > Xing Zhang (3):
-> > >    dt-bindings: add regulator vibrator documentation
-> > >    arm64: mediatek: Add regulator vibrator support
-> > >    Vibrator: Add regulator vibrator driver
-> > >=20
-> > >   .../bindings/leds/regulator-vibrator.txt      |  39 ++
-> > >   arch/arm64/configs/defconfig                  |   1 +
-> > >   drivers/leds/Kconfig                          |  10 +
-> > >   drivers/leds/Makefile                         |   1 +
-> > >   drivers/leds/regulator-vibrator.c             | 450 +++++++++++++++=
-+++
-> >=20
-> > OTOH, connecting LED to regulator might make some sense. I can take the=
- driver with
-> > vibrator functionality stripped, provided it is named the usual way...
->=20
-> We already had an attempt of solving this in more generic way [0],
-> but you opposed then [1]. Just for the record.
-
-That's something different. led-regulator.c might be
-acceptable. Special code to support vibrator quirks... not so much.
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---cvVnyQ+4j833TQvp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrR5IgAKCRAw5/Bqldv6
-8rhUAJwNZ8AJbpTJwM0okF7XO54EiI6dkQCfdJRagMkst3LRHughjgIVPDh4RiA=
-=07yZ
------END PGP SIGNATURE-----
-
---cvVnyQ+4j833TQvp--
+Reviewed-by: Rob Herring <robh@kernel.org>
