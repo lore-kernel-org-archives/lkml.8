@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A340EC47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8CBC54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8343C2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A8D2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588862086;
-	bh=Spyr7ZIhR97rA55+3Gpc8GXJ+3EMsDMbNw/N0oi7yq8=;
+	s=default; t=1588862089;
+	bh=d77HrayXv/zUq1hAABKyDml8cu8MWX+x2DmXs/dulIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWt0Kowp0ruFX1JuMXz89OgzTzPUyHOVXwmKhIgsUdiieOurhgbOzPMEgYuRSt0Gv
-	 1BHJjNkzaWMyghHbKDz1j6Dh7S8cn161I45RXrK77V5hfcFx4DV07+nMAmRxhVqbHh
-	 pxPy6Ey676xoFULbgsbISirWTKaRhozSyBBCkYf4=
+	b=n9NKZ3Tejq3lvB5p7c/jIi6eucUNlBaI7w14TYUeAQ+miOjuGNifyWHQXm0OMdxfh
+	 TpHmG00Wd584u90/7Zcpa6ySqoU1NV5ZdYK82zhasbXm2UwLB9981IUAx+WyV5572u
+	 r6lRk8HrCf4egFuHo+eJuv+4R3kjFaQHm21V4J+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgEGO3E (ORCPT
+        id S1728379AbgEGO3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbgEGO26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:28:58 -0400
+        id S1728329AbgEGO2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:28:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF49624955;
-        Thu,  7 May 2020 14:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B38CF20857;
+        Thu,  7 May 2020 14:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861737;
-        bh=Spyr7ZIhR97rA55+3Gpc8GXJ+3EMsDMbNw/N0oi7yq8=;
+        s=default; t=1588861735;
+        bh=d77HrayXv/zUq1hAABKyDml8cu8MWX+x2DmXs/dulIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOQUwOO3oV6sbgljrUVcb8pK/lh4yctWIVuuPNwbTxmELKsJZmSbJwQNj1HASbpbK
-         GeYLTUurKuMxxQt3bkjVe/Vb7irAdecU7h/2fc2jYi6SW/LuK+OgBhLEaLKDaLSS7C
-         KNwHyylUoyppoWBYXvEO2IbV9RzvK0jUiQWNBcS0=
+        b=1nuMML2NUbxZkabrfk00d3qXuaOGmGtgSj05FNMxZFv20WlhcCMS3wF8uPDuJ5zCj
+         V70uQMIBpL8+uUcEEVUX6PowbIjy811bBIeAbcsI9z3RlFETDJcuAdBHCGiwTM+F9W
+         vCMzMXAT1RpAz1hTEom4dcnmHryreLYigti3ipA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/35] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Thu,  7 May 2020 10:28:15 -0400
-Message-Id: <20200507142830.26239-21-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        minchan@kernel.org, surenb@google.com, jenhaochen@google.com,
+        Martin Liu <liumartin@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 19/35] dma-buf: Fix SET_NAME ioctl uapi
+Date:   Thu,  7 May 2020 10:28:13 -0400
+Message-Id: <20200507142830.26239-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142830.26239-1-sashal@kernel.org>
 References: <20200507142830.26239-1-sashal@kernel.org>
@@ -61,63 +66,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Daniel Vetter <daniel.vetter@intel.com>
 
-[ Upstream commit b9f960201249f20deea586b4ec814669b4c6b1c0 ]
+[ Upstream commit a5bff92eaac45bdf6221badf9505c26792fdf99e ]
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+The uapi is the same on 32 and 64 bit, but the number isn't. Everyone
+who botched this please re-read:
 
-	grep -H . /sys/module/dmatest/parameters/*
+https://www.kernel.org/doc/html/v5.4-preprc-cpu/ioctl/botching-up-ioctls.html
 
-the iterations parameter is not respected and test is going on and on until
-user gives
+Also, the type argument for the ioctl macros is for the type the void
+__user *arg pointer points at, which in this case would be the
+variable-sized char[] of a 0 terminated string. So this was botched in
+more than just the usual ways.
 
-	echo 0 > /sys/module/dmatest/parameters/run
-
-This is not what expected.
-
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
-
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
-
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
-
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Greg Hackmann <ghackmann@google.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: minchan@kernel.org
+Cc: surenb@google.com
+Cc: jenhaochen@google.com
+Cc: Martin Liu <liumartin@google.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Tested-by: Martin Liu <liumartin@google.com>
+Reviewed-by: Martin Liu <liumartin@google.com>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+  [sumits: updated some checkpatch fixes, corrected author email]
+Link: https://patchwork.freedesktop.org/patch/msgid/20200407133002.3486387-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma-buf/dma-buf.c    | 3 ++-
+ include/uapi/linux/dma-buf.h | 6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index a2cadfa2e6d78..4993e3e5c5b01 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -662,8 +662,8 @@ static int dmatest_func(void *data)
- 		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 0fb0358f00736..adc88e1dc999a 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -388,7 +388,8 @@ static long dma_buf_ioctl(struct file *file,
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t *dsts;
+ 		return ret;
+ 
+-	case DMA_BUF_SET_NAME:
++	case DMA_BUF_SET_NAME_A:
++	case DMA_BUF_SET_NAME_B:
+ 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+ 
+ 	default:
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index dbc7092e04b5a..7f30393b92c3b 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -39,6 +39,12 @@ struct dma_buf_sync {
+ 
+ #define DMA_BUF_BASE		'b'
+ #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++
++/* 32/64bitness of this uapi was botched in android, there's no difference
++ * between them in actual uapi, they're just different numbers.
++ */
+ #define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_SET_NAME_A	_IOW(DMA_BUF_BASE, 1, u32)
++#define DMA_BUF_SET_NAME_B	_IOW(DMA_BUF_BASE, 1, u64)
+ 
+ #endif
 -- 
 2.20.1
 
