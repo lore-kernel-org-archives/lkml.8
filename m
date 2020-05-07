@@ -2,122 +2,148 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE20EC38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50143C47257
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2DB62078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A02207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 06:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588833867;
+	bh=lhU8/dsReAdmncwLMm+831xE4iixcV3spLV0dJI8dEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0UB0mfhlPRJoGHnpDCLyrLrQpuim13y581l98Z73qd77NC1wqE6nDj66y+Bo0smxj
+	 O5BPn48sFtvOgYZr6E+o57Yl0tNrxfmv9oJDFMZgr74TcNlXySvn0GaiC64towoJpM
+	 S1EenpWv8fGMQqCsTMQIsSpj+jtEYBneEZgOjKrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgEGGno (ORCPT
+        id S1726635AbgEGGo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 02:43:44 -0400
-Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:51830 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725903AbgEGGnn (ORCPT
+        Thu, 7 May 2020 02:44:26 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43318 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgEGGoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 02:43:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AA3E7801A056;
-        Thu,  7 May 2020 06:43:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: humor62_7784db8d54d20
-X-Filterd-Recvd-Size: 3778
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  7 May 2020 06:43:41 +0000 (UTC)
-Message-ID: <158979eb8e6e80c9b535acfdb4821bc9547c7c50.camel@perches.com>
-Subject: Re: [PATCH -next] ASoC: amd: acp3x-pcm-dma: Use bitwise instead of
- arithmetic operator for flags
-From:   Joe Perches <joe@perches.com>
-To:     Samuel Zou <zou_wei@huawei.com>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        Julia Lawall <julia.lawall@lip6.fr>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Date:   Wed, 06 May 2020 23:43:40 -0700
-In-Reply-To: <1588833562-14417-1-git-send-email-zou_wei@huawei.com>
-References: <1588833562-14417-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Thu, 7 May 2020 02:44:25 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l19so5036779lje.10;
+        Wed, 06 May 2020 23:44:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KPHo05lQ60Sgmm/o6B6Lw5R77cey+JqtyoXZZ3TP7Og=;
+        b=e7wVI36Rf4fqtU7WJhW0eNhiOoR9qLs5D7mo3cKZhnru4fOU0GoxY1Rs35zvmMqf/I
+         DkA2PrCvpIxoe8AfSXOlVr+ta+B03ZyC68RXZWbovm0bXaTIDEVnnMfW7e3g0LHXY1CO
+         dPAfTAx0ObfeW2JzcLmANRpukFCj7UGfD4Dz2qmu6JNdWZwEYji98uT+Ag8c7vkY0qce
+         qtMr9FwgibLoP97IsmB2khr0BBtNp/Qixd3dkDjNqYPewll+e1NSw/I9TxqrYAUhMlLu
+         BkNL9gdlG3oZnUJUNlWttddZNuu/RiSzOPza0L/9JzUYBSWiPbMzjI9KczuLwh2Lg/MD
+         6zVA==
+X-Gm-Message-State: AGi0PuZ8NNXts1Z10rRrfQ3AGOIxTdtR0oFmdemBYWnHfBdILxspxbN5
+        lBIIvmnMYJZKmHoYdPPk508=
+X-Google-Smtp-Source: APiQypIpQr2fTJp7sK/Z45NvIbcu6kYbSACpGgviZMKo6vxLEoYdxdc72K9eQNDS8kRJ9TzuUBJ2bQ==
+X-Received: by 2002:a2e:b44c:: with SMTP id o12mr6880195ljm.240.1588833860796;
+        Wed, 06 May 2020 23:44:20 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id o20sm3131820lfc.39.2020.05.06.23.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 23:44:19 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jWaGS-0008Rt-A0; Thu, 07 May 2020 08:44:12 +0200
+Date:   Thu, 7 May 2020 08:44:12 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vince Bridgers <vbridger@opensource.altera.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+        Vitaly Bordug <vbordug@ru.mvista.com>,
+        Claudiu Manoil <claudiu.manoil@freescale.com>,
+        Li Yang <leoli@freescale.com>,
+        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+        Felix Fietkau <nbd@openwrt.org>,
+        John Crispin <blogic@openwrt.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Mugunthan V N <mugunthanvnm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        Netdev <netdev@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
+ phydev leaks
+Message-ID: <20200507064412.GL2042@localhost>
+References: <1480357509-28074-1-git-send-email-johan@kernel.org>
+ <1480357509-28074-12-git-send-email-johan@kernel.org>
+ <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 14:39 +0800, Samuel Zou wrote:
-> Fix the following coccinelle warnings:
-
-> sound/soc/amd/raven/acp3x-pcm-dma.c:161:39-40: WARNING: sum of probable bitmasks, consider |
-> sound/soc/amd/raven/acp3x-pcm-dma.c:172:39-40: WARNING: sum of probable bitmasks, consider |
-> sound/soc/amd/raven/acp3x-pcm-dma.c:183:39-40: WARNING: sum of probable bitmasks, consider |
-> sound/soc/amd/raven/acp3x-pcm-dma.c:194:39-40: WARNING: sum of probable bitmasks, consider |
-
-These are not bitmasks.
-
-Samuel, please look deeper at the code before submitting
-bad patches.
-
-And hey Julia.
-
-This is the second false positive submitted for this
-warning today.
-
-Can you please remove the script or fix it so it
-uses better logic?k
-
-Thanks.
-
-
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-> ---
->  sound/soc/amd/raven/acp3x-pcm-dma.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+On Thu, May 07, 2020 at 12:27:53AM +0530, Naresh Kamboju wrote:
+> On Tue, 29 Nov 2016 at 00:00, Johan Hovold <johan@kernel.org> wrote:
+> >
+> > Make sure to deregister and free any fixed-link PHY registered using
+> > of_phy_register_fixed_link() on probe errors and on driver unbind.
+> >
+> > Fixes: 83895bedeee6 ("net: mvneta: add support for fixed links")
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
+> >  drivers/net/ethernet/marvell/mvneta.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> > index 0c0a45af950f..707bc4680b9b 100644
+> > --- a/drivers/net/ethernet/marvell/mvneta.c
+> > +++ b/drivers/net/ethernet/marvell/mvneta.c
+> > @@ -4191,6 +4191,8 @@ static int mvneta_probe(struct platform_device *pdev)
+> >         clk_disable_unprepare(pp->clk);
+> >  err_put_phy_node:
+> >         of_node_put(phy_node);
+> > +       if (of_phy_is_fixed_link(dn))
+> > +               of_phy_deregister_fixed_link(dn);
 > 
-> diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> index e362f0b..b0cc0fe 100644
-> --- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-> +++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> @@ -158,7 +158,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->  		switch (rtd->i2s_instance) {
->  		case I2S_BT_INSTANCE:
->  			reg_dma_size = mmACP_BT_TX_DMA_SIZE;
-> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
->  						BT_PB_FIFO_ADDR_OFFSET;
->  			reg_fifo_addr = mmACP_BT_TX_FIFOADDR;
->  			reg_fifo_size = mmACP_BT_TX_FIFOSIZE;
-> @@ -169,7 +169,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->  		case I2S_SP_INSTANCE:
->  		default:
->  			reg_dma_size = mmACP_I2S_TX_DMA_SIZE;
-> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
->  						SP_PB_FIFO_ADDR_OFFSET;
->  			reg_fifo_addr =	mmACP_I2S_TX_FIFOADDR;
->  			reg_fifo_size = mmACP_I2S_TX_FIFOSIZE;
-> @@ -180,7 +180,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->  		switch (rtd->i2s_instance) {
->  		case I2S_BT_INSTANCE:
->  			reg_dma_size = mmACP_BT_RX_DMA_SIZE;
-> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
->  						BT_CAPT_FIFO_ADDR_OFFSET;
->  			reg_fifo_addr = mmACP_BT_RX_FIFOADDR;
->  			reg_fifo_size = mmACP_BT_RX_FIFOSIZE;
-> @@ -191,7 +191,7 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->  		case I2S_SP_INSTANCE:
->  		default:
->  			reg_dma_size = mmACP_I2S_RX_DMA_SIZE;
-> -			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET |
->  						SP_CAPT_FIFO_ADDR_OFFSET;
->  			reg_fifo_addr = mmACP_I2S_RX_FIFOADDR;
->  			reg_fifo_size = mmACP_I2S_RX_FIFOSIZE;
+> While building kernel Image for arm architecture on stable-rc 4.4 branch
+> the following build error found.
+> 
+> drivers/net/ethernet/marvell/mvneta.c:3442:3: error: implicit
+> declaration of function 'of_phy_deregister_fixed_link'; did you mean
+> 'of_phy_register_fixed_link'? [-Werror=implicit-function-declaration]
+> |    of_phy_deregister_fixed_link(dn);
+> |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> |    of_phy_register_fixed_link
+> 
+> ref:
+> https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/541374729
 
+Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
+PHYs") needs to be backported as well for these.
+
+Original series can be found here:
+
+	https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
+
+Johan
