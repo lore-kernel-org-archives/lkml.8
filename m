@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B903C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B21BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 242D020736
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9FC20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 00:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z4jXuicy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z0I83G48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgEGApn (ORCPT
+        id S1728780AbgEGApp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 May 2020 20:45:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39810 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728695AbgEGApi (ORCPT
+        Wed, 6 May 2020 20:45:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49254 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728708AbgEGApj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 May 2020 20:45:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470cY9j093219;
-        Thu, 7 May 2020 00:44:27 GMT
+        Wed, 6 May 2020 20:45:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470d0Rh076188;
+        Thu, 7 May 2020 00:44:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=VWqlosoXjG5R1RqBZE9eEylkgp/X8RtUPIDoZID/DCc=;
- b=z4jXuicy7aci4NvCa/KN1RcAMWuOtdDvS84SCGxFCkXjDUmdqqoAAetkRp9ypU3IKNXG
- beQ7/jLaSZpFpgtKD9BsG5beTlYHBthhaxk4ruV/y+DRxQV45ivD5lze5JWb+Z2lvzSL
- b2y5KiDoF075GZ7LW2TtpxWI+ujPwm+GPq77bGgdQrQkgfBBk/PdNcsFym6N0SAAlOMm
- a7zwsecz/Xmq2CoD19k1AbX+DaEbYTCRapdsWGuOQlJ++bw5S3yDeAxbOUxpsWMihbtT
- TsRWffWXM3MjG82INzJj35Q8il8LFhkfmv0OmwlnVJL7p3nQiLWT8+w/oxXnL6CtNtrv Ww== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30s1gnd8qc-1
+ bh=f+HGLsLngPlAifDSO//pUsSOr/CSejc37nW9hYK4Qnc=;
+ b=z0I83G489kwqDnyZRxNRtWp9rtxWw7wN408iq27oUAdeZsReLpruWyziVHztS77bwNn6
+ x4VzjF0+NjhFtXQj7HgxodLRuPF/MU+RRfM9sfl3x9rMUUrsBdX22KNaFVQkYvR4gb0G
+ GIjDZSvY41UDl8EgddIeJnvfziKYGA2CqzFNcdYx9zoSVRhTJwRy5n2uX5d47aRqOrk+
+ 1BeJQ/DCmF1Ob90s3tFwY/LSrv38CU1FjPItSL993Dk2IvBm7qocagzg7fQ24s7z6obz
+ EbD4dw7gn8tsfkOOTFjypce7GoaQE0XDekxtlI9ypFBbwZbeY8Pw1s872vI9ObIqDmab DQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30s09rdfc3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470bm0c131683;
-        Thu, 7 May 2020 00:44:27 GMT
+        Thu, 07 May 2020 00:44:36 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0470anji170838;
+        Thu, 7 May 2020 00:42:36 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 30t1r95cbf-1
+        by userp3020.oracle.com with ESMTP id 30us7p2kmn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 May 2020 00:44:27 +0000
+        Thu, 07 May 2020 00:42:35 +0000
 Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470iOBH026117;
-        Thu, 7 May 2020 00:44:24 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0470gWjC025345;
+        Thu, 7 May 2020 00:42:32 GMT
 Received: from ayz-linux.localdomain (/68.7.158.207)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 May 2020 17:44:23 -0700
+        with ESMTP ; Wed, 06 May 2020 17:42:32 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
@@ -71,201 +71,364 @@ Cc:     willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
         lei.l.li@intel.com, paul.c.lai@intel.com, ashok.raj@intel.com,
         linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
         kexec@lists.infradead.org
-Subject: [RFC 31/43] memblock, mm: defer initialization of preserved pages
-Date:   Wed,  6 May 2020 17:41:57 -0700
-Message-Id: <1588812129-8596-32-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 04/43] mm: PKRAM: implement page stream operations
+Date:   Wed,  6 May 2020 17:41:30 -0700
+Message-Id: <1588812129-8596-5-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=2
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005070001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9613 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 mlxscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005070001
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=2
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preserved pages are represented in the memblock reserved list, but page
-structs for pages in the reserved list are initialized early while boot
-is single threaded which means that a large number of preserved pages
-can impact boot time. To mitigate, defer initialization of preserved
-pages by skipping them when other reserved pages are initialized and
-initializing them later with a separate kernel thread.
+Using the pkram_save_page() function, one can populate PKRAM objects with
+memory pages which can later be loaded using the pkram_load_page()
+function. Saving a memory page to PKRAM is accomplished by recording
+its pfn and incrementing its refcount so that it will not be freed after
+the last user puts it.
 
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- arch/x86/mm/init_64.c |  1 -
- include/linux/mm.h    |  2 +-
- mm/memblock.c         | 10 ++++++++--
- mm/page_alloc.c       | 52 +++++++++++++++++++++++++++++++++++++++++++--------
- 4 files changed, 53 insertions(+), 12 deletions(-)
+ include/linux/pkram.h |   5 ++
+ mm/pkram.c            | 219 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 221 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 72662615977b..ae569ef6bd7d 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1245,7 +1245,6 @@ void __init mem_init(void)
- 	after_bootmem = 1;
- 	x86_init.hyper.init_after_bootmem();
- 
--	pkram_free_pgt();
- 	totalram_pages_add(pkram_reserved_pages);
- 	/*
- 	 * Must be done after boot memory is put on freelist, because here we
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5a323422d783..69b9cd08c721 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2297,7 +2297,7 @@ extern void free_highmem_page(struct page *page);
- extern void adjust_managed_page_count(struct page *page, long count);
- extern void mem_init_print_info(const char *str);
- 
--extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
-+extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end, int nid);
- 
- /* Free the reserved page into the buddy system, so it gets managed. */
- static inline void __free_reserved_page(struct page *page)
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 33597f352dc0..5524edbaf691 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2042,11 +2042,17 @@ static unsigned long __init free_low_memory_core_early(void)
- 	unsigned long count = 0;
- 	phys_addr_t start, end;
- 	u64 i;
-+	enum memblock_flags exclude;
- 
- 	memblock_clear_hotplug(0, -1);
- 
--	for_each_reserved_mem_region(i, &start, &end)
--		reserve_bootmem_region(start, end);
-+	if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
-+		exclude = MEMBLOCK_PRESERVED;
-+	else
-+		exclude = MEMBLOCK_NONE;
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index fabde2cd8203..f338d1c2aeb6 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -12,6 +12,11 @@ struct pkram_stream {
+ 	gfp_t gfp_mask;
+ 	struct pkram_node *node;
+ 	struct pkram_obj *obj;
 +
-+	for_each_reserved_mem_range(i, 0, exclude, &start, &end, NULL)
-+		reserve_bootmem_region(start, end, -1);
- 
- 	/*
- 	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 69827d4fa052..afd97b31725e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -68,6 +68,7 @@
- #include <linux/lockdep.h>
- #include <linux/nmi.h>
- #include <linux/psi.h>
-+#include <linux/pkram.h>
- 
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
-@@ -1408,15 +1409,18 @@ static void __meminit __init_single_page(struct page *page, unsigned long pfn,
- }
- 
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
--static void __meminit init_reserved_page(unsigned long pfn)
-+static void __meminit init_reserved_page(unsigned long pfn, int nid)
- {
- 	pg_data_t *pgdat;
--	int nid, zid;
-+	int zid;
- 
--	if (!early_page_uninitialised(pfn))
--		return;
-+	if (nid == -1) {
-+		if (!early_page_uninitialised(pfn))
-+			return;
++	struct pkram_link *link;		/* current link */
++	unsigned int entry_idx;		/* next entry in link */
 +
-+		nid = early_pfn_to_nid(pfn);
-+	}
++	unsigned long next_index;
+ };
  
--	nid = early_pfn_to_nid(pfn);
- 	pgdat = NODE_DATA(nid);
+ #define PKRAM_NAME_MAX		256	/* including nul */
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 4934ffd8b019..ab3053ca3539 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/err.h>
+ #include <linux/gfp.h>
++#include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/mm.h>
+@@ -10,8 +11,38 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
  
- 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
-@@ -1428,7 +1432,7 @@ static void __meminit init_reserved_page(unsigned long pfn)
- 	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
- }
- #else
--static inline void init_reserved_page(unsigned long pfn)
-+static inline void init_reserved_page(unsigned long pfn, int nid)
- {
- }
- #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
-@@ -1439,7 +1443,7 @@ static inline void init_reserved_page(unsigned long pfn)
-  * marks the pages PageReserved. The remaining valid pages are later
-  * sent to the buddy page allocator.
-  */
--void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
-+void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end, int nid)
- {
- 	unsigned long start_pfn = PFN_DOWN(start);
- 	unsigned long end_pfn = PFN_UP(end);
-@@ -1448,7 +1452,7 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
- 		if (pfn_valid(start_pfn)) {
- 			struct page *page = pfn_to_page(start_pfn);
- 
--			init_reserved_page(start_pfn);
-+			init_reserved_page(start_pfn, nid);
- 
- 			/* Avoid false-positive PageTail() */
- 			INIT_LIST_HEAD(&page->lru);
-@@ -1876,6 +1880,34 @@ static int __init deferred_init_memmap(void *data)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PKRAM
-+static int __init deferred_init_preserved(void *dummy)
-+{
-+	unsigned long start = jiffies;
-+	unsigned long nr_pages = 0;
-+	phys_addr_t spa, epa;
-+	int nid;
-+	u64 i;
++#include "internal.h"
 +
-+	for_each_reserved_mem_range(i, MEMBLOCK_PRESERVED, 0, &spa, &epa, &nid) {
-+		reserve_bootmem_region(spa, epa, nid);
-+		nr_pages += ((epa - spa) >> PAGE_SHIFT);
-+	}
 +
-+	pr_info("initialised %lu preserved pages in %ums\n", nr_pages,
-+					jiffies_to_msecs(jiffies - start));
++/*
++ * Represents a reference to a data page saved to PKRAM.
++ */
++typedef __u64 pkram_entry_t;
++
++#define PKRAM_ENTRY_FLAGS_SHIFT	0x5
++#define PKRAM_ENTRY_FLAGS_MASK	0x7f
++
++/*
++ * Keeps references to data pages saved to PKRAM.
++ * The structure occupies a memory page.
++ */
++struct pkram_link {
++	__u64	link_pfn;	/* points to the next link of the object */
++	__u64	index;		/* mapping index of first pkram_entry_t */
 +
 +	/*
-+	 * Free the preserved pages pagetable now that page structs are
-+	 * initialized.
++	 * the array occupies the rest of the link page; if the link is not
++	 * full, the rest of the array must be filled with zeros
 +	 */
-+	pkram_free_pgt();
++	pkram_entry_t entry[0];
++};
 +
-+	pgdat_init_report_one_done();
++#define PKRAM_LINK_ENTRIES_MAX \
++	((PAGE_SIZE-sizeof(struct pkram_link))/sizeof(pkram_entry_t))
++
+ struct pkram_obj {
+-	__u64   obj_pfn;	/* points to the next object in the list */
++	__u64	link_pfn;	/* points to the first link of the object */
++	__u64	obj_pfn;	/* points to the next object in the list */
+ };
+ 
+ /*
+@@ -19,6 +50,10 @@ struct pkram_obj {
+  * independently of each other. The nodes are identified by unique name
+  * strings.
+  *
++ * References to data pages saved to a preserved memory node are kept in a
++ * singly-linked list of PKRAM link structures (see above), the node has a
++ * pointer to the head of.
++ *
+  * The structure occupies a memory page.
+  */
+ struct pkram_node {
+@@ -68,6 +103,37 @@ static struct pkram_node *pkram_find_node(const char *name)
+ 	return NULL;
+ }
+ 
++static void pkram_truncate_link(struct pkram_link *link)
++{
++	struct page *page;
++	pkram_entry_t p;
++	int i;
++
++	for (i = 0; i < PKRAM_LINK_ENTRIES_MAX; i++) {
++		p = link->entry[i];
++		if (!p)
++			continue;
++		page = pfn_to_page(PHYS_PFN(p));
++		put_page(page);
++	}
++}
++
++static void pkram_truncate_obj(struct pkram_obj *obj)
++{
++	unsigned long link_pfn;
++	struct pkram_link *link;
++
++	link_pfn = obj->link_pfn;
++	while (link_pfn) {
++		link = pfn_to_kaddr(link_pfn);
++		pkram_truncate_link(link);
++		link_pfn = link->link_pfn;
++		pkram_free_page(link);
++		cond_resched();
++	}
++	obj->link_pfn = 0;
++}
++
+ static void pkram_truncate_node(struct pkram_node *node)
+ {
+ 	unsigned long obj_pfn;
+@@ -76,6 +142,7 @@ static void pkram_truncate_node(struct pkram_node *node)
+ 	obj_pfn = node->obj_pfn;
+ 	while (obj_pfn) {
+ 		obj = pfn_to_kaddr(obj_pfn);
++		pkram_truncate_obj(obj);
+ 		obj_pfn = obj->obj_pfn;
+ 		pkram_free_page(obj);
+ 		cond_resched();
+@@ -83,6 +150,26 @@ static void pkram_truncate_node(struct pkram_node *node)
+ 	node->obj_pfn = 0;
+ }
+ 
++static void pkram_add_link(struct pkram_link *link, struct pkram_obj *obj)
++{
++	link->link_pfn = obj->link_pfn;
++	obj->link_pfn = page_to_pfn(virt_to_page(link));
++}
++
++static struct pkram_link *pkram_remove_link(struct pkram_obj *obj)
++{
++	struct pkram_link *current_link;
++
++	if (!obj->link_pfn)
++		return NULL;
++
++	current_link = pfn_to_kaddr(obj->link_pfn);
++	obj->link_pfn = current_link->link_pfn;
++	current_link->link_pfn = 0;
++
++	return current_link;
++}
++
+ static void pkram_stream_init(struct pkram_stream *ps,
+ 			     struct pkram_node *node, gfp_t gfp_mask)
+ {
+@@ -94,6 +181,9 @@ static void pkram_stream_init(struct pkram_stream *ps,
+ static void pkram_stream_init_obj(struct pkram_stream *ps, struct pkram_obj *obj)
+ {
+ 	ps->obj = obj;
++	ps->link = NULL;
++	ps->entry_idx = 0;
++	ps->next_index = 0;
+ }
+ 
+ /**
+@@ -295,9 +385,28 @@ void pkram_finish_load_obj(struct pkram_stream *ps)
+ {
+ 	struct pkram_node *node = ps->node;
+ 	struct pkram_obj *obj = ps->obj;
++	struct pkram_link *link = ps->link;
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
+ 
++	/*
++	 * If link is not null, then loading stopped within a pkram_link
++	 * unexpectedly.
++	 */
++	if (link) {
++		unsigned long link_pfn;
++
++		link_pfn = page_to_pfn(virt_to_page(link));
++		while (link_pfn) {
++			link = pfn_to_kaddr(link_pfn);
++			pkram_truncate_link(link);
++			link_pfn = link->link_pfn;
++			pkram_free_page(link);
++			cond_resched();
++		}
++	}
++
++	pkram_truncate_obj(obj);
+ 	pkram_free_page(obj);
+ }
+ 
+@@ -316,6 +425,44 @@ void pkram_finish_load(struct pkram_stream *ps)
+ 	pkram_free_page(node);
+ }
+ 
++/*
++ * Insert page to PKRAM node allocating a new PKRAM link if necessary.
++ */
++static int __pkram_save_page(struct pkram_stream *ps,
++			    struct page *page, short flags, unsigned long index)
++{
++	struct pkram_link *link = ps->link;
++	struct pkram_obj *obj = ps->obj;
++	pkram_entry_t p;
++
++	if (!link || ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
++	    index != ps->next_index) {
++		struct page *link_page;
++
++		link_page = pkram_alloc_page((ps->gfp_mask & GFP_RECLAIM_MASK) |
++					    __GFP_ZERO);
++		if (!link_page)
++			return -ENOMEM;
++
++		ps->link = link = page_address(link_page);
++		pkram_add_link(link, obj);
++
++		ps->entry_idx = 0;
++
++		ps->next_index = link->index = index;
++	}
++
++	ps->next_index++;
++
++	get_page(page);
++	p = page_to_phys(page);
++	p |= ((flags & PKRAM_ENTRY_FLAGS_MASK) << PKRAM_ENTRY_FLAGS_SHIFT);
++	link->entry[ps->entry_idx] = p;
++	ps->entry_idx++;
++
 +	return 0;
 +}
-+#endif /* CONFIG_PKRAM */
 +
- /*
-  * If this zone has deferred pages, try to grow it by initializing enough
-  * deferred pages to satisfy the allocation specified by order, rounded up to
-@@ -1985,6 +2017,10 @@ void __init page_alloc_init_late(void)
+ /**
+  * Save page @page to the preserved memory node and object associated with
+  * stream @ps. The stream must have been initialized with pkram_prepare_save()
+@@ -324,10 +471,72 @@ void pkram_finish_load(struct pkram_stream *ps)
+  * @flags specifies supplemental page state to be preserved.
+  *
+  * Returns 0 on success, -errno on failure.
++ *
++ * Error values:
++ *	%ENOMEM: insufficient amount of memory available
++ *
++ * Saving a page to preserved memory is simply incrementing its refcount so
++ * that it will not get freed after the last user puts it. That means it is
++ * safe to use the page as usual after it has been saved.
+  */
+ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
+ {
+-	return -ENOSYS;
++	struct pkram_node *node = ps->node;
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
++
++	BUG_ON(PageCompound(page));
++
++	return __pkram_save_page(ps, page, flags, page->index);
++}
++
++/*
++ * Extract the next page from preserved memory freeing a PKRAM link if it
++ * becomes empty.
++ */
++static struct page *__pkram_load_page(struct pkram_stream *ps, unsigned long *index, short *flags)
++{
++	struct pkram_link *link = ps->link;
++	struct page *page;
++	pkram_entry_t p;
++	short flgs;
++
++	if (!link) {
++		link = pkram_remove_link(ps->obj);
++		if (!link)
++			return NULL;
++
++		ps->link = link;
++		ps->entry_idx = 0;
++		ps->next_index = link->index;
++	}
++
++	BUG_ON(ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX);
++
++	p = link->entry[ps->entry_idx];
++	BUG_ON(!p);
++
++	flgs = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
++	page = pfn_to_page(PHYS_PFN(p));
++
++	if (flags)
++		*flags = flgs;
++	if (index)
++		*index = ps->next_index;
++
++	ps->next_index++;
++
++	/* clear to avoid double free (see pkram_truncate_link()) */
++	link->entry[ps->entry_idx] = 0;
++
++	ps->entry_idx++;
++	if (ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
++	    !link->entry[ps->entry_idx]) {
++		ps->link = NULL;
++		pkram_free_page(link);
++	}
++
++	return page;
+ }
  
- 	/* There will be num_node_state(N_MEMORY) threads */
- 	atomic_set(&pgdat_init_n_undone, num_node_state(N_MEMORY));
-+#ifdef CONFIG_PKRAM
-+	atomic_inc(&pgdat_init_n_undone);
-+	kthread_run(deferred_init_preserved, NULL, "pgdatainit_preserved");
-+#endif
- 	for_each_node_state(nid, N_MEMORY) {
- 		kthread_run(deferred_init_memmap, NODE_DATA(nid), "pgdatinit%d", nid);
- 	}
+ /**
+@@ -346,7 +555,11 @@ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
+  */
+ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index, short *flags)
+ {
+-	return NULL;
++	struct pkram_node *node = ps->node;
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
++
++	return __pkram_load_page(ps, index, flags);
+ }
+ 
+ /**
 -- 
 2.13.3
 
