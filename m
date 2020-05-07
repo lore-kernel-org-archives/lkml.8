@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96944C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D6C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECE824958
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8074824958
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 18:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588877317;
-	bh=eVID7GhEbcf0/8Q5jvZMrtErhyUthXxPmrIJvJbk/+0=;
+	s=default; t=1588877322;
+	bh=0FzK11nGj1WinKh7fS63LIRI8HxfTaRuog1W0ERLTfs=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Px8Ul0RhKGUQp9rLesjzuFijwXBgxE74YGiRMuT8kh4shUVuLHgc1epfMiStDKWBH
-	 eOwWVyEhdfvJkUCDzbyG8F8P7PyH5tOOwhP2/VJ6tGunQfz473aDYhu6w/sDSV0HJW
-	 8qVfcNkXQaa/Ia+tlWotxx6Nx2DdlnVIEvAa7p7E=
+	b=waqG7UvmrY9nk08i2XfChRFI1bYSx+egE7LSsHZyCvkR4lnuk9cBVMhnbOh62+Nkm
+	 G5SOgl6g40otw+AX7pgWH7KD3EG52+7/HmgjbsGHTfKlNpyBmmmzpLVgkf+eHbSiRB
+	 2Ty3npgKbOEE5wL08Ag7xs8BVU6PjO9dU+B9Aewo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgEGSsg (ORCPT
+        id S1728624AbgEGSsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 14:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 14:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgEGSsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 14:48:36 -0400
+        id S1728166AbgEGSsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 14:48:41 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18FF521BE5;
-        Thu,  7 May 2020 18:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7608D21BE5;
+        Thu,  7 May 2020 18:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877315;
-        bh=eVID7GhEbcf0/8Q5jvZMrtErhyUthXxPmrIJvJbk/+0=;
+        s=default; t=1588877320;
+        bh=0FzK11nGj1WinKh7fS63LIRI8HxfTaRuog1W0ERLTfs=;
         h=Date:From:To:Cc:Subject:From;
-        b=oGR62nntwkq79FCOWn7nFoj1c0oW3WjNOnphBMx4Dq82vtNhdigMNzMmLyQFKEC83
-         A0ZA+AbFawVcm9ae2RIV9vD6RbaS17vFxeyDGH+RbBTdnEKlmiLAfrz2jskEv5bsuF
-         6mfzbK2eQ9T3AzL1Kjk8CeWEw057BF+M6M44vK6w=
-Date:   Thu, 7 May 2020 13:53:01 -0500
+        b=bGuqBT6fnSodm0+6QPewScsQbJptYCjrr+i1T9vjHa1tRj0wC+eI0fgcsNxFV0bdt
+         FKCHDjFot3fRPNHsXKMUs41k5WnUZtiTJlLhxAaScl2AIq8VmMA1QfYJzRsClpniN3
+         Yly1dIEELb172FcW65iiE9Oc220lV91G1NDL0UzI=
+Date:   Thu, 7 May 2020 13:53:07 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] treewide: Replace zero-length array with flexible-array
-Message-ID: <20200507185301.GA14333@embeddedor>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] FS-Cache: Replace zero-length array with flexible-array
+Message-ID: <20200507185307.GA14353@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -92,20 +91,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/fsl/bestcomm/bestcomm.h |    2 +-
+ include/linux/fscache-cache.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/fsl/bestcomm/bestcomm.h b/include/linux/fsl/bestcomm/bestcomm.h
-index a0e2e6b19b57..154e541ce57e 100644
---- a/include/linux/fsl/bestcomm/bestcomm.h
-+++ b/include/linux/fsl/bestcomm/bestcomm.h
-@@ -27,7 +27,7 @@
-  */
- struct bcom_bd {
- 	u32	status;
--	u32	data[0];	/* variable payload size */
-+	u32	data[];	/* variable payload size */
+diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
+index d5ba431b5d63..5b6072e4a7ab 100644
+--- a/include/linux/fscache-cache.h
++++ b/include/linux/fscache-cache.h
+@@ -46,7 +46,7 @@ struct fscache_cache_tag {
+ 	unsigned long		flags;
+ #define FSCACHE_TAG_RESERVED	0		/* T if tag is reserved for a cache */
+ 	atomic_t		usage;
+-	char			name[0];	/* tag name */
++	char			name[];	/* tag name */
  };
  
- /* ======================================================================== */
+ /*
 
