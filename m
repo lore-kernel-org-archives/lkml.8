@@ -2,132 +2,97 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF40C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825AC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73CAB2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cMmKQFVQ"
+	by mail.kernel.org (Postfix) with ESMTP id 528B62084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgEGOHr (ORCPT
+        id S1727114AbgEGOH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:07:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25736 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727903AbgEGOHn (ORCPT
+        Thu, 7 May 2020 10:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgEGOH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:07:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588860462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1AoI+9FyMu82WK4bZhrAK5V8JQ6RWrNZsFQbYJw2lb8=;
-        b=cMmKQFVQKKGKi3A8eBf2pDOFVWfZ3LjO2ZMbKfUXlf9oawbecNEEhbqTgFaDDUfOuDs0R9
-        xVhVVpQr6wHX86PxsWk98agb14s+azuxCpcxfnlRKAIXwdVfayaE36zuSseN22EpvYty4y
-        C4kNaIgIivoqetuU4Pugr6eQXNMqyfs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-vKGhe_kQMd-SMc6q1mPVXw-1; Thu, 07 May 2020 10:07:39 -0400
-X-MC-Unique: vKGhe_kQMd-SMc6q1mPVXw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 422AA460;
-        Thu,  7 May 2020 14:07:37 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 059E670545;
-        Thu,  7 May 2020 14:07:35 +0000 (UTC)
-Date:   Thu, 7 May 2020 09:07:33 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200507140733.v4xlzjogtnpgu5lc@treble>
-References: <20200502192105.xp2osi5z354rh4sm@treble>
- <20200505174300.gech3wr5v6kkho35@ast-mbp.dhcp.thefacebook.com>
- <20200505181108.hwcqanvw3qf5qyxk@treble>
- <20200505195320.lyphpnprn3sjijf6@ast-mbp.dhcp.thefacebook.com>
- <20200505202823.zkmq6t55fxspqazk@treble>
- <20200505235939.utnmzqsn22cec643@ast-mbp.dhcp.thefacebook.com>
- <20200506155343.7x3slq3uasponb6w@treble>
- <CAADnVQJZ1rj1DB-Y=85itvfcHxnXVKjhJXpzqs6zZ6ZLpexhCQ@mail.gmail.com>
- <20200506211945.4qhrxqplzmt4ul66@treble>
- <20200507000357.grprluieqa324v5c@ast-mbp.dhcp.thefacebook.com>
+        Thu, 7 May 2020 10:07:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC13C05BD0A;
+        Thu,  7 May 2020 07:07:26 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jWhBK-00027H-Qy; Thu, 07 May 2020 16:07:22 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6FDDE1C001A;
+        Thu,  7 May 2020 16:07:22 +0200 (CEST)
+Date:   Thu, 07 May 2020 14:07:22 -0000
+From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/platform] x86/platform/uv: Mark uv_min_hub_revision_id static
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Russ Anderson <rja@hpe.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200504171527.2845224-8-hch@lst.de>
+References: <20200504171527.2845224-8-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200507000357.grprluieqa324v5c@ast-mbp.dhcp.thefacebook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Message-ID: <158886044241.8414.13036679821317631665.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:03:57PM -0700, Alexei Starovoitov wrote:
-> > > > > diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> > > > > index d7ee4c6bad48..05104c3cc033 100644
-> > > > > --- a/include/linux/compiler-gcc.h
-> > > > > +++ b/include/linux/compiler-gcc.h
-> > > > > @@ -171,4 +171,4 @@
-> > > > >  #define __diag_GCC_8(s)
-> > > > >  #endif
-> > > > >
-> > > > > -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> > > > > +#define __no_fgcse __attribute__((optimize("-fno-gcse,-fno-omit-frame-pointer")))
-> > > > > --
-> > > > > 2.23.0
-> > > > >
-> > > > > I've tested it with gcc 8,9,10 and clang 11 with FP=y and with ORC=y.
-> > > > > All works.
-> > > > > I think it's safer to go with frame pointers even for ORC=y considering
-> > > > > all the pain this issue had caused. Even if objtool gets confused again
-> > > > > in the future __bpf_prog_run() will have frame pointers and kernel stack
-> > > > > unwinding can fall back from ORC to FP for that frame.
-> > > > > wdyt?
-> > > >
-> > > > It seems dangerous to me.  The GCC manual recommends against it.
-> > > 
-> > > The manual can says that it's broken. That won't stop the world from using it.
-> > > Just google projects that are using it. For example: qt, lz4, unreal engine, etc
-> > > Telling compiler to disable gcse via flag is a guaranteed way to avoid
-> > > that optimization that breaks objtool whereas messing with C code is nothing
-> > > but guess work. gcc can still do gcse.
-> > 
-> > But the manual's right, it is broken.  How do you know other important
-> > flags won't also be stripped?
-> 
-> What flags are you worried about?
-> I've checked that important things like -mno-red-zone, -fsanitize are preserved.
+The following commit has been merged into the x86/platform branch of tip:
 
-It's not any specific flags I'm worried about, it's all of them.  There
-are a lot of possibilities, with all the different configs, and arches.
-Flags are usually added for a good reason, so one randomly missing flag
-could have unforeseen results.
+Commit-ID:     8263b059379c4a95fe0181db1e5a2e9c2229d929
+Gitweb:        https://git.kernel.org/tip/8263b059379c4a95fe0181db1e5a2e9c2229d929
+Author:        Christoph Hellwig <hch@lst.de>
+AuthorDate:    Mon, 04 May 2020 19:15:23 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 07 May 2020 15:32:22 +02:00
 
-And I don't have any visibility into how GCC decides which flags to
-drop, and when.  But the docs aren't comforting.
+x86/platform/uv: Mark uv_min_hub_revision_id static
 
-Even if things seem to work now, that could (silently) change at any
-point in time.  This time objtool warned about the missing frame
-pointer, but that's not necessarily going to happen for other flags.
+This variable is only used inside x2apic_uv_x and not even declared
+in a header.
 
-If we go this route, I would much rather do -fno-gcse on a file-wide
-basis.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Not-acked-by:  Dimitri Sivanich <sivanich@hpe.com>
+Cc: Russ Anderson <rja@hpe.com>
+Link: https://lkml.kernel.org/r/20200504171527.2845224-8-hch@lst.de
 
--- 
-Josh
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index cb07a98..f1a0142 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -48,8 +48,7 @@ static struct {
+ 	unsigned int gnode_shift;
+ } uv_cpuid;
+ 
+-int uv_min_hub_revision_id;
+-EXPORT_SYMBOL_GPL(uv_min_hub_revision_id);
++static int uv_min_hub_revision_id;
+ 
+ unsigned int uv_apicid_hibits;
+ EXPORT_SYMBOL_GPL(uv_apicid_hibits);
