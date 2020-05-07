@@ -2,138 +2,134 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B093C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AB1C38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EFA2078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59092080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 08:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588840663;
+	bh=UfbG32gghEnagxdM/s07RMhpIOEDCca3UVjRhkdrfA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K3PHk2k7mFD78Y4/qAslU/H+2IF3e4brx5YrdFzvzCSwdoTTuH91P8QHmqxwzGfbm
+	 7aIIzYO7xDokvc4LtJhDSm5SLVwLnDHRSrwTF/QlM1QVoAoi2PM63cUHcSTYv1JzfC
+	 k6rcUkn40ElutZYOM09ABx1CYS3WUNoLKuvzMGyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgEGIgs (ORCPT
+        id S1726074AbgEGIhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 04:36:48 -0400
-Received: from smtp-bc0d.mail.infomaniak.ch ([45.157.188.13]:60499 "EHLO
-        smtp-bc0d.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725903AbgEGIgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 04:36:46 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Hmyz5P4szlhrLP;
-        Thu,  7 May 2020 10:36:43 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49Hmyx5yyJzlrBJt;
-        Thu,  7 May 2020 10:36:41 +0200 (CEST)
-Subject: Re: [PATCH v5 0/6] Add support for O_MAYEXEC
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <907109c8-9b19-528a-726f-92c3f61c1563@digikod.net>
-Date:   Thu, 7 May 2020 10:36:41 +0200
-User-Agent: 
+        Thu, 7 May 2020 04:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgEGIhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 04:37:42 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FA82078C;
+        Thu,  7 May 2020 08:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588840661;
+        bh=UfbG32gghEnagxdM/s07RMhpIOEDCca3UVjRhkdrfA0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2YThvRAXTq/axvNiQxDIgMsKSH75GoJAMMVFJySLe+uVCUTq7iUq88GILs6BOyM+X
+         asd4QgHl3ocvp+CbSFScegyXFuiCm/7QBw/QnYnzvuzEJlD/9kPlspqPiKJcfL4kgw
+         Gvf3mvDdhrZjtAlXoCZHPKvWEB4sKspWBbNUyqQI=
+Date:   Thu, 7 May 2020 09:37:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        shan.gavin@gmail.com
+Subject: Re: [PATCH] arm64/mm: Remove add_huge_page_size()
+Message-ID: <20200507083737.GB28215@willie-the-truck>
+References: <20200506064635.20114-1-gshan@redhat.com>
+ <fa3ad75d-9c4d-d6c9-1664-53b4c9770c6b@arm.com>
+ <20200506071927.GB7021@willie-the-truck>
+ <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20b24b9ca0a64afb9389722845738ec8@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e13bb496-7988-e096-2131-78c004231f27@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 07/05/2020 10:05, David Laight wrote:
-> From: Mickaël Salaün
->> Sent: 05 May 2020 16:32
->>
->> This fifth patch series add new kernel configurations (OMAYEXEC_STATIC,
->> OMAYEXEC_ENFORCE_MOUNT, and OMAYEXEC_ENFORCE_FILE) to enable to
->> configure the security policy at kernel build time.  As requested by
->> Mimi Zohar, I completed the series with one of her patches for IMA.
->>
->> The goal of this patch series is to enable to control script execution
->> with interpreters help.  A new O_MAYEXEC flag, usable through
->> openat2(2), is added to enable userspace script interpreter to delegate
->> to the kernel (and thus the system security policy) the permission to
->> interpret/execute scripts or other files containing what can be seen as
->> commands.
->>
->> A simple system-wide security policy can be enforced by the system
->> administrator through a sysctl configuration consistent with the mount
->> points or the file access rights.  The documentation patch explains the
->> prerequisites.
->>
->> Furthermore, the security policy can also be delegated to an LSM, either
->> a MAC system or an integrity system.  For instance, the new kernel
->> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
->> integrity gap by bringing the ability to check the use of scripts [1].
->> Other uses are expected, such as for openat2(2) [2], SGX integration
->> [3], bpffs [4] or IPE [5].
->>
->> Userspace needs to adapt to take advantage of this new feature.  For
->> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
->> extended with policy enforcement points related to code interpretation,
->> which can be used to align with the PowerShell audit features.
->> Additional Python security improvements (e.g. a limited interpreter
->> withou -c, stdin piping of code) are on their way.
->>
->> The initial idea come from CLIP OS 4 and the original implementation has
->> been used for more than 12 years:
->> https://github.com/clipos-archive/clipos4_doc
->>
->> An introduction to O_MAYEXEC was given at the Linux Security Summit
->> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
->> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
->> The "write xor execute" principle was explained at Kernel Recipes 2018 -
->> CLIP OS: a defense-in-depth OS:
->> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
->>
->> This patch series can be applied on top of v5.7-rc4.  This can be tested
->> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
->> this patch series.
+On Thu, May 07, 2020 at 10:15:59AM +1000, Gavin Shan wrote:
+> On 5/6/20 5:19 PM, Will Deacon wrote:
+> > On Wed, May 06, 2020 at 12:36:43PM +0530, Anshuman Khandual wrote:
+> > > 
+> > > 
+> > > On 05/06/2020 12:16 PM, Gavin Shan wrote:
+> > > > The function add_huge_page_size(), wrapper of hugetlb_add_hstate(),
+> > > > avoids to register duplicated huge page states for same size. However,
+> > > > the same logic has been included in hugetlb_add_hstate(). So it seems
+> > > > unnecessary to keep add_huge_page_size() and this just removes it.
+> > > 
+> > > Makes sense.
+> > > 
+> > > > 
+> > > > Signed-off-by: Gavin Shan <gshan@redhat.com>
+> > > > ---
+> > > >   arch/arm64/mm/hugetlbpage.c | 18 +++++-------------
+> > > >   1 file changed, 5 insertions(+), 13 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> > > > index bbeb6a5a6ba6..ed7530413941 100644
+> > > > --- a/arch/arm64/mm/hugetlbpage.c
+> > > > +++ b/arch/arm64/mm/hugetlbpage.c
+> > > > @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+> > > >   	clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
+> > > >   }
+> > > > -static void __init add_huge_page_size(unsigned long size)
+> > > > -{
+> > > > -	if (size_to_hstate(size))
+> > > > -		return;
+> > > > -
+> > > > -	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+> > > > -}
+> > > > -
+> > > >   static int __init hugetlbpage_init(void)
+> > > >   {
+> > > >   #ifdef CONFIG_ARM64_4K_PAGES
+> > > > -	add_huge_page_size(PUD_SIZE);
+> > > > +	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+> > > >   #endif
+> > > > -	add_huge_page_size(CONT_PMD_SIZE);
+> > > > -	add_huge_page_size(PMD_SIZE);
+> > > > -	add_huge_page_size(CONT_PTE_SIZE);
+> > > > +	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
+> > > > +	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+> > > > +	hugetlb_add_hstate(CONT_PTE_SHIFT);
+> > 
+> > Something similar has already been done in linux-next.
+> > 
 > 
-> None of that description actually says what the patch actually does.
+> Thanks, Will. I didn't check linux-next before posting this patch.
+> Please ignore it then :)
+> 
+> > > Should these page order values be converted into macros instead. Also
+> > > we should probably keep (CONT_PTE_SHIFT + PAGE_SHIFT - PAGE_SHIFT) as
+> > > is to make things more clear.
+> > 
+> > I think the real confusion stems from us not being consistent with your
+> > *_SHIFT definitions on arm64. It's madness for CONT_PTE_SHIFT to be smaller
+> > than PAGE_SHIFT imo, but it's just cosmetic I guess.
+> > 
+> 
+> Yeah, Do you want me to post a patch, to fix it?
 
-"Add support for O_MAYEXEC" "to enable to control script execution".
-What is not clear here? This seems well understood by other commenters.
-The documentation patch and the talks can also help.
+Let's wait until 5.8 is out the door first, since we've already got a fair
+amount of activity in this area and it would be a pity if we broke something
+as a result of cleanup!
+
+Cheers,
+
+Will
