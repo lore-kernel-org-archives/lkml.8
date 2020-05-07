@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76433C47247
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB2EC38A24
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547032083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0892083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861870;
-	bh=LeHCs5TUDusUjeNEfndr0UAM6RWKmcCX6pSKfwjK5ag=;
+	s=default; t=1588861873;
+	bh=CO+uLJ9HtvcYQ6CT6nxFh7UjZ++6KERn7qAMs6zWCrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heTjiH0roTtjDcuUGBGGur9QdLC9xBsE+c53B1nW10oEgnT+NBa8QdCwIbj+FBr7C
-	 /RA0Z5zy8Sy4sVG4z5M3bSZSPgvkLg805YkybMR+TH9Dd61Cyoy+bEvjsAAZa5hOci
-	 pdM54MU0V6wCI28K3UR7GMQi/0w9xKdgOyzQ2iOw=
+	b=eB9UTP1dzklN2bG5eUwyUIYCe+ngGEJQ9fpU5xPPYYe4/SM0fSdZGuCAUGNiXrk5j
+	 Z2alL1FJeo4ZgvJl+UE59HYOx87fFbM1bVVPGLUcI8AacRuZkrJrW8qduGDt+53Doo
+	 Ml9HhCGqbl1hNb5caUlmc2+sBO2CR+0S1G38/fSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgEGOau (ORCPT
+        id S1727950AbgEGOat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgEGOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:22 -0400
+        id S1728798AbgEGOaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E5A72083B;
-        Thu,  7 May 2020 14:30:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CE820936;
+        Thu,  7 May 2020 14:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861821;
-        bh=LeHCs5TUDusUjeNEfndr0UAM6RWKmcCX6pSKfwjK5ag=;
+        s=default; t=1588861817;
+        bh=CO+uLJ9HtvcYQ6CT6nxFh7UjZ++6KERn7qAMs6zWCrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGPN1iZAYAVC4qJkLUBmGhlUaHyM+Bx8uDp+OFlForWUcOPNoP4t3mFtwc902h+ee
-         Knt0bgXpNqYiDgz+eoTncw7owwv7jFtaodu4Sa6ZMDNUL8ELoM8J2wIBUIGffNP+JY
-         TAi+6VJ01GCH1jM0Uojgmr25aMFT/4JEK336jCdU=
+        b=lxUEcEC5E933FDW5SWaXIBvoiaxEggsarmRaOfOf4uECEA5GJXe3VxUSQSoPZkS0n
+         74pc7Q6WTr6sDMpQe5hsZxxVQis2zrxj92EfQi6M9yXh+xUOeMK3fEo3wh+3xHSe86
+         qXDsneHyfW8P/yL/fEJqrAaqeFDPq9Adw1ItQ1+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 2/9] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Thu,  7 May 2020 10:30:11 -0400
-Message-Id: <20200507143018.27195-2-sashal@kernel.org>
+Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 11/11] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
+Date:   Thu,  7 May 2020 10:30:03 -0400
+Message-Id: <20200507143003.27047-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
-References: <20200507143018.27195-1-sashal@kernel.org>
+In-Reply-To: <20200507143003.27047-1-sashal@kernel.org>
+References: <20200507143003.27047-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,81 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-[ Upstream commit 7648f939cb919b9d15c21fff8cd9eba908d595dc ]
+[ Upstream commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 ]
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Currently, system fails to boot because the legacy interrupt remapping
+mode does not enable 128-bit IRTE (GA), which is required for x2APIC
+support.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
+kernel option amd_iommu_intr=legacy instead. The initialization
+logic will check GASup and automatically fallback to using
+AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
+
+Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index 1ebe2fc7cda27..05c697d5b4779 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -213,37 +213,45 @@ int nfs3_proc_setacls(struct inode *inode, struct posix_acl *acl,
- 
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index c113e46fdc3ab..e6ae8d1239842 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2574,7 +2574,7 @@ static int __init parse_amd_iommu_intr(char *str)
  {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
+ 	for (; *str; ++str) {
+ 		if (strncmp(str, "legacy", 6) == 0) {
+-			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
++			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
  			break;
  		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+ 		if (strncmp(str, "vapic", 5) == 0) {
 -- 
 2.20.1
 
