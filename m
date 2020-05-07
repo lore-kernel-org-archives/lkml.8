@@ -2,127 +2,93 @@ Return-Path: <SRS0=0sZ+=6V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7DC47257
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C58C54E4A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28E2207DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D493D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 04:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mqCj3qeG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IlQ1KLt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgEGEz7 (ORCPT
+        id S1726235AbgEGE4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 00:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44376 "EHLO
+        Thu, 7 May 2020 00:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725763AbgEGEz7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725763AbgEGE4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 00:55:59 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1490DC061A0F;
-        Wed,  6 May 2020 21:55:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Hh4B5zw4z9sRY;
-        Thu,  7 May 2020 14:55:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588827356;
-        bh=AU2PEgfN5HkCY/lykPvJpAGTGV/oowF0bQCK/YlxYRY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mqCj3qeGt8sjSGsMSZMhp875k/myFaBwas7miKkV70A8ch4BCy7Ezu8vo1krLhSAW
-         psDKViQNVrxJYAj98XDmFBL4+l9zKunLV2HiW5Oi8r/H6VFsy4gSyELJhErufWq25i
-         BrKqLRKHw1F+SVWliPBfps7FOmqUWvHXFXjKa5q3kNznIKR1MVJi7AzUrvuuZs2DYE
-         oqb/HNFUOzjUksR6lm7V8xgHFvswH6hS141WCLwlyQA/gHG54KxWcFv3K8HQEJKIW9
-         shQl/HIq48ThpM0chplCN2b8Vy8tVDDtrOhXkvFQHkPExJYcInwQSbRlFrM995fUxW
-         ADb02oGOd7RVg==
-Date:   Thu, 7 May 2020 14:55:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Benson Leung <bleung@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Sarthak Kukreti <sarthakkukreti@chromium.org>
-Subject: linux-next: manual merge of the chrome-platform tree with the
- pstore tree
-Message-ID: <20200507145547.7c514106@canb.auug.org.au>
+        Thu, 7 May 2020 00:56:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F38C061A0F;
+        Wed,  6 May 2020 21:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=e6F2FSy+90a4CBJo4OFpHQu5UPPeprM5/VV6nvsaHNM=; b=IlQ1KLt/gfQCNp/2YYACfzUAvM
+        X/D5zrnZbBJxt4fTTkPRbO0abBcL5UXSvP84F3pPiIKxAGFEcl0xmqfpM7SKTkfFhy+zfxZO3G62A
+        uZthWGV2OnNDMsi0cfOMM+An4MO1GRWhWTkz1lsyuUFOkgyogfeK3xhYK3nVrNJFK4P9k2YApbYLS
+        xaT/yyR80cCXHfwpXgNAv58HSFjqMIUPIpU0BCSBWczC4w2kz827bDjcqGkFfFvM6T7zRK1d2rlLh
+        YklmG0qnLg1nMAomIrEjNIjAlS1kupgS9seSUIxmvcLlYnLCQ3TeufhT7atUo69S5WcDWW83nplQQ
+        mAh83sVw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWYaE-0001Ho-Mm; Thu, 07 May 2020 04:56:30 +0000
+Date:   Wed, 6 May 2020 21:56:30 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V2 08/11] arch/kmap: Ensure kmap_prot visibility
+Message-ID: <20200507045630.GA22061@infradead.org>
+References: <20200504010912.982044-1-ira.weiny@intel.com>
+ <20200504010912.982044-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/438muPcTwi24xAvTu+a_DYj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504010912.982044-9-ira.weiny@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/438muPcTwi24xAvTu+a_DYj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, May 03, 2020 at 06:09:09PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> We want to support kmap_atomic_prot() on all architectures and it makes
+> sense to define kmap_atomic() to use the default kmap_prot.
+> 
+> So we ensure all arch's have a globally available kmap_prot either as a
+> define or exported symbol.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Hi all,
+Looks good,
 
-Today's linux-next merge of the chrome-platform tree got a conflict in:
-
-  drivers/platform/chrome/chromeos_pstore.c
-
-between commit:
-
-  7bddec15c574 ("pstore/ram: Introduce max_reason and convert dump_oops")
-
-from the pstore tree and commit:
-
-  1c7c51347f2e ("platform/chrome: chromeos_pstore: set user space log size")
-
-from the chrome-platform tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/platform/chrome/chromeos_pstore.c
-index fa51153688b4,82dea8cb5da1..000000000000
---- a/drivers/platform/chrome/chromeos_pstore.c
-+++ b/drivers/platform/chrome/chromeos_pstore.c
-@@@ -57,7 -57,8 +57,8 @@@ static struct ramoops_platform_data chr
-  	.record_size	=3D 0x40000,
-  	.console_size	=3D 0x20000,
-  	.ftrace_size	=3D 0x20000,
-+ 	.pmsg_size	=3D 0x20000,
- -	.dump_oops	=3D 1,
- +	.max_reason	=3D KMSG_DUMP_OOPS,
-  };
- =20
-  static struct platform_device chromeos_ramoops =3D {
-
---Sig_/438muPcTwi24xAvTu+a_DYj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6zlNMACgkQAVBC80lX
-0GxnOgf/eG7ZXxtuY6ayV1S7/ldiT3uY/VwLGFqxsErvpTQ8DdzL0U5+2abZ1ePM
-77tw/drUO2ZBoMfVBdEpfbfv4LwGJbi+7H6qBKm4o4anapnsF5/ZivHesf86E8kf
-u23VyKH/kcGBasYVvP7kK7zY6oPiHU7HZo9LmGDmWCEze1JTjjYQo0tTg01zs1M0
-Q1YmScIRCcqPe2d2qhBpBgn5gBEQwuU5he/2kCT9cs9LVYWd4XH9LBTrXYMsGXaP
-+KlVOOg6aD7yBwht0GaPjsvjbxDvX5BPCI6dQSwYxclrqUy2am3Ggg5e/ym65vGn
-CCF6bZPd7LlU073jtKSWlZUdI8mFIg==
-=J1nG
------END PGP SIGNATURE-----
-
---Sig_/438muPcTwi24xAvTu+a_DYj--
+Reviewed-by: Christoph Hellwig <hch@lst.de>
