@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AD3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBADDC54E49
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE3F208DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B141421473
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 May 2020 14:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588861652;
-	bh=jjPs3cCRxH2+vEM0vdqifEvxOrjpWanBt4ztyY19i1Q=;
+	s=default; t=1588861657;
+	bh=nldiJ+MHYYN+kjgAX5mo6jUIk7pC/Xc/j4g2G7Uco6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVa+0dlLhsPinW9e8Z0x6UKTeZQbgtunoMEGjqJ1TpbKqHbF8TFWmsOnSrejF1nMe
-	 U4IaGAD3uzVxp2btgYUjwOiLQaM9w96nCRiwW/HTMVqfN1gDYQy5NZ4hemVPR98Y5D
-	 yeKKmcz8P+eVh9b7qUBU+kGVGrwFCSbsefnncEtA=
+	b=U5LPJqfSkRK6vmS3ihobVdT6SPh0wj3Sm71rmO67sp9dfGUgcEGOcurj9/Guiu9mP
+	 sWKwl5Lrbzh2QgnnQN4ct/MV4ZQuiixa6QJo6OF5qWegwcuYj6hBb9VMFcwY8r+edJ
+	 GkWjIZrWLlzNVE7tgQload/KqBm/qGVr0DxmFEQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEGO1c (ORCPT
+        id S1726891AbgEGO1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 10:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
+        Thu, 7 May 2020 10:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgEGO1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 10:27:30 -0400
+        id S1726742AbgEGO1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 10:27:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18CCC20857;
-        Thu,  7 May 2020 14:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 798162083B;
+        Thu,  7 May 2020 14:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861649;
-        bh=jjPs3cCRxH2+vEM0vdqifEvxOrjpWanBt4ztyY19i1Q=;
+        s=default; t=1588861653;
+        bh=nldiJ+MHYYN+kjgAX5mo6jUIk7pC/Xc/j4g2G7Uco6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhsfnToYZjOG09t7yrBQKRvyiZHNsmhfeVyfFeypmULZs6QEqfzLMEzzTuWzESIKu
-         hN0eiIkzqA0/c5Sx/IOEZ8YFUX46PdcfhUevl0lx/LAM4H6kpjo4PcchL1xzGQU2Cj
-         UgxSVnZNxE7i/7tpw2HqSiFAdHB/PyjLL1HqPubQ=
+        b=e0s4o+5EI+KKTv1EgVraZSnAfNcypP9onwpJf01GmePNVCzCRa9kHDOdp2JmKvYAR
+         QtzvVzwnfVW3XUo6M556Gizb5EI8oMj9cvYjDBNL59gnAAmOwQK3XM/R7wVj+WZJUZ
+         eA8cU4ZevAU/7OzP0/EfaWKkx4XzjRT8pJYN7l+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 02/50] RDMA/siw: Fix potential siw_mem refcnt leak in siw_fastreg_mr()
-Date:   Thu,  7 May 2020 10:26:38 -0400
-Message-Id: <20200507142726.25751-2-sashal@kernel.org>
+Cc:     Sebastian von Ohr <vonohr@smaract.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 05/50] dmaengine: xilinx_dma: Add missing check for empty list
+Date:   Thu,  7 May 2020 10:26:41 -0400
+Message-Id: <20200507142726.25751-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507142726.25751-1-sashal@kernel.org>
 References: <20200507142726.25751-1-sashal@kernel.org>
@@ -59,66 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Sebastian von Ohr <vonohr@smaract.com>
 
-[ Upstream commit 6e051971b0e2eeb0ce7ec65d3cc8180450512d36 ]
+[ Upstream commit b269426011bcfd97b7c3101abfe1a99147b6f40b ]
 
-siw_fastreg_mr() invokes siw_mem_id2obj(), which returns a local reference
-of the siw_mem object to "mem" with increased refcnt.  When
-siw_fastreg_mr() returns, "mem" becomes invalid, so the refcount should be
-decreased to keep refcount balanced.
+The DMA transfer might finish just after checking the state with
+dma_cookie_status, but before the lock is acquired. Not checking
+for an empty list in xilinx_dma_tx_status may result in reading
+random data or data corruption when desc is written to. This can
+be reliably triggered by using dma_sync_wait to wait for DMA
+completion.
 
-The issue happens in one error path of siw_fastreg_mr(). When "base_mr"
-equals to NULL but "mem" is not NULL, the function forgets to decrease the
-refcnt increased by siw_mem_id2obj() and causes a refcnt leak.
-
-Reorganize the flow so that the goto unwind can be used as expected.
-
-Fixes: b9be6f18cf9e ("rdma/siw: transmit path")
-Link: https://lore.kernel.org/r/1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sebastian von Ohr <vonohr@smaract.com>
+Tested-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Link: https://lore.kernel.org/r/20200303130518.333-1-vonohr@smaract.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_qp_tx.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-index ae92c8080967c..9f53aa4feb878 100644
---- a/drivers/infiniband/sw/siw/siw_qp_tx.c
-+++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-@@ -920,20 +920,27 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
- {
- 	struct ib_mr *base_mr = (struct ib_mr *)(uintptr_t)sqe->base_mr;
- 	struct siw_device *sdev = to_siw_dev(pd->device);
--	struct siw_mem *mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
-+	struct siw_mem *mem;
- 	int rv = 0;
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index a9c5d5cc9f2bd..5d5f1d0ce16cb 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -1229,16 +1229,16 @@ static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
+ 		return ret;
  
- 	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
- 
--	if (unlikely(!mem || !base_mr)) {
-+	if (unlikely(!base_mr)) {
- 		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
- 		return -EINVAL;
- 	}
-+
- 	if (unlikely(base_mr->rkey >> 8 != sqe->rkey  >> 8)) {
- 		pr_warn("siw: fastreg: STag 0x%08x: bad MR\n", sqe->rkey);
--		rv = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
-+
-+	mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
-+	if (unlikely(!mem)) {
-+		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
-+		return -EINVAL;
+ 	spin_lock_irqsave(&chan->lock, flags);
+-
+-	desc = list_last_entry(&chan->active_list,
+-			       struct xilinx_dma_tx_descriptor, node);
+-	/*
+-	 * VDMA and simple mode do not support residue reporting, so the
+-	 * residue field will always be 0.
+-	 */
+-	if (chan->has_sg && chan->xdev->dma_config->dmatype != XDMA_TYPE_VDMA)
+-		residue = xilinx_dma_get_residue(chan, desc);
+-
++	if (!list_empty(&chan->active_list)) {
++		desc = list_last_entry(&chan->active_list,
++				       struct xilinx_dma_tx_descriptor, node);
++		/*
++		 * VDMA and simple mode do not support residue reporting, so the
++		 * residue field will always be 0.
++		 */
++		if (chan->has_sg && chan->xdev->dma_config->dmatype != XDMA_TYPE_VDMA)
++			residue = xilinx_dma_get_residue(chan, desc);
 +	}
-+
- 	if (unlikely(mem->pd != pd)) {
- 		pr_warn("siw: fastreg: PD mismatch\n");
- 		rv = -EINVAL;
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+ 	dma_set_residue(txstate, residue);
 -- 
 2.20.1
 
