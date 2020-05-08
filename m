@@ -2,116 +2,131 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE7C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A31C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7821775
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BByQsgDm"
+	by mail.kernel.org (Postfix) with ESMTP id B15F021775
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgEHUaK (ORCPT
+        id S1727892AbgEHUaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726948AbgEHUaI (ORCPT
+        Fri, 8 May 2020 16:30:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56072 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbgEHUaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:30:08 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5B5C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:30:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z22so2464521lfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JkP0Yzz/l+xH+mX7IIfd2GFmeVL9ppgDSeJKkOGuaZs=;
-        b=BByQsgDmBbVUVcJNFmy8AmkPi3iJoG361CWAoRezKGuEHrPpx915LADgZRUCQzDD8Y
-         d1AUZrnvOydRU+LwM9UaAfWiwcpSpY7rOrfFk7/bfx9bcP8yDDeIZiDkHgVB8PvFGiwJ
-         7BCLWlmbpZA/M97YC8l9EDbTQHmqii/CklPv4bsq3dqaaX1VKU9bncR/sLSag76bouXk
-         0nhT07+IbyLij+n5haTbrVOdMIjxs1sgTQ4LkI2KrtaoUjOEi9ptNp6zVCdiprVa5dT1
-         QximxT140ZlthkT+XVm0ax9oJwY0zBi9J6zC4x9A9mCMLyp8RL3Aug0lPMACnVX4n9Gw
-         VmUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JkP0Yzz/l+xH+mX7IIfd2GFmeVL9ppgDSeJKkOGuaZs=;
-        b=jul5zoqJ5OdubPcMEgQF9x+5QxYQRkRSyG54ULC0D1aK+r4eLtuoqnFytDzchH8zQe
-         OFOk73WEy4gLtf/Xiwnz3Tx1egqL6+Jnrl33BTSESuVg9QJ7J4nSNNJVvB+Um0Xxe9c4
-         jYoc7exfnhCKlX3lCYjeA4aHkJgGl3SsTxLobbNU1+FlvBzE8FV0a5QLGl5p9L+2L7Ls
-         uykXM42HdUOrtsRsR6c59FXEubeEpqEfYmAQ31bubkTdWkMrgpTQVPElJydk/NIPs6gc
-         YQAtFF8p9t9rLTEwba6xpT5ETgevEP5l8xh4ENuxXVRfqUPX7JoagMnhtNJmim/nqOTc
-         KlUQ==
-X-Gm-Message-State: AOAM533MzpEBa+gT5t379XlwRktU8cSD8GMYGjXM7V0cfZZ4yz7ZfOzj
-        +FT9hT2EAjq19tB5vEFUAJZTmQ==
-X-Google-Smtp-Source: ABdhPJzPxpwJ4WTVl1KiI/hKOSLnHISGQjGrkhOYgyvu08zZAwTgwrRToxXHlwfcyz2NyiLE08DiuQ==
-X-Received: by 2002:ac2:5b41:: with SMTP id i1mr3014087lfp.16.1588969806431;
-        Fri, 08 May 2020 13:30:06 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:222:bcfb:3767:1ed2:9bbb:4cab])
-        by smtp.gmail.com with ESMTPSA id z5sm1826286lji.30.2020.05.08.13.30.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 13:30:05 -0700 (PDT)
-Subject: Re: [PATCH] USB: host: ehci: Add error handling in
- ehci_mxc_drv_probe()
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
- <20200508114858.GA4085349@kroah.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <c6c1f7e2-e8c6-d120-23de-fa1b566661d4@cogentembedded.com>
-Date:   Fri, 8 May 2020 23:30:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Fri, 8 May 2020 16:30:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7A1921C025E; Fri,  8 May 2020 22:30:21 +0200 (CEST)
+Date:   Fri, 8 May 2020 22:30:21 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Adam Jackson <ajax@redhat.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Yves-Alexis Perez <corsac@debian.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: Re: [PATCH 4.19 32/32] drm/atomic: Take the atomic toys away from X
+Message-ID: <20200508203021.GA18233@duo.ucw.cz>
+References: <20200508123034.886699170@linuxfoundation.org>
+ <20200508123039.718403889@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200508114858.GA4085349@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+In-Reply-To: <20200508123039.718403889@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 02:48 PM, Greg KH wrote:
 
->> The function ehci_mxc_drv_probe() does not perform sufficient error
->> checking after executing platform_get_irq(), thus fix it.
->>
->> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
->> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->> ---
->>  drivers/usb/host/ehci-mxc.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
->> index a1eb5ee77..a0b42ba59 100644
->> --- a/drivers/usb/host/ehci-mxc.c
->> +++ b/drivers/usb/host/ehci-mxc.c
->> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	irq = platform_get_irq(pdev, 0);
->> +	if (irq < 0)
->> +		return irq;
-> 
-> <= ?
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   I thought I've fixed the ambivalent zero bug some years ago... 
-   Please don't do this...
+Hi!
 
-MBR, Sergei
+> From: Daniel Vetter <daniel.vetter@ffwll.ch>
+>=20
+> commit 26b1d3b527e7bf3e24b814d617866ac5199ce68d upstream.
+>=20
+> The -modesetting ddx has a totally broken idea of how atomic works:
+> - doesn't disable old connectors, assuming they get auto-disable like
+>   with the legacy setcrtc
+> - assumes ASYNC_FLIP is wired through for the atomic ioctl
+> - not a single call to TEST_ONLY
+>=20
+> Iow the implementation is a 1:1 translation of legacy ioctls to
+> atomic, which is a) broken b) pointless.
+>=20
+> We already have bugs in both i915 and amdgpu-DC where this prevents us
+> from enabling neat features.
+>=20
+> If anyone ever cares about atomic in X we can easily add a new atomic
+> level (req->value =3D=3D 2) for X to get back the shiny toys.
+>=20
+> Since these broken versions of -modesetting have been shipping,
+> there's really no other way to get out of this bind.
+
+This is quite crazy. You really should not fight with X like
+that. Will it break someone's setup?
+
+> @@ -321,7 +321,12 @@ drm_setclientcap(struct drm_device *dev,
+>  	case DRM_CLIENT_CAP_ATOMIC:
+>  		if (!drm_core_check_feature(dev, DRIVER_ATOMIC))
+>  			return -EINVAL;
+> -		if (req->value > 1)
+> +		/* The modesetting DDX has a totally broken idea of atomic. */
+> +		if (current->comm[0] =3D=3D 'X' && req->value =3D=3D 1) {
+> +			pr_info("broken atomic modeset userspace detected, disabling atomic\n=
+");
+> +			return -EOPNOTSUPP;
+> +		}
+> +		if (req->value > 2)
+
+Really? Checking first letter of command name? Is there no other way
+to do it? Should it at least check full command name, so my
+XtremeWindowingSystem can continue working?
+
+Is this justified? If this is not an regression, you should simply ask
+people to update their X server, not add crazy hack in kernel for
+that.
+
+Does it even work? Will not comm[0] be "/" in many cases?
+
+root     13628  1.6  2.5 914196 150524 tty7    Ssl+ Apr19 482:32 /usr/lib/x=
+org/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -n=
+ovtswitch
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrXBXQAKCRAw5/Bqldv6
+8vpQAJ4zhHO6X7W2juDP9b+LBH5YxRrwgQCgiPy0KmyBeUzQoQO4Zs88noz7E74=
+=N84f
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
