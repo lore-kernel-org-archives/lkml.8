@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AC0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985F4C54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F665206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA0C206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943682;
-	bh=si+R2ZWl7SvDMQd5E/QfliAZaePZH2mtXt7CY4pbOzE=;
+	s=default; t=1588943686;
+	bh=0T222ILwSgvkoX/PFXNcY1qF0aAgs076Z9VE9QEqd7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=laADNEKsLQ2d1bm8vSJwFLct5cY2syd7nQjNJIGIdCMouz2vjKjtToSIT34eqSYNn
-	 veelIYqB/xCW6NMGk3sgw0T/sK6G6el54xAdixerZqRgGREM7ITu1t2x/IFwSJkvKK
-	 3GWZYtdL7SgOc8fsv4b/YcSquh0LsTEc2iVdiGWM=
+	b=IdCpyGKMWu64ydD1qyW3iGhkLxJByVmqWuYk6lwy5i25rWACavYilBzrWw/vsfwo5
+	 QvdQrZb2GnVfe7YU7ATzzwIhb2l5edM4x/g2+MSGS/NfgLE+ddFSM6SgQIVfOebDOp
+	 dUmCZY4XevIZ8vqz95SrCLIZxijRC/Y3g50NIs9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgEHNOl (ORCPT
+        id S1729479AbgEHMqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48730 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729489AbgEHMqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:54 -0400
+        id S1728880AbgEHMqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EEA2495E;
-        Fri,  8 May 2020 12:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA9F21974;
+        Fri,  8 May 2020 12:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942013;
-        bh=si+R2ZWl7SvDMQd5E/QfliAZaePZH2mtXt7CY4pbOzE=;
+        s=default; t=1588941998;
+        bh=0T222ILwSgvkoX/PFXNcY1qF0aAgs076Z9VE9QEqd7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3Pr6US3vsKDocKtfrUhPRVo9VtgIo7QSEIIhBM7PVKGkGVC57G42oQRJHDD1hhg8
-         bTAY5hko4+DVgou/XJt3aKhGupgI58nMGX0N36JjbO2nn8KFtvJ/Z/GrqnjmdGgwtb
-         iPJC5WW98VVmDdwd0st3i/61P/53TnJl6P27l79A=
+        b=HJ+iS8fDnQVRb0HD/T0q4gnD4NLooqW6d7w77FXR4YKmi38Kh+nF3chL1WAY8ytgI
+         jHbvtarC60tZUpfeAvafSc6ZIrCa6pnyEgsZ1ewyG/8pxGYakrgMuBdodwbASo8A58
+         iDW8PfsdDKDyKiabJWyCePrzbCq1SOlMdnfluX8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyj.lk@gmail.com>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 261/312] net: macb: add missing free_netdev() on error in macb_probe()
-Date:   Fri,  8 May 2020 14:34:12 +0200
-Message-Id: <20200508123142.781496849@linuxfoundation.org>
+Subject: [PATCH 4.4 256/312] gre: reject GUE and FOU in collect metadata mode
+Date:   Fri,  8 May 2020 14:34:07 +0200
+Message-Id: <20200508123142.402612829@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,32 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyj.lk@gmail.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-commit b22ae0b4d9669495158a7fa0fd027bd0fcd8896e upstream.
+commit 946b636f1730c64e05ff7fe8cf7136422fa8ea70 upstream.
 
-Add the missing free_netdev() before return from function macb_probe()
-in the platform_get_irq() error handling case.
+The collect metadata mode does not support GUE nor FOU. This might be
+implemented later; until then, we should reject such config.
 
-Fixes: c69618b3e4f2 ("net/macb: fix probe sequence to setup clocks earlier")
-Signed-off-by: Wei Yongjun <weiyj.lk@gmail.com>
+I think this is okay to be changed. It's unlikely anyone has such
+configuration (as it doesn't work anyway) and we may need a way to
+distinguish whether it's supported or not by the kernel later.
+
+For backwards compatibility with iproute2, it's not possible to just check
+the attribute presence (iproute2 always includes the attribute), the actual
+value has to be checked, too.
+
+Fixes: 2e15ea390e6f4 ("ip_gre: Add support to collect tunnel metadata.")
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cadence/macb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_gre.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -2904,7 +2904,7 @@ static int macb_probe(struct platform_de
- 	dev->irq = platform_get_irq(pdev, 0);
- 	if (dev->irq < 0) {
- 		err = dev->irq;
--		goto err_disable_clocks;
-+		goto err_out_free_netdev;
- 	}
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -937,6 +937,11 @@ static int ipgre_tunnel_validate(struct
+ 	if (flags & (GRE_VERSION|GRE_ROUTING))
+ 		return -EINVAL;
  
- 	mac = of_get_mac_address(np);
++	if (data[IFLA_GRE_COLLECT_METADATA] &&
++	    data[IFLA_GRE_ENCAP_TYPE] &&
++	    nla_get_u16(data[IFLA_GRE_ENCAP_TYPE]) != TUNNEL_ENCAP_NONE)
++		return -EINVAL;
++
+ 	return 0;
+ }
+ 
 
 
