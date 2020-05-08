@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD01C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169DBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358992145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E046D2145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941874;
-	bh=ntFx9cisOC5WEGR9NgoQJkp5UtAujJ3Z17jpEpWqYz4=;
+	s=default; t=1588941880;
+	bh=HJHN5sj1vd4/4NzFiddp91u6CB25GJ+psBJotnAwsvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1O9cc+2ZUjE37kWJkSXkqQrw/Kfvfs6Urn45pm4mBE40DOAISiLP7G5lLSAQhU/YP
-	 8wmY5DU3EKM7Yy4qnEUeN03oJtigkX3DfPtXCnYC4uMyqoYJKw0UoRkbtaFc+ddpUU
-	 kI2w17gSTtMKNSI3x63kaqGqY//NkFqo+hbgPBpg=
+	b=iavEW1akSKE2X8Skz1gVX861j8YvrGkPWhWgT4mPQyYYXNeUIJN6vPP4gNoa7qGw3
+	 q/wYQymYNBjU+bNXUOxaPZF5Jjcj6p2EpgedA4lxFjv2OUcpiwqsdquVeSD0EZuI1n
+	 Q/7AlX05oK3/K3YbGQ/pogkpdVm7URtCjyRMkRNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgEHMod (ORCPT
+        id S1729212AbgEHMoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42914 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgEHMo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:44:28 -0400
+        id S1729202AbgEHMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:44:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B152145D;
-        Fri,  8 May 2020 12:44:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF6B02145D;
+        Fri,  8 May 2020 12:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941867;
-        bh=ntFx9cisOC5WEGR9NgoQJkp5UtAujJ3Z17jpEpWqYz4=;
+        s=default; t=1588941875;
+        bh=HJHN5sj1vd4/4NzFiddp91u6CB25GJ+psBJotnAwsvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hQKrmklLuJ3wHhF7BU8GQb99vahwrEgnEZ78m8cvQISomyobjrQnaSlclIa1W9xMF
-         btxQQLr+aqXO45ez21BORlEPqAdNdPDQApjn6GxlIpa5kgUFqYB5Xj7SFm5hmYGgb+
-         oChVCBO5MKW7whA+GGf9RCMUl39piB0EXnRDNxyE=
+        b=08OohzFhl39jOtzsNFPH5hpBmQybK8TwW2eUiK47VWIOv2ybTgS/FChTIM+smv0uX
+         zKrn+V1EKRDPHlN++1dbg+RAeCIby8dD9vyDZUxpvXUtvRTdTzsMjUS0f0kVqBiy/2
+         vAtOgftoPkohlWUBhg3xY2qwo5Ga2ocEzPzus4SU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: [PATCH 4.4 205/312] clk: multiplier: Prevent the multiplier from under / over flowing
-Date:   Fri,  8 May 2020 14:33:16 +0200
-Message-Id: <20200508123138.843408939@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Loc Ho <lho@apm.com>, Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 4.4 207/312] clk: xgene: Dont call __pa on ioremaped address
+Date:   Fri,  8 May 2020 14:33:18 +0200
+Message-Id: <20200508123138.976378561@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,61 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Laura Abbott <labbott@redhat.com>
 
-commit 25f77a3aa4cb948666bf8e7fd972533ea487c3bd upstream.
+commit 06b113e9f28f8657715919087a3f54b77d1634ed upstream.
 
-In the current multiplier base clock implementation, if the
-CLK_SET_RATE_PARENT flag isn't set, the code will not make sure that the
-multiplier computed remains within the boundaries of our clock.
+ioremaped addresses are not linearly mapped so the physical
+address can not be figured out via __pa. More generally, there
+is no guarantee that backing value of an ioremapped address
+is a physical address at all. The value here is only used
+for debugging so just drop the call to __pa on the ioremapped
+address.
 
-This means that if the clock we want to reach is below the parent rate,
-or if the multiplier is above the maximum that we can reach, we will end up
-with a completely bogus one that the clock cannot achieve.
-
-Fixes: f2e0a53271a4 ("clk: Add a basic multiplier clock")
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Signed-off-by: Michael Turquette <mturquette@baylibre.com>
-Link: lkml.kernel.org/r/1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com
+Fixes: 6ae5fd381251 ("clk: xgene: Silence sparse warnings")
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Loc Ho <lho@apm.com>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk-multiplier.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/clk/clk-xgene.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/clk/clk-multiplier.c
-+++ b/drivers/clk/clk-multiplier.c
-@@ -54,14 +54,28 @@ static unsigned long __bestmult(struct c
- 				unsigned long *best_parent_rate,
- 				u8 width, unsigned long flags)
- {
-+	struct clk_multiplier *mult = to_clk_multiplier(hw);
- 	unsigned long orig_parent_rate = *best_parent_rate;
- 	unsigned long parent_rate, current_rate, best_rate = ~0;
- 	unsigned int i, bestmult = 0;
-+	unsigned int maxmult = (1 << width) - 1;
+--- a/drivers/clk/clk-xgene.c
++++ b/drivers/clk/clk-xgene.c
+@@ -218,22 +218,20 @@ static int xgene_clk_enable(struct clk_h
+ 	struct xgene_clk *pclk = to_xgene_clk(hw);
+ 	unsigned long flags = 0;
+ 	u32 data;
+-	phys_addr_t reg;
  
--	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT))
--		return rate / *best_parent_rate;
-+	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
-+		bestmult = rate / orig_parent_rate;
+ 	if (pclk->lock)
+ 		spin_lock_irqsave(pclk->lock, flags);
  
--	for (i = 1; i < ((1 << width) - 1); i++) {
-+		/* Make sure we don't end up with a 0 multiplier */
-+		if ((bestmult == 0) &&
-+		    !(mult->flags & CLK_MULTIPLIER_ZERO_BYPASS))
-+			bestmult = 1;
-+
-+		/* Make sure we don't overflow the multiplier */
-+		if (bestmult > maxmult)
-+			bestmult = maxmult;
-+
-+		return bestmult;
-+	}
-+
-+	for (i = 1; i < maxmult; i++) {
- 		if (rate == orig_parent_rate * i) {
- 			/*
- 			 * This is the best case for us if we have a
+ 	if (pclk->param.csr_reg != NULL) {
+ 		pr_debug("%s clock enabled\n", clk_hw_get_name(hw));
+-		reg = __pa(pclk->param.csr_reg);
+ 		/* First enable the clock */
+ 		data = xgene_clk_read(pclk->param.csr_reg +
+ 					pclk->param.reg_clk_offset);
+ 		data |= pclk->param.reg_clk_mask;
+ 		xgene_clk_write(data, pclk->param.csr_reg +
+ 					pclk->param.reg_clk_offset);
+-		pr_debug("%s clock PADDR base %pa clk offset 0x%08X mask 0x%08X value 0x%08X\n",
+-			clk_hw_get_name(hw), &reg,
++		pr_debug("%s clk offset 0x%08X mask 0x%08X value 0x%08X\n",
++			clk_hw_get_name(hw),
+ 			pclk->param.reg_clk_offset, pclk->param.reg_clk_mask,
+ 			data);
+ 
+@@ -243,8 +241,8 @@ static int xgene_clk_enable(struct clk_h
+ 		data &= ~pclk->param.reg_csr_mask;
+ 		xgene_clk_write(data, pclk->param.csr_reg +
+ 					pclk->param.reg_csr_offset);
+-		pr_debug("%s CSR RESET PADDR base %pa csr offset 0x%08X mask 0x%08X value 0x%08X\n",
+-			clk_hw_get_name(hw), &reg,
++		pr_debug("%s csr offset 0x%08X mask 0x%08X value 0x%08X\n",
++			clk_hw_get_name(hw),
+ 			pclk->param.reg_csr_offset, pclk->param.reg_csr_mask,
+ 			data);
+ 	}
 
 
