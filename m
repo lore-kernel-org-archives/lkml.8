@@ -2,93 +2,91 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852CEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E488C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637F2216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:57:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tYAv3EZi"
+	by mail.kernel.org (Postfix) with ESMTP id 7D1852070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgEHO5E (ORCPT
+        id S1728212AbgEHO65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgEHO5E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:57:04 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE21FC061A0C;
-        Fri,  8 May 2020 07:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LHxKO+UrbR4+N0mrKQD3SVjztItTGAPxETGyiyCS0KY=; b=tYAv3EZiihxSVIyjLOo2dQQ7a9
-        Bl/iA0wlNBAcurTP2/8JqFqwEiJij4LmdgLOHMQW1Lqi6DFGUhEvTU/wyN4pbsTMjx2HcVm7FMqWY
-        U6UXavvfgjdbsJPeDSfV9eG/eoVMrohfDnyXXrkH+oCnvAzZRsV/3dEgizbxIgBq9Uyl2OsTebpPY
-        VJNy3L2drtIqgfxSpUiY77XbXu2bkKFIpuiq1WUgEXEiNd0ecij/1runxNHl3qoDntIuAxWCyn0t4
-        0X7zDJQqo+b2dehNS/V0SXyaQ4Oet0TSd8ApfQsnfaVFKmWboZrCku77ZeD0E3VD9vwCVfWaHvLzt
-        lXiahHTA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX4Qt-0002IW-AC; Fri, 08 May 2020 14:56:59 +0000
-Date:   Fri, 8 May 2020 07:56:59 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH RFC 8/8] dcache: prevent flooding with negative dentries
-Message-ID: <20200508145659.GQ16070@bombadil.infradead.org>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894061332.200862.9812452563558764287.stgit@buzz>
+        Fri, 8 May 2020 10:58:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:49730 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbgEHO64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:58:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C2C01FB;
+        Fri,  8 May 2020 07:58:56 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AC403F305;
+        Fri,  8 May 2020 07:58:53 -0700 (PDT)
+References: <20200507180553.9993-1-john.mathew@unikie.com> <20200507180553.9993-3-john.mathew@unikie.com> <jhjh7wrtpjk.mognet@arm.com> <b974b959-7b9a-2874-dca6-674b74ad5b42@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     John Mathew <john.mathew@unikie.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        tsbogend@alpha.franken.de, lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@basemark.com, rdunlap@infradead.org,
+        Oleg Tsymbal <oleg.tsymbal@unikie.com>
+Subject: Re: [RFC PATCH v3 2/3] docs: scheduler: Add scheduler overview documentation
+In-reply-to: <b974b959-7b9a-2874-dca6-674b74ad5b42@arm.com>
+Date:   Fri, 08 May 2020 15:58:51 +0100
+Message-ID: <jhjd07etqvo.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158894061332.200862.9812452563558764287.stgit@buzz>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 03:23:33PM +0300, Konstantin Khlebnikov wrote:
-> This patch implements heuristic which detects such scenarios and prevents
-> unbounded growth of completely unneeded negative dentries. It keeps up to
-> three latest negative dentry in each bucket unless they were referenced.
-> 
-> At first dput of negative dentry when it swept to the tail of siblings
-> we'll also clear it's reference flag and look at next dentries in chain.
-> Then kill third in series of negative, unused and unreferenced denries.
-> 
-> This way each hash bucket will preserve three negative dentry to let them
-> get reference and survive. Adding positive or used dentry into hash chain
-> also protects few recent negative dentries. In result total size of dcache
-> asymptotically limited by count of buckets and positive or used dentries.
-> 
-> This heuristic isn't bulletproof and solves only most practical case.
-> It's easy to deceive: just touch same random name twice.
 
-I'm not sure if that's "easy to deceive" ... My concern with limiting
-negative dentries is something like a kernel compilation where there
-are many (11 for mm/mmap.c, 9 in general) and there will be a lot of
-places where <linux/fs.h> does not exist
+On 08/05/20 11:58, Dietmar Eggemann wrote:
+> On 07/05/2020 23:15, Valentin Schneider wrote:
+>>
+>> On 07/05/20 19:05, John Mathew wrote:
+>
+> [...]
+>
+>> It would also be an opportunity to have one place to (at least briefly)
+>> describe what the different sched classes do wrt capacity asymmetry - CFS
+>> does one thing, RT now does one thing (see Qais' work), and DL will
+>> hopefully soon follow (see Dietmar's work).
+>>
+>> I'd be happy to contribute (some of) that, if it can be deemed useful (I
+>> personally think it might).
+>
+> I like the idea.
+>
+> Essentially all the code which is guarded by the 'if
+> (static_branch_unlikely(&sched_asym_cpucapacity)' condition or which
+> sets it during bring-up.
+>
+> * 'Cpu capacity < SCHED_LOAD_SCALE for non-big' CPUs setting during
+>    bringup (necessary dt binding, CPUfreq influence)
+>
+> * CFS capacity awareness:
+>
+>   * wakeup - select_idle_capacity() (replaced wake_cap() & slow path to
+>              cover DynamIQ and classical big.LITTLE)
+>
+>   * load_balance - misfit handling
+>
+> * RT & DL capacity awareness
+>
+> * ... & the relation to EAS (Documentation/scheduler/sched-energy.rst)
+>
+> This is what we referred to (at least internally) as CAS (Capacity-Aware
+> Scheduling).
 
--isystem /usr/lib/gcc/x86_64-linux-gnu/9/include
--I../arch/x86/include
--I./arch/x86/include/generated
--I../include
--I./include
--I../arch/x86/include/uapi
--I./arch/x86/include/generated/uapi
--I../include/uapi
--I./include/generated/uapi
--I ../mm
--I ./mm
-
-So it'd be good to know that kernel compilation times are unaffected by
-this patch.
+Yeah, something like that. I'll sharpen my quill and have a go at it,
+though it won't be for right now with OSPM and the other ongoing stuff.
