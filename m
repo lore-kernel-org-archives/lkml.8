@@ -2,219 +2,166 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC79C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAD3C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19012218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF8A2184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwJoDALi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aGj4Wnxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgEHTjG (ORCPT
+        id S1727825AbgEHTjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:39:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48752 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727786AbgEHTjF (ORCPT
+        Fri, 8 May 2020 15:39:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726913AbgEHTjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:39:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588966743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WvM/+trhO6AMazPvr+ThgaIhqSMkk3F1gyxpsCTl3qk=;
-        b=cwJoDALiYltfoe278W6HxjwVmvqH1OLwtrhkRyNpoITRqofrJ1VT4yn9mZPA+kOsm49wDq
-        QPcEDd1FVWOu/kcW78n6gXxf1TRnCNho7QGs5drSTDIw75IUdbZ6Hro3ZfiKQunajCE3+c
-        q6VDxo2RzOh0Suiapx5t9gxIdUFm254=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-Sx3SF5doMVms-by8Lqcfpg-1; Fri, 08 May 2020 15:39:02 -0400
-X-MC-Unique: Sx3SF5doMVms-by8Lqcfpg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D74AA464;
-        Fri,  8 May 2020 19:39:00 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-83.rdu2.redhat.com [10.10.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EB7001C9;
-        Fri,  8 May 2020 19:38:59 +0000 (UTC)
-Subject: Re: [PATCH RFC 3/8] dcache: sweep cached negative dentries to the end
- of list of siblings
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894060021.200862.15936671684100629802.stgit@buzz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9b5d75d0-d627-2b53-10eb-a850bace091b@redhat.com>
-Date:   Fri, 8 May 2020 15:38:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 8 May 2020 15:39:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA161C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 12:39:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so2919558ljj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 12:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gjrGLJHLzoxchg9f/7+BzZ/emAWiNvtOkRqlM0vdoIg=;
+        b=aGj4Wnxz1/aQyFPMr7NUm4zXJhJ8h7VAryh5DVU6ZQt6AVBxS9tmKQlupGJ5KeXejP
+         KSz+L58WUX50UeLf1ShwLZkVfus9ZX0lgD06QjMNC3/zKkfIiXkiwYge15T1/gUc27aO
+         SkBLyUASa8xg9hfhlhGe48TZ8pL8eEM/DPhjceFCm41s4igWICxrTAtxmj/XVBmMuxC4
+         E0I1gaydT5OWK5CYVJmqK9YvykFVgSYts/bi6SSXxHBh3rqtCTLdTb3PJAIbT3TVcvcg
+         VNqziYQkuxX1HykgiPzPe2jl2OWQ4sEXFDROXuEuqS3AeWyiXcSOnUPjvLntH8TtjK2v
+         OUaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gjrGLJHLzoxchg9f/7+BzZ/emAWiNvtOkRqlM0vdoIg=;
+        b=clXgYDle7BbD1jTpzLb9IMEFQCHyFB7I4y58kjvZijmbAe74tJWJhyWoIUp++VGesp
+         MRTMh+2KeEwzSMP+FGXISE2rYC1B/AwugosbuXy2D6GGeoP/bnEiHRY2AoMb7dzzcOcz
+         v412NlCVnWcqDzv51TqCqqOltg9VSiFrD0dFY29jCCnmjH3qwEj3oDrMjBJlmddbMW2R
+         HqjTz+vToIfzsUsepGr61TKqoNxA7CukfxuVC6oOmHl48R3yBeRSr7RRB3rqXnZZJXX/
+         mQHq/E3sUiSBIwishL+SuHqRYaxLOTN1uSDJe0GquL1NzMejk6e9eXdrzVFHZtQr+yAI
+         f88w==
+X-Gm-Message-State: AOAM533WxMEeBG/XlPeHR8DB9+Kd7nFt1y7GtCLGT2c+t0KKzmY+IJK0
+        9DyLxE9TyC+YhoI0xXAS74IdFl6m0b8o/hzcVCRXNA==
+X-Google-Smtp-Source: ABdhPJzVNt0K7k0tLrvgknOBlVHyrZtBVYfRv9CoX9LYJ+b2t/u4YporDzh0yTsMzYpoIig38TiOGb/ERqa5Fzvduw8=
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr2546861ljg.99.1588966753962;
+ Fri, 08 May 2020 12:39:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <158894060021.200862.15936671684100629802.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru> <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 8 May 2020 21:39:02 +0200
+Message-ID: <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com>
+Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gregory Clement <gregory.clement@bootlin.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
-> For disk filesystems result of every negative lookup is cached, content of
-> directories is usually cached too. Production of negative dentries isn't
-> limited with disk speed. It's really easy to generate millions of them if
-> system has enough memory. Negative dentries are linked into siblings list
-> along with normal positive dentries. Some operations walks dcache tree but
-> looks only for positive dentries: most important is fsnotify/inotify.
+On Fri, May 8, 2020 at 3:31 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+
+> Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
+> chipselect") attempted to fix the problem when GPIO active-high
+> chip-select is utilized to communicate with some SPI slave. It fixed
+> the problem, but broke the normal native CS support. At the same time
+> the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
+> chipselect") didn't solve the problem either, since it just inverted
+> the set_cs() polarity perception without taking into account that
+> CS-high might be applicable. Here is what is done to finally fix the
+> problem.
+
+I'm not sure this is the whole story.
+
+I think Charles' fix made it work, and then commit
+3e5ec1db8bfee845d9f8560d1c64aeaccd586398
+"spi: Fix SPI_CS_HIGH setting when using native and GPIO CS"
+fixed it broken again.
+
+This commit will make sure only set SPI_CS_HIGH on a
+spi_device if it is using a GPIO as CS. Before this change,
+the core would set that on everything, and expect the
+.set_cs() callback to cope.
+
+I think we fixed that and that fix should have been undone
+when applying commit 3e5ec1db8bfe.
+
+So possibly Fixes: should be set only to this commit, so
+that the fix is not backported to kernels without it.
+
+> DW SPI controller demands any native CS being set in order to proceed
+> with data transfer. So in order to activate the SPI communications we
+> must set any bit in the Slave Select DW SPI controller register no
+> matter whether the platform requests the GPIO- or native CS.
+
+Ah-ha! Maybe we should even add a comment explaining that.
+And that is why SPI_MASTER_GPIO_SS is set.
+
+I suppose my naive understanding was:
+"bit set to 1" = CS asserted (driven low)
+"bit set to 0" = CS de-asserted  (driven high)
+So that is not how this register works at all.
+
+> This commit fixes the problem for all described cases. So no matter
+> whether an SPI slave needs GPIO- or native-based CS with active-high
+> or low signal the corresponding bit will be set in SER.
+
+Makes sense.
+
+>         struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+>         struct chip_data *chip = spi_get_ctldata(spi);
+> +       bool cs_high = !!(spi->mode & SPI_CS_HIGH);
 >
-> This patch moves negative dentries to the end of list at final dput() and
-> marks with flag which tells that all following dentries are negative too.
-> Reverse operation is required before instantiating negative dentry.
+>         /* Chip select logic is inverted from spi_set_cs() */
+>         if (chip && chip->cs_control)
+>                 chip->cs_control(!enable);
 >
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->   fs/dcache.c            |   63 ++++++++++++++++++++++++++++++++++++++++++++++--
->   include/linux/dcache.h |    6 +++++
->   2 files changed, 66 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index 386f97eaf2ff..743255773cc7 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -632,6 +632,48 @@ static inline struct dentry *lock_parent(struct dentry *dentry)
->   	return __lock_parent(dentry);
->   }
->   
-> +/*
-> + * Move cached negative dentry to the tail of parent->d_subdirs.
-> + * This lets walkers skip them all together at first sight.
-> + * Must be called at dput of negative dentry.
-> + */
-> +static void sweep_negative(struct dentry *dentry)
-> +{
-> +	struct dentry *parent;
-> +
-> +	if (!d_is_tail_negative(dentry)) {
-> +		parent = lock_parent(dentry);
-> +		if (!parent)
-> +			return;
-> +
-> +		if (!d_count(dentry) && d_is_negative(dentry) &&
-> +		    !d_is_tail_negative(dentry)) {
-> +			dentry->d_flags |= DCACHE_TAIL_NEGATIVE;
-> +			list_move_tail(&dentry->d_child, &parent->d_subdirs);
-> +		}
-> +
-> +		spin_unlock(&parent->d_lock);
-> +	}
-> +}
-> +
-> +/*
-> + * Undo sweep_negative() and move to the head of parent->d_subdirs.
-> + * Must be called before converting negative dentry into positive.
-> + */
-> +static void recycle_negative(struct dentry *dentry)
-> +{
-> +	struct dentry *parent;
-> +
-> +	spin_lock(&dentry->d_lock);
-> +	parent = lock_parent(dentry);
-> +	if (parent) {
-> +		list_move(&dentry->d_child, &parent->d_subdirs);
-> +		spin_unlock(&parent->d_lock);
-> +	}
-> +	dentry->d_flags &= ~DCACHE_TAIL_NEGATIVE;
-> +	spin_unlock(&dentry->d_lock);
-> +}
-> +
+> -       if (!enable)
+> +       if (cs_high == enable)
+>                 dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
 
-The name sweep_negative and recycle_negative are not very descriptive of 
-what the function is doing (especially the later one). I am not good at 
-naming, but some kind of naming scheme that can clearly show one is 
-opposite of another will be better.
+This is the correct fix now but I an afraid not correct before
+commit 3e5ec1db8bfe.
 
+What I can't help but asking is: can the native chip select even
+handle active high chip select if not backed by a GPIO?
+Which register would set that polarity?
 
->   static inline bool retain_dentry(struct dentry *dentry)
->   {
->   	WARN_ON(d_in_lookup(dentry));
-> @@ -703,6 +745,8 @@ static struct dentry *dentry_kill(struct dentry *dentry)
->   		spin_unlock(&inode->i_lock);
->   	if (parent)
->   		spin_unlock(&parent->d_lock);
-> +	if (d_is_negative(dentry))
-> +		sweep_negative(dentry);
-We can potentially save an unneeded lock/unlock pair by moving it up 
-before "if (parent)" and pass in a flag to indicate if the parent lock 
-is being held.
->   	spin_unlock(&dentry->d_lock);
->   	return NULL;
->   }
-> @@ -718,7 +762,7 @@ static struct dentry *dentry_kill(struct dentry *dentry)
->   static inline bool fast_dput(struct dentry *dentry)
->   {
->   	int ret;
-> -	unsigned int d_flags;
-> +	unsigned int d_flags, required;
->   
->   	/*
->   	 * If we have a d_op->d_delete() operation, we sould not
-> @@ -766,6 +810,8 @@ static inline bool fast_dput(struct dentry *dentry)
->   	 * a 'delete' op, and it's referenced and already on
->   	 * the LRU list.
->   	 *
-> +	 * Cached negative dentry must be swept to the tail.
-> +	 *
->   	 * NOTE! Since we aren't locked, these values are
->   	 * not "stable". However, it is sufficient that at
->   	 * some point after we dropped the reference the
-> @@ -777,10 +823,15 @@ static inline bool fast_dput(struct dentry *dentry)
->   	 */
->   	smp_rmb();
->   	d_flags = READ_ONCE(dentry->d_flags);
-> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
-> +
-> +	required = DCACHE_REFERENCED | DCACHE_LRU_LIST |
-> +		   (d_flags_negative(d_flags) ? DCACHE_TAIL_NEGATIVE : 0);
-> +
-> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST |
-> +		   DCACHE_DISCONNECTED | DCACHE_TAIL_NEGATIVE;
->   
->   	/* Nothing to do? Dropping the reference was all we needed? */
-> -	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
-> +	if (d_flags == required && !d_unhashed(dentry))
->   		return true;
->   
->   	/*
-> @@ -852,6 +903,8 @@ void dput(struct dentry *dentry)
->   		rcu_read_unlock();
->   
->   		if (likely(retain_dentry(dentry))) {
-> +			if (d_is_negative(dentry))
-> +				sweep_negative(dentry);
->   			spin_unlock(&dentry->d_lock);
->   			return;
->   		}
-> @@ -1951,6 +2004,8 @@ void d_instantiate(struct dentry *entry, struct inode * inode)
->   {
->   	BUG_ON(!hlist_unhashed(&entry->d_u.d_alias));
->   	if (inode) {
-> +		if (d_is_tail_negative(entry))
-> +			recycle_negative(entry);
-
-Will it better to recycle_negative() inside __d_instantiate() under the 
-d_lock. That reduces the number of lock/unlock you need to do and 
-eliminate the need to change d_instantiate_new().
-
-Cheers,
-Longman
-
+Yours,
+Linus Walleij
