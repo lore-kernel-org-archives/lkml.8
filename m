@@ -2,198 +2,565 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FBAC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A54C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98AF20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:29:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Kmk0Qc6j"
+	by mail.kernel.org (Postfix) with ESMTP id 03443208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgEHE3f (ORCPT
+        id S1726091AbgEHEa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 00:29:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:51841 "EHLO ozlabs.org"
+        Fri, 8 May 2020 00:30:57 -0400
+Received: from mail.hallyn.com ([178.63.66.53]:42752 "EHLO mail.hallyn.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgEHE3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 00:29:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JHRG3tDvz9sRf;
-        Fri,  8 May 2020 14:29:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588912173;
-        bh=RQXB8rPuh7y1lmH6XmNpcRx9cxb29ebZDhSL2BWaWGE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Kmk0Qc6jV47rfbR4JJMZVgjQ0mq8aZLc+0V/3bzayxQw46n4OF8x+wPXXoFt+UykK
-         GFhfSGWGUi66BNnBaQ77CYF+xshVShMAK6ds6KrUj/1H8At4lcNLBxEBs8XiDxUrK3
-         Yhm5/X+WUN9QQALZ88Z6fcTpR6w8+FFeHUuln1NgN3wSeLUsxtDaXgk9QPtXo5Gxfe
-         FGgzA8DQLNnnZCQNgnaDQNtdOOJuIvaCRYNH9AODgfuRrg4semAkauxpwjBLeHYmoA
-         nUopS9xE0Hcnru08X0/1qnCZ/TKtEPyGhi2861++jyBU0+OcBxchMHW0KBnFK6KFbz
-         TsNspZ5zs69lg==
-Date:   Fri, 8 May 2020 14:29:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: build failure after merge of the drm tree
-Message-ID: <20200508142928.05cde878@canb.auug.org.au>
+        id S1725550AbgEHEa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 00:30:56 -0400
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id B10F3A1B; Thu,  7 May 2020 23:30:51 -0500 (CDT)
+Date:   Thu, 7 May 2020 23:30:51 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] nsproxy: attach to namespaces via pidfds
+Message-ID: <20200508043051.GB22682@mail.hallyn.com>
+References: <20200505140432.181565-1-christian.brauner@ubuntu.com>
+ <20200505140432.181565-3-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/e.nyMLmvHLl8O.HE3RkDMhs";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505140432.181565-3-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/e.nyMLmvHLl8O.HE3RkDMhs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 05, 2020 at 04:04:31PM +0200, Christian Brauner wrote:
+> For quite a while we have been thinking about using pidfds to attach to
+> namespaces. This patchset has existed for about a year already but we've
+> wanted to wait to see how the general api would be received and adopted.
+> Now that more and more programs in userspace have started using pidfds
+> for process management it's time to send this one out.
+> 
+> This patch makes it possible to use pidfds to attach to the namespaces
+> of another process, i.e. they can be passed as the first argument to the
+> setns() syscall. When only a single namespace type is specified the
+> semantics are equivalent to passing an nsfd. That means
+> setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
+> when a pidfd is passed, multiple namespace flags can be specified in the
+> second setns() argument and setns() will attach the caller to all the
+> specified namespaces all at once or to none of them. Specifying 0 is not
+> valid together with a pidfd.
+> 
+> Here are just two obvious examples:
+> setns(pidfd, CLONE_NEWPID | CLONE_NEWNS | CLONE_NEWNET);
+> setns(pidfd, CLONE_NEWUSER);
+> Allowing to also attach subsets of namespaces supports various use-cases
+> where callers setns to a subset of namespaces to retain privilege, perform
+> an action and then re-attach another subset of namespaces.
+> 
+> If the need arises, as Eric suggested, we can extend this patchset to
+> assume even more context than just attaching all namespaces. His suggestion
+> specifically was about assuming the process' root directory when
+> setns(pidfd, 0) or setns(pidfd, SETNS_PIDFD) is specified. For now, just
+> keep it flexible in terms of supporting subsets of namespaces but let's
+> wait until we have users asking for even more context to be assumed. At
+> that point we can add an extension.
+> 
+> The obvious example where this is useful is a standard container
+> manager interacting with a running container: pushing and pulling files
+> or directories, injecting mounts, attaching/execing any kind of process,
+> managing network devices all these operations require attaching to all
+> or at least multiple namespaces at the same time. Given that nowadays
+> most containers are spawned with all namespaces enabled we're currently
+> looking at at least 14 syscalls, 7 to open the /proc/<pid>/ns/<ns>
+> nsfds, another 7 to actually perform the namespace switch. With time
+> namespaces we're looking at about 16 syscalls.
+> (We could amortize the first 7 or 8 syscalls for opening the nsfds by
+>  stashing them in each container's monitor process but that would mean
+>  we need to send around those file descriptors through unix sockets
+>  everytime we want to interact with the container or keep on-disk
+>  state. Even in scenarios where a caller wants to join a particular
+>  namespace in a particular order callers still profit from batching
+>  other namespaces. That mostly applies to the user namespace but
+>  all container runtimes I found join the user namespace first no matter
+>  if it privileges or deprivileges the container similar to how unshare
+>  behaves.)
+> With pidfds this becomes a single syscall no matter how many namespaces
+> are supposed to be attached to.
+> 
+> A decently designed, large-scale container manager usually isn't the
+> parent of any of the containers it spawns so the containers don't die
+> when it crashes or needs to update or reinitialize. This means that
+> for the manager to interact with containers through pids is inherently
+> racy especially on systems where the maximum pid number is not
+> significicantly bumped. This is even more problematic since we often spawn
+> and manage thousands or ten-thousands of containers. Interacting with a
+> container through a pid thus can become risky quite quickly. Especially
+> since we allow for an administrator to enable advanced features such as
+> syscall interception where we're performing syscalls in lieu of the
+> container. In all of those cases we use pidfds if they are available and
+> we pass them around as stable references. Using them to setns() to the
+> target process' namespaces is as reliable as using nsfds. Either the
+> target process is already dead and we get ESRCH or we manage to attach
+> to its namespaces but we can't accidently attach to another process'
+> namespaces. So pidfds lend themselves to be used with this api.
+> The other main advantage is that with this change the pidfd becomes the
+> only relevant token for most container interactions and it's the only
+> token we need to create and send around.
+> 
+> Apart from significiantly reducing the number of syscalls from double
+> digit to single digit which is a decent reason post-spectre/meltdown
+> this also allows to switch to a set of namespaces atomically, i.e.
+> either attaching to all the specified namespaces succeeds or we fail. If
+> we fail we haven't changed a single namespace. There are currently three
+> namespaces that can fail (other than for ENOMEM which really is not
+> very interesting since we then have other problems anyway) for
+> non-trivial reasons, user, mount, and pid namespaces. We can fail to
+> attach to a pid namespace if it is not our current active pid namespace
+> or a descendant of it. We can fail to attach to a user namespace because
+> we are multi-threaded or because our current mount namespace shares
+> filesystem state with other tasks, or because we're trying to setns()
+> to the same user namespace, i.e. the target task has the same user
+> namespace as we do. We can fail to attach to a mount namespace because
+> it shares filesystem state with other tasks or because we fail to lookup
+> the new root for the new mount namespace. In most non-pathological
+> scenarios these issues can be somewhat mitigated. But there are cases where
+> we're half-attached to some namespace and failing to attach to another one.
+> I've talked about some of these problem during the hallway track (something
+> only the pre-COVID-19 generation will remember) of Plumbers in Los Angeles
+> in 2018(?). Even if all these issues could be avoided with super careful
+> userspace coding it would be nicer to have this done in-kernel. Pidfds seem
+> to lend themselves nicely for this.
+> 
+> The other neat thing about this is that setns() becomes an actual
+> counterpart to the namespace bits of unshare().
+> 
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Serge Hallyn <serge@hallyn.com>
 
-Hi all,
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
-After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-In file included from include/asm-generic/bug.h:19,
-                 from arch/x86/include/asm/bug.h:83,
-                 from include/linux/bug.h:5,
-                 from include/linux/seq_file.h:7,
-                 from include/drm/drm_print.h:31,
-                 from drivers/gpu/drm/i915/gt/intel_engine_cs.c:25:
-drivers/gpu/drm/i915/gt/intel_engine_cs.c: In function 'intel_engine_print_=
-registers':
-drivers/gpu/drm/i915/gt/intel_engine_cs.c:1428:31: error: 'struct intel_con=
-text' has no member named 'lrc_desc'
- 1428 |      upper_32_bits(rq->context->lrc_desc));
-      |                               ^~
-drivers/gpu/drm/i915/gt/intel_engine_cs.c:1440:31: error: 'struct intel_con=
-text' has no member named 'lrc_desc'
- 1440 |      upper_32_bits(rq->context->lrc_desc));
-      |                               ^~
-In file included from include/linux/interrupt.h:6,
-                 from drivers/gpu/drm/i915/gt/intel_lrc.c:134:
-drivers/gpu/drm/i915/gt/intel_lrc.c: In function 'active_context':
-drivers/gpu/drm/i915/gt/intel_lrc.c:2850:32: error: 'struct intel_context' =
-has no member named 'lrc_desc'
- 2850 |   if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
-      |                                ^~
-drivers/gpu/drm/i915/gt/intel_lrc.c:2859:32: error: 'struct intel_context' =
-has no member named 'lrc_desc'
- 2859 |   if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
-      |                                ^~
-
-Caused by commit
-
-  53b2622e7746 ("drm/i915/execlists: Avoid reusing the same logical CCID")
-
-from the drm-intel-fixes tree interacting with commits
-
-  606727842d8b ("drm/i915/gt: Include the execlists CCID of each port in th=
-e engine dump")
-  4c977837ba29 ("drm/i915/execlists: Peek at the next submission for error =
-interrupts")
-
-from the drm tree.
-
-I have added teh following merge fix patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 8 May 2020 14:21:40 +1000
-Subject: [PATCH] drm/i915/execlists: fix up for "Avoid reusing the same log=
-ical CCID"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/i915/gt/intel_engine_cs.c | 4 ++--
- drivers/gpu/drm/i915/gt/intel_lrc.c       | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gt/intel_engine_cs.c b/drivers/gpu/drm/i9=
-15/gt/intel_engine_cs.c
-index b1f8527f02c8..7c3cb5aedfdf 100644
---- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-@@ -1425,7 +1425,7 @@ static void intel_engine_print_registers(struct intel=
-_engine_cs *engine,
- 			len =3D scnprintf(hdr, sizeof(hdr),
- 					"\t\tActive[%d]:  ccid:%08x, ",
- 					(int)(port - execlists->active),
--					upper_32_bits(rq->context->lrc_desc));
-+					rq->context->lrc.ccid);
- 			len +=3D print_ring(hdr + len, sizeof(hdr) - len, rq);
- 			scnprintf(hdr + len, sizeof(hdr) - len, "rq: ");
- 			print_request(m, rq, hdr);
-@@ -1437,7 +1437,7 @@ static void intel_engine_print_registers(struct intel=
-_engine_cs *engine,
- 			len =3D scnprintf(hdr, sizeof(hdr),
- 					"\t\tPending[%d]: ccid:%08x, ",
- 					(int)(port - execlists->pending),
--					upper_32_bits(rq->context->lrc_desc));
-+					rq->context->lrc.ccid);
- 			len +=3D print_ring(hdr + len, sizeof(hdr) - len, rq);
- 			scnprintf(hdr + len, sizeof(hdr) - len, "rq: ");
- 			print_request(m, rq, hdr);
-diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/=
-intel_lrc.c
-index 233f815c3c86..456d286c17dd 100644
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -2847,7 +2847,7 @@ active_context(struct intel_engine_cs *engine, u32 cc=
-id)
- 	 */
-=20
- 	for (port =3D el->active; (rq =3D *port); port++) {
--		if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
-+		if (rq->context->lrc.ccid =3D=3D ccid) {
- 			ENGINE_TRACE(engine,
- 				     "ccid found at active:%zd\n",
- 				     port - el->active);
-@@ -2856,7 +2856,7 @@ active_context(struct intel_engine_cs *engine, u32 cc=
-id)
- 	}
-=20
- 	for (port =3D el->pending; (rq =3D *port); port++) {
--		if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
-+		if (rq->context->lrc.ccid =3D=3D ccid) {
- 			ENGINE_TRACE(engine,
- 				     "ccid found at pending:%zd\n",
- 				     port - el->pending);
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/e.nyMLmvHLl8O.HE3RkDMhs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl604CgACgkQAVBC80lX
-0GyuCQf/bCPaY923Ltga+uVnvu2+bMet/ju0S6gT8ZEkVZm7RQm541Baslq8hB6d
-dlUv3F3qRXJ9M5OJlP9HvmOJMSP3gygYHtFYDhuILvlOyjH2VCDwrccfaFRNGi3U
-52ZeDWVsGlEUyVrMLEphJ9Rad6IAEEHUactBa/K1flYyjNa6ZAax3CQjnwSgKbm5
-ANN5tbW3Fjs1HFkGjGTw6ja9RAqFo0/b+TU3AXZQdvDdpzeD8BeBOQwiQCd7yP6h
-CXdz1lha86iNUyvuBgFAwJRQXlT+S3rx6xXTrCMuUSaHu0+Vsr54q1hFe1wyEEuR
-JK30f87thgOzc23PGy4P+XNRX5BmNw==
-=JUUx
------END PGP SIGNATURE-----
-
---Sig_/e.nyMLmvHLl8O.HE3RkDMhs--
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+> If we agree that this is useful than I'd pick this up for for v5.8.
+> There's probably some smart trick around nsproxy and pidns life-cycle
+> management that I'm missing but I tried to be conservative wrt to taking
+> references.
+> /* v2 */
+> - Michael Kerrisk <mtk.manpages@gmail.com>:
+>   - Michael pointed out that the semantics for setns(nsfd, 0) and
+>     setns(pidfd, 0) are not comparable. setns(pidfd, 0) is now
+>     disallowed completely. Users wanting to attach to all namespaces
+>     should simply specify them explicitly just as with unshare() and
+>     clone3().
+> - Jann Horn <jannh@google.com>:
+>   - Jann pointed out that the setns() in its first form wasn't atomic in
+>     that userspace could end up in an intermediate state where e.g. the
+>     process had moved into the target user namespace but failed to move
+>     into the target mount namespace.
+>     In this new version I've removed all intermediate states. There's an
+>     installation/preparation state and a commit state similar to
+>     prepare_creds() and commit_creds().
+> 
+> /* v3 */
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - The patchset is mostly unchanged. It was only fixed-up in response
+>     to changes in earlier patches.
+> 
+> /* v4 */
+> unchanged
+> ---
+>  fs/namespace.c                |   5 +
+>  fs/nsfs.c                     |   5 +
+>  include/linux/mnt_namespace.h |   1 +
+>  include/linux/proc_fs.h       |   6 +
+>  kernel/nsproxy.c              | 229 +++++++++++++++++++++++++++++++---
+>  5 files changed, 230 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 62899fad4a04..be99e80e3c7c 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -1733,6 +1733,11 @@ static struct mnt_namespace *to_mnt_ns(struct ns_common *ns)
+>  	return container_of(ns, struct mnt_namespace, ns);
+>  }
+>  
+> +struct ns_common *from_mnt_ns(struct mnt_namespace *mnt)
+> +{
+> +	return &mnt->ns;
+> +}
+> +
+>  static bool mnt_ns_loop(struct dentry *dentry)
+>  {
+>  	/* Could bind mounting the mount namespace inode cause a
+> diff --git a/fs/nsfs.c b/fs/nsfs.c
+> index 4f1205725cfe..800c1d0eb0d0 100644
+> --- a/fs/nsfs.c
+> +++ b/fs/nsfs.c
+> @@ -229,6 +229,11 @@ int ns_get_name(char *buf, size_t size, struct task_struct *task,
+>  	return res;
+>  }
+>  
+> +bool proc_ns_file(const struct file *file)
+> +{
+> +	return file->f_op == &ns_file_operations;
+> +}
+> +
+>  struct file *proc_ns_fget(int fd)
+>  {
+>  	struct file *file;
+> diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
+> index 007cfa52efb2..8f882f5881e8 100644
+> --- a/include/linux/mnt_namespace.h
+> +++ b/include/linux/mnt_namespace.h
+> @@ -11,6 +11,7 @@ struct ns_common;
+>  extern struct mnt_namespace *copy_mnt_ns(unsigned long, struct mnt_namespace *,
+>  		struct user_namespace *, struct fs_struct *);
+>  extern void put_mnt_ns(struct mnt_namespace *ns);
+> +extern struct ns_common *from_mnt_ns(struct mnt_namespace *);
+>  
+>  extern const struct file_operations proc_mounts_operations;
+>  extern const struct file_operations proc_mountinfo_operations;
+> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> index 45c05fd9c99d..acfd5012db4e 100644
+> --- a/include/linux/proc_fs.h
+> +++ b/include/linux/proc_fs.h
+> @@ -104,6 +104,7 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
+>  						    proc_write_t write,
+>  						    void *data);
+>  extern struct pid *tgid_pidfd_to_pid(const struct file *file);
+> +extern bool proc_ns_file(const struct file *file);
+>  
+>  #ifdef CONFIG_PROC_PID_ARCH_STATUS
+>  /*
+> @@ -159,6 +160,11 @@ static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
+>  	return ERR_PTR(-EBADF);
+>  }
+>  
+> +static inline bool proc_ns_file(const struct file *file)
+> +{
+> +	return false;
+> +}
+> +
+>  #endif /* CONFIG_PROC_FS */
+>  
+>  struct net;
+> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
+> index b7954fd60475..7e98f7648af5 100644
+> --- a/kernel/nsproxy.c
+> +++ b/kernel/nsproxy.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/ipc_namespace.h>
+>  #include <linux/time_namespace.h>
+>  #include <linux/fs_struct.h>
+> +#include <linux/proc_fs.h>
+>  #include <linux/proc_ns.h>
+>  #include <linux/file.h>
+>  #include <linux/syscalls.h>
+> @@ -258,17 +259,58 @@ void exit_task_namespaces(struct task_struct *p)
+>  	switch_task_namespaces(p, NULL);
+>  }
+>  
+> +static int check_setns_flags(unsigned long flags)
+> +{
+> +	if (!flags || (flags & ~(CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
+> +				 CLONE_NEWNET | CLONE_NEWUSER | CLONE_NEWPID |
+> +				 CLONE_NEWCGROUP)))
+> +		return -EINVAL;
+> +
+> +#ifndef CONFIG_USER_NS
+> +	if (flags & CLONE_NEWUSER)
+> +		return -EINVAL;
+> +#endif
+> +#ifndef CONFIG_PID_NS
+> +	if (flags & CLONE_NEWPID)
+> +		return -EINVAL;
+> +#endif
+> +#ifndef CONFIG_UTS_NS
+> +	if (flags & CLONE_NEWUTS)
+> +		return -EINVAL;
+> +#endif
+> +#ifndef CONFIG_IPC_NS
+> +	if (flags & CLONE_NEWIPC)
+> +		return -EINVAL;
+> +#endif
+> +#ifndef CONFIG_CGROUPS
+> +	if (flags & CLONE_NEWCGROUP)
+> +		return -EINVAL;
+> +#endif
+> +#ifndef CONFIG_NET_NS
+> +	if (flags & CLONE_NEWNET)
+> +		return -EINVAL;
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
+>  static void put_nsset(struct nsset *nsset)
+>  {
+>  	unsigned flags = nsset->flags;
+>  
+>  	if (flags & CLONE_NEWUSER)
+>  		put_cred(nsset_cred(nsset));
+> +	/*
+> +	 * We only created a temporary copy if we attached to more than just
+> +	 * the mount namespace.
+> +	 */
+> +	if (nsset->fs && (flags & CLONE_NEWNS) && (flags & ~CLONE_NEWNS))
+> +		free_fs_struct(nsset->fs);
+>  	if (nsset->nsproxy)
+>  		free_nsproxy(nsset->nsproxy);
+>  }
+>  
+> -static int prepare_nsset(int nstype, struct nsset *nsset)
+> +static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>  {
+>  	struct task_struct *me = current;
+>  
+> @@ -276,17 +318,23 @@ static int prepare_nsset(int nstype, struct nsset *nsset)
+>  	if (IS_ERR(nsset->nsproxy))
+>  		return PTR_ERR(nsset->nsproxy);
+>  
+> -	if (nstype == CLONE_NEWUSER)
+> +	if (flags & CLONE_NEWUSER)
+>  		nsset->cred = prepare_creds();
+>  	else
+>  		nsset->cred = current_cred();
+>  	if (!nsset->cred)
+>  		goto out;
+>  
+> -	if (nstype == CLONE_NEWNS)
+> +	/* Only create a temporary copy of fs_struct if we really need to. */
+> +	if (flags == CLONE_NEWNS) {
+>  		nsset->fs = me->fs;
+> +	} else if (flags & CLONE_NEWNS) {
+> +		nsset->fs = copy_fs_struct(me->fs);
+> +		if (!nsset->fs)
+> +			goto out;
+> +	}
+>  
+> -	nsset->flags = nstype;
+> +	nsset->flags = flags;
+>  	return 0;
+>  
+>  out:
+> @@ -294,6 +342,138 @@ static int prepare_nsset(int nstype, struct nsset *nsset)
+>  	return -ENOMEM;
+>  }
+>  
+> +static inline int validate_ns(struct nsset *nsset, struct ns_common *ns)
+> +{
+> +	return ns->ops->install(nsset, ns);
+> +}
+> +
+> +/*
+> + * This is the inverse operation to unshare().
+> + * Ordering is equivalent to the standard ordering used everywhere else
+> + * during unshare and process creation. The switch to the new set of
+> + * namespaces occurs at the point of no return after installation of
+> + * all requested namespaces was successful in commit_nsset().
+> + */
+> +static int validate_nsset(struct nsset *nsset, struct pid *pid)
+> +{
+> +	int ret = 0;
+> +	unsigned flags = nsset->flags;
+> +	struct user_namespace *user_ns = NULL;
+> +	struct pid_namespace *pid_ns = NULL;
+> +	struct nsproxy *nsp;
+> +	struct task_struct *tsk;
+> +
+> +	/* Take a "snapshot" of the target task's namespaces. */
+> +	rcu_read_lock();
+> +	tsk = pid_task(pid, PIDTYPE_PID);
+> +	if (!tsk) {
+> +		rcu_read_unlock();
+> +		return -ESRCH;
+> +	}
+> +
+> +	if (!ptrace_may_access(tsk, PTRACE_MODE_READ_REALCREDS)) {
+> +		rcu_read_unlock();
+> +		return -EPERM;
+> +	}
+> +
+> +	task_lock(tsk);
+> +	nsp = tsk->nsproxy;
+> +	if (nsp)
+> +		get_nsproxy(nsp);
+> +	task_unlock(tsk);
+> +	if (!nsp) {
+> +		rcu_read_unlock();
+> +		return -ESRCH;
+> +	}
+> +
+> +#ifdef CONFIG_PID_NS
+> +	if (flags & CLONE_NEWPID) {
+> +		pid_ns = task_active_pid_ns(tsk);
+> +		if (unlikely(!pid_ns)) {
+> +			rcu_read_unlock();
+> +			ret = -ESRCH;
+> +			goto out;
+> +		}
+> +		get_pid_ns(pid_ns);
+> +	}
+> +#endif
+> +
+> +#ifdef CONFIG_USER_NS
+> +	if (flags & CLONE_NEWUSER)
+> +		user_ns = get_user_ns(__task_cred(tsk)->user_ns);
+> +#endif
+> +	rcu_read_unlock();
+> +
+> +	/*
+> +	 * Install requested namespaces. The caller will have
+> +	 * verified earlier that the requested namespaces are
+> +	 * supported on this kernel. We don't report errors here
+> +	 * if a namespace is requested that isn't supported.
+> +	 */
+> +#ifdef CONFIG_USER_NS
+> +	if (flags & CLONE_NEWUSER) {
+> +		ret = validate_ns(nsset, &user_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +	if (flags & CLONE_NEWNS) {
+> +		ret = validate_ns(nsset, from_mnt_ns(nsp->mnt_ns));
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +#ifdef CONFIG_UTS_NS
+> +	if (flags & CLONE_NEWUTS) {
+> +		ret = validate_ns(nsset, &nsp->uts_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +#ifdef CONFIG_IPC_NS
+> +	if (flags & CLONE_NEWIPC) {
+> +		ret = validate_ns(nsset, &nsp->ipc_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +#ifdef CONFIG_PID_NS
+> +	if (flags & CLONE_NEWPID) {
+> +		ret = validate_ns(nsset, &pid_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +#ifdef CONFIG_CGROUPS
+> +	if (flags & CLONE_NEWCGROUP) {
+> +		ret = validate_ns(nsset, &nsp->cgroup_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +#ifdef CONFIG_NET_NS
+> +	if (flags & CLONE_NEWNET) {
+> +		ret = validate_ns(nsset, &nsp->net_ns->ns);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +#endif
+> +
+> +out:
+> +	if (pid_ns)
+> +		put_pid_ns(pid_ns);
+> +	if (nsp)
+> +		put_nsproxy(nsp);
+> +	put_user_ns(user_ns);
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * This is the point of no return. There are just a few namespaces
+>   * that do some actual work here and it's sufficiently minimal that
+> @@ -316,6 +496,12 @@ static void commit_nsset(struct nsset *nsset)
+>  	}
+>  #endif
+>  
+> +	/* We only need to commit if we have used a temporary fs_struct. */
+> +	if ((flags & CLONE_NEWNS) && (flags & ~CLONE_NEWNS)) {
+> +		set_fs_root(me->fs, &nsset->fs->root);
+> +		set_fs_pwd(me->fs, &nsset->fs->pwd);
+> +	}
+> +
+>  #ifdef CONFIG_IPC_NS
+>  	if (flags & CLONE_NEWIPC)
+>  		exit_sem(me);
+> @@ -326,27 +512,38 @@ static void commit_nsset(struct nsset *nsset)
+>  	nsset->nsproxy = NULL;
+>  }
+>  
+> -SYSCALL_DEFINE2(setns, int, fd, int, nstype)
+> +SYSCALL_DEFINE2(setns, int, fd, int, flags)
+>  {
+>  	struct file *file;
+> -	struct ns_common *ns;
+> +	struct ns_common *ns = NULL;
+>  	struct nsset nsset = {};
+> -	int err;
+> -
+> -	file = proc_ns_fget(fd);
+> -	if (IS_ERR(file))
+> -		return PTR_ERR(file);
+> +	int err = 0;
+>  
+> -	err = -EINVAL;
+> -	ns = get_proc_ns(file_inode(file));
+> -	if (nstype && (ns->ops->type != nstype))
+> +	file = fget(fd);
+> +	if (!file)
+> +		return -EBADF;
+> +
+> +	if (proc_ns_file(file)) {
+> +		ns = get_proc_ns(file_inode(file));
+> +		if (flags && (ns->ops->type != flags))
+> +			err = -EINVAL;
+> +		flags = ns->ops->type;
+> +	} else if (pidfd_pid(file)) {
+> +		err = check_setns_flags(flags);
+> +	} else {
+> +		err = -EBADF;
+> +	}
+> +	if (err)
+>  		goto out;
+>  
+> -	err = prepare_nsset(ns->ops->type, &nsset);
+> +	err = prepare_nsset(flags, &nsset);
+>  	if (err)
+>  		goto out;
+>  
+> -	err = ns->ops->install(&nsset, ns);
+> +	if (proc_ns_file(file))
+> +		err = validate_ns(&nsset, ns);
+> +	else
+> +		err = validate_nsset(&nsset, file->private_data);
+>  	if (!err) {
+>  		commit_nsset(&nsset);
+>  		perf_event_namespaces(current);
+> -- 
+> 2.26.2
