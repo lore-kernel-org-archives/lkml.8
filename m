@@ -2,138 +2,89 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A96C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF75C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489C824954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92782063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j/zivjws"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pXYU5SOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgEHXnM (ORCPT
+        id S1728347AbgEHXpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:43:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50160 "EHLO vps0.lunn.ch"
+        Fri, 8 May 2020 19:45:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:58347 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHXnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:43:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=VieCsnbAAH7ShY/le63Gu8FMcfhJPUddj2RQTmeSZkc=; b=j/zivjwsfKTO3NJdPZ1Xkc0NMS
-        stqHbu/mibnqlxCUPiEvYElq+cYGn7gXuzGJw8Y9noaxxexZeAkB30T8zy8Z9okui8vzzlQnoI2ED
-        VVZhLcyi4vETgL05SKfKuVbO4i618JeaQGJTGls8WuwreVQWM7bmWTAJ+PcHMuUyctZU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jXCdt-001R9J-5t; Sat, 09 May 2020 01:42:57 +0200
-Date:   Sat, 9 May 2020 01:42:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        id S1728051AbgEHXpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 19:45:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Jn4s4LCzz9sRf;
+        Sat,  9 May 2020 09:45:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588981518;
+        bh=2WQDracut3zz1bq++kSErjF7oN+Ntk+RcYSiiBCiIQ4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pXYU5SOf5gKaD8OtwYkGI5tOken/Qkc7ZyCTKN77YNff8cQNoQXNpXLf4F2+7FGCN
+         NdbH216oSRBWWnx+EhSgElJxZKBN3rnla37oOuvTGHXumvlqKjvKQu7wO6aFB8cBRu
+         8l/BvLU2YTkUQ/FIrkukPH2wVEDTbYu9O3+BgWlkjWJfrvuLiFfn/9Enay7FhRMzZN
+         xn/M9fFPIbOQKUKKCJHgPTw6QZ8LYuUpmH7wZ1sH19ZgcwpXz3tKZssDodiNhCKSme
+         LstdRB2rzDoDOj/tFDX4DvJ2AcKDrGBjV8XYauE71uJquQXgbfDoLQqFoZnvpwItj8
+         +XSkEG/lrl35g==
+Date:   Sat, 9 May 2020 09:45:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sage Weil <sage@newdream.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-Message-ID: <20200508234257.GA338317@lunn.ch>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
- <20200508202722.GI298574@lunn.ch>
- <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: linux-next: new contact(s) for the ceph tree?
+Message-ID: <20200509094515.7082eb92@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
+Content-Type: multipart/signed; boundary="Sig_/QrGhtZScms+ql_amXLes32e";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 05:48:33PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/8/20 3:27 PM, Andrew Lunn wrote:
-> > > > There is a very small number of devices where the vendor messed up,
-> > > > and did not put valid contents in the ID registers. In such cases, we
-> > > > can read the IDs from device tree. These are then used in exactly the
-> > > > same way as if they were read from the device.
-> > > > 
-> > > 
-> > > Is that the case here?
-> > 
-> > Sorry, I don't understand the question?
-> 
-> I was asking in general, does this machine report the ID's correctly.
+--Sig_/QrGhtZScms+ql_amXLes32e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Very likely, it does.
+Hi all,
 
-> The embedded single mac:mdio per nic case seems like the normal case, and
-> most of the existing ACPI described devices are setup that way.
+I noticed commit
 
-Somebody in this thread pointed to ACPI patches for the
-MACCHIATOBin. If i remember the hardware correctly, it has 4 Ethernet
-interfaces, and two MDIO bus masters. One of the bus masters can only
-do C22 and the other can only do C45. It is expected that the busses
-are shared, not a nice one to one mapping.
+  3a5ccecd9af7 ("MAINTAINERS: remove myself as ceph co-maintainer")
 
-> But at the same time, that shifts the c22/45 question to the nic
-> driver, where use of a DSD property before instantiating/probing
-> MDIO isn't really a problem if needed.
+appear recently.  So who should I now list as the contact(s) for the
+ceph tree?
 
-This in fact does not help you. The MAC driver has no idea what PHY is
-connected to it. The MAC does not know if it is C22 or C45. It uses
-the phylib abstraction which hides all this. Even if you assume 1:1,
-use phy_find_first(), it will not find a C45 PHY because without
-knowing there is a C45 PHY, we don't scan for it. And we should expect
-C45 PHYs to become more popular in the next few years.
+--=20
+Cheers,
+Stephen Rothwell
 
-> In fact this embedded nic/mac/mdio/phy 1:1:1 case, is likely a requirement
-> for passthrough into a generic VM, otherwise someone has to create a virtual
-> mdio, and pass the phy in for the nic/mac.
-> 
-> AFAIK, NXP's part avoids this despite having a shared MDIO, because the phy
-> state never leaves the mgmt side of the picture. It monitors the state and
-> then feeds that back into their nic mgmt complex rather than using it
-> directly.
+--Sig_/QrGhtZScms+ql_amXLes32e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-That is the other model. Don't use Linux to drive the PHY, use
-firmware in the MAC. A number of MACs do that, but it has the usual
-problems of firmware. It limits you on your choice of PHYs, bugs in
-the firmware cannot be fixed by the community, no sharing of drivers
-because firmware is generally proprietary, no 'for free features'
-because somebody else added features to the linux PHY driver etc.  But
-it will make ACPI support simple, this whole discussion goes away, no
-ACPI needed at all.
+-----BEGIN PGP SIGNATURE-----
 
-   Andrew
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl617wsACgkQAVBC80lX
+0GwE0QgAifvK+HJPBq+Eb3B63fj8y7MRZYxKw9Rc5I23M8/Yf4QhWbei2WMOqB/L
+e2i/IQvqRnGcjO0Ibbiem9qzT/KSLhtQC1S+FcOCrqWTz+yS3mrzlf0zzCKhOaWh
+IeN1UOfJ+qQ4PvtXPBwnPeroag54o61Z9BEBX7ASeUdl4ddvE7u9V79VqDPUEvXe
+phKdwcBANp53UicKR7nv8lTMRnn/b1c+o5MvjuiTIwtydxDAVvadf0iXkkh4fvaj
+62dPCG9DL7B4Tvz9MJsmuJVyZhiXz6KfTdA/d9AXqSL3cPeFZMEKxVOo4mbsVwgU
+ohBY/h72mb9ozZZ8OtFBMMRf++2uHw==
+=TNFg
+-----END PGP SIGNATURE-----
+
+--Sig_/QrGhtZScms+ql_amXLes32e--
