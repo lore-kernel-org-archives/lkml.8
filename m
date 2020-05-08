@@ -2,133 +2,286 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEC5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A9C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F46208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BB420870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgEHFzM (ORCPT
+        id S1726048AbgEHF5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:55:12 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:14212 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725865AbgEHFzM (ORCPT
+        Fri, 8 May 2020 01:57:19 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:21951 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgEHF5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:55:12 -0400
-X-IronPort-AV: E=Sophos;i="5.73,366,1583164800"; 
-   d="scan'208";a="91677474"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 08 May 2020 13:55:08 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id E2FC24BCC89E;
-        Fri,  8 May 2020 13:55:04 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 8 May 2020 13:55:04 +0800
-Subject: Re: [PATCH v2] perf: fix compilation failure on i386
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <philip.li@intel.com>
-References: <20200501082537.4740-1-caoj.fnst@cn.fujitsu.com>
-Message-ID: <05c93fb7-d385-e7de-a98a-fce6c2b8e508@cn.fujitsu.com>
-Date:   Fri, 8 May 2020 13:55:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 8 May 2020 01:57:19 -0400
+IronPort-SDR: iWsuOs1L0Ixuth+rzMhXVhYhS6Hc4qRBR9B3vOj/CXD02wp394wBSu+IP3JjsXq1+5aNEZMRoP
+ Hf6G0SveAH+A1BQoBk5mBvcoskHHox2lekp5Qtut/rB1a890yIs56gUqvxezN/FI/qzriszw34
+ w7cpTnH5wTxiHey+LzX6XtSbws4BRpRSMvG6JgWKAoHATdd02wSccwPW/JSgs5YgpdHMld1Uce
+ FPULzqflqHN1NZO/lOoK/AziV5Skh7rS+4GSRy9VeP+3WsgN2Lu9IuI5CSCDIJ2YfQ+4volaGP
+ wdg=
+X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
+   d="scan'208";a="48651885"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 07 May 2020 21:57:02 -0800
+IronPort-SDR: cCqpoRZXbZtSD7FLMLVxVrSX3EezEf9xBwqN5C3iuiOjwg+B31vIUaKVoxeZG+YquhnamQ24wb
+ atXQen75W/kh+JauGmI/mjEmdDm993G5i67d1HilfTtgynCxQVe//FoVGvLjRVIRNlA1pjD5Ud
+ APajCw5l8GDhMiCobjkMmVxgd3XRnbELl84T8qBgUYCk8IMbyJajIU/NVe/0hoF47alhTD41WD
+ dodF2H2Bih6lDYHM7nt5gU6uHL9U8f4gJnG2LmjE8Etqqr493/uIZsqJVaAvyR3w1YH+cLlg8y
+ W+Q=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v11 00/56] atmel_mxt_ts misc
+Date:   Thu, 7 May 2020 22:56:00 -0700
+Message-ID: <20200508055656.96389-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200501082537.4740-1-caoj.fnst@cn.fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: E2FC24BCC89E.AC1B6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BTW, this is reported by kernel test robot <lkp@intel.com>, so please help to add:
+This patch-set forward ports Nick Dyer's work in ndyer/linux github
+repository as long as some other features and fixes
 
-	Reported-by: kernel test robot <lkp@intel.com>
+Balasubramani Vivekanandan (2):
+  Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+    transaction
+  Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
 
-when it got merged.
+Dean Jenkins (1):
+  Input: atmel_mxt_ts: return error from
+    mxt_process_messages_until_invalid()
+
+Deepak Das (6):
+  Input: Atmel: improve error handling in mxt_start()
+  Input: Atmel: improve error handling in mxt_initialize()
+  Input: Atmel: improve error handling in mxt_update_cfg()
+  Input: Atmel: Improve error handling in mxt_initialize_input_device()
+  Input: Atmel: handle ReportID "0x00" while processing T5 messages
+  Input: Atmel: use T44 object to process T5 messages
+
+George G. Davis (1):
+  input: atmel_mxt_ts: export GPIO reset line via sysfs
+
+Janus Cheng (1):
+  Input: atmel_mxt_ts - check data->input_dev is not null in
+    mxt_input_sync()
+
+Jiada Wang (12):
+  Input: introduce input_mt_report_slot_inactive
+  dt-bindings: input: atmel: add suspend mode support
+  Input: atmel_mxt_ts: Rename mxt_fw_version_show to fw_version_show
+  Input: atmel_mxt_ts: Rename mxt_hw_version_show to hw_version_show
+  Input: atmel_mxt_ts: rename mxt_update_fw_store to update_fw_store
+  dt-bindings: input: atmel: provide name of configuration file
+  dt-bindings: input: atmel: support to specify input name
+  Input: atmel_mxt_ts - rename mxt_object_show to object_show
+  Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+  Input: atmel_mxt_ts - eliminate data->raw_info_block
+  input: atmel_mxt_ts: don't disable IRQ before remove of
+    mxt_fw_attr_group
+  Input: atmel_mxt_ts - Fix compilation warning
+
+Karl Tsou (1):
+  Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Kautuk Consul (2):
+  Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+  Input: atmel_mxt_ts - rely on calculated_crc rather than file
+    config_crc
+
+Naveen Chakka (2):
+  input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+    status
+  input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+
+Nick Dyer (25):
+  Input: atmel_mxt_ts - rework sysfs init/remove
+  Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when
+    necessary
+  Input: atmel_mxt_ts - split large i2c transfers into blocks
+  Input: atmel_mxt_ts - output status from T48 Noise Supression
+  Input: atmel_mxt_ts - output status from T42 Touch Suppression
+  Input: atmel_mxt_ts - implement T9 vector/orientation support
+  Input: atmel_mxt_ts - implement T15 Key Array support
+  Input: atmel_mxt_ts - handle reports from T47 Stylus object
+  Input: atmel_mxt_ts - implement support for T107 active stylus
+  Input: atmel_mxt_ts - release touch state during suspend
+  Input: atmel_mxt_ts - add regulator control support
+  Input: atmel_mxt_ts - report failures in suspend/resume
+  Input: atmel_mxt_ts - allow specification of firmware file name
+  Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+  Input: atmel_mxt_ts - allow input name to be specified in platform
+    data
+  Input: atmel_mxt_ts - refactor firmware flash to extract context into
+    struct
+  Input: atmel_mxt_ts - refactor code to enter bootloader into separate
+    func
+  Input: atmel_mxt_ts - combine bootloader version query with probe
+  Input: atmel_mxt_ts - improve bootloader state machine handling
+  Input: atmel_mxt_ts - rename bl_completion to chg_completion
+  Input: atmel_mxt_ts - make bootloader interrupt driven
+  Input: atmel_mxt_ts - implement I2C retries
+  Input: atmel_mxt_ts - orientation is not present in hover
+  Input: atmel_mxt_ts - implement debug output for messages
+  Input: atmel_mxt_ts - implement improved debug message interface
+
+Nikhil Ravindran (1):
+  Input: atmel_mxt_ts: Add support for run self-test routine.
+
+karl tsou (1):
+  Input: atmel_mxt_ts - add config checksum attribute to sysfs
+
+keerthikumarp (1):
+  input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel
+    touch panel controller in detachable displays.
+---
+v11:
+Following commits in v10 have been dropped
+dt-bindings: input: atmel: support to set max bytes transferred
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+Following commits have been added
+Input: atmel_mxt_ts - check data->input_dev is not null in
+mxt_input_sync()
+Input: atmel_mxt_ts - rename mxt_object_show to object_show
+input: atmel_mxt_ts: don't disable IRQ before remove of
+mxt_fw_attr_group
+
+Following commits have been updated to address review findings
+dt-bindings: input: atmel: add suspend mode support
+input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+status
+Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+
+v10:
+Following commits have been updated
+input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+status
+dt-bindings: input: atmel: add suspend mode support
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+Re-order commits to avoid compilation error
+
+v9:
+Following commits have been added
+Input: atmel_mxt_ts: rename mxt_update_fw_store to update_fw_store
+Input: atmel_mxt_ts: Rename mxt_hw_version_show to hw_version_show
+Input: atmel_mxt_ts: Rename mxt_fw_version_show to fw_version_show
+
+Addressed dev_attrs related checkpatch warnings
+
+v8:
+Fix checkpatch errors and warnings
+
+Fix issue in commit (" Input: atmel_mxt_ts - only read messages in
+mxt_acquire_irq() when necessary")
+reported by Dmitry Osipenko
+
+Cleanup coding style for commits
+Input: atmel_mxt_ts - add regulator control support
+Input: atmel_mxt_ts - improve bootloader state machine handling
+
+v7:
+Fix regression found when updating firmware
+Following commits have been updated to fix regression found when
+updating firmware
+Input: atmel_mxt_ts - improve bootloader state machine handling
+Input: atmel_mxt_ts - make bootloader interrupt driven
+input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+status
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v6:
+Fix issue in commit ("Input: introduce input_mt_report_slot_inactive")
+reported by kernel test robot
+
+v5:
+Following commits have been updated to address warnings & errors
+reported by kbuild test robot
+Input: atmel_mxt_ts - make bootloader interrupt driven
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Following commit has been updated
+Input: introduce input_mt_report_slot_inactive
+
+v4:
+Following commit in v3 patch-set has been removed
+Input: switch to use return value of input_mt_report_slot_state
+
+Following commit has been updated to address checkpatch warning
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v3:
+Following commits have been updated compared to v2 patchset
+Input: atmel_mxt_ts - implement debug output for messages
+- added inline comment
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msg
+- changed dev_info() to dev_dbg()
+
+v2:
+Following commit in v1 patchset has been split into two commits
+Input: introduce input_mt_report_slot_inactive
+
+Following commits have been updated compared to v1 patchset
+Input: atmel_mxt_ts - split large i2c transfers into blocks
+Input: atmel_mxt_ts - output status from T42 Touch Suppression
+
+Following commits in v1 patchset have been squashed
+Input: touchscreen: Atmel: Add device tree support for T15 key array
+objects
+Input: atmel_mxt_ts - check data->input_dev is not null in
+mxt_input_sync()
+Input: atmel_mxt_ts - check firmware format before entering bootloader
+Input: atmel_mxt_ts: update stale use_retrigen_workaround flag
+input: atmel_mxt_ts: move bootloader probe from mxt_initialize()
+input: Atmel: limit the max bytes transferred while reading T5 messages
+Input: atmel_mxt_ts: Use msecs_to_jiffies() instead of HZ
+Input: atmel_mxt_ts: Use complete when in_bootloader true
+Input: atmel_mxt_ts: Prevent crash due to freeing of input device
+input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
+
+Following commits in v1 patchset have been dropped:
+Input: atmel_mxt_ts - configure and use gpios as real gpios
+Input: touchscreen: Atmel: Enable IRQ_DISABLE_UNLAZY flag for interrupt
+Input: atmel_mxt_ts - add memory access interface via sysfs
+Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+Input: atmel_mxt_ts: Avoid race condition in freeing of input device
+
+v1: initial version
+---
+
+ .../bindings/input/atmel,maxtouch.txt         |   14 +
+ MAINTAINERS                                   |    1 +
+ drivers/hid/hid-alps.c                        |    3 +-
+ drivers/hid/hid-multitouch.c                  |    6 +-
+ drivers/input/misc/xen-kbdfront.c             |    2 +-
+ drivers/input/mouse/elan_i2c_core.c           |    2 +-
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 2072 ++++++++++++++---
+ drivers/input/touchscreen/cyttsp4_core.c      |    5 +-
+ drivers/input/touchscreen/cyttsp_core.c       |    2 +-
+ drivers/input/touchscreen/melfas_mip4.c       |    4 +-
+ drivers/input/touchscreen/mms114.c            |    2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |    2 +-
+ drivers/input/touchscreen/stmfts.c            |    2 +-
+ include/dt-bindings/input/atmel_mxt_ts.h      |   23 +
+ include/linux/input/mt.h                      |    5 +
+ 15 files changed, 1790 insertions(+), 355 deletions(-)
+ create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
 
 -- 
-Sincerely,
-Cao jin
-
-On 5/1/20 4:25 PM, Cao jin wrote:
-> Compilation on i386 complains as following:
-> 
-> util/session.c: In function 'perf_session__process_compressed_event':
-> util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
->   pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
->            ^
-> 
-> util/zstd.c: In function 'zstd_decompress_stream':
-> util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
->     pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
->            ^
-> 
-> Fix them by pairing "%zd" to size_t.
-> 
-> Also revert an unnecessary conversion: "(long)src_size" to plain "src_size"
-> with conversion specifier "%zd".
-> 
-> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-> ---
->  tools/perf/util/session.c | 2 +-
->  tools/perf/util/zstd.c    | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 0b0bfe5bef17..50c2ffa388ad 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
->  		session->decomp_last = decomp;
->  	}
->  
-> -	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-> +	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
->  
->  	return 0;
->  }
-> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> index d2202392ffdb..877bfb79e4af 100644
-> --- a/tools/perf/util/zstd.c
-> +++ b/tools/perf/util/zstd.c
-> @@ -74,8 +74,8 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
->  		ret = ZSTD_compressStream(data->cstream, &output, &input);
->  		ZSTD_flushStream(data->cstream, &output);
->  		if (ZSTD_isError(ret)) {
-> -			pr_err("failed to compress %ld bytes: %s\n",
-> -				(long)src_size, ZSTD_getErrorName(ret));
-> +			pr_err("failed to compress %zd bytes: %s\n",
-> +				src_size, ZSTD_getErrorName(ret));
->  			memcpy(dst, src, src_size);
->  			return src_size;
->  		}
-> @@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
->  	while (input.pos < input.size) {
->  		ret = ZSTD_decompressStream(data->dstream, &output, &input);
->  		if (ZSTD_isError(ret)) {
-> -			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-> +			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
->  			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
->  			break;
->  		}
-> 
-
-
+2.17.1
 
