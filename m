@@ -2,292 +2,80 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6E3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF76C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84401218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:01:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nXAXQ6W0"
+	by mail.kernel.org (Postfix) with ESMTP id D436E215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgEHKBb (ORCPT
+        id S1727122AbgEHKCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:01:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49446 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgEHKBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:01:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048A1Omp040624;
-        Fri, 8 May 2020 05:01:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588932084;
-        bh=mDlb+wq/cr64hTho8njr8Aifr3WWmAgvcyp800YAOO8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nXAXQ6W0HwOrLZMpH3RdwLtzPJOYCNRUW/E8LLvPyAsIgL+FihXX56yFlSK7UDXKC
-         OS/A8PiHsb4XCZ7+IhFhdvft8ZsDoP3LTZr2rjTMdh/ElqVNhkTizzn5nFyL1ULZLS
-         3sla0BSokdVC1jjZ4r1S2PtLsXv/MKXiUKBIyMb0=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048A1Ob8071491;
-        Fri, 8 May 2020 05:01:24 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 05:01:24 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 05:01:24 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048A1NBx103087;
-        Fri, 8 May 2020 05:01:23 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>, <devicetree@vger.kernel.org>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v3 2/2] soc: ti: add k3 platforms chipid module driver
-Date:   Fri, 8 May 2020 13:01:00 +0300
-Message-ID: <20200508100100.20740-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508100100.20740-1-grygorii.strashko@ti.com>
-References: <20200508100100.20740-1-grygorii.strashko@ti.com>
+        Fri, 8 May 2020 06:02:04 -0400
+Received: from relay.sw.ru ([185.231.240.75]:59018 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgEHKCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:02:03 -0400
+Received: from vvs-ws.sw.ru ([172.16.24.21])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1jWzp5-0004Tv-Er; Fri, 08 May 2020 13:01:39 +0300
+Subject: Re: [PATCH] ipc/util.c: sysvipc_find_ipc() incorrectly updates
+ position index
+From:   Vasily Averin <vvs@virtuozzo.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Andreas Schwab <schwab@suse.de>
+References: <ad24ee52-21a8-3ff0-e968-63d315472b91@virtuozzo.com>
+ <4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com>
+ <20200507170242.6cbb88ae672deed67152e221@linux-foundation.org>
+ <20200508033625.GO16070@bombadil.infradead.org>
+ <e25e5a42-159c-6bad-4f14-d70461a78b72@virtuozzo.com>
+Message-ID: <c89b587a-b570-2a11-3001-d1c8444f3a2f@virtuozzo.com>
+Date:   Fri, 8 May 2020 13:01:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <e25e5a42-159c-6bad-4f14-d70461a78b72@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Texas Instruments K3 Multicore SoC platforms have chipid module which
-is represented by CTRLMMR_xxx_JTAGID register and contains information
-about SoC id and revision.
- Bits:
-  31-28 VARIANT Device variant
-  27-12 PARTNO  Part number
-  11-1  MFG     Indicates TI as manufacturer (0x17)
-  1             Always 1
+On 5/8/20 9:07 AM, Vasily Averin wrote:
+> On 5/8/20 6:36 AM, Matthew Wilcox wrote:
+>> On Thu, May 07, 2020 at 05:02:42PM -0700, Andrew Morton wrote:
+>>> Here's how I resolved things.  Please check?
+>>>
+>>> static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+>>> 					      loff_t *new_pos)
+>>> {
+>>> 	unsigned long index = pos;
+>>> 	struct kern_ipc_perm *ipc;
+>>>
+>>> 	rcu_read_lock();
+>>> 	ipc = xa_find(&ids->ipcs, &index, ULONG_MAX, XA_PRESENT);
+>>> 	if (ipc)
+>>> 		ipc_lock_object(ipc);
+>>> 	else
+>>> 		rcu_read_unlock();
+>>> 	*new_pos = pos + 1;
+>>> 	return ipc;
+>>> }
+>>
+>> Surely that should be '*new_pos = index + 1'?  Or did I misunderstand
+>> the reasoning behind the other patch?
+> 
+> I'm not sure however it looks like xa_find() can return index < pos
+it seems, I was wrong here.
+So I'm agree with Matthew, '*new_pos = index + 1' should be used.
 
-This patch adds corresponding driver to identify the TI K3 SoC family and
-revision, and registers this information with the SoC bus. It is available
-under /sys/devices/soc0/ for user space, and can be checked, where needed,
-in Kernel using soc_device_match().
-
-Identification is done by:
-- checking MFG to be TI ID
- - retrieving Device variant (revision)
- - retrieving Part number and convert it to the family
- - retrieving machine from DT "/model"
-
-Example J721E:
-  # cat /sys/devices/soc0/{machine,family,revision}
-  Texas Instruments K3 J721E SoC
-  J721E
-  SR1.0
-
-Example AM65x:
-  # cat /sys/devices/soc0/{machine,family,revision}
-  Texas Instruments AM654 Base Board
-  AM65X
-  SR1.0
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/soc/ti/Kconfig      |  10 +++
- drivers/soc/ti/Makefile     |   1 +
- drivers/soc/ti/k3-socinfo.c | 140 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
- create mode 100644 drivers/soc/ti/k3-socinfo.c
-
-diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index 4486e055794c..e192fb788836 100644
---- a/drivers/soc/ti/Kconfig
-+++ b/drivers/soc/ti/Kconfig
-@@ -91,6 +91,16 @@ config TI_K3_RINGACC
- 	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
- 	  If unsure, say N.
- 
-+config TI_K3_SOCINFO
-+	bool
-+	depends on ARCH_K3 || COMPILE_TEST
-+	select SOC_BUS
-+	select MFD_SYSCON
-+	help
-+	  Include support for the SoC bus socinfo for the TI K3 Multicore SoC
-+	  platforms to provide information about the SoC family and
-+	  variant to user space.
-+
- endif # SOC_TI
- 
- config TI_SCI_INTA_MSI_DOMAIN
-diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-index bec827937a5f..1110e5c98685 100644
---- a/drivers/soc/ti/Makefile
-+++ b/drivers/soc/ti/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
- obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
- obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
- obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
-+obj-$(CONFIG_TI_K3_SOCINFO)		+= k3-socinfo.o
-diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
-new file mode 100644
-index 000000000000..57c6bde7adf5
---- /dev/null
-+++ b/drivers/soc/ti/k3-socinfo.c
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * TI K3 SoC info driver
-+ *
-+ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/sys_soc.h>
-+
-+#define CTRLMMR_WKUP_JTAGID_REG		0
-+/*
-+ * Bits:
-+ *  31-28 VARIANT	Device variant
-+ *  27-12 PARTNO	Part number
-+ *  11-1  MFG		Indicates TI as manufacturer (0x17)
-+ *  1			Always 1
-+ */
-+#define CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT	(28)
-+#define CTRLMMR_WKUP_JTAGID_VARIANT_MASK	GENMASK(31, 28)
-+
-+#define CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT	(12)
-+#define CTRLMMR_WKUP_JTAGID_PARTNO_MASK		GENMASK(27, 12)
-+
-+#define CTRLMMR_WKUP_JTAGID_MFG_SHIFT		(1)
-+#define CTRLMMR_WKUP_JTAGID_MFG_MASK		GENMASK(11, 1)
-+
-+#define CTRLMMR_WKUP_JTAGID_MFG_TI		0x17
-+
-+static const struct k3_soc_id {
-+	unsigned int id;
-+	const char *family_name;
-+} k3_soc_ids[] = {
-+	{ 0xBB5A, "AM65X" },
-+	{ 0xBB64, "J721E" },
-+};
-+
-+static int __init partno_to_names(unsigned int partno,
-+				  struct soc_device_attribute *soc_dev_attr)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(k3_soc_ids); i++)
-+		if (partno == k3_soc_ids[i].id) {
-+			soc_dev_attr->family = k3_soc_ids[i].family_name;
-+			return 0;
-+		}
-+
-+	return -EINVAL;
-+}
-+
-+static int __init k3_chipinfo_init(void)
-+{
-+	struct soc_device_attribute *soc_dev_attr;
-+	struct soc_device *soc_dev;
-+	struct device_node *node;
-+	struct regmap *regmap;
-+	u32 partno_id;
-+	u32 variant;
-+	u32 jtag_id;
-+	u32 mfg;
-+	int ret;
-+
-+	node = of_find_compatible_node(NULL, NULL, "ti,am654-chipid");
-+	if (!node)
-+		return -ENODEV;
-+
-+	regmap = device_node_to_regmap(node);
-+	of_node_put(node);
-+
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = regmap_read(regmap, CTRLMMR_WKUP_JTAGID_REG, &jtag_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	mfg = (jtag_id & CTRLMMR_WKUP_JTAGID_MFG_MASK) >>
-+	       CTRLMMR_WKUP_JTAGID_MFG_SHIFT;
-+
-+	if (mfg != CTRLMMR_WKUP_JTAGID_MFG_TI) {
-+		pr_err("Invalid MFG SoC\n");
-+		return -ENODEV;
-+	}
-+
-+	variant = (jtag_id & CTRLMMR_WKUP_JTAGID_VARIANT_MASK) >>
-+		  CTRLMMR_WKUP_JTAGID_VARIANT_SHIFT;
-+	variant++;
-+
-+	partno_id = (jtag_id & CTRLMMR_WKUP_JTAGID_PARTNO_MASK) >>
-+		 CTRLMMR_WKUP_JTAGID_PARTNO_SHIFT;
-+
-+	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-+	if (!soc_dev_attr)
-+		return -ENOMEM;
-+
-+	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "SR%x.0", variant);
-+	if (!soc_dev_attr->revision) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	ret = partno_to_names(partno_id, soc_dev_attr);
-+	if (ret) {
-+		pr_err("Unknown SoC JTAGID[0x%08X]\n", jtag_id);
-+		ret = -ENODEV;
-+		goto err_free_rev;
-+	}
-+
-+	node = of_find_node_by_path("/");
-+	of_property_read_string(node, "model", &soc_dev_attr->machine);
-+	of_node_put(node);
-+
-+	soc_dev = soc_device_register(soc_dev_attr);
-+	if (IS_ERR(soc_dev)) {
-+		ret = PTR_ERR(soc_dev);
-+		goto err_free_rev;
-+	}
-+
-+	pr_info("Family:%s rev:%s JTAGID[0x%08x] Detected\n",
-+		soc_dev_attr->family,
-+		soc_dev_attr->revision, jtag_id);
-+
-+	return 0;
-+
-+err_free_rev:
-+	kfree(soc_dev_attr->revision);
-+err:
-+	kfree(soc_dev_attr);
-+	return ret;
-+}
-+
-+subsys_initcall(k3_chipinfo_init);
--- 
-2.17.1
-
+Thank you,
+	Vasily Averin
