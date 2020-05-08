@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D01C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7973FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD0221835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BC824968
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941675;
-	bh=7WNCl6dTYw0a32ibN6iTf84kdFDF1dAkXtEfvhpDzXQ=;
+	s=default; t=1588941678;
+	bh=kV98EsgCCVwfYGIGyknDDHj3jNejnuhthv1D6favVD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rs0kzVIePcglsfrjwPFMGylRsETBJQRC9/JVjA0IvmER6DcxtLCR8vl6zs4KmRX3T
-	 TiC6qvx+F+uN9iV7JuFLm1zAPHeYY50V7S/cXF52p5qloH6acUc5f3hUz8tNtgESnk
-	 NzNFuNbKdxianhCmf4nbyLbEPs1a3WIM0tzvSyq8=
+	b=xcLDrWe5HfA5b9yQlS3DwU2Pu+w0ekjcJ7AqkgCLtw0uEZNfW6GRg6WZct/cv+x5t
+	 iilGHSFyS3WCTqQMFNihaCeMAs6HPT/jXAgxv1zhz3r7i6hVnVPGkmRLECaPG4KO1t
+	 DmMzk+ilrewtW5TgINeAoxAHhemGWeb+rywWS4/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgEHMlO (ORCPT
+        id S1726811AbgEHMlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgEHMlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:06 -0400
+        id S1728188AbgEHMlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0040320731;
-        Fri,  8 May 2020 12:41:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5B920731;
+        Fri,  8 May 2020 12:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941665;
-        bh=7WNCl6dTYw0a32ibN6iTf84kdFDF1dAkXtEfvhpDzXQ=;
+        s=default; t=1588941670;
+        bh=kV98EsgCCVwfYGIGyknDDHj3jNejnuhthv1D6favVD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scxpoMsuj0gBMYe+ltXYc271X98zi1xpczkbHYj3W46aQO/3AdoGEKlOFe08rNbKd
-         y8f13IiB2KDZiJaYEZPutAY8JGVkCqaiZSKutej/eOTinwvTuvrm5IziOPuFW0BJ4Z
-         9Gc2XSlPrI/6Ko3h+gmgEvf5gLeyBNHKgOoBLJc4=
+        b=u+MZ0h6djnhrTDoT3EUln2aqdT45GDWCuJtXLkJJUL8S3Kvzjy2xXB2U4uA6Fpsk+
+         RoerjEZa1cuvWqdwDXPF2wdERf04CenRQI8IVPkC86Js5bSvtR7rc1csYjGOTeQYSx
+         tHF0CIvqqQfTuc4DTQuFF3+H1QbBw5FMRWLBMNuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kodanev <alexey.kodanev@oracle.com>,
+        stable@vger.kernel.org, Ilan Tayari <ilant@mellanox.com>,
+        Rami Rosen <roszenrami@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 123/312] net/xfrm_input: fix possible NULL deref of tunnel.ip6->parms.i_key
-Date:   Fri,  8 May 2020 14:31:54 +0200
-Message-Id: <20200508123133.108492280@linuxfoundation.org>
+Subject: [PATCH 4.4 125/312] xfrm: Fix memory leak of aead algorithm name
+Date:   Fri,  8 May 2020 14:31:56 +0200
+Message-Id: <20200508123133.269293616@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,74 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kodanev <alexey.kodanev@oracle.com>
+From: Ilan Tayari <ilant@mellanox.com>
 
-commit 1625f4529957738be7d87cf157e107b8fb9d23b9 upstream.
+commit b588479358ce26f32138e0f0a7ab0678f8e3e601 upstream.
 
-Running LTP 'icmp-uni-basic.sh -6 -p ipcomp -m tunnel' test over
-openvswitch + veth can trigger kernel panic:
+commit 1a6509d99122 ("[IPSEC]: Add support for combined mode algorithms")
+introduced aead. The function attach_aead kmemdup()s the algorithm
+name during xfrm_state_construct().
+However this memory is never freed.
+Implementation has since been slightly modified in
+commit ee5c23176fcc ("xfrm: Clone states properly on migration")
+without resolving this leak.
+This patch adds a kfree() call for the aead algorithm name.
 
-  BUG: unable to handle kernel NULL pointer dereference
-  at 00000000000000e0 IP: [<ffffffff8169d1d2>] xfrm_input+0x82/0x750
-  ...
-  [<ffffffff816d472e>] xfrm6_rcv_spi+0x1e/0x20
-  [<ffffffffa082c3c2>] xfrm6_tunnel_rcv+0x42/0x50 [xfrm6_tunnel]
-  [<ffffffffa082727e>] tunnel6_rcv+0x3e/0x8c [tunnel6]
-  [<ffffffff8169f365>] ip6_input_finish+0xd5/0x430
-  [<ffffffff8169fc53>] ip6_input+0x33/0x90
-  [<ffffffff8169f1d5>] ip6_rcv_finish+0xa5/0xb0
-  ...
-
-It seems that tunnel.ip6 can have garbage values and also dereferenced
-without a proper check, only tunnel.ip4 is being verified. Fix it by
-adding one more if block for AF_INET6 and initialize tunnel.ip6 with NULL
-inside xfrm6_rcv_spi() (which is similar to xfrm4_rcv_spi()).
-
-Fixes: 049f8e2 ("xfrm: Override skb->mark with tunnel->parm.i_key in xfrm_input")
-
-Signed-off-by: Alexey Kodanev <alexey.kodanev@oracle.com>
+Fixes: 1a6509d99122 ("[IPSEC]: Add support for combined mode algorithms")
+Signed-off-by: Ilan Tayari <ilant@mellanox.com>
+Acked-by: Rami Rosen <roszenrami@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/xfrm6_input.c |    1 +
- net/xfrm/xfrm_input.c  |   14 +++++++-------
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ net/xfrm/xfrm_state.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv6/xfrm6_input.c
-+++ b/net/ipv6/xfrm6_input.c
-@@ -23,6 +23,7 @@ int xfrm6_extract_input(struct xfrm_stat
- 
- int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi)
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -332,6 +332,7 @@ static void xfrm_state_gc_destroy(struct
  {
-+	XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = NULL;
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET6;
- 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct ipv6hdr, daddr);
- 	return xfrm_input(skb, nexthdr, spi, 0);
---- a/net/xfrm/xfrm_input.c
-+++ b/net/xfrm/xfrm_input.c
-@@ -207,15 +207,15 @@ int xfrm_input(struct sk_buff *skb, int
- 	family = XFRM_SPI_SKB_CB(skb)->family;
- 
- 	/* if tunnel is present override skb->mark value with tunnel i_key */
--	if (XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4) {
--		switch (family) {
--		case AF_INET:
-+	switch (family) {
-+	case AF_INET:
-+		if (XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4)
- 			mark = be32_to_cpu(XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4->parms.i_key);
--			break;
--		case AF_INET6:
-+		break;
-+	case AF_INET6:
-+		if (XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6)
- 			mark = be32_to_cpu(XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6->parms.i_key);
--			break;
--		}
-+		break;
- 	}
- 
- 	/* Allocate new secpath or COW existing one. */
+ 	tasklet_hrtimer_cancel(&x->mtimer);
+ 	del_timer_sync(&x->rtimer);
++	kfree(x->aead);
+ 	kfree(x->aalg);
+ 	kfree(x->ealg);
+ 	kfree(x->calg);
 
 
