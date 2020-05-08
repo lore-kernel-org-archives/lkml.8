@@ -2,168 +2,99 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A6DC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44480C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F4121974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225402184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="taRppZsM";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IXmO1A7e"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qyX9hwha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEHRbl (ORCPT
+        id S1727802AbgEHRcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:31:41 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42800 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726746AbgEHRbi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:31:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5FFF58EE269;
-        Fri,  8 May 2020 10:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1588959098;
-        bh=ccfPUMPOZrwzfliVDDgWfLincd4TIFff8Vt2wm+HZWI=;
-        h=Subject:From:To:Cc:Date:From;
-        b=taRppZsMBhJyjIpGxGtMyRmZk/Cy6my59uQ0VNQGBN/tPuM1/0+dSSL6xg9UaaSzU
-         +2Xn9w8uWYP0lXZn5WP9rplrQAt19vv0Oq8XpG2VS8B3aQ5PHz4L9xnHmsXiLNPDqN
-         ivbPPmJ2U44N/Gql0vyNIYY4Rmw3MAy0jVl5uXY8=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 98BeorSCoWdG; Fri,  8 May 2020 10:31:38 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A1F918EE0F8;
-        Fri,  8 May 2020 10:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1588959097;
-        bh=ccfPUMPOZrwzfliVDDgWfLincd4TIFff8Vt2wm+HZWI=;
-        h=Subject:From:To:Cc:Date:From;
-        b=IXmO1A7ebfLJ64cSREZLl5ap6rP85YReGhnMDZYGahMHFE68uBSgmTKK4OQfX6g8c
-         DFCjhABQKgVJqr4Utplx6NLWWOHFQj4oTxg2lin2hU7UIiIeJbOeOu10u4uPeaKGQ8
-         RDCkQ/x7g2EUXOISVFIhF8WvwZKeURb1jJN3mgaE=
-Message-ID: <1588959096.3837.12.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.7-rc4
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 08 May 2020 10:31:36 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Fri, 8 May 2020 13:32:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59021 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726746AbgEHRcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:32:22 -0400
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 048HVftM3921978
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Fri, 8 May 2020 10:31:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 048HVftM3921978
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588959104;
+        bh=j4Wt5+zHny+jNVeWIommm01rPqJoQDpyDmv65ZQS5Sw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qyX9hwhasKyR0D6xlFQuduuCpCaongWidyAWUxb/fhwYDsxx7V0Mfg1EIX1k21YmX
+         nBAyONHj/k8sjGGcKRrDex9b0FjXOWMx2KBZtVizuPQo9zSjzCoSCWNPi1CB2myIIK
+         6mlS7GT+BqZCcU0iQ+6qqC5m1o1K9ORGf+h4UFQkrIrlGChUGrklB9GYUKAiW6moF3
+         DQyMt39w1+13n709biF1A6K8nz94ih9AeZVZ0Y1otScfo1PwknvYrUyGA64Vi2JJuy
+         wkXgU+ZJpjnZCca+JM4BjvvlTmKII+Y763LfO/WBIap8QVGV2k4ADuL988yQ4De3C5
+         HXAHTXjBpuM5Q==
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Brian Gerst <brgerst@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200505174423.199985-1-ndesaulniers@google.com>
+ <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com>
+ <20200507113422.GA3762@hirez.programming.kicks-ass.net>
+ <CAMzpN2hXUYvLuTA63N56ef4DEzyWXt_uVVq6PV0r8YQT-YN42g@mail.gmail.com>
+ <CAKwvOd=a3MR7osKBpbq=d41ieo7G9FtOp5Kok5por1P5ZS9s4g@mail.gmail.com>
+ <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
+ <CAMzpN2gu4stkRKTsMTVxyzckO3SMhfA+dmCnSu6-aMg5QAA_JQ@mail.gmail.com>
+ <CAKwvOd=hVKrFU+imSGeX+MEKMpW97gE7bzn1C637qdns9KSnUA@mail.gmail.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
+Date:   Fri, 8 May 2020 10:31:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAKwvOd=hVKrFU+imSGeX+MEKMpW97gE7bzn1C637qdns9KSnUA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Four minor fixes, all in drivers (qla2xxx, ibmvfc, ibmvscsi)
+On 2020-05-08 10:21, Nick Desaulniers wrote:
+>>
+>> One last suggestion.  Add the "b" modifier to the mask operand: "orb
+>> %b1, %0".  That forces the compiler to use the 8-bit register name
+>> instead of trying to deduce the width from the input.
+> 
+> Ah right: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
+> 
+> Looks like that works for both compilers.  In that case, we can likely
+> drop the `& 0xff`, too.  Let me play with that, then I'll hopefully
+> send a v3 today.
+> 
 
-The patch is available here:
+Good idea. I requested a while ago that they document these modifiers; they
+chose not to document them all which in some ways is good; it shows what they
+are willing to commit to indefinitely.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-
-The short changelog is:
-
-Arun Easi (1):
-      scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
-
-Brian King (1):
-      scsi: ibmvfc: Don't send implicit logouts prior to NPIV login
-
-Quinn Tran (1):
-      scsi: qla2xxx: Delete all sessions before unregister local nvme port
-
-Tyrel Datwyler (1):
-      scsi: ibmvscsi: Fix WARN_ON during event pool release
-
-And the diffstat:
-
- drivers/scsi/ibmvscsi/ibmvfc.c   | 5 +++++
- drivers/scsi/ibmvscsi/ibmvscsi.c | 4 ----
- drivers/scsi/qla2xxx/qla_attr.c  | 2 +-
- drivers/scsi/qla2xxx/qla_mbx.c   | 2 +-
- 4 files changed, 7 insertions(+), 6 deletions(-)
-
-With full diff below
-
-James
-
----
-
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index 7da9e060b270..635f6f9cffc4 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -3640,6 +3640,11 @@ static void ibmvfc_tgt_implicit_logout_and_del(struct ibmvfc_target *tgt)
- 	struct ibmvfc_host *vhost = tgt->vhost;
- 	struct ibmvfc_event *evt;
- 
-+	if (!vhost->logged_in) {
-+		ibmvfc_set_tgt_action(tgt, IBMVFC_TGT_ACTION_DEL_RPORT);
-+		return;
-+	}
-+
- 	if (vhost->discovery_threads >= disc_threads)
- 		return;
- 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 7f66a7783209..59f0f1030c54 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2320,16 +2320,12 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	unsigned long flags;
- 
- 	srp_remove_host(hostdata->host);
- 	scsi_remove_host(hostdata->host);
- 
- 	purge_requests(hostdata, DID_ERROR);
--
--	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
--	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
- 
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index 97cabd7e0014..33255968f03a 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -3031,11 +3031,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
- 		msleep(1000);
- 
--	qla_nvme_delete(vha);
- 
- 	qla24xx_disable_vp(vha);
- 	qla2x00_wait_for_sess_deletion(vha);
- 
-+	qla_nvme_delete(vha);
- 	vha->flags.delete_progress = 1;
- 
- 	qlt_remove_target(ha, vha);
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 4ed90437e8c4..d6c991bd1bde 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -3153,7 +3153,7 @@ qla24xx_abort_command(srb_t *sp)
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
- 	    "Entered %s.\n", __func__);
- 
--	if (vha->flags.qpairs_available && sp->qpair)
-+	if (sp->qpair)
- 		req = sp->qpair->req;
- 	else
- 		return QLA_FUNCTION_FAILED;
+	-hpa
