@@ -2,102 +2,115 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55A2C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F4DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B416D20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ycs8GXkC"
+	by mail.kernel.org (Postfix) with ESMTP id D782F20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgEHUG4 (ORCPT
+        id S1727774AbgEHULn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:06:56 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8438 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgEHUG4 (ORCPT
+        Fri, 8 May 2020 16:11:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33444 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgEHULm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:06:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb5bbd30000>; Fri, 08 May 2020 13:06:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 08 May 2020 13:06:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 08 May 2020 13:06:56 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 May
- 2020 20:06:55 +0000
-Subject: Re: [PATCH 4/6] mm/hmm: add output flag for compound page mapping
-To:     Christoph Hellwig <hch@lst.de>
-CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Shuah Khan" <shuah@kernel.org>, <willy@infradead.org>
-References: <20200508192009.15302-1-rcampbell@nvidia.com>
- <20200508192009.15302-5-rcampbell@nvidia.com> <20200508195129.GA19740@lst.de>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <1ec0511f-e6eb-3e11-ad6d-ad4e5b107464@nvidia.com>
-Date:   Fri, 8 May 2020 13:06:55 -0700
+        Fri, 8 May 2020 16:11:42 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a4so1363403pgc.0;
+        Fri, 08 May 2020 13:11:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=M0td/tVQrd6JWU+Nqfok36GqNdC8dDzRs4sSNx11odc=;
+        b=Oe3ZoViFiDif47K1+IE90XRud+/MAWzK4VsqgMOWRZplrifsNVbS5rCCXBcvrNX1eZ
+         j9wK9iYH3Ui0pVA/uHfHN09eZ9raTEESFkkIfO+vh2AHF9xicMBOVKZ6DX56Rg3EO17l
+         K49DbEu+xTSJNZSBWpOCpunwm8fR8Bpc1V75Z15CRAJRKlxTx12vlxi0aVdZvPnbAT5P
+         HbD/sDWNULxsQ0XwpQ8Y5pxRD/37ykwUmjkrrPbEMGZkiNXlKuiTvo1JQEXb6T/BZV0o
+         sBqpwoUG092M8KIjsvFgXL/xAHg18F3TLsgXmwvvtnreQ6afupUzu09N/J2ZdiVA3KvW
+         Duxw==
+X-Gm-Message-State: AGi0PubkqVNQQaAX0C3nur1uoQyWXkBVqYucX4pB63KcF4b+F3+Fmmf1
+        ae9i+fWu3WeCpUT+k/w4i2UJ6Vkd4pk=
+X-Google-Smtp-Source: APiQypLbS2OlCtnbNFCZ+k3kV86aeI2BepAWtPhcHgidQvpHFrabaIkHVxwrKM4aPYHHzPtLRQfYwg==
+X-Received: by 2002:a63:180a:: with SMTP id y10mr3815182pgl.204.1588968701422;
+        Fri, 08 May 2020 13:11:41 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:89ed:1db3:8c60:ba90? ([2601:647:4000:d7:89ed:1db3:8c60:ba90])
+        by smtp.gmail.com with ESMTPSA id q14sm1973399pgq.60.2020.05.08.13.11.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 13:11:40 -0700 (PDT)
+Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
+ Booster(HPB) driver
+To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org,
+        rdunlap@infradead.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org
+References: <20200504142032.16619-1-beanhuo@micron.com>
+ <20200504142032.16619-6-beanhuo@micron.com>
+ <7b3e127f-a25f-e821-6704-2680ea619c6d@acm.org>
+ <1edda80d569a53e0af28fbe30a367d84f099f8fe.camel@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ff9de169-be8e-1595-5df0-0d09b1a1ce8e@acm.org>
+Date:   Fri, 8 May 2020 13:11:38 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200508195129.GA19740@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1edda80d569a53e0af28fbe30a367d84f099f8fe.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588968404; bh=1PhR0ynTTHTZ2jjSta5jo4Wils7Nsyx2BUSfOurLe2M=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ycs8GXkCLsC3dOjGwwVRiDFIa15xrlFp5dmFGRza+tkcfuZFMsD5xYyCaJ3SGXe5L
-         MbsyET5GQuGbmktRrCTBcURNRpVyByNfAP6d32d3PQqHhfvXHl7hV3Vz6+jpL9f7XP
-         CXbZOo+mS0n/H/P9XYRbSRpH1g1yZoCcRMaMatvBiqhLkjOZkUb5AO5td5VmqXKkE/
-         sM80B5uZfLs+ocEiGdK/OF8louCokHaVcQ5PGDdXwn/0dQA98q3hte0xdQaR0KSK8o
-         h1YgoYDiUJdbmaXyPqLW6c0Avqm1BAzTgQczQUQuWMpS3cwZcoVq5P9xL82BMqcFaC
-         raNhF8Jy7jtaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/8/20 12:51 PM, Christoph Hellwig wrote:
-> On Fri, May 08, 2020 at 12:20:07PM -0700, Ralph Campbell wrote:
->> hmm_range_fault() returns an array of page frame numbers and flags for
->> how the pages are mapped in the requested process' page tables. The PFN
->> can be used to get the struct page with hmm_pfn_to_page() and the page size
->> order can be determined with compound_order(page) but if the page is larger
->> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
->> using a larger page size. To be fully general, hmm_range_fault() would need
->> to return the mapping size to handle cases like a 1GB compound page being
->> mapped with 2MB PMD entries. However, the most common case is the mapping
->> size the same as the underlying compound page size.
->> Add a new output flag to indicate this so that callers know it is safe to
->> use a large device page table mapping if one is available.
+On 2020-05-08 07:44, Bean Huo wrote:
+> 1: driver module parameter, while system booting, specify maximum HPB
+> cache size in kernel boot Parameters:
 > 
-> Why do you need the flag?  The caller should be able to just use
-> page_size() (or willys new thp_size helper).
+>    	static int max_hpb_mem = 128;
+>    	module_param(max_hpb_mem,int,0444);
 > 
+> but this paramter is added in the ufshcd.c since the ufshpb.c is not a 
+> independent module. looks not very natural.
+> [ ... ]
+> If you prefer to convert current HPB driver to be a kernel module
+> driver, I prefer first apporach.
 
-The question is whether or not a large page can be mapped with smaller
-page table entries with different permissions. If one process has a 2MB
-page mapped with 4K PTEs with different read/write permissions, I don't think
-it would be OK for a device to map the whole 2MB with write access enabled.
-The flag is supposed to indicate that the whole page can be mapped by the
-device with the indicated read/write permissions.
+Hi Bean,
+
+A kernel module parameter sounds good to me.
+
+Thanks,
+
+Bart.
