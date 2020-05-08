@@ -2,208 +2,99 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C850C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A846421582
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8C121582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588943040;
+	bh=OAivvKqlUtldmHTyEiX1khD9Ur7dtJEbj2YpaT//bIg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A+mCNJMPY9cDCYHDcbzm9cxdKUB0+meWGr+EL9DL/vFav0yAfCNMhfEnx5azcMaor
+	 6UhoXNf+mR9HLiwMnGbG0gUGMwEjLa3f+GQPPZZJmg0oFJqEOlv6i7akMh03VnJjCy
+	 C997zeYRNqPGZZSgrsDiSNYnngBo9DYIwigNyCdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgEHNDx (ORCPT
+        id S1729731AbgEHMtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:03:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61522 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728830AbgEHNDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:03:49 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048D3L47119211;
-        Fri, 8 May 2020 09:03:29 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtt3v0q2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 09:03:26 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048D04Lm007962;
-        Fri, 8 May 2020 13:03:09 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g5dgcx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 13:03:09 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048D37uh65470550
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 13:03:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1775B5204F;
-        Fri,  8 May 2020 13:03:07 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 10B7852051;
-        Fri,  8 May 2020 13:03:04 +0000 (GMT)
-Date:   Fri, 8 May 2020 18:33:04 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200508130304.GA1961@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
- <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
- <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
- <20200429014145.GD19958@linux.vnet.ibm.com>
- <20200429122211.GD28637@dhcp22.suse.cz>
- <20200430071820.GF19958@linux.vnet.ibm.com>
- <20200504093712.GL22838@dhcp22.suse.cz>
+        Fri, 8 May 2020 08:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729367AbgEHMtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B2A421835;
+        Fri,  8 May 2020 12:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942158;
+        bh=OAivvKqlUtldmHTyEiX1khD9Ur7dtJEbj2YpaT//bIg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z41ASxxV+eTmWTbTorV2Ws60iyJ6y53SZWOBoqYEzGXtSWXoGZQEMy/vMm2rk9ki6
+         YVTQwFFvgnCbd7USHO8l6rmgFQPduv4FTldGocvxh0fVM7Qyp3MWZ0RptbRCFW1Zo9
+         7PCjQnUxIKTghbJkPUy+p3JIoGz/6syJGx6QQHqo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pravin B Shelar <pshelar@nicira.com>,
+        Jesse Gross <jesse@nicira.com>, Thomas Graf <tgraf@suug.ch>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 271/312] ovs/geneve: fix rtnl notifications on iface deletion
+Date:   Fri,  8 May 2020 14:34:22 +0200
+Message-Id: <20200508123143.493299935@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200504093712.GL22838@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_12:2020-05-07,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 clxscore=1015 priorityscore=1501 suspectscore=2 bulkscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080116
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michal Hocko <mhocko@kernel.org> [2020-05-04 11:37:12]:
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-> > > 
-> > > Have you tested on something else than ppc? Each arch does the NUMA
-> > > setup separately and this is a big mess. E.g. x86 marks even memory less
-> > > nodes (see init_memory_less_node) as online.
-> > > 
-> > 
-> > while I have predominantly tested on ppc, I did test on X86 with CONFIG_NUMA
-> > enabled/disabled on both single node and multi node machines.
-> > However, I dont have a cpuless/memoryless x86 system.
-> 
-> This should be able to emulate inside kvm, I believe.
-> 
+commit 41009481b690493c169ce85f591b9d32c6fd9422 upstream.
 
-I did try but somehow not able to get cpuless / memoryless node in a x86 kvm
-guest.
+The function geneve_dev_create_fb() (only used by ovs) never calls
+rtnl_configure_link(). The consequence is that dev->rtnl_link_state is
+never set to RTNL_LINK_INITIALIZED.
+During the deletion phase, the function rollback_registered_many() sends
+a RTM_DELLINK only if dev->rtnl_link_state is set to RTNL_LINK_INITIALIZED.
 
-Also I am unable to see how to enable HAVE_MEMORYLESS_NODES on x86 system.
-# git grep -w HAVE_MEMORYLESS_NODES | cat
-arch/ia64/Kconfig:config HAVE_MEMORYLESS_NODES
-arch/powerpc/Kconfig:config HAVE_MEMORYLESS_NODES
-#
-I forced enabled but it got disabled while kernel build.
-May be I am missing something.
+Fixes: e305ac6cf5a1 ("geneve: Add support to collect tunnel metadata.")
+CC: Pravin B Shelar <pshelar@nicira.com>
+CC: Jesse Gross <jesse@nicira.com>
+CC: Thomas Graf <tgraf@suug.ch>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> > 
-> > So we have a redundant page hinting numa faults which we can avoid.
-> 
-> interesting. Does this lead to any observable differences? Btw. it would
-> be really great to describe how the online state influences the numa
-> balancing.
-> 
+---
+ drivers/net/geneve.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-If numa_balancing is enabled, it has a check to see if the number of online
-nodes is 1. If its one, it disables numa_balancing, else the numa_balancing
-stays as is. In this case, the actual node (node nr > 0) and
-node 0 were marked online without the patch.
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -1363,6 +1363,10 @@ struct net_device *geneve_dev_create_fb(
+ 	if (err)
+ 		goto err;
+ 
++	err = rtnl_configure_link(dev, NULL);
++	if (err < 0)
++		goto err;
++
+ 	return dev;
+ 
+  err:
 
-Here are 2 sample numa programs.
 
-numa01.sh is a set of 2 process each running threads as many as number of cpus;
-each thread doing 50 loops on 3GB process shared memory operations.
-
-numa02.sh is a single process with threads as many as number of cpus;
-each thread doing 800 loops on 32MB thread local memory operations.
-
-Testcase         Time:  Min      Max      Avg      StdDev
-./numa01.sh      Real:  149.62   149.66   149.64   0.02
-./numa01.sh      Sys:   3.21     3.71     3.46     0.25
-./numa01.sh      User:  4755.13  4758.15  4756.64  1.51
-./numa02.sh      Real:  24.98    25.02    25.00    0.02
-./numa02.sh      Sys:   0.51     0.59     0.55     0.04
-./numa02.sh      User:  790.28   790.88   790.58   0.30
-
-Testcase         Time:  Min      Max      Avg      StdDev  %Change
-./numa01.sh      Real:  149.44   149.46   149.45   0.01    0.127133%
-./numa01.sh      Sys:   0.71     0.89     0.80     0.09    332.5%
-./numa01.sh      User:  4754.19  4754.48  4754.33  0.15    0.0485873%
-./numa02.sh      Real:  24.97    24.98    24.98    0.00    0.0800641%
-./numa02.sh      Sys:   0.26     0.41     0.33     0.08    66.6667%
-./numa02.sh      User:  789.75   790.28   790.01   0.27    0.072151%
-
-numa01.sh
-param                   no_patch    with_patch  %Change
------                   ----------  ----------  -------
-numa_hint_faults        1131164     0           -100%
-numa_hint_faults_local  1131164     0           -100%
-numa_hit                213696      214244      0.256439%
-numa_local              213696      214244      0.256439%
-numa_pte_updates        1131294     0           -100%
-pgfault                 1380845     241424      -82.5162%
-pgmajfault              75          60          -20%
-
-numa02.sh
-param                   no_patch    with_patch  %Change
------                   ----------  ----------  -------
-numa_hint_faults        111878      0           -100%
-numa_hint_faults_local  111878      0           -100%
-numa_hit                41854       43220       3.26373%
-numa_local              41854       43220       3.26373%
-numa_pte_updates        113926      0           -100%
-pgfault                 163662      51210       -68.7099%
-pgmajfault              56          52          -7.14286%
-
-Observations:
-The real time and user time actually doesn't change much. However the system
-time changes to some extent. The reason being the number of numa hinting
-faults. With the patch we are not seeing the numa hinting faults.
-
-> > 2. Few people have complained about existence of this dummy node when
-> > parsing lscpu and numactl o/p. They somehow start to think that the tools
-> > are reporting incorrectly or the kernel is not able to recognize resources
-> > connected to the node.
-> 
-> Please be more specific.
-
-Taking the below example of numactl
-available: 2 nodes (0,7)
-node 0 cpus:
-node 0 size: 0 MB
-node 0 free: 0 MB
-node 7 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-node 7 size: 16238 MB
-node 7 free: 15449 MB
-node distances:
-node   0   7 
-  0:  10  20 
-  7:  20  10 
-
-We know node 0 can be special, but users may not feel the same.
-
-When users parse numactl/lscpu or /sys directory; they find there are 2
-online nodes. They find none of the resources for a node(node 0) are
-available but still online. However they find other nodes (nodes 1-6) with
-don't have resources but not online. So they tend to think the kernel has
-been unable to online some of the resources or the resources have gone bad.
-Please do note that on hypervisors like PowerVM, the admins don't have
-control over which nodes the resources are allocated.
-
--- 
-Thanks and Regards
-Srikar Dronamraju
