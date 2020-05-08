@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9073C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6B6C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8907024999
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEEC24999
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943603;
-	bh=WnmcXTXsiT6QBqU7y2rKUaAHDFDo3K4E7Fg5YW5WJIY=;
+	s=default; t=1588943606;
+	bh=nwlzXYC+UHKQNyuU/Ac8698iQoeR5eSXGmmZcPzFB50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Au1EkayxEvS9uRZzHIQo6wCFayM1q9+WNuyGHEz7yeHQErOr/ELn6gyuGvGfY4UTL
-	 ceJ/slpE9jvf3LwZ8XrBDzEJ/rlxgi/eNZjVqApII1KZ1RN9PleZvBWK/eiEq4L3X2
-	 zgj6Ud5wM0o+jaSqhTXUsbPUGojvb5oYuHG8kudU=
+	b=0yBH3+J4LEKShIbhacdGSppWdOVjoKpFO+rv7Fud+z6Mu9xlDvQiFIWHrCrV9HQ36
+	 Cy6cxExgYhfGCwh03K/pcObPwIf1sWYuPdsHTAYT1nEbiEDfb4b8dWkyDGhqRUiuR4
+	 ySXKicgZh/Ymd3RMWMJUVEi6VutjvV9giAxT6H7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgEHNNX (ORCPT
+        id S1729606AbgEHMr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbgEHMsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:01 -0400
+        id S1728970AbgEHMrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F732145D;
-        Fri,  8 May 2020 12:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 024E7221F7;
+        Fri,  8 May 2020 12:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942081;
-        bh=WnmcXTXsiT6QBqU7y2rKUaAHDFDo3K4E7Fg5YW5WJIY=;
+        s=default; t=1588942071;
+        bh=nwlzXYC+UHKQNyuU/Ac8698iQoeR5eSXGmmZcPzFB50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klN4SmQZnuJF3Gt5pkp9YxGUUArkVF3UM1+cHskDD7LbetphspmN0x4E+choELnTd
-         EyyDpkbnGG5kYdBqGSmv4Jo71gGSBy1VIrx0sJw9KD+LJ4JK8Pb00UDe+/2oYyhBG0
-         v043nZOD0jpcBUIkhz596/HuldcuX6bMRfAoCxTo=
+        b=XEX8vDxVRMh/55yPkNsCE2lYHJNZ5PFrXJdeHGgQ8fuoIdaDhM1Ky/lFLh704P45p
+         auYwW2LnAHrmDsWwOoNpstQ6F8ITcP2HJl3E2Bn5B06qxbdH8R1HOEWBYfX+yp2Yu/
+         jwB6Lb1o9lHxjHlflTMqi42yssKoK5ey9zMRVBUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, David Ahern <dsa@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 290/312] mvpp2: use correct size for memset
-Date:   Fri,  8 May 2020 14:34:41 +0200
-Message-Id: <20200508123144.777181962@linuxfoundation.org>
+Subject: [PATCH 4.4 286/312] net: icmp_route_lookup should use rt dev to determine L3 domain
+Date:   Fri,  8 May 2020 14:34:37 +0200
+Message-Id: <20200508123144.510017235@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,41 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: David Ahern <dsa@cumulusnetworks.com>
 
-commit e8f967c3d88489fc1562a31d4e44d905ac1d3aff upstream.
+commit 9d1a6c4ea43e48c7880c85971c17939b56832d8a upstream.
 
-gcc-7 detects a short memset in mvpp2, introduced in the original
-merge of the driver:
+icmp_send is called in response to some event. The skb may not have
+the device set (skb->dev is NULL), but it is expected to have an rt.
+Update icmp_route_lookup to use the rt on the skb to determine L3
+domain.
 
-drivers/net/ethernet/marvell/mvpp2.c: In function 'mvpp2_cls_init':
-drivers/net/ethernet/marvell/mvpp2.c:3296:2: error: 'memset' used with length equal to number of elements without multiplication by element size [-Werror=memset-elt-size]
-
-The result seems to be that we write uninitialized data into the
-flow table registers, although we did not get any warning about
-that uninitialized data usage.
-
-Using sizeof() lets us initialize then entire array instead.
-
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 613d09b30f8b ("net: Use VRF device index for lookups on TX")
+Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/marvell/mvpp2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/icmp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2.c
-+++ b/drivers/net/ethernet/marvell/mvpp2.c
-@@ -3305,7 +3305,7 @@ static void mvpp2_cls_init(struct mvpp2
- 	mvpp2_write(priv, MVPP2_CLS_MODE_REG, MVPP2_CLS_MODE_ACTIVE_MASK);
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -478,7 +478,7 @@ static struct rtable *icmp_route_lookup(
+ 	fl4->flowi4_proto = IPPROTO_ICMP;
+ 	fl4->fl4_icmp_type = type;
+ 	fl4->fl4_icmp_code = code;
+-	fl4->flowi4_oif = l3mdev_master_ifindex(skb_in->dev);
++	fl4->flowi4_oif = l3mdev_master_ifindex(skb_dst(skb_in)->dev);
  
- 	/* Clear classifier flow table */
--	memset(&fe.data, 0, MVPP2_CLS_FLOWS_TBL_DATA_WORDS);
-+	memset(&fe.data, 0, sizeof(fe.data));
- 	for (index = 0; index < MVPP2_CLS_FLOWS_TBL_SIZE; index++) {
- 		fe.index = index;
- 		mvpp2_cls_flow_write(priv, &fe);
+ 	security_skb_classify_flow(skb_in, flowi4_to_flowi(fl4));
+ 	rt = __ip_route_output_key_hash(net, fl4,
+@@ -503,7 +503,7 @@ static struct rtable *icmp_route_lookup(
+ 	if (err)
+ 		goto relookup_failed;
+ 
+-	if (inet_addr_type_dev_table(net, skb_in->dev,
++	if (inet_addr_type_dev_table(net, skb_dst(skb_in)->dev,
+ 				     fl4_dec.saddr) == RTN_LOCAL) {
+ 		rt2 = __ip_route_output_key(net, &fl4_dec);
+ 		if (IS_ERR(rt2))
 
 
