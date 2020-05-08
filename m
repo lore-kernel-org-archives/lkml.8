@@ -2,159 +2,155 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA0C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A24C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08A621974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1106207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="khSI8fbO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="So0EZW/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgEHIFd (ORCPT
+        id S1726877AbgEHIGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgEHIFc (ORCPT
+        Fri, 8 May 2020 04:06:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55514 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726036AbgEHIGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:05:32 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32406C05BD43;
-        Fri,  8 May 2020 01:05:32 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 8 May 2020 04:06:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588925193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=AHTpzQ8IDS46OZTlghdsJwpK8Bif4d4yx5+4C9pVSg8=;
+        b=So0EZW/c+KnR6XpqrgEAAPXKI7mHeThYFLoFxm9BR5OgxnjwHGi+hIPIkQbbrHPlGPHT9Q
+        kpaWKYJNchDCN6zIxlWle8VX1iU2q4AXlN3KDXrARfiogFc+o/7CrfCgjcW4DPe4jAKjlt
+        7FZWmIiQ0ZselwXaS30jN6wASDd5a7I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-uz25tvMHN4y_nftsah677Q-1; Fri, 08 May 2020 04:06:31 -0400
+X-MC-Unique: uz25tvMHN4y_nftsah677Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JNDS22fNz9sSk;
-        Fri,  8 May 2020 18:05:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588925129;
-        bh=F4X1gYE+pfegdxl3zi0f5sR1u9ohhPj7XClYVF3+g4g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=khSI8fbOg/1K0zEKgkk2SFu4f7euOnwAfnRRaha0Y7Ch5PBCm6j7+tmUw9dfpayJi
-         gihETPB1+VrK7rAC3FRHPV0oLFiwAXb3Y0MLc3U0YS9Vkir/4wOPyA7VM9i7JhY8oq
-         sGiPEZsqvV2fmeEXFBe9y0902nzdsbI7z5LsoScOgPJhbR4jtF1S4tlBx5NZ5KkauU
-         xgVarxbzoppGoK66FMVQtlIvVRqh+L0cSRjIY8U2F79fq9AvsFZ8XF1IdzshKgSLQz
-         Y6zqjH7ikEvVRyI+C9Hg6a20sXPJsFtw4EHsOzDV6z8IrDTE6jCA4itzf7SbCqWvn8
-         efILDNGDnziWA==
-Date:   Fri, 8 May 2020 18:05:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: linux-next: manual merge of the livepatching tree with the modules
- tree
-Message-ID: <20200508180524.6995b07e@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC4481895A28;
+        Fri,  8 May 2020 08:06:29 +0000 (UTC)
+Received: from [10.36.113.181] (ovpn-113-181.ams2.redhat.com [10.36.113.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39D1C5C1D4;
+        Fri,  8 May 2020 08:06:28 +0000 (UTC)
+Subject: Re: [PATCH 1/1] mm: remove an unnecessary goto jump
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200505115858.1718-1-thunder.leizhen@huawei.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <6d06207c-5b1c-d526-ef01-e437c7696dd3@redhat.com>
+Date:   Fri, 8 May 2020 10:06:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zQSwp35U6Oy695F0wOUlMTo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200505115858.1718-1-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zQSwp35U6Oy695F0wOUlMTo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 05.05.20 13:58, Zhen Lei wrote:
+> This "goto" doesn't reduce any code, but bother the readers.
 
-Hi all,
+"mm/page_io.c: mm: remove an unnecessary goto in generic_swapfile_activate"
 
-Today's linux-next merge of the livepatching tree got a conflict in:
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  mm/page_io.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 76965be1d40e..b1d4f4558e6b 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -235,10 +235,10 @@ int generic_swapfile_activate(struct swap_info_struct *sis,
+>  	sis->highest_bit = page_no - 1;
+>  out:
+>  	return ret;
+> +
 
-  kernel/module.c
+nit: I'd just not mess with newlines here.
 
-between commits:
+>  bad_bmap:
+>  	pr_err("swapon: swapfile has holes\n");
+> -	ret = -EINVAL;
+> -	goto out;
+> +	return -EINVAL;
+>  }
+>  
+>  /*
+> 
 
-  db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRICT=
-_MODULE_RWX #ifdefs")
-  5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX")
+apart from that
 
-from the modules tree and commit:
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-  e6eff4376e28 ("module: Make module_enable_ro() static again")
 
-from the livepatching tree.
+-- 
+Thanks,
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+David / dhildenb
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc kernel/module.c
-index c69291362676,a26343ea4d50..000000000000
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@@ -2055,29 -2023,20 +2042,30 @@@ static void module_enable_nx(const stru
-  	frob_writable_data(&mod->init_layout, set_memory_nx);
-  }
- =20
- +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- +				       char *secstrings, struct module *mod)
- +{
- +	const unsigned long shf_wx =3D SHF_WRITE|SHF_EXECINSTR;
- +	int i;
- +
- +	for (i =3D 0; i < hdr->e_shnum; i++) {
- +		if ((sechdrs[i].sh_flags & shf_wx) =3D=3D shf_wx)
- +			return -ENOEXEC;
- +	}
- +
- +	return 0;
- +}
- +
-  #else /* !CONFIG_STRICT_MODULE_RWX */
- +/* module_{enable,disable}_ro() stubs are in module.h */
-  static void module_enable_nx(const struct module *mod) { }
-+ static void module_enable_ro(const struct module *mod, bool after_init) {}
- -#endif /*  CONFIG_STRICT_MODULE_RWX */
- -static void module_enable_x(const struct module *mod)
- +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- +				       char *secstrings, struct module *mod)
-  {
- -	frob_text(&mod->core_layout, set_memory_x);
- -	frob_text(&mod->init_layout, set_memory_x);
- +	return 0;
-  }
- -#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- -static void module_enable_nx(const struct module *mod) { }
- -static void module_enable_x(const struct module *mod) { }
- -#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- -
- +#endif /*  CONFIG_STRICT_MODULE_RWX */
- =20
-  #ifdef CONFIG_LIVEPATCH
-  /*
-
---Sig_/zQSwp35U6Oy695F0wOUlMTo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl61EsUACgkQAVBC80lX
-0Gy+Nwf/QwPmeO+0MwhkZtGBK96zqtJ8AtW7o6pMslU2qtP0RqQmaS/wFfQo/7bk
-wliasNDFacduHLf/I82FGoG0r1TIiVWCPuiNAPdTqfb7rldqrFnb07NDfzLhwSFQ
-+IJyKoZAByvDTKtlV6Q6HC9Ki8ecKMwT37EG1lUQgCyX23mET7sf3vUQgDqMM8Wo
-TtneBKwOGSkRzELMAEcJwwgh4Gnrt0SgW1bG4q0OvdhVOMvjaVb+h0G7HdPHFyVD
-sz0yCzFU58+2Qqxdfi3W8AfRUNDoOcMTE06txH0GehjfJBCQouu6IPcrJz0gO/92
-eSPq9C+1Bu/qShR4rBxsIfi15RKmfw==
-=QMwq
------END PGP SIGNATURE-----
-
---Sig_/zQSwp35U6Oy695F0wOUlMTo--
