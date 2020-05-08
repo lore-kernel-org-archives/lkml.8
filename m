@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74848C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4522E20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C06207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941833;
-	bh=1dRfvo3y1eTNxKbDkM0vF8Peuzsi+lmgYxwyqGR7jto=;
+	s=default; t=1588941835;
+	bh=ORv7Qy0u/bkXmW6s/tiSk5SObYIvGzfdzSsuQt1zCVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nscsDYC2vQ93DRqOX3K3DlwlX8sJLs08wBElg3kUPiaFaf1lJGF7MVdTQIzpkAY5B
-	 Katn9kB34CDqIQGAnCHq0lGgWdn30/uatuvSyIWM89B5x/kzOYOisWE8GYq67FGkx0
-	 ovAVkJ31VZuwfxAMSzaurhTj8d6e72pZqgAaclds=
+	b=0CopMkaYpseTGMsvKePcvmWSYG/tKTirn4sXlH3NnBqWqCt65xIIYbRSKLpw0e8R4
+	 i2mIdfSDVX0GUO9RK3JuTQEWncY2CuzANMYvPZ6AInK0smQ/T9z+BYr3KDOWq3OGnl
+	 X796PxK13bi5lGwWGvm9yB3BnDvgA0h81lhDpOTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgEHMnv (ORCPT
+        id S1729125AbgEHMny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbgEHMnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:40 -0400
+        id S1729116AbgEHMnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7D121974;
-        Fri,  8 May 2020 12:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C660C206B8;
+        Fri,  8 May 2020 12:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941820;
-        bh=1dRfvo3y1eTNxKbDkM0vF8Peuzsi+lmgYxwyqGR7jto=;
+        s=default; t=1588941830;
+        bh=ORv7Qy0u/bkXmW6s/tiSk5SObYIvGzfdzSsuQt1zCVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2uwjnrwgBBKe3j285/EgyD9uBSXyUJxDSDGGLMv5wTE/5uIkX+kQUFrf6MVpmV9KD
-         CSxvBO6tYjcmBH4C7axUk5Si+2s/5wYIL9n+uGnGowweSb4ZnDXnMbztAYwe49fXXq
-         KCGoo1IeOw6Fowd512MyU6jQLZlCsXidilh1NOs8=
+        b=xsDNt/g5/ro7JOfbNHLHpd4YktO2IDZDSUmOjaSCWc1MYwe41AudRiGSwa2eAMkHK
+         wcaiAnUYe9CFqWzpWKAlof/AybqhzmynEtFkf/5p3vuHpLjhKsesJDlYx0PzJbgYYm
+         FJd81XVySXTnD9Y0uDsrRGyAF5WOHiYJWBGJXhsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bart Van Assche <bart.vanassche@sandisk.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andy Grover <agrover@redhat.com>,
-        Sagi Grimberg <sagig@mellanox.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>
-Subject: [PATCH 4.4 183/312] target: Fix a memory leak in target_dev_lba_map_store()
-Date:   Fri,  8 May 2020 14:32:54 +0200
-Message-Id: <20200508123137.353779595@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 149/312] sctp: fix the transports round robin issue when init is retransmitted
+Date:   Fri,  8 May 2020 14:32:20 +0200
+Message-Id: <20200508123134.940148234@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -64,53 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bart.vanassche@sandisk.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit f0a8afecb29ad0005e7e946228a0ef5422058b85 upstream.
+commit 39d2adebf137de5f900843f69f5e500932e31047 upstream.
 
-strsep() modifies its first argument. Make the pointer passed to kfree()
-match the return value of kmalloc().
+prior to this patch, at the beginning if we have two paths in one assoc,
+they may have the same params other than the last_time_heard, it will try
+the paths like this:
 
-Fixes: 229d4f112fd6 (commit "target_core_alua: Referrals configfs integration")
-Signed-off-by: Bart Van Assche <bart.vanassche@sandisk.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Andy Grover <agrover@redhat.com>
-Cc: Sagi Grimberg <sagig@mellanox.com>
-Signed-off-by: Nicholas Bellinger <nab@linux-iscsi.org>
+1st cycle
+  try trans1 fail.
+  then trans2 is selected.(cause it's last_time_heard is after trans1).
+
+2nd cycle:
+  try  trans2 fail
+  then trans2 is selected.(cause it's last_time_heard is after trans1).
+
+3rd cycle:
+  try  trans2 fail
+  then trans2 is selected.(cause it's last_time_heard is after trans1).
+
+....
+
+trans1 will never have change to be selected, which is not what we expect.
+we should keeping round robin all the paths if they are just added at the
+beginning.
+
+So at first every tranport's last_time_heard should be initialized 0, so
+that we ensure they have the same value at the beginning, only by this,
+all the transports could get equal chance to be selected.
+
+Then for sctp_trans_elect_best, it should return the trans_next one when
+*trans == *trans_next, so that we can try next if it fails,  but now it
+always return trans. so we can fix it by exchanging these two params when
+we calls sctp_trans_elect_tie().
+
+Fixes: 4c47af4d5eb2 ('net: sctp: rework multihoming retransmission path selection to rfc4960')
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/target_core_configfs.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/sctp/associola.c |    2 +-
+ net/sctp/transport.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -1980,14 +1980,14 @@ static ssize_t target_dev_lba_map_store(
- 	struct se_device *dev = to_device(item);
- 	struct t10_alua_lba_map *lba_map = NULL;
- 	struct list_head lba_list;
--	char *map_entries, *ptr;
-+	char *map_entries, *orig, *ptr;
- 	char state;
- 	int pg_num = -1, pg;
- 	int ret = 0, num = 0, pg_id, alua_state;
- 	unsigned long start_lba = -1, end_lba = -1;
- 	unsigned long segment_size = -1, segment_mult = -1;
- 
--	map_entries = kstrdup(page, GFP_KERNEL);
-+	orig = map_entries = kstrdup(page, GFP_KERNEL);
- 	if (!map_entries)
- 		return -ENOMEM;
- 
-@@ -2085,7 +2085,7 @@ out:
- 	} else
- 		core_alua_set_lba_map(dev, &lba_list,
- 				      segment_size, segment_mult);
--	kfree(map_entries);
-+	kfree(orig);
- 	return count;
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -1290,7 +1290,7 @@ static struct sctp_transport *sctp_trans
+ 	if (score_curr > score_best)
+ 		return curr;
+ 	else if (score_curr == score_best)
+-		return sctp_trans_elect_tie(curr, best);
++		return sctp_trans_elect_tie(best, curr);
+ 	else
+ 		return best;
  }
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -72,7 +72,7 @@ static struct sctp_transport *sctp_trans
+ 	 */
+ 	peer->rto = msecs_to_jiffies(net->sctp.rto_initial);
  
+-	peer->last_time_heard = ktime_get();
++	peer->last_time_heard = ktime_set(0, 0);
+ 	peer->last_time_ecne_reduced = jiffies;
+ 
+ 	peer->param_flags = SPP_HB_DISABLE |
 
 
