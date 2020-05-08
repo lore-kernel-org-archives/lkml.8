@@ -2,59 +2,57 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F07C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03691C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A882496A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87AD24958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942477;
-	bh=5M9/i+sHmIz8sIvRvyAC4vBnfJk2Ljuv92Rsyc2GraY=;
+	s=default; t=1588942481;
+	bh=w+CRxr9kY4K+9b8jpYJdkDCWoR7oDk9596EFqhXzsvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4DIxzcyM01CTIEQNPv6qra9IIwfv6Ajk/Tgvje1seI4cRVmmtJvPN4AOab/hq0QE
-	 /aUJsFFHrMqgn97M3+7ESP/BY2BKIrvIGIJ5pq7NGIr0vMPdIlVd1QSGPxAxOUMu6X
-	 m4mXr/WnMyIHH+YhNGpJOYKDP+/0s5yljiCp5UbQ=
+	b=09vE8WDra51dgtAQgE7uYd4un7SARqDIyIfJObqludtleksy0vWW+ipzGtdiqX98A
+	 bbAM8F+V5XpoLs5ZCprPdX7I0io+8hhvO7mPLSj3i9uO6LSoPwJaU+3gaT1tovXFve
+	 LCk6pvtMmLJd3QMbVvez4SabP4BKYJZln8f4KwDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgEHMyh (ORCPT
+        id S1730235AbgEHMyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbgEHMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:34 -0400
+        id S1730223AbgEHMyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4E724958;
-        Fri,  8 May 2020 12:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE132495C;
+        Fri,  8 May 2020 12:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942473;
-        bh=5M9/i+sHmIz8sIvRvyAC4vBnfJk2Ljuv92Rsyc2GraY=;
+        s=default; t=1588942475;
+        bh=w+CRxr9kY4K+9b8jpYJdkDCWoR7oDk9596EFqhXzsvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UkZuAPeEkdPbt1IwvzJTDI2Bjw3li3dFw6Aipu/CWbpnNV0PjdHbJNyQxfWiGLkgo
-         mi5BXYz4aFc/leDecxmN3lporc0k63RqGLkzjLgOwpeBxEytUE98OwbPzR9frwozT0
-         2A2sJRr9TZaCQwWVRNb8/ewr6SJXckwhIWkzQO/o=
+        b=AdyYxYH1xmw6kYanqV22Ih59AYBDJbkdnLgsALj3UT8mIB7hBNGlg25PgpuoOIRMA
+         TTCPSHtGu//z4dTJWiyIz9VloGSvaQ6VuU6wJ3MUAZN/m7xGP8V0zVVNkqetOMsuLt
+         u581T73NIKIJFCY6paQvMCi2e0Fx3d0/yEEvOZLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jia He <justin.he@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH 5.6 01/49] vhost: vsock: kick send_pkt worker once device is started
-Date:   Fri,  8 May 2020 14:35:18 +0200
-Message-Id: <20200508123043.013091973@linuxfoundation.org>
+        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 10/49] selftests: vm: Do not override definition of ARCH
+Date:   Fri,  8 May 2020 14:35:27 +0200
+Message-Id: <20200508123044.428448691@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,72 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia He <justin.he@arm.com>
+From: Sandipan Das <sandipan@linux.ibm.com>
 
-commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
+[ Upstream commit 24c3f063c57b2a8ae21b259bcfa7690e2eb56dd9 ]
 
-Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
-The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
-connecting from the client side. The vhost vsock client tries to connect
-an initializing virtio vsock server.
+Independent builds of the vm selftests is currently broken because
+commit 7549b3364201 ("selftests: vm: Build/Run 64bit tests only on
+64bit arch") overrides the value of ARCH with the machine name from
+uname. This does not always match the architecture names used for
+tasks like header installation.
 
-The abnormal flow looks like:
-host-userspace           vhost vsock                       guest vsock
-==============           ===========                       ============
-connect()     -------->  vhost_transport_send_pkt_work()   initializing
-   |                     vq->private_data==NULL
-   |                     will not be queued
-   V
-schedule_timeout(2s)
-                         vhost_vsock_start()  <---------   device ready
-                         set vq->private_data
+E.g. for building tests on powerpc64, we need ARCH=powerpc
+and not ARCH=ppc64 or ARCH=ppc64le. Otherwise, the build
+fails as shown below.
 
-wait for 2s and failed
-connect() again          vq->private_data!=NULL         recv connecting pkt
+  $ uname -m
+  ppc64le
 
-Details:
-1. Host userspace sends a connect pkt, at that time, guest vsock is under
-   initializing, hence the vhost_vsock_start has not been called. So
-   vq->private_data==NULL, and the pkt is not been queued to send to guest
-2. Then it sleeps for 2s
-3. After guest vsock finishes initializing, vq->private_data is set
-4. When host userspace wakes up after 2s, send connecting pkt again,
-   everything is fine.
+  $ make -C tools/testing/selftests/vm
+  make: Entering directory '/home/sandipan/linux/tools/testing/selftests/vm'
+  make --no-builtin-rules ARCH=ppc64le -C ../../../.. headers_install
+  make[1]: Entering directory '/home/sandipan/linux'
+  Makefile:653: arch/ppc64le/Makefile: No such file or directory
+  make[1]: *** No rule to make target 'arch/ppc64le/Makefile'.  Stop.
+  make[1]: Leaving directory '/home/sandipan/linux'
+  ../lib.mk:50: recipe for target 'khdr' failed
+  make: *** [khdr] Error 2
+  make: Leaving directory '/home/sandipan/linux/tools/testing/selftests/vm'
 
-As suggested by Stefano Garzarella, this fixes it by additional kicking the
-send_pkt worker in vhost_vsock_start once the virtio device is started. This
-makes the pending pkt sent again.
-
-After this patch, kata-runtime (with vsock enabled) boot time is reduced
-from 3s to 1s on a ThunderX2 arm64 server.
-
-[1] https://github.com/kata-containers/runtime/issues/1917
-
-Reported-by: Ning Bo <n.b@live.com>
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jia He <justin.he@arm.com>
-Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7549b3364201 ("selftests: vm: Build/Run 64bit tests only on 64bit arch")
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ tools/testing/selftests/vm/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -543,6 +543,11 @@ static int vhost_vsock_start(struct vhos
- 		mutex_unlock(&vq->mutex);
- 	}
+diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+index 7f9a8a8c31da9..3f2e2f0ccbc9a 100644
+--- a/tools/testing/selftests/vm/Makefile
++++ b/tools/testing/selftests/vm/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for vm selftests
+ uname_M := $(shell uname -m 2>/dev/null || echo not)
+-ARCH ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
++MACHINE ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
  
-+	/* Some packets may have been queued before the device was started,
-+	 * let's kick the send worker to send them.
-+	 */
-+	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
-+
- 	mutex_unlock(&vsock->dev.mutex);
- 	return 0;
+ CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
+ LDLIBS = -lrt
+@@ -19,7 +19,7 @@ TEST_GEN_FILES += thuge-gen
+ TEST_GEN_FILES += transhuge-stress
+ TEST_GEN_FILES += userfaultfd
  
+-ifneq (,$(filter $(ARCH),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
++ifneq (,$(filter $(MACHINE),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
+ TEST_GEN_FILES += va_128TBswitch
+ TEST_GEN_FILES += virtual_address_range
+ endif
+-- 
+2.20.1
+
 
 
