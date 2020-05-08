@@ -2,318 +2,568 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6793AC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4CDC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5017C208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA57208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgEHIcb (ORCPT
+        id S1727790AbgEHIc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:32:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5577 "EHLO mga09.intel.com"
+        Fri, 8 May 2020 04:32:57 -0400
+Received: from mx.socionext.com ([202.248.49.38]:6165 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHIca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:32:30 -0400
-IronPort-SDR: esev7ramki06kiNr1weLUIDshzpzj9CFNepVIRXx6uBsXfyalMxh2unXyqoqhScErwibqRnHXW
- 4DVPROgwgLkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 01:32:29 -0700
-IronPort-SDR: gI2CTkFMXk+5nNqVGFDQsCcRd6yrhvwLekHSvtX5sma2RcReehdVaVaPLUHhRf13T8A83LETmz
- kYL6dILcy88Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="305365410"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2020 01:32:27 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [kvm-unit-tests PATCH] x86: pmu: Test full-width counter writes support
-Date:   Fri,  8 May 2020 16:32:18 +0800
-Message-Id: <20200508083218.120559-2-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200508083218.120559-1-like.xu@linux.intel.com>
-References: <20200508083218.120559-1-like.xu@linux.intel.com>
+        id S1727770AbgEHIc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:32:57 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 May 2020 17:32:50 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id CFA8E60057;
+        Fri,  8 May 2020 17:32:50 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 8 May 2020 17:32:50 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 764371A01BB;
+        Fri,  8 May 2020 17:32:50 +0900 (JST)
+Received: from [10.213.29.153] (unknown [10.213.29.153])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 9312D12013D;
+        Fri,  8 May 2020 17:32:49 +0900 (JST)
+Subject: Re: [PATCH v3 2/2] PCI: uniphier: Add Socionext UniPhier Pro5 PCIe
+ endpoint controller driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1584956454-8829-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1584956454-8829-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200507193353.GA21821@bogus>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <bb92b3a0-04f2-4487-e601-a4a631fe40ce@socionext.com>
+Date:   Fri, 8 May 2020 17:32:49 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200507193353.GA21821@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the full-width writes capability is set, use the alternative MSR
-range to write larger sign counter values (up to GP counter width).
+Hi Rob,
+Thank you for your comment.
 
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
+On 2020/05/08 4:33, Rob Herring wrote:
+> On Mon, Mar 23, 2020 at 06:40:54PM +0900, Kunihiko Hayashi wrote:
+>> Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
+>> This controller is based on the DesignWare PCIe core.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   MAINTAINERS                                   |   2 +-
+>>   drivers/pci/controller/dwc/Kconfig            |  13 +-
+>>   drivers/pci/controller/dwc/Makefile           |   1 +
+>>   drivers/pci/controller/dwc/pcie-uniphier-ep.c | 380 ++++++++++++++++++++++++++
+>>   4 files changed, 393 insertions(+), 3 deletions(-)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 01a4631..95d296b 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13152,7 +13152,7 @@ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>   L:	linux-pci@vger.kernel.org
+>>   S:	Maintained
+>>   F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
+>> -F:	drivers/pci/controller/dwc/pcie-uniphier.c
+>> +F:	drivers/pci/controller/dwc/pcie-uniphier*.c
+>>   
+>>   PCIE DRIVER FOR ST SPEAR13XX
+>>   M:	Pratyush Anand <pratyush.anand@gmail.com>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 169cde5..4dd5ba9 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -282,15 +282,24 @@ config PCIE_TEGRA194_EP
+>>   	  selected. This uses the DesignWare core.
+>>   
+>>   config PCIE_UNIPHIER
+>> -	bool "Socionext UniPhier PCIe controllers"
+>> +	bool "Socionext UniPhier PCIe host controllers"
+>>   	depends on ARCH_UNIPHIER || COMPILE_TEST
+>>   	depends on OF && HAS_IOMEM
+>>   	depends on PCI_MSI_IRQ_DOMAIN
+>>   	select PCIE_DW_HOST
+>>   	help
+>> -	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+>> +	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
+>>   	  This driver supports LD20 and PXs3 SoCs.
+>>   
+>> +config PCIE_UNIPHIER_EP
+>> +	bool "Socionext UniPhier PCIe endpoint controllers"
+>> +	depends on ARCH_UNIPHIER || COMPILE_TEST
+>> +	depends on OF && HAS_IOMEM
+>> +	select PCIE_DW_EP
+>> +	help
+>> +	  Say Y here if you want PCIe endpoint controller support on
+>> +	  UniPhier SoCs. This driver supports Pro5 SoC.
+>> +
+>>   config PCIE_AL
+>>   	bool "Amazon Annapurna Labs PCIe controller"
+>>   	depends on OF && (ARM64 || COMPILE_TEST)
+>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>> index 8a637cf..a751553 100644
+>> --- a/drivers/pci/controller/dwc/Makefile
+>> +++ b/drivers/pci/controller/dwc/Makefile
+>> @@ -19,6 +19,7 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>>   obj-$(CONFIG_PCI_MESON) += pci-meson.o
+>>   obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>>   obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>> +obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>>   
+>>   # The following drivers are for devices that use the generic ACPI
+>>   # pci_root.c driver but don't support standard ECAM config access.
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>> new file mode 100644
+>> index 0000000..71db49f
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>> @@ -0,0 +1,380 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * PCIe endpoint controller driver for UniPhier SoCs
+>> + * Copyright 2018 Socionext Inc.
+>> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/init.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>> +
+>> +#include "pcie-designware.h"
+>> +
+>> +/* Link Glue registers */
+>> +#define PCL_RSTCTRL0			0x0010
+>> +#define PCL_RSTCTRL_AXI_REG		BIT(3)
+>> +#define PCL_RSTCTRL_AXI_SLAVE		BIT(2)
+>> +#define PCL_RSTCTRL_AXI_MASTER		BIT(1)
+>> +#define PCL_RSTCTRL_PIPE3		BIT(0)
+>> +
+>> +#define PCL_RSTCTRL1			0x0020
+>> +#define PCL_RSTCTRL_PERST		BIT(0)
+>> +
+>> +#define PCL_RSTCTRL2			0x0024
+>> +#define PCL_RSTCTRL_PHY_RESET		BIT(0)
+>> +
+>> +#define PCL_MODE			0x8000
+>> +#define PCL_MODE_REGEN			BIT(8)
+>> +#define PCL_MODE_REGVAL			BIT(0)
+>> +
+>> +#define PCL_APP_CLK_CTRL		0x8004
+>> +#define PCL_APP_CLK_REQ			BIT(0)
+>> +
+>> +#define PCL_APP_READY_CTRL		0x8008
+>> +#define PCL_APP_LTSSM_ENABLE		BIT(0)
+>> +
+>> +#define PCL_APP_MSI0			0x8040
+>> +#define PCL_APP_VEN_MSI_TC_MASK		GENMASK(10, 8)
+>> +#define PCL_APP_VEN_MSI_VECTOR_MASK	GENMASK(4, 0)
+>> +
+>> +#define PCL_APP_MSI1			0x8044
+>> +#define PCL_APP_MSI_REQ			BIT(0)
+>> +
+>> +#define PCL_APP_INTX			0x8074
+>> +#define PCL_APP_INTX_SYS_INT		BIT(0)
+>> +
+>> +/* assertion time of INTx in usec */
+>> +#define PCL_INTX_WIDTH_USEC		30
+>> +
+>> +struct uniphier_pcie_ep_priv {
+>> +	void __iomem *base;
+>> +	struct dw_pcie pci;
+>> +	struct clk *clk, *clk_gio;
+>> +	struct reset_control *rst, *rst_gio;
+>> +	struct phy *phy;
+>> +	const struct pci_epc_features *features;
+>> +};
+>> +
+>> +#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+>> +
+>> +static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_ep_priv *priv,
+>> +				       bool enable)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = readl(priv->base + PCL_APP_READY_CTRL);
+>> +	if (enable)
+>> +		val |= PCL_APP_LTSSM_ENABLE;
+>> +	else
+>> +		val &= ~PCL_APP_LTSSM_ENABLE;
+>> +	writel(val, priv->base + PCL_APP_READY_CTRL);
+>> +}
+>> +
+>> +static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
+>> +				    bool assert)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = readl(priv->base + PCL_RSTCTRL2);
+>> +	if (assert)
+>> +		val |= PCL_RSTCTRL_PHY_RESET;
+>> +	else
+>> +		val &= ~PCL_RSTCTRL_PHY_RESET;
+>> +	writel(val, priv->base + PCL_RSTCTRL2);
+>> +}
+>> +
+>> +static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
+>> +{
+>> +	u32 val;
+>> +
+>> +	/* set EP mode */
+>> +	val = readl(priv->base + PCL_MODE);
+>> +	val |= PCL_MODE_REGEN | PCL_MODE_REGVAL;
+>> +	writel(val, priv->base + PCL_MODE);
+>> +
+>> +	/* clock request */
+>> +	val = readl(priv->base + PCL_APP_CLK_CTRL);
+>> +	val &= ~PCL_APP_CLK_REQ;
+>> +	writel(val, priv->base + PCL_APP_CLK_CTRL);
+>> +
+>> +	/* deassert PIPE3 and AXI reset */
+>> +	val = readl(priv->base + PCL_RSTCTRL0);
+>> +	val |= PCL_RSTCTRL_AXI_REG | PCL_RSTCTRL_AXI_SLAVE
+>> +		| PCL_RSTCTRL_AXI_MASTER | PCL_RSTCTRL_PIPE3;
+>> +	writel(val, priv->base + PCL_RSTCTRL0);
+>> +
+>> +	uniphier_pcie_ltssm_enable(priv, false);
+>> +
+>> +	msleep(100);
+>> +}
+>> +
+>> +static int uniphier_pcie_start_link(struct dw_pcie *pci)
+>> +{
+>> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+>> +
+>> +	uniphier_pcie_ltssm_enable(priv, true);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>> +{
+>> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+>> +
+>> +	uniphier_pcie_ltssm_enable(priv, false);
+>> +}
+>> +
+>> +static void uniphier_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	enum pci_barno bar;
+>> +
+>> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+>> +		dw_pcie_ep_reset_bar(pci, bar);
+>> +}
+>> +
+>> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+>> +	u32 val;
+>> +
+>> +	/* assert INTx */
+>> +	val = readl(priv->base + PCL_APP_INTX);
+>> +	val |= PCL_APP_INTX_SYS_INT;
+>> +	writel(val, priv->base + PCL_APP_INTX);
+>> +
+>> +	udelay(PCL_INTX_WIDTH_USEC);
+> 
+> What happens if you are preempted here?
+
+If deasserting INTx is postponed, the RC might receive more interrupts
+from EP depending on the interrupt setting.
+
+> 
+>> +
+>> +	/* deassert INTx */
+>> +	val &= ~PCL_APP_INTX_SYS_INT;
+>> +	writel(val, priv->base + PCL_APP_INTX);
+> 
+> Any locking needed around this RMWW?
+
+This function is called from pci_epc_raise_irq() via dw_pcie_ep_raise_irq().
+In pci_epc_raise_irq(), this is covered with mutex.
+
+> 
+> Aren't PCI legacy interrupts level triggered and this should only be
+> cleared when the cause is masked?
+
+This function makes one-shot pulse signal to send INTx to the RC, so this
+should be cleared as soon as possible.
+
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
+>> +					  u8 func_no, u16 interrupt_num)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+>> +	u32 val;
+>> +
+>> +	val = FIELD_PREP(PCL_APP_VEN_MSI_TC_MASK, func_no)
+>> +		| FIELD_PREP(PCL_APP_VEN_MSI_VECTOR_MASK, interrupt_num - 1);
+>> +	writel(val, priv->base + PCL_APP_MSI0);
+>> +
+>> +	val = readl(priv->base + PCL_APP_MSI1);
+>> +	val |= PCL_APP_MSI_REQ;
+>> +	writel(val, priv->base + PCL_APP_MSI1);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>> +				      enum pci_epc_irq_type type,
+>> +				      u16 interrupt_num)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +
+>> +	switch (type) {
+>> +	case PCI_EPC_IRQ_LEGACY:
+>> +		return uniphier_pcie_ep_raise_legacy_irq(ep);
+>> +	case PCI_EPC_IRQ_MSI:
+>> +		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
+>> +						      interrupt_num);
+>> +	default:
+>> +		dev_err(pci->dev, "UNKNOWN IRQ type (%d)\n", type);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct pci_epc_features*
+>> +uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+>> +
+>> +	return priv->features;
+>> +}
+>> +
+>> +static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
+>> +	.ep_init = uniphier_pcie_ep_init,
+>> +	.raise_irq = uniphier_pcie_ep_raise_irq,
+>> +	.get_features = uniphier_pcie_get_features,
+>> +};
+>> +
+>> +static int uniphier_add_pcie_ep(struct uniphier_pcie_ep_priv *priv,
+>> +				struct platform_device *pdev)
+>> +{
+>> +	struct dw_pcie *pci = &priv->pci;
+>> +	struct dw_pcie_ep *ep = &pci->ep;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	ep->ops = &uniphier_pcie_ep_ops;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+>> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> 
+> devm_ioremap_resource_byname
+
+Okay, I'll replace with it.
+
+> 
+>> +	if (IS_ERR(pci->dbi_base2))
+>> +		return PTR_ERR(pci->dbi_base2);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>> +	if (!res)
+>> +		return -EINVAL;
+>> +
+>> +	ep->phys_base = res->start;
+>> +	ep->addr_size = resource_size(res);
+>> +
+>> +	ret = dw_pcie_ep_init(ep);
+>> +	if (ret)
+>> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = clk_prepare_enable(priv->clk);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = clk_prepare_enable(priv->clk_gio);
+>> +	if (ret)
+>> +		goto out_clk_disable;
+>> +
+>> +	ret = reset_control_deassert(priv->rst);
+>> +	if (ret)
+>> +		goto out_clk_gio_disable;
+>> +
+>> +	ret = reset_control_deassert(priv->rst_gio);
+>> +	if (ret)
+>> +		goto out_rst_assert;
+>> +
+>> +	uniphier_pcie_init_ep(priv);
+>> +
+>> +	uniphier_pcie_phy_reset(priv, true);
+>> +
+>> +	ret = phy_init(priv->phy);
+>> +	if (ret)
+>> +		goto out_rst_gio_assert;
+>> +
+>> +	uniphier_pcie_phy_reset(priv, false);
+>> +
+>> +	return 0;
+>> +
+>> +out_rst_gio_assert:
+>> +	reset_control_assert(priv->rst_gio);
+>> +out_rst_assert:
+>> +	reset_control_assert(priv->rst);
+>> +out_clk_gio_disable:
+>> +	clk_disable_unprepare(priv->clk_gio);
+>> +out_clk_disable:
+>> +	clk_disable_unprepare(priv->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct dw_pcie_ops dw_pcie_ops = {
+>> +	.start_link = uniphier_pcie_start_link,
+>> +	.stop_link = uniphier_pcie_stop_link,
+>> +};
+>> +
+>> +static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct uniphier_pcie_ep_priv *priv;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	priv->features = of_device_get_match_data(dev);
+>> +	if (WARN_ON(!priv->features))
+>> +		return -EINVAL;
+>> +
+>> +	priv->pci.dev = dev;
+>> +	priv->pci.ops = &dw_pcie_ops;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>> +	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
+>> +	if (IS_ERR(priv->pci.dbi_base))
+>> +		return PTR_ERR(priv->pci.dbi_base);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+>> +	priv->base = devm_ioremap_resource(dev, res);
+> 
+> devm_ioremap_resource_byname()
+
+Ditto.
+
+> 
+>> +	if (IS_ERR(priv->base))
+>> +		return PTR_ERR(priv->base);
+>> +
+>> +	priv->clk_gio = devm_clk_get(dev, "gio");
+>> +	if (IS_ERR(priv->clk))
+>> +		return PTR_ERR(priv->clk);
+>> +
+>> +	priv->rst_gio = devm_reset_control_get_shared(dev, "gio");
+>> +	if (IS_ERR(priv->rst_gio))
+>> +		return PTR_ERR(priv->rst_gio);
+>> +
+>> +	priv->clk = devm_clk_get(dev, "link");
+>> +	if (IS_ERR(priv->clk))
+>> +		return PTR_ERR(priv->clk);
+>> +
+>> +	priv->rst = devm_reset_control_get_shared(dev, "link");
+>> +	if (IS_ERR(priv->rst))
+>> +		return PTR_ERR(priv->rst);
+>> +
+>> +	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+>> +	if (IS_ERR(priv->phy)) {
+>> +		ret = PTR_ERR(priv->phy);
+>> +		dev_err(dev, "Failed to get phy (%d)\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, priv);
+>> +
+>> +	ret = uniphier_pcie_ep_enable(priv);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return uniphier_add_pcie_ep(priv, pdev);
+>> +}
+>> +
+>> +static const struct pci_epc_features uniphier_pro5_data = {
+>> +	.linkup_notifier = false,
+>> +	.msi_capable = true,
+>> +	.msix_capable = false,
+>> +	.align = 1 << 16,
+>> +	.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
+>> +	.reserved_bar =  BIT(BAR_4),
+>> +};
+>> +
+>> +static const struct of_device_id uniphier_pcie_ep_match[] = {
+>> +	{
+>> +		.compatible = "socionext,uniphier-pro5-pcie-ep",
+>> +		.data = &uniphier_pro5_data,
+>> +	},
+>> +	{ /* sentinel */ },
+>> +};
+>> +
+>> +static struct platform_driver uniphier_pcie_ep_driver = {
+>> +	.probe  = uniphier_pcie_ep_probe,
+>> +	.driver = {
+>> +		.name = "uniphier-pcie-ep",
+>> +		.of_match_table = uniphier_pcie_ep_match,
+>> +		.suppress_bind_attrs = true,
+>> +	},
+>> +};
+>> +builtin_platform_driver(uniphier_pcie_ep_driver);
+> 
+> Why not a module?
+
+This controller is based on DesignWare Core IP, and this driver is also
+based on pcie-designware-ep.c. Since this dwc driver doesn't have a remove
+function, like the UniPhier PCIe host drivers, I think it's hard to finalize
+the controller safely.
+
+Thank you,
+
 ---
- lib/x86/msr.h |   1 +
- x86/pmu.c     | 125 ++++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 102 insertions(+), 24 deletions(-)
-
-diff --git a/lib/x86/msr.h b/lib/x86/msr.h
-index 8dca964..6ef5502 100644
---- a/lib/x86/msr.h
-+++ b/lib/x86/msr.h
-@@ -35,6 +35,7 @@
- #define MSR_IA32_SPEC_CTRL              0x00000048
- #define MSR_IA32_PRED_CMD               0x00000049
- 
-+#define MSR_IA32_PMC0                  0x000004c1
- #define MSR_IA32_PERFCTR0		0x000000c1
- #define MSR_IA32_PERFCTR1		0x000000c2
- #define MSR_FSB_FREQ			0x000000cd
-diff --git a/x86/pmu.c b/x86/pmu.c
-index f45621a..8644f90 100644
---- a/x86/pmu.c
-+++ b/x86/pmu.c
-@@ -91,6 +91,9 @@ struct pmu_event {
- 	{"fixed 3", MSR_CORE_PERF_FIXED_CTR0 + 2, 0.1*N, 30*N}
- };
- 
-+#define PMU_CAP_FW_WRITES	(1ULL << 13)
-+static u64 gp_counter_base = MSR_IA32_PERFCTR0;
-+
- static int num_counters;
- 
- char *buf;
-@@ -125,12 +128,13 @@ static bool check_irq(void)
- 
- static bool is_gp(pmu_counter_t *evt)
- {
--	return evt->ctr < MSR_CORE_PERF_FIXED_CTR0;
-+	return evt->ctr < MSR_CORE_PERF_FIXED_CTR0 ||
-+		evt->ctr >= MSR_IA32_PMC0;
- }
- 
- static int event_to_global_idx(pmu_counter_t *cnt)
- {
--	return cnt->ctr - (is_gp(cnt) ? MSR_IA32_PERFCTR0 :
-+	return cnt->ctr - (is_gp(cnt) ? gp_counter_base :
- 		(MSR_CORE_PERF_FIXED_CTR0 - FIXED_CNT_INDEX));
- }
- 
-@@ -226,7 +230,7 @@ static bool verify_counter(pmu_counter_t *cnt)
- static void check_gp_counter(struct pmu_event *evt)
- {
- 	pmu_counter_t cnt = {
--		.ctr = MSR_IA32_PERFCTR0,
-+		.ctr = gp_counter_base,
- 		.config = EVNTSEL_OS | EVNTSEL_USR | evt->unit_sel,
- 	};
- 	int i;
-@@ -276,7 +280,7 @@ static void check_counters_many(void)
- 			continue;
- 
- 		cnt[n].count = 0;
--		cnt[n].ctr = MSR_IA32_PERFCTR0 + n;
-+		cnt[n].ctr = gp_counter_base + n;
- 		cnt[n].config = EVNTSEL_OS | EVNTSEL_USR |
- 			gp_events[i % ARRAY_SIZE(gp_events)].unit_sel;
- 		n++;
-@@ -302,7 +306,7 @@ static void check_counter_overflow(void)
- 	uint64_t count;
- 	int i;
- 	pmu_counter_t cnt = {
--		.ctr = MSR_IA32_PERFCTR0,
-+		.ctr = gp_counter_base,
- 		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
- 		.count = 0,
- 	};
-@@ -319,6 +323,8 @@ static void check_counter_overflow(void)
- 		int idx;
- 
- 		cnt.count = 1 - count;
-+		if (gp_counter_base == MSR_IA32_PMC0)
-+			cnt.count &= (1ul << eax.split.bit_width) - 1;
- 
- 		if (i == num_counters) {
- 			cnt.ctr = fixed_events[0].unit_sel;
-@@ -346,7 +352,7 @@ static void check_counter_overflow(void)
- static void check_gp_counter_cmask(void)
- {
- 	pmu_counter_t cnt = {
--		.ctr = MSR_IA32_PERFCTR0,
-+		.ctr = gp_counter_base,
- 		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
- 		.count = 0,
- 	};
-@@ -369,7 +375,7 @@ static void do_rdpmc_fast(void *ptr)
- 
- static void check_rdpmc(void)
- {
--	uint64_t val = 0x1f3456789ull;
-+	uint64_t val = 0xff0123456789ull;
- 	bool exc;
- 	int i;
- 
-@@ -378,20 +384,23 @@ static void check_rdpmc(void)
- 	for (i = 0; i < num_counters; i++) {
- 		uint64_t x;
- 		pmu_counter_t cnt = {
--			.ctr = MSR_IA32_PERFCTR0 + i,
-+			.ctr = gp_counter_base + i,
- 			.idx = i
- 		};
- 
--		/*
--		 * Only the low 32 bits are writable, and the value is
--		 * sign-extended.
--		 */
--		x = (uint64_t)(int64_t)(int32_t)val;
-+	        /*
-+	         * Without full-width writes, only the low 32 bits are writable,
-+	         * and the value is sign-extended.
-+	         */
-+		if (gp_counter_base == MSR_IA32_PERFCTR0)
-+			x = (uint64_t)(int64_t)(int32_t)val;
-+		else
-+			x = (uint64_t)(int64_t)val;
- 
- 		/* Mask according to the number of supported bits */
- 		x &= (1ull << eax.split.bit_width) - 1;
- 
--		wrmsr(MSR_IA32_PERFCTR0 + i, val);
-+		wrmsr(gp_counter_base + i, val);
- 		report(rdpmc(i) == x, "cntr-%d", i);
- 
- 		exc = test_for_exception(GP_VECTOR, do_rdpmc_fast, &cnt);
-@@ -423,8 +432,9 @@ static void check_rdpmc(void)
- static void check_running_counter_wrmsr(void)
- {
- 	uint64_t status;
-+	uint64_t count;
- 	pmu_counter_t evt = {
--		.ctr = MSR_IA32_PERFCTR0,
-+		.ctr = gp_counter_base,
- 		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel,
- 		.count = 0,
- 	};
-@@ -433,7 +443,7 @@ static void check_running_counter_wrmsr(void)
- 
- 	start_event(&evt);
- 	loop();
--	wrmsr(MSR_IA32_PERFCTR0, 0);
-+	wrmsr(gp_counter_base, 0);
- 	stop_event(&evt);
- 	report(evt.count < gp_events[1].min, "cntr");
- 
-@@ -443,7 +453,13 @@ static void check_running_counter_wrmsr(void)
- 
- 	evt.count = 0;
- 	start_event(&evt);
--	wrmsr(MSR_IA32_PERFCTR0, -1);
-+
-+	count = -1;
-+	if (gp_counter_base == MSR_IA32_PMC0)
-+		count &= (1ul << eax.split.bit_width) - 1;
-+
-+	wrmsr(gp_counter_base, count);
-+
- 	loop();
- 	stop_event(&evt);
- 	status = rdmsr(MSR_CORE_PERF_GLOBAL_STATUS);
-@@ -452,6 +468,66 @@ static void check_running_counter_wrmsr(void)
- 	report_prefix_pop();
- }
- 
-+static void check_counters(void)
-+{
-+	check_gp_counters();
-+	check_fixed_counters();
-+	check_rdpmc();
-+	check_counters_many();
-+	check_counter_overflow();
-+	check_gp_counter_cmask();
-+	check_running_counter_wrmsr();
-+}
-+
-+static void do_unsupported_width_counter_write(void *index)
-+{
-+	wrmsr(MSR_IA32_PMC0 + *((int *) index), 0xffffff0123456789ull);
-+}
-+
-+static void  check_gp_counters_write_width(void)
-+{
-+	u64 val_64 = 0xffffff0123456789ull;
-+	u64 val_32 = val_64 & ((1ul << 32) - 1);
-+	u64 val_max_width = val_64 & ((1ul << eax.split.bit_width) - 1);
-+	int i;
-+
-+	/*
-+	 * MSR_IA32_PERFCTRn supports 64-bit writes,
-+	 * but only the lowest 32 bits are valid.
-+	 */
-+	for (i = 0; i < num_counters; i++) {
-+		wrmsr(MSR_IA32_PERFCTR0 + i, val_32);
-+		assert(rdmsr(MSR_IA32_PERFCTR0 + i) == val_32);
-+		assert(rdmsr(MSR_IA32_PMC0 + i) == val_32);
-+
-+		wrmsr(MSR_IA32_PERFCTR0 + i, val_max_width);
-+		assert(rdmsr(MSR_IA32_PERFCTR0 + i) == val_32);
-+		assert(rdmsr(MSR_IA32_PMC0 + i) == val_32);
-+
-+		wrmsr(MSR_IA32_PERFCTR0 + i, val_64);
-+		assert(rdmsr(MSR_IA32_PERFCTR0 + i) == val_32);
-+		assert(rdmsr(MSR_IA32_PMC0 + i) == val_32);
-+	}
-+
-+	/*
-+	 * MSR_IA32_PMCn supports writing values ​​up to GP counter width,
-+	 * and only the lowest bits of GP counter width are valid.
-+	 */
-+	for (i = 0; i < num_counters; i++) {
-+		wrmsr(MSR_IA32_PMC0 + i, val_32);
-+		assert(rdmsr(MSR_IA32_PMC0 + i) == val_32);
-+		assert(rdmsr(MSR_IA32_PERFCTR0 + i) == val_32);
-+
-+		wrmsr(MSR_IA32_PMC0 + i, val_max_width);
-+		assert(rdmsr(MSR_IA32_PMC0 + i) == val_max_width);
-+		assert(rdmsr(MSR_IA32_PERFCTR0 + i) == val_max_width);
-+
-+		report(test_for_exception(GP_VECTOR,
-+			do_unsupported_width_counter_write, &i),
-+		"writing unsupported width to MSR_IA32_PMC%d raises #GP", i);
-+	}
-+}
-+
- int main(int ac, char **av)
- {
- 	struct cpuid id = cpuid(10);
-@@ -480,13 +556,14 @@ int main(int ac, char **av)
- 
- 	apic_write(APIC_LVTPC, PC_VECTOR);
- 
--	check_gp_counters();
--	check_fixed_counters();
--	check_rdpmc();
--	check_counters_many();
--	check_counter_overflow();
--	check_gp_counter_cmask();
--	check_running_counter_wrmsr();
-+	check_counters();
-+
-+	if (rdmsr(MSR_IA32_PERF_CAPABILITIES) & PMU_CAP_FW_WRITES) {
-+		gp_counter_base = MSR_IA32_PMC0;
-+		report_prefix_push("full-width writes");
-+		check_counters();
-+		check_gp_counters_write_width();
-+	}
- 
- 	return report_summary();
- }
--- 
-2.21.1
-
+Best Regards
+Kunihiko Hayashi
