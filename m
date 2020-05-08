@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CDAC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6ABC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C2D21BE5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E868B21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941387;
-	bh=tcgZXyYJLW2CvBxvw8LEQKfAFWzcUcs5rilOxYRENjM=;
+	s=default; t=1588941390;
+	bh=4461rff/8b/jph4vSDZqmbqZ71AQJeIrJYUJcwal6GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjAuS82+8GQyvBaxyJ+V/nF4OBh1FeMcltbkzeKtFz1CVYJF/ntN+iLNnGK2ZC61A
-	 7A1kQkV+QaoZlm70OQwIdl5ZnPAPUAQ3qjo6USSNZ6ZfQPm9hFUylGyBiCE+JlURdh
-	 NE4swl0BitfC1pXBGJNkU31G+TUbhiICdYg6HQHY=
+	b=ZlMMV+nkGedks7ueyNtNKmcvFwkt2blZcPlDqwV1Gu2OXDgPYYrwOG1uC+vKq7smn
+	 OeKye27KxYf+HiLeLOib4k/xHDSgUWrQ93s+VILbwYR72mSRED6mhOCOA51dfrcre1
+	 ysIf0x9o19+DzrQHsmUluh/BbM6V9ZwogPf6eb2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgEHMg0 (ORCPT
+        id S1727803AbgEHMg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:36:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgEHMgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:36:25 -0400
+        id S1727124AbgEHMg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:36:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2073821473;
-        Fri,  8 May 2020 12:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9607021974;
+        Fri,  8 May 2020 12:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941384;
-        bh=tcgZXyYJLW2CvBxvw8LEQKfAFWzcUcs5rilOxYRENjM=;
+        s=default; t=1588941387;
+        bh=4461rff/8b/jph4vSDZqmbqZ71AQJeIrJYUJcwal6GM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KyVUiq2KGxtLXXUE2fDBZXX+hDoYJyVm4blVk0JkhWqMDIEHrHK9yEEo3brwema9o
-         cO/IShOPCPL56L5WFWBLN/SCiVjlczLJrTil1wFN/IkiIj0wEIsnOpvTzpni3UJLqG
-         Aj2DwF+k/8+Oxv2sQmDYxmKOqcr43Dm9ZWJ+KqsU=
+        b=E9qxWbxl+AMW3Ep5DwYbzeQPoVCiOOBNglpdZfO2H9H+H9L68vLLJ5pLiDqoaHXuj
+         DyaeYdIH83r7UazFja34TW0yX6Z0qtof53wPeBhtAUTltBArLJWwO4DfesohgT/NH9
+         ApIvFxEPFPgw2DWUDcGUx2sp8LNx+eqObiOVWdBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        john@phrozen.org, cernekee@gmail.com, jogo@openwrt.org,
-        jaedon.shin@gmail.com, jfraser@broadcom.com, pgynther@google.com,
-        dragan.stancevic@gmail.com, linux-mips@linux-mips.org,
-        Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 011/312] MIPS: BMIPS: Fix PRID_IMP_BMIPS5000 masking for BMIPS5200
-Date:   Fri,  8 May 2020 14:30:02 +0200
-Message-Id: <20200508123125.303734179@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@imgtec.com>,
+        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 012/312] MIPS: smp-cps: Stop printing EJTAG exceptions to UART
+Date:   Fri,  8 May 2020 14:30:03 +0200
+Message-Id: <20200508123125.369792501@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,69 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Paul Burton <paul.burton@imgtec.com>
 
-commit cbbda6e7c9c3e4532bd70a73ff9d5e6655c894dc upstream.
+commit 6609ccdc852f7bfbfa54300dd5b3cd89eb4ced6f upstream.
 
-BMIPS5000 have a PrID value of 0x5A00 and BMIPS5200 have a PrID value of
-0x5B00, which, masked with 0x5A00, returns 0x5A00. Update all conditionals on
-the PrID to cover both variants since we are going to need this to enable
-BMIPS5200 SMP. The existing check, masking with 0xFF00 would not cover
-BMIPS5200 at all.
+When CONFIG_MIPS_CPS_NS16550 is enabled, some register state is dumped
+to the UART when an exception is taken via the BEV on secondary cores.
+EJTAG exceptions are architecturally expected to be handled by the BEV
+even when Status.BEV is 0. This effectively means that if userland
+executes an sdbbp instruction on a secondary core then the kernel dumps
+register state to the UART even though the exception is perfectly normal
+& expected. Prevent this by simply not dumping information to the UART
+for EJTAG exceptions.
 
-Fixes: 68e6a78373a6d ("MIPS: BMIPS: Add PRId for BMIPS5200 (Whirlwind)")
-Fixes: 6465460c92a85 ("MIPS: BMIPS: change compile time checks to runtime checks")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Cc: john@phrozen.org
-Cc: cernekee@gmail.com
-Cc: jogo@openwrt.org
-Cc: jaedon.shin@gmail.com
-Cc: jfraser@broadcom.com
-Cc: pgynther@google.com
-Cc: dragan.stancevic@gmail.com
+Fixes: 609cf6f2291a ("MIPS: CPS: Early debug using an ns16550-compatible UART")
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/12279/
+Cc: linux-kernel@vger.kernel.org
+Patchwork: https://patchwork.linux-mips.org/patch/12341/
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/bmips_vec.S |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/mips/kernel/cps-vec.S |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/mips/kernel/bmips_vec.S
-+++ b/arch/mips/kernel/bmips_vec.S
-@@ -93,7 +93,8 @@ NESTED(bmips_reset_nmi_vec, PT_SIZE, sp)
- #if defined(CONFIG_CPU_BMIPS5000)
- 	mfc0	k0, CP0_PRID
- 	li	k1, PRID_IMP_BMIPS5000
--	andi	k0, 0xff00
-+	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
-+	andi	k0, PRID_IMP_BMIPS5000
- 	bne	k0, k1, 1f
+--- a/arch/mips/kernel/cps-vec.S
++++ b/arch/mips/kernel/cps-vec.S
+@@ -245,7 +245,6 @@ LEAF(excep_intex)
  
- 	/* if we're not on core 0, this must be the SMP boot signal */
-@@ -166,10 +167,12 @@ bmips_smp_entry:
- 2:
- #endif /* CONFIG_CPU_BMIPS4350 || CONFIG_CPU_BMIPS4380 */
- #if defined(CONFIG_CPU_BMIPS5000)
--	/* set exception vector base */
-+	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
- 	li	k1, PRID_IMP_BMIPS5000
-+	andi	k0, PRID_IMP_BMIPS5000
- 	bne	k0, k1, 3f
- 
-+	/* set exception vector base */
- 	la	k0, ebase
- 	lw	k0, 0(k0)
- 	mtc0	k0, $15, 1
-@@ -263,6 +266,8 @@ LEAF(bmips_enable_xks01)
- #endif /* CONFIG_CPU_BMIPS4380 */
- #if defined(CONFIG_CPU_BMIPS5000)
- 	li	t1, PRID_IMP_BMIPS5000
-+	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
-+	andi	t2, PRID_IMP_BMIPS5000
- 	bne	t2, t1, 2f
- 
- 	mfc0	t0, $22, 5
+ .org 0x480
+ LEAF(excep_ejtag)
+-	DUMP_EXCEP("EJTAG")
+ 	PTR_LA	k0, ejtag_debug_handler
+ 	jr	k0
+ 	 nop
 
 
