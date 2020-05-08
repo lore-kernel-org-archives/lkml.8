@@ -2,103 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04249C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8AFC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8AA2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfoPJenA"
+	by mail.kernel.org (Postfix) with ESMTP id 740742173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEHTF1 (ORCPT
+        id S1727123AbgEHTGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:05:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39637 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726807AbgEHTF0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:05:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588964725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XsDRaGkVfqyuEIS9XYvP0fqwdX3bL7AdrzNr+5CISAE=;
-        b=PfoPJenATFPVjkPwST56PQMZEVvIBkkq0KTTjgSThEcvWoaOv8ZedrSknMHtKRq6+fEW9b
-        7yQPE7XJP8HLEGexMpPZbiO9eyJi0Pozw24rb2oNMrbHnmOtREgVDtfOxnnUbncJqr0giZ
-        NJR+hEvtxYCtz6QPYxwCIbkQjEUH2L4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-444-VyoKLMhUOt2U1vweSATWPQ-1; Fri, 08 May 2020 15:05:21 -0400
-X-MC-Unique: VyoKLMhUOt2U1vweSATWPQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B13053;
-        Fri,  8 May 2020 19:05:20 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-83.rdu2.redhat.com [10.10.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 228FF1053B1B;
-        Fri,  8 May 2020 19:05:19 +0000 (UTC)
-Subject: Re: [PATCH RFC 1/8] dcache: show count of hash buckets in sysctl
- fs.dentry-state
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894059427.200862.341530589978120554.stgit@buzz>
- <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
- <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <741172f7-a0d2-1428-fb25-789e38978d4e@redhat.com>
-Date:   Fri, 8 May 2020 15:05:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 8 May 2020 15:06:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:1210 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgEHTGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:06:24 -0400
+IronPort-SDR: v2gjK4RKVJ1v/sdovzL2O+wNylxbADOvG7CwVQ2mYCdz9xLJxz/HixotXkwpwCZ+kmPH0d16Cx
+ 1FbYJHrKB4gw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:06:23 -0700
+IronPort-SDR: nTJv2Ub7B7vBvOk28P4x1cVdUZbPUuOksDDQNy7s9MtBirBS8RvT9K4KcLsZoqahFtSTTuVdmk
+ 9Xl7ImcTOcnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="462687274"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:06:19 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8KE-005Sw7-9j; Fri, 08 May 2020 22:06:22 +0300
+Date:   Fri, 8 May 2020 22:06:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200508190622.GQ185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 12:16 PM, Konstantin Khlebnikov wrote:
-> On 08/05/2020 17.49, Waiman Long wrote:
->> On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
->>> Count of buckets is required for estimating average length of hash 
->>> chains.
->>> Size of hash table depends on memory size and printed once at boot.
->>>
->>> Let's expose nr_buckets as sixth number in sysctl fs.dentry-state
->>
->> The hash bucket count is a constant determined at boot time. Is there 
->> a need to use up one dentry_stat entry for that? Besides one can get 
->> it by looking up the kernel dmesg log like:
->>
->> [    0.055212] Dentry cache hash table entries: 8388608 (order: 14, 
->> 67108864 bytes)
->
-> Grepping logs since boot time is a worst API ever.
->
-> dentry-state shows count of dentries in various states.
-> It's very convenient to show count of buckets next to it,
-> because this number defines overall scale. 
+On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
+> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
+> 
+> > > Multi-block support provides a way to map the kernel-specific SG-table so
+> > > the DW DMA device would handle it as a whole instead of handling the
+> > > SG-list items or so called LLP block items one by one. So if true LLP
+> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> > > utilized to load and execute each LLP-block one by one. A problem may
+> > > happen for multi-block DMA slave transfers, when the slave device buffers
+> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
+> > > than the block size. In this case writing data to the DMA slave Tx buffer
+> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
+> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
+> > > We've discovered this problem in the framework of the DW APB SPI device
+> 
+> > Mark, do we have any adjustment knobs in SPI core to cope with this?
+> 
+> Frankly I'm not sure I follow what the issue is - is an LLP block item
+> different from a SG list entry?  As far as I can tell the problem is
+> that the DMA controller does not support chaining transactions together
+> and possibly also has a limit on the transfer size?  Or possibly some
+> issue with the DMA controller locking the CPU out of the I/O bus for
+> noticable periods?  I can't really think what we could do about that if
+> the issue is transfer sizes, that just seems like hardware which is
+> never going to work reliably.  If the issue is not being able to chain
+> transfers then possibly an option to linearize messages into a single
+> transfer as suggested to cope with PIO devices with ill considered
+> automated chip select handling, though at some point you have to worry
+> about the cost of the memcpy() vs the cost of just doing PIO.
 
-I am not against using the last free entry for that. My only concern is 
-when we want to expose another internal dcache data point via 
-dentry-state, we will have to add one more number to the array which can 
-cause all sort of compatibility problem. So do we want to use the last 
-free slot for a constant that can be retrieved from somewhere else?
+My understanding that the programmed transfers (as separate items in SG list)
+can be desynchronized due to LLP emulation in DMA driver. And suggestion
+probably is to use only single entry (block) SG lists will do the trick (I
+guess that we can configure SPI core do or do not change CS between them).
 
-Cheers,
-Longman
+> > > working in conjunction with DW DMA. Since there is no comprehensive way to
+> > > fix it right now lets at least print a warning for the first found
+> > > multi-blockless DW DMAC channel. This shall point a developer to the
+> > > possible cause of the problem if one would experience a sudden data loss.
+> 
+> I thought from the description of the SPI driver I just reviewed that
+> this hardware didn't have DMA?  Or are there separate blocks in the
+> hardware that have a more standard instantiation of the DesignWare SPI
+> controller with DMA attached?
+
+I speculate that the right words there should be 'we don't enable DMA right now
+due to some issues' (see above).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
