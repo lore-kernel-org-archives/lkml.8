@@ -2,58 +2,64 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD86C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A872CC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37CE2495C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8783921473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942211;
-	bh=rqwiKhf2BLURmX6eRQeZLiO0HnJNekfAjN4i7IDcxOM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vybPq1X6629OWVkVBqvOvRnMwe9gyon3BoHmrnQoLlErxYGC1k7nNng8PT2UwYEXm
-	 BbKA3YVD0NvlGNqqnUY00UilQRxZPj+R5QGQq8S33xXlr+jcMLLJeaL7krjh/AXVRC
-	 au2B+b4cej02959BHcGm+1n2c0BYcQ1sQFgTj7gY=
+	s=default; t=1588942221;
+	bh=tDgb4ZhqgTRX4pFltIIphvpJ1LIqmMkqkCzl3AR9tCU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zssfcY2anX1KfgGhXyvTYmNQcf1P9moeBmoRtz1ZOIUTpQoiGwc58xa5zqbthi3sQ
+	 xp4G77EQTUgwZaPnAljP+Ndmm7fgvYTeeSWnE0HYRYtFEmJwILj4jQQ7Ie27PRDZFk
+	 pQ8DJEDfvcK2Xj39JL1P9JWiITIGUJmFEbsXXBhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbgEHMuK (ORCPT
+        id S1728581AbgEHMuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:50:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729811AbgEHMuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:03 -0400
+        id S1729818AbgEHMuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9627824959;
-        Fri,  8 May 2020 12:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A8524953;
+        Fri,  8 May 2020 12:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942203;
-        bh=rqwiKhf2BLURmX6eRQeZLiO0HnJNekfAjN4i7IDcxOM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=loeeIAbV8YHte5Vpx0WzW31SxXu8McpFNK8cW6Lk8oPKtGf8RGk8Cof197xmmbhrV
-         53Wngw3EPeau6T0hfiSOk88CPCAlH1+TiIzeWm6tYdMFPgw32h7B5BioTZBFTYEtPQ
-         WENCzZMaZDPTpvIDWHrA3QQJf4/ORg143Py7s5ZE=
+        s=default; t=1588942205;
+        bh=tDgb4ZhqgTRX4pFltIIphvpJ1LIqmMkqkCzl3AR9tCU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eHiGacgwJ7dRMKrYqc3egS+1xqGdBtKrQSE19AZt8YZ1TyBqPetDtF3XuXjgt+r7K
+         r3U57g3P3u+lOjFTE4ozEOAebBIxdmEcJcNLL2ur2Mhnot/uTL3lVk04ce4nWnIaHc
+         reXfRbxS8yImDdOCY9rOJvHQh4/6bnlXYv2ZKgZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 09/18] scripts/config: allow colons in option strings for sed
-Date:   Fri,  8 May 2020 14:35:12 +0200
-Message-Id: <20200508123032.959347035@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/18] 4.9.223-rc1 review
+Date:   Fri,  8 May 2020 14:35:03 +0200
+Message-Id: <20200508123030.497793118@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
-References: <20200508123030.497793118@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.223-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.223-rc1
+X-KernelTest-Deadline: 2020-05-10T12:30+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,48 +67,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+This is the start of the stable review cycle for the 4.9.223 release.
+There are 18 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
+Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+Anything received after that time might be too late.
 
-Sed broke on some strings as it used colon as a separator.
-I made it more robust by using \001, which is legit POSIX AFAIK.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.223-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
-failed with: sed: -e expression #1, char 55: unknown option to `s'
+thanks,
 
-Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/config | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+greg k-h
 
-diff --git a/scripts/config b/scripts/config
-index 026aeb4f32ee3..73de17d396987 100755
---- a/scripts/config
-+++ b/scripts/config
-@@ -6,6 +6,9 @@ myname=${0##*/}
- # If no prefix forced, use the default CONFIG_
- CONFIG_="${CONFIG_-CONFIG_}"
- 
-+# We use an uncommon delimiter for sed substitutions
-+SED_DELIM=$(echo -en "\001")
-+
- usage() {
- 	cat >&2 <<EOL
- Manipulate options in a .config file from the command line.
-@@ -82,7 +85,7 @@ txt_subst() {
- 	local infile="$3"
- 	local tmpfile="$infile.swp"
- 
--	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
-+	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
- 	# replace original file with the edited one
- 	mv "$tmpfile" "$infile"
- }
--- 
-2.20.1
+-------------
+Pseudo-Shortlog of commits:
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.223-rc1
+
+Thomas Pedersen <thomas@adapt-ip.com>
+    mac80211: add ieee80211_is_any_nullfunc()
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda: Match both PCI ID and SSID for driver blacklist
+
+Jere Leppänen <jere.leppanen@nokia.com>
+    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+
+Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+    MIPS: perf: Remove incorrect odd/even counter handling for I6400
+
+Chuck Lever <chuck.lever@oracle.com>
+    xprtrdma: Fix backchannel allocation of extra rpcrdma_reps
+
+Doug Berger <opendmb@gmail.com>
+    net: systemport: suppress warnings on failed Rx SKB allocations
+
+Doug Berger <opendmb@gmail.com>
+    net: bcmgenet: suppress warnings on failed Rx SKB allocations
+
+Nathan Chancellor <natechancellor@gmail.com>
+    lib/mpi: Fix building for powerpc with clang
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: b53: Rework ARL bin logic
+
+Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+    scripts/config: allow colons in option strings for sed
+
+Ronnie Sahlberg <lsahlber@redhat.com>
+    cifs: protect updating server->dstaddr with a spinlock
+
+Julien Beraud <julien.beraud@orolia.com>
+    net: stmmac: Fix sub-second increment
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    wimax/i2400m: Fix potential urb refcnt leak
+
+Sebastian Reichel <sebastian.reichel@collabora.com>
+    ASoC: sgtl5000: Fix VAG power-on handling
+
+Tyler Hicks <tyhicks@linux.microsoft.com>
+    selftests/ipc: Fix test failure seen after initial test run
+
+YueHaibing <yuehaibing@huawei.com>
+    iio:ad7797: Use correct attribute_group
+
+Alexey Kardashevskiy <aik@ozlabs.ru>
+    powerpc/pci/of: Parse unassigned resources
+
+Jia He <justin.he@arm.com>
+    vhost: vsock: kick send_pkt worker once device is started
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +--
+ arch/mips/kernel/perf_event_mipsxx.c               |  6 +++-
+ arch/powerpc/kernel/pci_of_scan.c                  | 12 ++++++--
+ drivers/iio/adc/ad7793.c                           |  2 +-
+ drivers/net/dsa/b53/b53_common.c                   | 30 ++++++++++++++++---
+ drivers/net/dsa/b53/b53_regs.h                     |  3 ++
+ drivers/net/ethernet/broadcom/bcmsysport.c         |  3 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  3 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 12 +++++---
+ drivers/net/wimax/i2400m/usb-fw.c                  |  1 +
+ drivers/vhost/vsock.c                              |  5 ++++
+ fs/cifs/connect.c                                  |  2 ++
+ include/linux/ieee80211.h                          |  9 ++++++
+ lib/mpi/longlong.h                                 | 34 +++++++++++-----------
+ net/mac80211/mlme.c                                |  2 +-
+ net/mac80211/rx.c                                  |  8 ++---
+ net/mac80211/status.c                              |  5 ++--
+ net/mac80211/tx.c                                  |  2 +-
+ net/sctp/sm_make_chunk.c                           |  6 +++-
+ net/sunrpc/xprtrdma/backchannel.c                  | 12 ++------
+ net/sunrpc/xprtrdma/verbs.c                        | 34 +++++++++++++---------
+ net/sunrpc/xprtrdma/xprt_rdma.h                    |  2 +-
+ scripts/config                                     |  5 +++-
+ sound/pci/hda/hda_intel.c                          |  9 +++---
+ sound/soc/codecs/sgtl5000.c                        | 34 ++++++++++++++++++++++
+ sound/soc/codecs/sgtl5000.h                        |  1 +
+ tools/testing/selftests/ipc/msgque.c               |  2 +-
+ 27 files changed, 173 insertions(+), 75 deletions(-)
 
 
