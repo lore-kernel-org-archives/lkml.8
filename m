@@ -2,235 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D35C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773AAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD6021473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF93206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jXappDhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgEHIAc (ORCPT
+        id S1727118AbgEHIBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:00:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:29311 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgEHIAa (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:00:30 -0400
-IronPort-SDR: mqoCvGbJ8zfIQ7Vo33EjKcE9ns8TVme/Eo4MzF0EncDMT72XwLRB3EmfCKKq1BfiHV2ELgMq9w
- Y3rDJUzRbXnw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 01:00:29 -0700
-IronPort-SDR: dV9QlGlDEIbymudBlGF0fo1KiFQDn/jQ3aV3MkxyoZrjvV4Wuy4LbmlrXG3/Y5riPzeZctbsy2
- ujd51rHs5s4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="370372939"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 01:00:27 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 4/4] perf stat: Report summary for interval mode
-Date:   Fri,  8 May 2020 15:58:17 +0800
-Message-Id: <20200508075817.10588-5-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508075817.10588-1-yao.jin@linux.intel.com>
-References: <20200508075817.10588-1-yao.jin@linux.intel.com>
+        Fri, 8 May 2020 04:01:24 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40573 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726974AbgEHIBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:01:23 -0400
+X-UUID: 5451aae3a1dd42bea1cd4bed645b84f6-20200508
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=uGT7hSTUzH9ZKoRQUM/Tvp8FCrc2dsU2C85wx6zrn7c=;
+        b=jXappDhhT6v7+89hWqkMKS6/jweiyhR/macCNpBydYfSeFGDa5UkOJ7BDDO27f6M76jlElqkwtijSABhNScf78ey3im8UYPeZIHS4SAhr2uzFAQRS4kNciPwFEd1BKMFxigjO8wuQsxwaIpZFXCyVdRQdy7fnrAf79fMooDd26U=;
+X-UUID: 5451aae3a1dd42bea1cd4bed645b84f6-20200508
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 431706336; Fri, 08 May 2020 16:01:20 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 8 May 2020 16:01:16 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 8 May 2020 16:01:18 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v8 3/8] scsi: ufs: export ufs_fixup_device_setup() function
+Date:   Fri, 8 May 2020 16:01:10 +0800
+Message-ID: <20200508080115.24233-4-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200508080115.24233-1-stanley.chu@mediatek.com>
+References: <20200508080115.24233-1-stanley.chu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 47C1EFE60891844C887843C26736B395BD6B73E41061F5077EBA054EDA9897692000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently perf-stat supports to print counts at regular interval (-I),
-but it's not very easy for user to get the overall statistics.
-
-The patch uses 'evsel->prev_raw_counts' to get counts for summary.
-Copy the counts to 'evsel->counts' after printing the interval results.
-Next, we just follow the non-interval processing.
-
-Let's see some examples,
-
- root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
- #           time             counts unit events
-      1.000412064          2,281,114      cycles
-      2.001383658          2,547,880      cycles
-
-  Performance counter stats for 'system wide':
-
-          4,828,994      cycles
-
-        2.002860349 seconds time elapsed
-
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000389902          1,536,093      cycles
-      1.000389902            420,226      instructions              #    0.27  insn per cycle
-      2.001433453          2,213,952      cycles
-      2.001433453            735,465      instructions              #    0.33  insn per cycle
-
-  Performance counter stats for 'system wide':
-
-          3,750,045      cycles
-          1,155,691      instructions              #    0.31  insn per cycle
-
-        2.003023361 seconds time elapsed
-
- root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
- #           time             counts unit events
-      1.000435121            905,303      inst_retired.any          #      2.9 CPI
-      1.000435121          2,663,333      cycles
-      1.000435121            914,702      inst_retired.any          #      0.3 IPC
-      1.000435121          2,676,559      cpu_clk_unhalted.thread
-      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
-      2.001615941          3,551,357      cycles
-      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
-      2.001615941          3,551,044      cpu_clk_unhalted.thread
-
-  Performance counter stats for 'system wide':
-
-          2,856,395      inst_retired.any          #      2.2 CPI
-          6,214,690      cycles
-          2,865,539      inst_retired.any          #      0.5 IPC
-          6,227,603      cpu_clk_unhalted.thread
-
-        2.003403078 seconds time elapsed
-
- v4:
- ---
- Move affinity setup and read_counter_cpu to a new function
- read_affinity_counters. It's only called when stat_config.summary
- is not set.
-
- v3:
- ---
- Use evsel->prev_raw_counts for summary counts
-
- v2:
- ---
- Rebase to perf/core branch
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c | 27 ++++++++++++++++++++++++---
- tools/perf/util/stat.c    |  2 +-
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 26 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f3b3a59ac7d2..d6a6aa6b997d 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -314,14 +314,14 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
- 	return 0;
- }
- 
--static void read_counters(struct timespec *rs)
-+static int read_affinity_counters(struct timespec *rs)
- {
- 	struct evsel *counter;
- 	struct affinity affinity;
- 	int i, ncpus, cpu;
- 
- 	if (affinity__setup(&affinity) < 0)
--		return;
-+		return -1;
- 
- 	ncpus = perf_cpu_map__nr(evsel_list->core.all_cpus);
- 	if (!target__has_cpu(&target) || target__has_per_thread(&target))
-@@ -341,6 +341,15 @@ static void read_counters(struct timespec *rs)
- 		}
- 	}
- 	affinity__cleanup(&affinity);
-+	return 0;
-+}
-+
-+static void read_counters(struct timespec *rs)
-+{
-+	struct evsel *counter;
-+
-+	if (!stat_config.summary && (read_affinity_counters(rs) < 0))
-+		return;
- 
- 	evlist__for_each_entry(evsel_list, counter) {
- 		if (counter->err)
-@@ -394,6 +403,7 @@ static void runtime_stat_reset(struct perf_stat_config *config)
- static void process_interval(void)
- {
- 	struct timespec ts, rs;
-+	struct stats walltime_nsecs_stats_bak;
- 
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
-@@ -407,9 +417,11 @@ static void process_interval(void)
- 			pr_err("failed to write stat round event\n");
- 	}
- 
-+	walltime_nsecs_stats_bak = walltime_nsecs_stats;
- 	init_stats(&walltime_nsecs_stats);
- 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
- 	print_counters(&rs, 0, NULL);
-+	walltime_nsecs_stats = walltime_nsecs_stats_bak;
- }
- 
- static void enable_counters(void)
-@@ -765,6 +777,15 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 
- 	update_stats(&walltime_nsecs_stats, t1 - t0);
- 
-+	if (interval) {
-+		stat_config.interval = 0;
-+		stat_config.summary = true;
-+		perf_evlist__copy_prev_raw_counts(evsel_list);
-+		perf_evlist__reset_prev_raw_counts(evsel_list);
-+		runtime_stat_reset(&stat_config);
-+		perf_stat__reset_shadow_per_stat(&rt_stat);
-+	}
-+
- 	/*
- 	 * Closing a group leader splits the group, and as we only disable
- 	 * group leaders, results in remaining events becoming enabled. To
-@@ -2159,7 +2180,7 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
--	if (!forever && status != -1 && !interval)
-+	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
- 	if (STAT_RECORD) {
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index aadc723ce871..49e832a9c109 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -388,7 +388,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
- 	 * interval mode, otherwise overall avg running
- 	 * averages will be shown for each interval.
- 	 */
--	if (config->interval) {
-+	if (config->interval || config->summary) {
- 		for (i = 0; i < 3; i++)
- 			init_stats(&ps->res_stats[i]);
- 	}
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 62cf72c71869..c60e9e5d6474 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -110,6 +110,7 @@ struct perf_stat_config {
- 	bool			 all_kernel;
- 	bool			 all_user;
- 	bool			 percore_show_thread;
-+	bool			 summary;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--- 
-2.17.1
+RXhwb3J0IHVmc19maXh1cF9kZXZpY2Vfc2V0dXAoKSB0byBhbGxvdyB2ZW5kb3JzIHRvIHJlLXVz
+ZSBpdCBmb3INCmZpeGluZyBkZXZpY2UgcXVyaWtzIG9uIHNwZWNpZmllZCBVRlMgaG9zdHMuDQoN
+ClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpS
+ZXZpZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5jb20+DQotLS0NCiBkcml2
+ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgMTAgKysrKysrKy0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMv
+dWZzaGNkLmggfCAgMSArDQogMiBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJp
+dmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KaW5kZXggOGQ4NmQ5YTZhNjIyLi5jMGIyY2VjNWRjZDgg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQorKysgYi9kcml2ZXJzL3Nj
+c2kvdWZzL3Vmc2hjZC5jDQpAQCAtNjgzOCwxMiArNjgzOCwxNSBAQCBzdGF0aWMgdm9pZCB1ZnNo
+Y2Rfd2JfcHJvYmUoc3RydWN0IHVmc19oYmEgKmhiYSwgdTggKmRlc2NfYnVmKQ0KIAloYmEtPmNh
+cHMgJj0gflVGU0hDRF9DQVBfV0JfRU47DQogfQ0KIA0KLXN0YXRpYyB2b2lkIHVmc2hjZF9maXh1
+cF9kZXZfcXVpcmtzKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQordm9pZCB1ZnNoY2RfZml4dXBfZGV2
+X3F1aXJrcyhzdHJ1Y3QgdWZzX2hiYSAqaGJhLCBzdHJ1Y3QgdWZzX2Rldl9maXggKmZpeHVwcykN
+CiB7DQogCXN0cnVjdCB1ZnNfZGV2X2ZpeCAqZjsNCiAJc3RydWN0IHVmc19kZXZfaW5mbyAqZGV2
+X2luZm8gPSAmaGJhLT5kZXZfaW5mbzsNCiANCi0JZm9yIChmID0gdWZzX2ZpeHVwczsgZi0+cXVp
+cms7IGYrKykgew0KKwlpZiAoIWZpeHVwcykNCisJCXJldHVybjsNCisNCisJZm9yIChmID0gZml4
+dXBzOyBmLT5xdWlyazsgZisrKSB7DQogCQlpZiAoKGYtPndtYW51ZmFjdHVyZXJpZCA9PSBkZXZf
+aW5mby0+d21hbnVmYWN0dXJlcmlkIHx8DQogCQkgICAgIGYtPndtYW51ZmFjdHVyZXJpZCA9PSBV
+RlNfQU5ZX1ZFTkRPUikgJiYNCiAJCSAgICAgKChkZXZfaW5mby0+bW9kZWwgJiYNCkBAIC02ODUy
+LDExICs2ODU1LDEyIEBAIHN0YXRpYyB2b2lkIHVmc2hjZF9maXh1cF9kZXZfcXVpcmtzKHN0cnVj
+dCB1ZnNfaGJhICpoYmEpDQogCQkJaGJhLT5kZXZfcXVpcmtzIHw9IGYtPnF1aXJrOw0KIAl9DQog
+fQ0KK0VYUE9SVF9TWU1CT0xfR1BMKHVmc2hjZF9maXh1cF9kZXZfcXVpcmtzKTsNCiANCiBzdGF0
+aWMgdm9pZCB1ZnNfZml4dXBfZGV2aWNlX3NldHVwKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogew0K
+IAkvKiBmaXggYnkgZ2VuZXJhbCBxdWlyayB0YWJsZSAqLw0KLQl1ZnNoY2RfZml4dXBfZGV2X3F1
+aXJrcyhoYmEpOw0KKwl1ZnNoY2RfZml4dXBfZGV2X3F1aXJrcyhoYmEsIHVmc19maXh1cHMpOw0K
+IA0KIAkvKiBhbGxvdyB2ZW5kb3JzIHRvIGZpeCBxdWlya3MgKi8NCiAJdWZzaGNkX3ZvcHNfZml4
+dXBfZGV2X3F1aXJrcyhoYmEpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNk
+LmggYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oDQppbmRleCA4OTczMzhiYTY3YWEuLjRkMjk2
+YWNhZGQ2ZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCisrKyBiL2Ry
+aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCkBAIC05NTIsNiArOTUyLDcgQEAgaW50IHVmc2hjZF9x
+dWVyeV9mbGFnKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGVudW0gcXVlcnlfb3Bjb2RlIG9wY29kZSwN
+CiANCiB2b2lkIHVmc2hjZF9hdXRvX2hpYmVybjhfZW5hYmxlKHN0cnVjdCB1ZnNfaGJhICpoYmEp
+Ow0KIHZvaWQgdWZzaGNkX2F1dG9faGliZXJuOF91cGRhdGUoc3RydWN0IHVmc19oYmEgKmhiYSwg
+dTMyIGFoaXQpOw0KK3ZvaWQgdWZzaGNkX2ZpeHVwX2Rldl9xdWlya3Moc3RydWN0IHVmc19oYmEg
+KmhiYSwgc3RydWN0IHVmc19kZXZfZml4ICpmaXh1cHMpOw0KICNkZWZpbmUgU0RfQVNDSUlfU1RE
+IHRydWUNCiAjZGVmaW5lIFNEX1JBVyBmYWxzZQ0KIGludCB1ZnNoY2RfcmVhZF9zdHJpbmdfZGVz
+YyhzdHJ1Y3QgdWZzX2hiYSAqaGJhLCB1OCBkZXNjX2luZGV4LA0KLS0gDQoyLjE4LjANCg==
 
