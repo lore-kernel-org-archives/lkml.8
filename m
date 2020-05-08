@@ -2,102 +2,86 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64254C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE63C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EF22184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="OvTf+PpX"
+	by mail.kernel.org (Postfix) with ESMTP id 6409E218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588966739;
+	bh=TVF1tf6NxsU/ettA9htZ19+xz7qF2EXHonAMXoKKwVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zL7I2c0AG08sO0HeclV0f2P30dG9/DMKTw2E6wTVGsknmyqGj779innMTsZwxEq3r
+	 LofCrg+bloVQpEX/i5F//0iQ7NFcN5745Knf3EIRAOAu+mGAVdWGEskFg/MBKurXGv
+	 WQuR1RHGILR3Bb5S4tWQ4gyfb8JHuCJJRqUWkN7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgEHTiP (ORCPT
+        id S1727783AbgEHTi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:38:15 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:35872 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbgEHTiO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:38:14 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id D9AE22E1311;
-        Fri,  8 May 2020 22:38:11 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id QvZdULVM6o-cAX4svEI;
-        Fri, 08 May 2020 22:38:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588966691; bh=9GLY1la68n+wI9zMyvgvDRv2pNDwrtlhLHG5G0IMGTs=;
-        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
-        b=OvTf+PpXtk7c6havdRnlXu1hosHaar/Pj5/xkLONgMgc//ZOb4TQlntz2NNbxteoP
-         nKGm5QpGYYrY3oPg5vhtBUmNC3ZrUyU2Prue+3JmKRuePDd0LSYlSdt5z2pgxoN0ir
-         flbJfpFua4c+p7FkDT2Vfv1JSxMI3cdGMEwJaJ7M=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7114::1:3])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id jDpMf4G7CS-cAWSORw7;
-        Fri, 08 May 2020 22:38:10 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC 1/8] dcache: show count of hash buckets in sysctl
- fs.dentry-state
-To:     Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894059427.200862.341530589978120554.stgit@buzz>
- <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
- <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
- <741172f7-a0d2-1428-fb25-789e38978d4e@redhat.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <1f137f70-3d37-eb70-2e85-2541e504afbd@yandex-team.ru>
-Date:   Fri, 8 May 2020 22:38:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 15:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgEHTi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:38:58 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A4DC20725;
+        Fri,  8 May 2020 19:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588966737;
+        bh=TVF1tf6NxsU/ettA9htZ19+xz7qF2EXHonAMXoKKwVE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fEUa2hpQEVZ/5oNp1fr5qsCBw8GHgtMEJvhk+5/bCZYLMkOiF7tcXsTfELHccv7bK
+         gaBqJ8v8aRf2VzYARtx9NSsWuSkEQtr52uc4DiUh/tLlhaQaM4jx9XCFmRcC867Uvh
+         P8onb0BGagZbzRt//WbMxOJknZofArfkbeEQOkaw=
+Date:   Fri, 8 May 2020 14:43:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: Replace zero-length array with flexible-array
+Message-ID: <20200508194325.GD23375@embeddedor>
+References: <20200507190544.GA15633@embeddedor>
+ <20200507201544.GA23633@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <741172f7-a0d2-1428-fb25-789e38978d4e@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507201544.GA23633@bjorn-Precision-5520>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 08/05/2020 22.05, Waiman Long wrote:
-> On 5/8/20 12:16 PM, Konstantin Khlebnikov wrote:
->> On 08/05/2020 17.49, Waiman Long wrote:
->>> On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
->>>> Count of buckets is required for estimating average length of hash chains.
->>>> Size of hash table depends on memory size and printed once at boot.
->>>>
->>>> Let's expose nr_buckets as sixth number in sysctl fs.dentry-state
->>>
->>> The hash bucket count is a constant determined at boot time. Is there a need to use up one dentry_stat entry for that? Besides one can 
->>> get it by looking up the kernel dmesg log like:
->>>
->>> [    0.055212] Dentry cache hash table entries: 8388608 (order: 14, 67108864 bytes)
->>
->> Grepping logs since boot time is a worst API ever.
->>
->> dentry-state shows count of dentries in various states.
->> It's very convenient to show count of buckets next to it,
->> because this number defines overall scale. 
+On Thu, May 07, 2020 at 03:15:44PM -0500, Bjorn Helgaas wrote:
+> On Thu, May 07, 2020 at 02:05:44PM -0500, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> I am not against using the last free entry for that. My only concern is when we want to expose another internal dcache data point via 
-> dentry-state, we will have to add one more number to the array which can cause all sort of compatibility problem. So do we want to use the 
-> last free slot for a constant that can be retrieved from somewhere else?
-
-I see no problem in adding more numbers into sysctl.
-Especially into such rarely used.
-This interface is designed for that.
-
-Also fields 'age_limit' and 'want_pages' are unused since kernel 2.2.0
-
+> Applied to pci/misc for v5.8, thanks!
 > 
-> Cheers,
-> Longman
+> I assume this takes care of everything in drivers/pci/, right?  I'd
+> like to do them all at once, so if there are others, send another
+> patch and I'll squash them.  I took a quick look but didn't see any.
 > 
+
+Yep. I can confirm that these are the last zero-length arrays in
+drivers/pci/ :)
+
+Thanks
+--
+Gustavo
