@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BF2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1ECC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C14920870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D587E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943068;
-	bh=0FOvSCNt8UtfbIPwhxl/4xZOBKkGSXp3YeT0bc0a7Dg=;
+	s=default; t=1588943076;
+	bh=K0ZGYulBriFMjO4nLQ5/9iPqciULhpiG+A26PMQUrvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQgEK8bH1JX485/Dbti6DjRh36WuejGBnW/RSDNJ8WIGPgvRrN4dDLJzZP8KPAqCl
-	 6O5XPJeLWwZkVJGjRAK5MnKTPlKBZ3XTG8nMyn9bIKt831CNiZqCc73edm8uzFPNMv
-	 S7+Xm5QAs2EXCmTDMtg1lf+HWRd1IfEuwjYBMN0A=
+	b=c8j+mvno4mXl30RiS/b7ab1vVomx79As1748mxaGZP51ot/1w/6nZ47yGgU9LD+fS
+	 hOj2eAFMbWOQpmnP0MmYblW0IOg30mn7tEenlWw0FRgcHI70krtSA2k1HrhjXggcGi
+	 E96RPQzpW06aWuYmbL90DPdIOZ0ICrY+BqXqryE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgEHNE1 (ORCPT
+        id S1729734AbgEHNEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgEHMtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:08 -0400
+        id S1729353AbgEHMs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8272324953;
-        Fri,  8 May 2020 12:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845C024953;
+        Fri,  8 May 2020 12:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942146;
-        bh=0FOvSCNt8UtfbIPwhxl/4xZOBKkGSXp3YeT0bc0a7Dg=;
+        s=default; t=1588942138;
+        bh=K0ZGYulBriFMjO4nLQ5/9iPqciULhpiG+A26PMQUrvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ArZv246rkOZXMBJ1iUJ5MijfHYeoAcrfF03XhcwhIeac/2IzpO3bac/SCffmh2948
-         2dI8sxOQ8iQI2Kqbu+CHggIyjNEH1KLK3yPPKloNto+X1ByqycDdfWF1h2jBifzkPi
-         c+z+6KEZ5w8sGUBiiPLjCxGYd7QS2vzQyuJBUpSc=
+        b=Ns7gFgZ/2AU7WA1DtI3KrxyKyVOFVwoxTHjvQvge78j1H8WKi4Nw/jtv1bGOyzj2C
+         pQlg/AV5umd/b9YPy5+zPU7j34B0lt4XQHkcgnV1QgmWEP+9H3ArgOdMJoXlcb356/
+         3YpH7NckmMI8IAJnEyzmjMdF9axJlvnJTO5k3Yaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Hutchinson <b.hutchman@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mugunthan V N <mugunthanvnm@ti.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 276/312] net: ethernet: davinci_emac: Fix devioctl while in fixed link
-Date:   Fri,  8 May 2020 14:34:27 +0200
-Message-Id: <20200508123143.839989509@linuxfoundation.org>
+Subject: [PATCH 4.4 275/312] bnxt_en: Remove locking around txr->dev_state
+Date:   Fri,  8 May 2020 14:34:26 +0200
+Message-Id: <20200508123143.771875671@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 62522ef3c399996f6c8120bfd14b94280bc9f490 upstream.
+commit cbce91cad4ee39070bf3c7873767194e4be88e16 upstream.
 
-When configured in fixed link, the DaVinci emac driver sets the
-priv->phydev to NULL and further ioctl calls to the phy_mii_ioctl()
-causes the kernel to crash.
+txr->dev_state was not consistently manipulated with the acquisition of
+the per-queue lock, after further inspection the lock does not seem
+necessary, either the value is read as BNXT_DEV_STATE_CLOSING or 0.
 
-Cc: Brian Hutchinson <b.hutchman@gmail.com>
-Fixes: 1bb6aa56bb38 ("net: davinci_emac: Add support for fixed-link PHY")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Mugunthan V N <mugunthanvnm@ti.com>
+Reported-by: coverity (CID 1339583)
+Fixes: c0c050c58d840 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/ti/davinci_emac.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1512,7 +1512,10 @@ static int emac_devioctl(struct net_devi
- 
- 	/* TODO: Add phy read and write and private statistics get feature */
- 
--	return phy_mii_ioctl(priv->phydev, ifrq, cmd);
-+	if (priv->phydev)
-+		return phy_mii_ioctl(priv->phydev, ifrq, cmd);
-+	else
-+		return -EOPNOTSUPP;
- }
- 
- static int match_first_device(struct device *dev, void *data)
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -4310,9 +4310,7 @@ static void bnxt_tx_disable(struct bnxt
+ 			bnapi = bp->bnapi[i];
+ 			txr = &bnapi->tx_ring;
+ 			txq = netdev_get_tx_queue(bp->dev, i);
+-			__netif_tx_lock(txq, smp_processor_id());
+ 			txr->dev_state = BNXT_DEV_STATE_CLOSING;
+-			__netif_tx_unlock(txq);
+ 		}
+ 	}
+ 	/* Stop all TX queues */
 
 
