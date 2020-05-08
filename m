@@ -2,111 +2,102 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4AFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55A2C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E138920A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B416D20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kAKMdwcD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ycs8GXkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgEHUDY (ORCPT
+        id S1727100AbgEHUG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgEHUDX (ORCPT
+        Fri, 8 May 2020 16:06:56 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8438 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgEHUG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:03:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F4FC061A0C;
-        Fri,  8 May 2020 13:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=UYn2z6n+L+AvMY1L8ilIOE7d4kxYCxQt3oTadxSZ8JM=; b=kAKMdwcDXsnJ6b5ZZPP6IUxiN1
-        swzM8MoBxnXH+rIiVrEsFr0TG6OTx1BkuzcMj5jixIBC2q12I6tRxTQ3MvMDDFHXPyZPU8hb9lmcW
-        C24Dc/oNRvVu4LxAKP5R4YyCOKM0RWFusSl/Ftctlji996tdHp5HV40WdLOF3RwNHt12WpvMG9gvw
-        CIHUyJ3vNDagdhVbbzpyqCaO9JDj8THmKTvaXxKSWon/0BS03t3TyJgXpA9yCI2mDbUVmaH9VVZ/I
-        tm9+wCWtmhxMR4OBugJShTNCaQJHwnR7zwIS6Swz2oW14UzSTY0bIs0xSBBjvR4TUyhz0PkItE+ek
-        /IHL1eTw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX9DM-0007kI-8X; Fri, 08 May 2020 20:03:20 +0000
-Date:   Fri, 8 May 2020 13:03:20 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH RFC 1/8] dcache: show count of hash buckets in sysctl
- fs.dentry-state
-Message-ID: <20200508200320.GS16070@bombadil.infradead.org>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894059427.200862.341530589978120554.stgit@buzz>
- <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
- <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
- <741172f7-a0d2-1428-fb25-789e38978d4e@redhat.com>
- <1f137f70-3d37-eb70-2e85-2541e504afbd@yandex-team.ru>
- <34ed1b12-1bee-8158-3084-fb1059b6686a@redhat.com>
+        Fri, 8 May 2020 16:06:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb5bbd30000>; Fri, 08 May 2020 13:06:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 08 May 2020 13:06:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 08 May 2020 13:06:56 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 May
+ 2020 20:06:55 +0000
+Subject: Re: [PATCH 4/6] mm/hmm: add output flag for compound page mapping
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Shuah Khan" <shuah@kernel.org>, <willy@infradead.org>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
+ <20200508192009.15302-5-rcampbell@nvidia.com> <20200508195129.GA19740@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <1ec0511f-e6eb-3e11-ad6d-ad4e5b107464@nvidia.com>
+Date:   Fri, 8 May 2020 13:06:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <34ed1b12-1bee-8158-3084-fb1059b6686a@redhat.com>
+In-Reply-To: <20200508195129.GA19740@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588968404; bh=1PhR0ynTTHTZ2jjSta5jo4Wils7Nsyx2BUSfOurLe2M=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ycs8GXkCLsC3dOjGwwVRiDFIa15xrlFp5dmFGRza+tkcfuZFMsD5xYyCaJ3SGXe5L
+         MbsyET5GQuGbmktRrCTBcURNRpVyByNfAP6d32d3PQqHhfvXHl7hV3Vz6+jpL9f7XP
+         CXbZOo+mS0n/H/P9XYRbSRpH1g1yZoCcRMaMatvBiqhLkjOZkUb5AO5td5VmqXKkE/
+         sM80B5uZfLs+ocEiGdK/OF8louCokHaVcQ5PGDdXwn/0dQA98q3hte0xdQaR0KSK8o
+         h1YgoYDiUJdbmaXyPqLW6c0Avqm1BAzTgQczQUQuWMpS3cwZcoVq5P9xL82BMqcFaC
+         raNhF8Jy7jtaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:00:08PM -0400, Waiman Long wrote:
-> On 5/8/20 3:38 PM, Konstantin Khlebnikov wrote:
-> > On 08/05/2020 22.05, Waiman Long wrote:
-> > > On 5/8/20 12:16 PM, Konstantin Khlebnikov wrote:
-> > > > On 08/05/2020 17.49, Waiman Long wrote:
-> > > > > On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
-> > > > > > Count of buckets is required for estimating average
-> > > > > > length of hash chains.
-> > > > > > Size of hash table depends on memory size and printed once at boot.
-> > > > > > 
-> > > > > > Let's expose nr_buckets as sixth number in sysctl fs.dentry-state
-> > > > > 
-> > > > > The hash bucket count is a constant determined at boot time.
-> > > > > Is there a need to use up one dentry_stat entry for that?
-> > > > > Besides one can get it by looking up the kernel dmesg log
-> > > > > like:
-> > > > > 
-> > > > > [    0.055212] Dentry cache hash table entries: 8388608
-> > > > > (order: 14, 67108864 bytes)
-> > > > 
-> > > > Grepping logs since boot time is a worst API ever.
-> > > > 
-> > > > dentry-state shows count of dentries in various states.
-> > > > It's very convenient to show count of buckets next to it,
-> > > > because this number defines overall scale.
-> > > 
-> > > I am not against using the last free entry for that. My only concern
-> > > is when we want to expose another internal dcache data point via
-> > > dentry-state, we will have to add one more number to the array which
-> > > can cause all sort of compatibility problem. So do we want to use
-> > > the last free slot for a constant that can be retrieved from
-> > > somewhere else?
-> > 
-> > I see no problem in adding more numbers into sysctl.
-> > Especially into such rarely used.
-> > This interface is designed for that.
-> > 
-> > Also fields 'age_limit' and 'want_pages' are unused since kernel 2.2.0
-> 
-> Well, I got rebuke the last time I want to reuse one of age_limit/want_pages
-> entry for negative dentry count because of the potential of breaking some
-> really old applications or tools. Changing dentry-state to output one more
-> number can potentially break compatibility too. That is why I am questioning
-> if it is a good idea to use up the last free slot.
 
-I'd rather see the nr_buckets exposed some other way, leaving this file
-for dynamic state.
+On 5/8/20 12:51 PM, Christoph Hellwig wrote:
+> On Fri, May 08, 2020 at 12:20:07PM -0700, Ralph Campbell wrote:
+>> hmm_range_fault() returns an array of page frame numbers and flags for
+>> how the pages are mapped in the requested process' page tables. The PFN
+>> can be used to get the struct page with hmm_pfn_to_page() and the page size
+>> order can be determined with compound_order(page) but if the page is larger
+>> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+>> using a larger page size. To be fully general, hmm_range_fault() would need
+>> to return the mapping size to handle cases like a 1GB compound page being
+>> mapped with 2MB PMD entries. However, the most common case is the mapping
+>> size the same as the underlying compound page size.
+>> Add a new output flag to indicate this so that callers know it is safe to
+>> use a large device page table mapping if one is available.
+> 
+> Why do you need the flag?  The caller should be able to just use
+> page_size() (or willys new thp_size helper).
+> 
+
+The question is whether or not a large page can be mapped with smaller
+page table entries with different permissions. If one process has a 2MB
+page mapped with 4K PTEs with different read/write permissions, I don't think
+it would be OK for a device to map the whole 2MB with write access enabled.
+The flag is supposed to indicate that the whole page can be mapped by the
+device with the indicated read/write permissions.
