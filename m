@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBC6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB562C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FC120CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979E5208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEHHVS (ORCPT
+        id S1726906AbgEHHV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:21:18 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59248 "EHLO inva021.nxp.com"
+        Fri, 8 May 2020 03:21:28 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56784 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgEHHUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:49 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 247CA2012CE;
-        Fri,  8 May 2020 09:20:47 +0200 (CEST)
+        id S1725991AbgEHHUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:20:48 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E2EB41A1427;
+        Fri,  8 May 2020 09:20:45 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 17F3E201045;
-        Fri,  8 May 2020 09:20:47 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D62191A1412;
+        Fri,  8 May 2020 09:20:45 +0200 (CEST)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9991C204BD;
-        Fri,  8 May 2020 09:20:46 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 558EA204BD;
+        Fri,  8 May 2020 09:20:45 +0200 (CEST)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     alex.williamson@redhat.com, kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        bharatb.linux@gmail.com, Diana Craciun <diana.craciun@nxp.com>
-Subject: [PATCH v2 6/9] vfio/fsl-mc: Added lock support in preparation for interrupt handling
-Date:   Fri,  8 May 2020 10:20:36 +0300
-Message-Id: <20200508072039.18146-7-diana.craciun@oss.nxp.com>
+        bharatb.linux@gmail.com, Diana Craciun <diana.craciun@oss.nxp.com>,
+        Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Subject: [PATCH v2 4/9] vfio/fsl-mc: Implement VFIO_DEVICE_GET_REGION_INFO ioctl call
+Date:   Fri,  8 May 2020 10:20:34 +0300
+Message-Id: <20200508072039.18146-5-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
 References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
@@ -44,193 +45,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@nxp.com>
+Expose to userspace information about the memory regions.
 
-Only the DPRC object allocates interrupts from the MSI
-interrupt domain. The interrupts are managed by the DPRC in
-a pool of interrupts. The access to this pool of interrupts
-has to be protected with a lock.
-This patch extends the current lock implementation to have a
-lock per DPRC.
-
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 90 +++++++++++++++++++++--
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  8 +-
- 2 files changed, 91 insertions(+), 7 deletions(-)
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 77 ++++++++++++++++++++++-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_private.h | 19 ++++++
+ 2 files changed, 95 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index a92c6c97c29a..3c43f52ca162 100644
+index 8a4d3203b176..c162fa27c02c 100644
 --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
 +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -17,6 +17,76 @@
+@@ -17,16 +17,72 @@
  
  static struct fsl_mc_driver vfio_fsl_mc_driver;
  
-+static DEFINE_MUTEX(reflck_lock);
-+
-+static void vfio_fsl_mc_reflck_get(struct vfio_fsl_mc_reflck *reflck)
++static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
 +{
-+	kref_get(&reflck->kref);
-+}
++	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++	int count = mc_dev->obj_desc.region_count;
++	int i;
 +
-+static void vfio_fsl_mc_reflck_release(struct kref *kref)
-+{
-+	struct vfio_fsl_mc_reflck *reflck = container_of(kref,
-+						      struct vfio_fsl_mc_reflck,
-+						      kref);
++	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
++				GFP_KERNEL);
++	if (!vdev->regions)
++		return -ENOMEM;
 +
-+	kfree(reflck);
-+	mutex_unlock(&reflck_lock);
-+}
++	for (i = 0; i < count; i++) {
++		struct resource *res = &mc_dev->regions[i];
 +
-+static void vfio_fsl_mc_reflck_put(struct vfio_fsl_mc_reflck *reflck)
-+{
-+	kref_put_mutex(&reflck->kref, vfio_fsl_mc_reflck_release, &reflck_lock);
-+}
-+
-+static struct vfio_fsl_mc_reflck *vfio_fsl_mc_reflck_alloc(void)
-+{
-+	struct vfio_fsl_mc_reflck *reflck;
-+
-+	reflck = kzalloc(sizeof(*reflck), GFP_KERNEL);
-+	if (!reflck)
-+		return ERR_PTR(-ENOMEM);
-+
-+	kref_init(&reflck->kref);
-+	mutex_init(&reflck->lock);
-+
-+	return reflck;
-+}
-+
-+static int vfio_fsl_mc_reflck_attach(struct vfio_fsl_mc_device *vdev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&reflck_lock);
-+	if (is_fsl_mc_bus_dprc(vdev->mc_dev)) {
-+		vdev->reflck = vfio_fsl_mc_reflck_alloc();
-+	} else {
-+		struct device *mc_cont_dev = vdev->mc_dev->dev.parent;
-+		struct vfio_device *device;
-+		struct vfio_fsl_mc_device *cont_vdev;
-+
-+		device = vfio_device_get_from_dev(mc_cont_dev);
-+		if (!device) {
-+			ret = -ENODEV;
-+			goto unlock;
-+		}
-+
-+		cont_vdev = vfio_device_data(device);
-+		if (!cont_vdev->reflck) {
-+			vfio_device_put(device);
-+			ret = -ENODEV;
-+			goto unlock;
-+		}
-+		vfio_fsl_mc_reflck_get(cont_vdev->reflck);
-+		vdev->reflck = cont_vdev->reflck;
-+		vfio_device_put(device);
++		vdev->regions[i].addr = res->start;
++		vdev->regions[i].size = PAGE_ALIGN((resource_size(res)));
++		vdev->regions[i].flags = 0;
 +	}
 +
-+unlock:
-+	mutex_unlock(&reflck_lock);
-+	return ret;
++	vdev->num_regions = mc_dev->obj_desc.region_count;
++	return 0;
 +}
 +
- static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
++static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
++{
++	vdev->num_regions = 0;
++	kfree(vdev->regions);
++}
++
+ static int vfio_fsl_mc_open(void *device_data)
  {
- 	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-@@ -58,7 +128,7 @@ static int vfio_fsl_mc_open(void *device_data)
++	struct vfio_fsl_mc_device *vdev = device_data;
++	int ret;
++
  	if (!try_module_get(THIS_MODULE))
  		return -ENODEV;
  
--	mutex_lock(&vdev->driver_lock);
-+	mutex_lock(&vdev->reflck->lock);
- 	if (!vdev->refcnt) {
- 		ret = vfio_fsl_mc_regions_init(vdev);
- 		if (ret)
-@@ -66,12 +136,12 @@ static int vfio_fsl_mc_open(void *device_data)
- 	}
- 	vdev->refcnt++;
- 
--	mutex_unlock(&vdev->driver_lock);
-+	mutex_unlock(&vdev->reflck->lock);
- 
- 	return 0;
- 
- err_reg_init:
--	mutex_unlock(&vdev->driver_lock);
-+	mutex_unlock(&vdev->reflck->lock);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
-@@ -80,12 +150,12 @@ static void vfio_fsl_mc_release(void *device_data)
- {
- 	struct vfio_fsl_mc_device *vdev = device_data;
- 
--	mutex_lock(&vdev->driver_lock);
-+	mutex_lock(&vdev->reflck->lock);
- 
- 	if (!(--vdev->refcnt))
- 		vfio_fsl_mc_regions_cleanup(vdev);
- 
--	mutex_unlock(&vdev->driver_lock);
-+	mutex_unlock(&vdev->reflck->lock);
- 
- 	module_put(THIS_MODULE);
- }
-@@ -326,12 +396,18 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
- 		return ret;
- 	}
- 
-+	ret = vfio_fsl_mc_reflck_attach(vdev);
-+	if (ret) {
-+		vfio_iommu_group_put(group, dev);
-+		return ret;
++	mutex_lock(&vdev->driver_lock);
++	if (!vdev->refcnt) {
++		ret = vfio_fsl_mc_regions_init(vdev);
++		if (ret)
++			goto err_reg_init;
 +	}
++	vdev->refcnt++;
 +
- 	ret = vfio_fsl_mc_init_device(vdev);
- 	if (ret) {
-+		vfio_fsl_mc_reflck_put(vdev->reflck);
++	mutex_unlock(&vdev->driver_lock);
++
+ 	return 0;
++
++err_reg_init:
++	mutex_unlock(&vdev->driver_lock);
++	module_put(THIS_MODULE);
++	return ret;
+ }
+ 
+ static void vfio_fsl_mc_release(void *device_data)
+ {
++	struct vfio_fsl_mc_device *vdev = device_data;
++
++	mutex_lock(&vdev->driver_lock);
++
++	if (!(--vdev->refcnt))
++		vfio_fsl_mc_regions_cleanup(vdev);
++
++	mutex_unlock(&vdev->driver_lock);
++
+ 	module_put(THIS_MODULE);
+ }
+ 
+@@ -59,7 +115,25 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+ 	}
+ 	case VFIO_DEVICE_GET_REGION_INFO:
+ 	{
+-		return -ENOTTY;
++		struct vfio_region_info info;
++
++		minsz = offsetofend(struct vfio_region_info, offset);
++
++		if (copy_from_user(&info, (void __user *)arg, minsz))
++			return -EFAULT;
++
++		if (info.argsz < minsz)
++			return -EINVAL;
++
++		if (info.index >= vdev->num_regions)
++			return -EINVAL;
++
++		/* map offset to the physical address  */
++		info.offset = VFIO_FSL_MC_INDEX_TO_OFFSET(info.index);
++		info.size = vdev->regions[info.index].size;
++		info.flags = vdev->regions[info.index].flags;
++
++		return copy_to_user((void __user *)arg, &info, minsz);
+ 	}
+ 	case VFIO_DEVICE_GET_IRQ_INFO:
+ 	{
+@@ -201,6 +275,7 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
  		vfio_iommu_group_put(group, dev);
  		return ret;
  	}
--	mutex_init(&vdev->driver_lock);
++	mutex_init(&vdev->driver_lock);
  
  	return ret;
  }
-@@ -375,6 +451,8 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
- 	if (vdev->nb.notifier_call)
- 		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
- 
-+	vfio_fsl_mc_reflck_put(vdev->reflck);
-+
- 	if (is_fsl_mc_bus_dprc(mc_dev))
- 		vfio_fsl_mc_cleanup_dprc(vdev->mc_dev);
- 
 diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-index 89d2e2a602d8..f34fe8721848 100644
+index 37d61eaa58c8..818dfd3df4db 100644
 --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
 +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -17,6 +17,11 @@
+@@ -7,9 +7,28 @@
+ #ifndef VFIO_FSL_MC_PRIVATE_H
+ #define VFIO_FSL_MC_PRIVATE_H
  
- #define VFIO_DPRC_REGION_CACHEABLE	0x00000001
- 
-+struct vfio_fsl_mc_reflck {
-+	struct kref		kref;
-+	struct mutex		lock;
++#define VFIO_FSL_MC_OFFSET_SHIFT    40
++#define VFIO_FSL_MC_OFFSET_MASK (((u64)(1) << VFIO_FSL_MC_OFFSET_SHIFT) - 1)
++
++#define VFIO_FSL_MC_OFFSET_TO_INDEX(off) ((off) >> VFIO_FSL_MC_OFFSET_SHIFT)
++
++#define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
++	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
++
++struct vfio_fsl_mc_region {
++	u32			flags;
++	u32			type;
++	u64			addr;
++	resource_size_t		size;
 +};
 +
- struct vfio_fsl_mc_region {
- 	u32			flags;
- 	u32			type;
-@@ -30,7 +35,8 @@ struct vfio_fsl_mc_device {
- 	int				refcnt;
- 	u32				num_regions;
- 	struct vfio_fsl_mc_region	*regions;
--	struct mutex driver_lock;
-+	struct vfio_fsl_mc_reflck   *reflck;
-+
+ struct vfio_fsl_mc_device {
+ 	struct fsl_mc_device		*mc_dev;
+ 	struct notifier_block        nb;
++	int				refcnt;
++	u32				num_regions;
++	struct vfio_fsl_mc_region	*regions;
++	struct mutex driver_lock;
  };
  
  #endif /* VFIO_FSL_MC_PRIVATE_H */
