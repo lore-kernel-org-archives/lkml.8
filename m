@@ -2,144 +2,145 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC30C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610D2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0785C216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGvWQE9v"
+	by mail.kernel.org (Postfix) with ESMTP id 4190D2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588949177;
+	bh=rUna4BvqAdXmw2zWEnE1XX0U3nEpMJ9/qKR4xB4CzIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dmc0KXrdDYe2FdWjw7mpingyEjpWmNz0rnzYrtz9suS22d0CHqB26RrzdPXhdlC7h
+	 37hhmRgX+xHiLhtha4AEE0EfPiaAlzz8rhccpjo/7GmsVB5B+OXxRZioHKdyFBoRqm
+	 nZmdyTMrwlCVmEczcPMZwGvOIeVLtueyDPMPe0B8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgEHOpB (ORCPT
+        id S1727835AbgEHOqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgEHOpA (ORCPT
+        Fri, 8 May 2020 10:46:16 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42456 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgEHOqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:45:00 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E87C061A0C;
-        Fri,  8 May 2020 07:45:00 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id y24so10930573wma.4;
-        Fri, 08 May 2020 07:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s/MYZPlVUlnns2iya4LFQ4TyS82AWS2Uxnpk3t09sYA=;
-        b=XGvWQE9vdi094WQCIZix9amQXx9sbULFi+inl9n2v/5QeS8IrV64WF5s+Ma+RRTp6f
-         Bia5lRq3lnQIiRlY5artBL4CfIaErNpjrAhxq8Tl0zK4pKzAZ+jwpGUE8Iktoq4AhqM6
-         i/M1WS2ce+A98wdyEznAwrB7wXh9Uq8z0K3/jLM5pUky60bdvJ3ZuXpCUe4WbGofsHCl
-         mPCtIU3P3uLtlE++L6LkJPAsvEnspZALLZdKFQqBrBxDjrbY2ZyP7cye7vl34DOf0H3u
-         AeuWKU2WyK605Qamy8n/pknjJPCCpMHouFIvil1PFhcFsh6QNG4Nwys6V3RYf99SE+sD
-         kacw==
+        Fri, 8 May 2020 10:46:15 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s10so1407053edy.9;
+        Fri, 08 May 2020 07:46:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s/MYZPlVUlnns2iya4LFQ4TyS82AWS2Uxnpk3t09sYA=;
-        b=YreENlGgSt69r+WHV2S8gb1qEVuZEU86SLcD65d/Q1H9g4JcWeGisqr4p9oUAMvX40
-         +eIP7viJZfpL6SjYUwRa0V2L6PPODs7MDIbJHy/4WJ4esENi2NdGvxx5RYeqYpBgJLvZ
-         w5LSrm7dXOG3cSetmDJR00fwotBcv0ei2gVRb4kLCHvFBOra/VelQEcJ2WbB3rFJgX8b
-         ZCZGvzKq4nNIaLPgg4ZIvppmvD9DwCXg32UhOHrChAlPRwIUT/V/6y6bO34Zwp/Yio/1
-         zJYKJyORcxdCtYEQyxu4owRTxLfhdNqxzGnnnfL3JNolRJLdJZbY72q8dhnZXgKknjq/
-         Iw/g==
-X-Gm-Message-State: AGi0PuYuSjRiKtHLYbFsr8Ip5hubTsLNnoR8HiI+2nyZs138uyl66/Cp
-        n3ynAw1Qyh6ceuJ0z2edBeM=
-X-Google-Smtp-Source: APiQypJT0D+r37v+q2xNWxpq6zD8tCQligqHPEKvlLGJkVkp8JUs6F8UVBtD2TzPaS0F51K/F6N32g==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr16603953wma.150.1588949099163;
-        Fri, 08 May 2020 07:44:59 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id d15sm3107347wrs.38.2020.05.08.07.44.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XarHM7quPtL8Iwp9fTwswhgZUavH/ZpsvuGgVu5XAdQ=;
+        b=s/ZHhlAj71VgJ8NnezjZBWro4BmGv+kztSHzy9OaFeyxmgcg4yrKfs91ak7WS/rjF0
+         xq6ErTJk3IsxZP480DStFO9tOyhR38TvWShYjzdduYmpnf9kRbOjCNW6ehXLn6IdLex+
+         lBtONwzWDLu0Bw18ILlbuDoKvcL4t9BnN3mjLGvv6PADRb3IP8c+jNQaP8inW3HaQfTt
+         uSn7kGk0K37Tz9PW0jd82VNFOLI01l3hAt7R6jPZElr/PQqp1hqW8EIJBJDTa7a6+N4b
+         0ey3uHJFOh7tW3LO4Vr+mzwybi3GDTg1/k7RCEIoWQbAYCpwI8udTTyZgyUMc901yWP9
+         MK6w==
+X-Gm-Message-State: AGi0PuYEgz24/EQPsqpy32zYDKrXkaecLzIA9HmXl1iM+Lk4afrMFdGG
+        4esZFW1O41NnuZHbqtBLIkY=
+X-Google-Smtp-Source: APiQypJjIQQnYzAO+FSyQEz9WwVtWHbUUhLRrRKlBcmzLwDdJK0dXJ06g9EggDcxrDp7mWZKsB0M9g==
+X-Received: by 2002:a05:6402:1515:: with SMTP id f21mr2448831edw.370.1588949173380;
+        Fri, 08 May 2020 07:46:13 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id a5sm289736edn.14.2020.05.08.07.46.12
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 07:44:58 -0700 (PDT)
-Message-ID: <1edda80d569a53e0af28fbe30a367d84f099f8fe.camel@gmail.com>
-Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
- Booster(HPB) driver
-From:   Bean Huo <huobean@gmail.com>
-To:     Bart Van Assche <bvanassche@acm.org>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org,
-        rdunlap@infradead.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org
-Date:   Fri, 08 May 2020 16:44:57 +0200
-In-Reply-To: <7b3e127f-a25f-e821-6704-2680ea619c6d@acm.org>
-References: <20200504142032.16619-1-beanhuo@micron.com>
-         <20200504142032.16619-6-beanhuo@micron.com>
-         <7b3e127f-a25f-e821-6704-2680ea619c6d@acm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 08 May 2020 07:46:12 -0700 (PDT)
+Date:   Fri, 8 May 2020 16:46:10 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Bernard Zhao <bernard@vivo.com>, Kukjin Kim <kgene@kernel.org>,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] memory/samsung: Maybe wrong triming parameter
+Message-ID: <20200508144610.GA5983@kozik-lap>
+References: <20200507114514.11589-1-bernard@vivo.com>
+ <2eeb33f7-1acc-66bb-704a-b724fa0be0a8@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2eeb33f7-1acc-66bb-704a-b724fa0be0a8@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 20:21 -0700, Bart Van Assche wrote:
-> On 2020-05-04 07:20, huobean@gmail.com wrote:
-> > +config SCSI_UFSHPB
-> > +	bool "UFS Host Performance Booster (EXPERIMENTAL)"
-> > +	depends on SCSI_UFSHCD
-> > +	[ ... ]
-> > +
-> > +config UFSHPB_MAX_MEM_SIZE
-> > +	int "UFS HPB maximum memory size per controller (in MiB)"
-> > +	depends on SCSI_UFSHPB
-> > +	default 128
-> > +	range 0 65536
-> > +	[ ... ]
-> 
-> Kernel module parameters are an inflexible mechanism because the
-> value
-> of these parameters cannot be changed without rebuilding the kernel
-> followed by a reboot. Has it been considered to make these two
-> parameters configurable through sysfs? Has it been considered to make
-> these parameters UFS device parameters instead of global parameters
-> that
-> apply to all UFS devices?
+On Thu, May 07, 2020 at 04:42:46PM +0100, Lukasz Luba wrote:
+> Hi Bernard,
 > 
 > 
-Hi Bart
-I ever tried these two approaches. let me explain why I finally choose
-kernel module "make menuconfig" way.
+> On 5/7/20 12:45 PM, Bernard Zhao wrote:
+> > In function create_timings_aligned, all the max is to use
+> > dmc->min_tck->xxx, aligned with val dmc->timings->xxx.
+> > But the dmc->timings->tFAW use dmc->min_tck->tXP?
+> > Maybe this point is wrong parameter useing.
+> > 
+> > Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> > ---
+> >   drivers/memory/samsung/exynos5422-dmc.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> > index 81a1b1d01683..22a43d662833 100644
+> > --- a/drivers/memory/samsung/exynos5422-dmc.c
+> > +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> > @@ -1091,7 +1091,7 @@ static int create_timings_aligned(struct exynos5_dmc *dmc, u32 *reg_timing_row,
+> >   	/* power related timings */
+> >   	val = dmc->timings->tFAW / clk_period_ps;
+> >   	val += dmc->timings->tFAW % clk_period_ps ? 1 : 0;
+> > -	val = max(val, dmc->min_tck->tXP);
+> > +	val = max(val, dmc->min_tck->tFAW);
+> >   	reg = &timing_power[0];
+> >   	*reg_timing_power |= TIMING_VAL2REG(reg, val);
+> > 
+> 
+> Good catch! Indeed this should be a dmc->min_tck->tFAW used for
+> clamping.
+> 
+> It didn't show up in testing because the frequency values based on
+> which the 'clk_period_ps' are calculated are sane.
+> Check the dump below:
+> 
+> [    5.458227] DMC: mem tFAW=25000, clk_period_ps=6060
+> [    5.461743] DMC: tFAW=5, tXP=2 val=5
+> [    5.465273] DMC: mem tFAW=25000, clk_period_ps=4854
+> [    5.470101] DMC: tFAW=5, tXP=2 val=6
+> [    5.473668] DMC: mem tFAW=25000, clk_period_ps=3636
+> [    5.478507] DMC: tFAW=5, tXP=2 val=7
+> [    5.482072] DMC: mem tFAW=25000, clk_period_ps=2421
+> [    5.486951] DMC: tFAW=5, tXP=2 val=11
+> [    5.490531] DMC: mem tFAW=25000, clk_period_ps=1841
+> [    5.495439] DMC: tFAW=5, tXP=2 val=14
+> [    5.499113] DMC: mem tFAW=25000, clk_period_ps=1579
+> [    5.503877] DMC: tFAW=5, tXP=2 val=16
+> [    5.507476] DMC: mem tFAW=25000, clk_period_ps=1373
+> [    5.512368] DMC: tFAW=5, tXP=2 val=19
+> [    5.515968] DMC: mem tFAW=25000, clk_period_ps=1212
+> [    5.520826] DMC: tFAW=5, tXP=2 val=21
+> 
+> That's why in the existing configuration it does not harm
+> (the calculated 'val' is always >= 5) the board.
+> 
+> But I think this patch should be applied (after small changes in the
+> commit message).
+> 
+> @Krzysztof could you have a look on the commit message or take the
+> patch with small adjustment in the description, please?
+> 
+> I conditionally give (because of this description):
+> 
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-1: driver module parameter, while system booting, specify maximum HPB
-cache size in kernel boot Parameters:
+Thanks for review.
 
-   	static int max_hpb_mem = 128;
-   	module_param(max_hpb_mem,int,0444);
+I applied patch with CC-stable and adjusred commit msg.
 
-but this paramter is added in the ufshcd.c since the ufshpb.c is not a 
-independent module. looks not very natural.
-
-
-2: sysfs parameters
-
-This is a feasible option. we can enable HPB after system boot up,
-also, change the HPB cache maximum size.
-this is the same with the current way, moreover, we don't want user to
-change HPB cache size while HPB is running.
-
-
-If you prefer to convert current HPB driver to be a kernel module
-driver, I prefer first apporach.
-
-
-thanks,
-
-Bean
-
-
-
-
-
+Best regards,
+Krzysztof
 
