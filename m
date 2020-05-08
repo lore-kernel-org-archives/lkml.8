@@ -2,278 +2,158 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8986C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDD020735
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B70C20735
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgEHHFN (ORCPT
+        id S1726864AbgEHHHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:05:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9822 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725991AbgEHHFN (ORCPT
+        Fri, 8 May 2020 03:07:15 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51275 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgEHHHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:05:13 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04874EDd134993;
-        Fri, 8 May 2020 03:05:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtw5b3bc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 03:05:07 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048756X8140299;
-        Fri, 8 May 2020 03:05:06 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtw5b3au-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 03:05:06 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0486soIa025561;
-        Fri, 8 May 2020 07:05:05 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04dal.us.ibm.com with ESMTP id 30s0g7m2tp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 07:05:05 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048754ov10224004
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 07:05:04 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A770BE054;
-        Fri,  8 May 2020 07:05:04 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09EA9BE051;
-        Fri,  8 May 2020 07:04:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.35.106])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri,  8 May 2020 07:04:57 +0000 (GMT)
-Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
-To:     "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
-        ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com,
-        mpe@ellerman.id.au, irogers@google.com
-References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
- <1588868938-21933-3-git-send-email-pc@us.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <0b276c65-9c54-c6eb-0381-f56c4ccf5ec2@linux.ibm.com>
-Date:   Fri, 8 May 2020 12:34:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 8 May 2020 03:07:14 -0400
+Received: by mail-io1-f69.google.com with SMTP id k1so977395iov.18
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 00:07:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1g63PD4aW+o9z6DtIx6SKExc/rMZEaz5ow/1Vs89Rik=;
+        b=fTy1TvkQ+a2ObMCOg4YRwQiAo39SvSq1zXrgiVe5VAUV21bvXEoQ/oJ28RIYd2Ldve
+         TcscM8J+Wo1VAbAD7gFpsP3OJUlplRu6D+SViy7jBMxdkKCqpcyeIYG31uPGxy6HPqTZ
+         v6tm54mMKUZT20+F7Ga2juKA7/U0oUKdMVSKw5+hfLkubPZC1DU98QaXv0tXh9+ZRbjb
+         dKA9wpMfgcwwukfeXoUcdCvN0UWmmD2vIyLrgwvFJSKemmas03Jeu4qrbCYDK7od7SMu
+         46FyKMfyj8s/dhyslOJ9sqfhbA/m2yrwFOJVi1YPVASVKvtrycTpbiVB9ZakgMBzcs7O
+         bsJA==
+X-Gm-Message-State: AGi0PuakMLkyNvZDGp8AIb1iisGW+GJoxA5Zs+7Ic0EwEp4GgstFKAWR
+        jCPrdZgkwouEDIlk+E+OgQVMo1oFjgN+XGVHmDtNiLCRsF1V
+X-Google-Smtp-Source: APiQypLuTPZ0bTtaD8jyqJ21T3s0snid0JDDtH58MJUSOncjcM9yqBUA/lwCTFQm9CLtkD0H8QkYgJrI5SPlEUbSFvOoKTfJeY0H
 MIME-Version: 1.0
-In-Reply-To: <1588868938-21933-3-git-send-email-pc@us.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_08:2020-05-07,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 adultscore=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 bulkscore=0 spamscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005080056
+X-Received: by 2002:a05:6638:ca1:: with SMTP id x1mr321463jad.86.1588921633226;
+ Fri, 08 May 2020 00:07:13 -0700 (PDT)
+Date:   Fri, 08 May 2020 00:07:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000086452c05a51da504@google.com>
+Subject: BUG: unable to handle kernel paging request in vga16fb_imageblit (2)
+From:   syzbot <syzbot+1f29e126cf461c4de3b3@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, jani.nikula@intel.com,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    262f7a6b Merge tag 'for-5.7-rc3-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12786888100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5b075813ec8b93cd
+dashboard link: https://syzkaller.appspot.com/bug?extid=1f29e126cf461c4de3b3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1f29e126cf461c4de3b3@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: ffff8880ffca0e80
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD d401067 P4D d401067 PUD 0 
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 710 Comm: syz-executor.5 Not tainted 5.7.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+RIP: 0010:vga_imageblit_expand drivers/video/fbdev/vga16fb.c:1168 [inline]
+RIP: 0010:vga16fb_imageblit+0xa5b/0x2210 drivers/video/fbdev/vga16fb.c:1260
+Code: 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 09 84 d2 74 05 e8 ee 59 ed fd 41 8b 47 14 48 8b 74 24 08 <88> 06 0f ae e8 8a 06 b8 05 00 00 00 ba ce 03 00 00 ee 48 c7 c2 18
+RSP: 0000:ffffc90002ea71f0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000007 RCX: ffffc90014391000
+RDX: 0000000000000000 RSI: ffff8880ffca0e80 RDI: ffffc90002ea739c
+RBP: ffffc90002ea738c R08: ffff8880922ac200 R09: 0000000000000000
+R10: ffffffff8a895007 R11: fffffbfff1512a00 R12: 0000000000000000
+R13: ffff888218de5140 R14: 0000000000000001 R15: ffffc90002ea7388
+FS:  00007fbeeb282700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8880ffca0e80 CR3: 000000008e9c5000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ bit_putcs_unaligned drivers/video/fbdev/core/bitblit.c:139 [inline]
+ bit_putcs+0x910/0xe10 drivers/video/fbdev/core/bitblit.c:188
+ fbcon_putcs+0x345/0x3f0 drivers/video/fbdev/core/fbcon.c:1362
+ con_flush drivers/tty/vt/vt.c:2569 [inline]
+ do_con_write.part.0+0x7d1/0x1dc0 drivers/tty/vt/vt.c:2772
+ do_con_write drivers/tty/vt/vt.c:2588 [inline]
+ con_write+0x41/0xe0 drivers/tty/vt/vt.c:3154
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x3f0/0xf90 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x495/0x800 drivers/tty/tty_io.c:1046
+ __vfs_write+0x76/0x100 fs/read_write.c:495
+ __kernel_write+0x11c/0x3a0 fs/read_write.c:516
+ write_pipe_buf+0x153/0x1e0 fs/splice.c:809
+ splice_from_pipe_feed fs/splice.c:512 [inline]
+ __splice_from_pipe+0x3e6/0x7b0 fs/splice.c:636
+ splice_from_pipe+0xd9/0x140 fs/splice.c:671
+ default_file_splice_write+0x37/0x90 fs/splice.c:821
+ do_splice_from fs/splice.c:863 [inline]
+ direct_splice_actor+0x115/0x160 fs/splice.c:1037
+ splice_direct_to_actor+0x38c/0x980 fs/splice.c:992
+ do_splice_direct+0x1b4/0x280 fs/splice.c:1080
+ do_sendfile+0x555/0xc50 fs/read_write.c:1521
+ __do_sys_sendfile64 fs/read_write.c:1582 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1568 [inline]
+ __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1568
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fbeeb281c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000004fc0c0 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0800000080004103 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000008d6 R14: 00000000004cb7a1 R15: 00007fbeeb2826d4
+Modules linked in:
+CR2: ffff8880ffca0e80
+---[ end trace 5bb103c4fc7bf525 ]---
+RIP: 0010:writeb arch/x86/include/asm/io.h:65 [inline]
+RIP: 0010:vga_imageblit_expand drivers/video/fbdev/vga16fb.c:1168 [inline]
+RIP: 0010:vga16fb_imageblit+0xa5b/0x2210 drivers/video/fbdev/vga16fb.c:1260
+Code: 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 09 84 d2 74 05 e8 ee 59 ed fd 41 8b 47 14 48 8b 74 24 08 <88> 06 0f ae e8 8a 06 b8 05 00 00 00 ba ce 03 00 00 ee 48 c7 c2 18
+RSP: 0000:ffffc90002ea71f0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000007 RCX: ffffc90014391000
+RDX: 0000000000000000 RSI: ffff8880ffca0e80 RDI: ffffc90002ea739c
+RBP: ffffc90002ea738c R08: ffff8880922ac200 R09: 0000000000000000
+R10: ffffffff8a895007 R11: fffffbfff1512a00 R12: 0000000000000000
+R13: ffff888218de5140 R14: 0000000000000001 R15: ffffc90002ea7388
+FS:  00007fbeeb282700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8880ffca0e80 CR3: 000000008e9c5000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 5/7/20 9:58 PM, Paul A. Clarke wrote:
-> From: "Paul A. Clarke" <pc@us.ibm.com>
-> 
-> Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
-> - ict_noslot_br_mpred_cpi
-> - ict_noslot_br_mpred_icmiss_cpi
-> - ict_noslot_cyc_other_cpi
-> - ict_noslot_disp_held_cpi
-> - ict_noslot_disp_held_hb_full_cpi
-> - ict_noslot_disp_held_issq_cpi
-> - ict_noslot_disp_held_other_cpi
-> - ict_noslot_disp_held_sync_cpi
-> - ict_noslot_disp_held_tbegin_cpi
-> - ict_noslot_ic_l2_cpi
-> - ict_noslot_ic_l3_cpi
-> - ict_noslot_ic_l3miss_cpi
-> - ict_noslot_ic_miss_cpi
-> 
-> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-> ---
->  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
->  1 file changed, 78 insertions(+), 65 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> index 811c2a8c1c9e..6169351a72c8 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> @@ -207,6 +207,84 @@
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "fxu_stall_cpi"
->      },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_br_mpred_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT other stalls",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_cyc_other_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_other_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l2_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l3_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_miss_cpi"
-> +    },
->      {
->          "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
-> @@ -1819,71 +1897,6 @@
->          "MetricExpr": "PM_FXU_IDLE / PM_CYC",
->          "MetricName": "fxu_all_idle"
->      },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_br_mpred_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT other stalls",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_cyc_other_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_other_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l2_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l3_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_miss_cpi"
-> -    },
->      {
->          "BriefDescription": "Rate of IERAT reloads from L2",
->          "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
