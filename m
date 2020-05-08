@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5C2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEEFC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE6A821835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EEB21582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941406;
-	bh=C4uUhk0YLhuLSdUkE+dP14X/bpJOJg8ZfomfZOV7kuQ=;
+	s=default; t=1588941411;
+	bh=Rb1GDpdprDpq6RwZL0rYnYTGS4DnZIANwENFzzhhGfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1tS4Jy9Tmb02wtUHgLaZ65YictDS5GZxdYBPoaBgA4I1lzXx1zNd/A2JXRkS+Kl6
-	 G52tPlYbHfm4z1nesO9v7Ln+iRyMN7eujLpP1tqIVP6F2ZW3SVl+ckKiFhn1jWnnDB
-	 V5fad3CrCPfDmfjsWaBM2eCsHhf/6eyJXjrgRJY4=
+	b=RGKSxkqaGMvHNDOGsFjOrbBSy/9eLNZWVl7e8gNVq+Y7nMDIhp66GsFjmBhK9gYQV
+	 aKBUXApPWzQwq7spSUAvf/xSYBU2HuHgz5W0l6Rxz2IDhuoGntn6NxFA0wrEeLhaxk
+	 7iIltuFQLEzozvOyUY8tkGhtlw0IAt8EWP3seNSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgEHMgp (ORCPT
+        id S1727915AbgEHMgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50170 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727844AbgEHMgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:36:40 -0400
+        id S1727891AbgEHMgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:36:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F61021473;
-        Fri,  8 May 2020 12:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C5421582;
+        Fri,  8 May 2020 12:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941399;
-        bh=C4uUhk0YLhuLSdUkE+dP14X/bpJOJg8ZfomfZOV7kuQ=;
+        s=default; t=1588941407;
+        bh=Rb1GDpdprDpq6RwZL0rYnYTGS4DnZIANwENFzzhhGfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2udYCEpgkW5MQWgGFzk9RAqI+MHy+FkSyGH26dgb3xKpQSw0zNsxmI6I8lfnbrzV8
-         KlavS03hbHZxyxZPSYJvVImHe704u10BOkmdGvO28N/0xiymdQuMZyBSg6Rbp7JrKY
-         oQlw9546cHJPeLcl60ZPzPFPWW3YAnGIlGUn53LY=
+        b=gX6JjXOx7+T4bMITMp4XiwOD2Q/D8J6eOCa6yA23L7mj9GTwa4t3KGGMo6xlvMeo9
+         BVtvK5YJAuoWQ9yvP3Ir1UqERXNS4KzbooN4MZ1bHXuXWrns8vjamsgTdnpZrZ+Q1A
+         6675TCHsJexgKNtgQ1wD/LazYHbQ/4UUsYyh0skk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 017/312] MIPS: BMIPS: Pretty print BMIPS5200 processor name
-Date:   Fri,  8 May 2020 14:30:08 +0200
-Message-Id: <20200508123125.704211127@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 004/312] staging: rtl8192u: Fix crash due to pointers being "confusing"
+Date:   Fri,  8 May 2020 14:29:55 +0200
+Message-Id: <20200508123124.853211565@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,38 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-commit 37808d62afcdc420d98875c4b514c178d56f6815 upstream.
+commit c3f463484bdd0acd15abd5f92399041f79592d06 upstream.
 
-Just to ease debugging of multiplatform kernel, make sure we print
-"Broadcom BMIPS5200" for the BMIPS5200 implementation instead of
-Broadcom BMIPS5000.
+There's no net_device stashed in skb->cb, there's a net_device * there.
 
-Fixes: 68e6a78373a6d ("MIPS: BMIPS: Add PRId for BMIPS5200 (Whirlwind)")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/13014/
-Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+To make it *really* clear, also change the write of the dev pointer
+into skb->cb from a memcpy() to an assignment.
+
+Fixes: 3fe563249374 ("staging: rtl8192u: r8192U_core.c: Cleaning up ...")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/cpu-probe.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8192u/r8192U_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1284,7 +1284,10 @@ static inline void cpu_probe_broadcom(st
- 	case PRID_IMP_BMIPS5000:
- 	case PRID_IMP_BMIPS5200:
- 		c->cputype = CPU_BMIPS5000;
--		__cpu_name[cpu] = "Broadcom BMIPS5000";
-+		if ((c->processor_id & PRID_IMP_MASK) == PRID_IMP_BMIPS5200)
-+			__cpu_name[cpu] = "Broadcom BMIPS5200";
-+		else
-+			__cpu_name[cpu] = "Broadcom BMIPS5000";
- 		set_elf_platform(cpu, "bmips5000");
- 		c->options |= MIPS_CPU_ULRI;
- 		break;
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -1050,7 +1050,7 @@ static void rtl8192_hard_data_xmit(struc
+ 
+ 	spin_lock_irqsave(&priv->tx_lock, flags);
+ 
+-	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
++	*(struct net_device **)(skb->cb) = dev;
+ 	tcb_desc->bTxEnableFwCalcDur = 1;
+ 	skb_push(skb, priv->ieee80211->tx_headroom);
+ 	ret = rtl8192_tx(dev, skb);
+@@ -1092,7 +1092,7 @@ static int rtl8192_hard_start_xmit(struc
+ static void rtl8192_tx_isr(struct urb *tx_urb)
+ {
+ 	struct sk_buff *skb = (struct sk_buff *)tx_urb->context;
+-	struct net_device *dev = (struct net_device *)(skb->cb);
++	struct net_device *dev = *(struct net_device **)(skb->cb);
+ 	struct r8192_priv *priv = NULL;
+ 	cb_desc *tcb_desc = (cb_desc *)(skb->cb + MAX_DEV_ADDR_SIZE);
+ 	u8  queue_index = tcb_desc->queue_index;
 
 
