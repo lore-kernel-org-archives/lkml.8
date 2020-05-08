@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4F0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE71CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E8120870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C479620870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943770;
-	bh=Hfd/mLI5kpgrtwJPD1FVPGFVF+YLlvb6FT9f59xKZ4Y=;
+	s=default; t=1588943772;
+	bh=3Gv960WOUHXTssVcGdsk3y/VLn7wVu7uSqVU1Wsl9Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fq23m4uV+zF8GN0zUkuMdeEaDLASUGr2BGAa24Wg6rsi5vFNBslqEGzC04FAqVXQq
-	 akGieCACsXqcyqg1zY1xq1nj5tJ+u+uwERylVhhzSNT0l6Qzi0DzuGAu09GzbL+4Oa
-	 KqC/xAT46SqYel2/5Nwe5kZVyLAAIFgVhl8a9fsk=
+	b=RO4glUbuA+V+YN9uA8k8t3lZZuUN/+cWJSRk6L94M9YTnwk+WV+tChwuClrhaR3Lk
+	 gXrUNqedR4y/U9KfW3m32cfMvR7mwiDD30g78O5UKDXDEQTp+xgO0iqashsWWaY3QO
+	 Hm6nhrmczGpXOSjcN2DbD1HIwg/JG8loPtiBkxKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgEHNQJ (ORCPT
+        id S1728921AbgEHMpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44970 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgEHMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:26 -0400
+        id S1728559AbgEHMpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E6B21473;
-        Fri,  8 May 2020 12:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE26208D6;
+        Fri,  8 May 2020 12:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941925;
-        bh=Hfd/mLI5kpgrtwJPD1FVPGFVF+YLlvb6FT9f59xKZ4Y=;
+        s=default; t=1588941912;
+        bh=3Gv960WOUHXTssVcGdsk3y/VLn7wVu7uSqVU1Wsl9Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFWUEksmEgDMjqN3vyZVCWqK6qRMT4Ce9PyA8N/tFIUYgHDFNNiXcId02Z3vAavQs
-         ppN6BoJSMfIQvKr/vjA/2ZLBJdaNzn23sn4glTtfjghbmSDh8Ql8f1NRC/11HE6qh3
-         PchOPh83uVIUI3Vjipc+ZuUlSw4D2OSrTsZyFeTA=
+        b=D6ZshCZkqviC1G33C6EEoVuxb3tN+Rwmf22YmBazagbXjqZK4EXHSzV3Rsm2Vb5xp
+         ggcYCYTruMPKmokWADXprx1xY1KY4IA9iXZ+N6pY8RosrzA6uHeR2Q7YqpGFxh4wku
+         S5dVuxR4I6RuYXTGcn7MiDLyp9tCImZBHIqW0aXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 190/312] ipv4: do not abuse GFP_ATOMIC in inet_netconf_notify_devconf()
-Date:   Fri,  8 May 2020 14:33:01 +0200
-Message-Id: <20200508123137.827396603@linuxfoundation.org>
+Subject: [PATCH 4.4 221/312] net/mlx4_core: Fix QUERY FUNC CAP flags
+Date:   Fri,  8 May 2020 14:33:32 +0200
+Message-Id: <20200508123140.002267257@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,81 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-commit fa17806cde76fb1087532f07e72aa757a30e0500 upstream.
+commit c9cc599a96a6822c52cd72ed31dd7f813d792b4f upstream.
 
-inet_forward_change() runs with RTNL held.
-We are allowed to sleep if required.
+Separate QUERY_FUNC_CAP flags0 from QUERY_FUNC_CAP flags, as 'flags' is
+already used for another set of flags in FUNC CAP, while phv bit should be
+part of a different set of flags.
+Remove QUERY_FUNC_CAP port_flags field, as it is not in use.
 
-If we use __in_dev_get_rtnl() instead of __in_dev_get_rcu(),
-we no longer have to use GFP_ATOMIC allocations in
-inet_netconf_notify_devconf(), meaning we are less likely to miss
-notifications under memory pressure, and wont touch precious memory
-reserves either and risk dropping incoming packets.
-
-inet_netconf_get_devconf() can also use GFP_KERNEL allocation.
-
-Fixes: edc9e748934c ("rtnl/ipv4: use netconf msg to advertise forwarding status")
-Fixes: 9e5511106f99 ("rtnl/ipv4: add support of RTM_GETNETCONF")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Fixes: 77fc29c4bbbb ('net/mlx4_core: Preparations for 802.1ad VLAN support')
+Fixes: 5cc914f10851 ('mlx4_core: Added FW commands and their wrappers for supporting SRIOV')
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/devinet.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/fw.c |    5 ++---
+ drivers/net/ethernet/mellanox/mlx4/fw.h |    2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -1814,7 +1814,7 @@ void inet_netconf_notify_devconf(struct
- 	struct sk_buff *skb;
- 	int err = -ENOBUFS;
+--- a/drivers/net/ethernet/mellanox/mlx4/fw.c
++++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
+@@ -610,8 +610,7 @@ int mlx4_QUERY_FUNC_CAP(struct mlx4_dev
+ 		MLX4_GET(func_cap->phys_port_id, outbox,
+ 			 QUERY_FUNC_CAP_PHYS_PORT_ID);
  
--	skb = nlmsg_new(inet_netconf_msgsize_devconf(type), GFP_ATOMIC);
-+	skb = nlmsg_new(inet_netconf_msgsize_devconf(type), GFP_KERNEL);
- 	if (!skb)
- 		goto errout;
+-	MLX4_GET(field, outbox, QUERY_FUNC_CAP_FLAGS0_OFFSET);
+-	func_cap->flags |= (field & QUERY_FUNC_CAP_PHV_BIT);
++	MLX4_GET(func_cap->flags0, outbox, QUERY_FUNC_CAP_FLAGS0_OFFSET);
  
-@@ -1826,7 +1826,7 @@ void inet_netconf_notify_devconf(struct
- 		kfree_skb(skb);
- 		goto errout;
- 	}
--	rtnl_notify(skb, net, 0, RTNLGRP_IPV4_NETCONF, NULL, GFP_ATOMIC);
-+	rtnl_notify(skb, net, 0, RTNLGRP_IPV4_NETCONF, NULL, GFP_KERNEL);
- 	return;
- errout:
- 	if (err < 0)
-@@ -1883,7 +1883,7 @@ static int inet_netconf_get_devconf(stru
- 	}
- 
- 	err = -ENOBUFS;
--	skb = nlmsg_new(inet_netconf_msgsize_devconf(-1), GFP_ATOMIC);
-+	skb = nlmsg_new(inet_netconf_msgsize_devconf(-1), GFP_KERNEL);
- 	if (!skb)
- 		goto errout;
- 
-@@ -2007,16 +2007,16 @@ static void inet_forward_change(struct n
- 
- 	for_each_netdev(net, dev) {
- 		struct in_device *in_dev;
-+
- 		if (on)
- 			dev_disable_lro(dev);
--		rcu_read_lock();
--		in_dev = __in_dev_get_rcu(dev);
-+
-+		in_dev = __in_dev_get_rtnl(dev);
- 		if (in_dev) {
- 			IN_DEV_CONF_SET(in_dev, FORWARDING, on);
- 			inet_netconf_notify_devconf(net, NETCONFA_FORWARDING,
- 						    dev->ifindex, &in_dev->cnf);
- 		}
--		rcu_read_unlock();
- 	}
+ 	/* All other resources are allocated by the master, but we still report
+ 	 * 'num' and 'reserved' capabilities as follows:
+@@ -2840,7 +2839,7 @@ int get_phv_bit(struct mlx4_dev *dev, u8
+ 	memset(&func_cap, 0, sizeof(func_cap));
+ 	err = mlx4_QUERY_FUNC_CAP(dev, port, &func_cap);
+ 	if (!err)
+-		*phv = func_cap.flags & QUERY_FUNC_CAP_PHV_BIT;
++		*phv = func_cap.flags0 & QUERY_FUNC_CAP_PHV_BIT;
+ 	return err;
  }
- 
+ EXPORT_SYMBOL(get_phv_bit);
+--- a/drivers/net/ethernet/mellanox/mlx4/fw.h
++++ b/drivers/net/ethernet/mellanox/mlx4/fw.h
+@@ -150,7 +150,7 @@ struct mlx4_func_cap {
+ 	u32	qp1_proxy_qpn;
+ 	u32	reserved_lkey;
+ 	u8	physical_port;
+-	u8	port_flags;
++	u8	flags0;
+ 	u8	flags1;
+ 	u64	phys_port_id;
+ 	u32	extra_flags;
 
 
