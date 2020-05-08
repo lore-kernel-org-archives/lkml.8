@@ -2,76 +2,187 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FFBC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018C4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385032184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588957087;
-	bh=WP1BgEPTd2LR/MoihVTnA2bSf8MuPTmn0D0iTQBdITw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D3Y1HLON3MkFHzYnsWaFfC0uyYnXlQLK7uIhhO7aKWbLiKkCiVTF0yZ+a4nP8W15b
-	 5R63l8Pkv7EE0vcL4avwX7UmWaHewjhaFIA7CFNlmZ8HmspV3utELJCdhjMGUGhh3i
-	 LP6yQVEPkMjThmg0VOfIHQKYI4PyGzdHzcnLQub8=
+	by mail.kernel.org (Postfix) with ESMTP id D3868218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgEHQ6G (ORCPT
+        id S1727122AbgEHQ7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbgEHQ6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:58:06 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E61F2184D;
-        Fri,  8 May 2020 16:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588957085;
-        bh=WP1BgEPTd2LR/MoihVTnA2bSf8MuPTmn0D0iTQBdITw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AX0fptuXGlETWhByUdADUICOr6vdc9Z16dkvRO1IuyMQYTv4Z15h4gzUh0IMxLdH2
-         zEf+e1gglPKzwZO0W0JfZVUfLsYwhyXUo7pBDY9TQxmkqZvM2owGdGgpR5YGGOzYO3
-         xClFY/M4pHYmCeCoeSex6B79c+U1V62XPaLi7Pyc=
-Date:   Fri, 8 May 2020 12:02:33 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
- flexible-array
-Message-ID: <20200508170233.GB23375@embeddedor>
-References: <20200507185016.GA13883@embeddedor>
- <1b3cda25-5f3a-5359-4bf7-d16a8364f545@codeaurora.org>
+        Fri, 8 May 2020 12:59:34 -0400
+Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25314 "EHLO
+        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726750AbgEHQ7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:59:33 -0400
+X-Greylist: delayed 6383 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 12:59:29 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1588957119; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=TkaJmbwyr5Dih3GcfdQAITPF5nlWXDEKZkjOeOpNQaR9GPsGlvvcMD5v1A6uMKjVANc7kF+FiR4GhM9GYD6foG2ZvZGlxOzHM0DrjQti3RURB92y3whH6NNtEgkv3Fz5YE3bsivaJTo7nE2l4kJEmRmvANCYZ0OuO+4Ul5dUAmg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1588957119; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=hinQtspvNNJvWFC1mFI4rvIKuoVuJBJGKGSRpNj179s=; 
+        b=NptcGeiyQbTx+oRETd2ZICyJ7G1D74eiFtRwH0HFQN7r3LwExAk+ycf7NiyoS5GslSXD9j8XDnk9JQj7zwKzF5D1KUQbxfLv5lIwC6P0yXGstKnffMBb+ve2R1K6IH9cLn2gFSSKYiGqD1CAw73tnYwO6F+BUIF6BaurJ8qdpTI=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        spf=pass  smtp.mailfrom=zohooouoto@zoho.com.cn;
+        dmarc=pass header.from=<zohooouoto@zoho.com.cn> header.from=<zohooouoto@zoho.com.cn>
+Received: from localhost (122.194.88.39 [122.194.88.39]) by mx.zoho.com.cn
+        with SMTPS id 1588957117227398.5930646405061; Sat, 9 May 2020 00:58:37 +0800 (CST)
+Date:   Sat, 9 May 2020 01:02:13 +0800
+From:   Tao Zhou <zohooouoto@zoho.com.cn>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Tao Zhou <ouwen210@hotmail.com>
+Subject: Re: [PATCH v2] sched/fair: Fix enqueue_task_fair warning some more
+Message-ID: <20200508170213.GA27353@geo.homenetwork>
+References: <20200506141821.GA9773@lorien.usersys.redhat.com>
+ <20200507203612.GF19331@lorien.usersys.redhat.com>
+ <20200508151515.GA25974@geo.homenetwork>
+ <CAKfTPtCeA1VcEierR5iyQJApU5JMFQqkMSR+2JGU4o5cG76opQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b3cda25-5f3a-5359-4bf7-d16a8364f545@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKfTPtCeA1VcEierR5iyQJApU5JMFQqkMSR+2JGU4o5cG76opQ@mail.gmail.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:24:57PM -0600, Jeffrey Hugo wrote:
-> >   drivers/dma/qcom/bam_dma.c         |    2 +-
-> >   drivers/firmware/qcom_scm-legacy.c |    2 +-
-> >   2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
+On Fri, May 08, 2020 at 05:27:44PM +0200, Vincent Guittot wrote:
+> On Fri, 8 May 2020 at 17:12, Tao Zhou <zohooouoto@zoho.com.cn> wrote:
+> >
+> > Hi Phil,
+> >
+> > On Thu, May 07, 2020 at 04:36:12PM -0400, Phil Auld wrote:
+> > > sched/fair: Fix enqueue_task_fair warning some more
+> > >
+> > > The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+> > > did not fully resolve the issues with the rq->tmp_alone_branch !=
+> > > &rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
+> > > the first for_each_sched_entity loop exits due to on_rq, having incompletely
+> > > updated the list.  In this case the second for_each_sched_entity loop can
+> > > further modify se. The later code to fix up the list management fails to do
+> > > what is needed because se no longer points to the sched_entity which broke
+> > > out of the first loop.
+> > >
+> >
+> > > Address this by calling leaf_add_rq_list if there are throttled parents while
+> > > doing the second for_each_sched_entity loop.
+> >
+> > Thanks for your trace imformation and explanation. I
+> > truely have learned from this and that.
+> >
+> > s/leaf_add_rq_list/list_add_leaf_cfs_rq/
+> >
+> > >
+> > > Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > Signed-off-by: Phil Auld <pauld@redhat.com>
+> > > Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> > > Cc: Ingo Molnar <mingo@kernel.org>
+> > > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > > ---
+> > >  kernel/sched/fair.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 02f323b85b6d..c6d57c334d51 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -5479,6 +5479,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> > >               /* end evaluation on encountering a throttled cfs_rq */
+> > >               if (cfs_rq_throttled(cfs_rq))
+> > >                       goto enqueue_throttle;
+> > > +
+> > > +               /*
+> > > +                * One parent has been throttled and cfs_rq removed from the
+> > > +                * list. Add it back to not break the leaf list.
+> > > +                */
+> > > +               if (throttled_hierarchy(cfs_rq))
+> > > +                       list_add_leaf_cfs_rq(cfs_rq);
+> > >       }
+> >
+> > I was confused by why the throttled cfs rq can be on list.
+> > It is possible when enqueue a task and thanks to the 'threads'.
+> > But I think the above comment does not truely put the right
+> > intention, right ?
+> > If throttled parent is onlist, the child cfs_rq is ignored
+> > to be added to the leaf cfs_rq list me think.
+> >
+> > unthrottle_cfs_rq() follows the same logic if i am not wrong.
+> > Is it necessary to add the above to it ?
 > 
-> Shouldn't these two files be two different patches?
-> 
+> When a cfs_rq is throttled, its sched group is dequeued and all child
+> cfs_rq are removed from  leaf_cfs_rq list. But the sched group of the
+> child cfs_rq stay enqueued in the throttled cfs_rq so child sched
+> group->on_rq might be still set.
 
-I believe so... I'll split this patch up into two patches.
+If there is a throttle of throttle, and unthrottle the child throttled
+cfs_rq(ugly):
+                               ...
+                                |
+                      cfs_rq throttled (parent A)
+                                |
+                                |
+                      cfs_rq in hierarchy (B)
+                                |
+                                |
+                      cfs_rq throttled (C)
+                                |
+                               ...
 
-Thanks
---
-Gustavo
+Then unthrottle the child throttled cfs_rq C, now the A is on the 
+leaf_cfs_rq list. sched_group entity of C is enqueued to B, and 
+sched_group entity of B is on_rq and is ignored by enqueue but in
+the throttled hierarchy and not add to leaf_cfs_rq list.
+The above may be absolutely wrong that I miss something.
 
+Another thing :
+In enqueue_task_fair():
+
+	for_each_sched_entity(se) {
+		cfs_rq = cfs_rq_of(se);
+
+		if (list_add_leaf_cfs_rq(cfs_rq))
+			break;
+	}
+
+In unthrottle_cfs_rq():
+
+	for_each_sched_entity(se) {
+		cfs_rq = cfs_rq_of(se);
+
+		list_add_leaf_cfs_rq(cfs_rq);
+	}
+
+The difference between them is that if condition, add if
+condition to unthrottle_cfs_rq() may be an optimization and
+keep the same.
+
+> >
+> > Thanks,
+> > Tau
+> >
+> > >
+> > >  enqueue_throttle:
+> > > --
+> > > 2.18.0
+> > >
+> > > V2 rework the fix based on Vincent's suggestion. Thanks Vincent.
+> > >
+> > >
+> > > Cheers,
+> > > Phil
+> > >
+> > > --
+> > >
