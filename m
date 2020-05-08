@@ -2,92 +2,107 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FADC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C1C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175D220720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="RKZgcroP"
+	by mail.kernel.org (Postfix) with ESMTP id 18EA821582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588942921;
+	bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MA9K3PkXtmVufgANJFbPfLlBbb8mMr9DY1AVFor+ngq8rdu9Tqv8hBztBr5i5bgAA
+	 eilcFCRsiqZEwB+HigLycoSM/lchaVH0wgPWnGVXsqNmmsL0Qzv3gfypC+hxrYTmOy
+	 PI1rVUODfkTOweVouW9xwCLsK/rOF+wz2NtbzAu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbgEHNBv (ORCPT
+        id S1726843AbgEHNB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:01:51 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:37932 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1729210AbgEHNBp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:01:45 -0400
-X-Greylist: delayed 584 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 09:01:44 EDT
-Received: from hanazono.local (unknown [116.236.177.50])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        Fri, 8 May 2020 09:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbgEHMv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 332BC600B4;
-        Fri,  8 May 2020 20:51:56 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1588942316; bh=HDjHMr6Wm9wSc694o01E98JEM0XZjMXpbv98vll1dXs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RKZgcroPWCAm49IrZ9c+3R18tnP6iedDoJVXpGk4K0jbg9X9S1K1OtlrZtloC6CyB
-         QUeuh0EYGIio+qc3f/g0WNT43E8PVrWA6wJV5wAZhSKNnQB4C4yIAyBdV4ejeM+rmu
-         T+eSOIID5kTd5kAAmykDuKmLyqDhkNkc1ZXdz4sc=
-Subject: Re: [PATCH 2/3] MIPS: Loongson: Add hwmon support for generic CPU
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-References: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
- <1588938904-924-3-git-send-email-yangtiezhu@loongson.cn>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <f7184121-c044-6e79-78ab-dcc9103b27c2@xen0n.name>
-Date:   Fri, 8 May 2020 20:51:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.0a1
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B48424963;
+        Fri,  8 May 2020 12:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942287;
+        bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AaTZ+gJEWKVb3fDl3LmV9Jm2Y29gS7FJk6FBnn6mC7CbIi4mekWAoljzEbi3EHXCR
+         bnnuV8TA+uNzkXQquSYDlt0XnQJgPzoi0yorVIcEPIwWXKURx7BXRAUJs9Ge8q+Oow
+         rUjpN+DNgAs6oqwGiojKn7INwKlHgLp4LAbgm2zU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/32] scripts/config: allow colons in option strings for sed
+Date:   Fri,  8 May 2020 14:35:31 +0200
+Message-Id: <20200508123037.284975775@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
+References: <20200508123034.886699170@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1588938904-924-3-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/8 19:55, Tiezhu Yang wrote:
+From: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
 
-> Add PRID_IMP_LOONGSON_64G case to enable hwmon support for Loongson
-> generic CPU such as 3A4000 and newer CPU.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   drivers/platform/mips/cpu_hwmon.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-> index add5f52..7b4bde1 100644
-> --- a/drivers/platform/mips/cpu_hwmon.c
-> +++ b/drivers/platform/mips/cpu_hwmon.c
-> @@ -43,6 +43,7 @@ int loongson3_cpu_temp(int cpu)
->   		break;
->   	case PRID_REV_LOONGSON3A_R3_0:
->   	case PRID_REV_LOONGSON3A_R3_1:
-> +	case PRID_IMP_LOONGSON_64G:
->   	default:
->   		reg = (reg & 0xffff)*731/0x4000 - 273;
->   		break;
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-Hi,
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-This is obviously wrong, as the value being matched is a PRID_REV. You 
-can tell from the neighboring match arms.
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
 
-Also, the LOONGSON_64G cores are 3A4000 and newer, that have CSR 
-support. The csr_temp_enable flag is probed in loongson_hwmon_init, then 
-the switch is simply never entered for these.
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
+ 
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
+ 
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
+-- 
+2.20.1
+
+
 
