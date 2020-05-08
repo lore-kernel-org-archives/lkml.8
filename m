@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986A6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40EFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C54208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5D6208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588933740;
-	bh=y46FFfqka43lOmkCt/b+5w/rxyZk6SrdMTEQ9yjSkX4=;
+	s=default; t=1588933746;
+	bh=+akHx3jjMTUUrTW/fRz1G1ZH9BzRzorGdvTbfueVTDg=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=euUSCipYvgJ4zyYfPPSG4qlRUh53uXaOtBT5Tb1hKYourXHexkdWrgjGHXFA9cdxm
-	 xLG54bLy/bmrA6BMJPR6pnOKA6CCH1gB/mF3v8Sk+7MMdl4jvuTQbFizelUgs1cfAY
-	 w8igvdszdFodJsBNA3Ytq26qEIyP9XiyiGPZ0WH8=
+	b=oY2cdr2evQBTgsz4KVxHstIcEgY1juWVECX1TJMABDzs1vVCRDZNknLPtE//rl8pX
+	 SuX2elmo6mAyleEyTzaTP7wAWLEqFzPFAihIGanxik43Ct7tG/UVFL0xtNp5CeZ8mE
+	 gn0Hb1ex3UEs65rIDncFvPMGWsSBXusgOZXrJhTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHK27 (ORCPT
+        id S1726913AbgEHK3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 06:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgEHK27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:28:59 -0400
+        id S1725815AbgEHK3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:29:05 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 657CD20708;
-        Fri,  8 May 2020 10:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD0821473;
+        Fri,  8 May 2020 10:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588933738;
-        bh=y46FFfqka43lOmkCt/b+5w/rxyZk6SrdMTEQ9yjSkX4=;
+        s=default; t=1588933744;
+        bh=+akHx3jjMTUUrTW/fRz1G1ZH9BzRzorGdvTbfueVTDg=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=mkRtTBNk8qRsDmU3XrxOh7J+KgBGPBp9nNsxYCpdDVMLuLjCdp1ty1yMmV80Ojg4N
-         M5Lrws/8wH9M6ySCccn9cJvPRBf2lNkAN8CFamWsrA2A1P10WtiSrl3wXZG/C4Qv5Z
-         25vWRQiGJmvL0sa+ZumR0jPFXQYqLAbsQBs33MRs=
-Date:   Fri, 08 May 2020 11:28:56 +0100
+        b=eEmcNYjl5lDnLeQwu75NRApfOp54Aqy37eZGzNCv1Q+Y3bjwlAvsJVrvg8ApQJDmW
+         2s9uHnIBnfzBIXzFJGNEB4dGt4R4zsIHfrwDGQCwa38Sb7Mz7es4EK9fHgmcSKTRgw
+         62d576YoSGgv/Ebv2bYVzXxzAOT3WKU7WNrsGVM0=
+Date:   Fri, 08 May 2020 11:29:02 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     pierre-louis.bossart@linux.intel.com,
-        YueHaibing <yuehaibing@huawei.com>, joe@perches.com,
-        kai.vehmanen@linux.intel.com, daniel.baluta@nxp.com,
-        ranjani.sridharan@linux.intel.com, perex@perex.cz,
-        lgirdwood@gmail.com, tiwai@suse.com
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        sound-open-firmware@alsa-project.org
-In-Reply-To: <20200507072735.16588-1-yuehaibing@huawei.com>
-References: <20200507031911.38644-1-yuehaibing@huawei.com> <20200507072735.16588-1-yuehaibing@huawei.com>
-Subject: Re: [PATCH v2 -next] ASoC: SOF: Intel: Fix unused variable warning
-Message-Id: <158893373629.42817.5382594504318611584.b4-ty@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <20200507192228.GA16355@embeddedor>
+References: <20200507192228.GA16355@embeddedor>
+Subject: Re: [PATCH] ASoC: soc-core: Replace zero-length array with flexible-array
+Message-Id: <158893373629.42817.8817557428869412992.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 15:27:35 +0800, YueHaibing wrote:
-> When CONFIG_SND_SOC_SOF_BAYTRAIL is not set, gcc warns:
+On Thu, 7 May 2020 14:22:28 -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> sound/soc/sof/intel/byt.c:85:41: warning: ‘cht_debugfs’ defined but not used [-Wunused-const-variable=]
->  static const struct snd_sof_debugfs_map cht_debugfs[] = {
->                                          ^~~~~~~~~~~
-> Move the variable inside #ifdef
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
 > [...]
 
@@ -72,8 +71,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: SOF: Intel: Fix unused variable warning
-      commit: 28d4adc4257cd2e119df17aa7e9d18cdf607f23d
+[1/1] ASoC: soc-core: Replace zero-length array with flexible-array
+      commit: 2d6201ee1123325c089008570bd5ddea3c5b131a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
