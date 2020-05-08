@@ -2,64 +2,58 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882ADC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A065C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66331218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5482496C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942533;
-	bh=ijgAiuYERsKwqsyboj2S9wS+rFrydzgj4aslyhTclCs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mmbK7UhkIu1FlAADJNlmddcG9AoF+OJnzRgkisofQ4QJNXA5GnOAn/GuaEFHXUZdf
-	 tr6C0Tbg7gJP+7eryJitLqUkAXG2f701wjkymU+53unPaU+2Oe/uhdYvCxvE9SFjBs
-	 C8IFF8WT+RmYh0Gmr+ACYSrHUPDwM3iJT0KLbWQ4=
+	s=default; t=1588942535;
+	bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gWEf+RXgDpd84fQQNfkk5K0MwWthE0b1b9/hEj4GFKZxubzgzIquHEcOeyYbedg2L
+	 /4seUWsowdwObXkEB0qitXieEmjTEF6m2Xcy9lxyjA8X2c0Jzy3U/nRXFc6HmElTbe
+	 M/m1XPA4cONjiTzxEf12rWwjgDUFAm2Zwhc2fNlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgEHMzb (ORCPT
+        id S1730338AbgEHMzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38144 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbgEHMzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:55:18 -0400
+        id S1729885AbgEHMz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 366C82495A;
-        Fri,  8 May 2020 12:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8D024958;
+        Fri,  8 May 2020 12:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942517;
-        bh=ijgAiuYERsKwqsyboj2S9wS+rFrydzgj4aslyhTclCs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1Is05wZ+1ApeUbVV1a/6XODo3WU61cxmot8gdZK3uVA8h3BydcJhQ7vOSeHav7J6D
-         5bDco8QgRimo32QLsiv9dHyMFfbxg7d7XNfXMAilxRl7Hb6UZrywhDJljRz1C6HiKB
-         xLKGEesOmIaWx7lMHojJaSMnGdIpCRa3H09OzIdM=
+        s=default; t=1588942527;
+        bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QFITd2Kgfw81VDKzfqJY6JHxs575HtAfQfGXS/EKZhtiYG7e4YqtrL03cKCwwpCQB
+         A0RsNOKCzKRZ8bMyiFXwZpbxBgsk5hBVxFF3R1JOnCVuIeOB5YQA48s+Ah4DagisHl
+         6qjuqYoU8P2qqrTrMkKeHKXBi4P/Jmset2fD/MMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.6 00/49] 5.6.12-rc1 review
-Date:   Fri,  8 May 2020 14:35:17 +0200
-Message-Id: <20200508123042.775047422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 31/49] scripts/config: allow colons in option strings for sed
+Date:   Fri,  8 May 2020 14:35:48 +0200
+Message-Id: <20200508123047.347017108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
+References: <20200508123042.775047422@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.6.12-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.6.12-rc1
-X-KernelTest-Deadline: 2020-05-10T12:30+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,233 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.6.12 release.
-There are 49 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
 
-Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-Anything received after that time might be too late.
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.12-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-and the diffstat can be found below.
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-thanks,
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
 
-greg k-h
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
--------------
-Pseudo-Shortlog of commits:
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
+ 
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
+ 
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
+-- 
+2.20.1
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.6.12-rc1
-
-Will Deacon <will@kernel.org>
-    mm/mremap: Add comment explaining the untagging behaviour of mremap()
-
-Jiri Slaby <jslaby@suse.cz>
-    cgroup, netclassid: remove double cond_resched
-
-Thomas Pedersen <thomas@adapt-ip.com>
-    mac80211: add ieee80211_is_any_nullfunc()
-
-Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
-
-Hans de Goede <hdegoede@redhat.com>
-    platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
-
-Qian Cai <cai@lca.pw>
-    x86/kvm: fix a missing-prototypes "vmread_error"
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda: Match both PCI ID and SSID for driver blacklist
-
-Aaron Ma <aaron.ma@canonical.com>
-    drm/amdgpu: Fix oops when pp_funcs is unset in ACPI event
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-
-Andrii Nakryiko <andriin@fb.com>
-    tools/runqslower: Ensure own vmlinux.h is picked up first
-
-Doug Berger <opendmb@gmail.com>
-    net: systemport: suppress warnings on failed Rx SKB allocations
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: suppress warnings on failed Rx SKB allocations
-
-Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-    mac80211: sta_info: Add lockdep condition for RCU list usage
-
-Nathan Chancellor <natechancellor@gmail.com>
-    lib/mpi: Fix building for powerpc with clang
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    net: phy: bcm84881: clear settings on link down
-
-Steven Rostedt (VMware) <rostedt@goodmis.org>
-    ftrace: Fix memory leak caused by not freeing entry in unregister_ftrace_direct()
-
-Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-    tracing: Fix memory leaks in trace_events_hist.c
-
-Paulo Alcantara <pc@cjr.nz>
-    cifs: do not share tcons with DFS
-
-Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-    scripts/config: allow colons in option strings for sed
-
-Ronnie Sahlberg <lsahlber@redhat.com>
-    cifs: protect updating server->dstaddr with a spinlock
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: Fix sub-second increment
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: fix enabling socfpga's ptp_ref_clock
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    wimax/i2400m: Fix potential urb refcnt leak
-
-Sandeep Raghuraman <sandy.8925@gmail.com>
-    drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
-
-Prike Liang <Prike.Liang@amd.com>
-    drm/amd/powerplay: fix resume failed as smu table initialize early exit
-
-Alex Elder <elder@linaro.org>
-    remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: gadget: Properly set maxpacket limit
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Fix endianness issue
-
-Sebastian Reichel <sebastian.reichel@collabora.com>
-    ASoC: sgtl5000: Fix VAG power-on handling
-
-Wu Bo <wubo40@huawei.com>
-    scsi: sg: add sg_remove_request in sg_write
-
-Vasily Khoruzhick <anarsoul@gmail.com>
-    drm/bridge: anx6345: set correct BPC for display_info of connector
-
-Tyler Hicks <tyhicks@linux.microsoft.com>
-    selftests/ipc: Fix test failure seen after initial test run
-
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-    Revert "Kernel selftests: tpm2: check for tpm support"
-
-Sandipan Das <sandipan@linux.ibm.com>
-    selftests: vm: Fix 64-bit test builds for powerpc64le
-
-Sandipan Das <sandipan@linux.ibm.com>
-    selftests: vm: Do not override definition of ARCH
-
-Yihao Wu <wuyihao@linux.alibaba.com>
-    SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_dai_config
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of pcm_new_ver
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check soc_tplg_add_route return value
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_*_create
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_create_tlv
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Add missing memory checks
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    drm/bridge: analogix_dp: Split bind() into probe() and real bind()
-
-Jia He <justin.he@arm.com>
-    vhost: vsock: kick send_pkt worker once device is started
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/x86/kvm/vmx/ops.h                             |   1 +
- drivers/acpi/sleep.c                               |   5 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |   3 +-
- .../gpu/drm/amd/powerplay/hwmgr/processpptables.c  |  26 +++++
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c         |   7 +-
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c |   3 +
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c |  33 ++++--
- drivers/gpu/drm/exynos/exynos_dp.c                 |  29 +++---
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    |  36 ++++---
- drivers/net/ethernet/broadcom/bcmsysport.c         |   3 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   3 +-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   9 +-
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  |  12 ++-
- drivers/net/phy/bcm84881.c                         |   6 +-
- drivers/net/wimax/i2400m/usb-fw.c                  |   1 +
- drivers/platform/x86/gpd-pocket-fan.c              |   2 +-
- drivers/remoteproc/qcom_q6v5_mss.c                 |   2 +-
- drivers/scsi/sg.c                                  |   4 +-
- drivers/usb/dwc3/core.h                            |   4 +
- drivers/usb/dwc3/gadget.c                          |  52 ++++++++--
- drivers/vhost/vsock.c                              |   5 +
- fs/cifs/connect.c                                  |   6 ++
- include/drm/bridge/analogix_dp.h                   |   5 +-
- include/linux/ieee80211.h                          |   9 ++
- kernel/trace/ftrace.c                              |   1 +
- kernel/trace/trace_events_hist.c                   |   7 ++
- lib/mpi/longlong.h                                 |  34 +++---
- mm/mremap.c                                        |  10 ++
- net/core/netclassid_cgroup.c                       |   4 +-
- net/mac80211/mlme.c                                |   2 +-
- net/mac80211/rx.c                                  |   8 +-
- net/mac80211/sta_info.c                            |   3 +-
- net/mac80211/status.c                              |   5 +-
- net/mac80211/tx.c                                  |   2 +-
- net/sctp/sm_make_chunk.c                           |   6 +-
- net/sunrpc/cache.c                                 |   5 +-
- scripts/config                                     |   5 +-
- sound/pci/hda/hda_intel.c                          |   9 +-
- sound/soc/codecs/hdac_hdmi.c                       |   6 +-
- sound/soc/codecs/sgtl5000.c                        |  34 ++++++
- sound/soc/codecs/sgtl5000.h                        |   1 +
- sound/soc/sh/rcar/ssi.c                            |  11 +-
- sound/soc/sh/rcar/ssiu.c                           |   2 +-
- sound/soc/soc-topology.c                           | 115 ++++++++++++++++-----
- tools/bpf/runqslower/Makefile                      |   2 +-
- tools/testing/selftests/ipc/msgque.c               |   2 +-
- tools/testing/selftests/tpm2/test_smoke.sh         |  13 +--
- tools/testing/selftests/tpm2/test_space.sh         |   9 +-
- tools/testing/selftests/vm/Makefile                |   4 +-
- tools/testing/selftests/vm/run_vmtests             |   2 +-
- 51 files changed, 402 insertions(+), 170 deletions(-)
 
 
