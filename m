@@ -2,988 +2,1074 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB69DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE33921841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0924721841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgEHPda (ORCPT
+        id S1726942AbgEHPf5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:33:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:52843 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgEHPda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:33:30 -0400
-IronPort-SDR: WILZbZfeTX0M7A6TTzeNPu+WqeGCctMFXsg/LwNRQ0HZ06vSZsPYwbxdESzQ76ocZt4oEq+XGy
- AK/emr5s2ZhA==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 08:33:19 -0700
-IronPort-SDR: J2T0CxAtxAV6Q6+Oi2ElOfT1283VopvcbECBQZ6mZzfmu1GAVtxpw582UqyiYJ3FG9nqDtVFcu
- gYRDq6FzGbWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="gz'50?scan'50,208,50";a="462327832"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2020 08:33:16 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jX4zz-0006ot-Hc; Fri, 08 May 2020 23:33:15 +0800
-Date:   Fri, 8 May 2020 23:32:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        mlevitsk@redhat.com
-Cc:     kbuild-all@lists.01.org, pbonzini@redhat.com, joro@8bytes.org,
-        jon.grimm@amd.com, mlevitsk@redhat.com
-Subject: Re: [PATCH v2] KVM: SVM: Disable AVIC before setting V_IRQ
-Message-ID: <202005082357.eOEx21cH%lkp@intel.com>
-References: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
+        Fri, 8 May 2020 11:35:57 -0400
+Received: from sender3-pp-o92.zoho.com.cn ([124.251.121.251]:25728 "EHLO
+        sender3-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726636AbgEHPf4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:35:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1588951954; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=D1/dMiLa9ANdzPOK7m85nwbp3JtTYc2QQen17d2Xrkl/JMPK1F1X9om9ZV8E9ZfG46ybw+7TP7assQR+HLsTUfD543+Hd/hOX/3YWMNu8BYjvG6rrA2XYepSCzqzjucEL+n3vCNCWN6mnd02ityf+QxVyLlJZwumAhtOEeJZYBA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1588951954; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=9LRk9ZGAzJ7CEGieP+t3DNGQNiX42Rwy6ixsZcItrV0=; 
+        b=KZCbg6Lf80z5NW9vLzYRPhMqFezLUfPSoTj8EhUuU9PRlVvBXIb/LXIa8PaUaXS6lWiaNklONgxdxanilQUYIDJd/NHyd3V4e1aE8oVuPVjE6LV1g3XKrqI8JZl/V6f98d7sNKjPjvprSNeZM9pfKA7DsWOi5LHTbO8Q9xirpXU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        spf=pass  smtp.mailfrom=zohooouoto@zoho.com.cn;
+        dmarc=pass header.from=<zohooouoto@zoho.com.cn> header.from=<zohooouoto@zoho.com.cn>
+Received: from localhost (122.194.88.39 [122.194.88.39]) by mx.zoho.com.cn
+        with SMTPS id 1588951950481902.3300007256316; Fri, 8 May 2020 23:32:30 +0800 (CST)
+Date:   Fri, 8 May 2020 23:36:04 +0800
+From:   Tao Zhou <zohooouoto@zoho.com.cn>
+To:     John Mathew <john.mathew@unikie.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@basemark.com, rdunlap@infradead.org,
+        Oleg Tsymbal <oleg.tsymbal@unikie.com>
+Message-ID: <20200508153604.GA27289@geo.homenetwork>
+Subject: Re: [RFC PATCH v3 2/3] docs: scheduler: Add scheduler overview
+ documentation
+References: <20200507180553.9993-1-john.mathew@unikie.com>
+ <20200507180553.9993-3-john.mathew@unikie.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="WIyZ46R2i8wDzkSu"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200507180553.9993-3-john.mathew@unikie.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, May 07, 2020 at 09:05:52PM +0300, John Mathew wrote:
+> Add documentation for
+>  -scheduler overview
+>  -scheduler state transtion
+>  -CFS overview
+>  -scheduler data structs
+> 
+> Add rst for scheduler APIs and modify sched/core.c
+> to add kernel-doc comments.
+> 
+> Suggested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Co-developed-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
+> Signed-off-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
+> Co-developed-by: Oleg Tsymbal <oleg.tsymbal@unikie.com>
+> Signed-off-by: Oleg Tsymbal <oleg.tsymbal@unikie.com>
+> Signed-off-by: John Mathew <john.mathew@unikie.com>
+> ---
+>  Documentation/scheduler/cfs-overview.rst      | 113 ++++++++
+>  Documentation/scheduler/index.rst             |   7 +-
+>  Documentation/scheduler/overview.rst          | 266 ++++++++++++++++++
+>  .../scheduler/sched-data-structs.rst          | 253 +++++++++++++++++
+>  Documentation/scheduler/scheduler-api.rst     |  31 ++
+>  kernel/sched/core.c                           |  28 +-
+>  kernel/sched/sched.h                          | 169 ++++++++++-
+>  7 files changed, 858 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/scheduler/cfs-overview.rst
+>  create mode 100644 Documentation/scheduler/sched-data-structs.rst
+>  create mode 100644 Documentation/scheduler/scheduler-api.rst
+> 
+> diff --git a/Documentation/scheduler/cfs-overview.rst b/Documentation/scheduler/cfs-overview.rst
+> new file mode 100644
+> index 000000000000..b717f2d3e340
+> --- /dev/null
+> +++ b/Documentation/scheduler/cfs-overview.rst
+> @@ -0,0 +1,113 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +=============
+> +CFS Overview
+> +=============
+> +
+> +Linux 2.6.23 introduced a modular scheduler core and a Completely Fair
+> +Scheduler (CFS) implemented as a scheduling module. A brief overview of the
+> +CFS design is provided in :doc:`sched-design-CFS`
+> +
+> +In addition there have been many improvements to the CFS, a few of which are
+> +
+> +**Thermal Pressure**:
+> +cpu_capacity initially reflects the maximum possible capacity of a CPU.
+> +Thermal pressure on a CPU means this maximum possible capacity is
+> +unavailable due to thermal events. Average thermal pressure for a CPU
+> +is now subtracted from its maximum possible capacity so that cpu_capacity
+> +reflects the remaining maximum capacity.
+> +
+> +**Use Idle CPU for NUMA balancing**:
+> +Idle CPU is used as a migration target instead of comparing tasks.
+> +Information on an idle core is cached while gathering statistics
+> +and this is used to avoid a second scan of the node runqueues if load is
+> +not imbalanced. Preference is given to an idle core rather than an
+> +idle SMT sibling to avoid packing HT siblings due to linearly scanning
+> +the node cpumask. Multiple tasks can attempt to select an idle CPU but
+> +fail because a NUMA balance is active on that CPU, in this case instead of
+> +failing, an alternative idle CPU scanned.
+> +
+> +**Asymmetric CPU capacity wakeup scan**:
+> +Previous assumption that CPU capacities within an SD_SHARE_PKG_RESOURCES
+> +domain (sd_llc) are homogeneous didn't hold for newer generations of big.LITTLE
+> +systems (DynamIQ) which can accommodate CPUs of different compute capacity
+> +within a single LLC domain. A new idle sibling helper function was added
+> +which took CPU capacity into account. The policy is to pick the first idle
+> +CPU which is big enough for the task (task_util * margin < cpu_capacity).
+> +If no idle CPU is big enough, the idle CPU with the highest capacity is
+> +picked.
+> +
+> +**Optimized idle core selection**:
+> +Previously all threads of a core were looped through to evaluate if the
+> +core is idle or not. This was unnecessary. If a thread of a core is not
+> +idle, skip evaluating other threads of a core. Also while clearing the
+> +cpumask, bits of all CPUs of a core can be cleared in one shot.
+> +
+> +**Load balance aggressively for SCHED_IDLE CPUs**:
+> +The fair scheduler performs periodic load balance on every CPU to check
+> +if it can pull some tasks from other busy CPUs. The duration of this
+> +periodic load balance is set to scheduler domain's balance_interval and
+> +multiplied by a busy_factor (set to 32 by default) for the busy CPUs. This
+> +multiplication is done for busy CPUs to avoid doing load balance too
+> +often and rather spend more time executing actual task. While that is
+> +the right thing to do for the CPUs busy with SCHED_OTHER or SCHED_BATCH
+> +tasks, it may not be the optimal thing for CPUs running only SCHED_IDLE
+> +tasks. With the recent enhancements in the fair scheduler around SCHED_IDLE
+> +CPUs, it is now preferred to enqueue a newly-woken task to a SCHED_IDLE
+> +CPU instead of other busy or idle CPUs. The same reasoning is applied
+> +to the load balancer as well to make it migrate tasks more aggressively
+> +to a SCHED_IDLE CPU, as that will reduce the scheduling latency of the
+> +migrated (SCHED_OTHER) tasks. Fair scheduler now does the next
+> +load balance soon after the last non-SCHED_IDLE task is dequeued from a
+> +runqueue, i.e. making the CPU SCHED_IDLE.
+> +
+> +**Load balancing algorithm Reworked**:
+> +The load balancing algorithm contained some heuristics which became
+> +meaningless since the rework of the scheduler's metrics like the
+> +introduction of PELT. The new load balancing algorithm fixes several
+> +pending wrong tasks placement
+> +
+> + * the 1 task per CPU case with asymmetric system
+> + * the case of CFS task preempted by other class
+> + * the case of tasks not evenly spread on groups with spare capacity
+> +
+> +Also the load balance decisions have been consolidated in the 3 separate
+> +functions.
+> +
+> +**Energy-aware wake-ups speeded up**:
+> +EAS computes the energy impact of migrating a waking task when deciding
+> +on which CPU it should run. However, the previous approach had high algorithmic
+> +complexity, which resulted in prohibitively high wake-up latencies on
+> +systems with complex energy models, such as systems with per-CPU DVFS. On
+> +such systems, the algorithm complexity was O(n^2). To address this,
+> +the EAS wake-up path was re-factored to compute the energy 'delta' on a
+> +per-performance domain basis, rather than system-wide, which brings the
+> +complexity down to O(n).
+> +
+> +**Selection of an energy-efficient CPU on task wake-up**:
+> +If an Energy Model (EM) is available and if the system isn't overutilized,
+> +waking tasks are re-routed into an energy-aware placement algorithm.
+> +The selection of an energy-efficient CPU for a task is achieved by estimating
+> +the impact on system-level active energy resulting from the placement of the
+> +task on the CPU with the highest spare capacity in each performance domain.
+> +This strategy spreads tasks in a performance domain and avoids overly
+> +aggressive task packing. The best CPU energy-wise is then selected if it
+> +saves a large enough amount of energy with respect to prev_cpu.
+> +
+> +**Consider misfit tasks when load-balancing**:
+> +On asymmetric CPU capacity systems load intensive tasks can end up on
+> +CPUs that don't suit their compute demand. In this scenario 'misfit'
+> +tasks are migrated to CPUs with higher compute capacity to ensure better
+> +throughput. A new group_type: group_misfit_task is added and indicates this
+> +scenario. Tweaks to the load-balance code are done to make the migrations
+> +happen. Misfit balancing is done between a source group of lower per-CPU
+> +capacity and destination group of higher compute capacity. Otherwise, misfit
+> +balancing is ignored.
+> +
+> +**Make schedstats a runtime tunable that is disabled by default**:
+> +schedstats is very useful during debugging and performance tuning but it
+> +incurred overhead to calculate the stats. A kernel command-line and sysctl
+> +tunable was added to enable or disable schedstats on demand (when it's built in).
+> +It is disabled by default. The benefits are dependent on how
+> +scheduler-intensive the workload is.
+> +
+> diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
+> index ede1a30a6894..f311abe5b711 100644
+> --- a/Documentation/scheduler/index.rst
+> +++ b/Documentation/scheduler/index.rst
+> @@ -17,10 +17,13 @@ specific implementation differences.
+>      :maxdepth: 2
+>  
+>      overview
+> +    sched-data-structs
+> +    cfs-overview
+>      sched-design-CFS
+>      sched-features
+> -    arch-specific.rst
+> -    sched-debugging.rst
+> +    arch-specific
+> +    sched-debugging
+> +    scheduler-api
+>  
+>  .. only::  subproject and html
+>  
+> diff --git a/Documentation/scheduler/overview.rst b/Documentation/scheduler/overview.rst
+> index aee16feefc61..f2cb0c901208 100644
+> --- a/Documentation/scheduler/overview.rst
+> +++ b/Documentation/scheduler/overview.rst
+> @@ -3,3 +3,269 @@
+>  ====================
+>  Scheduler overview
+>  ====================
+> +
+> +Linux kernel implements priority-based scheduling. More than one process are
+> +allowed to run at any given time and each process is allowed to run as if it
+> +were the only process on the system. The process scheduler coordinates which
+> +process runs when. In that context, it has the following tasks:
+> +
+> +* share CPU cores equally among all currently running processes.
+> +* pick appropriate process to run next if required, considering scheduling
+> +  class/policy and process priorities.
+> +* balance processes between multiple cores in SMP systems.
+> +
+> +The scheduler attempts to be responsive for I/O bound processes and efficient
+> +for CPU bound processes. The scheduler also applies different scheduling
+> +policies for real time and normal processes based on their respective
+> +priorities. Higher priorities in the kernel have a numerical smaller
+> +value. Real time priorities range from 1 (highest) – 99 whereas normal
+> +priorities range from 100 – 139 (lowest). SCHED_DEADLINE tasks have negative
+> +priorities, reflecting the fact that any of them has higher priority than
+> +RT and NORMAL/BATCH tasks.
+> +
+> +Process Management
+> +==================
+> +
+> +Each process in the system is represented by struct task_struct. When a
+> +process/thread is created, the kernel allocates a new task_struct for it.
+> +The kernel then stores this task_struct in an RCU list. Macro next_task()
+> +allows a process to obtain its next task and for_each_process() macro enables
+> +traversal of the list.
+> +
+> +Frequently used fields of the task struct are:
+> +
+> +*state:* The running state of the task. The possible states are:
+> +
+> +* TASK_RUNNING: The task is currently running or in a run queue waiting
+> +  to run.
+> +* TASK_INTERRUPTIBLE: The task is sleeping waiting for some event to occur.
+> +  This task can be interrupted by signals. On waking up the task transitions
+> +  to TASK_RUNNING.
+> +* TASK_UNINTERRUPTIBLE: Similar to TASK_INTERRUPTIBLE but does not wake
+> +  up on signals. Needs an explicit wake-up call to be woken up. Contributes
+> +  to loadavg.
+> +* __TASK_TRACED: Task is being traced by another task like a debugger.
+> +* __TASK_STOPPED: Task execution has stopped and not eligible to run.
+> +  SIGSTOP, SIGTSTP etc causes this state.  The task can be continued by
+> +  the signal SIGCONT.
+> +* TASK_PARKED: State to support kthread parking/unparking.
+> +* TASK_DEAD: If a task dies, then it sets TASK_DEAD in tsk->state and calls
+> +  schedule one last time. The schedule call will never return.
+> +* TASK_WAKEKILL: It works like TASK_UNINTERRUPTIBLE with the bonus that it
+> +  can respond to fatal signals.
+> +* TASK_WAKING: To handle concurrent waking of the same task for SMP.
+> +  Indicates that someone is already waking the task.
+> +* TASK_NOLOAD: To be used along with TASK_UNINTERRUPTIBLE to indicate
+> +  an idle task which does not contribute to loadavg.
+> +* TASK_NEW: Set during fork(), to guarantee that no one will run the task,
+> +  a signal or any other wake event cannot wake it up and insert it on
+> +  the runqueue.
+> +
+> +*exit_state* : The exiting state of the task. The possible states are:
+> +
+> +* EXIT_ZOMBIE: The task is terminated and waiting for parent to collect
+> +  the exit information of the task.
+> +* EXIT_DEAD: After collecting the exit information the task is put to
+> +  this state and removed from the system.
+> +
+> +*static_prio:* Nice value of a task. The value of this field does
+> + not change.  Value ranges from -20 to 19. This value is mapped to nice
+> + value and used in the scheduler.
+> +
+> +*prio:* Dynamic priority of a task. Previously a function of static
+> + priority and tasks interactivity. Value not used by CFS scheduler but used
+> + by the RT scheduler. Might be boosted by interactivity modifiers. Changes
+> + upon fork, setprio syscalls, and whenever the interactivity estimator
+> + recalculates.
+> +
+> +*normal_prio:* Expected priority of a task. The value of static_prio
+> + and normal_prio are the same for non-real-time processes. For real time
+> + processes value of prio is used.
+> +
+> +*rt_priority:* Field used by real time tasks. Real time tasks are
+> + prioritized based on this value.
+> +
+> +*sched_class:* Pointer to sched_class CFS structure.
+> +
+> +*sched_entity:* Pointer to sched_entity CFS structure.
+> +
+> +*policy:* Value for scheduling policy. The possible values are:
+> +
+> +* SCHED_NORMAL: Regular tasks use this policy.
+> +* SCHED_BATCH: Tasks which need to run longer without preemption
+> +  use this policy. Suitable for batch jobs.
+> +* SCHED_IDLE: Policy used by background tasks.
+> +* SCHED_FIFO & SCHED_RR: These policies for real time tasks. Handled by
+> +  real time scheduler.
+> +* SCHED_DEADLINE: Tasks which are activated on a periodic or sporadic fashion
+> +  use this policy. This policy implements the Earliest Deadline First (EDF)
+> +  scheduling algorithm. This policy is explained in detail in the
+> +  :doc:`sched-deadline` documentation.
+> +
+> +*nr_cpus_allowed:* Bit field containing tasks affinity towards a set of
+> + CPU cores.  Set using sched_setaffinity() system call.
+> +
+> +New processes are created using the fork() system call which is described
+> +at manpage :manpage:`FORK(2)` or the clone system call described at
+> +:manpage:`CLONE(2)`.
+> +Users can create threads within a process to achieve parallelism. Threads
+> +share address space, open files and other resources of the process. Threads
+> +are created like normal tasks with their unique task_struct, but clone()
+> +is provided with flags that enable the sharing of resources such as address
+> +space ::
+> +
+> +	clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0);
+> +
+> +The scheduler schedules task_structs so from scheduler perspective there is
+> +no difference between threads and processes. Threads are created using
+> +the system call pthread_create described at :manpage:`PTHREAD_CREATE(3)`
+> +POSIX threads creation is described at :manpage:`PTHREADS(7)`
+> +
+> +The Scheduler Entry Point
+> +=========================
+> +
+> +The main scheduler entry point is an architecture independent schedule()
+> +function defined in kernel/sched/core.c. Its objective is to find a process in
+> +the runqueue list and then assign the CPU to it. It is invoked, directly
+> +or in a lazy (deferred) way from many different places in the kernel. A lazy
+> +invocation does not call the function by its name, but gives the kernel a
+> +hint by setting a flag TIF_NEED_RESCHED. The flag is a message to the kernel
+> +that the scheduler should be invoked as soon as possible because another
+> +process deserves to run.
+> +
+> +Following are some places that notify the kernel to schedule:
+> +
+> +* scheduler_tick()
+> +
+> +* Running task goes to sleep state : Right before a task goes to sleep,
+> +  schedule() will be called to pick the next task to run and the change
+> +  its state to either TASK_INTERRUPTIBLE or TASK_UNINTERRUPTIBLE. For
+> +  instance, prepare_to_wait() is one of the functions that makes the
+> +  task go to the sleep state.
+> +
+> +* try_to_wake_up()
+> +
+> +* yield()
+> +
+> +* wait_event()
+> +
+> +* cond_resched() : It gives the scheduler a chance to run a higher-priority
+> +  process.
+> +
+> +* cond_resched_lock() : If a reschedule is pending, drop the given lock,
+> +  call schedule, and on return reacquire the lock.
+> +
+> +* do_task_dead()
+> +
+> +* preempt_schedule() : The function checks whether local interrupts are
+> +  enabled and the preempt_count field of current is zero; if both
+> +  conditions are true, it invokes schedule() to select another process
+> +  to run.
+> +
+> +* preempt_schedule_irq()
+> +
+> +Calling functions mentioned above leads to a call to __schedule(). Note
+> +that preemption must be disabled before it is called and enabled after
+> +the call using preempt_disable and preempt_enable functions family.
+> +
+> +
+> +The steps during invocation are:
+> +--------------------------------
+> +1. Disable preemption to avoid another task preempting the scheduling
+> +   thread itself.
+> +2. Retrieve the runqueue of current processor and its lock is obtained to
+> +   allow only one thread to modify the runqueue at a time.
+> +3. The state of the previously executed task when the schedule()
+> +   was called is examined. If it is not runnable and has not been
+> +   preempted in kernel mode, it is removed from the runqueue. If the
+> +   previous task has non-blocked pending signals, its state is set to
+> +   TASK_RUNNING and left in the runqueue.
+> +4. Scheduler classes are iterated and the corresponding class hook to
+> +   pick the next suitable task to be scheduled on the CPU is called.
+> +   Since most tasks are handled by the sched_fair class, a shortcut to this
+> +   class is implemented in the beginning of the function.
+> +5. TIF_NEED_RESCHED and architecture specific need_resched flags are cleared.
+> +6. If the scheduler class picks a different task from what was running
+> +   before, a context switch is performed by calling context_switch().
+> +   Internally, context_switch() switches to the new task's memory map and
+> +   swaps the register state and stack. If scheduler class picked the same
+> +   task as the previous task, no task switch is performed and the current
+> +   task keeps running.
+> +7. Balance callback list is processed. Each scheduling class can migrate tasks
+> +   between CPUs to balance load. These load balancing operations are queued
+> +   on a Balance callback list which get executed when balance_callback() is
+> +   called.
+> +8. The runqueue is unlocked and preemption is re-enabled. In case
+> +   preemption was requested during the time in which it was disabled,
+> +   schedule() is run again right away.
+> +
+> +Scheduler State Transition
+> +==========================
+> +
+> +A very high level scheduler state transition flow with a few states can
+> +be depicted as follows. ::
+> +
+> +                                       *
+> +                                       |
+> +                                       | task
+> +                                       | forks
+> +                                       v
+> +                        +------------------------------+
+> +                        |           TASK_NEW           |
+> +                        |        (Ready to run)        |
+> +                        +------------------------------+
+> +                                       |
+> +                                       |
+> +                                       v
+> +                     +------------------------------------+
+> +                     |            TASK_RUNNING            |
+> +   +---------------> |           (Ready to run)           | <--+
+> +   |                 +------------------------------------+    |
+> +   |                   |                                       |
+> +   |                   | schedule() calls context_switch()     | task is preempted
+> +   |                   v                                       |
+> +   |                 +------------------------------------+    |
+> +   |                 |            TASK_RUNNING            |    |
+> +   |                 |             (Running)              | ---+
+> +   | event occurred  +------------------------------------+
+> +   |                   |
+> +   |                   | task needs to wait for event
+> +   |                   v
+> +   |                 +------------------------------------+
+> +   |                 |         TASK_INTERRUPTIBLE         |
+> +   |                 |        TASK_UNINTERRUPTIBLE        |
+> +   +-----------------|           TASK_WAKEKILL            |
+> +                     +------------------------------------+
+> +                                       |
+> +                                       | task exits via do_exit()
+> +                                       v
+> +                        +------------------------------+
+> +                        |          TASK_DEAD           |
+> +                        |         EXIT_ZOMBIE          |
+> +                        +------------------------------+
+> +
+> +
+> +Scheduler provides tracepoints tracing all major events of the scheduler.
+> +The tracepoints are defined in ::
+> +
+> +  include/trace/events/sched.h
+> +
+> +Using these tracepoints it is possible to model the scheduler state transition
+> +in an automata model. The following journal paper discusses such modeling:
+> +
+> +Daniel B. de Oliveira, Rômulo S. de Oliveira, Tommaso Cucinotta, **A thread
+> +synchronization model for the PREEMPT_RT Linux kernel**, *Journal of Systems
+> +Architecture*, Volume 107, 2020, 101729, ISSN 1383-7621,
+> +https://doi.org/10.1016/j.sysarc.2020.101729.
+> +
+> +To model the scheduler efficiently the system was divided in to generators
+> +and specifications. Some of the generators used were "need_resched",
+> +"sleepable" and "runnable", "thread_context" and "scheduling context".
+> +The specifications are the necessary and sufficient conditions to call
+> +the scheduler. New trace events were added to specify the generators
+> +and specifications. In case a kernel event referred to more than one
+> +event, extra fields of the kernel event was used to distinguish between
+> +automation events. The final model was generated from parallel composition
+> +of all generators and specifications which composed of 34 events,
+> +12 generators and 33 specifications. This resulted in 9017 states, and
+> +20103 transitions.
+> diff --git a/Documentation/scheduler/sched-data-structs.rst b/Documentation/scheduler/sched-data-structs.rst
+> new file mode 100644
+> index 000000000000..ec900367cc0c
+> --- /dev/null
+> +++ b/Documentation/scheduler/sched-data-structs.rst
+> @@ -0,0 +1,253 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +=========================
+> +Scheduler Data Structures
+> +=========================
+> +
+> +The main parts of the Linux scheduler are:
+> +
+> +Runqueue
+> +~~~~~~~~
+> +
+> +:c:type:`struct rq <rq>` is the central data structure of process
+> +scheduling. It keeps track of tasks that are in a runnable state assigned
+> +for a particular processor. Each CPU has its own run queue and stored in a
+> +per CPU array::
+> +
+> +    DEFINE_PER_CPU(struct rq, runqueues);
+> +
+> +Access to the queue requires locking and lock acquire operations must be
+> +ordered by ascending runqueue. Macros for accessing and locking the runqueue
+> +are provided in::
+> +
+> +    kernel/sched/sched.h
+> +
+> +The runqueue contains scheduling class specific queues and several scheduling
+> +statistics.
+> +
+> +Scheduling entity
+> +~~~~~~~~~~~~~~~~~
+> +Scheduler uses scheduling entities which contain sufficient information to
+> +actually accomplish the scheduling job of a task or a task-group. The
+> +scheduling entity may be a group of tasks or a single task. Every task is
+> +associated with a sched_entity structure. CFS adds support for nesting of
+> +tasks and task groups. Each scheduling entity may be run from its parents
+> +runqueue. The scheduler traverses the sched_entity hierarchy to pick the
+> +next task to run on the CPU. The entity gets picked up from the cfs_rq on
+> +which it is queued and its time slice is divided among all the tasks on its my_q.
+> +
+> +Virtual Runtime
+> +~~~~~~~~~~~~~~~~~
+> +Virtual Run Time or vruntime is the amount of time a task has spent running
+> +on the CPU. It is updated periodically by scheduler_tick(). Tasks are stored
+> +in the CFS scheduling class rbtree sorted by vruntime. scheduler_tick() calls
+> +corresponding hook of CFS which first updates the runtime statistics of the
+> +currently running task and checks if the current task needs to be preempted.
+> +vruntime of the task based on the formula ::
+> +
+> +    vruntime += delta_exec * (NICE_0_LOAD/curr->load.weight);
+> +
+> +where:
+> +
+> +* delta_exec is the time in nanoseconds spent by the task since the last time
+> +  vruntime was updated.
+> +* NICE_0_LOAD is the load of a task with normal priority.
+> +* curr is the shed_entity instance of the cfs_rq struct of the currently
 
-Hi Suravee,
+s/shed_entity/sched_entity/
 
-I love your patch! Yet something to improve:
+> +  running task.
+> +* load.weight: sched_entity load_weight. load_weight is the encoding of
+> +  the tasks priority and vruntime. The load of a task is the metric
+> +  indicating the number of CPUs needed to make satisfactory progress on its
+> +  job. Load of a task influences the time a task spends on the CPU and also
+> +  helps to estimate the overall CPU load which is needed for load balancing.
+> +  Priority of the task is not enough for the scheduler to estimate the
+> +  vruntime of a process. So priority value must be mapped to the capacity of
+> +  the standard CPU which is done in the array :c:type:`sched_prio_to_weight[]`.
+> +  The array contains mappings for the nice values from -20 to 19. Nice value
+> +  0 is mapped to 1024. Each entry advances by approximately 1.25 which means
+> +  for every increment in nice value the task gets 10% less CPU and vice versa.
+> +
+> +Scheduler classes
+> +~~~~~~~~~~~~~~~~~
+> +It is an extensible hierarchy of scheduler modules. The modules encapsulate
+> +scheduling policy details. They are called from the core code which is
+> +independent. Scheduling classes are implemented through the sched_class
+> +structure. dl_sched_class for deadline scheduler, fair_sched_class for CFS
+> +and rt_sched_class for RT are implementations of this class.
+> +
+> +The important methods of scheduler class are:
+> +
+> +enqueue_task and dequeue_task
+> +    These functions are used to put and remove tasks from the runqueue
+> +    respectively. The function takes the runqueue, the task which needs to
+> +    be enqueued/dequeued and a bit mask of flags. The main purpose of the
+> +    flags is to describe why the enqueue or dequeue is being called.
+> +    The different flags used are described in ::
+> +
+> +        kernel/sched/sched.h
+> +
+> +    enqueue_task and dequeue_task are called for following purposes.
+> +
+> +    - When waking a newly created task for the first time. Called with
+> +      ENQUEUE_NOCLOCK
+> +    - When migrating a task from one CPU's runqueue to another. Task will be
+> +      first dequeued from its old runqueue, new CPU will be added to the
+> +      task struct,  runqueue of the new CPU will be retrieved and task is
+> +      then enqueued on this new runqueue.
+> +    - When do_set_cpus_allowed() is called to change a tasks CPU affinity. If
+> +      the task is queued on a runqueue, it is first dequeued with the
+> +      DEQUEUE_SAVE and DEQUEUE_NOCLOCK flags set. The set_cpus_allowed()
+> +      function of the corresponding scheduling class will be called.
+> +      enqueue_task() is then called with ENQUEUE_RESTORE and ENQUEUE_NOCLOCK
+> +      flags set.
+> +    - When changing the priority of a task using rt_mutex_setprio(). This
+> +      function implements the priority inheritance logic of the RT mutex
+> +      code. This function changes the effective priority of a task which may
+> +      in turn change the scheduling class of the task. If so enqueue_task is
+> +      called with flags corresponding to each class.
+> +    - When user changes the nice value of the task. If the task is queued on
+> +      a runqueue, it first needs to be dequeued, then its load weight and
+> +      effective priority needs to be set. Following which the task is
+> +      enqueued with ENQUEUE_RESTORE and ENQUEUE_NOCLOCK flags set.
+> +    - When __sched_setscheduler() is called. This function enables changing
+> +      the scheduling policy and/or RT priority of a thread. If the task is
+> +      on a runqueue, it will be first dequeued, changes will be made and
+> +      then enqueued.
+> +    - When moving tasks between scheduling groups. The runqueue of the tasks
+> +      is changed when moving between groups. For this purpose if the task
+> +      is running on a queue, it is first dequeued with DEQUEUE_SAVE, DEQUEUE_MOVE
+> +      and DEQUEUE_NOCLOCK flags set, followed by which scheduler function to
+> +      change the tsk->se.cfs_rq and tsk->se.parent and then task is enqueued
+> +      on the runqueue with the same flags used in dequeue.
+> +
+> +pick_next_task
+> +    Called by __schedule() to pick the next best task to run.
+> +    Scheduling class structure has a pointer pointing to the next scheduling
+> +    class type and each scheduling class is linked using a singly linked list.
+> +    The __schedule() function iterates through the corresponding
+> +    functions of the scheduler classes in priority order to pick up the next
+> +    best task to run. Since tasks belonging to the idle class and fair class
+> +    are frequent, the scheduler optimizes the picking of next task to call
+> +    the pick_next_task_fair() if the previous task was of the similar
+> +    scheduling class.
+> +
+> +put_prev_task
+> +    Called by the scheduler when a running task is being taken off a CPU.
+> +    The behavior of this function depends on individual scheduling classes
+> +    and called in the following cases.
+> +
+> +    - When do_set_cpus_allowed() is called and if the task is currently running.
+> +    - When scheduler pick_next_task() is called, the put_prev_task() is
+> +      called with the previous task as function argument.
+> +    - When rt_mutex_setprio() is called and if the task is currently running.
+> +    - When user changes the nice value of the task and if the task is
+> +      currently running.
+> +    - When __sched_setscheduler() is called and if the task is currently
+> +      running.
+> +    - When moving tasks between scheduling groups through the sched_move_task()
+> +      and if the task is ćurrently running.
 
-[auto build test ERROR on kvm/linux-next]
-[also build test ERROR on vhost/linux-next linus/master v5.7-rc4 next-20200507]
-[cannot apply to linux/master]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+s/ćurrently/currently
 
-url:    https://github.com/0day-ci/linux/commits/Suravee-Suthikulpanit/KVM-SVM-Disable-AVIC-before-setting-V_IRQ/20200507-111704
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-config: x86_64-rhel (attached as .config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=x86_64 
+Thanks,
+Tau
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+> +
+> +    In CFS class this function is used to put the currently running task back
+> +    into the CFS RB tree. When a task is running it is dequeued from the tree.
+> +    This is to prevent redundant enqueue's and dequeue's for updating its
+> +    vruntime. vruntime of tasks on the tree needs to be updated by update_curr()
+> +    to keep the tree in sync. In DL(deadline) and RT classes additional tree is
+> +    maintained for facilitating task migration between CPUs through push
+> +    operation between runqueues for load balancing. Task will be added to
+> +    this queue if it is present on the scheduling class rq and the task has
+> +    affinity to more than one CPU.
+> +
+> +set_next_task
+> +    Pairs with the put_prev_task(), this function is called when the next
+> +    task is set to run on the CPU. This function is called in all the places
+> +    where put_prev_task is called to complete the 'change'. Change is defined
+> +    as the following sequence of calls::
+> +
+> +         - dequeue task
+> +         - put task
+> +         - change the property
+> +         - enqueue task
+> +         - set task as current task
+> +
+> +    It resets the run time statistics for the entity with
+> +    the runqueue clock.
+> +    In case of CFS scheduling class, it will set the pointer to the current
+> +    scheduling entity to the picked task and accounts bandwidth usage on
+> +    the cfs_rq. In addition it will also remove the current entity from the
+> +    CFS runqueue for vruntime update optimization opposite to what was done
+> +    in put_prev_task.
+> +    For the SCHED_DEADLINE and RT classes it will
+> +
+> +    - dequeue the picked task from the tree of pushable tasks.
+> +    - update the load average in case the previous task belonged to another
+> +      class.
+> +    - queues the function to push tasks from current runqueue to other CPUs
+> +      which can preempt and start execution. Balance callback list is used.
+> +
+> +task_tick
+> +    Called from scheduler_tick(), hrtick() and sched_tick_remote() to update
+> +    the current task statistics and load averages. Also restarting the high
+> +    resolution tick timer is done if high resolution timers are enabled.
+> +    scheduler_tick() runs at 1/HZ and is called from the timer interrupt
+> +    handler of the Kernel internal timers.
+> +    hrtick() is called from high resolution timers to deliver an accurate
+> +    preemption tick as the regular scheduler tick that runs at 1/HZ can be
+> +    too coarse when nice levels are used.
+> +    sched_tick_remote() Gets called by the offloaded residual 1Hz scheduler
+> +    tick. In order to reduce interruptions to bare metal tasks, it is possible
+> +    to outsource these scheduler ticks to the global workqueue so that a
+> +    housekeeping CPU handles those remotely.
+> +
+> +select_task_rq
+> +    Called by scheduler to get the CPU to assign a task to and migrating
+> +    tasks between CPUs. Flags describe the reason the function was called.
+> +    Called by try_to_wake_up() with SD_BALANCE_WAKE flag which wakes up a
+> +    sleeping task.
+> +    Called by wake_up_new_task() with SD_BALANCE_FORK flag which wakes up a
+> +    newly forked task.
+> +    Called by sched_exec() with SD_BALANCE_EXEC which is called from execv
+> +    syscall.
+> +    SCHED_DEADLINE class decides the CPU on which the task should be woken
+> +    up based on the deadline. RT class decides based on the RT priority. Fair
+> +    scheduling class balances load by selecting the idlest CPU in the
+> +    idlest group, or under certain conditions an idle sibling CPU if the
+> +    domain has SD_WAKE_AFFINE set.
+> +
+> +balance
+> +    Called by pick_next_task() from scheduler to enable scheduling classes
+> +    to pull tasks from runqueues of other CPUs for balancing task execution
+> +    between the CPUs.
+> +
+> +task_fork
+> +    Called from sched_fork() of scheduler which assigns a task to a CPU.
+> +    Fair scheduling class updates runqueue clock, runtime statistics and
+> +    vruntime for the scheduling entity.
+> +
+> +yield_task
+> +    Called from SYSCALL sched_yield to yield the CPU to other tasks.
+> +    SCHED_DEADLINE class forces the runtime of the task to zero using a special
+> +    flag and dequeues the task from its trees. RT class requeues the task
+> +    entities to the end of the run list. Fair scheduling class implements
+> +    the buddy mechanism. This allows skipping onto the next highest priority
+> +    scheduling entity at every level in the CFS tree, unless doing so would
+> +    introduce gross unfairness in CPU time distribution.
+> +
+> +check_preempt_curr
+> +    Check whether the task that woke up should preempt the currently
+> +    running task. Called by scheduler,
+> +
+> +    * when moving queued task to new runqueue
+> +    * ttwu()
+> +    * when waking up newly created task for the first time.
+> +
+> +    SCHED_DEADLINE class compares the deadlines of the tasks and calls
+> +    scheduler function resched_curr() if the preemption is needed. In case
+> +    the deadlines are equal, migratability of the tasks is used a criteria
+> +    for preemption.
+> +    RT class behaves the same except it uses RT priority for comparison.
+> +    Fair class sets the buddy hints before calling resched_curr() to preempt.
+> +
+> +Scheduler sets the scheduler class for each task based on its priority.
+> +Tasks assigned with SCHED_NORMAL, SCHED_IDLE and SCHED_BATCH call
+> +fair_sched_class hooks and tasks assigned with SCHED_RR and
+> +SCHED_FIFO call rt_sched_class hooks. Tasks assigned with SCHED_DEADLINE
+> +policy calls dl_sched_class hooks.
+> diff --git a/Documentation/scheduler/scheduler-api.rst b/Documentation/scheduler/scheduler-api.rst
+> new file mode 100644
+> index 000000000000..1fc6bd4c2908
+> --- /dev/null
+> +++ b/Documentation/scheduler/scheduler-api.rst
+> @@ -0,0 +1,31 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +=============================
+> +Scheduler related functions
+> +=============================
+> +
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: __schedule
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: scheduler_tick
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: try_to_wake_up
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: do_task_dead
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: preempt_schedule_irq
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: prepare_task_switch
+> +
+> +.. kernel-doc:: kernel/sched/core.c
+> +	:functions: finish_task_switch
+> +
+> +.. kernel-doc:: kernel/sched/sched.h
+> +	:functions: rq
+> +
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 9a2fbf98fd6f..b349ed9b4d92 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3576,9 +3576,13 @@ void arch_set_thermal_pressure(struct cpumask *cpus,
+>  		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+>  }
+>  
+> -/*
+> +/**
+> + * scheduler_tick - sched tick timer handler
+> + *
+>   * This function gets called by the timer code, with HZ frequency.
+>   * We call it with interrupts disabled.
+> + *
+> + * Return: 0.
+>   */
+>  void scheduler_tick(void)
+>  {
+> @@ -3959,8 +3963,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	BUG();
+>  }
+>  
+> -/*
+> - * __schedule() is the main scheduler function.
+> +/**
+> + * __schedule() - the main scheduler function.
+> + *
+> + * @preempt: preemption enabled/disabled
+>   *
+>   * The main means of driving the scheduler and thus entering this function are:
+>   *
+> @@ -4089,6 +4095,12 @@ static void __sched notrace __schedule(bool preempt)
+>  	balance_callback(rq);
+>  }
+>  
+> +/**
+> + * do_task_dead - handle task exit
+> + *
+> + * Changes the the task state to TASK_DEAD and calls
+> + * schedule to pick next task to run.
+> + */
+>  void __noreturn do_task_dead(void)
+>  {
+>  	/* Causes final put_task_struct in finish_task_switch(): */
+> @@ -4320,7 +4332,8 @@ EXPORT_SYMBOL_GPL(preempt_schedule_notrace);
+>  
+>  #endif /* CONFIG_PREEMPTION */
+>  
+> -/*
+> +/**
+> + * preempt_schedule_irq - schedule from irq context
+>   * This is the entry point to schedule() from kernel preemption
+>   * off of irq context.
+>   * Note, that this is called and return with irqs disabled. This will
+> @@ -5618,6 +5631,13 @@ SYSCALL_DEFINE0(sched_yield)
+>  }
+>  
+>  #ifndef CONFIG_PREEMPTION
+> +/**
+> + * _cond_resched - explicit rescheduling
+> + *
+> + * gives the scheduler a chance to run a higher-priority process
+> + *
+> + * Return: 1 if reschedule was done, 0 if reschedule not done.
+> + */
+>  int __sched _cond_resched(void)
+>  {
+>  	if (should_resched(0)) {
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index db3a57675ccf..21f2953b72c7 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -865,12 +865,175 @@ struct uclamp_rq {
+>  };
+>  #endif /* CONFIG_UCLAMP_TASK */
+>  
+> -/*
+> - * This is the main, per-CPU runqueue data structure.
+> +/**
+> + * struct rq - This is the main, per-CPU runqueue data structure.
+>   *
+>   * Locking rule: those places that want to lock multiple runqueues
+>   * (such as the load balancing or the thread migration code), lock
+>   * acquire operations must be ordered by ascending &runqueue.
+> + *
+> + * @lock:
+> + *	lock to be acquired while modifying the runqueue
+> + * @nr_running:
+> + *	number of runnable tasks on this queue
+> + * @nr_numa_running:
+> + *	number of tasks running that care about their placement
+> + * @nr_preferred_running:
+> + *	number of tasks that are optimally NUMA placed
+> + * @numa_migrate_on:
+> + *	per run-queue variable to check if NUMA-balance is
+> + *	active on the run-queue
+> + * @last_blocked_load_update_tick:
+> + *	tick stamp for decay of blocked load
+> + * @has_blocked_load:
+> + *	idle CPU has blocked load
+> + * @nohz_tick_stopped:
+> + *	CPU is going idle with tick stopped
+> + * @nohz_flags:
+> + *	flags indicating NOHZ idle balancer actions
+> + * @nr_load_updates:
+> + *	unused
+> + * @nr_switches:
+> + *	number of context switches
+> + * @uclamp:
+> + *	utilization clamp values based on CPU's RUNNABLE tasks
+> + * @uclamp_flags:
+> + *	flags for uclamp actions, currently one flag for idle.
+> + * @cfs:
+> + *	fair scheduling class runqueue
+> + * @rt:
+> + *	rt scheduling class runqueue
+> + * @dl:
+> + *	dl scheduing class runqueue
+> + * @leaf_cfs_rq_list:
+> + *	list of leaf cfs_rq on this CPU
+> + * @tmp_alone_branch:
+> + *	reference to add child before its parent in leaf_cfs_rq_list
+> + * @nr_uninterruptible:
+> + *	global counter where the total sum over all CPUs matters. A task
+> + *      can increase this counter on one CPU and if it got migrated
+> + *	afterwards it may decrease it on another CPU. Always updated under
+> + *	the runqueue lock
+> + * @curr:
+> + *	points to the currently running task of this rq.
+> + * @idle:
+> + *	points to the idle task of this rq
+> + * @stop:
+> + *	points to the stop task of this rq
+> + * @next_balance:
+> + *	shortest next balance before updating nohz.next_balance
+> + * @prev_mm:
+> + *	real address space of the previous task
+> + * @clock_update_flags:
+> + *	RQCF clock_update_flags bits
+> + * @clock:
+> + *	sched_clock() value for the queue
+> + * @clock_task:
+> + *	clock value minus irq handling time
+> + * @clock_pelt:
+> + *	clock which scales with current capacity when something is
+> + *	running on rq and synchronizes with clock_task when rq is idle
+> + * @lost_idle_time:
+> + *	idle time lost when utilization of a rq has reached the
+> + *	maximum value
+> + * @nr_iowait:
+> + *	account the idle time that we could have spend running if it
+> + *	were not for IO
+> + * @membarrier_state:
+> + *	copy of membarrier_state from the mm_struct
+> + * @rd:
+> + *	root domain, each exclusive cpuset essentially defines an island
+> + *	domain by fully partitioning the member CPUs from any other cpuset
+> + * @sd:
+> + *	a domain heirarchy of CPU groups to balance process load among them
+> + * @cpu_capacity:
+> + *	information about CPUs heterogeneity used for CPU performance
+> + *	scaling
+> + * @cpu_capacity_orig:
+> + *	original capacity of a CPU before being altered by
+> + *	rt tasks and/or IRQ
+> + * @balance_callback:
+> + *	queue to hold load balancing push and pull operations
+> + * @idle_balance:
+> + *	flag to do the nohz idle load balance
+> + * @misfit_task_load:
+> + *	set whenever the current running task has a utilization
+> + *	greater than 80% of rq->cpu_capacity. A non-zero value
+> + *	in this field enables misfit load balancing
+> + * @active_balance:
+> + *	synchronizes accesses to ->active_balance_work
+> + * @push_cpu:
+> + *	idle cpu to push the running task on to during active load
+> + *	balancing.
+> + * @active_balance_work:
+> + *	callback scheduled to run on one or multiple cpus
+> + *	with maximum priority monopolozing those cpus.
+> + * @cpu:
+> + *	CPU of this runqueue
+> + * @online:
+> + *	Used by scheduling classes to support CPU hotplug
+> + * @cfs_tasks:
+> + *	an MRU list used for load balancing, sorted (except
+> + *	woken tasks) starting from recently given CPU time tasks
+> + *	toward tasks with max wait time in a run-queue
+> + * @avg_rt:
+> + *	track the utilization of RT tasks for a  more accurate
+> + *	view of the utilization of the CPU when overloaded by CFS and
+> + *	RT tasks
+> + * @avg_dl:
+> + *	track the utilization of DL tasks as CFS tasks can be preempted
+> + *	by DL tasks and the CFS's utilization might no longer describe
+> + *	the real utilization level
+> + * @avg_irq:
+> + *	track the the utilization of interrupt to give a more accurate
+> + *	level of utilization of CPU taking into account the time spent
+> + *	under interrupt context when rqs' clock is updated
+> + * @avg_thermal:
+> + *	tracks thermal pressure which is the reduction in maximum
+> + *	possible capacity due to thermal events
+> + * @idle_stamp:
+> + *	time stamp at which idle load balance started for this rq.
+> + *	Used to find the idlest CPU, when multiple idle CPUs are in
+> + *	the same state
+> + * @avg_idle:
+> + *	average idle time for this rq
+> + * @max_idle_balance_cost:
+> + *	used to determine avg_idle's max value
+> + * @prev_irq_time:
+> + *	updated to account time consumed when a previous
+> + *	update_rq_clock() happened inside a {soft,}irq region
+> + * @prev_steal_time:
+> + *	to account how much elapsed time was spent in steal
+> + * @prev_steal_time_rq:
+> + *	for fine granularity task steal time accounting by
+> + *	making update_rq_clock() aware of steal time
+> + * @calc_load_update:
+> + *	sample window for global load-average calculations
+> + * @calc_load_active:
+> + *	fold any nr_active delta into a global accumulate
+> + * @hrtick_csd:
+> + *	call_single_data used to set hrtick timer state on a specific CPU
+> + * @hrtick_timer:
+> + *	HR-timer to deliver an accurate preemption tick
+> + * @rq_sched_info:
+> + *	runqueue specific latency stats
+> + * @rq_cpu_time:
+> + *	runqueue specific accumulated per-task cpu runtime
+> + * @yld_count:
+> + *	runqueue specific sys_sched_yield() stats
+> + * @sched_count:
+> + *	runqueue specific __schedule() stats
+> + * @sched_goidle:
+> + *	runqueue specific idle scheduling class stats
+> + * @ttwu_count:
+> + *	runqueue specific idle ttwu stats , both remote and local
+> + * @ttwu_local:
+> + *	ttwu count for the CPU of the rq
+> + * @wake_list:
+> + *	list which stores tasks being woken up remotely by ttwu
+> + * @idle_state:
+> + *	cpuidle state pointer of the CPU of this rq used to make a
+> + *	better decision when balancing tasks
+>   */
+>  struct rq {
+>  	/* runqueue lock: */
+> @@ -1136,7 +1299,7 @@ static inline u64 rq_clock_task(struct rq *rq)
+>  	return rq->clock_task;
+>  }
+>  
+> -/**
+> +/*
+>   * By default the decay is the default pelt decay period.
+>   * The decay shift can change the decay period in
+>   * multiples of 32.
+> -- 
+> 2.17.1
+> 
 
-All errors (new ones prefixed by >>):
-
-   arch/x86/kvm/x86.c: In function 'kvm_request_apicv_update':
->> arch/x86/kvm/x86.c:8107:2: error: implicit declaration of function 'kvm_make_all_cpus_request_except'; did you mean 'kvm_make_all_cpus_request'? [-Werror=implicit-function-declaration]
-     kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     kvm_make_all_cpus_request
-   cc1: all warnings being treated as errors
-
-vim +8107 arch/x86/kvm/x86.c
-
-  8065	
-  8066	/*
-  8067	 * NOTE: Do not hold any lock prior to calling this.
-  8068	 *
-  8069	 * In particular, kvm_request_apicv_update() expects kvm->srcu not to be
-  8070	 * locked, because it calls __x86_set_memory_region() which does
-  8071	 * synchronize_srcu(&kvm->srcu).
-  8072	 */
-  8073	void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
-  8074	{
-  8075		struct kvm_vcpu *except;
-  8076		unsigned long old, new, expected;
-  8077	
-  8078		if (!kvm_x86_ops.check_apicv_inhibit_reasons ||
-  8079		    !kvm_x86_ops.check_apicv_inhibit_reasons(bit))
-  8080			return;
-  8081	
-  8082		old = READ_ONCE(kvm->arch.apicv_inhibit_reasons);
-  8083		do {
-  8084			expected = new = old;
-  8085			if (activate)
-  8086				__clear_bit(bit, &new);
-  8087			else
-  8088				__set_bit(bit, &new);
-  8089			if (new == old)
-  8090				break;
-  8091			old = cmpxchg(&kvm->arch.apicv_inhibit_reasons, expected, new);
-  8092		} while (old != expected);
-  8093	
-  8094		if (!!old == !!new)
-  8095			return;
-  8096	
-  8097		trace_kvm_apicv_update_request(activate, bit);
-  8098		if (kvm_x86_ops.pre_update_apicv_exec_ctrl)
-  8099			kvm_x86_ops.pre_update_apicv_exec_ctrl(kvm, activate);
-  8100	
-  8101		/*
-  8102		 * Sending request to update APICV for all other vcpus,
-  8103		 * while update the calling vcpu immediately instead of
-  8104		 * waiting for another #VMEXIT to handle the request.
-  8105		 */
-  8106		except = kvm_get_running_vcpu();
-> 8107		kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
-  8108						 except);
-  8109		if (except)
-  8110			kvm_vcpu_update_apicv(except);
-  8111	}
-  8112	EXPORT_SYMBOL_GPL(kvm_request_apicv_update);
-  8113	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-PVFHj08n7Izwlfk/7mVgX7nQAgA=
-
---WIyZ46R2i8wDzkSu--
