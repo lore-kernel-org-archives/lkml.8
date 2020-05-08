@@ -2,54 +2,52 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F37C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B35B620870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD5920735
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943925;
-	bh=92GMJ3vVz3kng28dkVP2FXCoZkRYgHbQffs0xOz9nSA=;
+	s=default; t=1588943928;
+	bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XL47UH8T8SnkZBlId76GW/QRHus3GL/9ELOFkfdq6/GzOPW/qtCx37G6wMTRGIjq/
-	 SqfA/nNz+lxKg8OKdE4jHhqFz9JWLoeueopgSNc2FYuoZeqymuucWX+RGpUUO1Usl8
-	 V3WGTeFFBuNUa/ARywm0Ot17gUKH2jwfnHGNym3A=
+	b=gETotX9nOyukqY+hATZJa2HtgPEsAaRWdxvRoBHGODkYawy/5xe2gGVBhQE49q48r
+	 JI/a/A9fl59fTy8hbNeUI64CI6NGaELdojK9hfnE9qgUOhE1oaaX1eIGEqos1jzddn
+	 CQVykd/NK7/rLzdMKvJwMyYl/XOP5CeomJ2Mfphs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgEHMmk (ORCPT
+        id S1729269AbgEHNSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgEHMmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:32 -0400
+        id S1728984AbgEHMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A6D21835;
-        Fri,  8 May 2020 12:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 896E320731;
+        Fri,  8 May 2020 12:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941751;
-        bh=92GMJ3vVz3kng28dkVP2FXCoZkRYgHbQffs0xOz9nSA=;
+        s=default; t=1588941761;
+        bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvEngcWYIHYMEzos8SN9sOKXwRzDHk/jc5BxWClC2jpx/4soH50Be42lh48rSNdln
-         KI42KhDUSBqUhph2wHQQXjgZCmvP6bMxHZXgITBTwYGYqLto+9hHz+H6qXIUAkNU30
-         Ao/ZRQRgRVaYNso85lcW0hxpxpqnW5Y4OztYl5+4=
+        b=a+dSlhWhKAHf7kJ2eAdthM/hrgUBxrH2cQtCsvksMD4GkQSz9/X6ReOcxvyiyvYCY
+         hJkd7j/ryxkaOzU9LQ7kVZNLjjO/qoZkekWDpN11gvKDmgBoAOKRSwjxA1Ts4KTppe
+         IyOb72TZWF2sGieZnD3fZx8ULMjzM3zQTwpE5KE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Rivshin <drivshin@allworx.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Andrew Goodbody <andrew.goodbody@cambrionix.com>,
-        Mugunthan V N <mugunthanvnm@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 158/312] drivers: net: cpsw: dont ignore phy-mode if phy-handle is used
-Date:   Fri,  8 May 2020 14:32:29 +0200
-Message-Id: <20200508123135.567401154@linuxfoundation.org>
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 162/312] selftests/ipc: Fix test failure seen after initial test run
+Date:   Fri,  8 May 2020 14:32:33 +0200
+Message-Id: <20200508123135.845917934@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,54 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rivshin <drivshin@allworx.com>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-commit ae092b5bded24d5dc7dae0e0aef4669c169ce874 upstream.
+[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
 
-The phy-mode emac property was only being processed in the phy_id
-or fixed-link cases. However if phy-handle was specified instead,
-an error message would complain about the lack of phy_id or
-fixed-link, and then jump past the of_get_phy_mode(). This would
-result in the PHY mode defaulting to MII, regardless of what the
-devicetree specified.
+After successfully running the IPC msgque test once, subsequent runs
+result in a test failure:
 
-Fixes: 9e42f715264f ("drivers: net: cpsw: add phy-handle parsing")
-Signed-off-by: David Rivshin <drivshin@allworx.com>
-Tested-by: Nicolas Chauvet <kwizart@gmail.com>
-Tested-by: Andrew Goodbody <andrew.goodbody@cambrionix.com>
-Reviewed-by: Mugunthan V N <mugunthanvnm@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ sudo ./run_kselftest.sh
+  TAP version 13
+  1..1
+  # selftests: ipc: msgque
+  # Failed to get stats for IPC queue with id 0
+  # Failed to dump queue: -22
+  # Bail out!
+  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+  not ok 1 selftests: ipc: msgque # exit=1
 
+The dump_queue() function loops through the possible message queue index
+values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
+represents the index value. The first time the test is ran, the initial
+index value of 0 is valid and the test is able to complete. The index
+value of 0 is not valid in subsequent test runs and the loop attempts to
+try index values of 1, 2, 3, and so on until a valid index value is
+found that corresponds to the message queue created earlier in the test.
+
+The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
+index values are used. The test failure is caused by incorrectly
+comparing errno to -EINVAL when cycling through possible index values.
+
+Fix invalid test failures on subsequent runs of the msgque test by
+correctly comparing errno values to a non-negated EINVAL.
+
+Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/ipc/msgque.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2060,7 +2060,11 @@ static int cpsw_probe_dt(struct cpsw_pla
- 		slave_data->phy_node = of_parse_phandle(slave_node,
- 							"phy-handle", 0);
- 		parp = of_get_property(slave_node, "phy_id", &lenp);
--		if (of_phy_is_fixed_link(slave_node)) {
-+		if (slave_data->phy_node) {
-+			dev_dbg(&pdev->dev,
-+				"slave[%d] using phy-handle=\"%s\"\n",
-+				i, slave_data->phy_node->full_name);
-+		} else if (of_phy_is_fixed_link(slave_node)) {
- 			struct device_node *phy_node;
- 			struct phy_device *phy_dev;
- 
-@@ -2097,7 +2101,9 @@ static int cpsw_probe_dt(struct cpsw_pla
- 				 PHY_ID_FMT, mdio->name, phyid);
- 			put_device(&mdio->dev);
- 		} else {
--			dev_err(&pdev->dev, "No slave[%d] phy_id or fixed-link property\n", i);
-+			dev_err(&pdev->dev,
-+				"No slave[%d] phy_id, phy-handle, or fixed-link property\n",
-+				i);
- 			goto no_phy_slave;
- 		}
- 		slave_data->phy_if = of_get_phy_mode(slave_node);
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index 1b2ce334bb3f0..47c074d73e610 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -135,7 +135,7 @@ int dump_queue(struct msgque_data *msgque)
+ 	for (kern_id = 0; kern_id < 256; kern_id++) {
+ 		ret = msgctl(kern_id, MSG_STAT, &ds);
+ 		if (ret < 0) {
+-			if (errno == -EINVAL)
++			if (errno == EINVAL)
+ 				continue;
+ 			printf("Failed to get stats for IPC queue with id %d\n",
+ 					kern_id);
+-- 
+2.20.1
+
 
 
