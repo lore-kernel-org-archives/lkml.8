@@ -2,90 +2,109 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1F8C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C48C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 104A720725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022AC20725
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcCGcoif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEHB4s (ORCPT
+        id S1727108AbgEHB4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgEHB4r (ORCPT
+        Thu, 7 May 2020 21:56:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48940 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727084AbgEHB4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:56:47 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C50C05BD43;
-        Thu,  7 May 2020 18:56:47 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 88C261192EEC6;
-        Thu,  7 May 2020 18:56:47 -0700 (PDT)
-Date:   Thu, 07 May 2020 18:56:46 -0700 (PDT)
-Message-Id: <20200507.185646.111035164612060986.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipv6: Replace zero-length array with flexible-array
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200507190216.GA15407@embeddedor>
-References: <20200507190216.GA15407@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 18:56:47 -0700 (PDT)
+        Thu, 7 May 2020 21:56:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588903009;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JT05FM/qFjOhlzVbidfMllXSBmmMs5hu8jLgUO53t7w=;
+        b=XcCGcoifhYmUdgA3GzlVGIVDUI672LJU4ks5eDxO7wKSRJAMmwBRfUAqcY/xYaBweMNO9j
+        UXOHG+tbO43vkEg+OdFGVqHktJR95cHcLU3LPD+KaLGMM9DOPmU+OGaw2HS5TjOUmdFMSX
+        4bQFlmj+/41MlXg+IOtH0Dov7Zb1O7w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-MdXXWQgiPJ-p7NVrRQ1dJg-1; Thu, 07 May 2020 21:56:47 -0400
+X-MC-Unique: MdXXWQgiPJ-p7NVrRQ1dJg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AFB5107ACCA;
+        Fri,  8 May 2020 01:56:46 +0000 (UTC)
+Received: from [10.72.13.98] (ovpn-13-98.pek2.redhat.com [10.72.13.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D48125C1B0;
+        Fri,  8 May 2020 01:56:39 +0000 (UTC)
+Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
+ header for XDP
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+References: <20200506061633.16327-1-jasowang@redhat.com>
+ <20200506033834-mutt-send-email-mst@kernel.org>
+ <7a169b06-b6b9-eac1-f03a-39dd1cfcce57@redhat.com>
+ <20200506055436-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <c1df2cdf-eaff-f146-1804-f0a6cad6bb2d@redhat.com>
+Date:   Fri, 8 May 2020 09:56:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200506055436-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Thu, 7 May 2020 14:02:16 -0500
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On 2020/5/6 下午5:54, Michael S. Tsirkin wrote:
+> On Wed, May 06, 2020 at 04:19:40PM +0800, Jason Wang wrote:
+>> On 2020/5/6 下午3:53, Michael S. Tsirkin wrote:
+>>> On Wed, May 06, 2020 at 02:16:32PM +0800, Jason Wang wrote:
+>>>> We tried to reserve space for vnet header before
+>>>> xdp.data_hard_start. But this is useless since the packet could be
+>>>> modified by XDP which may invalidate the information stored in the
+>>>> header and there's no way for XDP to know the existence of the vnet
+>>>> header currently.
+>>> What do you mean? Doesn't XDP_PASS use the header in the buffer?
+>> We don't, see 436c9453a1ac0 ("virtio-net: keep vnet header zeroed after
+>> processing XDP")
+>>
+>> If there's other place, it should be a bug.
+>>
+>>
+>>>> So let's just not reserve space for vnet header in this case.
+>>> In any case, we can find out XDP does head adjustments
+>>> if we need to.
+>> But XDP program can modify the packets without adjusting headers.
+>>
+>> Thanks
+> Then what's the problem?
 
-Applied to net-next.
+
+Then we can't do anything more than just invalidating vnet header since 
+we don't know whether or not the packet has been modified or not.
+
+Technically, XDP can give the driver some hint about whether or not the 
+packet has been modified, but AFAIK we haven't implemented this yet.
+
+Thanks
+
+
+>
+
