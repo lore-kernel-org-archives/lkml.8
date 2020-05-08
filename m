@@ -2,55 +2,59 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E25C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77899C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE12620870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BCF208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942936;
-	bh=F42RYYpFQA8sz/EtIP1xqz9osr29mGNKV4lkhnLOvOg=;
+	s=default; t=1588942940;
+	bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkAMODoSZztveaDe9AWDuxsqePy4/nIhu+SEoZp1k/HjJff196kfKIeDdGl10ptbd
-	 okX5PeoW6IisS3YuYjAuWoCY5b/sE88l3YzNdGuoLqJaO9Px1Mi/8o1OWYo4ZfealJ
-	 aGPx1HM83YKytnma1owKxNzcp7kl/kK1sY+ldLGQ=
+	b=IeM9ZrvjZM2t6/rr2ylHnXlN2kWZ1x4NFrgIC4WmLIfJNGQHdnOpV36aL5Uf29ZKE
+	 CrQQNf0Go/fX6eBUI81kYMXOzP+q5MMhRMYPRDTHMGwFVvH+6lPyO3KlxEQcjCd5x/
+	 NkB3pTxjDgM8AQ2ksbsNXZcnt8c2RCH89iRvl1qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgEHMvI (ORCPT
+        id S1730033AbgEHNCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59792 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbgEHMvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:03 -0400
+        id S1729014AbgEHMvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB6124959;
-        Fri,  8 May 2020 12:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC6024964;
+        Fri,  8 May 2020 12:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942262;
-        bh=F42RYYpFQA8sz/EtIP1xqz9osr29mGNKV4lkhnLOvOg=;
+        s=default; t=1588942265;
+        bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAh3u5103V0DFbtKL1W9avLB6ZaZWdYX71ovsHE6QHBXwoEjmdMBv117VHU2DuZ7G
-         zhSXAIu2Twn8FZIJGT6GRKMjKZkfqKg8e6NnWPPEMXEpbZVnjeP2m3FRTYDRTrlDUS
-         PNuYIjRoLgmxvdDbuZ6pMy1j3e1Yao/IzNgONtZ0=
+        b=Rfwt70VbamXErIoLiAdGG8XN1zJ3YuJQ4PXzQ2l7HIUiTpHpO0uDigad6+ESdoOZA
+         9D4KYeFMxQlENddr7+hRXK2N5YZDfNIq0M4vZQgL+kdFeGivFixig8i9iSov9BsGPA
+         VpBTpwdbRq+inyQyCmFby8u7sJXOJcKYkvYXwujE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 21/22] mac80211: add ieee80211_is_any_nullfunc()
-Date:   Fri,  8 May 2020 14:35:33 +0200
-Message-Id: <20200508123036.553439396@linuxfoundation.org>
+        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jia He <justin.he@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 4.19 01/32] vhost: vsock: kick send_pkt worker once device is started
+Date:   Fri,  8 May 2020 14:35:14 +0200
+Message-Id: <20200508123035.056580682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
-References: <20200508123033.915895060@linuxfoundation.org>
+In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
+References: <20200508123034.886699170@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,128 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@adapt-ip.com>
+From: Jia He <justin.he@arm.com>
 
-commit 30b2f0be23fb40e58d0ad2caf8702c2a44cda2e1 upstream.
+commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
 
-commit 08a5bdde3812 ("mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED")
-Fixed a bug where we failed to take into account a
-nullfunc frame can be either non-QoS or QoS. It turns out
-there is at least one more bug in
-ieee80211_sta_tx_notify(), introduced in
-commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing"),
-where we forgot to check for the QoS variant and so
-assumed the QoS nullfunc frame never went out
+Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+connecting from the client side. The vhost vsock client tries to connect
+an initializing virtio vsock server.
 
-Fix this by adding a helper ieee80211_is_any_nullfunc()
-which consolidates the check for non-QoS and QoS nullfunc
-frames. Replace existing compound conditionals and add a
-couple more missing checks for QoS variant.
+The abnormal flow looks like:
+host-userspace           vhost vsock                       guest vsock
+==============           ===========                       ============
+connect()     -------->  vhost_transport_send_pkt_work()   initializing
+   |                     vq->private_data==NULL
+   |                     will not be queued
+   V
+schedule_timeout(2s)
+                         vhost_vsock_start()  <---------   device ready
+                         set vq->private_data
 
-Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
-Link: https://lore.kernel.org/r/20200114055940.18502-3-thomas@adapt-ip.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+wait for 2s and failed
+connect() again          vq->private_data!=NULL         recv connecting pkt
+
+Details:
+1. Host userspace sends a connect pkt, at that time, guest vsock is under
+   initializing, hence the vhost_vsock_start has not been called. So
+   vq->private_data==NULL, and the pkt is not been queued to send to guest
+2. Then it sleeps for 2s
+3. After guest vsock finishes initializing, vq->private_data is set
+4. When host userspace wakes up after 2s, send connecting pkt again,
+   everything is fine.
+
+As suggested by Stefano Garzarella, this fixes it by additional kicking the
+send_pkt worker in vhost_vsock_start once the virtio device is started. This
+makes the pending pkt sent again.
+
+After this patch, kata-runtime (with vsock enabled) boot time is reduced
+from 3s to 1s on a ThunderX2 arm64 server.
+
+[1] https://github.com/kata-containers/runtime/issues/1917
+
+Reported-by: Ning Bo <n.b@live.com>
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |    9 +++++++++
- net/mac80211/mlme.c       |    2 +-
- net/mac80211/rx.c         |    8 +++-----
- net/mac80211/status.c     |    5 ++---
- net/mac80211/tx.c         |    2 +-
- 5 files changed, 16 insertions(+), 10 deletions(-)
+ drivers/vhost/vsock.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -622,6 +622,15 @@ static inline bool ieee80211_is_qos_null
- }
- 
- /**
-+ * ieee80211_is_any_nullfunc - check if frame is regular or QoS nullfunc frame
-+ * @fc: frame control bytes in little-endian byteorder
-+ */
-+static inline bool ieee80211_is_any_nullfunc(__le16 fc)
-+{
-+	return (ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc));
-+}
-+
-+/**
-  * ieee80211_is_bufferable_mmpdu - check if frame is bufferable MMPDU
-  * @fc: frame control field in little-endian byteorder
-  */
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2273,7 +2273,7 @@ void ieee80211_sta_tx_notify(struct ieee
- 	if (!ieee80211_is_data(hdr->frame_control))
- 	    return;
- 
--	if (ieee80211_is_nullfunc(hdr->frame_control) &&
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
- 	    sdata->u.mgd.probe_send_count > 0) {
- 		if (ack)
- 			ieee80211_sta_reset_conn_monitor(sdata);
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -1255,8 +1255,7 @@ ieee80211_rx_h_check_dup(struct ieee8021
- 		return RX_CONTINUE;
- 
- 	if (ieee80211_is_ctl(hdr->frame_control) ||
--	    ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control) ||
-+	    ieee80211_is_any_nullfunc(hdr->frame_control) ||
- 	    is_multicast_ether_addr(hdr->addr1))
- 		return RX_CONTINUE;
- 
-@@ -1643,8 +1642,7 @@ ieee80211_rx_h_sta_process(struct ieee80
- 	 * Drop (qos-)data::nullfunc frames silently, since they
- 	 * are used only to control station power saving mode.
- 	 */
--	if (ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control)) {
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control)) {
- 		I802_DEBUG_INC(rx->local->rx_handlers_drop_nullfunc);
- 
- 		/*
-@@ -2134,7 +2132,7 @@ static int ieee80211_drop_unencrypted(st
- 
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
--		     !ieee80211_is_nullfunc(fc) &&
-+		     !ieee80211_is_any_nullfunc(fc) &&
- 		     ieee80211_is_data(fc) && rx->key))
- 		return -EACCES;
- 
---- a/net/mac80211/status.c
-+++ b/net/mac80211/status.c
-@@ -478,8 +478,7 @@ static void ieee80211_report_ack_skb(str
- 		rcu_read_lock();
- 		sdata = ieee80211_sdata_from_skb(local, skb);
- 		if (sdata) {
--			if (ieee80211_is_nullfunc(hdr->frame_control) ||
--			    ieee80211_is_qos_nullfunc(hdr->frame_control))
-+			if (ieee80211_is_any_nullfunc(hdr->frame_control))
- 				cfg80211_probe_status(sdata->dev, hdr->addr1,
- 						      cookie, acked,
- 						      GFP_ATOMIC);
-@@ -856,7 +855,7 @@ static void __ieee80211_tx_status(struct
- 			I802_DEBUG_INC(local->dot11FailedCount);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -499,6 +499,11 @@ static int vhost_vsock_start(struct vhos
+ 		mutex_unlock(&vq->mutex);
  	}
  
--	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
-+	if (ieee80211_is_any_nullfunc(fc) &&
- 	    ieee80211_has_pm(fc) &&
- 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
- 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -296,7 +296,7 @@ ieee80211_tx_h_check_assoc(struct ieee80
- 	if (unlikely(test_bit(SCAN_SW_SCANNING, &tx->local->scanning)) &&
- 	    test_bit(SDATA_STATE_OFFCHANNEL, &tx->sdata->state) &&
- 	    !ieee80211_is_probe_req(hdr->frame_control) &&
--	    !ieee80211_is_nullfunc(hdr->frame_control))
-+	    !ieee80211_is_any_nullfunc(hdr->frame_control))
- 		/*
- 		 * When software scanning only nullfunc frames (to notify
- 		 * the sleep state to the AP) and probe requests (for the
++	/* Some packets may have been queued before the device was started,
++	 * let's kick the send worker to send them.
++	 */
++	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++
+ 	mutex_unlock(&vsock->dev.mutex);
+ 	return 0;
+ 
 
 
