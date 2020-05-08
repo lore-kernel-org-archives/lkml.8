@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B2BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AD7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A94A1206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D23218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944140;
-	bh=tm9FGvjd0MyW71FzYD0zA/MVsERx+V3EhF8qLAKFV6I=;
+	s=default; t=1588944145;
+	bh=5Pudbi8qJflYMeIBj1kNopKnTQBWaHl/pyGP+TIt3ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rN/cYQQTPXIAJl4IUBmMvg2NzwGaLYDNlNYaDLYzbR+aZOK7fUSqsAGpTzIls1KHW
-	 nNjshhNnXQR6Tt+ZCCmlCPBeTMbFPw6QoqNeG6X4wQwlpH1yW/9L5vIXHD0ZY9UMkq
-	 kCRAj8oyFHqpcvHzGZQLwWIMmhocFISZ9gmmjN/0=
+	b=CUkkn9cj1zWGI3k5raZjNOz1JCk1cKe8SSgnXvb5Z2vWoEZ05ZxzqtCCYm2yZwf6m
+	 /S+YKNvVLj/Xe6fRoVYdTKVSi3C5L9UY60T+OM9rSlXj+lnlcKXnq6xTUk4B3j26Zd
+	 hl+VvQB2kVtwHcrCgCfznVK5yU1Ka/QicyzgpBN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgEHNWT (ORCPT
+        id S1729541AbgEHNWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgEHMjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:24 -0400
+        id S1728568AbgEHMjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641FB2495F;
-        Fri,  8 May 2020 12:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B27920731;
+        Fri,  8 May 2020 12:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941563;
-        bh=tm9FGvjd0MyW71FzYD0zA/MVsERx+V3EhF8qLAKFV6I=;
+        s=default; t=1588941558;
+        bh=5Pudbi8qJflYMeIBj1kNopKnTQBWaHl/pyGP+TIt3ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgiuAHgm3pCValh9+F23a6BRgileFIBiKOkEzYJHYLzP/ePn4ETJXf6rXiKoTP21W
-         9RJC1AX8V2V6hpxCDW2seOOfPf+F0zcbkhf4racI25DM42nbig1jQY483rYbq7yfvT
-         IeNI2s+IJrAFPU5rtwwJylKSEQbody9+QAe6Od4M=
+        b=mK7OupDp2dIhWxOr/KzN+3a2mogoyQm3IkXcpnO3EC1MZooIbYL+79r8hBWsxEOYu
+         3a4+XFfwad4OXW7TH/MFmv5Nn9uaSu1uQzJKXa47+/OpW+Z3Klzo2JyVfsmDRbUj31
+         I13T6SpVbilLME3KW3BVYMy8Tk7NYjXjk1dMSjuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
+        stable@vger.kernel.org, Wang Sheng-Hui <shhuiw@foxmail.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 082/312] net/mlx5: Fix wait_vital for VFs and remove fixed sleep
-Date:   Fri,  8 May 2020 14:31:13 +0200
-Message-Id: <20200508123130.316606306@linuxfoundation.org>
+Subject: [PATCH 4.4 080/312] net/mlx5: use mlx5_buf_alloc_node instead of mlx5_buf_alloc in mlx5_wq_ll_create
+Date:   Fri,  8 May 2020 14:31:11 +0200
+Message-Id: <20200508123130.152545342@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,99 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jurgens <danielj@mellanox.com>
+From: Wang Sheng-Hui <shhuiw@foxmail.com>
 
-commit d57847dc4177c6fd8d950cb533f5edf0eab45b11 upstream.
+commit f299a02d5f13c4deb52c1a7ddf2b42630fe6294a upstream.
 
-The device ID for VFs is in a different location than PFs. This results
-in the poll always timing out for VFs. There's no good way to read the
-VF device ID without using the PF's configuration space.  Switch to waiting
-for the health poll to start incrementing. Also remove the 1s sleep
-at the beginning.
+Commit 311c7c71c9bb ("net/mlx5e: Allocate DMA coherent memory on
+reader NUMA node") introduced mlx5_*_alloc_node() but missed changing
+some calling and warn messages. This patch introduces 2 changes:
+	* Use mlx5_buf_alloc_node() instead of mlx5_buf_alloc() in
+	  mlx5_wq_ll_create()
+	* Update the failure warn messages with _node postfix for
+	  mlx5_*_alloc function names
 
-fixes: 89d44f0a6c73 ('net/mlx5_core: Add pci error handlers to mlx5_core
-driver')
-Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
+Fixes: 311c7c71c9bb ("net/mlx5e: Allocate DMA coherent memory on reader NUMA node")
+Signed-off-by: Wang Sheng-Hui <shhuiw@foxmail.com>
+Acked-By: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c |   41 +++++++++----------------
- 1 file changed, 15 insertions(+), 26 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1306,46 +1306,31 @@ void mlx5_disable_device(struct mlx5_cor
- 	mlx5_pci_err_detected(dev->pdev, 0);
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -75,14 +75,14 @@ int mlx5_wq_cyc_create(struct mlx5_core_
  
--/* wait for the device to show vital signs. For now we check
-- * that we can read the device ID and that the health buffer
-- * shows a non zero value which is different than 0xffffffff
-+/* wait for the device to show vital signs by waiting
-+ * for the health counter to start counting.
-  */
--static void wait_vital(struct pci_dev *pdev)
-+static int wait_vital(struct pci_dev *pdev)
- {
- 	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
- 	struct mlx5_core_health *health = &dev->priv.health;
- 	const int niter = 100;
-+	u32 last_count = 0;
- 	u32 count;
--	u16 did;
- 	int i;
- 
--	/* Wait for firmware to be ready after reset */
--	msleep(1000);
--	for (i = 0; i < niter; i++) {
--		if (pci_read_config_word(pdev, 2, &did)) {
--			dev_warn(&pdev->dev, "failed reading config word\n");
--			break;
--		}
--		if (did == pdev->device) {
--			dev_info(&pdev->dev, "device ID correctly read after %d iterations\n", i);
--			break;
--		}
--		msleep(50);
--	}
--	if (i == niter)
--		dev_warn(&pdev->dev, "%s-%d: could not read device ID\n", __func__, __LINE__);
--
- 	for (i = 0; i < niter; i++) {
- 		count = ioread32be(health->health_counter);
- 		if (count && count != 0xffffffff) {
--			dev_info(&pdev->dev, "Counter value 0x%x after %d iterations\n", count, i);
--			break;
-+			if (last_count && last_count != count) {
-+				dev_info(&pdev->dev, "Counter value 0x%x after %d iterations\n", count, i);
-+				return 0;
-+			}
-+			last_count = count;
- 		}
- 		msleep(50);
+ 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_db_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_db_alloc_node() failed, %d\n", err);
+ 		return err;
  	}
  
--	if (i == niter)
--		dev_warn(&pdev->dev, "%s-%d: could not read device ID\n", __func__, __LINE__);
-+	return -ETIMEDOUT;
- }
+ 	err = mlx5_buf_alloc_node(mdev, mlx5_wq_cyc_get_byte_size(wq),
+ 				  &wq_ctrl->buf, param->buf_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_buf_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_buf_alloc_node() failed, %d\n", err);
+ 		goto err_db_free;
+ 	}
  
- static void mlx5_pci_resume(struct pci_dev *pdev)
-@@ -1357,7 +1342,11 @@ static void mlx5_pci_resume(struct pci_d
- 	dev_info(&pdev->dev, "%s was called\n", __func__);
+@@ -111,14 +111,14 @@ int mlx5_cqwq_create(struct mlx5_core_de
  
- 	pci_save_state(pdev);
--	wait_vital(pdev);
-+	err = wait_vital(pdev);
-+	if (err) {
-+		dev_err(&pdev->dev, "%s: wait_vital timed out\n", __func__);
-+		return;
-+	}
+ 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_db_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_db_alloc_node() failed, %d\n", err);
+ 		return err;
+ 	}
  
- 	err = mlx5_load_one(dev, priv);
- 	if (err)
+ 	err = mlx5_buf_alloc_node(mdev, mlx5_cqwq_get_byte_size(wq),
+ 				  &wq_ctrl->buf, param->buf_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_buf_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_buf_alloc_node() failed, %d\n", err);
+ 		goto err_db_free;
+ 	}
+ 
+@@ -148,13 +148,14 @@ int mlx5_wq_ll_create(struct mlx5_core_d
+ 
+ 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_db_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_db_alloc_node() failed, %d\n", err);
+ 		return err;
+ 	}
+ 
+-	err = mlx5_buf_alloc(mdev, mlx5_wq_ll_get_byte_size(wq), &wq_ctrl->buf);
++	err = mlx5_buf_alloc_node(mdev, mlx5_wq_ll_get_byte_size(wq),
++				  &wq_ctrl->buf, param->buf_numa_node);
+ 	if (err) {
+-		mlx5_core_warn(mdev, "mlx5_buf_alloc() failed, %d\n", err);
++		mlx5_core_warn(mdev, "mlx5_buf_alloc_node() failed, %d\n", err);
+ 		goto err_db_free;
+ 	}
+ 
 
 
