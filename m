@@ -2,146 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BD4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768C9C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD2721974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A6B20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c2jrSafQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgEHXbI (ORCPT
+        id S1728135AbgEHXdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:31:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54685 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgEHXbH (ORCPT
+        Fri, 8 May 2020 19:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgEHXdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:31:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jXCSN-0007KI-Jm; Fri, 08 May 2020 23:31:03 +0000
-Subject: Re: [PATCH] net: tg3: tidy up loop, remove need to compute off with a
- multiply
-To:     Joe Perches <joe@perches.com>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200508225301.484094-1-colin.king@canonical.com>
- <1890306fc8c9306abe11186d419d84f784ee6144.camel@perches.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <160ce1ee-3bb5-3357-64f3-e5dea8c0538d@canonical.com>
-Date:   Sat, 9 May 2020 00:31:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 19:33:52 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6CDC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 16:33:52 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d184so1777810pfd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 16:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aH8P4+Ei6pqqMKSRAGY6lrlBj9MTJLPAq1y54tH7x5M=;
+        b=c2jrSafQfRhEZd9jTfLKbDy93UfmN/2t2IeoD8u5JqRk43Wn2SFjno2k+3fw8Ww7ha
+         m/86nRlyZIcjbgT65I6GDky8MnlZk9UJacJo9vtbWrY6C2A8oO28CkrUfd8wSgbGF8ot
+         w3YXATiZu/A7UtV8gDeP4jKT01vaiwWb7Walg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aH8P4+Ei6pqqMKSRAGY6lrlBj9MTJLPAq1y54tH7x5M=;
+        b=ZqSY0HcG1CoG+g+XVoyE/gHCGtr+uDiUcMqlJAuMXPole1pKBi4jARCbCPDtwqUV9Y
+         L6evK4aIkqD6aPuKkT3PgqvjGqpEmExFM0XvARo9/fwciMMHXxxhsDYdgtFqmsqQtgE7
+         fIJs1sw1wgDBZr7KK2piCVJJrs6P+NeYNVHH2B+BHzse7O+A1C1BFGIbe1LEoqZSIo5f
+         JSyKyp0d1e8z/wT7paf+EBwE99OmKsRWlpRkuBYHvsGavMy8myKzrMPuM2rD+gK45iFw
+         IJeY7Qq9qaqbm1K3kP+LVv5NaJTel9/vq2rIoA/+zHHKsFD6Nrm+Hk3cmLUWIGJ3B8si
+         EA4w==
+X-Gm-Message-State: AGi0PuYiPaoIdJYMYJrvO0f8bfS1DUtBqKqOrKtjHo2bQ1bw8CkZQEg1
+        0SSUDJDX9XQSugoK8p34KX6czg==
+X-Google-Smtp-Source: APiQypJvhMuGbXg+gBKnMJeVTmbSCsAWmHD2jkpOVJl3TZQ859+Dq6ODnzjWWTM/O3Ntaprp3YQ5hw==
+X-Received: by 2002:a63:575f:: with SMTP id h31mr3707439pgm.200.1588980831399;
+        Fri, 08 May 2020 16:33:51 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id p66sm2713991pfb.65.2020.05.08.16.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 16:33:50 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     linux-arm-msm@vger.kernel.org, seanpaul@chromium.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: ti-sn65dsi86: Clear old error bits before AUX transfers
+Date:   Fri,  8 May 2020 16:33:29 -0700
+Message-Id: <20200508163314.1.Idfa69d5d3fc9623083c0ff78572fea87dccb199c@changeid>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 MIME-Version: 1.0
-In-Reply-To: <1890306fc8c9306abe11186d419d84f784ee6144.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2020 00:21, Joe Perches wrote:
-> On Fri, 2020-05-08 at 23:53 +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently the value for 'off' is computed using a multiplication and
->> a couple of statements later off is being incremented by len and
->> this value is never read.  Clean up the code by removing the
->> multiplication and just increment off by len on each iteration. Also
->> use len instead of TG3_OCIR_LEN.
-> 
-> I think this is a lot harder to read.
-> 
->> diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-> []
->> @@ -10798,16 +10798,14 @@ static int tg3_init_hw(struct tg3 *tp, bool reset_phy)
->>  static void tg3_sd_scan_scratchpad(struct tg3 *tp, struct tg3_ocir *ocir)
->>  {
->>  	int i;
->> +	u32 off, len = TG3_OCIR_LEN;
->>  
->> -	for (i = 0; i < TG3_SD_NUM_RECS; i++, ocir++) {
->> -		u32 off = i * TG3_OCIR_LEN, len = TG3_OCIR_LEN;
->> -
->> +	for (i = 0, off = 0; i < TG3_SD_NUM_RECS; i++, ocir++, off += len) {
->>  		tg3_ape_scratchpad_read(tp, (u32 *) ocir, off, len);
->> -		off += len;
->>  
->>  		if (ocir->signature != TG3_OCIR_SIG_MAGIC ||
->>  		    !(ocir->version_flags & TG3_OCIR_FLAG_ACTIVE))
->> -			memset(ocir, 0, TG3_OCIR_LEN);
->> +			memset(ocir, 0, len);
->>  	}
->>  }
-> 
-> My preference would be for
-> 
-> {
-> 	int i;
-> 	u32 off = 0;
-> 
-> 	for (i = 0; i < TG3_SD_NUM_RECS; i++) {
-> 		tg3_ape_scratchpad_read(tp, (u32 *)ocir, off, TC3_OCIR_LEN);
-> 
-> 		if (ocir->signature != TG3_OCIR_SIG_MAGIC ||
-> 		    !(ocir->version_flags & TG3_OCIR_FLAG_ACTIVE))
-> 			memset(ocir, 0, TG3_OCIR_LEN);
-> 
-> 		off += TG3_OCIR_LEN;
-> 		ocir++;
-> 	}
-> 
-OK, I'll send a V3 tomorrow.
+The AUX channel transfer error bits in the status register are latched
+and need to be cleared.  Clear them before doing our transfer so we
+don't see old bits and get confused.
+
+Without this patch having a single failure would mean that all future
+transfers would look like they failed.
+
+Fixes: b814ec6d4535 ("drm/bridge: ti-sn65dsi86: Implement AUX channel")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6ad688b320ae..d865cc2565bc 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -827,6 +827,12 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *aux,
+ 				     buf[i]);
+ 	}
+ 
++	/* Clear old status bits before start so we don't get confused */
++	regmap_write(pdata->regmap, SN_AUX_CMD_STATUS_REG,
++		     AUX_IRQ_STATUS_NAT_I2C_FAIL |
++		     AUX_IRQ_STATUS_AUX_RPLY_TOUT |
++		     AUX_IRQ_STATUS_AUX_SHORT);
++
+ 	regmap_write(pdata->regmap, SN_AUX_CMD_REG, request_val | AUX_CMD_SEND);
+ 
+ 	ret = regmap_read_poll_timeout(pdata->regmap, SN_AUX_CMD_REG, val,
+-- 
+2.26.2.645.ge9eca65c58-goog
 
