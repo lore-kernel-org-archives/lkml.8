@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D780FC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC88C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C165224969
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B09E24969
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbgEHNGJ (ORCPT
+        id S1730642AbgEHNGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34788 "EHLO
+        Fri, 8 May 2020 09:06:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729850AbgEHNFk (ORCPT
+        by vger.kernel.org with ESMTP id S1729714AbgEHNFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:40 -0400
+        Fri, 8 May 2020 09:05:41 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FCFC05BD43;
-        Fri,  8 May 2020 06:05:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CCA6C05BD0A;
+        Fri,  8 May 2020 06:05:41 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2h2-0007uz-Ob; Fri, 08 May 2020 15:05:32 +0200
+        id 1jX2h3-0007wP-Cb; Fri, 08 May 2020 15:05:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3AC671C0493;
-        Fri,  8 May 2020 15:05:13 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:05:13 -0000
-From:   "tip-bot2 for Tommi Rantala" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 20AAA1C0823;
+        Fri,  8 May 2020 15:05:14 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:05:14 -0000
+From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf test session topology: Fix data path
-Cc:     Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf stat: Zero all the 'ena' and 'run' array slot
+ stats for interval mode
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200423115341.562782-1-tommi.t.rantala@nokia.com>
-References: <20200423115341.562782-1-tommi.t.rantala@nokia.com>
+In-Reply-To: <20200409070755.17261-1-yao.jin@linux.intel.com>
+References: <20200409070755.17261-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158894311318.8414.2157393565908107171.tip-bot2@tip-bot2>
+Message-ID: <158894311407.8414.15193131154587476786.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,101 +65,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     dbd660e6b2884b864d2642d930a163d3bcebe4be
-Gitweb:        https://git.kernel.org/tip/dbd660e6b2884b864d2642d930a163d3bcebe4be
-Author:        Tommi Rantala <tommi.t.rantala@nokia.com>
-AuthorDate:    Thu, 23 Apr 2020 14:53:40 +03:00
+Commit-ID:     0e0bf1ea1147fcf74eab19c2d3c853cc3740a72f
+Gitweb:        https://git.kernel.org/tip/0e0bf1ea1147fcf74eab19c2d3c853cc3740a72f
+Author:        Jin Yao <yao.jin@linux.intel.com>
+AuthorDate:    Thu, 09 Apr 2020 15:07:55 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 23 Apr 2020 11:08:24 -03:00
+CommitterDate: Wed, 22 Apr 2020 15:51:01 -03:00
 
-perf test session topology: Fix data path
+perf stat: Zero all the 'ena' and 'run' array slot stats for interval mode
 
-Commit 2d4f27999b88 ("perf data: Add global path holder") missed path
-conversion in tests/topology.c, causing the "Session topology" testcase
-to "hang" (waits forever for input from stdin) when doing "ssh $VM perf
-test".
+As the code comments in perf_stat_process_counter() say, we calculate
+counter's data every interval, and the display code shows ps->res_stats
+avg value. We need to zero the stats for interval mode.
 
-Can be reproduced by running "cat | perf test topo", and crashed by
-replacing cat with true:
+But the current code only zeros the res_stats[0], it doesn't zero the
+res_stats[1] and res_stats[2], which are for ena and run of counter.
 
-  $ true | perf test -v topo
-  40: Session topology                                      :
-  --- start ---
-  test child forked, pid 3638
-  templ file: /tmp/perf-test-QPvAch
-  incompatible file format
-  incompatible file format (rerun with -v to learn more)
-  free(): invalid pointer
-  test child interrupted
-  ---- end ----
-  Session topology: FAILED!
+This patch zeros the whole res_stats[] for interval mode.
 
-Committer testing:
-
-Reproduced the above result before the patch and after it is back
-working:
-
-  # true | perf test -v topo
-  41: Session topology                                      :
-  --- start ---
-  test child forked, pid 19374
-  templ file: /tmp/perf-test-YOTEQg
-  CPU 0, core 0, socket 0
-  CPU 1, core 1, socket 0
-  CPU 2, core 2, socket 0
-  CPU 3, core 3, socket 0
-  CPU 4, core 0, socket 0
-  CPU 5, core 1, socket 0
-  CPU 6, core 2, socket 0
-  CPU 7, core 3, socket 0
-  test child finished with 0
-  ---- end ----
-  Session topology: Ok
-  #
-
-Fixes: 2d4f27999b88 ("perf data: Add global path holder")
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Fixes: 51fd2df1e882 ("perf stat: Fix interval output values")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200423115341.562782-1-tommi.t.rantala@nokia.com
+Link: http://lore.kernel.org/lkml/20200409070755.17261-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/topology.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ tools/perf/util/stat.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 4a80049..22daf2b 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -33,10 +33,8 @@ static int session_write_header(char *path)
- {
- 	struct perf_session *session;
- 	struct perf_data data = {
--		.file      = {
--			.path = path,
--		},
--		.mode      = PERF_DATA_MODE_WRITE,
-+		.path = path,
-+		.mode = PERF_DATA_MODE_WRITE,
- 	};
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 5f26137..242476e 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -368,8 +368,10 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+ 	 * interval mode, otherwise overall avg running
+ 	 * averages will be shown for each interval.
+ 	 */
+-	if (config->interval)
+-		init_stats(ps->res_stats);
++	if (config->interval) {
++		for (i = 0; i < 3; i++)
++			init_stats(&ps->res_stats[i]);
++	}
  
- 	session = perf_session__new(&data, false, NULL);
-@@ -63,10 +61,8 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- {
- 	struct perf_session *session;
- 	struct perf_data data = {
--		.file      = {
--			.path = path,
--		},
--		.mode      = PERF_DATA_MODE_READ,
-+		.path = path,
-+		.mode = PERF_DATA_MODE_READ,
- 	};
- 	int i;
- 
+ 	if (counter->per_pkg)
+ 		zero_per_pkg(counter);
