@@ -2,100 +2,93 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D232C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8672FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF5F21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B62173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgEHS61 (ORCPT
+        id S1726908AbgEHTC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHS61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:58:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8924D2083B;
-        Fri,  8 May 2020 18:58:25 +0000 (UTC)
-Date:   Fri, 8 May 2020 14:58:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 6/7] mm: Remove vmalloc_sync_(un)mappings()
-Message-ID: <20200508145822.07fcc32b@gandalf.local.home>
-In-Reply-To: <20200508144043.13893-7-joro@8bytes.org>
-References: <20200508144043.13893-1-joro@8bytes.org>
-        <20200508144043.13893-7-joro@8bytes.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 8 May 2020 15:02:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48944 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgEHTC2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:02:28 -0400
+Received: from mail-ed1-f69.google.com ([209.85.208.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1jX8GP-0005LN-Us
+        for linux-kernel@vger.kernel.org; Fri, 08 May 2020 19:02:26 +0000
+Received: by mail-ed1-f69.google.com with SMTP id h2so1036987edj.17
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 12:02:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3K8W/xyCm3pY7h2xvaxoZVF5ExAZpZK/UzoZ8wN3Uls=;
+        b=hvFLbZL3ut7qqSYNXUyw5NB6DfGTmKdEuQS3tch5ADDf/OOgviz/mYbUAL35gDvuOy
+         48qlxShnrxPRKuzAqsyDPs9QiF/tKeIUEdAHnA2Z2sBLXRqzQlAL7RTI0JWwDvIqce8i
+         HlBawVpHBxZjyQq+w77gEm+x7lp87fDsPXHPKQGn8mmmJPzq8Obekg2zs/f12IVE4H4T
+         d5h4QIDxzfzLrXnRvbC/koRIDcGAqj4mO/GmBWU75l4PYf66pG6DPTUSboXinB0Bo29A
+         M6P0CYxlqyWEHHBB8kGQimzFCXGrAEFcYDrdh9V1f+XF2C/av2NJoe5iv6Ip8Gle0O2E
+         P9pQ==
+X-Gm-Message-State: AGi0Puaj6gInuUcHnERmRSKnwJEe8a4/VpBJisVZMW3wytAJyH0wezTN
+        sydto9tS7YeI+45C9hQg88WYBNU8VPywTYwVb7AaEJjshJokZE50o7HMQ53Xg6HD/I4fvyPL3VC
+        bMvX1x9qB3sTVkF77AIoeZm1JvJ6MnXvNC8NQQuwyW1tOytsTlUjfaYEp0A==
+X-Received: by 2002:a05:6402:6d5:: with SMTP id n21mr3573996edy.82.1588964545591;
+        Fri, 08 May 2020 12:02:25 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL+It7P9ir85DDzToWoA7YkY+2Z8BcQsFBl1nhtQZIU3wFa15GhLaAD9J4WEPKApGNJ2gMQId51G5ozqQpimjE=
+X-Received: by 2002:a05:6402:6d5:: with SMTP id n21mr3573982edy.82.1588964545399;
+ Fri, 08 May 2020 12:02:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200507215946.22589-1-gpiccoli@canonical.com>
+ <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
+ <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com> <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Fri, 8 May 2020 16:01:48 -0300
+Message-ID: <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
+Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
+ triggered by sysctl
+To:     David Rientjes <rientjes@google.com>
+Cc:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Gavin Guo <gavin.guo@canonical.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 May 2020 16:40:42 +0200
-Joerg Roedel <joro@8bytes.org> wrote:
-
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> These functions are not needed anymore because the vmalloc and ioremap
-> mappings are now synchronized when they are created or teared down.
-> 
-> Remove all callers and function definitions.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+On Fri, May 8, 2020 at 3:31 PM David Rientjes <rientjes@google.com> wrote:
+> It doesn't make sense because it's only being done here for the entire
+> system, there are also per-node sysfs triggers so you could do something
+> like iterate over the nodemask of all nodes with memory and trigger
+> compaction manually and then nothing is emitted to the kernel log.
 >
+> There is new statsfs support that Red Hat is proposing that can be used
+> for things like this.  It currently only supports KVM statistics but
+> adding MM statistics is something that would be a natural extension and
+> avoids polluting both the kernel log and /proc/vmstat.
 
-You'll need to fold this into this patch, as my patch has already hit
-Linus's tree.
+Thanks for the review. Is this what you're talking about [0] ? Very interesting!
 
-But I applied your whole series and I'm not able to reproduce the bug.
+Also, I agree about the per-node compaction, it's a good point. But at
+the same time, having the information on the number of manual
+compaction triggered is interesting, at least for some users. What if
+we add that as a per-node stat in zoneinfo?
 
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cheers,
 
--- Steve
+Guilherme
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 29615f15a820..1424a89193c6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8526,19 +8526,6 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 	 */
- 	allocate_snapshot = false;
- #endif
--
--	/*
--	 * Because of some magic with the way alloc_percpu() works on
--	 * x86_64, we need to synchronize the pgd of all the tables,
--	 * otherwise the trace events that happen in x86_64 page fault
--	 * handlers can't cope with accessing the chance that a
--	 * alloc_percpu()'d memory might be touched in the page fault trace
--	 * event. Oh, and we need to audit all other alloc_percpu() and vmalloc()
--	 * calls in tracing, because something might get triggered within a
--	 * page fault trace event!
--	 */
--	vmalloc_sync_mappings();
--
- 	return 0;
- }
- 
+
+[0] lore.kernel.org/kvm/20200427141816.16703-1-eesposit@redhat.com
