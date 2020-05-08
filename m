@@ -2,83 +2,133 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52423C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8948208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32190207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u/BuPo7W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MFDfKpxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgEHIMb (ORCPT
+        id S1726922AbgEHIMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
+        Fri, 8 May 2020 04:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgEHIMa (ORCPT
+        with ESMTP id S1726811AbgEHIMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:12:30 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5071CC05BD43;
-        Fri,  8 May 2020 01:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3ahC++fEwMzmLLM2QpP2jvwJMwZREpXt88C4KYJBX2U=; b=u/BuPo7WsiFvewU2RMhJpL7PNC
-        3/dZzUXyh/eiYNNFsAgV0nNEpU6QXz3cLsV+fb4rcK3VQ7FTjKBNe3/ArFyBBYY4QEStYjxEaPv2q
-        zkToNxMIkliWpH5z1CmXlsPYGFUEohVtY9/xQLwafuXbFqV+okSh7+KJyWfwpZlJ1eu1or5oK4hw5
-        4z2RoIQXsiuyOdeUzbAiCAG/QbdlzbGmshvf2DP4bEtzaeMo5ZrZxpAt7TvIRaakE4KCHS6Yva8oj
-        ikC+7/+sr/MFvTh5oLOxsFrtzO08ieBJeoM0nWN7HcqrIWfVA2D8iaeUZZdK7LFAhCxVPVqltkP5u
-        EAKiGU8w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWy6V-0003Fp-Jk; Fri, 08 May 2020 08:11:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B060A301A80;
-        Fri,  8 May 2020 10:11:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C4892038FB83; Fri,  8 May 2020 10:11:28 +0200 (CEST)
-Date:   Fri, 8 May 2020 10:11:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        fweisbec@gmail.com, tkjos@google.com, kernel-team@android.com
-Subject: Re: [PATCH 00/14] Modularize schedutil
-Message-ID: <20200508081128.GM5298@hirez.programming.kicks-ass.net>
-References: <20200507181012.29791-1-qperret@google.com>
+        Fri, 8 May 2020 04:12:38 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62ABEC05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:12:38 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id z16so342629uae.11
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 01:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZWwTq3jHgl0vF+73+HcJrJHO5r6wPiuEt3hWYFmGy1s=;
+        b=MFDfKpxPwGsj8xTnETNOiIP+xhjHs/bQFbn69qKF1+HzOOwBZFODhnJN2quiwfekXx
+         Kys+dq0GQgoVpit/riusVb0+s/xZ85m5lorNpLqOTdA1PEm/OO0liOG2TUWKIvDWXTry
+         V8jXdk7ZZYqJy9G6BaSzPi9rzCcnz2cxUoQDKwLTFL2iIhWIrM1cI3v0yUE5W6pGLwOW
+         HZruxyg48j0ztKttfSHufyK/4KcfPsiRFNmOkYU7oK+ui/HkQKZkN0x/zTPQ6HDuFk7+
+         +WyMfSYgt4y85fBKqLJ35BFKrNbu3ho2tJcPyeXb/DD0G/Rb7DdG1b09SICIJ/rb13rB
+         h7XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZWwTq3jHgl0vF+73+HcJrJHO5r6wPiuEt3hWYFmGy1s=;
+        b=YJ/8Bh+GqL9WBqS+CKfOrJXczjv+fxdYb5V4y6OkC1gok1pBJSoZhkSgKrLT8c4kZL
+         C7mthCHYu5JIlSt14ooRQXVccYYVRHCN46WvDqBYNSPROuAlxLc8XiHZpqrjJ9K4mCZe
+         SVlQDaOX3pswamMw5Zk5ISF2i5qRnTkJpTrs1PxdSXW0SFH7YiqaA6QgPN7EJjdsqjxR
+         769hxEE3aDuSi4gxRep7xfAidpHvJJVT0ngtrr4HXWlSmJ3E+JNvP43G4IL88hWYsuBT
+         ueRE6J2YiUFWd+pZz03WW3WsiLgN7KSP5c/BuPJvQXicBRrPCSc7eL10FywVfQlUkQIy
+         B5Dw==
+X-Gm-Message-State: AGi0Pua8V3NiFHRahXReHIRHLNchAWCc3lIqTSojwJwWId4kTuZsvcjG
+        qNJTz/u8t9h53TyDagjzxSEFAsfaCLh3ZLM/1sJ7YA==
+X-Google-Smtp-Source: APiQypK1UlkumqiTdJM/8YlLN6wYa3E2QGBvtJ2jz2DQhm09vLS24dPjTwAN95MP173PKwYSE1aF5bp/sM3ZgZd+E8w=
+X-Received: by 2002:ab0:5ca:: with SMTP id e68mr886565uae.19.1588925557511;
+ Fri, 08 May 2020 01:12:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507181012.29791-1-qperret@google.com>
+References: <1588775643-18037-1-git-send-email-vbadigan@codeaurora.org> <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1588775643-18037-2-git-send-email-vbadigan@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 8 May 2020 10:12:01 +0200
+Message-ID: <CAPDyKFpon+ojJgj-CZ5rSiPR=EOA-3DBfN=28zkVjNXUVytZzA@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] mmc: core: Check request type before completing
+ the request
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:09:58PM +0100, Quentin Perret wrote:
-> One challenge to implement GKI is to avoid bloating the kernel by
-> compiling too many things in, especially given that different devices
-> need different things. As such, anything that can be turned into a
-> module helps GKI, by offering an alternative to having that component
-> built-in. This is true for pretty much anything that can be made
-> modular, including drivers as well as other kernel components, such as
-> CPUFreq governors.
+On Wed, 6 May 2020 at 16:34, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> In the request completion path with CQE, request type is being checked
+> after the request is getting completed. This is resulting in returning
+> the wrong request type and leading to the IO hang issue.
+>
+> ASYNC request type is getting returned for DCMD type requests.
+> Because of this mismatch, mq->cqe_busy flag is never getting cleared
+> and the driver is not invoking blk_mq_hw_run_queue. So requests are not
+> getting dispatched to the LLD from the block layer.
+>
+> All these eventually leading to IO hang issues.
+> So, get the request type before completing the request.
+>
+> Cc: <stable@vger.kernel.org> # v4.19+
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-The idea is to move to 1 governor, schedutil. Also, I abhor all the
-exports this thing does. Modules have no business touching most of that.
+Applied for fixes, and by updating the tags that were provided by
+Adrian, thanks!
 
-Look at every EXPORT you do and wonder ask yourself how you can abuse
-it. Modules are not a good thing, they're horrible pieces of crap.
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/core/block.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index 8499b56..c5367e2 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -1370,6 +1370,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+>         struct mmc_request *mrq = &mqrq->brq.mrq;
+>         struct request_queue *q = req->q;
+>         struct mmc_host *host = mq->card->host;
+> +       enum mmc_issue_type issue_type = mmc_issue_type(mq, req);
+>         unsigned long flags;
+>         bool put_card;
+>         int err;
+> @@ -1399,7 +1400,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+>
+>         spin_lock_irqsave(&mq->lock, flags);
+>
+> -       mq->in_flight[mmc_issue_type(mq, req)] -= 1;
+> +       mq->in_flight[issue_type] -= 1;
+>
+>         put_card = (mmc_tot_in_flight(mq) == 0);
+>
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
