@@ -2,127 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56BDC54E4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF6C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C091221835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0BA208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/NCyVG6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ow1M+5cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgEHKDU (ORCPT
+        id S1726863AbgEHKEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        Fri, 8 May 2020 06:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHKDT (ORCPT
+        with ESMTP id S1725815AbgEHKEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:03:19 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89582C05BD43;
-        Fri,  8 May 2020 03:03:18 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a7so4043473pju.2;
-        Fri, 08 May 2020 03:03:18 -0700 (PDT)
+        Fri, 8 May 2020 06:04:31 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D61BC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:04:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e16so1168605wra.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 03:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
-        b=u/NCyVG6CzWS7pw0cVQAQnsq+Lf6SFeLH7drFG01yY59AfQ7lMhouQ3Pg2ToMqbJQL
-         2POW+E2A5sROd3nUY8fmotQr5FoH2M/JlcIIkysWB8eO8ogi6JXo+H56/wpD4EfUJ5n0
-         994SFeBIX7AJ1nG1Rz3CwPP4hoUHla1nDCpFo5RAE0ekzm6MAYZJjxK+jSvng+sF9HIt
-         6KNmn+2qIDY410kZd7xhCIb0cmC+ipwD+fjNCWAnw2dujVHotaxpAsxRwA9IEcOHukpk
-         Rn/FzsDrK+46oQqBtt24AOFdR1meEYkGeqetdSO0HNrJ15VPF76HEodrshyYicE1r7o5
-         nEHQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3ahmjo7zWj9jAF2hUJ67B2bDxaSBhv7Y9eLaU0WOfHs=;
+        b=Ow1M+5cpGoKhWIgArtKKdDwzijj4tPOSBLNMT4uEWbCCdOY+v3p+h51Tuyq/2uxqdO
+         qwYA6XIh2oBLvDb5IYdxEienwVhPwBQ6WPyyHW4iy3BTjThXhZRLOqg7rcb2dc3Q4qSM
+         zd+XliY65XMylQmL3UkGsQqEYt+rNjKCcDT8WOPaCNtA/+WxGOHgUy7Q+MZeXre3FEJB
+         Uvz1guxee4h+GfdY5rM5IDKy/68yXPskbFLb7PpMUEwOZTcxRB7nODkAkJGSRhyn/KwL
+         Qu+AxulP295egIYe3FFgQDt+ZxGhz/S4aGq68urvQbL3qqNCvDcYy0Mnqb2ld+Wx+6ei
+         a01g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
-        b=T6gt70RpdDsVNPB6O4FYQ5/iIhlaaAnkiay+/BqubM/Guxtx6S+k7J4YJ/IlMznogY
-         2iOWZTj9Qbllq1PSOXLyrkzq8SNE6BrnMZCWUXlI22iEDhul58bJOcRu+mQ6hZQwFQcq
-         eeLhBIkaN36NgCJ2MMaYj4DcjGp3Nl8z9Qcm9+rvYcSfAiMDhN1h3GcniBoXs1mwIQV6
-         lXv8wXGxo/7Ci1N/zVP+UfVqLOhjuZ4ZuIVXhbTKXos2MdOL3iSiJjQSiTRAG966Crbx
-         jqL9VigZvBmN7iG6Nyol7ACB8SP/N+S4+d7oMq9IO1v77NFLUDlFBht/qSv9FOI/TYQ1
-         YqDw==
-X-Gm-Message-State: AGi0PuZ4eswVW4llvECyxkmHKW+X7cuThYPTi/yQa0b6kyW1N8rzlbGI
-        nDJy5ibOMZIFsedyZeXAEI49Nf3dlY6vebqd7Uk=
-X-Google-Smtp-Source: APiQypIYSY85bDmuNcTHocu/ewpdNMG8j/aKGbo5ccq1Q5fhJ062xJSYj+xkopkvK/UvMdGwbYVbRLif6bs3S8dCqrc=
-X-Received: by 2002:a17:902:6901:: with SMTP id j1mr1688511plk.255.1588932198001;
- Fri, 08 May 2020 03:03:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3ahmjo7zWj9jAF2hUJ67B2bDxaSBhv7Y9eLaU0WOfHs=;
+        b=kAn9IT7kJldFz0TqXbzMJ+CViZmOPlxJNNtevX88DRkYJRjF1T+87CM/YERnMyIgqe
+         t+88UTm7X6cLl6dWPs/1oggrS2k1JugGiDkOMNhmBvRO4i8whxmG503IyyhftBFFdZV7
+         zh/R7mkDEduvlqzltfsYEh6nH9aFYbaHUKI/cl14yh1Pj+9q/FTuDeUXRd7/Hsg1XhpV
+         gvnB6ekWCfPVuFkdmjOQ+hu0gW9gTg4LKgt5tX7crMae0Tl8r7eihcofXSwgNhSFjYlM
+         SUTzMIzbLDJuU4E0U4EMebfRQLZdbnyWYAzQTGGtE/JWlYwEZ9JKj0kWfGwVk1QqRXLd
+         d4HA==
+X-Gm-Message-State: AGi0PubR2lGaa7gZUmp0N7QGYYE1gsZiVzA2VxF/8bTut0vMLPimgbv1
+        /balpoownsqKmmLjoOi6wNA9DQd9XhY=
+X-Google-Smtp-Source: APiQypLKry7qhaWWoWsKrrbZvd9kXc6HTKRQxi4oXWoq/OWFOW1Rb0C+lIlByPLfibQJKGURGtJt7w==
+X-Received: by 2002:adf:fa92:: with SMTP id h18mr2098339wrr.260.1588932269512;
+        Fri, 08 May 2020 03:04:29 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id c25sm12210763wmb.44.2020.05.08.03.04.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 03:04:28 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:04:25 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        fweisbec@gmail.com, tkjos@google.com, kernel-team@android.com
+Subject: Re: [PATCH 08/14] sched/core: Export runqueues per-cpu array
+Message-ID: <20200508100425.GA239353@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200507181012.29791-9-qperret@google.com>
+ <20200508080759.GL5298@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru> <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 13:03:11 +0300
-Message-ID: <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508080759.GL5298@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:37 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> This SPI-controller is a part of the Baikal-T1 System Controller and
-> is based on the DW APB SSI IP-core, but with very limited resources:
-> no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
-> FIFO available. In order to provide a transparent initial boot code
-> execution this controller is also utilized by an vendor-specific block,
-> which provides an CS0 SPI flash direct mapping interface. Since both
-> direct mapping and SPI controller normal utilization are mutual exclusive
-> only a one of these interfaces can be used to access an external SPI
-> slave device. Taking into account the peculiarities of the controller
-> registers and physically mapped SPI flash access, very limited resources
-> and seeing the normal usecase of the controller is to access an external
-> SPI-nor flash, we decided to create a dedicated SPI driver for it.
+On Friday 08 May 2020 at 10:07:59 (+0200), Peter Zijlstra wrote:
+> On Thu, May 07, 2020 at 07:10:06PM +0100, Quentin Perret wrote:
+> > It will be needed by schedutil once modularized, export it.
+> > 
+> > Signed-off-by: Quentin Perret <qperret@google.com>
+> > ---
+> > This is only needed for cpu_rq() -> cpu_bw_dl() in schedutil, so there is
+> > probably an alternative if exporting this isn't desirable.
+> > ---
+> >  kernel/sched/core.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index dbaf3f63df22..537eb45b4274 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -36,6 +36,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
+> >  
+> >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+> > +EXPORT_SYMBOL_GPL(runqueues);
+> 
+> NAK, never going to happen.
 
-It seems a lot of code.
-Why can't you use spi-dw-mmio.c et al.?
+Well, I should have seen that one coming :-)
 
-> The driver provides callbacks for native messages-based SPI interface,
-> SPI-memory and direct mapping read operations. Due to not having any
-> asynchronous signaling interface provided by the core we have no choice
-> but to implement a polling-based data transmission/reception algorithm.
-> In addition to that in order to bypass the automatic native chip-select
-> toggle the driver disables the local interrupts during the memory-based
-> transfers if no complementary GPIO-based chip-select detected in the
-> platform.
+As mentioned in the commit message, we might be able to work around.
+I'll cook something for v2.
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Quentin
