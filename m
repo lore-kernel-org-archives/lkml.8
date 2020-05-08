@@ -2,131 +2,188 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C78C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F79C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87490208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8120D20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEHLTX (ORCPT
+        id S1726811AbgEHLU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:19:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726616AbgEHLTX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:19:23 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048B2u2I022139;
-        Fri, 8 May 2020 07:19:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtxq117q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 07:19:13 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048B3GoK023430;
-        Fri, 8 May 2020 07:19:12 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtxq116v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 07:19:12 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048BFeIT009146;
-        Fri, 8 May 2020 11:19:10 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5wa1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 11:19:10 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048BJ8nI46792730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 11:19:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C5B84204D;
-        Fri,  8 May 2020 11:19:08 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E19CB42047;
-        Fri,  8 May 2020 11:19:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.102.16.192])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 May 2020 11:19:05 +0000 (GMT)
-Subject: Re: [RFC 3/4] sched/idle: Disable idle call on least latency
- requirements
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, valentin.schneider@arm.com,
-        rjw@rjwysocki.net
-References: <20200507133723.18325-1-parth@linux.ibm.com>
- <20200507133723.18325-4-parth@linux.ibm.com>
- <20200508083601.GJ19464@codeaurora.org>
-From:   Parth Shah <parth@linux.ibm.com>
-Message-ID: <328de1bf-57d1-023d-29aa-11a540212015@linux.ibm.com>
-Date:   Fri, 8 May 2020 16:49:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200508083601.GJ19464@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_08:2020-05-07,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005080097
+        Fri, 8 May 2020 07:20:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58519 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbgEHLUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:20:54 -0400
+IronPort-SDR: b73UGGSDcvgsjMD7FPZE7nxcwvpYjFDSqp/OA8iIiVJETZJ1n+a3d33ySm+GJjZqA6BtOGsxTx
+ ewQ04HaJpDww==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:20:54 -0700
+IronPort-SDR: L3ZS7pIBLFx1WplCTOxs1Usmy4xWOZgzH/gYmTuqoCsyWtA/xFY2jYQ59pIeoK7WZSkIgZouhB
+ F9F0e8zfQzLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
+   d="scan'208";a="370429123"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 04:20:52 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH] serial: lantiq: Make driver modular and console configurable
+Date:   Fri,  8 May 2020 19:20:49 +0800
+Message-Id: <42292519ba78f086eb19d058dec6411f5f29da51.1588936756.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavan,
+Add changes so Lantiq serial driver can be compiled as a module.
+Also, make this driver's use as console selectable/configurable.
 
-On 5/8/20 2:06 PM, Pavan Kondeti wrote:
-> On Thu, May 07, 2020 at 07:07:22PM +0530, Parth Shah wrote:
->> Restrict the call to deeper idle states when the given CPU has been set for
->> the least latency requirements
->>
->> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->> ---
->>  kernel/sched/idle.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
->> index b743bf38f08f..85d72a6e2521 100644
->> --- a/kernel/sched/idle.c
->> +++ b/kernel/sched/idle.c
->> @@ -262,7 +262,8 @@ static void do_idle(void)
->>  		 * broadcast device expired for us, we don't want to go deep
->>  		 * idle as we know that the IPI is going to arrive right away.
->>  		 */
->> -		if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
->> +		if (cpu_idle_force_poll || tick_check_broadcast_expired() ||
->> +		    per_cpu(nr_lat_sensitive, cpu)) {
->>  			tick_nohz_idle_restart_tick();
->>  			cpu_idle_poll();
->>  		} else {
->> -- 
->> 2.17.2
->>
-> 
-> Since nr_lat_sensitive updates can happen remotely (when a latency sensitive
-> task becomes non-latency sensitive task), we may need to add this condition
-> in cpu_idle_poll() as well.
-> 
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ drivers/tty/serial/Kconfig  | 13 +++++++++++--
+ drivers/tty/serial/lantiq.c | 43 ++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 51 insertions(+), 5 deletions(-)
 
-Right. but if the CPU is running idle_task then it will again come back to
-do_idle and read the refcount. Its a penalty in power-saving for 1
-do_idle() loop but it is difficult to put up checks for any change in
-latency_nice value.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 4b0a7b98f8c7..996782247174 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1034,13 +1034,22 @@ config SERIAL_SIFIVE_CONSOLE
+ 	  boot time.)
+ 
+ config SERIAL_LANTIQ
+-	bool "Lantiq serial driver"
++	tristate "Lantiq serial driver"
+ 	depends on (LANTIQ || X86) || COMPILE_TEST
+ 	select SERIAL_CORE
++	help
++	  Support for UART on Lantiq and Intel SoCs.
++	  To compile this driver as a module, choose M here, the
++	  module will be called lantiq.
++
++config SERIAL_LANTIQ_CONSOLE
++	bool "Console on Lantiq UART"
++	depends on SERIAL_LANTIQ=y
+ 	select SERIAL_CORE_CONSOLE
+ 	select SERIAL_EARLYCON
+ 	help
+-	  Support for console and UART on Lantiq SoCs.
++	  Select this option if you would like to use a Lantiq UART as the
++	  system console.
+ 
+ config SERIAL_QE
+ 	tristate "Freescale QUICC Engine serial port support"
+diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
+index c5e46ff972e4..93ed59bccd11 100644
+--- a/drivers/tty/serial/lantiq.c
++++ b/drivers/tty/serial/lantiq.c
+@@ -15,6 +15,7 @@
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+ #include <linux/lantiq.h>
++#include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+@@ -597,6 +598,13 @@ static const struct uart_ops lqasc_pops = {
+ 	.verify_port =	lqasc_verify_port,
+ };
+ 
++
++/*
++ * Linux console interface
++ */
++
++#ifdef CONFIG_SERIAL_LANTIQ_CONSOLE
++
+ static void
+ lqasc_console_putchar(struct uart_port *port, int ch)
+ {
+@@ -705,6 +713,14 @@ lqasc_serial_early_console_setup(struct earlycon_device *device,
+ OF_EARLYCON_DECLARE(lantiq, "lantiq,asc", lqasc_serial_early_console_setup);
+ OF_EARLYCON_DECLARE(lantiq, "intel,lgm-asc", lqasc_serial_early_console_setup);
+ 
++#define LANTIQ_SERIAL_CONSOLE	(&lqasc_console)
++
++#else
++
++#define LANTIQ_SERIAL_CONSOLE	NULL
++
++#endif
++
+ static struct uart_driver lqasc_reg = {
+ 	.owner =	THIS_MODULE,
+ 	.driver_name =	DRVNAME,
+@@ -712,7 +728,7 @@ static struct uart_driver lqasc_reg = {
+ 	.major =	0,
+ 	.minor =	0,
+ 	.nr =		MAXPORTS,
+-	.cons =		&lqasc_console,
++	.cons =		LANTIQ_SERIAL_CONSOLE,
+ };
+ 
+ static int fetch_irq_lantiq(struct device *dev, struct ltq_uart_port *ltq_port)
+@@ -899,6 +915,13 @@ lqasc_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int lqasc_remove(struct platform_device *pdev)
++{
++	struct uart_port *port = platform_get_drvdata(pdev);
++
++	return uart_remove_one_port(&lqasc_reg, port);
++}
++
+ static const struct ltq_soc_data soc_data_lantiq = {
+ 	.fetch_irq = fetch_irq_lantiq,
+ 	.request_irq = request_irq_lantiq,
+@@ -916,8 +939,11 @@ static const struct of_device_id ltq_asc_match[] = {
+ 	{ .compatible = "intel,lgm-asc", .data = &soc_data_intel },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, ltq_asc_match);
+ 
+ static struct platform_driver lqasc_driver = {
++	.probe		= lqasc_probe,
++	.remove		= lqasc_remove,
+ 	.driver		= {
+ 		.name	= DRVNAME,
+ 		.of_match_table = ltq_asc_match,
+@@ -933,10 +959,21 @@ init_lqasc(void)
+ 	if (ret != 0)
+ 		return ret;
+ 
+-	ret = platform_driver_probe(&lqasc_driver, lqasc_probe);
++	ret = platform_driver_register(&lqasc_driver);
+ 	if (ret != 0)
+ 		uart_unregister_driver(&lqasc_reg);
+ 
+ 	return ret;
+ }
+-device_initcall(init_lqasc);
++
++static void __exit exit_lqasc(void)
++{
++	platform_driver_unregister(&lqasc_driver);
++	uart_unregister_driver(&lqasc_reg);
++}
++
++module_init(init_lqasc);
++module_exit(exit_lqasc);
++
++MODULE_DESCRIPTION("Serial driver for Lantiq & Intel gateway SoCs");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
 
-Thanks,
-Parth
