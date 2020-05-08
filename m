@@ -2,52 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18905C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF44C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35DE218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A320924959
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942309;
-	bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+	s=default; t=1588942312;
+	bh=CSSG65g2BH3IAonSSiWOlBenGNI6RSP/8pRPZEKLlNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=axSicJCSSextiNy7TdBX4Ge2k4AmEgwkQSn4rgjnS/m9PjnmWPPIgiFkh6lTpGhGN
-	 7D/dIuF0aAfbxAyZjHzEtaIZ0DPIyrN0MX0zqgLDkZrz8Ha6kVyeYC3eUQfkKPCYdA
-	 x5pU/SZeVrvIx5mf7oh9sL8JMdtQYjw5z2T5lmcE=
+	b=OitTMXcukla9x2z2K4z0eopIrY/dSgf0duNbtWtEKx5sWY3FTFR6ATdThCFidgvDJ
+	 PX+CCNyTovesZ6EyZE6KtNyZM2M7SVipiOb8lOYjcdc/eWFw84UDewLrEb7YAJddbR
+	 NjEzaa0jZFd2RN0+8JxHSFg+1NXkfx/EbPz90rXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729929AbgEHMvr (ORCPT
+        id S1728784AbgEHMvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729913AbgEHMvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:33 -0400
+        id S1728823AbgEHMvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0DA2495C;
-        Fri,  8 May 2020 12:51:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A6F424966;
+        Fri,  8 May 2020 12:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942292;
-        bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+        s=default; t=1588942300;
+        bh=CSSG65g2BH3IAonSSiWOlBenGNI6RSP/8pRPZEKLlNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJ0UbMLp4w0W8nxnb8DgP/Hw4AeTWe9eoJMp1e+5AJA9/1xpKJ13p1tATkf86FvDl
-         /cTMQBL7ctS5h5rc9QjTTNj+1NrkA1vmcR5ubT8ksfbZAggzkk9T3fMyEsd/j7J+pY
-         D5acG+zto95hpE0Y+BAjwznp7/GMGBMH5lb0OCB0=
+        b=Th1bAbe+HedMpmEmCj/xtOfKv5cSSh38j+2iC7oZmrQgT5OwC/5ldcRykxKZZuIP9
+         MRqpvfXbSwfCihg2jnZKC71pzGfYThMYWgoDV4B2qK8q9d9P8XwnmaKw0YG8t2J1pp
+         SFBEeuULb2Ym0z6RDlo0kJkM4MIMDpDEIcmtxWH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 02/32] powerpc/pci/of: Parse unassigned resources
-Date:   Fri,  8 May 2020 14:35:15 +0200
-Message-Id: <20200508123035.139795603@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 22/32] sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+Date:   Fri,  8 May 2020 14:35:35 +0200
+Message-Id: <20200508123037.944302353@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -60,64 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Jere Leppänen <jere.leppanen@nokia.com>
 
-commit dead1c845dbe97e0061dae2017eaf3bd8f8f06ee upstream.
+commit 12dfd78e3a74825e6f0bc8df7ef9f938fbc6bfe3 upstream.
 
-The pseries platform uses the PCI_PROBE_DEVTREE method of PCI probing
-which reads "assigned-addresses" of every PCI device and initializes
-the device resources. However if the property is missing or zero sized,
-then there is no fallback of any kind and the PCI resources remain
-undiscovered, i.e. pdev->resource[] array remains empty.
+When starting shutdown in sctp_sf_do_dupcook_a(), get the value for
+SHUTDOWN Cumulative TSN Ack from the new association, which is
+reconstructed from the cookie, instead of the old association, which
+the peer doesn't have anymore.
 
-This adds a fallback which parses the "reg" property in pretty much same
-way except it marks resources as "unset" which later make Linux assign
-those resources proper addresses.
+Otherwise the SHUTDOWN is either ignored or replied to with an ABORT
+by the peer because CTSN Ack doesn't match the peer's Initial TSN.
 
-This has an effect when:
-1. a hypervisor failed to assign any resource for a device;
-2. /chosen/linux,pci-probe-only=0 is in the DT so the system may try
-assigning a resource.
-Neither is likely to happen under PowerVM.
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
+Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/pci_of_scan.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ net/sctp/sm_make_chunk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -82,10 +82,16 @@ static void of_pci_parse_addrs(struct de
- 	const __be32 *addrs;
- 	u32 i;
- 	int proplen;
-+	bool mark_unset = false;
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -871,7 +871,11 @@ struct sctp_chunk *sctp_make_shutdown(co
+ 	struct sctp_chunk *retval;
+ 	__u32 ctsn;
  
- 	addrs = of_get_property(node, "assigned-addresses", &proplen);
--	if (!addrs)
--		return;
-+	if (!addrs || !proplen) {
-+		addrs = of_get_property(node, "reg", &proplen);
-+		if (!addrs || !proplen)
-+			return;
-+		mark_unset = true;
-+	}
+-	ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
++	if (chunk && chunk->asoc)
++		ctsn = sctp_tsnmap_get_ctsn(&chunk->asoc->peer.tsn_map);
++	else
++		ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
 +
- 	pr_debug("    parse addresses (%d bytes) @ %p\n", proplen, addrs);
- 	for (; proplen >= 20; proplen -= 20, addrs += 5) {
- 		flags = pci_parse_of_flags(of_read_number(addrs, 1), 0);
-@@ -110,6 +116,8 @@ static void of_pci_parse_addrs(struct de
- 			continue;
- 		}
- 		res->flags = flags;
-+		if (mark_unset)
-+			res->flags |= IORESOURCE_UNSET;
- 		res->name = pci_name(dev);
- 		region.start = base;
- 		region.end = base + size - 1;
+ 	shut.cum_tsn_ack = htonl(ctsn);
+ 
+ 	retval = sctp_make_control(asoc, SCTP_CID_SHUTDOWN, 0,
 
 
