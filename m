@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F322C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E6DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425DF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B2921582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943026;
-	bh=brmIHDI2OIjf6X5qfGk9j3hdw4WiFOYPiZME2ivsH5w=;
+	s=default; t=1588943029;
+	bh=qsJ/53XCgYqaSo+VENcud1k+gasMiL9UTTpBJtkC0Q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WuiPnyyx118/XkOFNB+3g+UNPYKsgXktqWhs8Kwp3K505397IHh05VyN7cMesm+yo
-	 APRF4d0cRsAN2EBnc2Ny1ZfpKbLdRIC2UweePJzQOVjAxfTX5w0ETcuQCIxdVed5bo
-	 DkHIlKzS8LTwKmVqZHG0ey5t8eamY520RfsQWNjU=
+	b=CPj/r5Y5yfkqm85Sj6vZP/ycrSXbAJRXeGgsk+Dk4gtNwsD0AwBNjagamtPEjyqzA
+	 ia1dIThQVQ2+XH8HWJ3OmQvOGcK3Vwji3Tetw7zwZxHB35TS647jmYjrc/PXGQY3QJ
+	 7BU5pD30u6fycaSyIIIMks6WL/Otip+Zb1iLcKWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgEHMtl (ORCPT
+        id S1729946AbgEHNDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgEHMti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:38 -0400
+        id S1729755AbgEHMtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA8CC218AC;
-        Fri,  8 May 2020 12:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4675B24963;
+        Fri,  8 May 2020 12:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942178;
-        bh=brmIHDI2OIjf6X5qfGk9j3hdw4WiFOYPiZME2ivsH5w=;
+        s=default; t=1588942180;
+        bh=qsJ/53XCgYqaSo+VENcud1k+gasMiL9UTTpBJtkC0Q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=De0VOPdsOkJJ8RyoEmUZ2EcHiTaW6szwsMIlCH8GtlUbk1+8ugLYKGmasKKs7kylD
-         2D16ULh0EX9hG4EdJk+96kNvkEAsHRdTbB5jvxfBn0A7iU543LI/1JZUu9m0Bbqyxw
-         82lrCSQooNCvWIrKW40A7nkroVeAdOKWPTeenLYc=
+        b=C/jwwPvpDWsPBSmnj4QD8krSoem4NhZPTR+eiOH9sUQhS0/dEvbwhT/d6klm+oaYr
+         vTEe0T//5pJkA0K+K8P5EDhEoVq4vC0WXFvifTutBT8OKobmRMdDoUkO/37q0eAfFr
+         CUZ4q8xrdMD+GHtK2AE2U6BAq71ti1NorIPjKs9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 16/18] sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-Date:   Fri,  8 May 2020 14:35:19 +0200
-Message-Id: <20200508123034.158652178@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 17/18] ALSA: hda: Match both PCI ID and SSID for driver blacklist
+Date:   Fri,  8 May 2020 14:35:20 +0200
+Message-Id: <20200508123034.322337323@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
@@ -61,42 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jere Leppänen <jere.leppanen@nokia.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 12dfd78e3a74825e6f0bc8df7ef9f938fbc6bfe3 upstream.
+commit 977dfef40c8996b69afe23a9094d184049efb7bb upstream.
 
-When starting shutdown in sctp_sf_do_dupcook_a(), get the value for
-SHUTDOWN Cumulative TSN Ack from the new association, which is
-reconstructed from the cookie, instead of the old association, which
-the peer doesn't have anymore.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-Otherwise the SHUTDOWN is either ignored or replied to with an ABORT
-by the peer because CTSN Ack doesn't match the peer's Initial TSN.
+Since the empty codec problem appear on the certain AMD platform (PCI
+ID 1022:1487), this patch changes the blacklist matching to both PCI
+ID and SSID using pci_match_id().  Also, the entry that was removed by
+the previous fix for ASUS ROG Zenigh II is re-added.
 
-Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
-Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sctp/sm_make_chunk.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -856,7 +856,11 @@ struct sctp_chunk *sctp_make_shutdown(co
- 	sctp_shutdownhdr_t shut;
- 	__u32 ctsn;
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1966,9 +1966,10 @@ static const struct hdac_io_ops pci_hda_
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
  
--	ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
-+	if (chunk && chunk->asoc)
-+		ctsn = sctp_tsnmap_get_ctsn(&chunk->asoc->peer.tsn_map);
-+	else
-+		ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
-+
- 	shut.cum_tsn_ack = htonl(ctsn);
+@@ -1991,7 +1992,7 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
  
- 	retval = sctp_make_control(asoc, SCTP_CID_SHUTDOWN, 0,
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
 
 
