@@ -2,39 +2,38 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7361EC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC2DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540D220736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2284220736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgEHGAA (ORCPT
+        id S1728331AbgEHGAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:00:00 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:22062 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgEHF7S (ORCPT
+        Fri, 8 May 2020 02:00:16 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:38783 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgEHGAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:59:18 -0400
-IronPort-SDR: Ef7ooS/g+dUBxga/7WSmWDbeAMsS/BZITWmQnYCoEU8Tu5FqQMogSADT9IrufU0VHPhoACSnic
- JcySAcnNnmhHsp85ER/xqzUhbaf5I7fUx/D7Wkjs+xRRIF2P6Rifcl/dSapiz21CmbRCiGmmwF
- BiCzQn5SejSRnxW8asn9POa5d0cY1cL2muKJ0YgFDAu+wcvr10tCh3/CPWJCu2ONQzH1H/Q2IX
- OtKkvHDB1v1CtSWblsA/tBuEfgquHdEfFmLl5liXbTZuLlK8FqhXDl5RsuAHMJK72WTAc+EBzf
- Peo=
+        Fri, 8 May 2020 02:00:11 -0400
+IronPort-SDR: sUl9fRF2fVoZs0RHja5c5kJMC8LDMYOJl/CeEYxHwLN6vljmpaZpZucAb+jLstHuGgSLtX9Z0V
+ tF4S6SoW/w8wxPUSQroK4np71250S/wrBLz/tCbxj8dTu1k8pIUz/bPqCnC4Mb6KFy/KCCbzOu
+ I+MJ10XLk36/90If1ZGCSSLmMmS+JyKd4RAvJI5Sb8H1ZyCvK9WSJJdi9jcPLOtyF9Spq1gqpB
+ c1Ysl9KRmVEFwYZlHQhG5fdtPaWELaC1SHe1+Ho5Q+rQyoCIRXpitVGQgyCly2OUyQ2rzTHJb8
+ P3Q=
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="48589120"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 07 May 2020 21:59:17 -0800
-IronPort-SDR: /151iejCQ14UkWcq1PC2SpC2EGv6MEZlEhO+H4MrdNPMSdiDiKHosyb/L1NP2kFFslHfnf5NzY
- o4K28EdsRSpuIXVJLXmCxVt6X+kJ7hmO8FBlUrNX/HQ+8YLIlyJlFJbX13qknUJwkyNiWgrxql
- PS0rGM/trQPStR7NQ5VZCGGh+4a3tBeYjOsskeTzu00Yoajxak3tCyPGvDkBVYPGlUE8OYIDEj
- yJJWCb8jgY5bA9C3EGQsacxuAH+9CDRE++UkZJkVft7gEnNSDoJbW0iF4784neiZxj2LRvSue4
- ak4=
+   d="scan'208";a="50670168"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 07 May 2020 22:00:08 -0800
+IronPort-SDR: oZx0j2xcqYbijImYJojoAtAzZ+qTicxtGtQPPUvKpBLdY5tutC7BIXRd0PCT6o7dF8W0pt+7rU
+ qSfQNzkTnOQEc3JxnFdIR4y2MxaXb836jgvB8p7QVfcwzL3exlwL38KMfYOSdJXlYWTMhF5POW
+ +yGDpxvUu6qYoV9bLxSEf3wsKVLRw131aGPyxvo0nGqHXNOevCfdFRlADp3vPoelqfLmfjAOkQ
+ g+DjWvEczzLHuxKTX2RihxjFeDm3voFRamh79qdstkWQjGXQnhZ8/lU1dDJqORXQEWjLH81Hr2
+ 4GM=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -42,9 +41,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v11 36/56] Input: atmel_mxt_ts - implement debug output for messages
-Date:   Thu, 7 May 2020 22:56:36 -0700
-Message-ID: <20200508055656.96389-37-jiada_wang@mentor.com>
+Subject: [PATCH v11 50/56] Input: Atmel: handle ReportID "0x00" while processing T5 messages
+Date:   Thu, 7 May 2020 22:56:50 -0700
+Message-ID: <20200508055656.96389-51-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508055656.96389-1-jiada_wang@mentor.com>
 References: <20200508055656.96389-1-jiada_wang@mentor.com>
@@ -55,126 +54,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Deepak Das <deepak_das@mentor.com>
 
-Add a debug switch which causes all messages from the touch controller to
-be dumped to the dmesg log with a set prefix "MXT MSG:". This is used by
-Atmel user-space utilities to debug touch operation. Enabling this output
-does impact touch performance.
+ReportID "0x00" is reserved by Atmel and should not be used by any
+Atmel touch controller.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 3c3fcfdd4889dfeb1c80ae8cd94a622c6342b06a)
-[gdavis: Forward port and fix conflicts.]
+reportID is the first byte retrieved from T5 message payload.
+Currently Atmel driver continues to process the T5 messages even if
+the reportID "0x00" is returned by Touch Controller.
+
+This commit modifies Atmel touch driver to return -EINVAL if ReportID
+"0x00" is received while processing T5 messages.
+
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Rename mxt_debug_enable_store to debug_enable_store
-	Rename mxt_debug_enable_show to debug_enable_show
-	Replace DEVICE_ATTR with DEVICE_ATTR_RW]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 46 ++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 1027ebbc3978..7d48c4d1f57d 100644
+index 92701bf5291f..103881911acc 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -336,6 +336,7 @@ struct mxt_data {
- 	u8 t100_aux_ampl;
- 	u8 t100_aux_area;
- 	u8 t100_aux_vect;
-+	bool debug_enabled;
- 	u8 max_reportid;
- 	u32 config_crc;
- 	u32 info_crc;
-@@ -461,8 +462,11 @@ static bool mxt_object_readable(unsigned int type)
+@@ -77,6 +77,7 @@
+ #define MXT_PROCI_TOUCHSEQUENCELOGGER	93
+ #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
+ #define MXT_PROCI_ACTIVESTYLUS_T107	107
++#define MXT_RPTID_RESERVED		0
  
- static void mxt_dump_message(struct mxt_data *data, u8 *message)
- {
--	dev_dbg(&data->client->dev, "message: %*ph\n",
--		data->T5_msg_size, message);
-+	/* debug message with prefix 'MXT MSG:' used by
-+	 * Atmel user-space utilities to debug touch operation
-+	 */
-+	dev_dbg(&data->client->dev, "MXT MSG: %*ph\n",
-+		       data->T5_msg_size, message);
- }
- 
- static int mxt_wait_for_completion(struct mxt_data *data,
-@@ -1212,6 +1216,7 @@ static void mxt_proc_t93_messages(struct mxt_data *data, u8 *msg)
- static int mxt_proc_message(struct mxt_data *data, u8 *message)
- {
+ /* MXT_GEN_MESSAGE_T5 object */
+ #define MXT_RPTID_NOMSG		0xff
+@@ -1381,6 +1382,11 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
  	u8 report_id = message[0];
-+	bool dump = data->debug_enabled;
+ 	bool dump = data->debug_enabled;
  
++	if (report_id == MXT_RPTID_RESERVED) {
++		dev_err(&data->client->dev,
++			"Received Reserved ReportID 0x00\n");
++		return -EINVAL;
++	}
  	if (report_id == MXT_RPTID_NOMSG)
  		return 0;
-@@ -1246,9 +1251,12 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 	} else if (report_id == data->T93_reportid) {
- 		mxt_proc_t93_messages(data, message);
- 	} else {
--		mxt_dump_message(data, message);
-+		dump = true;
+ 
+@@ -1451,6 +1457,8 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
+ 		ret = mxt_proc_message(data,
+ 			data->msg_buf + data->T5_msg_size * i);
+ 
++		if (ret < 0)
++			return ret;
+ 		if (ret == 1)
+ 			num_valid++;
  	}
- 
-+	if (dump)
-+		mxt_dump_message(data, message);
-+
- 	return 1;
- }
- 
-@@ -3498,6 +3506,36 @@ static ssize_t update_cfg_store(struct device *dev,
- 	return ret;
- }
- 
-+static ssize_t debug_enable_show(struct device *dev,
-+	struct device_attribute *attr, char *buf)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	char c;
-+
-+	c = data->debug_enabled ? '1' : '0';
-+	return scnprintf(buf, PAGE_SIZE, "%c\n", c);
-+}
-+
-+static ssize_t debug_enable_store(struct device *dev,
-+	struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	u8 i;
-+	ssize_t ret;
-+
-+	if (kstrtou8(buf, 0, &i) == 0 && i < 2) {
-+		data->debug_enabled = (i == 1);
-+
-+		dev_dbg(dev, "%s\n", i ? "debug enabled" : "debug disabled");
-+		ret = count;
-+	} else {
-+		dev_dbg(dev, "debug_enabled write error\n");
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static DEVICE_ATTR_WO(update_fw);
- 
- static struct attribute *mxt_fw_attrs[] = {
-@@ -3514,6 +3552,7 @@ static DEVICE_ATTR_RO(hw_version);
- static DEVICE_ATTR_RO(object);
- static DEVICE_ATTR_WO(update_cfg);
- static DEVICE_ATTR_RO(config_crc);
-+static DEVICE_ATTR_RW(debug_enable);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
-@@ -3521,6 +3560,7 @@ static struct attribute *mxt_attrs[] = {
- 	&dev_attr_object.attr,
- 	&dev_attr_update_cfg.attr,
- 	&dev_attr_config_crc.attr,
-+	&dev_attr_debug_enable.attr,
- 	NULL
- };
- 
 -- 
 2.17.1
 
