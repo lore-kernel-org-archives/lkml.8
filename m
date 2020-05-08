@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221BCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86710C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36FF2496D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDB121582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941514;
-	bh=XC88n2lCSjqDfXenb2OH6ECcKqlTqc7gKZ8QBN0TmCA=;
+	s=default; t=1588941520;
+	bh=kDgKTk6zSvN1I0mYRhrLAZSenMElEVVerabyFRFK6K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ih4BlO3+jqs9gYZVm3d3/OnqK5gW/gwsRolm9mEbiIGQ7eqeIlyPImcxGGfm8t+P+
-	 mh9OgV6+tMnm+UnczPK4JHpjbkIpfooM7y1JiX8M+sQKkAmXDRJrwwDcVBAew8VUSZ
-	 uoWm8GncRJp6T3sItCGyYzEJDjCBLY6DlQO4L+ck=
+	b=ExZr6alxsy/5xrWyKYOLkuKIxeGcoW7VQNhfE4tWuSYJ6no6l09LbfHL1ifcNfWlm
+	 M/PFoC3T5FvDEBdD5rhE4XNIp7GUbBKwWd+IJC6bZXvo0vJZ1XvdZFWMxXpEVXqRYj
+	 2yavddZ1lTO6YI1Fwb66ynoZpSdk5c6w3R6i0/jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgEHMid (ORCPT
+        id S1728439AbgEHMij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgEHMiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:19 -0400
+        id S1728409AbgEHMie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D412215A4;
-        Fri,  8 May 2020 12:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6E521582;
+        Fri,  8 May 2020 12:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941499;
-        bh=XC88n2lCSjqDfXenb2OH6ECcKqlTqc7gKZ8QBN0TmCA=;
+        s=default; t=1588941513;
+        bh=kDgKTk6zSvN1I0mYRhrLAZSenMElEVVerabyFRFK6K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w8uE3rKMK5TupiOZRipY+cg/T8qxJJmmHjKZIPKXYnxo36KmgLFbWpPKtW3vnKA9/
-         AoZ/ww/d9h+U9V/Akf+kAHJon9xqU8r+AtAge3fyjsLM5/JVMBFMukKBB+2dXVXSKe
-         0z6oQQN2cCcCCCqrHsaLWiWtUVcjh50A8wUTxlpM=
+        b=OXZ2IgH/9oGRntt/wjtX0bRQjcNwNSLArqFEz2n+W+dM877I+9bq1XOK++ujATxMQ
+         WitqCMZoiC6y2f3h5bYw5L0LM5TI7elcHc9BdGbj/hpnpESXYhxNT+wXP7lIG8d8Uk
+         IUwrl6pHCSSjgTBpC2/LXJxrdeSZZycdAdcqQ2+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Subject: [PATCH 4.4 055/312] iwlwifi: set max firmware version of 7265 to 17
-Date:   Fri,  8 May 2020 14:30:46 +0200
-Message-Id: <20200508123128.424635957@linuxfoundation.org>
+        stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
+        Paul Burton <paul.burton@imgtec.com>,
+        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 024/312] MIPS: Fix 64-bit HTW configuration
+Date:   Fri,  8 May 2020 14:30:15 +0200
+Message-Id: <20200508123126.189876683@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,32 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: James Hogan <james.hogan@imgtec.com>
 
-commit ed0450cef00d2c76bcb8778721df947ba7ff4147 upstream.
+commit aa76042a016474775ccd187c068669148c30c3bb upstream.
 
-Just like 7260, 7265 will not have firmware releases newer
-than iwlwifi-7265-17.ucode. 7265D is still supported in
-latest firmware releases.
+The Hardware page Table Walker (HTW) is being misconfigured on 64-bit
+kernels. The PWSize.PS (pointer size) bit determines whether pointers
+within directories are loaded as 32-bit or 64-bit addresses, but was
+never being set to 1 for 64-bit kernels where the unsigned long in pgd_t
+is 64-bits wide.
 
-Fixes: 628a2918afe4 ("iwlwifi: separate firmware version for 7260 devices")
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+This actually reduces rather than improves performance when the HTW is
+enabled on P6600 since the HTW is initiated lots, but walks are all
+aborted due I think to bad intermediate pointers.
+
+Since we were already taking the width of the PTEs into account by
+setting PWSize.PTEW, which is the left shift applied to the page table
+index *in addition to* the native pointer size, we also need to reduce
+PTEW by 1 when PS=1. This is done by calculating PTEW based on the
+relative size of pte_t compared to pgd_t.
+
+Finally in order for the HTW to be used when PS=1, the appropriate
+XK/XS/XU bits corresponding to the different 64-bit segments need to be
+set in PWCtl. We enable only XU for now to enable walking for XUSeg.
+
+Supporting walking for XKSeg would be a bit more involved so is left for
+a future patch. It would either require the use of a per-CPU top level
+base directory if supported by the HTW (a bit like pgd_current but with
+a second entry pointing at swapper_pg_dir), or the HTW would prepend bit
+63 of the address to the global directory index which doesn't really
+match how we split user and kernel page directories.
+
+Fixes: cab25bc7537b ("MIPS: Extend hardware table walking support to MIPS64")
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mips@linux-mips.org
+Patchwork: https://patchwork.linux-mips.org/patch/13364/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/iwlwifi/iwl-7000.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/mm/tlbex.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/iwlwifi/iwl-7000.c
-+++ b/drivers/net/wireless/iwlwifi/iwl-7000.c
-@@ -70,7 +70,7 @@
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -2329,15 +2329,25 @@ static void config_htw_params(void)
+ 	if (CONFIG_PGTABLE_LEVELS >= 3)
+ 		pwsize |= ilog2(PTRS_PER_PMD) << MIPS_PWSIZE_MDW_SHIFT;
  
- /* Highest firmware API version supported */
- #define IWL7260_UCODE_API_MAX	17
--#define IWL7265_UCODE_API_MAX	19
-+#define IWL7265_UCODE_API_MAX	17
- #define IWL7265D_UCODE_API_MAX	19
+-	pwsize |= ilog2(sizeof(pte_t)/4) << MIPS_PWSIZE_PTEW_SHIFT;
++	/* Set pointer size to size of directory pointers */
++	if (config_enabled(CONFIG_64BIT))
++		pwsize |= MIPS_PWSIZE_PS_MASK;
++	/* PTEs may be multiple pointers long (e.g. with XPA) */
++	pwsize |= ((PTE_T_LOG2 - PGD_T_LOG2) << MIPS_PWSIZE_PTEW_SHIFT)
++			& MIPS_PWSIZE_PTEW_MASK;
  
- /* Oldest version we won't warn about */
+ 	write_c0_pwsize(pwsize);
+ 
+ 	/* Make sure everything is set before we enable the HTW */
+ 	back_to_back_c0_hazard();
+ 
+-	/* Enable HTW and disable the rest of the pwctl fields */
++	/*
++	 * Enable HTW (and only for XUSeg on 64-bit), and disable the rest of
++	 * the pwctl fields.
++	 */
+ 	config = 1 << MIPS_PWCTL_PWEN_SHIFT;
++	if (config_enabled(CONFIG_64BIT))
++		config |= MIPS_PWCTL_XU_MASK;
+ 	write_c0_pwctl(config);
+ 	pr_info("Hardware Page Table Walker enabled\n");
+ 
 
 
