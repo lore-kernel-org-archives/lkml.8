@@ -2,165 +2,159 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6421C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E7DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6B12173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB572217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2octv/pb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgEHVJ1 (ORCPT
+        id S1728007AbgEHVJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:09:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47831 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:09:27 -0400
-IronPort-SDR: QO0FxIEqTehsgRPWcWhn8OHH+9Tg6Ok9g5yi5cVANRlkFFGlmbC6ZWyXuABWC651F8Z7VXPJDA
- EqW426tMwqKQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 14:09:26 -0700
-IronPort-SDR: t8aaeoiPvCzOsEvHLJZqAjj+9C+nJFuYFvskqaR0vlh09eQuAezALf37FWPrOromuz1phYNjBv
- 46F3pt5Fq19A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="264510152"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 May 2020 14:09:25 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jXAFI-000B77-Rl; Sat, 09 May 2020 05:09:24 +0800
-Date:   Sat, 09 May 2020 05:08:47 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- 059c6d68cfc5f85ba3ab71d71a6de380016f7936
-Message-ID: <5eb5ca5f.JfnaeVrQ3S0+Hpp2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 8 May 2020 17:09:51 -0400
+Received: from mail-bn7nam10on2075.outbound.protection.outlook.com ([40.107.92.75]:6097
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727088AbgEHVJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:09:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DOzViDWIXpz9p50aSrQztQE8MEN5xiRNzFt98I2ZNl9azcUAtZqTkiu8iLloJWbQvHh0G18WymQGl5pNmEDbRi5DeniLtsRlHvJeH0xdA0I6wuC658VZFncEzrWTkoOfdztKE4g5COzM5LkVwWRmseqPD4iYU6cnu/ZTbh4I5end4YPgj6+4kNgS7J2K9M3nyW59a29V83seHsof9hgbPex1cm7lkOYDkeFb68Gh7l137pN9BwfsZJEnomKo2dG/bWhvuN9aBQnAiTweF1rxVcXR3RoznLGaG3ZxcTDsUWilYRylx2CRP17yx7VU++A067ghh00YzNimNlOjCKKc/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=55OWPmbFkE16QROd1bFJxGuXEuFYoAgCuzOyoubLayQ=;
+ b=VOvFGGJj0J4Jat6HAvNFdszrzAX4QJMtdusksDCG97O0ar026EDG7ju8PLO6xIvTUKv9Oldq3DzNcBp6qCuBDBd+L0t7JU2irthK0i2545uRyAhb1hGYbUdXTkGm4lQOL2ok0RHxf2jzsJDPWtPDjOmxhi8+/Pu8ZmNEv/ELDKGr/09cQHtLurAWMqicdOKxh+FLl2dxcaWDzDW68DDH6uww+GEHQnNMqVBhC7IP985VwmTdXY/frrzK8OaOs2lGjg3oyAdVOHKLKxl3oxIpTHGWV2CaHANTF+rL2dO7pyTmjZV3LL2a76TIQgwH5pvbxgOd0fnbFJVBhkxpTJQQMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=55OWPmbFkE16QROd1bFJxGuXEuFYoAgCuzOyoubLayQ=;
+ b=2octv/pbT1rJsdruU23SYuXRuLlRyMXXwbi4W0W8bs/Hcot7sCrGgso9BXjYUk3r1OLwSfkEMh1mUKOjCN0nMcsb0bNX+NbSIFNmTDEuPfZK8UpyLhRIXTN73r8XgnBU9yY0V708wDoKUTcxbWfJCDK+COhpvb0GPxQCjWJXaL4=
+Authentication-Results: tencent.com; dkim=none (message not signed)
+ header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2591.namprd12.prod.outlook.com (2603:10b6:802:30::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.33; Fri, 8 May
+ 2020 21:09:43 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.028; Fri, 8 May 2020
+ 21:09:43 +0000
+Subject: [PATCH v2 0/3] arch/x86: Enable MPK feature on AMD
+From:   Babu Moger <babu.moger@amd.com>
+To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
+        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
+        asteinhauser@google.com, anshuman.khandual@arm.com,
+        jan.kiszka@siemens.com, akpm@linux-foundation.org,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date:   Fri, 08 May 2020 16:09:40 -0500
+Message-ID: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
+User-Agent: StGit/unknown-version
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR01CA0001.prod.exchangelabs.com (2603:10b6:805:b6::14)
+ To SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from naples-babu.amd.com (165.204.78.2) by SN6PR01CA0001.prod.exchangelabs.com (2603:10b6:805:b6::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 21:09:41 +0000
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 325917d1-56a8-4602-d6dd-08d7f39420c8
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2591:|SN1PR12MB2591:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB2591752BD22868BC6C57BC4195A20@SN1PR12MB2591.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TDrFiE3TTxkh+t5k77ckEKFWJkoUsdjTH2LxxOI78+Nh8pMGl0gmv5hOmg7QZqXgn0iUHqJ0OJeAgZzuc9RF20h7mS0/k1ubS7VaKkSP5lY5M/LVvgZENN2ehKxYX+4az+pJ8By3IiQdTeLARS+6GFGWCFHsvAKPzpkM2kPV/mj/kyAWv2l/PxrUTeQRtFYFibnFNLTi1Hxqih4Bs0nXj4W7ZDV9FFaTRew2zhJQqWYtpQQTtpUmXxuPUpc4EIl1AivHIL1RWyVVbfnKDUY6hOS5t2R1bJFARw/bjF0pLQp1UGf0r2aGHcqkPpPDEWLuflur2TQLo+SCXFpMkuWIu5uikP7UJtSwtuPJIitf4ddt/6ZbpkJje3ebenNJivOJlr9nP7Dpj+3jfwUDptDzVYOZN155tdy+eK57MVRFT25C/yJYXlc/2ZDXHETpjYaLuuOEkh9AcLOkGr5VpF9DPpmtzxWwGObAXhPDkPt0ff1krbFBFYB2jnMm+4/ZUjf2EWH17WFslzX00gddTmScxFGvNSph2P6TklS05XaPk88FOrZBmACYG5rnXk2ZjFyhIEOz1k/+XR2Gq3RaaVxcGlsKmqLJYUQvGmNphI2etec=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(33430700001)(7406005)(16526019)(4326008)(7696005)(7416002)(186003)(26005)(66556008)(8936002)(52116002)(316002)(66946007)(66476007)(33440700001)(2906002)(44832011)(956004)(478600001)(55016002)(966005)(5660300002)(8676002)(103116003)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: zmDu0/jvHkbocr7X85VYqRqBk4DsYJsMlJusIgtmQEDDSOpcuyAVtSzAlPKqxIXrdthP0+0ueRpJwYRH3YcMrt4Y2eIPfkXE/L98qZW5k/cl7vW5Hv0HkhesxvnIzUvzIYTuzaXGHdbETvDXu9xsnWCJohzKAPOzcXxZroXzK8q58nZeK7WNlxUwTXMKZCAylECJflsTHQTXa1H//SbSRZGJOlWyi68yfh1hxhbjU7wLXDuxDA6yi85sdBCHRJpJufvsLx6EL6mY4FpA7rWACm44SaVzd/slKvnHZRjYXNcTEJKDIDfXvUWS1e4+ipf6cLzaWl6WgWNUYgy9HigDwaiArIZZ71XmgqHSBH+aCdGOb7GOdnTwAK2/HiZ0vuxiUOMX7c6qZVYUpHCuOIDwzBRuiHJPbgMka2PY9Q/xpZq6RmMgGxiHuMzLmlOQQc/9Ca85mWhpHPCf28Ny+uKprAcCpemHx7P4ZjngF34vfLY=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 325917d1-56a8-4602-d6dd-08d7f39420c8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 21:09:43.0065
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +bPueknMWfiVGiOpb7dReMa9fCFs8rR/SoTrigVaPaAK3UDfUck2tIZ39sAye6tN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2591
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
-branch HEAD: 059c6d68cfc5f85ba3ab71d71a6de380016f7936  Merge tag 'perf-core-for-mingo-5.8-20200506' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core
+AMD's next generation of EPYC processors support the MPK (Memory
+Protection Keys) feature.
 
-elapsed time: 483m
+AMD documentation for MPK feature is available at "AMD64 Architecture
+Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
+Section 5.6.6 Memory Protection Keys (MPK) Bit".
 
-configs tested: 98
-configs skipped: 21
+The documentation can be obtained at the link below:
+https://bugzilla.kernel.org/show_bug.cgi?id=206537
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-parisc                              defconfig
-parisc                            allnoconfig
-s390                                defconfig
-c6x                              allyesconfig
-alpha                            allyesconfig
-nds32                               defconfig
-powerpc                             defconfig
-sparc64                             defconfig
-alpha                               defconfig
-arc                              allyesconfig
-ia64                                defconfig
-riscv                             allnoconfig
-microblaze                        allnoconfig
-c6x                               allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-openrisc                         allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-microblaze                       allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200508
-i386                 randconfig-a004-20200508
-i386                 randconfig-a003-20200508
-i386                 randconfig-a002-20200508
-i386                 randconfig-a001-20200508
-i386                 randconfig-a006-20200508
-x86_64               randconfig-a015-20200509
-x86_64               randconfig-a014-20200509
-x86_64               randconfig-a011-20200509
-x86_64               randconfig-a013-20200509
-x86_64               randconfig-a012-20200509
-x86_64               randconfig-a016-20200509
-i386                 randconfig-a012-20200508
-i386                 randconfig-a014-20200508
-i386                 randconfig-a016-20200508
-i386                 randconfig-a011-20200508
-i386                 randconfig-a013-20200508
-i386                 randconfig-a015-20200508
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-sparc                               defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+This series enables the feature on AMD and updates config parameters
+to reflect the MPK support on generic x86 platforms.
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+v2:
+  - Introduced intermediate config option X86_MEMORY_PROTECTION_KEYS to
+    avoid user propmpts. Kept X86_INTEL_MEMORY_PROTECTION_KEYS as is.
+    Eventually, we will be moving to X86_MEMORY_PROTECTION_KEYS after
+    couple of kernel revisions. 
+  - Moved pkru data structures to kvm_vcpu_arch. Moved save/restore pkru
+    to kvm_load_host_xsave_state/kvm_load_guest_xsave_state.
+
+v1:
+  https://lore.kernel.org/lkml/158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com/
+
+Babu Moger (3):
+      arch/x86: Rename config X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
+      KVM: x86: Move pkru save/restore to x86.c
+      KVM: SVM: Add support for MPK feature on AMD
+
+
+ Documentation/core-api/protection-keys.rst     |    3 ++-
+ arch/x86/Kconfig                               |   11 +++++++++--
+ arch/x86/include/asm/disabled-features.h       |    4 ++--
+ arch/x86/include/asm/kvm_host.h                |    1 +
+ arch/x86/include/asm/mmu.h                     |    2 +-
+ arch/x86/include/asm/mmu_context.h             |    4 ++--
+ arch/x86/include/asm/pgtable.h                 |    4 ++--
+ arch/x86/include/asm/pgtable_types.h           |    2 +-
+ arch/x86/include/asm/special_insns.h           |    2 +-
+ arch/x86/include/uapi/asm/mman.h               |    2 +-
+ arch/x86/kernel/cpu/common.c                   |    2 +-
+ arch/x86/kvm/svm/svm.c                         |    4 ++++
+ arch/x86/kvm/vmx/vmx.c                         |   18 ------------------
+ arch/x86/kvm/x86.c                             |   20 ++++++++++++++++++++
+ arch/x86/mm/Makefile                           |    2 +-
+ arch/x86/mm/pkeys.c                            |    2 +-
+ scripts/headers_install.sh                     |    2 +-
+ tools/arch/x86/include/asm/disabled-features.h |    4 ++--
+ 18 files changed, 52 insertions(+), 37 deletions(-)
+
+--
