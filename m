@@ -2,55 +2,224 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB93C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F049C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1952082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF502082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="N3irBq46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEHAFU (ORCPT
+        id S1726811AbgEHAIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 20:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
+        Thu, 7 May 2020 20:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgEHAFT (ORCPT
+        by vger.kernel.org with ESMTP id S1726480AbgEHAIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 20:05:19 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9739AC05BD43;
-        Thu,  7 May 2020 17:05:19 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWqVp-003JlK-Li; Fri, 08 May 2020 00:05:09 +0000
-Date:   Fri, 8 May 2020 01:05:09 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     axboe@kernel.dk, zohar@linux.vnet.ibm.com, mcgrof@kernel.org,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] fs: avoid fdput() after failed fdget() in
- ksys_sync_file_range()
-Message-ID: <20200508000509.GK23230@ZenIV.linux.org.uk>
-References: <cover.1588894359.git.skhan@linuxfoundation.org>
- <31be6e0896eba59c06eb9d3d137b214f7220cc53.1588894359.git.skhan@linuxfoundation.org>
+        Thu, 7 May 2020 20:08:11 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E6EC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 17:08:11 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id n14so8234652qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 17:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jGrCheF+xcDEz7z4ioHUwe8UBu2trZjlpvbQqyH8U0s=;
+        b=N3irBq46VSPNifsOgvIB8UjOTsmPKIGoQFutM2D0eCd+TiynzDLtxcdpZ0eY8DIOBU
+         biGoBS4dGlzM83L6fGm7KWbpbT2qn3FI07VCACR+bBO3scfHa6B5Do6fvgqUNFsJdnke
+         2zOEnP5zGVFsON9+97bJ05Evs+lHuNpMD9E31/XrRbCDo82uRFFqrneDTnLDhnZ2Tqe3
+         Bu5gyu7AHeoemQvsdF/ArU5nbBtkZIVmoWNSx9Y2XaeFOCLto37JMxXLhOViXwj/MJrh
+         XSbcLcDCYvfnskHa5UJChOkKkKaK3eEDUDwA7Qe6+9r2+DcWRqCt/2EJIEheWaIeadRd
+         RPhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jGrCheF+xcDEz7z4ioHUwe8UBu2trZjlpvbQqyH8U0s=;
+        b=twKCsTL469dPLEmLZF4vSMYyF5nwX2a1L/FXq3fr35eDsaH21LKPFWEh6HMqJE2OmV
+         MQyDETg9VYwxLhdb0A1IcPx+mlewxWt6HLqD72ziP6kX3oqUFPBPLym/oV6plC9T10t1
+         DrIK7+3BQg4hnyMLPPf6gDEtTcCaqW3pfwE/tpjIkXVEay0wy8vTTWbBo1bQzbKAGxbm
+         bW52DB8kCrmG9zb2av3rYBY1SglrjeWuB25bpVcZKSQI1rj+ZqbXnF8wrDuZOuoT2Sod
+         Yd2q82JLTdjd/CLkiXWTcmVEl/nsLW2oY/jNo3oL2xMuaWvGbutyzuQZilgNqoEAN5m8
+         FHjQ==
+X-Gm-Message-State: AGi0PuYzYoYFOYD+a5b0Va+X4T9eQH7Rkbn2z2pyzl7xV7kQMX2fIPGb
+        K0iCPKOTjj3qV1WFb0sdLJDUUt3e0Ns=
+X-Google-Smtp-Source: APiQypJ0HbaPuD3VaiAGy4AkJ4UVGib5UgUhYsqYiv6WhZjBHoE0vKqjIfmzrhPWnUlOT+CDXmMnbw==
+X-Received: by 2002:a37:a785:: with SMTP id q127mr53947qke.179.1588896490475;
+        Thu, 07 May 2020 17:08:10 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id j11sm4899305qkk.33.2020.05.07.17.08.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 May 2020 17:08:09 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jWqYj-0001YM-Ee; Thu, 07 May 2020 21:08:09 -0300
+Date:   Thu, 7 May 2020 21:08:09 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+Message-ID: <20200508000809.GM26002@ziepe.ca>
+References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
+ <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <31be6e0896eba59c06eb9d3d137b214f7220cc53.1588894359.git.skhan@linuxfoundation.org>
+In-Reply-To: <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:57:09PM -0600, Shuah Khan wrote:
-> Fix ksys_sync_file_range() to avoid fdput() after a failed fdget().
-> fdput() doesn't do fput() on this file since FDPUT_FPUT isn't set
-> in fd.flags. Fix it anyway since failed fdget() doesn't require
-> a fdput().
+On Thu, May 07, 2020 at 11:34:47AM -0700, Divya Indi wrote:
+> This patch fixes commit -
+> commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
 > 
-> This was introdcued in a commit to add sync_file_range() helper.
+> Above commit adds the query to the request list before ib_nl_snd_msg.
+> 
+> However, if there is a delay in sending out the request (For
+> eg: Delay due to low memory situation) the timer to handle request timeout
+> might kick in before the request is sent out to ibacm via netlink.
+> ib_nl_request_timeout may release the query if it fails to send it to SA
+> as well causing a use after free situation.
+> 
+> Call Trace for the above race:
+> 
+> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> [rds_rdma]
+> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> [rds_rdma]
+> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> ....
+> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+> 
+> To resolve this issue, we introduce a new flag IB_SA_NL_QUERY_SENT.
+> This flag Indicates if the request has been sent out to ibacm yet.
+> 
+> If this flag is not set for a query and the query times out, we add it
+> back to the list with the original delay.
+> 
+> To handle the case where a response is received before we could set this
+> flag, the response handler waits for the flag to be
+> set before proceeding with the query.
+> 
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+>  drivers/infiniband/core/sa_query.c | 45 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> index 30d4c12..ffbae2f 100644
+> +++ b/drivers/infiniband/core/sa_query.c
+> @@ -59,6 +59,9 @@
+>  #define IB_SA_LOCAL_SVC_TIMEOUT_MAX		200000
+>  #define IB_SA_CPI_MAX_RETRY_CNT			3
+>  #define IB_SA_CPI_RETRY_WAIT			1000 /*msecs */
+> +
+> +DECLARE_WAIT_QUEUE_HEAD(wait_queue);
+> +
+>  static int sa_local_svc_timeout_ms = IB_SA_LOCAL_SVC_TIMEOUT_DEFAULT;
+>  
+>  struct ib_sa_sm_ah {
+> @@ -122,6 +125,7 @@ struct ib_sa_query {
+>  #define IB_SA_ENABLE_LOCAL_SERVICE	0x00000001
+>  #define IB_SA_CANCEL			0x00000002
+>  #define IB_SA_QUERY_OPA			0x00000004
+> +#define IB_SA_NL_QUERY_SENT		0x00000008
+>  
+>  struct ib_sa_service_query {
+>  	void (*callback)(int, struct ib_sa_service_rec *, void *);
+> @@ -746,6 +750,11 @@ static inline int ib_sa_query_cancelled(struct ib_sa_query *query)
+>  	return (query->flags & IB_SA_CANCEL);
+>  }
+>  
+> +static inline int ib_sa_nl_query_sent(struct ib_sa_query *query)
+> +{
+> +	return (query->flags & IB_SA_NL_QUERY_SENT);
+> +}
+> +
+>  static void ib_nl_set_path_rec_attrs(struct sk_buff *skb,
+>  				     struct ib_sa_query *query)
+>  {
+> @@ -889,6 +898,15 @@ static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+>  		spin_lock_irqsave(&ib_nl_request_lock, flags);
+>  		list_del(&query->list);
+>  		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> +	} else {
+> +		query->flags |= IB_SA_NL_QUERY_SENT;
+> +
+> +		/*
+> +		 * If response is received before this flag was set
+> +		 * someone is waiting to process the response and release the
+> +		 * query.
+> +		 */
+> +		wake_up(&wait_queue);
+>  	}
+>  
+>  	return ret;
+> @@ -994,6 +1012,21 @@ static void ib_nl_request_timeout(struct work_struct *work)
+>  		}
+>  
+>  		list_del(&query->list);
+> +
+> +		/*
+> +		 * If IB_SA_NL_QUERY_SENT is not set, this query has not been
+> +		 * sent to ibacm yet. Reset the timer.
+> +		 */
+> +		if (!ib_sa_nl_query_sent(query)) {
+> +			delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+> +			query->timeout = delay + jiffies;
+> +			list_add_tail(&query->list, &ib_nl_request_list);
+> +			/* Start the timeout if this is the only request */
+> +			if (ib_nl_request_list.next == &query->list)
+> +				queue_delayed_work(ib_nl_wq, &ib_nl_timed_work,
+> +						delay);
+> +			break;
+> +		}
+>  		ib_sa_disable_local_svc(query);
+>  		/* Hold the lock to protect against query cancellation */
+>  		if (ib_sa_query_cancelled(query))
+> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
+>  
+>  	send_buf = query->mad_buf;
+>  
+> +	/*
+> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
+> +	 * processing this query. If flag is not set, query can be accessed in
+> +	 * another context while setting the flag and processing the query will
+> +	 * eventually release it causing a possible use-after-free.
+> +	 */
 
-Er...  What's the point microoptimizing the slow path here?
+This comment doesn't really make sense, flags insige the memory being
+freed inherently can't prevent use after free.
+
+Jason
