@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D5BC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF500C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8212F21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A393E24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kXvLegnP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AWoCrBmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgEHPgv (ORCPT
+        id S1728279AbgEHPgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:36:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
+        Fri, 8 May 2020 11:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgEHPgq (ORCPT
+        with ESMTP id S1726736AbgEHPgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:36:46 -0400
+        Fri, 8 May 2020 11:36:52 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC95C061A0C;
-        Fri,  8 May 2020 08:36:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9235C061A0C;
+        Fri,  8 May 2020 08:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=gdo1CI68NGJpSv9H2lBuA2msCSuabwKNVFFgXf1S+fQ=; b=kXvLegnPNvMN1Xbz6imxQGM4XM
-        Z8HFAC7hxbTwBWprI5Zanbre5K5ZwnCBBb4002EVizfDHTsu7wogMSR3nHOL7Ph1/16Aya6Jhb4dJ
-        Eux8v6F6qPyHNsXqCoATHO+bgojB6GwUxNrouxkwQPZklS6F4DXUwsKb7vxpKNcraqET5L2x04Rqu
-        nEUOVezhcTYa4Zw/6XTkgLDACTmIpGAZ1rX0Rl5VqNFyF/wKFnxjiNP/rhXXEmYd753MOqRvCuUvS
-        OO7jQSd/2NZJu8y8Qss0YVUQz5fsROiTd5y+++Ve6eHFR2VVNhw2NSaRKJVviaOwWCwlhMrw3OLBv
-        eNQEao8g==;
+        bh=84Q6+XvESATHkPDs3NezzlHWwc4KFGjN8N6drGU+t58=; b=AWoCrBmcbiNeSqG41R8zejRyGu
+        q9id5MMqFDnvfrZaKfLud0DzqWzP81fdQM2386RtOX+d1YUMf/xfAOiVUr699SfUMz7BTaVNStXYL
+        URpd5PGUP47QmFtYhFKrjV9Chp+yOi6JLX3053q5fnCJsoCaJC0JS55pAMk20L88eIz9rHxZgVuGV
+        yjg4TCdQyTS/tDFunEk4vcDsvmGZCUFGy9Yo0DcC3s6+nRk9Or5FqCiCQQmg/86acEJlB6AwC/r2W
+        ha+mGlYY+7L0ukMxEOgVwW3F6ckPe0jf7choEDgXl4CQfuHU79gbeHfvDNAxNZBTXBT7Mjx37VB6E
+        BcK7J1bg==;
 Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX53N-00048d-Lx; Fri, 08 May 2020 15:36:46 +0000
+        id 1jX53T-0004BL-6n; Fri, 08 May 2020 15:36:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -46,9 +46,9 @@ Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 03/12] pidfd: use __anon_inode_getfd
-Date:   Fri,  8 May 2020 17:36:25 +0200
-Message-Id: <20200508153634.249933-4-hch@lst.de>
+Subject: [PATCH 05/12] io_uring: use __anon_inode_getfd
+Date:   Fri,  8 May 2020 17:36:27 +0200
+Message-Id: <20200508153634.249933-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508153634.249933-1-hch@lst.de>
 References: <20200508153634.249933-1-hch@lst.de>
@@ -65,35 +65,34 @@ get_unused_fd_flags + anon_inode_getfile.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- kernel/fork.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ fs/io_uring.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4385f3d639f23..31e0face01072 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2113,19 +2113,11 @@ static __latent_entropy struct task_struct *copy_process(
- 	 * if the fd table isn't shared).
- 	 */
- 	if (clone_flags & CLONE_PIDFD) {
--		retval = get_unused_fd_flags(O_RDWR | O_CLOEXEC);
-+		retval = __anon_inode_getfd("[pidfd]", &pidfd_fops, pid,
-+				O_RDWR | O_CLOEXEC, &pidfile);
- 		if (retval < 0)
- 			goto bad_fork_free_pid;
--
- 		pidfd = retval;
--
--		pidfile = anon_inode_getfile("[pidfd]", &pidfd_fops, pid,
--					      O_RDWR | O_CLOEXEC);
--		if (IS_ERR(pidfile)) {
--			put_unused_fd(pidfd);
--			retval = PTR_ERR(pidfile);
--			goto bad_fork_free_pid;
--		}
- 		get_pid(pid);	/* held by pidfile now */
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5190bfb6a6657..4104f8a45d11e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7709,18 +7709,11 @@ static int io_uring_get_fd(struct io_ring_ctx *ctx)
+ 		return ret;
+ #endif
  
- 		retval = put_user(pidfd, args->pidfd);
+-	ret = get_unused_fd_flags(O_RDWR | O_CLOEXEC);
++	ret = __anon_inode_getfd("[io_uring]", &io_uring_fops, ctx,
++			O_RDWR | O_CLOEXEC, &file);
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	file = anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
+-					O_RDWR | O_CLOEXEC);
+-	if (IS_ERR(file)) {
+-		put_unused_fd(ret);
+-		ret = PTR_ERR(file);
+-		goto err;
+-	}
+-
+ #if defined(CONFIG_UNIX)
+ 	ctx->ring_sock->file = file;
+ #endif
 -- 
 2.26.2
 
