@@ -2,102 +2,71 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6115EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6951C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4165220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B182083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgEHOl3 (ORCPT
+        id S1727886AbgEHOmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:41:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:38571 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728216AbgEHOlN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:41:13 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mr9OA-1ikEYX0EAI-00oG15; Fri, 08 May 2020 16:40:51 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ben Skeggs <bskeggs@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] nouveau: fix dependencies for DEVICE_PRIVATE
-Date:   Fri,  8 May 2020 16:40:09 +0200
-Message-Id: <20200508144017.3501418-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200508144017.3501418-1-arnd@arndb.de>
-References: <20200508144017.3501418-1-arnd@arndb.de>
+        Fri, 8 May 2020 10:42:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53840 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbgEHOmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:42:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 829C1AE2E;
+        Fri,  8 May 2020 14:42:36 +0000 (UTC)
+Date:   Fri, 8 May 2020 16:42:29 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [PATCH] tracing: Call vmalloc_sync_mappings() after
+ alloc_percpu()
+Message-ID: <20200508144229.GO8135@suse.de>
+References: <20200430191434.GC8135@suse.de>
+ <20200430211308.74a994dc@oasis.local.home>
+ <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
+ <20200430223919.50861011@gandalf.local.home>
+ <20200504151236.GI8135@suse.de>
+ <20200504134042.178409c3@gandalf.local.home>
+ <20200504183832.GL8135@suse.de>
+ <20200504151006.69d2a16c@gandalf.local.home>
+ <20200505123144.GM8135@suse.de>
+ <20200506111704.5a97a3e2@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JWVQOgOnHysetYBnSk3CKrV5svFn5O5bRyqndsTcxkwhAVFX33K
- 8QbP8gDLWPxaMFNAgd7F0Cl5FkzbK7UMEJIFy0zMaVqeRYEiRnApjKD442XntX1liV7tU8u
- +v58YzETQ9SV2Hp+cHqKt2yBzRbfWwCIKA6DW0+yHZ5CaJ628eVpggV+QV31QJGmJnChH1i
- vbw4Va8hrFgS/CW9ROAkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VzDQJ1Yexdc=:rlZgpEK/dFkEh64B04UQUI
- g+x10OM+ECzQzdguOSFhigUHOMdlbZFiI08PVo16y3npp77DmEsUma/AvaHcceM2m5b3I2o7L
- TNCu82db3goJxFTWsXeuL1ZexwTp0gb5JWPrscj83fsTSOZ/18VLYpONC2FctsWw9C/ZTKzgS
- K0HbBohnOvCR3/SHRUv1n1sX17ZLm6sZ7onWo54A55647knTetrzKq+aimZ3A3fEN/f1JRi2q
- Fz7PefVUE5BFdLOZfKP5PVlfwCyFKD6ePO31sczeohRvfZrfip4z6j5azwY53UD8A2la9VDMl
- yQ+zJZVhiTIEPExvx2yHPt8Gb4vD9nklM6omlVYpu0t7d4EINmaSrURvpa8jZGeYVMzuniupd
- GCC0Ui4hsMVN4O+BGGp4mzzSTdHxZNuUpUfZalKuY98GENhMiAjkN8T1/WrzIzIlYLjdGtodz
- i4ar0/wiV5tIOczUPF0P9sKJGaDYgVsNGNmzm403LzNNJzt1oxw6UMUJE4iRQ1Akef7DSocGP
- TPO/xZ/dimwT8pDNNP6hqgqxRCEPgk43rCb1CWF2rYxdcoPcQLVLwDgWV1VH9AhMabNUbojSm
- G8HmBR+fcLs6jSPX8Ls6tidrpGP6nsyMSNMLDV8lfryssOazCoAdn2ZG4RZJ1/o5BEegZ8I9B
- 80CzFDRI32YAgnT9uC1xB8szTuFOrz1fc+/kgtYCqSk3qr4O9buMmeCmRGHuM+5J8UOGznTD8
- 0YZ3ZZkh/Y2ymPOhW2NNuVL+0rXAFSSaH49WsYDVcyPjUerW4YuaddC4lv6dBUSeTDyQY4nLK
- NV8OCikn7NeFF6Uk7/uPXIkQYE5CSkZ9+DUpSoA+hw2rOqe68k=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506111704.5a97a3e2@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_DEVICE_PRIVATE cannot be selected in configurations
-without ZONE_DEVICE:
+On Wed, May 06, 2020 at 11:17:04AM -0400, Steven Rostedt wrote:
+> OK, I did take authorship. At least it will be me who gets the blame ;-)
 
-WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
-  Depends on [n]: ZONE_DEVICE [=n]
-  Selected by [y]:
-  - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && DRM_NOUVEAU [=y] && MMU [=y] && STAGING [=y]
-kernel/resource.c:1653:28: error: use of undeclared identifier 'PA_SECTION_SHIFT'
-        size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
-                                  ^
-kernel/resource.c:1654:48: error: use of undeclared identifier 'MAX_PHYSMEM_BITS'
+Okay, I meanwhile worked on the removal of vmalloc_sync_(un)mappings.
+Let's see what people think about it.
 
-Add a dependency for Nouveau to avoid broken randconfig builds.
+Regards,
 
-Fixes: d2c63df2242e ("mm/hmm: make CONFIG_DEVICE_PRIVATE into a select")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/nouveau/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index af5793f3e7c2..996ec5475908 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -87,6 +87,7 @@ config DRM_NOUVEAU_BACKLIGHT
- config DRM_NOUVEAU_SVM
- 	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
- 	depends on DRM_NOUVEAU
-+	depends on ZONE_DEVICE
- 	depends on MMU
- 	depends on STAGING
- 	select DEVICE_PRIVATE
--- 
-2.26.0
-
+	Joerg
