@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3256C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D188218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8719F24953
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942152;
-	bh=TP97m5R3CtqaMXtZ++WkaHcN9XZ3LDmzoitsQph8EPo=;
+	s=default; t=1588942161;
+	bh=B0ZRehfb7daJt9fmJGPXuRxL4DWb4WzgqL+FHZ7Ej7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OM7SPM1DrBCic9xS3f7RyQk4ZX5/g9DBdT3nhE9Zjw1qOnfz8YnbOhqxxvHggZhes
-	 7NWazUUk87xC6O8baSkKVy9vndDqxBBTr1RfuyixkK8TqICYeSjEORn4G2twcH8L4L
-	 DKm2KN4/mduycxdo2Cx7Z+9yHZscpli/lvwMc+BY=
+	b=Hvt5nPGTx4gnOPH2WMSjghwD169DsTiFyoQ1d1dbcf02LYNLBax+vzmTi5IKs0CLz
+	 yp6sZ105SSsb6UC4hmcGhN6RgO8B39S/id7sgQVl8UPKwTmcRyIz+Sk06ITi2T0QtZ
+	 QgQcoi3IdNuqPjkq9tyt4Q6cg9tlxY9uBWyOGc2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgEHMtL (ORCPT
+        id S1729725AbgEHMtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53668 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgEHMsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:55 -0400
+        id S1729711AbgEHMtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FCEB21473;
-        Fri,  8 May 2020 12:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B7321473;
+        Fri,  8 May 2020 12:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942135;
-        bh=TP97m5R3CtqaMXtZ++WkaHcN9XZ3LDmzoitsQph8EPo=;
+        s=default; t=1588942156;
+        bh=B0ZRehfb7daJt9fmJGPXuRxL4DWb4WzgqL+FHZ7Ej7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdw5AUefalhp2+8kY8/goSfmSUxfaga8fwDyDGoPvH1W04qa57uDzdI4avvbTVesi
-         oJHEo0b/71ZsTZMVmmc9oc98mbCW8aW/MedYzGYky7VVZcBN/iPPAO2v1sxNhcoE02
-         txKr5c/6tKDF6RVac8B2y/2c8VeB8YmhbA26cJYQ=
+        b=oKRm1kgUL1f3CeiVbBj505ss1hm5g1ORZKrs/QbonbYVZv8jRe61Gxm73Icmf1vmT
+         53Fyyagu9QPAsaxZXYtJQ6xUzzBJHPzkLAwmgJYSgCDG3BL2SCqfJlLsSSgXj9rO0N
+         pOsk1SAmhwyursZffLesLlnUPzNvCRa36qvaq2Vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        stable@vger.kernel.org, Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 310/312] sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-Date:   Fri,  8 May 2020 14:35:01 +0200
-Message-Id: <20200508123146.325593469@linuxfoundation.org>
+Subject: [PATCH 4.4 280/312] net: hns: fix device reference leaks
+Date:   Fri,  8 May 2020 14:34:31 +0200
+Message-Id: <20200508123144.109692712@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,42 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jere Leppänen <jere.leppanen@nokia.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 12dfd78e3a74825e6f0bc8df7ef9f938fbc6bfe3 upstream.
+commit 2271150bfb814b72ec57ae2fdf66e39da2eafafd upstream.
 
-When starting shutdown in sctp_sf_do_dupcook_a(), get the value for
-SHUTDOWN Cumulative TSN Ack from the new association, which is
-reconstructed from the cookie, instead of the old association, which
-the peer doesn't have anymore.
+Make sure to drop the reference taken by class_find_device() in
+hnae_get_handle() on errors and when later releasing the handle.
 
-Otherwise the SHUTDOWN is either ignored or replied to with an ABORT
-by the peer because CTSN Ack doesn't match the peer's Initial TSN.
-
-Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
-Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fixes: 6fe6611ff275 ("net: add Hisilicon Network Subsystem...")
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
+Cc: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sctp/sm_make_chunk.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hnae.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -857,7 +857,11 @@ struct sctp_chunk *sctp_make_shutdown(co
- 	sctp_shutdownhdr_t shut;
- 	__u32 ctsn;
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.c
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+@@ -331,8 +331,10 @@ struct hnae_handle *hnae_get_handle(stru
+ 		return ERR_PTR(-ENODEV);
  
--	ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
-+	if (chunk && chunk->asoc)
-+		ctsn = sctp_tsnmap_get_ctsn(&chunk->asoc->peer.tsn_map);
-+	else
-+		ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
+ 	handle = dev->ops->get_handle(dev, port_id);
+-	if (IS_ERR(handle))
++	if (IS_ERR(handle)) {
++		put_device(&dev->cls_dev);
+ 		return handle;
++	}
+ 
+ 	handle->dev = dev;
+ 	handle->owner_dev = owner_dev;
+@@ -355,6 +357,8 @@ out_when_init_queue:
+ 	for (j = i - 1; j >= 0; j--)
+ 		hnae_fini_queue(handle->qs[j]);
+ 
++	put_device(&dev->cls_dev);
 +
- 	shut.cum_tsn_ack = htonl(ctsn);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ EXPORT_SYMBOL(hnae_get_handle);
+@@ -376,6 +380,8 @@ void hnae_put_handle(struct hnae_handle
+ 		dev->ops->put_handle(h);
  
- 	retval = sctp_make_control(asoc, SCTP_CID_SHUTDOWN, 0,
+ 	module_put(dev->owner);
++
++	put_device(&dev->cls_dev);
+ }
+ EXPORT_SYMBOL(hnae_put_handle);
+ 
 
 
