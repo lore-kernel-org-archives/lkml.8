@@ -2,222 +2,399 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12DFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131D2C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82471208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHTx8S84"
+	by mail.kernel.org (Postfix) with ESMTP id E0D6B20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgEHKIH (ORCPT
+        id S1726770AbgEHKJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgEHKIH (ORCPT
+        Fri, 8 May 2020 06:09:28 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41388 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgEHKJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:08:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A16C05BD43;
-        Fri,  8 May 2020 03:08:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l18so1184099wrn.6;
-        Fri, 08 May 2020 03:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cMrXUnaCQ6nb0TNeDE3z+xWlmBXzCBLLvf7b5TeC00M=;
-        b=YHTx8S84AjkknLST+QQrfc6FW2ngA/ciHZ2fjnf3DmCskDVE/lrfqCyF8og4Cj129z
-         KsC822zLkQiWHFgK801nGelUuDMSOqH2WP8FHS6Fn/NtwGd34/ynSNDAlQXxJ1OZa29o
-         hUpTZY7Djkyo/v9PAwLPWGJhm10Q608NpkiM1gsve2ObdiBRUdges4bi9p0aC2LDwCOn
-         d3ersJJnNF/NeuL6lvR/GPlVtVxlIpfhQjHQv85bJsuypdFve/9CCnA1vdtxmm8hLX1G
-         ymuexHRslUdJPEb1vbdjVVtpQMtanNyFyIu8AvfR0PhY4WgSw/mnWGniNlEPXyRFCWe5
-         jadA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cMrXUnaCQ6nb0TNeDE3z+xWlmBXzCBLLvf7b5TeC00M=;
-        b=jHeAvhswyAIZHeTJ/2MfmK+SgHnfcuoaG18Bp0qC4ZdjAXGYKjLqBpyGGI3vgQpyNi
-         td7lFpBbWUyrPBvqu6f6xDbJAI1sGLmcl4fufKJBr0zywjNy3z5i2G/Ep0bSjXwh+GcD
-         TryTSLu7BVTv6h5ZM+RI27IXNdjo713oDEJ5DUtoS1Dlr4aMQrGKnveoeC0zx2GkSMa1
-         TfJ5kOTAJMymi+9v4BT4zOSF5UxjTUtw3m5hwufLdX+5ReHzWcPHjDx5+eePsaRLH86J
-         +dDHQQFiOyabj2DxvOFpMHCdUZK4DLpV6Hvh6fZxQFXZuzWwPFX17/Sg0Y/7MnVgyU/D
-         r6yA==
-X-Gm-Message-State: AGi0PubMBNlygdLIdMj8wlMZ/uGGg6EF+2ecr0tzrWBHgfm0lklfWed7
-        LHlLYlVelvg4zwAksr3aeME/EkuLfU4=
-X-Google-Smtp-Source: APiQypLEt17JB/X+Fw/Poq8HAZrU3IhnvWhHS2sDpGd7T4Csm9vGWOiTN9ucEdO21bX1g+xV1ENvhw==
-X-Received: by 2002:a5d:54c4:: with SMTP id x4mr2175403wrv.73.1588932485577;
-        Fri, 08 May 2020 03:08:05 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id e21sm2178418wrc.1.2020.05.08.03.08.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 03:08:05 -0700 (PDT)
-Message-ID: <201b31e72f545ef46a74c7aa8e9cad8a9a81727e.camel@gmail.com>
-Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
- Booster(HPB) driver
-From:   Bean Huo <huobean@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        hch@infradead.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cang@codeaurora.org
-Date:   Fri, 08 May 2020 12:08:03 +0200
-In-Reply-To: <38db2ee7-18ff-9263-1cc7-1b9c6f085632@infradead.org>
-References: <20200504142032.16619-1-beanhuo@micron.com>
-         <20200504142032.16619-6-beanhuo@micron.com>
-         <38db2ee7-18ff-9263-1cc7-1b9c6f085632@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 8 May 2020 06:09:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8A5CF80307C7;
+        Fri,  8 May 2020 10:09:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yZfv1XbDoAXA; Fri,  8 May 2020 13:09:21 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lee Jones <lee.jones@linaro.org>, <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: [PATCH] mtd: physmap: Add Baikal-T1 physically mapped ROMs support
+Date:   Fri, 8 May 2020 13:08:55 +0300
+Message-ID: <20200508100905.5854-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 18:34 -0700, Randy Dunlap wrote:
-> Hi,
-> 
-> On 5/4/20 7:20 AM, huobean@gmail.com wrote:
-> > diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-> > index e2005aeddc2d..0224f224a641 100644
-> > --- a/drivers/scsi/ufs/Kconfig
-> > +++ b/drivers/scsi/ufs/Kconfig
-> > @@ -160,3 +160,65 @@ config SCSI_UFS_BSG
-> >  
-> >  	  Select this if you need a bsg device node for your UFS
-> > controller.
-> >  	  If unsure, say N.
-> > +
-> > +config SCSI_UFSHPB
-> > +	bool "UFS Host Performance Booster (EXPERIMENTAL)"
-> > +	depends on SCSI_UFSHCD
-> > +	help
-> > +	  NAND flash-based storage devices, including UFS, have
-> > mechanisms to
-> > +	  translate logical addresses of the IO requests to the
-> > corresponding
-> > +	  physical addresses of the flash storage. Traditionally, this
-> > L2P
-> > +	  mapping data is loaded to the internal SRAM in the storage
-> > controller.
-> > +	  When the capacity of storage is larger, a larger size of SRAM
-> > for the
-> > +	  L2P map data is required. Since increased SRAM size affects
-> > the
-> > +	  manufacturing cost significantly, it is not cost-effective to
-> > allocate
-> > +	  all the amount of SRAM needed to keep all the Logical-address 
-> > to
-> > +	  Physical-address (L2P) map data. Therefore, L2P map data,
-> > which is
-> > +	  required to identify the physical address for the requested
-> > IOs, can
-> > +	  only be partially stored in SRAM from NAND flash. Due to this
-> > partial
-> > +	  loading, accessing the flash address area where the L2P
-> > information
-> > +	  for that address is not loaded in the SRAM can result in
-> > serious
-> > +	  performance degradation.
-> > +
-> > +	  UFS Host Performance Booster (HPB) is a software solution for
-> > the
-> > +	  above problem, which uses the host side system memory as a
-> > cache for
-> > +	  the FTL L2P mapping table. It does not need additional
-> > hardware
-> > +	  support from the host side. By using HPB, the L2P mapping
-> > table can be
-> > +	  read from host memory and stored in host-side memory. when
-> > performing
-> 
-> Should that be: from device memory and stored in host-side memory.
-> ?
-> 
-> Also, s/when/When/
-> 
-> 
-> > +	  the read operation, the corresponding L2P information will be
-> > sent to
-> > +	  the UFS device along with the reading request. Since the L2P
-> > entry is
-> 
-> s/reading/read/
-> 
-> > +	  provided in the read request, UFS device does not have to
-> > load L2P
-> > +	  entry from flash memory to UFS internal SRAM. This will
-> > significantly
-> > +	  improve the read performance.
-> > +
-> > +	  When selected, this feature will be built in the UFS driver.
-> > +
-> > +	  If in doubt, say N.
-> > +
-> > +config UFSHPB_MAX_MEM_SIZE
-> > +	int "UFS HPB maximum memory size per controller (in MiB)"
-> > +	depends on SCSI_UFSHPB
-> > +	default 128
-> > +	range 0 65536
-> > +	help
-> > +	  This parameter defines the maximum UFS HPB memory/cache size
-> > in the
-> > +	  host system. The recommended HPB cache size by the UFS device
-> > can be
-> > +	  calculated from bHPBRegionSize and
-> > wDeviceMaxActiveHPBRegions. The
-> > +	  reference formula can be
-> 
-> s/can be/is/
-> 
-> > +
-> > +		(bHPBRegionSize(in KB) / 4KB) * 8 *
-> > wDeviceMaxActiveHPBRegions.
-> > +
-> > +	  The HPB cache in the host system is used to contain L2P
-> > mapping
-> > +	  entries. If the allocated HPB cache size is lower than what
-> > calculated
-> 
-> 	                                                    than that
-> 
-> > +	  by the above formula, the use of HPB feature may provide
-> > lower
-> > +	  performance advantage. But the system memory resource has the
-> > +	  limitation, we can not let HPB driver allocate its cache at
-> > will
-> > +	  according to the UFS device recommendation, so an appropriate
-> > size of
-> > +	  the cache for HPB should be specified before you choose to
-> > use HPB,
-> > +	  then please enter a non-zero positive integer value.
-> > +
-> > +	  Nevertheless, if you want to leave this to the HPB driver,
-> > and let the
-> > +	  HPB driver allocate the HPB cache based on the recommendation
-> > of the
-> > +	  UFS device. Just give 0 value to this parameter.
-> > +
-> > +	  Leave the default value if unsure.
-> 
-> thanks.
+Baikal-T1 Boot Controller provides an access to a RO storages, which are
+physically mapped into the MMIO space. In particularly there are the
+Internal ROM embedded into the SoC with a pre-installed firmware,
+externally attached SPI flash (also accessed in the read-only mode) and a
+memory region, which mirrors one of them in accordance with the currently
+enabled system boot mode (also called Boot ROM).
 
+This commit adds the ROMs support to the physmap driver of the MTD kernel
+subsystem. Currently the driver only supports the Internal ROM, since
+physically mapped SPI flash is utilized by the Baikal-T1 System Boot
+Controller driver so won't be available over mtd-rom interface and
+the Boot ROM mirror mapping has dependency on the SPI flash mapping
+switcher available within the SPI flash registers space. The real access
+to the Boot ROM memory will be added in future.
 
-Hi Randy
-Thanks for your review. I will change them based on your
-comments.
+Note we had to create a dedicated code for the ROMs since read from the
+corresponding memory regions must be done via the dword-aligned addresses.
+In addition the driver in future states will have to take into account
+that the Boot ROM might mirror the SPI flash region so before accessing it
+the SPI flash direct mapping must be enabled by means of a dedicated flag
+in the Baikal-T1 System SPI register flag.
 
-thanks,
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: linux-mips@vger.kernel.org
 
-Bean
+---
+
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
+
+New vendor prefix will be added in the framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
+
+Note since the next patchset is no longer relevant (as a result of a
+discussion with @Lee and @Miquel)
+https://lkml.org/lkml/2020/3/6/421
+and Boot ROM mtd is currently unsupported I can freely submit this patch,
+while in former case I had to wait for the patchset merged.
+---
+ drivers/mtd/maps/Kconfig           |   8 ++
+ drivers/mtd/maps/Makefile          |   1 +
+ drivers/mtd/maps/physmap-bt1-rom.c | 189 +++++++++++++++++++++++++++++
+ drivers/mtd/maps/physmap-bt1-rom.h |  17 +++
+ drivers/mtd/maps/physmap-core.c    |   5 +
+ 5 files changed, 220 insertions(+)
+ create mode 100644 drivers/mtd/maps/physmap-bt1-rom.c
+ create mode 100644 drivers/mtd/maps/physmap-bt1-rom.h
+
+diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
+index b28225a7c4f3..60b4285cd86a 100644
+--- a/drivers/mtd/maps/Kconfig
++++ b/drivers/mtd/maps/Kconfig
+@@ -107,6 +107,14 @@ config MTD_PHYSMAP_IXP4XX
+ 	  This provides some extra DT physmap parsing for the Intel IXP4xx
+ 	  platforms, some elaborate endianness handling in particular.
+ 
++config MTD_PHYSMAP_BT1_ROM
++	bool "Baikal-T1 Boot ROMs OF-based physical memory map handling"
++	depends on (MIPS_BAIKAL_T1 && MTD_PHYSMAP_OF) || COMPILE_TEST
++	select MTD_COMPLEX_MAPPINGS
++	help
++	  This provides some extra DT physmap parsing for the Baikal-T1
++	  platforms, some detection and setting up ROMs-specific accessors.
++
+ config MTD_PHYSMAP_GPIO_ADDR
+ 	bool "GPIO-assisted Flash Chip Support"
+ 	depends on MTD_PHYSMAP
+diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
+index c0da86a5d26f..45f3a151f568 100644
+--- a/drivers/mtd/maps/Makefile
++++ b/drivers/mtd/maps/Makefile
+@@ -21,6 +21,7 @@ physmap-objs-y			+= physmap-core.o
+ physmap-objs-$(CONFIG_MTD_PHYSMAP_VERSATILE) += physmap-versatile.o
+ physmap-objs-$(CONFIG_MTD_PHYSMAP_GEMINI) += physmap-gemini.o
+ physmap-objs-$(CONFIG_MTD_PHYSMAP_IXP4XX) += physmap-ixp4xx.o
++physmap-objs-$(CONFIG_MTD_PHYSMAP_BT1_ROM) += physmap-bt1-rom.o
+ physmap-objs			:= $(physmap-objs-y)
+ obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
+ obj-$(CONFIG_MTD_PISMO)		+= pismo.o
+diff --git a/drivers/mtd/maps/physmap-bt1-rom.c b/drivers/mtd/maps/physmap-bt1-rom.c
+new file mode 100644
+index 000000000000..55149af18729
+--- /dev/null
++++ b/drivers/mtd/maps/physmap-bt1-rom.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
++ *
++ * Authors:
++ *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
++ *
++ * Baikal-T1 Physically Mapped ROMs driver
++ */
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/device.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/bits.h>
++#include <linux/mtd/map.h>
++#include <linux/mtd/xip.h>
++#include <linux/string.h>
++
++#include "physmap-bt1-rom.h"
++
++struct bt1_rom_io {
++	map_word (*read)(struct map_info *map, unsigned long ofs);
++	void (*copy_from)(struct map_info *map, void *to, unsigned long from,
++			  ssize_t len);
++};
++
++/*
++ * Baikal-T1 SoC ROMs are only accessible by the dword-aligned instructions.
++ * We have to take this into account when implementing the data read-methods.
++ * Note there is no need in bothering with endianness, since both Baikal-T1
++ * CPU and MMIO are LE.
++ */
++static map_word __xipram bt1_rom_map_read(struct map_info *map,
++					  unsigned long ofs)
++{
++	void __iomem *src = map->virt + ofs;
++	unsigned long shift;
++	map_word ret;
++	u32 data;
++
++	/* Read data within offset dword. */
++	shift = (unsigned long)src & 0x3;
++	data = readl_relaxed(src - shift);
++	if (!shift) {
++		ret.x[0] = data;
++		return ret;
++	}
++	ret.x[0] = data >> (shift * BITS_PER_BYTE);
++
++	/* Read data from the next dword. */
++	shift = 4 - shift;
++	if (ofs + shift >= map->size)
++		return ret;
++
++	data = readl_relaxed(src + shift);
++	ret.x[0] |= data << (shift * BITS_PER_BYTE);
++
++	return ret;
++}
++
++static void __xipram bt1_rom_map_copy_from(struct map_info *map,
++					   void *to, unsigned long from,
++					   ssize_t len)
++{
++	void __iomem *src = map->virt + from;
++	ssize_t shift, chunk;
++	u32 data;
++
++	if (len <= 0 || from >= map->size)
++		return;
++
++	/* Make sure we don't go over the map limit. */
++	len = min_t(ssize_t, map->size - from, len);
++
++	/*
++	 * Since requested data size can be pretty big we have to implement
++	 * the copy procedure as optimal as possible. That's why it's split
++	 * up into the next three stages: unaligned head, aligned body,
++	 * unaligned tail.
++	 */
++	shift = (ssize_t)src & 0x3;
++	if (shift) {
++		chunk = min_t(ssize_t, 4 - shift, len);
++		data = readl_relaxed(src - shift);
++		memcpy(to, &data + shift, chunk);
++		src += chunk;
++		to += chunk;
++		len -= chunk;
++	}
++
++	while (len >= 4) {
++		data = readl_relaxed(src);
++		memcpy(to, &data, 4);
++		src += 4;
++		to += 4;
++		len -= 4;
++	}
++
++	if (len) {
++		data = readl_relaxed(src);
++		memcpy(to, &data, len);
++	}
++}
++
++static map_word __xipram bt1_rom_dummy_read(struct map_info *map,
++					  unsigned long ofs)
++{
++	map_word ret;
++
++	ret.x[0] = 0xFF;
++
++	return ret;
++}
++
++static void __xipram bt1_rom_dummy_copy_from(struct map_info *map,
++					   void *to, unsigned long from,
++					   ssize_t len)
++{
++	if (len <= 0 || from >= map->size)
++		return;
++
++	len = min_t(ssize_t, map->size - from, len);
++
++	memset(to, 0xFF, len);
++}
++
++static const struct bt1_rom_io bt1_rom_normal_io = {
++	.read = bt1_rom_map_read,
++	.copy_from = bt1_rom_map_copy_from
++};
++
++static const struct bt1_rom_io bt1_rom_dummy_io = {
++	.read = bt1_rom_dummy_read,
++	.copy_from = bt1_rom_dummy_copy_from
++};
++
++/*
++ * Currently Baikal-T1 SoC internal ROM is only supported. Boot ROM region is
++ * dummy-data filled for now since in case of the system booted up from an
++ * external SPI flash the ROM will mirror the Baikal-T1 System Boot SPI direct
++ * mapping memory region. That region can be only accessed when transparent
++ * mode is enabled, which we unable to do here because this feature is provided
++ * by the SPI controller config space occupied by the corresponding driver.
++ * In future we'll export the mode setting method from the Baikal-T1 System
++ * Boot SPI Controller driver to also have the Boot ROM supported here.
++ */
++static const struct of_device_id bt1_rom_of_match[] = {
++	{
++		.compatible = "baikal,bt1-int-rom",
++		.data = &bt1_rom_normal_io
++	},
++	{
++		.compatible = "baikal,bt1-boot-rom",
++		.data = &bt1_rom_dummy_io
++	},
++	{ }
++};
++
++int of_flash_probe_bt1_rom(struct platform_device *pdev,
++			   struct device_node *np,
++			   struct map_info *map)
++{
++	const struct of_device_id *match;
++	struct device *dev = &pdev->dev;
++	const struct bt1_rom_io *io;
++
++	/* It's supposed to be read-only MTD. */
++	if (!of_device_is_compatible(np, "mtd-rom")) {
++		dev_info(dev, "No mtd-rom compatible string\n");
++		return 0;
++	}
++
++	/* Multiplatform guard. */
++	match = of_match_device(bt1_rom_of_match, dev);
++	if (!match)
++		return 0;
++
++	/* Sanity check the device parameters retrieved from DTB. */
++	if (map->bankwidth != 4)
++		dev_warn(dev, "Bank width is supposed to be 32 bits wide\n");
++
++	io = match->data;
++	map->read = io->read;
++	map->copy_from = io->copy_from;
++
++	return 0;
++}
+diff --git a/drivers/mtd/maps/physmap-bt1-rom.h b/drivers/mtd/maps/physmap-bt1-rom.h
+new file mode 100644
+index 000000000000..5874f2acf929
+--- /dev/null
++++ b/drivers/mtd/maps/physmap-bt1-rom.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#include <linux/of.h>
++#include <linux/mtd/map.h>
++
++#ifdef CONFIG_MTD_PHYSMAP_BT1_ROM
++int of_flash_probe_bt1_rom(struct platform_device *pdev,
++			   struct device_node *np,
++			   struct map_info *map);
++#else
++static inline
++int of_flash_probe_bt1_rom(struct platform_device *pdev,
++			   struct device_node *np,
++			   struct map_info *map)
++{
++	return 0;
++}
++#endif
+diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
+index 8f7f966fa9a7..a0716da933b5 100644
+--- a/drivers/mtd/maps/physmap-core.c
++++ b/drivers/mtd/maps/physmap-core.c
+@@ -44,6 +44,7 @@
+ #include "physmap-gemini.h"
+ #include "physmap-ixp4xx.h"
+ #include "physmap-versatile.h"
++#include "physmap-bt1-rom.h"
+ 
+ struct physmap_flash_info {
+ 	unsigned int		nmaps;
+@@ -383,6 +384,10 @@ static int physmap_flash_of_init(struct platform_device *dev)
+ 		if (err)
+ 			return err;
+ 
++		err = of_flash_probe_bt1_rom(dev, dp, &info->maps[i]);
++		if (err)
++			return err;
++
+ 		/*
+ 		 * On some platforms (e.g. MPC5200) a direct 1:1 mapping
+ 		 * may cause problems with JFFS2 usage, as the local bus (LPB)
+-- 
+2.25.1
 
