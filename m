@@ -2,119 +2,89 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E00C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE29AC54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2771620720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588904328;
-	bh=EuEfExuv8GxUm/9AxpNngXeruKZTglHQOLfbSIXQvS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jZkicLgD4WJ+4QGj6RDeVtPGDpl7JCHvXkgc1GIv3bISc3v4KzX/jT3UUq2gS+q9+
-	 JK++ZMLFz+erAFH+DA6LcV0DqzqnmOX6K8U7Y2afmhcl12SAX5baPKgVdujpcS5ZqN
-	 OI0/1LG4nVmOGelAZYrWaDXkrgABLfBZbTLsVUYY=
+	by mail.kernel.org (Postfix) with ESMTP id CCB9820720
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgEHCSr (ORCPT
+        id S1727786AbgEHCSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:18:47 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43201 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgEHCSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:18:47 -0400
-Received: by mail-pl1-f194.google.com with SMTP id z6so35498plk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 19:18:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rrANQAw88TdCPS5Lvil2wuvQ/jrJH7vBB9S7MegCNOM=;
-        b=ua2zl0bgb9dDhNJkVWs4Y6fhqcybLc9gD5+ovjfIsITFkBRyYQOv5IYmRDC8fST10t
-         qrrVbijpzypdLJ0HO74NvNv52qhNEY0eFCZ+0obX75TEaH4XFtADWpDvRiJN682sTkex
-         NL6ILUaGJ5SCkrZRBozw8XlXkIXNbAYBa1H40z41NtEXh4TbyI2a8vMO3x6FF8bs0GUM
-         jdKo2XQw+7hfH90gEF+ce4oX4QnvqbUtBxM7g97c/Pv8wfGztzkSFM8dViou87EO/iVs
-         SoNXbFdn/Bj5G4Wl7cl2sxDE1xieTFO5cBfto3xfNcFFLK3v6VYvgtO99nMZr0yNGfPc
-         j6aQ==
-X-Gm-Message-State: AGi0Pua/9BF4oLJAS282YTHVNLBELQDQfB9IZR+fid7CK7mvsq5oFeWc
-        IcrYCqr36jQ3JW7IuoF/qwM=
-X-Google-Smtp-Source: APiQypI/jZXDBh9K0zLWBC20fYdxXjE/xq7oJZyHmdC0STsLykww2+QM7KRyd/kcZiVCWWosyVWw9Q==
-X-Received: by 2002:a17:90b:3110:: with SMTP id gc16mr3367219pjb.155.1588904326314;
-        Thu, 07 May 2020 19:18:46 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b29sm182297pgn.15.2020.05.07.19.18.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 19:18:45 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id EBEEF403EA; Fri,  8 May 2020 02:18:44 +0000 (UTC)
-Date:   Fri, 8 May 2020 02:18:44 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     jeyu@kernel.org
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        nborisov@suse.com
-Subject: Re: [RFC] taint: add module firmware crash taint support
-Message-ID: <20200508021844.GB11244@42.do-not-panic.com>
-References: <20200508021438.4373-1-mcgrof@kernel.org>
+        Thu, 7 May 2020 22:18:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11454 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbgEHCSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 22:18:49 -0400
+IronPort-SDR: Y7NcK3aBf9Dct+MXnUJb1QxQ0AeByerTQGjy6M2s16Us5A9i6TFhqjJ53fHKx+vpvbaMw74Oyj
+ 0O4yTLrtmlBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:18:49 -0700
+IronPort-SDR: vkouUZttxfG0Us7aACldfHfvOfo0DU/TTfp3dJS6LKh5iTWJ8uufQcKzBYYluOPUYwRpk9dmPd
+ 8h2qYqArfdEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
+   d="scan'208";a="462068855"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 07 May 2020 19:18:49 -0700
+Received: from debox1-hc.jf.intel.com (debox1-hc.jf.intel.com [10.54.75.159])
+        by linux.intel.com (Postfix) with ESMTP id 174C4580609;
+        Thu,  7 May 2020 19:18:49 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     bhelgaas@google.com, andy@infradead.org, lee.jones@linaro.org,
+        alexander.h.duyck@linux.intel.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v2 1/3] PCI: Add defines for Designated Vendor-Specific Capability
+Date:   Thu,  7 May 2020 19:18:42 -0700
+Message-Id: <20200508021844.6911-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200505013206.11223-1-david.e.box@linux.intel.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508021438.4373-1-mcgrof@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:14:38AM +0000, Luis Chamberlain wrote:
-> Device driver firmware can crash, and sometimes, this can leave your
-> system in a state which makes the device or subsystem completely
-> useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-> of scraping some magical words from the kernel log, which is driver
-> specific, is much easier. So instead provide a helper which lets drivers
-> annotate this.
-> 
-> Once this happens, scrapers can easily scrape modules taint flags.
-> This will taint both the kernel and respective calling module.
-> 
-> The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
-> this fact should in no way shape or form affect lockdep. This taint
-> is device driver specific.
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
-> 
-> Below is the full diff stat of manual inspection throughout the kernel
-> when this happens. My methodology is to just scrape for "crash" and
-> then study the driver a bit to see if indeed it seems like that the
-> firmware crashes there. In *many* cases there is even infrastructure
-> for this, so this is sometimes clearly obvious. Some other times it
-> required a bit of deciphering.
-> 
-> The diff stat below is what I have so far, however the patch below
-> only includes the drivers that start with Q, as they were a source of
-> inspiration for this, and to make this RFC easier to read.
-> 
-> If this seems sensible, I can follow up with the kernel helper first,
-> and then tackle each subsystem independently.
-> 
-> I purposely skipped review of remoteproc and virtualization. That should
-> require its own separate careful review and considerations.
-> 
+Add PCIe DVSEC extended capability ID and defines for the header offsets.
+Defined in PCIe r5.0, sec 7.9.6.
 
-I should also note that another motivation for this is it is *very*
-common for support issues to creep up, where the issues at hand are
-firmware related. Easily ruling out a firmware crash, and later devising
-tooling which captures this, can help with support.
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ include/uapi/linux/pci_regs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  Luis
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f9701410d3b5..09daa9f07b6b 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -720,6 +720,7 @@
+ #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+ #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+ #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
++#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+ #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+ #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+ #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+@@ -1062,6 +1063,10 @@
+ #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+ #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+ 
++/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
++#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
++#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
++
+ /* Data Link Feature */
+ #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+ #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+-- 
+2.20.1
+
