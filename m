@@ -2,129 +2,145 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791BDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869BFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5085520708
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588916366;
-	bh=s1QOfFaBR3ddl7wV1dbceN/IOgXnzOguwOOgiPfWhGQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I5KzMMtZKhUKJvkeQGLRECQtYJqRHGwDjscrsIPNH9AzKLeskGVs9yPRJ3/omCVNN
-	 d2uDTsLnX8dOV5IX5j69ZbSnosEqIdf27IsHsyHd38yPo9qKWwoCLviD4khmZkoCz7
-	 w1VEDp/CKuH2STex3Z4L1DWz0DZaREM4BT8sCPy4=
+	by mail.kernel.org (Postfix) with ESMTP id 574222173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phq+qYMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgEHFjZ (ORCPT
+        id S1726091AbgEHFn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:39:25 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:34644 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgEHFjY (ORCPT
+        Fri, 8 May 2020 01:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbgEHFnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:39:24 -0400
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 0485dAgs031709
-        for <linux-kernel@vger.kernel.org>; Fri, 8 May 2020 14:39:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0485dAgs031709
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588916351;
-        bh=SqKr69BWgpV8udoi/Flc/nNEFYVLgHRZP6ZiW69HDQQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BYPavCJdDx9mWU/oYwDFRkdGBtMHQLhI4ehXr7WRmITBv5v2PKwD6ptkpn1+Mu0id
-         fpxv2lZJdBw1o8dCt9IL+D/bBPucLIKGMFI1RF4mq/6J7FtpcMwmlfpFvJN19e+Yu/
-         ePIji5FU3kBkKasUqseZbbALnD8UmmbKG3p6XqgH8vnf2Avwzn2dX3hdmvl9TmaY/n
-         xk4YPQAMW4c+ZsI3r46vCHHqoZtIFPiCKTsi+VZjBeg6olxm76MlcIq6dirxS8yjeH
-         TtsLe7mvNkJO/kdnFZk3B8FZgw9v+egP/aM/pOmJrLOOJ6Xgx0NORotCq1xMgj3USf
-         b9hP9EADz5xWw==
-X-Nifty-SrcIP: [209.85.221.176]
-Received: by mail-vk1-f176.google.com with SMTP id w188so133393vkf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:39:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZQJJN8IImKMWfR2KyxS4qLiVZsr7VKj/RutG+XYl8m9WtIORzv
-        t7dvemuZrZTjg3jiVIGoFV/mPz8tQ4RhBWgVsuA=
-X-Google-Smtp-Source: APiQypI+ysgFwE7foMEUn00XG6rjxwOrxSiDvC4blyElwPeN4nEuPDi2a6Z9H6Ggo5Ykk+k5HJ7Hyh0H5cf8GfdZ9hE=
-X-Received: by 2002:a1f:1ed1:: with SMTP id e200mr501090vke.96.1588916350322;
- Thu, 07 May 2020 22:39:10 -0700 (PDT)
+        Fri, 8 May 2020 01:43:55 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F4BC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:43:55 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id c2so330196ybi.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BiVT8x4Fc5dyq46n+Hw+xDF4oIkQkHtFR1b/SJCs0I4=;
+        b=phq+qYMe/tmA1caYZbha2uS86UrX+JoR3gK3zeZIeQazLEaSE9RApfQAi/p7y5hJ57
+         V5XX0C8acA7Mq1AoSeRo860sfn3QU/+8eYAXZjttoaOuscvEiEwVLqEzYEo3IiKh7zTZ
+         4BrKn8RPhEDBbuXhM3Cr0V5Xdm4nnf6/DEb3su888Yt1ZpxPNs6PXDVOwQCzJ3qqYOfJ
+         4EMGNgyAUD9WadFwdw9wdcslT5yR0AlGXEPPJQIgXYFpbObM6A+WAcHyS8O0IWZTliJ6
+         80tXa6KrLND9zVldwxZuqUsW3zrLDzsbT3P+sbdP5mtvr7xn3zsso/kjiNDQfycEYyRW
+         VCyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BiVT8x4Fc5dyq46n+Hw+xDF4oIkQkHtFR1b/SJCs0I4=;
+        b=jgc6+fH21dBIH4EIblYcQOrx24VQABJSWCMYpOuqeDeFvFTRAP++IgEuAjB70Oz+7Z
+         Py9FxeLIG5fQ4yDaGpEhgO2A6ME0VMfuCu+BgjnMGGSoIk5Rk14YNmRuwTG9NES4f5XY
+         2P5DJre5IYsOkA+JbKrggjUhPHMHptVEDYTaaSKsa9nENQJv9xqLTAGcQ/5BvAqJM/eH
+         h2gZBN+/XmybhUcnZfJw0TXcEIbMi1rk8YYZAkXlF4HT5nt53uRATENgFhD+emiirFq8
+         +oZw5jF7N+1aj7C3cu0pexyaGjIQxIcAk4zSZpl3V6wo8r0sYqwz1s+Dcm+nIODu+h9L
+         b5Ww==
+X-Gm-Message-State: AGi0PubrfcI3r+v0HABAhfyZbTF5q5/3j0BPtE5+f+xFerNJxSWlBQLb
+        Gy/f5Z/quweTuNvHi/JN4BZk8a2qi1/AcRGosG889w==
+X-Google-Smtp-Source: APiQypIpdGKyF4W8GsRGUUk4zGtCDqmFqLpXC0AQwLENnNPtdqCovYxcVCyWnJiASZ0d++HoZhpR7c5m9PF3dfTzUzE=
+X-Received: by 2002:a25:7cc1:: with SMTP id x184mr2015977ybc.403.1588916634370;
+ Thu, 07 May 2020 22:43:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588729957-19164-1-git-send-email-sidgup@codeaurora.org>
-In-Reply-To: <1588729957-19164-1-git-send-email-sidgup@codeaurora.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 8 May 2020 14:38:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATuhT-t81t86HwsYZkCp9kK3iOHX9VYtx=Hp18veFx3Dg@mail.gmail.com>
-Message-ID: <CAK7LNATuhT-t81t86HwsYZkCp9kK3iOHX9VYtx=Hp18veFx3Dg@mail.gmail.com>
-Subject: Re: [PATCH v3] scripts: headers_install: Exit with error on config leak
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>
+References: <20200507081436.49071-1-irogers@google.com> <20200507174835.GB3538@tassilo.jf.intel.com>
+ <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com> <20200507214652.GC3538@tassilo.jf.intel.com>
+In-Reply-To: <20200507214652.GC3538@tassilo.jf.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 7 May 2020 22:43:43 -0700
+Message-ID: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] Share events between metrics
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020 at 10:53 AM Siddharth Gupta <sidgup@codeaurora.org> wrote:
+On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
 >
-> Misuse of CONFIG_* in UAPI headers should result in an error. These config
-> options can be set in userspace by the user application which includes
-> these headers to control the APIs and structures being used in a kernel
-> which supports multiple targets.
+> > > - without this change events within a metric may get scheduled
+> > >   together, after they may appear as part of a larger group and be
+> > >   multiplexed at different times, lowering accuracy - however, less
+> > >   multiplexing may compensate for this.
+> >
+> > I agree the heuristic in this patch set is naive and would welcome to
+> > improve it from your toplev experience. I think this change is
+> > progress on TopDownL1 - would you agree?
 >
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> TopdownL1 in non SMT mode should always fit. Inside a group
+> deduping always makes sense.
+>
+> The problem is SMT mode where it doesn't fit. toplev tries
+> to group each node and each level together.
 
-Applied to linux-kbuild. Thanks.
+Thanks Andi, I've provided some examples of TopDownL3_SMT in the cover
+letter of the v3 patch set:
+https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+I tested sandybridge and cascadelake and the results look similar to
+the non-SMT version. Let me know if there's a different variant to
+test.
 
-> ---
->  scripts/headers_install.sh | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> >
+> > I'm wondering if what is needed are flags to control behavior. For
+> > example, avoiding the use of groups altogether. For TopDownL1 I see.
 >
-> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-> index a07668a..94a8335 100755
-> --- a/scripts/headers_install.sh
-> +++ b/scripts/headers_install.sh
-> @@ -64,7 +64,7 @@ configs=$(sed -e '
->         d
->  ' $OUTFILE)
+> Yes the current situation isn't great.
 >
-> -# The entries in the following list are not warned.
-> +# The entries in the following list do not result in an error.
->  # Please do not add a new entry. This list is only for existing ones.
->  # The list will be reduced gradually, and deleted eventually. (hopefully)
->  #
-> @@ -98,18 +98,19 @@ include/uapi/linux/raw.h:CONFIG_MAX_RAW_DEVS
+> For Topdown your patch clearly is an improvement, I'm not sure
+> it's for everything though.
 >
->  for c in $configs
->  do
-> -       warn=1
-> +       leak_error=1
->
->         for ignore in $config_leak_ignores
->         do
->                 if echo "$INFILE:$c" | grep -q "$ignore$"; then
-> -                       warn=
-> +                       leak_error=
->                         break
->                 fi
->         done
->
-> -       if [ "$warn" = 1 ]; then
-> -               echo "warning: $INFILE: leak $c to user-space" >&2
-> +       if [ "$leak_error" = 1 ]; then
-> +               echo "error: $INFILE: leak $c to user-space" >&2
-> +               exit 1
->         fi
->  done
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> Probably the advanced heuristics are only useful for a few
+> formulas, most are very simple. So maybe it's ok. I guess
+> would need some testing over the existing formulas.
 
+Agreed, do you have a pointer on a metric group where things would
+obviously be worse? I started off with a cache miss and hit rate
+metric and similar to topdown this approach is a benefit.
 
+In v3 I've added a --metric-no-merge option to retain existing
+grouping behavior, I've also added a --metric-no-group that avoids
+groups for all metrics. This may be useful if the NMI watchdog can't
+be disabled.
 
--- 
-Best Regards
-Masahiro Yamada
+Thanks for the input!
+Ian
+
+> -Andi
