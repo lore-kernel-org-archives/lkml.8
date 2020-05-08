@@ -4,69 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D313AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D3AC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B607824970
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C018208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgEHNJW (ORCPT
+        id S1730120AbgEHNFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
+        Fri, 8 May 2020 09:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730499AbgEHNFZ (ORCPT
+        by vger.kernel.org with ESMTP id S1730419AbgEHNFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:25 -0400
+        Fri, 8 May 2020 09:05:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880D0C05BD0E;
-        Fri,  8 May 2020 06:05:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2DEC05BD0A;
+        Fri,  8 May 2020 06:05:05 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gQ-0007I7-S1; Fri, 08 May 2020 15:04:55 +0200
+        id 1jX2gX-0007JG-3j; Fri, 08 May 2020 15:05:01 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A275B1C0475;
-        Fri,  8 May 2020 15:04:49 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:49 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 025B71C0822;
+        Fri,  8 May 2020 15:04:51 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:50 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf doc: Pass ASCIIDOC_EXTRA as an argument
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+Subject: [tip: perf/core] perf evsel: Rename perf_evsel__open_per_*() to
+ evsel__open_per_*()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, yuzhoujian <yuzhoujian@didichuxing.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200429231443.207201-2-irogers@google.com>
-References: <20200429231443.207201-2-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158894308957.8414.16891288926414860571.tip-bot2@tip-bot2>
+Message-ID: <158894309091.8414.12468417379454912081.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -82,83 +60,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     4b1984491e65c9592f9f2bfbe8fb5bf4d4e51587
-Gitweb:        https://git.kernel.org/tip/4b1984491e65c9592f9f2bfbe8fb5bf4d4e51587
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Wed, 29 Apr 2020 16:14:40 -07:00
+Commit-ID:     aa8c406b0adb3043b935293826b3e4675204ed83
+Gitweb:        https://git.kernel.org/tip/aa8c406b0adb3043b935293826b3e4675204ed83
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 29 Apr 2020 16:21:03 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:30 -03:00
 
-perf doc: Pass ASCIIDOC_EXTRA as an argument
+perf evsel: Rename perf_evsel__open_per_*() to evsel__open_per_*()
 
-commit e9cfa47e687d ("perf doc: allow ASCIIDOC_EXTRA to be an argument")
-allowed ASCIIDOC_EXTRA to be passed as an option to the Documentation
-Makefile. This change passes ASCIIDOC_EXTRA, set by detected features or
-command line options, prior to doing a Documentation build. This is
-necessary to allow conditional compilation, based on configuration
-variables, in asciidoc code.
+As those are not 'struct evsel' methods, not part of tools/lib/perf/,
+aka libperf, to whom the perf_ prefix belongs.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiwei Sun <jiwei.sun@windriver.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Link: http://lore.kernel.org/lkml/20200429231443.207201-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/event-times.c    | 8 ++++----
+ tools/perf/tests/openat-syscall.c | 2 +-
+ tools/perf/util/evsel.c           | 7 ++-----
+ tools/perf/util/evsel.h           | 7 ++-----
+ tools/perf/util/stat.c            | 4 ++--
+ 5 files changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d15a311..94a4955 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -188,7 +188,7 @@ AWK     = awk
- # non-config cases
- config := 1
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index 1e8a9f5..db68894 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -72,7 +72,7 @@ static int attach__current_disabled(struct evlist *evlist)
  
--NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
-+NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help
+ 	evsel->core.attr.disabled = 1;
  
- ifdef MAKECMDGOALS
- ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
-@@ -832,7 +832,7 @@ INSTALL_DOC_TARGETS += quick-install-doc quick-install-man quick-install-html
+-	err = perf_evsel__open_per_thread(evsel, threads);
++	err = evsel__open_per_thread(evsel, threads);
+ 	if (err) {
+ 		pr_debug("Failed to open event cpu-clock:u\n");
+ 		return err;
+@@ -96,7 +96,7 @@ static int attach__current_enabled(struct evlist *evlist)
+ 		return -1;
+ 	}
  
- # 'make doc' should call 'make -C Documentation all'
- $(DOC_TARGETS):
--	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all)
-+	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all) ASCIIDOC_EXTRA=$(ASCIIDOC_EXTRA)
+-	err = perf_evsel__open_per_thread(evsel, threads);
++	err = evsel__open_per_thread(evsel, threads);
  
- TAG_FOLDERS= . ../lib ../include
- TAG_FILES= ../../include/uapi/linux/perf_event.h
-@@ -959,7 +959,7 @@ install-python_ext:
+ 	perf_thread_map__put(threads);
+ 	return err == 0 ? TEST_OK : TEST_FAIL;
+@@ -125,7 +125,7 @@ static int attach__cpu_disabled(struct evlist *evlist)
  
- # 'make install-doc' should call 'make -C Documentation install'
- $(INSTALL_DOC_TARGETS):
--	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:-doc=)
-+	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:-doc=) ASCIIDOC_EXTRA=$(ASCIIDOC_EXTRA)
+ 	evsel->core.attr.disabled = 1;
  
- ### Cleaning rules
+-	err = perf_evsel__open_per_cpu(evsel, cpus, -1);
++	err = evsel__open_per_cpu(evsel, cpus, -1);
+ 	if (err) {
+ 		if (err == -EACCES)
+ 			return TEST_SKIP;
+@@ -152,7 +152,7 @@ static int attach__cpu_enabled(struct evlist *evlist)
+ 		return -1;
+ 	}
  
+-	err = perf_evsel__open_per_cpu(evsel, cpus, -1);
++	err = evsel__open_per_cpu(evsel, cpus, -1);
+ 	if (err == -EACCES)
+ 		return TEST_SKIP;
+ 
+diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
+index 5ebffae..8497a1f 100644
+--- a/tools/perf/tests/openat-syscall.c
++++ b/tools/perf/tests/openat-syscall.c
+@@ -34,7 +34,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
+ 		goto out_thread_map_delete;
+ 	}
+ 
+-	if (perf_evsel__open_per_thread(evsel, threads) < 0) {
++	if (evsel__open_per_thread(evsel, threads) < 0) {
+ 		pr_debug("failed to open counter: %s, "
+ 			 "tweak /proc/sys/kernel/perf_event_paranoid?\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4f27176..bbd57e8 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1863,9 +1863,7 @@ void evsel__close(struct evsel *evsel)
+ 	perf_evsel__free_id(&evsel->core);
+ }
+ 
+-int perf_evsel__open_per_cpu(struct evsel *evsel,
+-			     struct perf_cpu_map *cpus,
+-			     int cpu)
++int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu)
+ {
+ 	if (cpu == -1)
+ 		return evsel__open_cpu(evsel, cpus, NULL, 0,
+@@ -1874,8 +1872,7 @@ int perf_evsel__open_per_cpu(struct evsel *evsel,
+ 	return evsel__open_cpu(evsel, cpus, NULL, cpu, cpu + 1);
+ }
+ 
+-int perf_evsel__open_per_thread(struct evsel *evsel,
+-				struct perf_thread_map *threads)
++int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
+ {
+ 	return evsel__open(evsel, NULL, threads);
+ }
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index df64d89..e16a9b2 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -233,11 +233,8 @@ int evsel__enable(struct evsel *evsel);
+ int evsel__disable(struct evsel *evsel);
+ int evsel__disable_cpu(struct evsel *evsel, int cpu);
+ 
+-int perf_evsel__open_per_cpu(struct evsel *evsel,
+-			     struct perf_cpu_map *cpus,
+-			     int cpu);
+-int perf_evsel__open_per_thread(struct evsel *evsel,
+-				struct perf_thread_map *threads);
++int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu);
++int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads);
+ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads);
+ void evsel__close(struct evsel *evsel);
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index c27f01b..3520b74 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -521,7 +521,7 @@ int create_perf_stat_counter(struct evsel *evsel,
+ 	}
+ 
+ 	if (target__has_cpu(target) && !target__has_per_thread(target))
+-		return perf_evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu);
++		return evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu);
+ 
+-	return perf_evsel__open_per_thread(evsel, evsel->core.threads);
++	return evsel__open_per_thread(evsel, evsel->core.threads);
+ }
