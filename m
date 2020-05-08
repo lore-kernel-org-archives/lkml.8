@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BF2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A4520870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C14920870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943066;
-	bh=pizm5190yqEzNfwvsx7bXg5xW4jY2Iiy10XBwxmLmXg=;
+	s=default; t=1588943068;
+	bh=0FOvSCNt8UtfbIPwhxl/4xZOBKkGSXp3YeT0bc0a7Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uiE71auWeqiRLx/D4I4KsmNxgDNUVv0W1O5wnsJZf8G3MhZgSUB+omtLYGLO3VUO6
-	 V+ntqGDx2a2cFjx6DplzgnX0PTHpHckS5vbJ6CfWB0BjLr87uXpJEINKM7fpg7+TVX
-	 kOLmYXPMMmBocH7Z+90HK28rFDHZHJ8vQruSEX3c=
+	b=eQgEK8bH1JX485/Dbti6DjRh36WuejGBnW/RSDNJ8WIGPgvRrN4dDLJzZP8KPAqCl
+	 6O5XPJeLWwZkVJGjRAK5MnKTPlKBZ3XTG8nMyn9bIKt831CNiZqCc73edm8uzFPNMv
+	 S7+Xm5QAs2EXCmTDMtg1lf+HWRd1IfEuwjYBMN0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgEHNEY (ORCPT
+        id S1729389AbgEHNE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgEHMtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:09 -0400
+        id S1728370AbgEHMtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1AF721473;
-        Fri,  8 May 2020 12:49:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8272324953;
+        Fri,  8 May 2020 12:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942148;
-        bh=pizm5190yqEzNfwvsx7bXg5xW4jY2Iiy10XBwxmLmXg=;
+        s=default; t=1588942146;
+        bh=0FOvSCNt8UtfbIPwhxl/4xZOBKkGSXp3YeT0bc0a7Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DcWbVQN36j0VS0GUZLdG9MI52xW4Iss2boT6ddkOxua5ZiXBq7HLrU2ASf/4VlAJz
-         3vTWRxY9p4F4bZX9WslWT8RbuCpVTntZoEOXEQSNvBr4WZzLiBijDmxNa6W4bH0oAB
-         ebigjr+aZbbfjl17mE7s0lwPpYHWxz7X9CLHReE8=
+        b=ArZv246rkOZXMBJ1iUJ5MijfHYeoAcrfF03XhcwhIeac/2IzpO3bac/SCffmh2948
+         2dI8sxOQ8iQI2Kqbu+CHggIyjNEH1KLK3yPPKloNto+X1ByqycDdfWF1h2jBifzkPi
+         c+z+6KEZ5w8sGUBiiPLjCxGYd7QS2vzQyuJBUpSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Brian Hutchinson <b.hutchman@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mugunthan V N <mugunthanvnm@ti.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 277/312] net: ethernet: mvneta: Remove IFF_UNICAST_FLT which is not implemented
-Date:   Fri,  8 May 2020 14:34:28 +0200
-Message-Id: <20200508123143.908731565@linuxfoundation.org>
+Subject: [PATCH 4.4 276/312] net: ethernet: davinci_emac: Fix devioctl while in fixed link
+Date:   Fri,  8 May 2020 14:34:27 +0200
+Message-Id: <20200508123143.839989509@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,34 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 97db8afa2ab919fc400fe982f5054060868bdf07 upstream.
+commit 62522ef3c399996f6c8120bfd14b94280bc9f490 upstream.
 
-The mvneta driver advertises it supports IFF_UNICAST_FLT. However, it
-actually does not. The hardware probably does support it, but there is
-no code to configure the filter. As a quick and simple fix, remove the
-flag. This will cause the core to fall back to promiscuous mode.
+When configured in fixed link, the DaVinci emac driver sets the
+priv->phydev to NULL and further ioctl calls to the phy_mii_ioctl()
+causes the kernel to crash.
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Fixes: b50b72de2f2f ("net: mvneta: enable features before registering the driver")
+Cc: Brian Hutchinson <b.hutchman@gmail.com>
+Fixes: 1bb6aa56bb38 ("net: davinci_emac: Add support for fixed-link PHY")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Mugunthan V N <mugunthanvnm@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/marvell/mvneta.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ti/davinci_emac.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -3406,7 +3406,7 @@ static int mvneta_probe(struct platform_
- 	dev->features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO;
- 	dev->hw_features |= dev->features;
- 	dev->vlan_features |= dev->features;
--	dev->priv_flags |= IFF_UNICAST_FLT | IFF_LIVE_ADDR_CHANGE;
-+	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
- 	dev->gso_max_segs = MVNETA_MAX_TSO_SEGS;
+--- a/drivers/net/ethernet/ti/davinci_emac.c
++++ b/drivers/net/ethernet/ti/davinci_emac.c
+@@ -1512,7 +1512,10 @@ static int emac_devioctl(struct net_devi
  
- 	err = register_netdev(dev);
+ 	/* TODO: Add phy read and write and private statistics get feature */
+ 
+-	return phy_mii_ioctl(priv->phydev, ifrq, cmd);
++	if (priv->phydev)
++		return phy_mii_ioctl(priv->phydev, ifrq, cmd);
++	else
++		return -EOPNOTSUPP;
+ }
+ 
+ static int match_first_device(struct device *dev, void *data)
 
 
