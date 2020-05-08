@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FAFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CADC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B742496A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4EB21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942056;
-	bh=YWuyGgbdAjxor5TtHYvnlQ5qaNPnByagaxDiHL2EUV8=;
+	s=default; t=1588942063;
+	bh=lAWvsf08nZvSQrfzMExadqGz3aL2prjAHcmVRlzYXZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltVxIxbNP4lYiu/1eAObtW/Q0OuSCcaO7jAx2QewTLny5znlJe4ma8FLQ349hQA0O
-	 aqja2GdnDEL56L1IF0AGH2ZrABvlP3uq1bywONA+Xu70gqkFcz2+Qq6yMRtagKoGyi
-	 sHdF6WyNaqcokXBvGR0hF2aBqRDLpGc/TSjzIY1E=
+	b=cvfTZfgCXsvshRqXEKWKjpevyNmsHFLhWMdO6dh3D7y3DrLsNTMR7aduM3k00NSNm
+	 xjvV8fEdnZcEYRQ8ZmhDD/nK3TSNkb+Yon+HHoXq6TrkeUPOBQonVU18YcB9TerEN5
+	 tgBSXtMNyTLuVnvhcH2E1XR4NtrDIbxdhkbp3KPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgEHMre (ORCPT
+        id S1728960AbgEHMrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:47:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgEHMr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:26 -0400
+        id S1729571AbgEHMrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1752221F7;
-        Fri,  8 May 2020 12:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9ED221F7;
+        Fri,  8 May 2020 12:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942046;
-        bh=YWuyGgbdAjxor5TtHYvnlQ5qaNPnByagaxDiHL2EUV8=;
+        s=default; t=1588942059;
+        bh=lAWvsf08nZvSQrfzMExadqGz3aL2prjAHcmVRlzYXZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWrIY5yk76R+PjDe/M1p+jAYrIuXeF2a0Tt9eWCc89S3954/2zqq72v6YRjSzHNjC
-         XGwMO71y7OEtbsj+qP87usK5pdJs3eutWXWA7J0zSpzpRrpvz48DUfGnSD01jXhqi7
-         XiuCHjwBNz8bM3SERBTsvnGKzdI1GmFgah/E2yh0=
+        b=JGNdz8lZwZ3kZY97w3pSEMAvvhh7dn4Stde5hNe0kNCdKG7FNjmuBGtWkcJt4v8+K
+         rMLwlOiuDGZH0tvB6/W9/cZz4C2Q0ShogXGUC2AR+We+GQwWrcF9SAf94gAxwSJRAy
+         96BL/d5htW9ok+xfgeuasAKfTQ/DeFpJslUCpcR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kodanev <alexey.kodanev@oracle.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 235/312] vti6: fix input path
-Date:   Fri,  8 May 2020 14:33:46 +0200
-Message-Id: <20200508123140.949604399@linuxfoundation.org>
+        stable@vger.kernel.org, Kyeyoon Park <kyeyoonp@codeaurora.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        bridge@lists.linux-foundation.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 281/312] net: bridge: dont increment tx_dropped in br_do_proxy_arp
+Date:   Fri,  8 May 2020 14:34:32 +0200
+Message-Id: <20200508123144.177646487@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,110 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 63c43787d35e45562a6b5927e2edc8f4783d95b8 upstream.
+commit 85a3d4a9356b595d5440c3f1bf07ee7cecca1567 upstream.
 
-Since commit 1625f4529957, vti6 is broken, all input packets are dropped
-(LINUX_MIB_XFRMINNOSTATES is incremented).
+pskb_may_pull may fail due to various reasons (e.g. alloc failure), but the
+skb isn't changed/dropped and processing continues so we shouldn't
+increment tx_dropped.
 
-XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 is set by vti6_rcv() before calling
-xfrm6_rcv()/xfrm6_rcv_spi(), thus we cannot set to NULL that value in
-xfrm6_rcv_spi().
-
-A new function xfrm6_rcv_tnl() that enables to pass a value to
-xfrm6_rcv_spi() is added, so that xfrm6_rcv() is not touched (this function
-is used in several handlers).
-
-CC: Alexey Kodanev <alexey.kodanev@oracle.com>
-Fixes: 1625f4529957 ("net/xfrm_input: fix possible NULL deref of tunnel.ip6->parms.i_key")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+CC: Kyeyoon Park <kyeyoonp@codeaurora.org>
+CC: Roopa Prabhu <roopa@cumulusnetworks.com>
+CC: Stephen Hemminger <stephen@networkplumber.org>
+CC: bridge@lists.linux-foundation.org
+Fixes: 958501163ddd ("bridge: Add support for IEEE 802.11 Proxy ARP")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/xfrm.h      |    4 +++-
- net/ipv6/ip6_vti.c      |    4 +---
- net/ipv6/xfrm6_input.c  |   16 +++++++++++-----
- net/ipv6/xfrm6_tunnel.c |    2 +-
- 4 files changed, 16 insertions(+), 10 deletions(-)
+ net/bridge/br_input.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1551,8 +1551,10 @@ int xfrm4_tunnel_deregister(struct xfrm_
- void xfrm4_local_error(struct sk_buff *skb, u32 mtu);
- int xfrm6_extract_header(struct sk_buff *skb);
- int xfrm6_extract_input(struct xfrm_state *x, struct sk_buff *skb);
--int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi);
-+int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi,
-+		  struct ip6_tnl *t);
- int xfrm6_transport_finish(struct sk_buff *skb, int async);
-+int xfrm6_rcv_tnl(struct sk_buff *skb, struct ip6_tnl *t);
- int xfrm6_rcv(struct sk_buff *skb);
- int xfrm6_input_addr(struct sk_buff *skb, xfrm_address_t *daddr,
- 		     xfrm_address_t *saddr, u8 proto);
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -324,11 +324,9 @@ static int vti6_rcv(struct sk_buff *skb)
- 			goto discard;
- 		}
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -78,13 +78,10 @@ static void br_do_proxy_arp(struct sk_bu
  
--		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = t;
--
- 		rcu_read_unlock();
+ 	BR_INPUT_SKB_CB(skb)->proxyarp_replied = false;
  
--		return xfrm6_rcv(skb);
-+		return xfrm6_rcv_tnl(skb, t);
- 	}
- 	rcu_read_unlock();
- 	return -EINVAL;
---- a/net/ipv6/xfrm6_input.c
-+++ b/net/ipv6/xfrm6_input.c
-@@ -21,9 +21,10 @@ int xfrm6_extract_input(struct xfrm_stat
- 	return xfrm6_extract_header(skb);
- }
+-	if (dev->flags & IFF_NOARP)
++	if ((dev->flags & IFF_NOARP) ||
++	    !pskb_may_pull(skb, arp_hdr_len(dev)))
+ 		return;
  
--int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi)
-+int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi,
-+		  struct ip6_tnl *t)
- {
--	XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = NULL;
-+	XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = t;
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET6;
- 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct ipv6hdr, daddr);
- 	return xfrm_input(skb, nexthdr, spi, 0);
-@@ -49,13 +50,18 @@ int xfrm6_transport_finish(struct sk_buf
- 	return -1;
- }
+-	if (!pskb_may_pull(skb, arp_hdr_len(dev))) {
+-		dev->stats.tx_dropped++;
+-		return;
+-	}
+ 	parp = arp_hdr(skb);
  
--int xfrm6_rcv(struct sk_buff *skb)
-+int xfrm6_rcv_tnl(struct sk_buff *skb, struct ip6_tnl *t)
- {
- 	return xfrm6_rcv_spi(skb, skb_network_header(skb)[IP6CB(skb)->nhoff],
--			     0);
-+			     0, t);
- }
--EXPORT_SYMBOL(xfrm6_rcv);
-+EXPORT_SYMBOL(xfrm6_rcv_tnl);
- 
-+int xfrm6_rcv(struct sk_buff *skb)
-+{
-+	return xfrm6_rcv_tnl(skb, NULL);
-+}
-+EXPORT_SYMBOL(xfrm6_rcv);
- int xfrm6_input_addr(struct sk_buff *skb, xfrm_address_t *daddr,
- 		     xfrm_address_t *saddr, u8 proto)
- {
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -239,7 +239,7 @@ static int xfrm6_tunnel_rcv(struct sk_bu
- 	__be32 spi;
- 
- 	spi = xfrm6_tunnel_spi_lookup(net, (const xfrm_address_t *)&iph->saddr);
--	return xfrm6_rcv_spi(skb, IPPROTO_IPV6, spi);
-+	return xfrm6_rcv_spi(skb, IPPROTO_IPV6, spi, NULL);
- }
- 
- static int xfrm6_tunnel_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
+ 	if (parp->ar_pro != htons(ETH_P_IP) ||
 
 
