@@ -2,187 +2,144 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C4CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC81C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 396A020870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r54rmYQW"
+	by mail.kernel.org (Postfix) with ESMTP id 2A3C5208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgEHGl3 (ORCPT
+        id S1727891AbgEHGlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:41:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56215 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726048AbgEHGl2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:41:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588920087; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=JGbArbE31FgJMYaWjsdsGR2edFKZOM0SJ0pUFigb4cY=; b=r54rmYQWkIssOczo7+4d6ttJOnxJ2q08j6rww7fQQAwesT8I8JUtlDT1bVK2hzFyVUgKqYdt
- Pdj9WxjdpP9fdw3NeuWFQH69UCXWTUO9+sLALI75KeKU7jwQiiIcJjhEIcYDxZ5oFLHwPoa2
- 9H+88MezbeggbVJVkxLADEg1Y24=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb4ff0b.7fbb7575f688-smtp-out-n04;
- Fri, 08 May 2020 06:41:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BEBCCC4478C; Fri,  8 May 2020 06:41:15 +0000 (UTC)
-Received: from charante-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2B60C433BA;
-        Fri,  8 May 2020 06:41:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2B60C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-From:   Charan Teja Reddy <charante@codeaurora.org>
-To:     sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com
-Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
-Date:   Fri,  8 May 2020 12:11:03 +0530
-Message-Id: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 8 May 2020 02:41:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbgEHGln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 02:41:43 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 63B79A0D0C0777DF1379;
+        Fri,  8 May 2020 14:41:40 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 14:41:32 +0800
+Subject: Re: [PATCH] tools/bootconfig: fix resource leak in apply_xbc()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hewenliang <hewenliang4@huawei.com>,
+        Shiyuan Hu <hushiyuan@huawei.com>
+References: <63755ce8-5e1b-6c54-2f74-649cc2546371@web.de>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <9359694c-57bf-729f-593f-6e25c4b115f6@huawei.com>
+Date:   Fri, 8 May 2020 14:41:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <63755ce8-5e1b-6c54-2f74-649cc2546371@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following race occurs while accessing the dmabuf object exported as
-file:
-P1				P2
-dma_buf_release()          dmabuffs_dname()
-			   [say lsof reading /proc/<P1 pid>/fd/<num>]
 
-			   read dmabuf stored in dentry->d_fsdata
-Free the dmabuf object
-			   Start accessing the dmabuf structure
 
-In the above description, the dmabuf object freed in P1 is being
-accessed from P2 which is resulting into the use-after-free. Below is
-the dump stack reported.
+On 2020/5/8 4:30, Markus Elfring wrote:
+>> The @data and @fd is leak in the error path of apply_xbc(), so this
+>> patch fix it.
+> 
+> I suggest to improve this change description.
+> 
+> * Please use an imperative wording.
+> 
+> * Would you like to add the tag “Fixes”?
+> 
+> 
+>> +++ b/tools/bootconfig/main.c
+>> @@ -314,6 +314,7 @@  int apply_xbc(const char *path, const char *xbc_path)
+>>  	ret = delete_xbc(path);
+>>  	if (ret < 0) {
+>>  		pr_err("Failed to delete previous boot config: %d\n", ret);
+>> +		free(data);
+>>  		return ret;
+>>  	}
+> 
+> I propose to adjust the exception handling.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=6e7f2eacf09811d092c1b41263108ac7fe0d089d#n450
+> 
+> -		return ret;
+> +		goto free_data;
+> 
+> 
+>> @@ -321,24 +322,26 @@ int apply_xbc(const char *path, const char *xbc_path)
+>>  	fd = open(path, O_RDWR | O_APPEND);
+>>  	if (fd < 0) {
+>>  		pr_err("Failed to open %s: %d\n", path, fd);
+>> +		free(data);
+>>  		return fd;
+> 
+> -		return fd;
+> +		ret = fd;
+> +		goto free_data;
+> 
+> 
+>>  	}
+>>  	/* TODO: Ensure the @path is initramfs/initrd image */
+>>  	ret = write(fd, data, size + 8);
+>>  	if (ret < 0) {
+>>  		pr_err("Failed to apply a boot config: %d\n", ret);
+>> -		return ret;
+>> +		goto out;
+> 
+> +		goto free_data;
+> 
+> 
+>>  	}
+>>  	/* Write a magic word of the bootconfig */
+>>  	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
+>>  	if (ret < 0) {
+> 
+> -	if (ret < 0) {
+> +	if (ret < 0)
+> 
+> 
+>>  		pr_err("Failed to apply a boot config magic: %d\n", ret);
+>> -		return ret;
+>> +		goto out;
+> 
+> I suggest to avoid an extra jump at such a place.
+> 
+> 
+>>  	}
+> 
+> -	}
+> +
+> 
+> 
+>> +out:
+> 
+> +close_fd:
+>>  	close(fd);
+> 
+> +free_data:
+>>  	free(data);
+> 
+> 
+> How do you think about to complete the error handling also at other
+> source code places?
+> 
+ok, I will modify and send the patch v2, thanks.
 
-We are reading the dmabuf object stored in the dentry->d_fsdata but
-there is no binding between the dentry and the dmabuf which means that
-the dmabuf can be freed while it is being read from ->d_fsdata and
-inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
-with an extra refcount is not a viable solution as the exported dmabuf
-is already under file's refcount and keeping the multiple refcounts on
-the same object coordinated is not possible.
+> Regards,
+> Markus
+> 
+> 
 
-As we are reading the dmabuf in ->d_fsdata just to get the user passed
-name, we can directly store the name in d_fsdata thus can avoid the
-reading of dmabuf altogether.
-
-Call Trace:
- kasan_report+0x12/0x20
- __asan_report_load8_noabort+0x14/0x20
- dmabuffs_dname+0x4f4/0x560
- tomoyo_realpath_from_path+0x165/0x660
- tomoyo_get_realpath
- tomoyo_check_open_permission+0x2a3/0x3e0
- tomoyo_file_open
- tomoyo_file_open+0xa9/0xd0
- security_file_open+0x71/0x300
- do_dentry_open+0x37a/0x1380
- vfs_open+0xa0/0xd0
- path_openat+0x12ee/0x3490
- do_filp_open+0x192/0x260
- do_sys_openat2+0x5eb/0x7e0
- do_sys_open+0xf2/0x180
-
-Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
-Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org> [5.3+]
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
----
-
-Changes in v2: 
-
-- Pass the user passed name in ->d_fsdata instead of dmabuf
-- Improve the commit message
-
-Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
-
- drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 01ce125..0071f7d 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -25,6 +25,7 @@
- #include <linux/mm.h>
- #include <linux/mount.h>
- #include <linux/pseudo_fs.h>
-+#include <linux/dcache.h>
- 
- #include <uapi/linux/dma-buf.h>
- #include <uapi/linux/magic.h>
-@@ -40,15 +41,13 @@ struct dma_buf_list {
- 
- static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
- {
--	struct dma_buf *dmabuf;
- 	char name[DMA_BUF_NAME_LEN];
- 	size_t ret = 0;
- 
--	dmabuf = dentry->d_fsdata;
--	dma_resv_lock(dmabuf->resv, NULL);
--	if (dmabuf->name)
--		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
--	dma_resv_unlock(dmabuf->resv);
-+	spin_lock(&dentry->d_lock);
-+	if (dentry->d_fsdata)
-+		ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
-+	spin_unlock(&dentry->d_lock);
- 
- 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
- 			     dentry->d_name.name, ret > 0 ? name : "");
-@@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
- static int dma_buf_release(struct inode *inode, struct file *file)
- {
- 	struct dma_buf *dmabuf;
-+	struct dentry *dentry = file->f_path.dentry;
- 
- 	if (!is_dma_buf_file(file))
- 		return -EINVAL;
- 
- 	dmabuf = file->private_data;
- 
-+	spin_lock(&dentry->d_lock);
-+	dentry->d_fsdata = NULL;
-+	spin_unlock(&dentry->d_lock);
- 	BUG_ON(dmabuf->vmapping_counter);
- 
- 	/*
-@@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
- 	}
- 	kfree(dmabuf->name);
- 	dmabuf->name = name;
-+	dmabuf->file->f_path.dentry->d_fsdata = name;
- 
- out_unlock:
- 	dma_resv_unlock(dmabuf->resv);
-@@ -446,7 +450,6 @@ static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
- 		goto err_alloc_file;
- 	file->f_flags = flags & (O_ACCMODE | O_NONBLOCK);
- 	file->private_data = dmabuf;
--	file->f_path.dentry->d_fsdata = dmabuf;
- 
- 	return file;
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
