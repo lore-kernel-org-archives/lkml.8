@@ -2,74 +2,88 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2500EC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2112C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07049208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588923484;
-	bh=HgSffkZ3pjQDj7iS38C707e8soAKo3/5HEBzFLGlmGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RmKa16jXs5vOvInMD9FNAZKBn7tN/V1NSLy7CJrVt5Mcx6EspQWc+eInghPGzkblN
-	 tCH7HLtiH3vViGXyXuzxgXk19HA7Q1coX/YW7nvv0KdVWSPdBUWfofQRPtpHk/itW+
-	 GiqJvgTqv7oiPj+DBhNERJNvRpojEXqQxUwfMufk=
+	by mail.kernel.org (Postfix) with ESMTP id 709A2206D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgEHHiD (ORCPT
+        id S1726750AbgEHHlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45156 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 03:41:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37308 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgEHHiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:38:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 303AD206D5;
-        Fri,  8 May 2020 07:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588923482;
-        bh=HgSffkZ3pjQDj7iS38C707e8soAKo3/5HEBzFLGlmGU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CiYMAXyOOzjj5TJpsGy3geryC12x8gjVFEBMUeV570xP5rrJAfXg8C7lWeo/UXS3n
-         hpGS+w0y5NN/8N2zg/q2WXmSRS1ac9NobH5JQ/DXBiAxlv5QSAN7j6RjgY13sImqS3
-         3p3sBNVDwbtvl4fylYuSRr7o9wvh1CdCOp199cDA=
-Date:   Fri, 8 May 2020 09:38:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, Jiri Slaby <jslaby@suse.com>,
-        Je Yen Tam <je.yen.tam@ni.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jay Dolan <jay.dolan@accesio.com>,
-        Denis Efremov <efremov@linux.com>,
-        "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 1/2] serial: 8250_pci: Move Pericom IDs to pci_ids.h
-Message-ID: <20200508073800.GC3374631@kroah.com>
-References: <20200508065343.32751-1-kai.heng.feng@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508065343.32751-1-kai.heng.feng@canonical.com>
+        id S1726049AbgEHHlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:41:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0ACEDAFD7;
+        Fri,  8 May 2020 07:41:50 +0000 (UTC)
+Date:   Fri, 08 May 2020 09:41:46 +0200
+Message-ID: <s5h4ksq3mbp.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: fireworks: Replace zero-length array with flexible-array
+In-Reply-To: <20200507185245.GA14270@embeddedor>
+References: <20200507185245.GA14270@embeddedor>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:53:40PM +0800, Kai-Heng Feng wrote:
-> Move the IDs to pci_ids.h so it can be used by next patch.
+On Thu, 07 May 2020 20:52:45 +0200,
+Gustavo A. R. Silva wrote:
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/tty/serial/8250/8250_pci.c | 6 ------
->  include/linux/pci_ids.h            | 6 ++++++
->  2 files changed, 6 insertions(+), 6 deletions(-)
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Applied, thanks.
+
+
+Takashi
