@@ -2,127 +2,169 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A47C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D4C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1381C21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F62208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a66yDCyd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kH3u9qP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgEHF2i (ORCPT
+        id S1726325AbgEHFbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:28:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:38673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbgEHF2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:28:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 8 May 2020 01:31:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13383 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgEHFbN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 01:31:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588915872; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=yBlsnDa9mB7yVmBNrfzU9ebqr5YvNXeZgf6sXTZor6k=; b=kH3u9qP5GDsSQ4Gnc0D1Vq07AgsbhFfEF7ZKJ5VxUXNvNuk9WKmFN3qyqwI+Qs++9FTXNRkh
+ HoblV12d45bpTTG02moxKQTv1FGzs/cOCt0K27vFKi/ghtWPrJeaGdYc09pyjYb9Xv8CNACk
+ 5WHWbW5lLyiSX5+O4piyooBLQb8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb4ee9c.7efc26e3f8f0-smtp-out-n04;
+ Fri, 08 May 2020 05:31:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E12BBC44798; Fri,  8 May 2020 05:31:05 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JJlR68jPz9sSk;
-        Fri,  8 May 2020 15:28:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588915716;
-        bh=dQc43ogTgSb8NPgTzBm/D7KQjb0ycLXQsSyJCR301ZE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a66yDCydRrudsOc7jI5grRLoXAQgJfeNogtTdGSt9MPgHDe/yMxZenaYLHgONJRst
-         deTnzErClPdLgUpbKMnO4m6acFr3GHX1rkZEZbWS+7gOnBj2tJUNFV7nlM9caxN/in
-         7QkbqkJvOXXOX/MZJwFb3I8f8R2vMF5gP4FhggbrfRR3f4PV1PdQ2n6JLrRxvGjVoz
-         jKTrdxPQYLW1V1XlRQbiUmwCUsrUmKfNHBvGHXZW0eE8ZqsxtU9V/2uXLqkSSxH3Sn
-         +d9R/auMCClWXA6RnzFm+p3uLQpovFqDW2563I9sevgIvkAMTRh6D7wOUXESacjAL4
-         AIfj6EUkwMV8A==
-Date:   Fri, 8 May 2020 15:28:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yufen Yu <yuyufen@huawei.com>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200508152833.7e840076@canb.auug.org.au>
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57574C433D2;
+        Fri,  8 May 2020 05:30:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57574C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Fri, 8 May 2020 11:00:53 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH 13/14] sched: cpufreq: Use IS_ENABLED() for schedutil
+Message-ID: <20200508053053.GG19464@codeaurora.org>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200507181012.29791-14-qperret@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hmqVjdEB8aFiTqUt97aKeGF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507181012.29791-14-qperret@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hmqVjdEB8aFiTqUt97aKeGF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Quentin
 
-Hi all,
+On Thu, May 07, 2020 at 07:10:11PM +0100, Quentin Perret wrote:
+> The IS_ENABLED() macro evaluates to true when an option is set to =y or
+> =m. As such, it is a good fit for tristate options.
+> 
+> In preparation for modularizing schedutil, change all the related ifdefs
+> to use IS_ENABLED().
+> 
+> Signed-off-by: Quentin Perret <qperret@google.com>
+> ---
+>  include/linux/cpufreq.h      | 2 +-
+>  include/linux/sched/sysctl.h | 2 +-
+>  kernel/sched/sched.h         | 4 ++--
+>  kernel/sched/topology.c      | 4 ++--
+>  kernel/sysctl.c              | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 267cc3b624da..c1176b8a0f61 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -983,7 +983,7 @@ static inline bool policy_has_boost_freq(struct cpufreq_policy *policy)
+>  }
+>  #endif
+>  
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
+>  			struct cpufreq_governor *old_gov);
+>  #else
+> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+> index d4f6215ee03f..704d971f204f 100644
+> --- a/include/linux/sched/sysctl.h
+> +++ b/include/linux/sched/sysctl.h
+> @@ -94,7 +94,7 @@ extern int sysctl_schedstats(struct ctl_table *table, int write,
+>  				 void __user *buffer, size_t *lenp,
+>  				 loff_t *ppos);
+>  
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  extern unsigned int sysctl_sched_energy_aware;
+>  extern int sched_energy_aware_handler(struct ctl_table *table, int write,
+>  				 void __user *buffer, size_t *lenp,
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 60592cde80e8..087508723e58 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -217,7 +217,7 @@ static inline void update_avg(u64 *avg, u64 sample)
+>  
+>  static inline bool dl_entity_is_special(struct sched_dl_entity *dl_se)
+>  {
+> -#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+> +#if IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  	return unlikely(dl_se->flags & SCHED_FLAG_SUGOV);
+>  #else
+>  	return false;
+> @@ -2459,7 +2459,7 @@ unsigned long scale_irq_capacity(unsigned long util, unsigned long irq, unsigned
+>  }
+>  #endif
+>  
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  
+>  #define perf_domain_span(pd) (to_cpumask(((pd)->em_pd->cpus)))
+>  
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index b905f2e8d9b2..5f49d25730bd 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -201,7 +201,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+>  	return 1;
+>  }
+>  
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  DEFINE_STATIC_KEY_FALSE(sched_energy_present);
+>  unsigned int sysctl_sched_energy_aware = 1;
+>  DEFINE_MUTEX(sched_energy_mutex);
+> @@ -2287,7 +2287,7 @@ void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
+>  		;
+>  	}
+>  
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+>  	/* Build perf. domains: */
+>  	for (i = 0; i < ndoms_new; i++) {
+>  		for (j = 0; j < n && !sched_energy_update; j++) {
 
-After merging the block tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Now that scheduler does not have any references to schedutil_gov and cpufreq
+has want_eas flag, do we need this CONFIG_CPU_FREQ_GOV_SCHEDUTIL checks here?
 
-In file included from include/linux/kernel.h:15,
-                 from include/linux/list.h:9,
-                 from include/linux/module.h:12,
-                 from block/bfq-iosched.c:116:
-block/bfq-iosched.c: In function 'bfq_set_next_ioprio_data':
-block/bfq-iosched.c:4980:5: error: implicit declaration of function 'bdi_de=
-v_name'; did you mean 'blkg_dev_name'? [-Werror=3Dimplicit-function-declara=
-tion]
- 4980 |     bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
-      |     ^~~~~~~~~~~~
-
-Caused by commit
-
-  0f6438fca125 ("bdi: use bdi_dev_name() to get device name")
-
-I have applied the following patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 8 May 2020 15:23:50 +1000
-Subject: [PATCH] bdi: bdi_dev_name() needs backing-dev.h
-
-Fixes: 0f6438fca125 ("bdi: use bdi_dev_name() to get device name")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- block/bfq-iosched.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 4d4fe44a9eea..3d411716d7ee 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -123,6 +123,7 @@
- #include <linux/ioprio.h>
- #include <linux/sbitmap.h>
- #include <linux/delay.h>
-+#include <linux/backing-dev.h>
-=20
- #include "blk.h"
- #include "blk-mq.h"
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hmqVjdEB8aFiTqUt97aKeGF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl607gEACgkQAVBC80lX
-0GxdIwgAo98U9fDp3r4sqmd92szVIhSq/U9RqtWdGJg07HB7y6C9OAX2naNnyEDF
-P79BpmaaoBkcmI+yc1VhhcNW7YRCUPOJ98PY92lqiWy9fw+oAJAwOUwTnFH70X9W
-UMri2AqD6OCJma1Y7KTrLkJ3e1pLqMPBE/dAVq96KAuhNo+1XlpPOqL9+LxbHPm3
-yPDt1mUUQFsMG78eyKmJoZEMPUXWV/f11LhfiG4li9CsPHpeWiSk171PT3WAtP3s
-z3fq6DioiMCMSYk7dvEYzoRBCumpcTyVsslPwNJjbG2DCaPuYU73L7HGzYYqWVx2
-JbgFMzt4gun5Ck3vdqqSPyuWqXBWkA==
-=T44d
------END PGP SIGNATURE-----
-
---Sig_/hmqVjdEB8aFiTqUt97aKeGF--
+Thanks,
+Pavan
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
