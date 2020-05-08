@@ -2,57 +2,59 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4075C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF392495E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E33B20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943044;
-	bh=6PQThudiOADLiowU8hPRGHfSO63STL1z7Wa+F73g4G0=;
+	s=default; t=1588943049;
+	bh=WTjfYyt1tNj0vHu2bkWyXHfuboHGAurigpDyTeWo5mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+LghCmJBlVQoz4FXDJsSE5mHt7WLR6lYshjori4Rv6RIcd/pUYgGZFymIM3O2PfG
-	 ZrMVrHoyboR5LJC2rs9WDib4492s0HLBjNBIQ9+AcWeOYXhDOToqeeYsPZutvB9BLu
-	 mrG1NvCu+asCitk49KmlHHZfh5Xkh/w2rrgiKR40=
+	b=Wb8zpvo9YRa5VXqdv2cgPn8TJ1s1MyMYFqlQErfUbvcdXmHE+ri4/wofbhZ+uuWLW
+	 mRK2vHhlBbocib12zXxdmz1nxxiink/xVreCGbmu8Flj31d2ltAsNRxzl2Tq2v4cSy
+	 mfrTOvHXRib8e/b9rCStuWq+a5ySag4Gvk2BiW1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbgEHNED (ORCPT
+        id S1727933AbgEHNEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgEHMt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:28 -0400
+        id S1729711AbgEHMtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC44D21473;
-        Fri,  8 May 2020 12:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF13218AC;
+        Fri,  8 May 2020 12:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942168;
-        bh=6PQThudiOADLiowU8hPRGHfSO63STL1z7Wa+F73g4G0=;
+        s=default; t=1588942160;
+        bh=WTjfYyt1tNj0vHu2bkWyXHfuboHGAurigpDyTeWo5mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUeYS/sZ3WV9nSdGiYk8fT2coV8gOenWwyL9EBtsbyy7fUicLZqCGqHywWQDZxGGr
-         cA3Q51dVFyIzlkBYijlSpKNmMBXhA5Ogk9oCMeBZgJ6TuBjew+No3x6Tny3ug4hAy0
-         unzgr+LtfYv75nTlEhvecjAnVc6muS8WfgPGh5S0=
+        b=BppeGgr3YhZAdrEvnkjnEx4eZ9DZlDFuGVB9T5nfwpkskRincGPlhOvFtpP3N8I4n
+         IOxlCdh4jkI45zg2H4k4oUkuC8E9tbbWr1HPQTni1t8ys1ukqdme8DZsqjldZqDgmi
+         lNLr/aogAdSfjP0hjvdnGmM2Iusgf9CKGfbqTfKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/18] net: bcmgenet: suppress warnings on failed Rx SKB allocations
-Date:   Fri,  8 May 2020 14:35:15 +0200
-Message-Id: <20200508123033.424749203@linuxfoundation.org>
+        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jia He <justin.he@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 4.9 01/18] vhost: vsock: kick send_pkt worker once device is started
+Date:   Fri,  8 May 2020 14:35:04 +0200
+Message-Id: <20200508123031.429916359@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,47 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Jia He <justin.he@arm.com>
 
-[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
+commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+connecting from the client side. The vhost vsock client tries to connect
+an initializing virtio vsock server.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+The abnormal flow looks like:
+host-userspace           vhost vsock                       guest vsock
+==============           ===========                       ============
+connect()     -------->  vhost_transport_send_pkt_work()   initializing
+   |                     vq->private_data==NULL
+   |                     will not be queued
+   V
+schedule_timeout(2s)
+                         vhost_vsock_start()  <---------   device ready
+                         set vq->private_data
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
+wait for 2s and failed
+connect() again          vq->private_data!=NULL         recv connecting pkt
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Details:
+1. Host userspace sends a connect pkt, at that time, guest vsock is under
+   initializing, hence the vhost_vsock_start has not been called. So
+   vq->private_data==NULL, and the pkt is not been queued to send to guest
+2. Then it sleeps for 2s
+3. After guest vsock finishes initializing, vq->private_data is set
+4. When host userspace wakes up after 2s, send connecting pkt again,
+   everything is fine.
+
+As suggested by Stefano Garzarella, this fixes it by additional kicking the
+send_pkt worker in vhost_vsock_start once the virtio device is started. This
+makes the pending pkt sent again.
+
+After this patch, kata-runtime (with vsock enabled) boot time is reduced
+from 3s to 1s on a ThunderX2 arm64 server.
+
+[1] https://github.com/kata-containers/runtime/issues/1917
+
+Reported-by: Ning Bo <n.b@live.com>
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/vhost/vsock.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index a234044805977..5d4189c94718c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1596,7 +1596,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
- 	dma_addr_t mapping;
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -460,6 +460,11 @@ static int vhost_vsock_start(struct vhos
+ 		mutex_unlock(&vq->mutex);
+ 	}
  
- 	/* Allocate a new Rx skb */
--	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
-+	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, priv->dev,
--- 
-2.20.1
-
++	/* Some packets may have been queued before the device was started,
++	 * let's kick the send worker to send them.
++	 */
++	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++
+ 	mutex_unlock(&vsock->dev.mutex);
+ 	return 0;
+ 
 
 
