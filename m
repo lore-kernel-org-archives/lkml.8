@@ -2,198 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D43C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE7C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC672184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E7821775
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyyBQ3kV"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BByQsgDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgEHU2j (ORCPT
+        id S1727887AbgEHUaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47670 "EHLO
+        Fri, 8 May 2020 16:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHU2i (ORCPT
+        by vger.kernel.org with ESMTP id S1726948AbgEHUaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:28:38 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E48CC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:28:38 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id t3so2538537otp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:28:38 -0700 (PDT)
+        Fri, 8 May 2020 16:30:08 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5B5C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:30:07 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so2464521lfd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IyFIhj/81iNIcxew/1W4kf3IkOg+PZK0fC0YxofxM9k=;
-        b=eyyBQ3kVmTEBdu/6V/sBFcv/Spj8vWFYPFgUaDuNst0uTIwmNioqW0DHl3QegBJWAh
-         N1Kq55FanpPUu6ZMwM0WPM4xfvli70oA9y89oDyBPWnz6r1OLr8TdpPmP4jh4fSOUBl7
-         VRIaZpDpafa8Ygf7axMVFO4xig0rFh+X55H77seDkMgvPw5WIplCqKr8VAArlhdfGG/J
-         LhuGzMWUydrNokuNcpWm1m+DH5X4enwSPNC0M07aTbmR3eQqxiM2JZodRIG+wxPScoxw
-         C8s+LtgHEwXW2v60WyL8P1kZWX5ZKa5TKYtV57u1x4OCsGX5dMypoKSNVXyxa8bxIJ5L
-         Rz3w==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JkP0Yzz/l+xH+mX7IIfd2GFmeVL9ppgDSeJKkOGuaZs=;
+        b=BByQsgDmBbVUVcJNFmy8AmkPi3iJoG361CWAoRezKGuEHrPpx915LADgZRUCQzDD8Y
+         d1AUZrnvOydRU+LwM9UaAfWiwcpSpY7rOrfFk7/bfx9bcP8yDDeIZiDkHgVB8PvFGiwJ
+         7BCLWlmbpZA/M97YC8l9EDbTQHmqii/CklPv4bsq3dqaaX1VKU9bncR/sLSag76bouXk
+         0nhT07+IbyLij+n5haTbrVOdMIjxs1sgTQ4LkI2KrtaoUjOEi9ptNp6zVCdiprVa5dT1
+         QximxT140ZlthkT+XVm0ax9oJwY0zBi9J6zC4x9A9mCMLyp8RL3Aug0lPMACnVX4n9Gw
+         VmUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IyFIhj/81iNIcxew/1W4kf3IkOg+PZK0fC0YxofxM9k=;
-        b=ibiQpgsKL/URDkDSJ1a5SUY3OlSdmpkW8uKksBHY2EiN5DIM1AUVJK/E6D8al5Z9Aw
-         Avql49u0lYKdobA5z2VHXRsJcNYTfIglnN7TVE/zc4zmLkA9B1XhG5xds+hphyjY6xem
-         jY286dSEvTglEuFdZk6LjMOIzMPNtisTBMsff93N7zDq6v29zB5Qc93uvQAQ2502nW9r
-         EtL9CAmG5qb0fhx1PZA+Yruu3XR2LTeNwehv7xbXPgFOINh56uWpNtOctAgSoHpmf307
-         22HnUsQdD7vlwv+uCCV6slyr8ta134BDScLpUjNKRKzTqtxOROBZbQG0ar3GcR8BWum4
-         SUCA==
-X-Gm-Message-State: AGi0PuZxeDoAhDt68lgdV2lWQsUaB9rrjHQ8brdT855OINcRnKvYksSR
-        N2jpRZA1BGpX5aK8lc1Qwe0eswUGIIY=
-X-Google-Smtp-Source: APiQypJ7A2HMOg+s0CNunxQgl5IbpSs1Egdf3tQfXA8gZPl9mVxD55Wbb6EVLYj8vFkkbUUtmy1ZVw==
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr3554812otm.145.1588969717893;
-        Fri, 08 May 2020 13:28:37 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n6sm722136oof.35.2020.05.08.13.28.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 13:28:37 -0700 (PDT)
-Date:   Fri, 8 May 2020 13:28:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Axtens <dja@axtens.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v5] x86: bitops: fix build regression
-Message-ID: <20200508202835.GA550540@ubuntu-s3-xlarge-x86>
-References: <20200508182835.228107-1-ndesaulniers@google.com>
- <20200508183230.229464-1-ndesaulniers@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JkP0Yzz/l+xH+mX7IIfd2GFmeVL9ppgDSeJKkOGuaZs=;
+        b=jul5zoqJ5OdubPcMEgQF9x+5QxYQRkRSyG54ULC0D1aK+r4eLtuoqnFytDzchH8zQe
+         OFOk73WEy4gLtf/Xiwnz3Tx1egqL6+Jnrl33BTSESuVg9QJ7J4nSNNJVvB+Um0Xxe9c4
+         jYoc7exfnhCKlX3lCYjeA4aHkJgGl3SsTxLobbNU1+FlvBzE8FV0a5QLGl5p9L+2L7Ls
+         uykXM42HdUOrtsRsR6c59FXEubeEpqEfYmAQ31bubkTdWkMrgpTQVPElJydk/NIPs6gc
+         YQAtFF8p9t9rLTEwba6xpT5ETgevEP5l8xh4ENuxXVRfqUPX7JoagMnhtNJmim/nqOTc
+         KlUQ==
+X-Gm-Message-State: AOAM533MzpEBa+gT5t379XlwRktU8cSD8GMYGjXM7V0cfZZ4yz7ZfOzj
+        +FT9hT2EAjq19tB5vEFUAJZTmQ==
+X-Google-Smtp-Source: ABdhPJzPxpwJ4WTVl1KiI/hKOSLnHISGQjGrkhOYgyvu08zZAwTgwrRToxXHlwfcyz2NyiLE08DiuQ==
+X-Received: by 2002:ac2:5b41:: with SMTP id i1mr3014087lfp.16.1588969806431;
+        Fri, 08 May 2020 13:30:06 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:222:bcfb:3767:1ed2:9bbb:4cab])
+        by smtp.gmail.com with ESMTPSA id z5sm1826286lji.30.2020.05.08.13.30.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 13:30:05 -0700 (PDT)
+Subject: Re: [PATCH] USB: host: ehci: Add error handling in
+ ehci_mxc_drv_probe()
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
+ <20200508114858.GA4085349@kroah.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <c6c1f7e2-e8c6-d120-23de-fa1b566661d4@cogentembedded.com>
+Date:   Fri, 8 May 2020 23:30:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508183230.229464-1-ndesaulniers@google.com>
+In-Reply-To: <20200508114858.GA4085349@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:32:29AM -0700, Nick Desaulniers wrote:
-> This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
-> 
-> It turns out that if your config tickles __builtin_constant_p via
-> differences in choices to inline or not, these statements produce
-> invalid assembly:
-> 
-> $ cat foo.c
-> long a(long b, long c) {
->   asm("orb\t%1, %0" : "+q"(c): "r"(b));
->   return c;
-> }
-> $ gcc foo.c
-> foo.c: Assembler messages:
-> foo.c:2: Error: `%rax' not allowed with `orb'
-> 
-> Use the `%b` "x86 Operand Modifier" to instead force register allocation
-> to select a lower-8-bit GPR operand.
-> 
-> The "q" constraint only has meaning on -m32 otherwise is treated as
-> "r". Not all GPRs have low-8-bit aliases for -m32.
-> 
-> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/961
-> Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-> Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
-> Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Suggested-by: Brian Gerst <brgerst@gmail.com>
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
-> Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+On 05/08/2020 02:48 PM, Greg KH wrote:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build, clang-11
+>> The function ehci_mxc_drv_probe() does not perform sufficient error
+>> checking after executing platform_get_irq(), thus fix it.
+>>
+>> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
+>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>> ---
+>>  drivers/usb/host/ehci-mxc.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+>> index a1eb5ee77..a0b42ba59 100644
+>> --- a/drivers/usb/host/ehci-mxc.c
+>> +++ b/drivers/usb/host/ehci-mxc.c
+>> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	irq = platform_get_irq(pdev, 0);
+>> +	if (irq < 0)
+>> +		return irq;
+> 
+> <= ?
 
-> ---
-> Changes V4 -> V5:
-> * actually use `%b` in arch_change_bit().
-> 
-> Changes V3 -> V4:
-> * drop (u8) cast from arch_change_bit() as well.
-> 
-> Changes V2 -> V3:
-> * use `%b` "x86 Operand Modifier" instead of bitwise op then cast.
-> * reword commit message.
-> * add Brian and HPA suggested by tags
-> * drop Nathan & Sedat Tested by/reviewed by tags (new patch is different
->   enough).
-> * Take over authorship.
-> 
-> Changes V1 -> V2:
-> * change authorship/signed-off-by to Ilie
-> * add Nathan's Tested by/reviewed by
-> * update commit message slightly with info sent to HPA.
->  arch/x86/include/asm/bitops.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index b392571c1f1d..35460fef39b8 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-> @@ -52,9 +52,9 @@ static __always_inline void
->  arch_set_bit(long nr, volatile unsigned long *addr)
->  {
->  	if (__builtin_constant_p(nr)) {
-> -		asm volatile(LOCK_PREFIX "orb %1,%0"
-> +		asm volatile(LOCK_PREFIX "orb %b1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" (CONST_MASK(nr) & 0xff)
-> +			: "iq" (CONST_MASK(nr))
->  			: "memory");
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> @@ -72,9 +72,9 @@ static __always_inline void
->  arch_clear_bit(long nr, volatile unsigned long *addr)
->  {
->  	if (__builtin_constant_p(nr)) {
-> -		asm volatile(LOCK_PREFIX "andb %1,%0"
-> +		asm volatile(LOCK_PREFIX "andb %b1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" (CONST_MASK(nr) ^ 0xff));
-> +			: "iq" (~CONST_MASK(nr)));
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
->  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> @@ -123,9 +123,9 @@ static __always_inline void
->  arch_change_bit(long nr, volatile unsigned long *addr)
->  {
->  	if (__builtin_constant_p(nr)) {
-> -		asm volatile(LOCK_PREFIX "xorb %1,%0"
-> +		asm volatile(LOCK_PREFIX "xorb %b1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)CONST_MASK(nr)));
-> +			: "iq" (CONST_MASK(nr)));
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
->  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
+   I thought I've fixed the ambivalent zero bug some years ago... 
+   Please don't do this...
+
+MBR, Sergei
