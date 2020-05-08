@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD9BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F3DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F12124958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C2E21BE5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941435;
-	bh=rBlSr5NBHfZ/N935rLEslrLFisg4sr5EccNQDxUtH+s=;
+	s=default; t=1588941443;
+	bh=GCQZRYNuZPMp57ZSTlZkuHsJuxHJNw2e2VjolFX+Zc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HrZQqo72/RVmRJ3bc8PvlNasi1Qr50z7OU3JE539o7oFXE2gjielbA1whTmubhekm
-	 2hJheFATpgsz9XDBmc6sJ4HAUkmsRcsaVNwSMwHGuJzly+pokJN7jmGiFxTvy5ONS7
-	 QEC8MeqHIhX3q8lWgdocav8gp5mVXYf6DJ1/VbUc=
+	b=xOCIoXTMhBMVQE16unolev65AwstF1rC3kv5MT1IPGrbpJI7mk5DGJxVGqPvjvd7v
+	 0jJ+xT23M4kFCddEgSfUgTx4FBVm1awd+Q+a63a7B+HYa0UI8RVoO3XGyfs1Hx4nHJ
+	 9oWadpfXzjKBhhb1Eh8JYOoZf5Kpin3o46UHgSjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgEHMhO (ORCPT
+        id S1728102AbgEHMhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:37:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgEHMhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:37:10 -0400
+        id S1728018AbgEHMhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:37:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 721CD21835;
-        Fri,  8 May 2020 12:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5E424953;
+        Fri,  8 May 2020 12:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941429;
-        bh=rBlSr5NBHfZ/N935rLEslrLFisg4sr5EccNQDxUtH+s=;
+        s=default; t=1588941435;
+        bh=GCQZRYNuZPMp57ZSTlZkuHsJuxHJNw2e2VjolFX+Zc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9IbPLXKtSNk20Ao7Q5HByk0DowwFdXMH9u5wIYHKZ66jx/vxt/1KyGfzoeHOs8qE
-         M27TNaSRMnzfsifmdLa2ZBWHkvG4qSWmRDHvZO5P0uRbCJLPBeqeSufFxu0PZ/2dEM
-         JNKQGEWVdP/DCl2pJadMK6mhUPp7SoBVth0WxAfA=
+        b=OPDkvC0zet4SoFrJFLfMD76TZ4LS4HgeDI+CYUseQiiSAjqfBStBlVo6/nS+mK2Ii
+         nesEijcGDcMz+H8LojYQTwlN1Q/rXoL3K6p9tWakiZDixxvNMzdgIep76esj0eBXMn
+         fmsqYPIC1oc2I9PNJvACz5nuiZb2towMfVXaV0HU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        David Daney <david.daney@cavium.com>,
-        Rob Herring <robh@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>, linux-mips@linux-mips.org,
-        kernel-janitors@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 029/312] MIPS: Octeon: Off by one in octeon_irq_gpio_map()
-Date:   Fri,  8 May 2020 14:30:20 +0200
-Message-Id: <20200508123126.529643159@linuxfoundation.org>
+        linux-mips@linux-mips.org, kernel-janitors@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 031/312] MIPS: RM7000: Double locking bug in rm7k_tc_disable()
+Date:   Fri,  8 May 2020 14:30:22 +0200
+Message-Id: <20200508123126.677472805@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -64,35 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 008d0cf1ec69ec6d2c08f2d23aff2b67cbe5d2af upstream.
+commit 58a7e1c140f3ad61646bc0cd9a1f6a9cafc0b225 upstream.
 
-It should be >= ARRAY_SIZE() instead of > ARRAY_SIZE().
+We obviously intended to enable IRQs again at the end.
 
-Fixes: 64b139f97c01 ('MIPS: OCTEON: irq: add CIB and other fixes')
+Fixes: 745aef5df1e2 ('MIPS: RM7000: Add support for tertiary cache')
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: David Daney <david.daney@cavium.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
 Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Cc: kernel-janitors@vger.kernel.org
-Patchwork: https://patchwork.linux-mips.org/patch/13813/
+Patchwork: https://patchwork.linux-mips.org/patch/13815/
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/cavium-octeon/octeon-irq.c |    2 +-
+ arch/mips/mm/sc-rm7k.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/cavium-octeon/octeon-irq.c
-+++ b/arch/mips/cavium-octeon/octeon-irq.c
-@@ -1220,7 +1220,7 @@ static int octeon_irq_gpio_map(struct ir
+--- a/arch/mips/mm/sc-rm7k.c
++++ b/arch/mips/mm/sc-rm7k.c
+@@ -161,7 +161,7 @@ static void rm7k_tc_disable(void)
+ 	local_irq_save(flags);
+ 	blast_rm7k_tcache();
+ 	clear_c0_config(RM7K_CONF_TE);
+-	local_irq_save(flags);
++	local_irq_restore(flags);
+ }
  
- 	line = (hw + gpiod->base_hwirq) >> 6;
- 	bit = (hw + gpiod->base_hwirq) & 63;
--	if (line > ARRAY_SIZE(octeon_irq_ciu_to_irq) ||
-+	if (line >= ARRAY_SIZE(octeon_irq_ciu_to_irq) ||
- 		octeon_irq_ciu_to_irq[line][bit] != 0)
- 		return -EINVAL;
- 
+ static void rm7k_sc_disable(void)
 
 
