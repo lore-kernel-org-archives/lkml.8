@@ -2,122 +2,125 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232F2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64747C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A5F20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B70208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N7rbAGxH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GnzP1gSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgEHFrM (ORCPT
+        id S1726049AbgEHFu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        Fri, 8 May 2020 01:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgEHFrL (ORCPT
+        with ESMTP id S1725896AbgEHFu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:47:11 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B13DCC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:47:11 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f8so256986plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:47:11 -0700 (PDT)
+        Fri, 8 May 2020 01:50:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5EAC05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:50:55 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f8so260583plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ktBlo73Jw5CNcN/vgvXAmN9qqf3G71SadtNeIh5UVH4=;
-        b=N7rbAGxHd1xFlmkvpJrFn0ZRApCwnO1j7WiuFU8e+kb3V5wpBpZvedwpGwP3Tsj4rS
-         +USqVD5/1YvlwcW9irIFGnnpEolkOgUSVlwg40HK7jfYWt4GqX2SuiPu40QxIZuyHub/
-         GMVgMfV9IFsRfoIx4M+wGQ7+7P+KBm4rp8eYk=
+        bh=7KizsQZiROV6EsP68AF78nG20gKxvU4xu7g/u2G/rfQ=;
+        b=GnzP1gSJOJe5VzGwl3UPI0/HY55joCCUajqsnrTMNQUOZaZgel2xDycfizHYUnzpF7
+         JELKuNlJlOoXj8e59IeVw8nOFIVL60dUapO4Yifd39sWXcSfTA2GHEEcyLhy9GkIPHZh
+         YVaeNeMrD7GCZEmEA4Twebw5v19lpqqfQd3JQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ktBlo73Jw5CNcN/vgvXAmN9qqf3G71SadtNeIh5UVH4=;
-        b=Y3LsP5c0emy7g/0JGT4HbpAlcThZ/0wK05BOdspyp4L1bvQ8Vq+4gRQMPyxzQVJQZ/
-         gPJTjVmzZOBL031KLw9HZLS2zblkLz8RCmgUffzy1qGYPoNaRtu7cHYNo8ueNxoclHQ+
-         PWEMFpKkIQ3HBL8TENV58r63L5VMtZFoQAnGjs6QftDggyKuaw7RXQqp5lKI0rEJ0vjf
-         EJCkLelTtwi0No97x3QxnuHFntfo3A67NToYAOikjDvINYRWzn5PLjzUY7gtsrf8OT8s
-         SVxn+pK2jwRsLyfZ7zPkBxLqUrY6D92Dgn9+Wf72JKex0HEfhtkpOwT4EME20ERaGjgG
-         SDFw==
-X-Gm-Message-State: AGi0PuYE0HGr/FXfeFQCu3MroPK81hLpPXZ51SlHvdLNA9bJaxKHKy3V
-        pFqyMH7KBC2aYkKdARqhV8oNxQ==
-X-Google-Smtp-Source: APiQypKeyu+9J0AZJ39edu4kWajGpktWn2BdzoMIWDoDZqCwqp/BDYP/gtakVb8IzNIpE09DU4gT6w==
-X-Received: by 2002:a17:90a:69e1:: with SMTP id s88mr4240516pjj.199.1588916831215;
-        Thu, 07 May 2020 22:47:11 -0700 (PDT)
+        bh=7KizsQZiROV6EsP68AF78nG20gKxvU4xu7g/u2G/rfQ=;
+        b=Gdy3JZ6di7DQFBH2/vCUhVt9NgOPDA5UHMMQvaXiqsVSGTWjgXKM05ZiaedQW565B0
+         YCjTjN7AK3ZmfHeSklYcyith320wEZbZZipKq3W1H1GKoDEQpNt2P/N4rKFw2Bd2opaK
+         YfYw9kE6zbAMNpJtBmWunVRV9zV0GKqzgUMQ8aGAfi6Q2Tt0MdQhiKwxk+oc3ethXK/e
+         G93wSc0c4SWuz8cKRFYYzmTXvu0A5HLBmPsoYUfb3MuBotvjIDUoB1EB9A4Hc+sDMxpt
+         WbAIgiH0nRQi9QWEA0D1Xn6HnMTMUOP2LwYpzBqzQO/6Zoq/paYpIKJ5l0uCfbqyYab4
+         2Gkw==
+X-Gm-Message-State: AGi0PuYTpqgFJ4DGGRBsUmiJRGPSvmtmIrQ0QWE5Wb81HLPWe90dab3E
+        /bB1JF/wssK+eF2E1T0aVh9ztA==
+X-Google-Smtp-Source: APiQypLKOpAhhsaWBvZcuae9Bduk7G88bnc8QVLf76Pury6KYeoMsRuq/xGaRC59YHIKz70yJvLuwg==
+X-Received: by 2002:a17:90a:c702:: with SMTP id o2mr4135072pjt.196.1588917055088;
+        Thu, 07 May 2020 22:50:55 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 67sm591198pfx.108.2020.05.07.22.47.09
+        by smtp.gmail.com with ESMTPSA id 9sm526352pgr.17.2020.05.07.22.50.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 22:47:10 -0700 (PDT)
-Date:   Thu, 7 May 2020 22:47:08 -0700
+        Thu, 07 May 2020 22:50:54 -0700 (PDT)
+Date:   Thu, 7 May 2020 22:50:53 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
-        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, daniel.vetter@ffwll.ch,
-        will@kernel.org, mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] taint: add module firmware crash taint support
-Message-ID: <202005072244.F2E0286@keescook>
-References: <20200508021438.4373-1-mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/7] exec: Move most of setup_new_exec into flush_old_exec
+Message-ID: <202005072249.81159F29@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87ftcei2si.fsf@x220.int.ebiederm.org>
+ <202005051354.C7E2278688@keescook>
+ <87blmz8lda.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508021438.4373-1-mcgrof@kernel.org>
+In-Reply-To: <87blmz8lda.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:14:38AM +0000, Luis Chamberlain wrote:
-> Device driver firmware can crash, and sometimes, this can leave your
-> system in a state which makes the device or subsystem completely
-> useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-> of scraping some magical words from the kernel log, which is driver
-> specific, is much easier. So instead provide a helper which lets drivers
-> annotate this.
+On Thu, May 07, 2020 at 04:51:13PM -0500, Eric W. Biederman wrote:
+> I intend to the following text to the changelog.  At this point I
+> believe I have read through everything and nothing raises any concerns
+> for me:
 > 
-> Once this happens, scrapers can easily scrape modules taint flags.
-> This will taint both the kernel and respective calling module.
+> --- text begin ---
 > 
-> The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
-> this fact should in no way shape or form affect lockdep. This taint
-> is device driver specific.
+> To see why it is safe to move this code please note that effectively
+> this change moves the personality setting in the binfmt and the following
+> three lines of code after everything except unlocking the mutexes:
+>         arch_pick_mmap_layout
+>         arch_setup_new_exec
+>         mm->task_size = TASK_SIZE
 > 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
+> The function arch_pick_mmap_layout at most sets:
+>         mm->get_unmapped_area
+>         mm->mmap_base
+>         mm->mmap_legacy_base
+>         mm->mmap_compat_base
+>         mm->mmap_compat_legacy_base
+> which nothing in flush_old_exec or setup_new_exec depends on.
 > 
-> Below is the full diff stat of manual inspection throughout the kernel
-> when this happens. My methodology is to just scrape for "crash" and
-> then study the driver a bit to see if indeed it seems like that the
-> firmware crashes there. In *many* cases there is even infrastructure
-> for this, so this is sometimes clearly obvious. Some other times it
-> required a bit of deciphering.
+> The function arch_setup_new_exec only sets architecture specific
+> state and the rest of the functions only deal in state that applies
+> to all architectures.
 > 
-> The diff stat below is what I have so far, however the patch below
-> only includes the drivers that start with Q, as they were a source of
-> inspiration for this, and to make this RFC easier to read.
+> The last line just sets mm->task_size and again nothing in flush_old_exec
+> or setup_new_exec depend on task_size.
 > 
-> If this seems sensible, I can follow up with the kernel helper first,
-> and then tackle each subsystem independently.
+> --- text end ---
+> [...]
+> > So, with a bit larger changelog discussing what's moving "earlier",
+> > I think this looks good:
 > 
-> I purposely skipped review of remoteproc and virtualization. That should
-> require its own separate careful review and considerations.
+> Please see above.
 
-This all seems reasonable to me. You might need to break these up into
-per-maintainer patches to get appropriate review. Perhaps land the
-infrastructure and some initial patches via netdev and in the next
-release send patches for DRM, media, etc?
+Awesome! Thanks for checking my checking of your checking. ;)
+
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
