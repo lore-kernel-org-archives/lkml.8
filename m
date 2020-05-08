@@ -2,183 +2,155 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27279C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE63C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05FF20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BC520708
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TCUXp1kA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwjUpQaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgEHKez (ORCPT
+        id S1727083AbgEHKfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:34:55 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:44591 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726618AbgEHKey (ORCPT
+        Fri, 8 May 2020 06:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725825AbgEHKfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:34:54 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id X0LAjdgdgtKAsX0LDje0Ij; Fri, 08 May 2020 12:34:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1588934091; bh=rTaj2j7yLA0szwh23jYmBUjOXAbRc2/au8nmnpb2Zdc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=TCUXp1kABX/YT/L2UPmdaQiapw6XKAogo5Qn9QcezED3EJ6LQcxgAGkGDXj48wg+h
-         ISJM6cWbdq1LJiu4zI79sJWLiqJhllggifF4B66OuGq0vYPJ86VitjflsvUmLE4CjP
-         4URbsIG5F7RLTZYNoxp9OfJZiGbgV8ZQkSBA1d3CJcJ+pT1YJzv2jt3oPY5M1dcR94
-         +2yAjWUahqciijGwXtTLsMZqkM7TuNmhQvpl9lHjTO65v6WMtz3F8M+zxdoEtEgQbU
-         i80NF+uY0cPNKw7O2tRYLrlKP/N1/AjHF3Kl9X2QbkaOTYGEdEktWA80oCl5cckTwL
-         z9qCfIXPPZpyQ==
-Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Boris Brezillon <boris.brezillon@collabora.com>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
- <20200505134110.3435-4-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
-Date:   Fri, 8 May 2020 12:34:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 8 May 2020 06:35:18 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A5AC05BD43;
+        Fri,  8 May 2020 03:35:18 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id i185so278766vki.12;
+        Fri, 08 May 2020 03:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g1M0dnG6X/ZdLSaJc75kcj4nbxBb95KPAtfkHekjG3Y=;
+        b=rwjUpQaWLzhBubkUR3QhhSNC734GFsOjNbxX0y3QmIcvzKwwfQD2+aVBaoi08yh0qR
+         gvATQlHOwvq/YQWOxHj+yB/0n0zDaR2bAFpWJvaZYBKm9eTKbHJnTW90L8JMYSxYfCma
+         NhZ2K9EIkQeMhhgKQb04Z5L+AKgNCjodZS14PlAhl2S46xL7yBNDJIdxEZ9YkTwXwYdo
+         HaWF/a+50wkr9HAXYVN9w7fQ1+UElfIvrpYAx4iqF/D+S6QUweieE6mbUObdYDr+y8gt
+         0FkiCWy2jD7KhYusK5DHGYnqC2xiBbG9oBQZqerFrHINpLIgRMg46Vk7U4wZGy9VgOWf
+         4cfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g1M0dnG6X/ZdLSaJc75kcj4nbxBb95KPAtfkHekjG3Y=;
+        b=cSIBl5P2lZYbCTCB7ICPPj1PqMjFbkw8kLMD+F/rfELpLuHrMg0pA2uJ4+dJJiU4jm
+         X8QSAbembVcPGIqKqnYxvzUm8fGxGtE3XTpJFg0+4BVg5Ds0cV37LNhhKYY20/LZ+lNJ
+         PE1UC1Uhkrtn3ZucXUMyLgtHh3iYV2KCRDwH/XXHElKpQ68UU/S2xWmLN/MCXzHjQGG+
+         kH44xhLg3JEaRTAq+MI2wEUATZIzW28r/UF9KLuP2YcJaRY2xJGZ4Uc9q7du0b+6DJCA
+         AQ9OG3Y0RumeoBvlqktxf/ICHtHF4H0HfYTHyGR2UHzTlafQYEuKY0L5Oms005zIYnYQ
+         I5rQ==
+X-Gm-Message-State: AGi0PubDMuho+gWQtIJAtKZQYDeZxJ7OgQ9vx+yGLR0HXpX24dyVu6T5
+        WI78CKEjgwwsO1DS0J95nEbjRTd/yInlgoK0WVM=
+X-Google-Smtp-Source: APiQypJuxr9P/KgaH27GjKEizVyEI5TXONbIe2ekMNjmGWVrroekHLlyMkSERXmjpBua2nXn55i9IHzLgAfA3Cda0OQ=
+X-Received: by 2002:a1f:2f91:: with SMTP id v139mr1139060vkv.22.1588934117720;
+ Fri, 08 May 2020 03:35:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505134110.3435-4-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJ86TdI1pvKHRfu5hsHU8t8yFvBoKIzTCou3UH+Ra77tQTuI8FHFV23LFzHAgOqdGDIsnh9RfGNX7FSWeTCCyL/4BXYSMlrWDgdW2oZMRNF2euitDKf1
- Rs9FPZLQq+MrczrwiFI+zibyA5tu9RYM0hjZiTsldfC2CCwH6Z3ncQ4PGQU+hA4Vqe7r1Fu74BzzgId+svluSpK9jsXxLTv60GZ2XCwiqn7ELZSViaABQkcO
- gr7T+SOVtsW7Lq8IKCaRk56Fk/0ivc/6Lq4np9ok9RbS4Z7sBd2K9HlFtoWw10EavuBLeRcL8xOAI3H1JcGx9XIC5NUSPAF6/Rs3J3O5XFqufn7h818F8QBk
- cYBdveq5iVcUwfOsuwxA8NAF3OvhIcy+YEhFOGMskV0R1iY+9Psp1LPlxs3GhyyVIRHAyjXtHC84EyyBhN08gcy2PGGLFcqVgg8guPVKxgy2BMs/jHW47Vrw
- EqYQUhGFjLaYpF0v6ZMFckaOYSd8dIcWGWv2zb1I40Ld5rM5MsFLGOTUS+XBEQh1FfRvCZbig7P1o3VZyAmfGoG7GzWE7i+PigerLQ==
+References: <20200430192746.1866325-1-paul.kocialkowski@bootlin.com>
+ <20200430192746.1866325-3-paul.kocialkowski@bootlin.com> <CACvgo51mRse3su4exyTqXYJRPPc0VqaX9+tRyKUuBPtm5Q+6XQ@mail.gmail.com>
+ <20200507201103.GH2422122@aptenodytes>
+In-Reply-To: <20200507201103.GH2422122@aptenodytes>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Fri, 8 May 2020 11:32:46 +0100
+Message-ID: <CACvgo52dMPk_KPyNYhBTDOo_+s7hJuGDNjoWun63Jj4uMidszA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] drm: Add support for the LogiCVC display controller
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/2020 15:41, Ezequiel Garcia wrote:
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> 
-> The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
-> a backend for this new format.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/rkvdec/Makefile     |    2 +-
->  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
->  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
->  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
->  4 files changed, 1637 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
-> 
-> diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
-> index c08fed0a39f9..cb86b429cfaa 100644
-> --- a/drivers/staging/media/rkvdec/Makefile
-> +++ b/drivers/staging/media/rkvdec/Makefile
-> @@ -1,3 +1,3 @@
->  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
->  
-> -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
-> +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> new file mode 100644
-> index 000000000000..37d0ea4e3570
-> --- /dev/null
-> +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> @@ -0,0 +1,1577 @@
+On Thu, 7 May 2020 at 21:11, Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi Emil,
+>
+> Thanks for the review!
+>
+> On Mon 04 May 20, 14:28, Emil Velikov wrote:
+> > Just had a casual quick look for custom KMS properties, since new
+> > drivers made that mistake in the past.
+> > Thanks for not including any o/
+>
+> Yeah I made sure not to include any, I know it easily gets very problematic and
+> creates disparity between drivers while needing to be kept alive even when a
+> standard way arises due to the no API breakage policy.
+>
+> The not-for-merge patch that I've sent does introduce some for the colorkey,
+> and that's why they are marked as such :)
+>
+> > I made a couple of trivial suggestions - if you agree, feel free to
+> > keep them as follow-up patches.
+> >
+> > On Thu, 30 Apr 2020 at 20:28, Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> >
+> > > +int logicvc_of_property_parse_u32(struct device_node *of_node,
+> > > +                                 const char *name, u32 *target)
+> > > +{
+> > > +       struct logicvc_of_property *property;
+> > > +       const char *string;
+> > > +       u32 value;
+> > > +       int ret;
+> > > +
+> > > +       property = logicvc_of_property_lookup(name);
+> > > +       if (!property)
+> > > +               return -EINVAL;
+> > > +
+> > One could have the logicvc_of_properties[] entries indexed with the
+> > logicvc_of_property_parse_{u32,bool} caller, using that instead of the
+> > name string.
+>
+> Do I understand correctly that you're suggesting passing each entry's
+> struct logicvc_of_property pointer to the function?
+>
+> I went for strings to make the code explicit and easy to read so I'd really
+> like to keep it that way and avoid passing things like
+> &logicvc_of_properties[4] or an index integer.
+>
+Add a some #define/enum and go to town. Example with sub-optimal names below:
 
-<snip>
+enum foobar {
+ LVC_OF_DISP_INTF,
+ LVC_OF_DISP_CLRSPC,
+...
+};
 
-> +static void init_inter_probs(struct rkvdec_ctx *ctx,
-> +			     const struct rkvdec_vp9_run *run)
-> +{
-> +	const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
-> +	struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
-> +	struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
-> +	struct rkvdec_vp9_inter_frame_probs *rkprobs;
-> +	const struct v4l2_vp9_probabilities *probs;
-> +	unsigned int i, j, k;
-> +
-> +	rkprobs = &tbl->probs.inter;
-> +	dec_params = run->decode_params;
-> +	probs = &dec_params->probs;
-> +
-> +	/*
-> +	 * inter probs
-> +	 * 151 x 128 bits, aligned to 152 x 128 bits
-> +	 * inter only
-> +	 * intra_y_mode & inter_block info 6 x 128 bits
-> +	 */
-> +
-> +	memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
-> +	memcpy(rkprobs->comp_mode, probs->comp_mode,
-> +	       sizeof(rkprobs->comp_mode));
-> +	memcpy(rkprobs->comp_ref, probs->comp_ref,
-> +	       sizeof(rkprobs->comp_ref));
-> +	memcpy(rkprobs->single_ref, probs->single_ref,
-> +	       sizeof(rkprobs->single_ref));
-> +	memcpy(rkprobs->inter_mode, probs->inter_mode,
-> +	       sizeof(rkprobs->inter_mode));
-> +	memcpy(rkprobs->interp_filter, probs->interp_filter,
-> +	       sizeof(rkprobs->interp_filter));
-> +
-> +	/* 128 x 128 bits coeff related */
-> +	for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
-> +		for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
-> +			for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
-> +				write_coeff_plane(probs->coef[i][j][k],
-> +						  rkprobs->coef[k][i][j]);
-> +		}
-> +	}
-> +
-> +	/* intra uv mode 6 x 128 */
-> +	memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
-> +	       sizeof(rkprobs->uv_mode_0_2));
-> +	memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
-> +	       sizeof(rkprobs->uv_mode_3_5));
-> +	memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
-> +	       sizeof(rkprobs->uv_mode_6_8));
-> +	memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
-> +	       sizeof(rkprobs->uv_mode_9));
-> +
-> +	/* mv related 6 x 128 */
-> +	memcpy(rkprobs->mv.joint, probs->mv.joint,
-> +	       sizeof(rkprobs->mv.joint));
-> +	memcpy(rkprobs->mv.sign, probs->mv.sign,
-> +	       sizeof(rkprobs->mv.sign));
-> +	memcpy(rkprobs->mv.class, probs->mv.class,
-> +	       sizeof(rkprobs->mv.class));
-> +	memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
-> +	       sizeof(rkprobs->mv.class0_bit));
-> +	memcpy(rkprobs->mv.bits, probs->mv.bits,
-> +	       sizeof(rkprobs->mv.bits));
-> +	memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
-> +	       sizeof(rkprobs->mv.class0_fr));
-> +	memcpy(rkprobs->mv.fr, probs->mv.fr,
-> +	       sizeof(rkprobs->mv.fr));
-> +	memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
-> +	       sizeof(rkprobs->mv.class0_hp));
-> +	memcpy(rkprobs->mv.hp, probs->mv.hp,
-> +	       sizeof(rkprobs->mv.hp));
+static struct logicvc_of_property logicvc_of_properties[] = {
+[LVC_OF_DISP_INTF]  = {
+               .name           = "xylon,display-interface",
+...
+       },
+[LVC_OF_DISP_CLRSPC] = {
+               .name           = "xylon,display-colorspace",
+...
+       },
+...
+}
 
-Can't you just do: 'rkprobs->mv = probs->mv'?
+While the callers are:
 
-> +}
+       ret = logicvc_of_property_parse_u32(of_node, LVC_OF_DISP_INTF,
+                                           &config->display_colorspace);
+       ret = logicvc_of_property_parse_u32(of_node, LVC_OF_DISP_CLRSPC,
+                                           &config->display_depth);
 
-Regards,
-
-	Hans
+-Emil
