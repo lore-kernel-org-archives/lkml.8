@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD98FC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68820C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50D5206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A73D206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942765;
-	bh=nYvNC5mp3p9E42LUYjMDSuncRs7p9od0b/nf87IZNn8=;
+	s=default; t=1588942774;
+	bh=GhV41PhBvlAjEwasQh4AUtzyCWM8FhV3HZQZzw5lOMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDD8z3k7qBzvHN+WGiffgpEd673rjBrUuhH+ENjVht0bw/q6Q2npri0AvPaRv5APA
-	 ci60cZOPzG850JNy+VRH5P4EbHSmADA6mQSAn6kWJzB6NplW1Ubam9JRQk6uzfnCZZ
-	 OG8DNcrkoOK446bjY2f4kKipEmE22IusoS/sSFnQ=
+	b=Fb59RTCd2lafKxR9kY8uK+NBOD/yk4+YHJKXWhuWSzvuHVOo97NOA3ZSHzvRwfGLm
+	 vkgkItf5FLHzGF22X8QhJQsdBYD3Q2lQJQeuYtcJUYLBdxOI3a3FYh++aheO4wbEA9
+	 5umzOhzW8TVQDUvXt2Yag0GIBEccz3IHXnGKvmXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgEHMxY (ORCPT
+        id S1729814AbgEHM7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbgEHMxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:19 -0400
+        id S1730054AbgEHMxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74ED24953;
-        Fri,  8 May 2020 12:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D5424958;
+        Fri,  8 May 2020 12:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942399;
-        bh=nYvNC5mp3p9E42LUYjMDSuncRs7p9od0b/nf87IZNn8=;
+        s=default; t=1588942396;
+        bh=GhV41PhBvlAjEwasQh4AUtzyCWM8FhV3HZQZzw5lOMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AXzAubStcLuiGgtSsMDkY8k7mTiaL0hVQg8ZrWiFTFUpvKHZN9LGuq5509O8Hstk
-         QFzzf+YYaR9w7Rflgz0cEZWQZau1WqV/oRJ5HoS+L+rq7JGQpR8zy6O44YCAoXHmiK
-         TkTPB6EBwuHpgy2ZZOPGAQbjpQATUI735+SAsw5o=
+        b=sDT+HQvluB60d4aIm7nqNboF8SH9aSz4TsdfJKr8y5sUgNTbBCukvO1fvVcwwnFdF
+         D812CiWTq1UoPnOnIPkfkPfcDl8rTU5PdZJgKgFQKMvzLUOenxL7YNp4ia5mUxe3R1
+         MEJI7ejffJgw7J86I0Odol9M99FZrg5vPTJN9vEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/50] ASoC: topology: Check return value of soc_tplg_dai_config
-Date:   Fri,  8 May 2020 14:35:13 +0200
-Message-Id: <20200508123044.352094803@linuxfoundation.org>
+Subject: [PATCH 5.4 06/50] ASoC: topology: Check return value of pcm_new_ver
+Date:   Fri,  8 May 2020 14:35:12 +0200
+Message-Id: <20200508123044.188095487@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -66,48 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit dd8e871d4e560eeb8d22af82dde91457ad835a63 ]
+[ Upstream commit b3677fc3d68dd942c92de52f0bd9dd8b472a40e6 ]
 
-Function soc_tplg_dai_config can fail, check for and handle possible
-failure.
+Function pcm_new_ver can fail, so we should check it's return value and
+handle possible error.
 
 Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200327204729.397-7-amadeuszx.slawinski@linux.intel.com
+Link: https://lore.kernel.org/r/20200327204729.397-6-amadeuszx.slawinski@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 22960f5932c7f..2d4a5a3058c41 100644
+index e0b40d4d8784c..22960f5932c7f 100644
 --- a/sound/soc/soc-topology.c
 +++ b/sound/soc/soc-topology.c
-@@ -2431,7 +2431,7 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
- {
- 	struct snd_soc_tplg_dai *dai;
- 	int count;
--	int i;
-+	int i, ret;
- 
- 	count = le32_to_cpu(hdr->count);
- 
-@@ -2446,7 +2446,12 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
- 			return -EINVAL;
+@@ -2092,7 +2092,9 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
+ 			_pcm = pcm;
+ 		} else {
+ 			abi_match = false;
+-			pcm_new_ver(tplg, pcm, &_pcm);
++			ret = pcm_new_ver(tplg, pcm, &_pcm);
++			if (ret < 0)
++				return ret;
  		}
  
--		soc_tplg_dai_config(tplg, dai);
-+		ret = soc_tplg_dai_config(tplg, dai);
-+		if (ret < 0) {
-+			dev_err(tplg->dev, "ASoC: failed to configure DAI\n");
-+			return ret;
-+		}
-+
- 		tplg->pos += (sizeof(*dai) + le32_to_cpu(dai->priv.size));
- 	}
- 
+ 		/* create the FE DAIs and DAI links */
 -- 
 2.20.1
 
