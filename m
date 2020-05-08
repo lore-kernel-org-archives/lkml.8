@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A14CC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF6C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5CF724964
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF28C24967
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942351;
-	bh=0JdQPdHvUAwfNehrZPdJ0HV1zrRmpMt3IIEHaznFoDQ=;
+	s=default; t=1588942354;
+	bh=HtJtrn7JwVuOd7YJhv7kbzpt4F0amW7hxGYen/hosUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3sN14OanFE5Tc/Z4tOjK6/WQRySzA9myUP/SW8U/mR+Vx/l9ClN84T/lAaTEHdxR
-	 lLldu34GLgCcaDU4ws2synyyU5tY76g1z0a93ZBkiTgPdNuSmwOfgxlp185HdEfy1L
-	 XkBeeqaJ3BfIbqejioaAJ5gpsrw94k0HjK4S4Kcg=
+	b=e4Xig6r4y9vHGTjwyXVnv5hI9ww0v8TZ8PnzAhJfE4pgcbORpoLS2m7bUx1J6eDHP
+	 k63h7pqR/sdS+aYdAdSHhjPWNgwfBcpGFJUlxF5uKZAusVLlswTGPc94NrOugm3zJ1
+	 69DXlajW3g+aSgaJOuKyggqtvnZI9K6LTvnFDWK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgEHMwb (ORCPT
+        id S1729974AbgEHMwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729941AbgEHMwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:20 -0400
+        id S1729946AbgEHMwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2E924959;
-        Fri,  8 May 2020 12:52:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906B724953;
+        Fri,  8 May 2020 12:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942339;
-        bh=0JdQPdHvUAwfNehrZPdJ0HV1zrRmpMt3IIEHaznFoDQ=;
+        s=default; t=1588942342;
+        bh=HtJtrn7JwVuOd7YJhv7kbzpt4F0amW7hxGYen/hosUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOIgViViyWd2V/yeI1BZdAdcK5G+LktczA8lcUG5LFx70Z1yN4WqQFSAg4yYL5ToP
-         rVJ7qCA4lzPMrdybpSoyv9b9NpEypPHiifA7pEXkoI5twdi5l+c1UoT1wfOojl6/sC
-         KDg7useG/F0mxhcViwuAcqCDWVm15GmVyEZD0TTc=
+        b=kB10gsvVCIrxZTM3k6DDcOEGpAJTfU+4Nrz4yHTGTVAq5m1mMhsHLX8jYruKnhQCe
+         5vJden20T2fOLG847htPi/z9flfqGSs9CJYNi8fO3Glez/PEwoOaxW0EcX7H0PelI0
+         NfMmxF3IpcSJE3lfZjXh/TKTpMeZvV35vrUaw81U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Dmitry Yakunin <zeil@yandex-team.ru>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 31/32] cgroup, netclassid: remove double cond_resched
-Date:   Fri,  8 May 2020 14:35:44 +0200
-Message-Id: <20200508123039.570048930@linuxfoundation.org>
+        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Adam Jackson <ajax@redhat.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Yves-Alexis Perez <corsac@debian.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: [PATCH 4.19 32/32] drm/atomic: Take the atomic toys away from X
+Date:   Fri,  8 May 2020 14:35:45 +0200
+Message-Id: <20200508123039.718403889@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -61,38 +67,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 526f3d96b8f83b1b13d73bd0b5c79cc2c487ec8e upstream.
+commit 26b1d3b527e7bf3e24b814d617866ac5199ce68d upstream.
 
-Commit 018d26fcd12a ("cgroup, netclassid: periodically release file_lock
-on classid") added a second cond_resched to write_classid indirectly by
-update_classid_task. Remove the one in write_classid.
+The -modesetting ddx has a totally broken idea of how atomic works:
+- doesn't disable old connectors, assuming they get auto-disable like
+  with the legacy setcrtc
+- assumes ASYNC_FLIP is wired through for the atomic ioctl
+- not a single call to TEST_ONLY
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Dmitry Yakunin <zeil@yandex-team.ru>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Iow the implementation is a 1:1 translation of legacy ioctls to
+atomic, which is a) broken b) pointless.
+
+We already have bugs in both i915 and amdgpu-DC where this prevents us
+from enabling neat features.
+
+If anyone ever cares about atomic in X we can easily add a new atomic
+level (req->value == 2) for X to get back the shiny toys.
+
+Since these broken versions of -modesetting have been shipping,
+there's really no other way to get out of this bind.
+
+v2:
+- add an informational dmesg output (Rob, Ajax)
+- reorder after the DRIVER_ATOMIC check to avoid useless noise (Ilia)
+- allow req->value > 2 so that X can do another attempt at atomic in
+  the future
+
+v3: Go with paranoid, insist that the X should be first (suggested by
+Rob)
+
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com> (v1)
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com> (v1)
+Cc: Michel Dänzer <michel@daenzer.net>
+Cc: Alex Deucher <alexdeucher@gmail.com>
+Cc: Adam Jackson <ajax@redhat.com>
+Acked-by: Adam Jackson <ajax@redhat.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Rob Clark <robdclark@gmail.com>
+Acked-by: Rob Clark <robdclark@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190905185318.31363-1-daniel.vetter@ffwll.ch
+Cc: Yves-Alexis Perez <corsac@debian.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/netclassid_cgroup.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/drm_ioctl.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/net/core/netclassid_cgroup.c
-+++ b/net/core/netclassid_cgroup.c
-@@ -131,10 +131,8 @@ static int write_classid(struct cgroup_s
- 	cs->classid = (u32)value;
- 
- 	css_task_iter_start(css, 0, &it);
--	while ((p = css_task_iter_next(&it))) {
-+	while ((p = css_task_iter_next(&it)))
- 		update_classid_task(p, cs->classid);
--		cond_resched();
--	}
- 	css_task_iter_end(&it);
- 
- 	return 0;
+--- a/drivers/gpu/drm/drm_ioctl.c
++++ b/drivers/gpu/drm/drm_ioctl.c
+@@ -321,7 +321,12 @@ drm_setclientcap(struct drm_device *dev,
+ 	case DRM_CLIENT_CAP_ATOMIC:
+ 		if (!drm_core_check_feature(dev, DRIVER_ATOMIC))
+ 			return -EINVAL;
+-		if (req->value > 1)
++		/* The modesetting DDX has a totally broken idea of atomic. */
++		if (current->comm[0] == 'X' && req->value == 1) {
++			pr_info("broken atomic modeset userspace detected, disabling atomic\n");
++			return -EOPNOTSUPP;
++		}
++		if (req->value > 2)
+ 			return -EINVAL;
+ 		file_priv->atomic = req->value;
+ 		file_priv->universal_planes = req->value;
 
 
