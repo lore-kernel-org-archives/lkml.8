@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2871C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B945218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D188218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942150;
-	bh=XE+FZXrzBDXXV9ixm2RSI3Bo3Ms8g3nmCf3qjbCYnIw=;
+	s=default; t=1588942152;
+	bh=TP97m5R3CtqaMXtZ++WkaHcN9XZ3LDmzoitsQph8EPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHN3yYNK8fVYs8f5eEAMyWtfaLXXfB2Q3sxqbRiKLyfU7M9HGZ4GLZFCrkk42KOy8
-	 xfdvyKMmEz+y9t6p9iy73fUKHUrN9S7GABchhSeZMow9d3o4xCPNXbU8IHYncehbLU
-	 Mcs/Wi7cMNg7vHI8T958dqaigyFrNH2YSoFiUViU=
+	b=OM7SPM1DrBCic9xS3f7RyQk4ZX5/g9DBdT3nhE9Zjw1qOnfz8YnbOhqxxvHggZhes
+	 7NWazUUk87xC6O8baSkKVy9vndDqxBBTr1RfuyixkK8TqICYeSjEORn4G2twcH8L4L
+	 DKm2KN4/mduycxdo2Cx7Z+9yHZscpli/lvwMc+BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgEHMtJ (ORCPT
+        id S1728868AbgEHMtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729700AbgEHMsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:50 -0400
+        id S1728294AbgEHMsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49979206D6;
-        Fri,  8 May 2020 12:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FCEB21473;
+        Fri,  8 May 2020 12:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942130;
-        bh=XE+FZXrzBDXXV9ixm2RSI3Bo3Ms8g3nmCf3qjbCYnIw=;
+        s=default; t=1588942135;
+        bh=TP97m5R3CtqaMXtZ++WkaHcN9XZ3LDmzoitsQph8EPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2S/AcPFbUvcOQdLaJjON3H8eD7RgmgrH5wz2LW4ptj18zDz5hWGkUwuqCZSPCznBG
-         zdLo1ds18o3GX0bsdp89t0L8q1ZDmVakR3+tx+SesL3ISkQe7zOBeEQMuacFzNf/iE
-         0ZtcbGrC3ZzPd9thRBJCFPUZRsESzn1e2taoa324=
+        b=mdw5AUefalhp2+8kY8/goSfmSUxfaga8fwDyDGoPvH1W04qa57uDzdI4avvbTVesi
+         oJHEo0b/71ZsTZMVmmc9oc98mbCW8aW/MedYzGYky7VVZcBN/iPPAO2v1sxNhcoE02
+         txKr5c/6tKDF6RVac8B2y/2c8VeB8YmhbA26cJYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 308/312] net: ep93xx_eth: Do not crash unloading module
-Date:   Fri,  8 May 2020 14:34:59 +0200
-Message-Id: <20200508123146.174409141@linuxfoundation.org>
+Subject: [PATCH 4.4 310/312] sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+Date:   Fri,  8 May 2020 14:35:01 +0200
+Message-Id: <20200508123146.325593469@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,54 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jere Leppänen <jere.leppanen@nokia.com>
 
-commit c823abac17926767fb50175e098f087a6ac684c3 upstream.
+commit 12dfd78e3a74825e6f0bc8df7ef9f938fbc6bfe3 upstream.
 
-When we unload the ep93xx_eth, whether we have opened the network
-interface or not, we will either hit a kernel paging request error, or a
-simple NULL pointer de-reference because:
+When starting shutdown in sctp_sf_do_dupcook_a(), get the value for
+SHUTDOWN Cumulative TSN Ack from the new association, which is
+reconstructed from the cookie, instead of the old association, which
+the peer doesn't have anymore.
 
-- if ep93xx_open has been called, we have created a valid DMA mapping
-  for ep->descs, when we call ep93xx_stop, we also call
-  ep93xx_free_buffers, ep->descs now has a stale value
+Otherwise the SHUTDOWN is either ignored or replied to with an ABORT
+by the peer because CTSN Ack doesn't match the peer's Initial TSN.
 
-- if ep93xx_open has not been called, we have a NULL pointer for
-  ep->descs, so performing any operation against that address just won't
-  work
-
-Fix this by adding a NULL pointer check for ep->descs which means that
-ep93xx_free_buffers() was able to successfully tear down the descriptors
-and free the DMA cookie as well.
-
-Fixes: 1d22e05df818 ("[PATCH] Cirrus Logic ep93xx ethernet driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
+Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cirrus/ep93xx_eth.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/sctp/sm_make_chunk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-+++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-@@ -468,6 +468,9 @@ static void ep93xx_free_buffers(struct e
- 	struct device *dev = ep->dev->dev.parent;
- 	int i;
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -857,7 +857,11 @@ struct sctp_chunk *sctp_make_shutdown(co
+ 	sctp_shutdownhdr_t shut;
+ 	__u32 ctsn;
  
-+	if (!ep->descs)
-+		return;
+-	ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
++	if (chunk && chunk->asoc)
++		ctsn = sctp_tsnmap_get_ctsn(&chunk->asoc->peer.tsn_map);
++	else
++		ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
 +
- 	for (i = 0; i < RX_QUEUE_ENTRIES; i++) {
- 		dma_addr_t d;
+ 	shut.cum_tsn_ack = htonl(ctsn);
  
-@@ -490,6 +493,7 @@ static void ep93xx_free_buffers(struct e
- 
- 	dma_free_coherent(dev, sizeof(struct ep93xx_descs), ep->descs,
- 							ep->descs_dma_addr);
-+	ep->descs = NULL;
- }
- 
- static int ep93xx_alloc_buffers(struct ep93xx_priv *ep)
+ 	retval = sctp_make_control(asoc, SCTP_CID_SHUTDOWN, 0,
 
 
