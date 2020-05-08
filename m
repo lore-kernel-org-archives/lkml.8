@@ -2,189 +2,106 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ACBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B72C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C49C21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:34:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RzHyM5dG"
+	by mail.kernel.org (Postfix) with ESMTP id 83E56218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588959374;
+	bh=hRqx7QnwUzVVyfLcYGbbO44yyAmWkryLH6lR1hltF6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FJ1Yo/pJ+iAIP1rBsjggTz3WoHR3n5DdLqP28FRje52Xkozv0q+3BchJ6el9wQyP3
+	 /XhutEsLoVsy7tS4cl4jzjaj64xPNi0bzoZsYu8Jij5o5HmINvMu9JRX/x11t+xo74
+	 jqH5cS+M0O2COPlNMKMKC24roIZwVL82Ro5kG8rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgEHRed (ORCPT
+        id S1727088AbgEHRgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:34:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18375 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726797AbgEHRed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:34:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588959272; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YRdx5B97TVorxMXPiXfW7wmYxuXC8t3jsBBMWPO3mPk=; b=RzHyM5dG0pAj7fF5D0GKQyT2zERsO0gOJRDsTL3RKe/JPDVjU3QrWTsctkDFi03fG0YHqH8d
- 6zSzSVRdk+3pPUOKBIC2gnY00TM3gwbSyOksVKORcJFv1a4CEYcgsN526tHqysjzwlthIlPK
- W4fLo3/o1tegBWv/xYR1GMUrU/Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb59817.7fc768bbdfb8-smtp-out-n03;
- Fri, 08 May 2020 17:34:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 259E7C433BA; Fri,  8 May 2020 17:34:15 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 8 May 2020 13:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgEHRgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:36:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64005C433F2;
-        Fri,  8 May 2020 17:34:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64005C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v6 3/8] bus: mhi: core: Add range check for channel id
- received in event ring
-To:     Manivannan Sadhasivam <mani@kernel.org>,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org
-References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
- <1588718832-4891-4-git-send-email-bbhatt@codeaurora.org>
- <20200508054518.GA2696@Mani-XPS-13-9360>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <82e131f8-8c67-23c3-3ac2-a05eb04d50ba@codeaurora.org>
-Date:   Fri, 8 May 2020 10:34:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id C62162184D;
+        Fri,  8 May 2020 17:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588959372;
+        bh=hRqx7QnwUzVVyfLcYGbbO44yyAmWkryLH6lR1hltF6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mu1u/yVegzhbRrgAnzmV32ElFBUzj2NSItbfkVO2f9Ki1cUZQTMkEUKZZAgWmR+Kg
+         +2eiaX7rpB6B4k3uA03vmodvLsut3XtiiQR9OL3do7l4y6OPW+ce1wJ/G8WNKb2xhA
+         C7uZYhwGSvnY9hPevB4wauPpaO/FRKrZH3sAnTFw=
+Date:   Fri, 8 May 2020 18:36:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200508173609.GQ4820@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200508054518.GA2696@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cxMSjUqMQBJIqbX5"
+Content-Disposition: inline
+In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+X-Cookie: Give him an evasive answer.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
 
-On 5/7/20 10:45 PM, Manivannan Sadhasivam wrote:
-> On Tue, May 05, 2020 at 03:47:07PM -0700, Bhaumik Bhatt wrote:
->> From: Hemant Kumar <hemantk@codeaurora.org>
->>
->> MHI data completion handler function reads channel id from event
->> ring element. Value is under the control of MHI devices and can be
->> any value between 0 and 255. In order to prevent out of bound access
->> add a bound check against the max channel supported by controller
->> and skip processing of that event ring element.
->>
->> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   drivers/bus/mhi/core/main.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
->> index 605640c..e60ab21 100644
->> --- a/drivers/bus/mhi/core/main.c
->> +++ b/drivers/bus/mhi/core/main.c
->> @@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->>   		case MHI_PKT_TYPE_TX_EVENT:
->>   			chan = MHI_TRE_GET_EV_CHID(local_rp);
->>   			mhi_chan = &mhi_cntrl->mhi_chan[chan];
-> 
-> Check should be done before this statement, isn't it?
-my bad. thanks for pointing that out.
-> 
->> +			if (WARN_ON(chan >= mhi_cntrl->max_chan))
->> +				goto next_event;
->> +
-> 
-> I don't prefer using gotos for non exit paths but I don't have a better solution
-> here. But you can try to wrap 'WARN_ON' inside the 'MHI_TRE_GET_EV_CHID'
-> definition and the just use:
-Instead of moving WARN_ON to macro as it requires mhi_cntrl->max_chan to 
-compare, how about just adding WARN_ON statement above if condition like 
-this
+--cxMSjUqMQBJIqbX5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-		WARN_ON(chan >= mhi_cntrl->max_chan);
-		/*
-  		 * Only process the event ring elements whose channel
-		 * ID is within the maximum supported range.
-		 */
-  		if (chan < mhi_cntrl->max_chan) {
-                       	mhi_chan = &mhi_cntrl->mhi_chan[chan];
-                        	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
-                           	event_quota--;
-  		}
-  		break;
-> 
-> 			/*
-> 			 * Only process the event ring elements whose channel
-> 			 * ID is within the maximum supported range.
-> 			 */
-> 			if (chan < mhi_cntrl->max_chan) {
->                          	mhi_chan = &mhi_cntrl->mhi_chan[chan];
->                          	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
->                          	event_quota--;
-> 			}
-> 			break;
-> 
-> This looks more clean.
+On Fri, May 08, 2020 at 04:29:25PM +0300, Serge Semin wrote:
+> Baikal-T1 SoC provides DW DMA controller to perform low-speed peripherals
+> Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> APB SSI devices embedded into the SoC. Currently this type DMA device is
 
-> 
->>   			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
->>   			event_quota--;
->>   			break;
->> @@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->>   			break;
->>   		}
->>   
->> +next_event:
->>   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
->>   		local_rp = ev_ring->rp;
->>   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
-> 
-> So you want the count to get increased for skipped element also?
-yeah idea is to have total count of events processed even if channel id 
-is not correct for that event. This fix is a security fix considering 
-that the MHI device is considered as non-secured and MHI host is trying
-to continue function normally and just reporting it as warning.
+This basically all looks good to me (without any hardware specific
+knowledge), I had a few comments but they were mostly procedural ones -
+mainly getting these bug fixes you've done merged as such.  Nice work.
 
-> 
-> Thanks,
-> Mani
-> 
->> @@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->>   
->>   		chan = MHI_TRE_GET_EV_CHID(local_rp);
->> +		if (WARN_ON(chan >= mhi_cntrl->max_chan))
->> +			goto next_event;
->> +
->>   		mhi_chan = &mhi_cntrl->mhi_chan[chan];
->>   
->>   		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
->> @@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->>   			event_quota--;
->>   		}
->>   
->> +next_event:
->>   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
->>   		local_rp = ev_ring->rp;
->>   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
-Even this function has the same goto statement. For consistency i would 
-do same thing here as well. Let me know what do you think about above 
-suggestion for both functions.
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+--cxMSjUqMQBJIqbX5
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61mIkACgkQJNaLcl1U
+h9A+eQf/aX/eJQKNbtRlg1YQiR0kNEKfYb0h+4IxTWaR0D4O8huNg6Q6+5WvT2Yj
+7mOeCIXspsfBGeaio/QMq7wEfJuA0WixGuipF+a6+fR+g46A4J33V0PlxawdRktx
+IaTWop1c75yO+k2WMmIcKxl2njtyhCDrPqWPan1ZyNs/EdP9Yzjb9xjuj28ZbOB5
++Too1aZWhzYiRx0UI8wfgC7msBilLvcxmHd0jmSnnBE1nsgPZE1cPme0khU+trXt
+XyNzPrOcMrqTJAKwkeU1ZQuYvvn07DMp+FzhjkYSfzrdC+luQwFLo6W0R0CK0aep
+dv7bvZv/ilTh26Ht3/pAJFJ03kdlww==
+=34XW
+-----END PGP SIGNATURE-----
+
+--cxMSjUqMQBJIqbX5--
