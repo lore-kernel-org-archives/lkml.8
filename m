@@ -2,153 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7769C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F54C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1CD2184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52DC21655
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEHQqW (ORCPT
+        id S1727071AbgEHQtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:46:22 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47884 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgEHQqV (ORCPT
+        Fri, 8 May 2020 12:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgEHQtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:46:21 -0400
-Received: from 89-64-85-173.dynamic.chello.pl (89.64.85.173) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id b97d93fcd990997d; Fri, 8 May 2020 18:46:18 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
+        Fri, 8 May 2020 12:49:24 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E748C061A0C;
+        Fri,  8 May 2020 09:49:24 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jX6BX-0005gy-W0; Fri, 08 May 2020 18:49:16 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 4DCC9101175; Fri,  8 May 2020 18:49:15 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH] ACPI: EC: s2idle: Avoid premature returns from acpi_s2idle_wake()
-Date:   Fri, 08 May 2020 18:46:17 +0200
-Message-ID: <1604462.Hd3yvOQCVk@kreacher>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <20200508160958.GA19631@otc-nc-03>
+References: <20200508005528.GB61703@otc-nc-03> <87368almbm.fsf@nanos.tec.linutronix.de> <20200508160958.GA19631@otc-nc-03>
+Date:   Fri, 08 May 2020 18:49:15 +0200
+Message-ID: <87h7wqjrsk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Ashok,
 
-If the EC GPE status is not set after checking all of the other GPEs,
-acpi_s2idle_wake() returns 'false', to indicate that the SCI event
-that has just triggered is not a system wakeup one, but it does that
-without canceling the pending wakeup and re-arming the SCI for system
-wakeup which is a mistake, because it may cause valid subsequent
-wakeup events to be missed.
+"Raj, Ashok" <ashok.raj@intel.com> writes:
+> On Fri, May 08, 2020 at 01:04:29PM +0200, Thomas Gleixner wrote:
+>> TBH, I can't see anything what's wrong here from the kernel side and as
+>> this is new silicon and you're the only ones reporting this it seems
+>> that this is something which is specific to that particular
+>> hardware. Have you talked to the hardware people about this?
+>> 
+>
+> After chasing it, I'm also trending to think that way. We had a question
+> about the moderation timer and how its affecting this behavior.
+> Mathias tried to turn off the moderation timer, and we are still able to 
+> see this hang. We are reaching out to the HW folks to get a handle on this.
+>
+> With legacy MSI we can have these races and kernel is trying to do the
+> song and dance, but we see this happening even when IR is turned on.
+> Which is perplexing. I think when we have IR, once we do the change vector 
+> and flush the interrupt entry cache, if there was an outstandng one in 
+> flight it should be in IRR. Possibly should be clearned up by the
+> send_cleanup_vector() i suppose.
 
-Fix that by moving all of the GPE checking logic from
-acpi_s2idle_wake() to acpi_ec_dispatch_gpe() and making the
-latter return 'true' only if a non-EC GPE has triggered and
-'false' otherwise, which will cause acpi_s2idle_wake() to
-cancel the pending SCI wakeup and re-arm the SCI for system
-wakeup regardless of the EC GPE status.
+Ouch. With IR this really should never happen and yes the old vector
+will catch one which was raised just before the migration disabled the
+IR entry. During the change nothing can go wrong because the entry is
+disabled and only reenabled after it's flushed which will send a pending
+one to the new vector.
 
-Fixes: d5406284ff80 ("ACPI: PM: s2idle: Refine active GPEs check")
-Reported-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/ec.c       |   24 ++++++++++++++++--------
- drivers/acpi/internal.h |    1 -
- drivers/acpi/sleep.c    |   14 ++------------
- 3 files changed, 18 insertions(+), 21 deletions(-)
+But if you see the issue with IR as well, then there is something wrong
+with the local APICs in that CPU.
 
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
- 		if (acpi_check_wakeup_handlers())
- 			return true;
- 
--		/*
--		 * If the status bit is set for any enabled GPE other than the
--		 * EC one, the wakeup is regarded as a genuine one.
--		 */
--		if (acpi_ec_other_gpes_active())
-+		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
-+		if (acpi_ec_dispatch_gpe())
- 			return true;
- 
- 		/*
--		 * If the EC GPE status bit has not been set, the wakeup is
--		 * regarded as a spurious one.
--		 */
--		if (!acpi_ec_dispatch_gpe())
--			return false;
--
--		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1994,23 +1994,31 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
- 
--bool acpi_ec_other_gpes_active(void)
--{
--	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
--}
--
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
- 
- 	if (!first_ec)
-+		return acpi_any_gpe_status_set(U32_MAX);
-+
-+	/*
-+	 * Report wakeup if the status bit is set for any enabled GPE other
-+	 * than the EC one.
-+	 */
-+	if (acpi_any_gpe_status_set(first_ec->gpe))
-+		return true;
-+
-+	if (ec_no_wakeup)
- 		return false;
- 
-+	/*
-+	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
-+	 * to allow the caller to process events properly after that.
-+	 */
- 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	if (ret == ACPI_INTERRUPT_HANDLED) {
-+	if (ret == ACPI_INTERRUPT_HANDLED)
- 		pm_pr_dbg("EC GPE dispatched\n");
--		return true;
--	}
-+
- 	return false;
- }
- #endif /* CONFIG_PM_SLEEP */
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
- 
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
--bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
- 
+Thanks,
 
-
-
+        tglx
