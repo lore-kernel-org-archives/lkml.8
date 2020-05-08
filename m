@@ -2,120 +2,98 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D9C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE09C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A933820820
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755D324958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588981990;
-	bh=HhHKaurLAmb7NjsgrxbGjxSSVFmDRRfuuN9UCDjB39o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GEOzERxpYLqynL7LCzsMomYAwwa68ulZv25qs2hYRnnajFmOcLKB5JDy8LmJGEE3S
-	 SfchqTctp/FgagOW5E3p1H2QokjQCveP/7QYq3JW43Zfak5daYSahCf7ZJOlyoOP7O
-	 9115fsfx49ZAOY7pz4lvnlNBXI+M8tsN9U2FMbZA=
+	s=default; t=1588982000;
+	bh=ShlmSSYoZM/4KVSCon78C6OJGXgAfXrm+T81mzLuWPw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QWUl0u1uRISoJwk32lzv6k6F3nswhkhjPQMKwnQcOI6lXTKFpy0fU0WBV6sxk/AD2
+	 Q0Y6kXFfraghNNFIWiRQaAIlUHAInO13yqMZLKMXCTMRcq1DRMbUkLXG3mdEWi+2V7
+	 s9blG2SB1YMNdj/vBfJqG1KKROc1CrzsjaVQ9a6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgEHXxJ (ORCPT
+        id S1728378AbgEHXxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 19:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHXxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:53:09 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727878AbgEHXxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 19:53:18 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36D12063A;
-        Fri,  8 May 2020 23:53:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C6042173E
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 23:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588981987;
-        bh=HhHKaurLAmb7NjsgrxbGjxSSVFmDRRfuuN9UCDjB39o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NlxsLycULu/0pDE5VncKMqsY68TvDzrBX4Z64itAzdFVs23jjGQe08PfomP/NtWT8
-         t+PlAdQE7wuMV/9rpzTnihUcJMRtJqlsdArVibUT/u4A0ZhILXtPYgryyu3m8JvFgO
-         cvEh5TrYedonuRC3JSEcG71eqRoSLBbbgIM2fD/M=
-Date:   Fri, 8 May 2020 16:53:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, kexec@lists.infradead.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user
- space after unloading kmem
-Message-Id: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
-In-Reply-To: <20200508084217.9160-2-david@redhat.com>
-References: <20200508084217.9160-1-david@redhat.com>
-        <20200508084217.9160-2-david@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1588981998;
+        bh=ShlmSSYoZM/4KVSCon78C6OJGXgAfXrm+T81mzLuWPw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n9D//HxEgwGYRXgRcsG3JRKq4w6a8alFjKJwQTMSBxIosataRm+U04vlHtZ3QiDPy
+         hc4pTv3LfB/awZ0phNvSPvbYP3FdBnamj604NaDyGvMkSCIyjNChgWtyiKoWwork7u
+         EcpSeIbFLNLB5hOPy+TTj8OUbvjTUDIT+69Q6izo=
+Received: by mail-wr1-f52.google.com with SMTP id e16so3854931wra.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 16:53:18 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZOYH4Q6qe6tTys09DsDUI3W7ylolKS0w6oplq3kXFTSMLtBtG8
+        o+Rtg4XBkD/r3/AljEet9T4Q3kl2/o+50GQ/eypElA==
+X-Google-Smtp-Source: APiQypLiN19kbzcdasktac/S2PjgXFAT+6IXCH3zMVMKE/A51GS2xk4EfodmyQvY7BtBRgu0KkORc7ULRJXdf0XOz1k=
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr5447139wrv.75.1588981996655;
+ Fri, 08 May 2020 16:53:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505134112.272268764@linutronix.de> <20200505134340.227579223@linutronix.de>
+In-Reply-To: <20200505134340.227579223@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 8 May 2020 16:53:05 -0700
+X-Gmail-Original-Message-ID: <CALCETrWJDdxnP5pJQinMkyL+mb3th1tWGY7psYqod8nDnrV2YQ@mail.gmail.com>
+Message-ID: <CALCETrWJDdxnP5pJQinMkyL+mb3th1tWGY7psYqod8nDnrV2YQ@mail.gmail.com>
+Subject: Re: [patch V4 part 2 01/18] x86/entry/64: Move non entry code into
+ .text section
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 May 2020 10:42:14 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> All ASM code which is not part of the entry functionality can move out into
+> the .text section. No reason to keep it in the non-instrumentable entry
+> section.
 
-> Assume we have kmem configured and loaded:
->   [root@localhost ~]# cat /proc/iomem
->   ...
->   140000000-33fffffff : Persistent Memory$
->     140000000-1481fffff : namespace0.0
->     150000000-33fffffff : dax0.0
->       150000000-33fffffff : System RAM
-> 
-> Assume we try to unload kmem. This force-unloading will work, even if
-> memory cannot get removed from the system.
->   [root@localhost ~]# rmmod kmem
->   [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
->   ...
->   [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
-> 
-> Now, we can reconfigure the namespace:
->   [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
->   [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
->   [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
->   ...
-> 
-> This fails as expected due to the busy memory resource, and the memory
-> cannot be used. However, the dax0.0 device is removed, and along its name.
-> 
-> The name of the memory resource now points at freed memory (name of the
-> device).
->   [root@localhost ~]# cat /proc/iomem
->   ...
->   140000000-33fffffff : Persistent Memory
->     140000000-1481fffff : namespace0.0
->     150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
->     150000000-33fffffff : System RAM
-> 
-> We have to make sure to duplicate the string. While at it, remove the
-> superfluous setting of the name and fixup a stale comment.
-> 
-> Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
-> Cc: stable@vger.kernel.org # v5.3
+Ick.  How about just moving that code into another file altogether?
 
-hm.
+> +.pushsection .text, "ax"
+>  SYM_FUNC_START(native_load_gs_index)
+>         FRAME_BEGIN
+>         pushfq
+> @@ -1058,6 +1063,7 @@ SYM_FUNC_START(native_load_gs_index)
+>         ret
+>  SYM_FUNC_END(native_load_gs_index)
+>  EXPORT_SYMBOL(native_load_gs_index)
+> +.popsection
 
-Is this really -stable material?  These are all privileged operations,
-I expect?
-
-Assuming "yes", I've queued this separately, staged for 5.7-rcX.  I'll
-redo patches 2-4 as a three-patch series for 5.8-rc1.
-
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-
-Reviewers, please ;)
-
-
+native_load_gs_index is toast if it gets instrumented in the wrong way.
