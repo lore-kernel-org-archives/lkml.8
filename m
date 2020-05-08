@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49FFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46C0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B89202499C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9E02496C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgEHNE5 (ORCPT
+        id S1730382AbgEHNFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
+        Fri, 8 May 2020 09:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730044AbgEHNEu (ORCPT
+        by vger.kernel.org with ESMTP id S1729385AbgEHNEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 09:04:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27945C05BD0C;
-        Fri,  8 May 2020 06:04:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DD1C05BD43;
+        Fri,  8 May 2020 06:04:50 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gE-00077C-2p; Fri, 08 May 2020 15:04:42 +0200
+        id 1jX2gH-0007AK-Er; Fri, 08 May 2020 15:04:45 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABD9B1C0080;
-        Fri,  8 May 2020 15:04:41 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:41 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4115B1C04CD;
+        Fri,  8 May 2020 15:04:44 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:44 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf inject: Rename perf_evsel__*() operating on
+Subject: [tip: perf/core] perf stat: Rename perf_evsel__*() operating on
  'struct evsel *' to evsel__*()
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -44,7 +44,7 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158894308165.8414.13958886304604863474.tip-bot2@tip-bot2>
+Message-ID: <158894308416.8414.9605094159789737027.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,14 +60,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     b14b36d0206549abd843523ae8891591eaceeb6f
-Gitweb:        https://git.kernel.org/tip/b14b36d0206549abd843523ae8891591eaceeb6f
+Commit-ID:     ddc6999eaf4edfde287ef012591c51f726690778
+Gitweb:        https://git.kernel.org/tip/ddc6999eaf4edfde287ef012591c51f726690778
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 04 May 2020 13:57:44 -03:00
+AuthorDate:    Mon, 04 May 2020 13:46:34 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
 
-perf inject: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+perf stat: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
 
 As those is a 'struct evsel' methods, not part of tools/lib/perf/, aka
 libperf, to whom the perf_ prefix belongs.
@@ -77,29 +77,49 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/builtin-stat.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index aad007b..53932db 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -561,8 +561,7 @@ static void sig_handler(int sig __maybe_unused)
- 	session_done = 1;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b2a9719..e0c1ad2 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -238,9 +238,8 @@ static int write_stat_round_event(u64 tm, u64 type)
+ 
+ #define SID(e, x, y) xyarray__entry(e->core.sample_id, x, y)
+ 
+-static int
+-perf_evsel__write_stat_event(struct evsel *counter, u32 cpu, u32 thread,
+-			     struct perf_counts_values *count)
++static int evsel__write_stat_event(struct evsel *counter, u32 cpu, u32 thread,
++				   struct perf_counts_values *count)
+ {
+ 	struct perf_sample_id *sid = SID(counter, cpu, thread);
+ 
+@@ -297,7 +296,7 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
+ 		perf_counts__set_loaded(counter->counts, cpu, thread, false);
+ 
+ 		if (STAT_RECORD) {
+-			if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
++			if (evsel__write_stat_event(counter, cpu, thread, count)) {
+ 				pr_err("failed to write stat event\n");
+ 				return -1;
+ 			}
+@@ -410,7 +409,7 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+ 	workload_exec_errno = info->si_value.sival_int;
  }
  
--static int perf_evsel__check_stype(struct evsel *evsel,
--				   u64 sample_type, const char *sample_msg)
-+static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *sample_msg)
+-static bool perf_evsel__should_store_id(struct evsel *counter)
++static bool evsel__should_store_id(struct evsel *counter)
  {
- 	struct perf_event_attr *attr = &evsel->core.attr;
- 	const char *name = evsel__name(evsel);
-@@ -625,7 +624,7 @@ static int __cmd_inject(struct perf_inject *inject)
- 			const char *name = evsel__name(evsel);
+ 	return STAT_RECORD || counter->core.attr.read_format & PERF_FORMAT_ID;
+ }
+@@ -635,7 +634,7 @@ try_again_reset:
+ 		if (l > stat_config.unit_width)
+ 			stat_config.unit_width = l;
  
- 			if (!strcmp(name, "sched:sched_switch")) {
--				if (perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
-+				if (evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
- 					return -EINVAL;
- 
- 				evsel->handler = perf_inject__sched_switch;
+-		if (perf_evsel__should_store_id(counter) &&
++		if (evsel__should_store_id(counter) &&
+ 		    evsel__store_ids(counter, evsel_list))
+ 			return -1;
+ 	}
