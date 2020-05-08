@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE130C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3347C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83787218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925CD218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943862;
-	bh=JxyaVjjFyzw3AEu5ORR/zDEFaxtWMS0F539DVma9a6c=;
+	s=default; t=1588943865;
+	bh=RevHL6/ppsU+ZB24KHRGsVR2GQXsknbXP3xp1aWcpXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXjIujJ6Jpgn4qWTwMn8wFUhQ9NzTDo/WAt79Ef4D/o5n7YVY6DcCqj7AAjjAtpwe
-	 81ukSBgAyplsxlnL+tXYvfIkMJSvhUFIs432GmwcR6FNW9JC4uSW2c2+PK4cXfvwzx
-	 zZDX9vvHPYfxB/M7Pg9Kb3EHqh+z7eWdgNZ1drSM=
+	b=CMK/2kO33vimHKULVuzmE26eKQBHoJ129EPIsAtX1DiHEdulrXG2v4N2kWNkRgN1X
+	 /x3V8IOkLW8fkVR7PWmNu2P5YqAHJInsGpKnRWwbLD16r+FhE6mU/8W+3BtxOyS5XS
+	 iFqAXk2GzfmlWytqpOH/c93bh2/Emi4PO0PEtE8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgEHNRl (ORCPT
+        id S1730488AbgEHNRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41836 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgEHMns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:48 -0400
+        id S1729106AbgEHMnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF9420720;
-        Fri,  8 May 2020 12:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEEB206B8;
+        Fri,  8 May 2020 12:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941827;
-        bh=JxyaVjjFyzw3AEu5ORR/zDEFaxtWMS0F539DVma9a6c=;
+        s=default; t=1588941825;
+        bh=RevHL6/ppsU+ZB24KHRGsVR2GQXsknbXP3xp1aWcpXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQ8GMrgixI1dJ3xOiuGKFBmbQUzd+YZPrmzjzhpDL85GzQv3D8BW2wb3DckRWitg8
-         gwZvavuIHX9PCS/5vTg7yyAfSTWnQT80jSrYjdsTws1dC3rtu3MYXfmDxHN2mSYFRV
-         FOKOHfHeBuqSVBg+GWbUuJsgsmMebiE/4deGAYgM=
+        b=BDzjNUDj+tO/hHOxJMM4mZRUNkMRuXNTkkNg+CmzBwvPH1ncfWob5i/cte5WCNIKr
+         AlzW8xMLfTEhXz4NqyWA8xhzoTH9M2ZKkhQ3Rc2aLGMXLf/HtweBf7ybdyDk02aH2d
+         yflFghPCs9yrZLNXoDx5x78r6bSOOvzUUPXtINhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 148/312] powerpc/book3s: Fix MCE console messages for unrecoverable MCE.
-Date:   Fri,  8 May 2020 14:32:19 +0200
-Message-Id: <20200508123134.870052137@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Eric Anholt <eric@anholt.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.4 185/312] pinctrl: bcm2835: Fix memory leak in error path
+Date:   Fri,  8 May 2020 14:32:56 +0200
+Message-Id: <20200508123137.489910835@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,46 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-commit c74dd88e77d3ecbc9e55c78796d82c9aa21cabad upstream.
+commit 53653c6b91750debba6dc4503003c851257fd340 upstream.
 
-When machine check occurs with MSR(RI=0), it means MC interrupt is
-unrecoverable and kernel goes down to panic path. But the console
-message still shows it as recovered. This patch fixes the MCE console
-messages.
+In case of an invalid pin value bcm2835_pctl_dt_node_to_map()
+would leak the pull configs of already assigned pins.
+So avoid this by calling the free map function in error case.
 
-Fixes: 36df96f8acaf ("powerpc/book3s: Decode and save machine check event.")
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Fixes: e1b2dc70cd5b ("pinctrl: add bcm2835 driver")
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/mce.c             |    3 ++-
- arch/powerpc/platforms/powernv/opal.c |    1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -92,7 +92,8 @@ void save_mce_event(struct pt_regs *regs
- 	mce->in_use = 1;
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -795,7 +795,7 @@ static int bcm2835_pctl_dt_node_to_map(s
+ 	return 0;
  
- 	mce->initiator = MCE_INITIATOR_CPU;
--	if (handled)
-+	/* Mark it recovered if we have handled it and MSR(RI=1). */
-+	if (handled && (regs->msr & MSR_RI))
- 		mce->disposition = MCE_DISPOSITION_RECOVERED;
- 	else
- 		mce->disposition = MCE_DISPOSITION_NOT_RECOVERED;
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -401,6 +401,7 @@ static int opal_recover_mce(struct pt_re
+ out:
+-	kfree(maps);
++	bcm2835_pctl_dt_free_map(pctldev, maps, num_pins * maps_per_pin);
+ 	return err;
+ }
  
- 	if (!(regs->msr & MSR_RI)) {
- 		/* If MSR_RI isn't set, we cannot recover */
-+		pr_err("Machine check interrupt unrecoverable: MSR(RI=0)\n");
- 		recovered = 0;
- 	} else if (evt->disposition == MCE_DISPOSITION_RECOVERED) {
- 		/* Platform corrected itself */
 
 
