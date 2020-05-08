@@ -2,109 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7001CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246BAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F2024969
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TqL3Pzp7"
+	by mail.kernel.org (Postfix) with ESMTP id 10F8B24969
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgEHNHd (ORCPT
+        id S1730582AbgEHNFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:07:33 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39136 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgEHNHG (ORCPT
+        Fri, 8 May 2020 09:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730419AbgEHNFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:07:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048D6oHY082815;
-        Fri, 8 May 2020 08:06:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588943210;
-        bh=7TFi8DenwabYdupg92PMqRYeyZT1ttnchvOUlGfcwpc=;
-        h=From:To:CC:Subject:Date;
-        b=TqL3Pzp733fAQrOCIkHz80JSjfKlDiEM2UFYAzUyw3GGabhU9P2Gm4C7KS/giVKuo
-         u29bGztq86zQOohltHNcW/FbJr2dKt7knj3L8yg5owuuj2URSasgEVXdu2eSSX52YS
-         SlACno9Jma6W7hZhBnfHcspidkek4id/gYuveUMM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048D6oGH000444;
-        Fri, 8 May 2020 08:06:50 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 08:06:50 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 08:06:50 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048D6kYk018673;
-        Fri, 8 May 2020 08:06:47 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kishon@ti.com>
-Subject: [PATCH v3 0/4] PCI: cadence: Deprecate inbound/outbound specific bindings
-Date:   Fri, 8 May 2020 18:36:42 +0530
-Message-ID: <20200508130646.23939-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 8 May 2020 09:05:25 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0737C05BD10;
+        Fri,  8 May 2020 06:05:23 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jX2go-0007a1-AV; Fri, 08 May 2020 15:05:18 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DDF701C0826;
+        Fri,  8 May 2020 15:05:00 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:05:00 -0000
+From:   "tip-bot2 for Konstantin Khlebnikov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf tools: Fix reading new topology attribute "core_cpus"
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <158817718710.747528.11009278875028211991.stgit@buzz>
+References: <158817718710.747528.11009278875028211991.stgit@buzz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <158894310080.8414.7942977053863010593.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is a result of comments given by Rob Herring @ [1].
-Patch series changes the DT bindings and makes the corresponding driver
-changes.
+The following commit has been merged into the perf/core branch of tip:
 
-Changes from v2:
-1) Changed the order of patches (no solid reason. Just save some
-rebasing effort for me)
-2) Added Acked-by Tom and Rob except for the dma-ranges patch
-3) Re-worked dma-ranges patch for it do decode multiple dma-ranges
-   and configure BAR0, BAR1 and NO_BAR instead of just NO_BAR [2].
+Commit-ID:     846de4371fdfddfa49481e3d04884539870dc127
+Gitweb:        https://git.kernel.org/tip/846de4371fdfddfa49481e3d04884539870dc127
+Author:        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+AuthorDate:    Wed, 29 Apr 2020 19:19:47 +03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Tue, 05 May 2020 16:35:29 -03:00
 
-Changes from v1:
-1) Added Reviewed-by: Rob Herring <robh@kernel.org> for dt-binding patch
-2) Fixed nitpick comments from Bjorn Helgaas
-3) Added a patch to read 32-bit Vendor ID/Device ID property from DT
+perf tools: Fix reading new topology attribute "core_cpus"
 
-[1] -> http://lore.kernel.org/r/20200219202700.GA21908@bogus
-[2] -> http://lore.kernel.org/r/eb1ffcb3-264f-5174-1f25-b5b2d3269840@ti.com
+Check if access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK)
+fails, which will happen unless the current directory is "/sys".
 
-Kishon Vijay Abraham I (4):
-  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
-    bindings
-  PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-  PCI: cadence: Fix to read 32-bit Vendor ID/Device ID property from DT
-  PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
-    property
+Simply try to read this file first.
 
- .../bindings/pci/cdns,cdns-pcie-ep.yaml       |   2 +-
- .../bindings/pci/cdns,cdns-pcie-host.yaml     |   3 +-
- .../devicetree/bindings/pci/cdns-pcie-ep.yaml |  25 +++
- .../bindings/pci/cdns-pcie-host.yaml          |  10 ++
- .../devicetree/bindings/pci/cdns-pcie.yaml    |   8 -
- .../controller/cadence/pcie-cadence-host.c    | 151 +++++++++++++++---
- drivers/pci/controller/cadence/pcie-cadence.h |  23 ++-
- 7 files changed, 182 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/158817718710.747528.11009278875028211991.stgit@buzz
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/smt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
--- 
-2.17.1
-
+diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
+index 3b791ef..8481842 100644
+--- a/tools/perf/util/smt.c
++++ b/tools/perf/util/smt.c
+@@ -24,13 +24,13 @@ int smt_on(void)
+ 
+ 		snprintf(fn, sizeof fn,
+ 			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
+-		if (access(fn, F_OK) == -1) {
++		if (sysfs__read_str(fn, &str, &strlen) < 0) {
+ 			snprintf(fn, sizeof fn,
+ 				"devices/system/cpu/cpu%d/topology/thread_siblings",
+ 				cpu);
++			if (sysfs__read_str(fn, &str, &strlen) < 0)
++				continue;
+ 		}
+-		if (sysfs__read_str(fn, &str, &strlen) < 0)
+-			continue;
+ 		/* Entry is hex, but does not have 0x, so need custom parser */
+ 		siblings = strtoull(str, NULL, 16);
+ 		free(str);
