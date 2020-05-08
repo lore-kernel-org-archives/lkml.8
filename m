@@ -2,252 +2,208 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92292C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BDEC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6684A208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD81D20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THnNxIew"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pzSVIV3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHGwI (ORCPT
+        id S1726897AbgEHGxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725971AbgEHGwI (ORCPT
+        Fri, 8 May 2020 02:53:33 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60966 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgEHGxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:52:08 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7718C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 23:52:07 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f11so537802ljp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 23:52:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=snsveWT+yJB6VQ5fgjYi4vu754HWsLYGYs2/57IiIIs=;
-        b=THnNxIewCJV4MBQ49YK3xWX6brA2V105UMphDKN/uYq0/0CIK/y4l1fcWiHiQ8m6gc
-         P+yfSZep8hKMPuXDcEdPhTvbDB8aH8Za4pekl33uteo/mKqWS8f/A32ttRRYoAGM4F0w
-         Qn4JpFG/AjGgkZwx+p/EHQ3Il/JOvTGx/H3epo9E+UK6ZcJeNtYvCdAxmigl91gu73Ch
-         pmkb5eGaOds2e9IT9MK6uJRgTHoGN5235d9j0yVCDp5bQGROvfbPe4Uokz22O7+cSObp
-         rqmM2I5SqqFV07IgcpdJTbFJIscQr2z2J3nkIA0P3W6mdaxkQ4agZQlo2xew99k1Zjhq
-         u56Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=snsveWT+yJB6VQ5fgjYi4vu754HWsLYGYs2/57IiIIs=;
-        b=r+9Jy1MM0HOZRfWW5SNlFoC6eT/72RdNK7DvBaKcI981/MOclDNu7VLiY1ipcgrjSF
-         wLz+kADjlUQ9CS+mwPN/KdR4g0fXuMULqaKXhhlU6HOUD7D9CQn/poKWipyejkbcoPaQ
-         ubnAAowUmzBl8MMWe7Ni7tZU2iKJGHP4NBiVqqxIkmOKRrbyFkMQLgxlRQNHI18tuv0K
-         JoCKu/SC5qJyGfuJBcaIcfJAtXpVj7XTOBqtJ3n85AZkpujItzrjhDwRRK4wJ25War2L
-         mtpNR0SY32oZXRrjzV2ysPt7K461oYp40tG7IcakyeL6BtOKh0Lv2onxdOJJ4ZRCT+g6
-         C0Iw==
-X-Gm-Message-State: AOAM531o0pL0TAj1RsDq4kH39Axy9L3Umy6XAco2ho2EbRmKuPXZJGwn
-        9o0rOeZ93hJnAjnOhfnZVzlixGGC3i55JsZTbe8=
-X-Google-Smtp-Source: ABdhPJxFvsxgr5OOUyQJFD7RtgZRdaymEEM49pe0hHmyFol7gUWYsHeqvu9yxLU8P+92BEGP+F20Y0NTXpyukJ1MZTQ=
-X-Received: by 2002:a2e:361a:: with SMTP id d26mr657621lja.171.1588920726023;
- Thu, 07 May 2020 23:52:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508011603.54553-1-yuchao0@huawei.com> <CACOAw_xxS_Wf==KnD31f9AOMu+QUs3WacowsfcD6w4A9n2AkTg@mail.gmail.com>
- <0d41e29e-c601-e016-e471-aed184ca4a6a@huawei.com> <CACOAw_z39D=2GONkMaQX6pSi2z26nqCvBZwZK-M=n3_yc84+yg@mail.gmail.com>
- <2a241a80-2597-ef9e-62b5-cf2b8bdb33c4@huawei.com>
-In-Reply-To: <2a241a80-2597-ef9e-62b5-cf2b8bdb33c4@huawei.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Fri, 8 May 2020 15:51:54 +0900
-Message-ID: <CACOAw_xmar1vv6yFu0DNzNjXq6eqXiVU-uxqQGjs3dUEHBWf_g@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: compress: fix zstd data corruption
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, Daeho Jeong <daehojeong@google.com>,
+        Fri, 8 May 2020 02:53:31 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200508065328euoutp01c6e48b3218343420fa606763be5d5508~M_w5_Zbte1038110381euoutp01B;
+        Fri,  8 May 2020 06:53:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200508065328euoutp01c6e48b3218343420fa606763be5d5508~M_w5_Zbte1038110381euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588920808;
+        bh=Z7m45ytXKpkmvuwQpxVLZ3SHLM3cMj1bzkRRhkTnaDw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=pzSVIV3/v4e6lL50pBf9yQgvuF1lvhHNPmqHibxlL4qnnHlOO6Ca0kv2oDyxarTjN
+         XhrxPH3lLvQzFvDmw9NPUFKSSTxL3kVHrAUEIe01K54sMLxFlf2tG3i4RZGhacY21r
+         A0MDXGqKfAhgnG0tYNBqygHojYiWJ2fPWkwBsF2I=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200508065327eucas1p2f725cefdb89745bd1d77d3dfb0ffb3d3~M_w5qPND-1155711557eucas1p2A;
+        Fri,  8 May 2020 06:53:27 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 99.CD.60679.7E105BE5; Fri,  8
+        May 2020 07:53:27 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200508065327eucas1p21ec9f6144ed975dc1fa11d99b6dc3ffb~M_w5PabC_1674116741eucas1p2U;
+        Fri,  8 May 2020 06:53:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200508065327eusmtrp2d1c70c67a2854b27d77b372c8fb55774~M_w5OM_4x2329423294eusmtrp2-;
+        Fri,  8 May 2020 06:53:27 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-8e-5eb501e7ebe1
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 65.7B.08375.7E105BE5; Fri,  8
+        May 2020 07:53:27 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200508065325eusmtip1a647998be423003f3e0d8a7ff6ef6317~M_w3Sghb12877628776eusmtip1m;
+        Fri,  8 May 2020 06:53:25 +0000 (GMT)
+Subject: Re: [PATCH v4 02/14] arm: add support for folded p4d page tables
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-sh@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        linux-hexagon@vger.kernel.org, Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu, Jonas Bonn <jonas@southpole.se>,
+        linux-arch@vger.kernel.org, Brian Cain <bcain@codeaurora.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org, Stafford Horne <shorne@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
         linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Michael Ellerman <mpe@ellerman.id.au>,
+        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
+        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <98229ab1-fbf8-0a89-c5d6-270c828799e7@samsung.com>
+Date:   Fri, 8 May 2020 08:53:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200507161155.GE683243@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTZxTee+/t7W2z6m1F+8YRlzULyWaQ6TZ3Ehc/4n68Jv7wj4lZAtrp
+        DbAVMK04NPtRy0ewwQ9qEbwt4ujinNQ1Fiofs3M2aFFCh9YYUBBlGEXBYq1Tvoptr278e85z
+        nnOe5/w4HK15zS7l8gv3CMZCvUHHKpkLVydDmY+QL+eztiNZ4PS4WZi1XZXD+TqPDNrL+xiY
+        sJTTEDldhaCylIKfJ6dkUHF8A9Q7bAhm/edZmDkxQcFYdDk8vx6UQ3/gDIKhPw4k5B0vGfD+
+        c1sGkbI2FiYqn8kg3OFk4Z57TgbOGTsNgRo/gulX8YSV85oMWswBFqziQxa8B8MsuDtdcuj0
+        tFLQZzez4K+5j6DH+1vCrPceA77uCA1lA1/CkM1Prc8g7pNuRMK3b9BkesqGSPmR1ywJHz5E
+        kcZRM0OqezJJuzgoJ66LoxSpGiuTEe/ZgyzxRm1yEnJMMKSrbpohRxv/QuRvr5vekv6t8utd
+        giF/r2DMWrtDmec/UMbsHlKXVNsXmlHFQitScJj/Ao8MjyErUnIa/gzCF2tdlFTEEHZ3tjBS
+        8QLhhw9m2Xcj52ab36p+RXjq5K238xGE4z02KqlaxG/Ch5qvMEmcxmdgy0sxNUHzj5XYPNNF
+        JxssvxJbx62ptSp+LX5ku5TgOY7hP8Z+z/4kvZjPxt2uZiRJ1PjaiZHUTkUiRX3NqxRP8x/i
+        Up+DlrAW3xlpoKSkNxU4fnqZhL/BYcccI+FF+EmwRS7hdDzX3pDKhvlShB+EzsmlogrhsKUO
+        Sao1eCA0xSbD0fwn2NORJdEbcG2klUrSmF+A+8bVUoYF2HahlpZoFa6s0EjqDCwGf//P9nLv
+        Tfoo0onzLhPnXSPOu0b83/cUYs4irVBsKsgVTKsKhR9XmPQFpuLC3BU7iwq8KPEP3fFgrA11
+        zHwXQDyHdO+r4Hlzjkam32vaVxBAmKN1aarqkpYcjWqXft9+wVi03VhsEEwB9AHH6LSqzxtH
+        szV8rn6P8IMg7BaM77oUp1hqRmsMsV7nTsv299Ii0V8cQnDg3+WGrTvqT4U8yHe86EV/kyHW
+        EyU31sWv9wb7fd9vjVXlDa/eXPmT69Li0FddTxh1/mr7U1BvPBYoWTeseBa5nNN5pb1VK0aX
+        NI39mT54d7DBUjtpv5XWlLVxS4NjfP0Sf0jLbsvO/GjztrvH7o+4dIwpT7/yU9po0r8Bp3xZ
+        7AsEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0xTZxTGfe+/XogN1wr6hmA01ZC5hbILVA5GiSQkvvrJxX1Y5sQ1egNE
+        2pLe1igfloKtwSpqGzC0FJyyGYUulRYU2ZptnQORsanEypiAizrDoqN2Gv9Q1EI14duTc57f
+        c85JDk+rjnCZfKXBLJkMuio1l8oMvR4Yz3mIeso+drozwOv3cTDr6ldAV7Ofhcv2UQaidXYa
+        ps8eRVB/kILTL1+xcOhkCbS2uBDMhro4iLujFDyKfQRPrg0o4M/wOQST39cm7H3PGAjci7Aw
+        bevlIFr/HwsjfV4OJnxvWPDGG2kIN4UQzDx/nRjlHWSh2xrmwOF5wEHg8AgHvivtCrjiv0TB
+        aKOVg1DTXQTDgfOJYdcnGOgZmqbBdkcLk64QtSmb+Np8iIxEbtBk5pULEfvxFxwZOdZAkTNT
+        VoY4h3PIZc+4grT/MEWRo49sLAl0HOZIIOZSkN9bogy52jzDkBNnfkLkj4CP3pb1uWaDyWgx
+        S6sqjLJ5o3qHCHkasQg0eQVFGjG/cOf6PK06t3jDHqmqcp9kyi3+UlMRqrUx1ZNL9jsb06zo
+        UJoDpfBYKMDfzQYpB0rlVcK3CF/03lAkG1l48KSVTeqlOB5xcEnTY4R9fXfpucZSYQtuCP7K
+        zOl0IRvXPfPMJ9HCv6n43CnvO8JF4f+n/pl3cYKIHY/nolJ4pVCMH7p+TCTxPCOswSF/zVw5
+        Q9iJOyN2lLQswYPu+/NoSmLV1qbn83VaWIfbgn/TSb0SH+xpeaeX47H7p6gTSOVZgHsWIJ4F
+        iGcB8jViOlC6ZJH15XpZ1Mg6vWwxlGt2G/UBlHjEi/0vg73oZtf2MBJ4pF6shCfBMhWr2ycf
+        0IcR5ml1utK5v7tMpdyjO1AjmYy7TJYqSQ4jbeI2J52ZsduYeGuDeZeoFQuhSCzML8xfB+rl
+        ynrh5y9UQrnOLO2VpGrJ9J6j+JRMK2oYt3x29kK2YfRpyYPWS78wv+21hHPNvY1Ct6apN3Ys
+        frsgqq8prX0zel2/bKv2yFh/RXUs85vN/g+Ctzu/av5k4NOaOyp3WmST86+J9Mod9mFl3UTx
+        8bHB8dPD8ZvnSXvbvVnH6s4hpbEzlJPb0V4Si6zZ0uApvbVIWGsrda/oyVIzcoVO/JA2ybq3
+        og0iYZ4DAAA=
+X-CMS-MailID: 20200508065327eucas1p21ec9f6144ed975dc1fa11d99b6dc3ffb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f
+References: <20200414153455.21744-1-rppt@kernel.org>
+        <20200414153455.21744-3-rppt@kernel.org>
+        <CGME20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f@eucas1p2.samsung.com>
+        <39ba8a04-d6b5-649d-c289-0c8b27cb66c5@samsung.com>
+        <20200507161155.GE683243@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Great, thanks for checking~! :)
+Hi Mike,
 
+On 07.05.2020 18:11, Mike Rapoport wrote:
+> On Thu, May 07, 2020 at 02:16:56PM +0200, Marek Szyprowski wrote:
+>> On 14.04.2020 17:34, Mike Rapoport wrote:
+>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>>
+>>> Implement primitives necessary for the 4th level folding, add walks of p4d
+>>> level where appropriate, and remove __ARCH_USE_5LEVEL_HACK.
+>>>
+>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>> Today I've noticed that kexec is broken on ARM 32bit. Bisecting between
+>> current linux-next and v5.7-rc1 pointed to this commit. I've tested this
+>> on Odroid XU4 and Raspberry Pi4 boards. Here is the relevant log:
+>>
+>> # kexec --kexec-syscall -l zImage --append "$(cat /proc/cmdline)"
+>> memory_range[0]:0x40000000..0xbe9fffff
+>> memory_range[0]:0x40000000..0xbe9fffff
+>> # kexec -e
+>> kexec_core: Starting new kernel
+>> 8<--- cut here ---
+>> Unable to handle kernel paging request at virtual address c010f1f4
+>> pgd = c6817793
+>> [c010f1f4] *pgd=4000041e(bad)
+>> Internal error: Oops: 80d [#1] PREEMPT ARM
+>> Modules linked in:
+>> CPU: 0 PID: 1329 Comm: kexec Tainted: G        W
+>> 5.7.0-rc3-00127-g6cba81ed0f62 #611
+>> Hardware name: Samsung Exynos (Flattened Device Tree)
+>> PC is at machine_kexec+0x40/0xfc
+> Any chance you have the debug info in this kernel?
+> scripts/faddr2line would come handy here.
 
-2020=EB=85=84 5=EC=9B=94 8=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 3:42, Ch=
-ao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 2020/5/8 11:30, Daeho Jeong wrote:
-> > I am a little bit confused.
-> >
-> > In compress_log=3D2 (4 pages),
-> >
-> > Every compression algorithm will set the cc->nr_cpages to 5 pages like =
-below.
-> >
-> >         max_len =3D COMPRESS_HEADER_SIZE + cc->clen;
-> >         cc->nr_cpages =3D DIV_ROUND_UP(max_len, PAGE_SIZE);
-> >
-> >         cc->cpages =3D f2fs_kzalloc(sbi, sizeof(struct page *) *
-> >                                         cc->nr_cpages, GFP_NOFS);
-> >
-> > And call cops->compress_pages(cc) and the returned length of the compre=
-ssed data will be set to cc->clen for every case.
-> > And if the cc->clen is larger than max_len, we will give up compression=
-.
-> >
-> >         ret =3D cops->compress_pages(cc);
-> >         if (ret)
-> >                 goto out_vunmap_cbuf;
-> >
-> >         max_len =3D PAGE_SIZE * (cc->cluster_size - 1) - COMPRESS_HEADE=
-R_SIZE;
-> >
-> >         if (cc->clen > max_len) {
-> >                 ret =3D -EAGAIN;
-> >                 goto out_vunmap_cbuf;
-> >         }
-> >
-> > So, with your patch, we will just use 3 pages for ZSTD and 5 pages for =
-LZO and LZ4 now.
-> > My question was whether it is also possible to decrease the compression=
- buffer size for LZO and LZ4 to 3 pages like ZSTD case.
-> > I was just curious about that. :)
-> I guess we can change LZ4 as we did for ZSTD case, since it supports part=
-ially
-> compression:
->
-> - lz4_compress_pages
->  - LZ4_compress_default
->   - LZ4_compress_fast
->    - LZ4_compress_fast_extState
->     if (maxOutputSize < LZ4_COMPRESSBOUND(inputSize))
->      - LZ4_compress_generic(..., limitedOutput, ...)
->       - if (outputLimited && boundary_check_condition) return 0;
->
-> And for LZO case, it looks we have to keep to allocate 5 pages for worst
-> compression case as it doesn't support partially compression as I checked=
-.
->
-> Thanks,
->
-> >
-> >
-> > 2020=EB=85=84 5=EC=9B=94 8=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 11:4=
-8, Chao Yu <yuchao0@huawei.com <mailto:yuchao0@huawei.com>>=EB=8B=98=EC=9D=
-=B4 =EC=9E=91=EC=84=B1:
-> >
-> >     Hi Daeho,
-> >
-> >     On 2020/5/8 9:28, Daeho Jeong wrote:
-> >     > Hi Chao,
-> >     >
-> >     > IIUC, you are trying not to use ZSTD_compressBound() to save the =
-memory
-> >     > space. Am I right?
-> >     >
-> >     > Then, how about LZ4_compressBound() for LZ4 and lzo1x_worst_compr=
-ess() for
-> >     > LZO?
-> >
-> >     Oops, it looks those limits were wrongly used...
-> >
-> >     #define LZ4_COMPRESSBOUND(isize)        (\
-> >             (unsigned int)(isize) > (unsigned int)LZ4_MAX_INPUT_SIZE \
-> >             ? 0 \
-> >             : (isize) + ((isize)/255) + 16)
-> >
-> >     #define lzo1x_worst_compress(x) ((x) + ((x) / 16) + 64 + 3 + 2)
-> >
-> >     Newly calculated boundary size is larger than target buffer size.
-> >
-> >     However comments on LZ4_compress_default() said:
-> >
-> >     ...
-> >      * @maxOutputSize: full or partial size of buffer 'dest'
-> >      *      which must be already allocated
-> >     ...
-> >     int LZ4_compress_default(const char *source, char *dest, int inputS=
-ize,
-> >             int maxOutputSize, void *wrkmem);
-> >
-> >     And @out_len in lzo1x_1_compress() was passed as an output paramete=
-r to
-> >     pass length of data that compressor compressed into @out buffer.
-> >
-> >     Let me know if I missed sth.
-> >
-> >     Thannks,
-> >
-> >     > Could we save more memory space for these two cases like ZSTD?
-> >     > As you know, we are using 5 pages compression buffer for LZ4 and =
-LZO in
-> >     > compress_log_size=3D2,
-> >     > and if the compressed data doesn't fit in 3 pages, it returns -EA=
-GAIN to
-> >     > give up compressing that one.
-> >     >
-> >     > Thanks,
-> >     >
-> >     > 2020=EB=85=84 5=EC=9B=94 8=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=
-=84 10:17, Chao Yu <yuchao0@huawei.com <mailto:yuchao0@huawei.com>>=EB=8B=
-=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >     >
-> >     >> During zstd compression, ZSTD_endStream() may return non-zero va=
-lue
-> >     >> because distination buffer is full, but there is still compresse=
-d data
-> >     >> remained in intermediate buffer, it means that zstd algorithm ca=
-n not
-> >     >> save at last one block space, let's just writeback raw data inst=
-ead of
-> >     >> compressed one, this can fix data corruption when decompressing
-> >     >> incomplete stored compression data.
-> >     >>
-> >     >> Signed-off-by: Daeho Jeong <daehojeong@google.com <mailto:daehoj=
-eong@google.com>>
-> >     >> Signed-off-by: Chao Yu <yuchao0@huawei.com <mailto:yuchao0@huawe=
-i.com>>
-> >     >> ---
-> >     >>  fs/f2fs/compress.c | 7 +++++++
-> >     >>  1 file changed, 7 insertions(+)
-> >     >>
-> >     >> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> >     >> index c22cc0d37369..5e4947250262 100644
-> >     >> --- a/fs/f2fs/compress.c
-> >     >> +++ b/fs/f2fs/compress.c
-> >     >> @@ -358,6 +358,13 @@ static int zstd_compress_pages(struct compr=
-ess_ctx
-> >     >> *cc)
-> >     >>                 return -EIO;
-> >     >>         }
-> >     >>
-> >     >> +       /*
-> >     >> +        * there is compressed data remained in intermediate buf=
-fer due to
-> >     >> +        * no more space in cbuf.cdata
-> >     >> +        */
-> >     >> +       if (ret)
-> >     >> +               return -EAGAIN;
-> >     >> +
-> >     >>         cc->clen =3D outbuf.pos;
-> >     >>         return 0;
-> >     >>  }
-> >     >> --
-> >     >> 2.18.0.rc1
-> >     >>
-> >     >>
-> >     >>
-> >     >> _______________________________________________
-> >     >> Linux-f2fs-devel mailing list
-> >     >> Linux-f2fs-devel@lists.sourceforge.net <mailto:Linux-f2fs-devel@=
-lists.sourceforge.net>
-> >     >> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >     >>
-> >     >
-> >
+# ./scripts/faddr2line --list vmlinux machine_kexec+0x40
+machine_kexec+0x40/0xf8:
+
+machine_kexec at arch/arm/kernel/machine_kexec.c:182
+  177            reboot_code_buffer = 
+page_address(image->control_code_page);
+  178
+  179            /* Prepare parameters for reboot_code_buffer*/
+  180            set_kernel_text_rw();
+  181            kexec_start_address = image->start;
+ >182<           kexec_indirection_page = page_list;
+  183            kexec_mach_type = machine_arch_type;
+  184            kexec_boot_atags = image->arch.kernel_r2;
+  185
+  186            /* copy our kernel relocation code to the control code 
+page */
+  187            reboot_entry = fncpy(reboot_code_buffer,
+
+ > ...
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
