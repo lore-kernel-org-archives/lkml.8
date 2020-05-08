@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984CDC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70B0C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA9224953
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9471F21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XC7dRbkc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UNM07rxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgEHPhx (ORCPT
+        id S1728591AbgEHPiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
+        Fri, 8 May 2020 11:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgEHPhA (ORCPT
+        with ESMTP id S1728174AbgEHPgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:37:00 -0400
+        Fri, 8 May 2020 11:36:49 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24ABEC061A0C;
-        Fri,  8 May 2020 08:37:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035BDC061A0C;
+        Fri,  8 May 2020 08:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=nmjnltB29xld+C3Z+3PwCdDAVaharMq9Nb/YJIWz0Mw=; b=XC7dRbkcv1Z+9Aj3oRe1TSTHyA
-        92hwRGkNvqNC1eKJPiFAchuwONZiLGsaR09OC9v+N2an8W+SAyjulwp7XCmGWsm1fNWqkmFfGnGQe
-        d+lsRHk/Bu2X6EcnRHqZEP/tmf+cfJDroBH3O+RBLMcto3g5Hpz5EsuYPzyIRDUd6Tx0MGnxaD+o4
-        8NZidjToalkxI1guS+RsMSwlFeAWxK4ZTLFqmVkASNbu0eweGVJrRiijmA8PNH65Z8vpwwddiqMrD
-        /VgNAyZqKh5bCLc5iRU9un0MeHL8up6W0xpMpgOOCMrlYGGig+ysKu6//vM1JaYlCnY64yS1RWO6e
-        E1IikOWA==;
+        bh=MVpXPi4fO9ek2hxfJ7eaB5mhfWvQarx43ZgTOZ4t1BM=; b=UNM07rxTMrjSKj57obB1kc0GKN
+        4c/P3xwFW5d9k3Hfi744eTkLYszdumNcpfrOjsxrJ9UyA5pDgJlACed00AREq1SZCfAHi0YTUfXeL
+        1a3vaAcVbG4IQqGt9D66OEKVcFQkxqBxp4rUGWmpPQER44ale5ue+RbbzOgzgKvdrdhoJt3D2NNxV
+        1eAPLhsMIzXbIHLL3++l6NlGgamQ555CXKlTkvYsF5jaAuaiGhVap01g1xYLqxcArTXcJZqmFMBoz
+        IZqNqIah5HvQMt9E9lRkiTzhTJQ5P5+JS/j09j+PuFEw8yw+wQnDHAw0xudwrm7AWdgH4vpWmQFKP
+        ZOHP/mFw==;
 Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX53b-0004Kk-JZ; Fri, 08 May 2020 15:37:00 +0000
+        id 1jX53Q-00049Y-EX; Fri, 08 May 2020 15:36:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -46,9 +46,9 @@ Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 08/12] vfio: use __anon_inode_getfd
-Date:   Fri,  8 May 2020 17:36:30 +0200
-Message-Id: <20200508153634.249933-9-hch@lst.de>
+Subject: [PATCH 04/12] bpf: use __anon_inode_getfd
+Date:   Fri,  8 May 2020 17:36:26 +0200
+Message-Id: <20200508153634.249933-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508153634.249933-1-hch@lst.de>
 References: <20200508153634.249933-1-hch@lst.de>
@@ -61,67 +61,105 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use __anon_inode_getfd instead of opencoding the logic using
-get_unused_fd_flags + anon_inode_getfile.
+get_unused_fd_flags + anon_inode_getfile.  Also switch the
+bpf_link_new_file calling conventions to match __anon_inode_getfd.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/vfio/vfio.c | 37 ++++++++-----------------------------
- 1 file changed, 8 insertions(+), 29 deletions(-)
+ include/linux/bpf.h  |  2 +-
+ kernel/bpf/cgroup.c  |  6 +++---
+ kernel/bpf/syscall.c | 31 +++++++++----------------------
+ 3 files changed, 13 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index 765e0e5d83ed9..33a88103f857f 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1451,42 +1451,21 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 		return ret;
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index fd2b2322412d7..539649fe8b885 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1103,7 +1103,7 @@ void bpf_link_cleanup(struct bpf_link *link, struct file *link_file,
+ void bpf_link_inc(struct bpf_link *link);
+ void bpf_link_put(struct bpf_link *link);
+ int bpf_link_new_fd(struct bpf_link *link);
+-struct file *bpf_link_new_file(struct bpf_link *link, int *reserved_fd);
++int bpf_link_new_file(struct bpf_link *link, struct file **link_file);
+ struct bpf_link *bpf_link_get_from_fd(u32 ufd);
+ 
+ int bpf_obj_pin_user(u32 ufd, const char __user *pathname);
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index cb305e71e7deb..8605287adcd9e 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -836,10 +836,10 @@ int cgroup_bpf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ 	link->cgroup = cgrp;
+ 	link->type = attr->link_create.attach_type;
+ 
+-	link_file = bpf_link_new_file(&link->link, &link_fd);
+-	if (IS_ERR(link_file)) {
++	link_fd = bpf_link_new_file(&link->link, &link_file);
++	if (link_fd < 0) {
+ 		kfree(link);
+-		err = PTR_ERR(link_file);
++		err = link_fd;
+ 		goto out_put_cgroup;
  	}
  
--	/*
--	 * We can't use anon_inode_getfd() because we need to modify
--	 * the f_mode flags directly to allow more than just ioctls
--	 */
--	ret = get_unused_fd_flags(O_CLOEXEC);
--	if (ret < 0) {
--		device->ops->release(device->device_data);
--		vfio_device_put(device);
--		return ret;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 64783da342020..cb2364e17423c 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2307,23 +2307,10 @@ int bpf_link_new_fd(struct bpf_link *link)
+  * complicated and expensive operations and should be delayed until all the fd
+  * reservation and anon_inode creation succeeds.
+  */
+-struct file *bpf_link_new_file(struct bpf_link *link, int *reserved_fd)
++int bpf_link_new_file(struct bpf_link *link, struct file **file)
+ {
+-	struct file *file;
+-	int fd;
+-
+-	fd = get_unused_fd_flags(O_CLOEXEC);
+-	if (fd < 0)
+-		return ERR_PTR(fd);
+-
+-	file = anon_inode_getfile("bpf_link", &bpf_link_fops, link, O_CLOEXEC);
+-	if (IS_ERR(file)) {
+-		put_unused_fd(fd);
+-		return file;
 -	}
 -
--	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
--				   device, O_RDWR);
--	if (IS_ERR(filep)) {
--		put_unused_fd(ret);
--		ret = PTR_ERR(filep);
--		device->ops->release(device->device_data);
--		vfio_device_put(device);
--		return ret;
--	}
--
--	/*
--	 * TODO: add an anon_inode interface to do this.
--	 * Appears to be missing by lack of need rather than
--	 * explicitly prevented.  Now there's need.
--	 */
-+	ret = __anon_inode_getfd("[vfio-device]", &vfio_device_fops,
-+				   device, O_CLOEXEC | O_RDWR, &filep);
-+	if (ret < 0)
-+		goto release;
- 	filep->f_mode |= (FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE);
--
- 	atomic_inc(&group->container_users);
--
- 	fd_install(ret, filep);
- 
- 	if (group->noiommu)
- 		dev_warn(device->dev, "vfio-noiommu device opened by user "
- 			 "(%s:%d)\n", current->comm, task_pid_nr(current));
--
-+	return ret;
-+release:
-+	device->ops->release(device->device_data);
-+	vfio_device_put(device);
- 	return ret;
+-	*reserved_fd = fd;
+-	return file;
++	return __anon_inode_getfd("bpf_link", &bpf_link_fops, link, O_CLOEXEC,
++			file);
  }
+ 
+ struct bpf_link *bpf_link_get_from_fd(u32 ufd)
+@@ -2406,10 +2393,10 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog)
+ 	}
+ 	bpf_link_init(&link->link, &bpf_tracing_link_lops, prog);
+ 
+-	link_file = bpf_link_new_file(&link->link, &link_fd);
+-	if (IS_ERR(link_file)) {
++	link_fd = bpf_link_new_file(&link->link, &link_file);
++	if (link_fd < 0) {
+ 		kfree(link);
+-		err = PTR_ERR(link_file);
++		err = link_fd;
+ 		goto out_put_prog;
+ 	}
+ 
+@@ -2520,10 +2507,10 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
+ 	bpf_link_init(&link->link, &bpf_raw_tp_lops, prog);
+ 	link->btp = btp;
+ 
+-	link_file = bpf_link_new_file(&link->link, &link_fd);
+-	if (IS_ERR(link_file)) {
++	link_fd = bpf_link_new_file(&link->link, &link_file);
++	if (link_fd < 0) {
+ 		kfree(link);
+-		err = PTR_ERR(link_file);
++		err = link_fd;
+ 		goto out_put_btp;
+ 	}
  
 -- 
 2.26.2
