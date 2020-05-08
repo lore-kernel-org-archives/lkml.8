@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE1CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFEDC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275AE2145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF0D2145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941960;
-	bh=KW6y5wmFLfiHusJt9VH5WdPcHaNDUYH9sRQ8FBD/nDA=;
+	s=default; t=1588941965;
+	bh=vT1ohDLykskvWR62HNatjxD7VTjctg1pSVYPi9mKQjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qF4DER2CTfm75Pc0HDFsPC8iVP4MKIcS12WEJNgnwU0t/PVPj41rpo4rp2fs6ANkC
-	 Ufn/U+pmUxy4/22Mzu0K6gb43z4qsxJex4YNfwasQ7uI92cTG73YpYuDqi+IH1Es7t
-	 pG+LA7VZoyGgj1iBsUjbMbRC3baeSPj3Ftq2GazQ=
+	b=FPbT8/DlVcAzTEyYuseCwMkiSzGq/2Qbdc/bDO9NSjI4TNZITIFhm8fV8ouLGLZbB
+	 JogK7oCOpbxGvq0Ue3ceTUpzOyDuHdJ17AxXfZOHaACe03N52+/iJhiL0oXp41MXUI
+	 5M4qqA2DHmLtdsOgONs8TAQevyrP1rzl2rZvdlWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgEHMp7 (ORCPT
+        id S1729382AbgEHMqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46288 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbgEHMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:56 -0400
+        id S1728581AbgEHMqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCCA121974;
-        Fri,  8 May 2020 12:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B8621974;
+        Fri,  8 May 2020 12:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941956;
-        bh=KW6y5wmFLfiHusJt9VH5WdPcHaNDUYH9sRQ8FBD/nDA=;
+        s=default; t=1588941961;
+        bh=vT1ohDLykskvWR62HNatjxD7VTjctg1pSVYPi9mKQjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRCeBPrUd68D6OUIU7bgvhpwsG/Z/4yiDcENcWoY/BBG3VkEdSCvDj4P+Xdd0f2E2
-         uq6diLjtBciIuey4Lo4OU2t/6AnrqxaBuOGnqqzCbqtG6r3Ga/26Pc1I/8uM2cvN5M
-         m9wtBCmqIq4mkE2n5p4lHd1iaENsYC7RCXyvbAj0=
+        b=KSYI1U9r1fyxBczuqey9W+6lrGTbhBMCBrmqrGkssyl+8a2qvEpPtMAHBgnFErSIG
+         6q8yt7JQENr/01fIh36NuN/d2uFYxS2RUclivXmdIHnsk/nvI8xnphtpryjR4MNJt3
+         sQIJja6uo0KrD9WoAD3e+NKlUFDjt7aGpQ6+3QC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tobias Jungel <tobias.jungel@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 240/312] bonding: fix length of actor system
-Date:   Fri,  8 May 2020 14:33:51 +0200
-Message-Id: <20200508123141.304323372@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@arm.com>,
+        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 242/312] Revert "cpufreq: Drop rwsem lock around CPUFREQ_GOV_POLICY_EXIT"
+Date:   Fri,  8 May 2020 14:33:53 +0200
+Message-Id: <20200508123141.444339553@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,35 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Jungel <tobias.jungel@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 414dd6fb9a1a1b59983aea7bf0f79f0085ecc5b8 upstream.
+commit 68e80dae09033d778b98dc88e5bfe8fdade188e5 upstream.
 
-The attribute IFLA_BOND_AD_ACTOR_SYSTEM is sent to user space having the
-length of sizeof(bond->params.ad_actor_system) which is 8 byte. This
-patch aligns the length to ETH_ALEN to have the same MAC address exposed
-as using sysfs.
+Earlier, when the struct freq-attr was used to represent governor
+attributes, the standard cpufreq show/store sysfs attribute callbacks
+were applied to the governor tunable attributes and they always acquire
+the policy->rwsem lock before carrying out the operation.  That could
+have resulted in an ABBA deadlock if governor tunable attributes are
+removed under policy->rwsem while one of them is being accessed
+concurrently (if sysfs attributes removal wins the race, it will wait
+for the access to complete with policy->rwsem held while the attribute
+callback will block on policy->rwsem indefinitely).
 
-Fixes: f87fda00b6ed2 ("bonding: prevent out of bound accesses")
-Signed-off-by: Tobias Jungel <tobias.jungel@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We attempted to address this issue by dropping policy->rwsem around
+governor tunable attributes removal (that is, around invocations of the
+->governor callback with the event arg equal to CPUFREQ_GOV_POLICY_EXIT)
+in cpufreq_set_policy(), but that opened up race conditions that had not
+been possible with policy->rwsem held all the time.
+
+The previous commit, "cpufreq: governor: New sysfs show/store callbacks
+for governor tunables", fixed the original ABBA deadlock by adding new
+governor specific show/store callbacks.
+
+We don't have to drop rwsem around invocations of governor event
+CPUFREQ_GOV_POLICY_EXIT anymore, and original fix can be reverted now.
+
+Fixes: 955ef4833574 (cpufreq: Drop rwsem lock around CPUFREQ_GOV_POLICY_EXIT)
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reported-by: Juri Lelli <juri.lelli@arm.com>
+Tested-by: Juri Lelli <juri.lelli@arm.com>
+Tested-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/bonding/bond_netlink.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c |    5 -----
+ include/linux/cpufreq.h   |    4 ----
+ 2 files changed, 9 deletions(-)
 
---- a/drivers/net/bonding/bond_netlink.c
-+++ b/drivers/net/bonding/bond_netlink.c
-@@ -628,8 +628,7 @@ static int bond_fill_info(struct sk_buff
- 				goto nla_put_failure;
- 
- 			if (nla_put(skb, IFLA_BOND_AD_ACTOR_SYSTEM,
--				    sizeof(bond->params.ad_actor_system),
--				    &bond->params.ad_actor_system))
-+				    ETH_ALEN, &bond->params.ad_actor_system))
- 				goto nla_put_failure;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2171,10 +2171,7 @@ static int cpufreq_set_policy(struct cpu
+ 			return ret;
  		}
- 		if (!bond_3ad_get_active_agg_info(bond, &info)) {
+ 
+-		up_write(&policy->rwsem);
+ 		ret = __cpufreq_governor(policy, CPUFREQ_GOV_POLICY_EXIT);
+-		down_write(&policy->rwsem);
+-
+ 		if (ret) {
+ 			pr_err("%s: Failed to Exit Governor: %s (%d)\n",
+ 			       __func__, old_gov->name, ret);
+@@ -2190,9 +2187,7 @@ static int cpufreq_set_policy(struct cpu
+ 		if (!ret)
+ 			goto out;
+ 
+-		up_write(&policy->rwsem);
+ 		__cpufreq_governor(policy, CPUFREQ_GOV_POLICY_EXIT);
+-		down_write(&policy->rwsem);
+ 	}
+ 
+ 	/* new governor failed, so re-start old one */
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -100,10 +100,6 @@ struct cpufreq_policy {
+ 	 * - Any routine that will write to the policy structure and/or may take away
+ 	 *   the policy altogether (eg. CPU hotplug), will hold this lock in write
+ 	 *   mode before doing so.
+-	 *
+-	 * Additional rules:
+-	 * - Lock should not be held across
+-	 *     __cpufreq_governor(data, CPUFREQ_GOV_POLICY_EXIT);
+ 	 */
+ 	struct rw_semaphore	rwsem;
+ 
 
 
