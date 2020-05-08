@@ -2,102 +2,90 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF031C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63761C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0A2218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QF9qhyvg"
+	by mail.kernel.org (Postfix) with ESMTP id 35513218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588944113;
+	bh=D3MJC+2qPG1IavHeiaYeHNHbRpFemYPUFUrOQDJhJm8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Lb/6PmLFNxFq04YkjxtYqgYhD1T17hjsp88Uj47mCAyZg3uemspDdcgWcOUiy5D1j
+	 eeOtxDutbz6IJl1OEN6xLJCpWQGzgYHWmMpOtTsEDysXvWE6XJG9fBPF/BPQh3YQpe
+	 8v3jFozdb402Gv7TpN2yOskGgBFDF81OYyWLs+KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbgEHNVq (ORCPT
+        id S1728694AbgEHNVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728633AbgEHNVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:21:34 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81118C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:21:34 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s8so1814350wrt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EdCijOczIQMLs1X4cAiihh7qwIxfmO/FmCoXMHIAt4I=;
-        b=QF9qhyvg3Qeb+YdknO2fao+XlPzsK19K/rtqFb+isyApE2gUA67kAJtCEbpFlaMbpL
-         dcijhFnjRYwsGrSpYFEdti57I43KZ8UJ0e+M60tBa2Gbm3/cm8H7yiqCqG6EY0EgxY1C
-         BeU3J+n0cXh29+FgY+fqG/ymytpuJWNTQHSnllJBQmDNb7rHv3lAlxjwr0etXAa2ptFB
-         7g7oPs/+taioniIBI29hoil0gYL0DZVP0rgSC2ri1qjfbIcpf1DDmjD0eszCHTKT00WF
-         k43oRpf8CYrDjieni9DUKpnnVMOxSLg06KLLhPJKXzpr0eyaH1TlvS1MwzQJLpAvAysn
-         YYTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EdCijOczIQMLs1X4cAiihh7qwIxfmO/FmCoXMHIAt4I=;
-        b=fj+Z97ncHc466zoD5jhK6qoDDc7pBpA0jCmBfqdaC7OlPWPg8WFXNwYT5r1v9lyfGF
-         1khaX12ECigGMOx7flC9SJdRtW1cPkmTrsIChvT5K+9WfCsXLtXRFdL4pL9WIn1lqdLk
-         wUBMEq9Gl7Y9A/r/QJ251c+KY25PRIgVUTDYsAK/tAyR5oSlqlwijbXJlnPXnoU6kvcj
-         IswUQFitkmy5DoQepXRa7M4OMcR+w4o7xmcyOfnv33JAc+JHMW5pJmr+U4p6WIiHxSx/
-         qHM0LjLNu8viiwSHfTlVBVHUkaSio/zbF/QIaUfJDGRn+sJtU5WE/trsD0TBhM05N4Rx
-         5BMg==
-X-Gm-Message-State: AGi0PuZaiz6FAVLStuFq8T1T3NtzAOyrROfMAwaHFCgBFnMwNA7xEyHc
-        huXgbl7e0Y06ELF4/HFSOyNXXA==
-X-Google-Smtp-Source: APiQypI1o0GT8qsdRugAQfihzVy7cdudanFaAiRDCAYBqFxUeH6OF3tVH8JjYsz1IbNVzkpokawI1w==
-X-Received: by 2002:a5d:5490:: with SMTP id h16mr2920378wrv.250.1588944093030;
-        Fri, 08 May 2020 06:21:33 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id h6sm12871912wmf.31.2020.05.08.06.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 06:21:32 -0700 (PDT)
-Date:   Fri, 8 May 2020 14:21:29 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH 13/14] sched: cpufreq: Use IS_ENABLED() for schedutil
-Message-ID: <20200508132129.GE10541@google.com>
-References: <20200507181012.29791-1-qperret@google.com>
- <20200507181012.29791-14-qperret@google.com>
- <20200508053053.GG19464@codeaurora.org>
+        Fri, 8 May 2020 09:21:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbgEHMkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9A1D2496A;
+        Fri,  8 May 2020 12:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588941608;
+        bh=D3MJC+2qPG1IavHeiaYeHNHbRpFemYPUFUrOQDJhJm8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zeoI24jafYN4IIz/Hnrq3/8jeIWyXFb2N1dTJJgTcZu4RNfVusBuIgeANg+mTAwDx
+         1S0TWK4uGra10Z/3PUZDu2y7j446zcOqWIvsZu6hS//z6jl+pzTXT23PYyZZBq5dBk
+         PrEQdQQZUKkuu3utiQAbuXQhXNYvSHNNHTIDKTCM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.4 063/312] vfio/pci: Allow VPD short read
+Date:   Fri,  8 May 2020 14:30:54 +0200
+Message-Id: <20200508123128.982023141@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508053053.GG19464@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 May 2020 at 11:00:53 (+0530), Pavan Kondeti wrote:
-> > -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> > +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> >  	/* Build perf. domains: */
-> >  	for (i = 0; i < ndoms_new; i++) {
-> >  		for (j = 0; j < n && !sched_energy_update; j++) {
-> 
-> Now that scheduler does not have any references to schedutil_gov and cpufreq
-> has want_eas flag, do we need this CONFIG_CPU_FREQ_GOV_SCHEDUTIL checks here?
+From: Alex Williamson <alex.williamson@redhat.com>
 
-Right, they're not absolutely required, but given that sugov is the only
-one to have 'want_eas' set I guess there is no need to compile that in
-without it, no?
+commit ce7585f3c4d76bca1dff4b66ae1ea32552954f9e upstream.
 
-Cheers,
-Quentin
+The size of the VPD area is not necessarily 4-byte aligned, so a
+pci_vpd_read() might return less than 4 bytes.  Zero our buffer and
+accept anything other than an error.  Intel X710 NICs exercise this.
+
+Fixes: 4e1a635552d3 ("vfio/pci: Use kernel VPD access functions")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/vfio/pci/vfio_pci_config.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -698,7 +698,8 @@ static int vfio_vpd_config_write(struct
+ 		if (pci_write_vpd(pdev, addr & ~PCI_VPD_ADDR_F, 4, &data) != 4)
+ 			return count;
+ 	} else {
+-		if (pci_read_vpd(pdev, addr, 4, &data) != 4)
++		data = 0;
++		if (pci_read_vpd(pdev, addr, 4, &data) < 0)
+ 			return count;
+ 		*pdata = cpu_to_le32(data);
+ 	}
+
+
