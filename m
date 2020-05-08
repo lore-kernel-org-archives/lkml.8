@@ -2,87 +2,161 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2135BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBF424954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F050C20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:30:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULYNzhjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgEHO2N (ORCPT
+        id S1727820AbgEHOay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:28:13 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4391 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbgEHO2N (ORCPT
+        Fri, 8 May 2020 10:30:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48692 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726873AbgEHOax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:28:13 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25eb56c5a887-5ad8b; Fri, 08 May 2020 22:27:39 +0800 (CST)
-X-RM-TRANSID: 2ee25eb56c5a887-5ad8b
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.43.52] (unknown[223.104.148.118])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45eb56c5a857-5b418;
-        Fri, 08 May 2020 22:27:39 +0800 (CST)
-X-RM-TRANSID: 2ee45eb56c5a857-5b418
-Subject: Re: [PATCH] USB: host: ehci: Use the defined variable to simplifycode
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-References: <Pine.LNX.4.44L0.2005080952130.19653-100000@netrider.rowland.org>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <e335e5c7-bf7e-22d8-4dbf-15b0477d8d5d@cmss.chinamobile.com>
-Date:   Fri, 8 May 2020 22:28:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 8 May 2020 10:30:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588948250;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lIRjAGCSvbO1PdVeTIb+ibHQAikoDQgX7hMGEBLwgkE=;
+        b=ULYNzhjnLm8tSjHrLNjqg5NCi/l5n+qQjsatWmhfuCGF9AGPqQ9rLaeO4f8kBBH7zp94i5
+        C1Z/T4dRQm/QZWee8C4r8CKCwJJxGe5Ym/OyDcbuPcZByZOIbJMdObvwfiMVr60jGcF7u2
+        93AqbQQo0IrwoiPkejh2Fz1y+MlIcZw=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-ey8eZz3OMjSGpdPbsrGPyA-1; Fri, 08 May 2020 10:30:49 -0400
+X-MC-Unique: ey8eZz3OMjSGpdPbsrGPyA-1
+Received: by mail-qk1-f197.google.com with SMTP id v6so1116340qkh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 07:30:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lIRjAGCSvbO1PdVeTIb+ibHQAikoDQgX7hMGEBLwgkE=;
+        b=trPFOcb608548VicCFxJlHFB9dXuP0wv2IZ2HYGq6KgMHcwLbYRsL/csuZ43wkSfPB
+         Hdh6PgWPab1u6KCizhJWWWTAzGQxD4kx1vovRMfVbBtpJ/NXNrfEDBvUn9wFY4rMc3c+
+         Iai20N0UDFB6wuVNhLxZ3ENiFRU7Df3GAE+YDVhSS7iUQ61XjJPTS5CTzxZTG+YqvXP9
+         pxcp69s3Zh5Jr9h2KJrCH9S5AhgtF9m7d1FFCVXSvo+wuKR+lcUa3WmBuJutE+7PpR3V
+         O8eA4h5QRYW4FycLV7fXszIlJceemYVSRQYfj3FCkca7KM+WtPysW6cSZY3urm3ubefc
+         wPig==
+X-Gm-Message-State: AGi0PuYtD19KxZTGjnsE2Cg2Qn0qBzQZTUs1BGGW7cTZeI3P9GLKmB7x
+        YlI22cH2r0Gg/fqprz2Fn/EtOdo6wV2Ve3ftnGcaRrygMwg4SXel0H0N7z6Yhcf9dKdsjrmTBLK
+        QGtwsgn761AuSHiVWgxIABZY6
+X-Received: by 2002:aed:2e24:: with SMTP id j33mr3254490qtd.117.1588948247009;
+        Fri, 08 May 2020 07:30:47 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLpIgVamTZ1EUCABaqOg/LRWWRWl2ZAJbE/Vu45j1TY2btxCLAF4n4xUil/Okkd6JIjfe6Bqg==
+X-Received: by 2002:aed:2e24:: with SMTP id j33mr3254355qtd.117.1588948245283;
+        Fri, 08 May 2020 07:30:45 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id k58sm1603302qtf.40.2020.05.08.07.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 07:30:44 -0700 (PDT)
+Date:   Fri, 8 May 2020 10:30:42 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200508143042.GY228260@xz-x1>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871568480.15589.17339878308143043906.stgit@gimli.home>
+ <20200507212443.GO228260@xz-x1>
+ <20200507235421.GK26002@ziepe.ca>
+ <20200508021939.GT228260@xz-x1>
+ <20200508121013.GO26002@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44L0.2005080952130.19653-100000@netrider.rowland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200508121013.GO26002@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 08, 2020 at 09:10:13AM -0300, Jason Gunthorpe wrote:
+> On Thu, May 07, 2020 at 10:19:39PM -0400, Peter Xu wrote:
+> > On Thu, May 07, 2020 at 08:54:21PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, May 07, 2020 at 05:24:43PM -0400, Peter Xu wrote:
+> > > > On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
+> > > > > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> > > > > the range being faulted into the vma.  Add support to manually provide
+> > > > > that, in the same way as done on KVM with hva_to_pfn_remapped().
+> > > > > 
+> > > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+> > > > >  1 file changed, 33 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > > > > index cc1d64765ce7..4a4cb7cd86b2 100644
+> > > > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > > > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> > > > > +			    unsigned long vaddr, unsigned long *pfn,
+> > > > > +			    bool write_fault)
+> > > > > +{
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	ret = follow_pfn(vma, vaddr, pfn);
+> > > > > +	if (ret) {
+> > > > > +		bool unlocked = false;
+> > > > > +
+> > > > > +		ret = fixup_user_fault(NULL, mm, vaddr,
+> > > > > +				       FAULT_FLAG_REMOTE |
+> > > > > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> > > > > +				       &unlocked);
+> > > > > +		if (unlocked)
+> > > > > +			return -EAGAIN;
+> > > > 
+> > > > Hi, Alex,
+> > > > 
+> > > > IIUC this retry is not needed too because fixup_user_fault() will guarantee the
+> > > > fault-in is done correctly with the valid PTE as long as ret==0, even if
+> > > > unlocked==true.
+> > > 
+> > > It is true, and today it is fine, but be careful when reworking this
+> > > to use notifiers as unlocked also means things like the vma pointer
+> > > are invalidated.
+> > 
+> > Oh right, thanks for noticing that.  Then we should probably still keep the
+> > retry logic... because otherwise the latter follow_pfn() could be referencing
+> > an invalid vma already...
+> 
+> I looked briefly and thought this flow used the vma only once?
 
-On 2020/5/8 21:56, Alan Stern wrote:
-> On Fri, 8 May 2020, Tang Bin wrote:
->
->> Use the defined variable "dev" to make the code cleaner. And
->> delete an extra blank line.
-> Again, the Subject: line should say "ehci-mxc".
-Got it.
->
->> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->> ---
->>   drivers/usb/host/ehci-mxc.c | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
->> index c9f91e6c7..a1eb5ee77 100644
->> --- a/drivers/usb/host/ehci-mxc.c
->> +++ b/drivers/usb/host/ehci-mxc.c
->> @@ -56,7 +56,7 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->>   		return -ENOMEM;
->>   
->>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
->> +	hcd->regs = devm_ioremap_resource(dev, res);
-> As long as you're making these changes, why not also move the
-> definition of dev up before the definition of pdata?  Then you could
-> change the definition of pdata to:
->
-> 	struct mxc_usbh_platform_data *pdata = dev_get_platdata(dev);
->
-Got it.
+        ret = follow_pfn(vma, vaddr, pfn);
+        if (ret) {
+                bool unlocked = false;
+ 
+                ret = fixup_user_fault(NULL, mm, vaddr,
+                                       FAULT_FLAG_REMOTE |
+                                       (write_fault ?  FAULT_FLAG_WRITE : 0),
+                                       &unlocked);
+                if (unlocked)
+                        return -EAGAIN;
+ 
+                if (ret)
+                        return ret;
+ 
+                ret = follow_pfn(vma, vaddr, pfn);      <--------------- [1]
+        }
 
-Thanks
+So imo the 2nd follow_pfn() [1] could be racy if without the unlocked check.
 
+Thanks,
 
+-- 
+Peter Xu
 
