@@ -2,66 +2,70 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCEDC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06781C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B0021974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB423218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588958007;
-	bh=nNOMj7fWr0hfCONmtS8yznlSceUy4xHRuJjwRqMvih4=;
+	s=default; t=1588958012;
+	bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=JTsS+MARi5Pq8XiY2sv4ti2vHwVOY+fCofzDovBu8mOGgZ73kHXlYzZUN4suR5pd2
-	 jN/jIV7k/IzRuBw6O5z9rtXRIozWn60UkCwvvrXAaL39LFV3WqHbbM60U3zWsEdKfK
-	 Rb6lMtdAgxG+gmHrnQr3Fol7cY0kKLGCzLk5TZiw=
+	b=Elt+jIRn4wfmK1sEVIjSOprLG5cu713Q6oT8MFneYI2BNNdB9elPiXyLxtC4AU5fV
+	 hOkdHesgVKwpjqMy+X6sMfhHMnESsgL3dYKxftzBhEYJdY31XojGme7/pr2VYtaOjk
+	 uuatZ74WnOXI6IPRQo3xM7wIuAf/N5mDO/3wOmsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgEHRN0 (ORCPT
+        id S1727899AbgEHRNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 13:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbgEHRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:13:25 -0400
+        id S1726750AbgEHRNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:13:31 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE40F2083B;
-        Fri,  8 May 2020 17:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6892192A;
+        Fri,  8 May 2020 17:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588958005;
-        bh=nNOMj7fWr0hfCONmtS8yznlSceUy4xHRuJjwRqMvih4=;
+        s=default; t=1588958011;
+        bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=e5cBrVN13xuZb//euliOWKPCF0H5WmI4AQugpfyjFE1KhFo/h15LtCE1ze0SLP/gu
-         arPWF2gx9qhUku3cMTASiW8VbJbllAUIl5I2W5biPz8xuifWWU7Ph9eFO2AhEuEjCC
-         MupA19cMtAaoUUejxsqBiUBiNs7fuBMb9Xh5P7Xw=
-Date:   Fri, 08 May 2020 18:13:22 +0100
+        b=pSqawFDd76MgRyToBM4GrmZnPrfhoRCCqOjCZp1j9YT7EJe1vdGGbozD9MIXSdw/L
+         FGR6AumafkY52sb47IYMlOE06dvz2uBlovSRPbvHswEFpV2Z1mMPEN7M57zpugdQOo
+         e7CH7dlCgzb3mD5q68T8j6b8yZsHdPRdACerkg4A=
+Date:   Fri, 08 May 2020 18:13:28 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     plai@codeaurora.org, Tang Bin <tangbin@cmss.chinamobile.com>,
-        perex@perex.cz, bgoswami@codeaurora.org
-Cc:     Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200504073558.2340-1-tangbin@cmss.chinamobile.com>
-References: <20200504073558.2340-1-tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH] ASoC: qcom: Remove the unnecessary cast
-Message-Id: <158895800278.30774.3687945839123979957.b4-ty@kernel.org>
+To:     robh@kernel.org, linus.walleij@linaro.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        lee.jones@linaro.org
+Cc:     linux-gpio@vger.kernel.org, bgoswami@codeaurora.org,
+        linux-kernel@vger.kernel.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        spapothi@codeaurora.org
+In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 00/12] ASoC: Add support to WCD9340/WCD9341 codec
+Message-Id: <158895800277.30774.11001800526381716360.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 15:35:58 +0800, Tang Bin wrote:
-> It's not necessary to specify 'void const __force *' casting
-> for 'drvdata->lpaif'.
-> 
-> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  sound/soc/qcom/lpass-cpu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On Thu, 21 Nov 2019 17:04:57 +0000, Srinivas Kandagatla wrote:
+> This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+> is a standalone Hi-Fi audio codec IC.
+> This codec supports both I2S/I2C and SLIMbus audio interfaces.
+> On slimbus interface it supports two data lanes; 16 Tx ports
+> and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+> Multibutton headset control (MBHC), Active noise cancellation,
+> Sidetone paths, MAD (mic activity detection) and codec processing engine.
+> It supports Class-H differential earpiece out and stereo single
+> ended headphones out.
 > 
 > [...]
 
@@ -71,8 +75,30 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: qcom: Remove the unnecessary cast
-      (no commit info)
+[01/12] dt-bindings: SLIMBus: add slim devices optional properties
+        (no commit info)
+[02/12] ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+        (no commit info)
+[03/12] mfd: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[04/12] ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[05/12] ASoC: wcd934x: add basic controls
+        (no commit info)
+[06/12] ASoC: wcd934x: add playback dapm widgets
+        (no commit info)
+[07/12] ASoC: wcd934x: add capture dapm widgets
+        (no commit info)
+[08/12] ASoC: wcd934x: add audio routings
+        (no commit info)
+[09/12] dt-bindings: gpio: wcd934x: Add bindings for gpio
+        (no commit info)
+[10/12] gpio: wcd934x: Add support to wcd934x gpio controller
+        (no commit info)
+[11/12] ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+        (no commit info)
+[12/12] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
+        (no commit info)
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
