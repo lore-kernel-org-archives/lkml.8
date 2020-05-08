@@ -2,117 +2,159 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C09C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C9EC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C49BC20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3A920870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEHKxF (ORCPT
+        id S1727119AbgEHKxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:53:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4302 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbgEHKxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:53:05 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C14AC10F0AFAD4AF2FD8;
-        Fri,  8 May 2020 18:53:02 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.237) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 18:52:53 +0800
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v3] tools/bootconfig: fix resource leak in apply_xbc()
-To:     <mhiramat@kernel.org>, <rostedt@goodmis.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        <Markus.Elfring@web.de>, <dan.carpenter@oracle.com>,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Message-ID: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
-Date:   Fri, 8 May 2020 18:52:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 8 May 2020 06:53:14 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41682 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgEHKxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:53:13 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F36AE80307C7;
+        Fri,  8 May 2020 10:53:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id n9plO7634JlT; Fri,  8 May 2020 13:53:08 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/6] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
+Date:   Fri, 8 May 2020 13:52:58 +0300
+Message-ID: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.237]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the @data and @fd allocations that are leaked in the error path of
-apply_xbc().
+Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+with currently implemented in the kernel DW DMAC driver, but there are some
+peculiarities which must be taken into account in order to have the device
+fully supported.
 
-Fixes: 85c46b78da58 ("bootconfig: Add bootconfig magic word for indicating bootconfig explicitly")
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-v2 -> v3:
- - set 'ret' to 0 before returning on success
+First of all traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+channels, which alas have different max burst length configuration.
+In particular first two channels may burst up to 128 bits (16 bytes) at a time
+while the rest of them just up to 32 bits. We must make sure that the DMA
+subsystem doesn't set values exceeding these limitations otherwise the
+controller will hang up. In third currently we discovered the problem in using
+the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+natively implemented multi-block LLP transfers support and the SPI-transfer
+length exceeds the max lock size. In this case due to asynchronous handling of
+Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+the DMAC to asynchronously execute the transfers we'd have to at least warn
+the user of the possible errors. In forth it's worth to set the DMA device max
+segment size with max block size config specific to the DW DMA controller. It
+shall help the DMA clients to create size-optimized SG-list items for the
+controller. This in turn will cause less dw_desc allocations, less LLP
+reinitializations, better DMA device performance.
 
-v1 -> v2:
- - complete the error handling at other error path
- - add "Fixes" tag
+Finally there is a bug in the algorithm of the nollp flag detection.
+In particular even if DW DMAC parameters state the multi-block transfers
+support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+by the driver true multi-block LLP functionality unusable. This happens cause'
+if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+contiguous multi-block transfers will be only supported. We must take the
+flag into account when detecting the LLP support otherwise the driver just
+won't work correctly.
 
- tools/bootconfig/main.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 16b9a420e6fd..17a9837dcfaa 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -314,31 +314,35 @@ int apply_xbc(const char *path, const char *xbc_path)
- 	ret = delete_xbc(path);
- 	if (ret < 0) {
- 		pr_err("Failed to delete previous boot config: %d\n", ret);
--		return ret;
-+		goto free_data;
- 	}
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do do with the
+  constraints in the DT binding.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false"
+  property in the DT binding file.
+- Discard default settings defined out of property enum constraint.
+- Set default max-burst-len to 256 TR-WIDTH words in the DT binding.
+- Discard noLLP and block_size accessors.
+- Set max segment size of the DMA device structure with the DW DMA block size
+  config.
+- Print warning if noLLP flag is set.
+- Discard max burst length accessor.
+- Add comment about why hardware accelerated LLP list support depends
+  on both MBLK_EN and HC_LLP configs setting.
+- Use explicit bits state comparison operator in noLLP flag setting.
 
- 	/* Apply new one */
- 	fd = open(path, O_RDWR | O_APPEND);
- 	if (fd < 0) {
- 		pr_err("Failed to open %s: %d\n", path, fd);
--		return fd;
-+		ret = fd;
-+		goto free_data;
- 	}
- 	/* TODO: Ensure the @path is initramfs/initrd image */
- 	ret = write(fd, data, size + 8);
- 	if (ret < 0) {
- 		pr_err("Failed to apply a boot config: %d\n", ret);
--		return ret;
-+		goto close_fd;
- 	}
- 	/* Write a magic word of the bootconfig */
- 	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
--	if (ret < 0) {
-+	if (ret < 0)
- 		pr_err("Failed to apply a boot config magic: %d\n", ret);
--		return ret;
--	}
-+
-+	ret = 0;
-+
-+close_fd:
- 	close(fd);
-+free_data:
- 	free(data);
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
--	return 0;
-+	return ret;
- }
+Serge Semin (6):
+  dt-bindings: dma: dw: Convert DW DMAC to DT binding
+  dt-bindings: dma: dw: Add max burst transaction length property
+  dmaengine: dw: Set DMA device max segment size parameter
+  dmaengine: dw: Print warning if multi-block is unsupported
+  dmaengine: dw: Introduce max burst length hw config
+  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
 
- int usage(void)
+ .../bindings/dma/snps,dma-spear1340.yaml      | 173 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+ drivers/dma/dw/core.c                         |  57 +++++-
+ drivers/dma/dw/dw.c                           |   1 +
+ drivers/dma/dw/of.c                           |   9 +
+ drivers/dma/dw/regs.h                         |  21 ++-
+ include/linux/platform_data/dma-dw.h          |   4 +
+ 7 files changed, 256 insertions(+), 78 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+
 -- 
-1.8.3.1
+2.25.1
 
