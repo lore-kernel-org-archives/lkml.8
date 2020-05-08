@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B60C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF13C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421EE206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E20206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943984;
-	bh=kZSpbwMjiUsLOnPRALjdPtfQYqyoa/8Jo8EJQKpLap0=;
+	s=default; t=1588943987;
+	bh=OuenHsL91OyfoabZnQQPLI6StpAl5FR2BmeWRvv+hB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k1FYTfzQs/PoUdOHV11K7FplomFzZOMQ/80NwvYv75evxwNjEnOq34aZRIc9+OLIQ
-	 3patl9zznTWH1RHyfk5h2K+phy9V8v1h+9LGPAPYrwE16isOvHc/udOjzGRxVWdQ1j
-	 IdSAP1eMXYAid3O4PavYCmsH9m1AlKmhAAZSnDc0=
+	b=kLgaQdgv2RIb8W8Qm37G6mvLc1IltNp71Zfha9TzuXMDi14Z1Q/DFns0zwliif+RF
+	 bRML5RvDvov3wWMJuvwMJZaHKF1hELNi7u9+rRG8LPUWDyr05/00CUZTFxq1evcdSR
+	 5bR6ZBRN3EzXguuvZBIj77vZAYfqKvwtAZ9cwyvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgEHNTn (ORCPT
+        id S1729162AbgEHNTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbgEHMlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:40 -0400
+        id S1728840AbgEHMlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD9FE2495F;
-        Fri,  8 May 2020 12:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D96921835;
+        Fri,  8 May 2020 12:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941700;
-        bh=kZSpbwMjiUsLOnPRALjdPtfQYqyoa/8Jo8EJQKpLap0=;
+        s=default; t=1588941697;
+        bh=OuenHsL91OyfoabZnQQPLI6StpAl5FR2BmeWRvv+hB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIL7MULCl5RUEMymy42okYpVXuCkLb2IcPy64LaIBIQvR87rhFZHID0DuyNiMw0lg
-         aQP3R3j33Zdwl++lrFbyW92IOs3bKXaZP0wrAtF6EzhspAQ+QLmCtZCFLdIJMl0gu/
-         RUsUHELnvuUVQ8rJvHkeRfbBt3EOwGdDndMPr+fc=
+        b=SBpIA06KRjOvQjxZJcfHU/vzEWRfmc/DuGkbpsJy4y2f6KJ9WusWptZFW30ZYUZTk
+         BKTrNyPX9Kq8i8MhrwOSlsuTw5RvqDSTnQi49FlXnvVNIJaO87BsSqaLTqBCgZI3ge
+         3PmPzNd/Ac52nykY/LpaxTOxOJ9EW/i1pF5x9pYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
+        stable@vger.kernel.org, Sudip Mukherjee <sudip@vectorindia.org>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 136/312] ASoC: fsl_ssi: mark SACNT register volatile
-Date:   Fri,  8 May 2020 14:32:07 +0200
-Message-Id: <20200508123134.063717277@linuxfoundation.org>
+Subject: [PATCH 4.4 135/312] ASoC: tegra_alc5632: check return value
+Date:   Fri,  8 May 2020 14:32:06 +0200
+Message-Id: <20200508123133.995845962@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,64 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit 3f1c241f0f5f90046258e6b8d4aeb6463ffdc08e upstream.
+commit 319c32597fc22a58b946a6146f2be1fd208582e0 upstream.
 
-SACNT register should be marked volatile since
-its WR and RD bits are cleared by SSI after
-completing the relevant operation.
-This unbreaks AC'97 register access.
+We have been returning success even if snd_soc_card_jack_new() fails.
+Lets check the return value and return error if it fails.
 
-Fixes: 05cf237972fe ("ASoC: fsl_ssi: Add driver suspend and resume to support MEGA Fast")
-
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Fixes: 12cc6d1dca4d ("ASoC: tegra_alc5632: Register jacks at the card level")
+Signed-off-by: Sudip Mukherjee <sudip@vectorindia.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_ssi.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/tegra/tegra_alc5632.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -146,6 +146,7 @@ static bool fsl_ssi_volatile_reg(struct
- 	case CCSR_SSI_SRX1:
- 	case CCSR_SSI_SISR:
- 	case CCSR_SSI_SFCSR:
-+	case CCSR_SSI_SACNT:
- 	case CCSR_SSI_SACADD:
- 	case CCSR_SSI_SACDAT:
- 	case CCSR_SSI_SATAG:
-@@ -239,8 +240,9 @@ struct fsl_ssi_private {
- 	unsigned int baudclk_streams;
- 	unsigned int bitclk_freq;
+--- a/sound/soc/tegra/tegra_alc5632.c
++++ b/sound/soc/tegra/tegra_alc5632.c
+@@ -101,12 +101,16 @@ static const struct snd_kcontrol_new teg
  
--	/*regcache for SFCSR*/
-+	/* regcache for volatile regs */
- 	u32 regcache_sfcsr;
-+	u32 regcache_sacnt;
+ static int tegra_alc5632_asoc_init(struct snd_soc_pcm_runtime *rtd)
+ {
++	int ret;
+ 	struct tegra_alc5632 *machine = snd_soc_card_get_drvdata(rtd->card);
  
- 	/* DMA params */
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
-@@ -1597,6 +1599,8 @@ static int fsl_ssi_suspend(struct device
+-	snd_soc_card_jack_new(rtd->card, "Headset Jack", SND_JACK_HEADSET,
+-			      &tegra_alc5632_hs_jack,
+-			      tegra_alc5632_hs_jack_pins,
+-			      ARRAY_SIZE(tegra_alc5632_hs_jack_pins));
++	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
++				    SND_JACK_HEADSET,
++				    &tegra_alc5632_hs_jack,
++				    tegra_alc5632_hs_jack_pins,
++				    ARRAY_SIZE(tegra_alc5632_hs_jack_pins));
++	if (ret)
++		return ret;
  
- 	regmap_read(regs, CCSR_SSI_SFCSR,
- 			&ssi_private->regcache_sfcsr);
-+	regmap_read(regs, CCSR_SSI_SACNT,
-+			&ssi_private->regcache_sacnt);
- 
- 	regcache_cache_only(regs, true);
- 	regcache_mark_dirty(regs);
-@@ -1615,6 +1619,8 @@ static int fsl_ssi_resume(struct device
- 			CCSR_SSI_SFCSR_RFWM1_MASK | CCSR_SSI_SFCSR_TFWM1_MASK |
- 			CCSR_SSI_SFCSR_RFWM0_MASK | CCSR_SSI_SFCSR_TFWM0_MASK,
- 			ssi_private->regcache_sfcsr);
-+	regmap_write(regs, CCSR_SSI_SACNT,
-+			ssi_private->regcache_sacnt);
- 
- 	return regcache_sync(regs);
- }
+ 	if (gpio_is_valid(machine->gpio_hp_det)) {
+ 		tegra_alc5632_hp_jack_gpio.gpio = machine->gpio_hp_det;
 
 
