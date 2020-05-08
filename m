@@ -2,151 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC15EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F753C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE05E21582
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588939329;
-	bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zty6mMK7BYeOKVpTze3XEERDmPeWBu9vb2gGACEM7RSILKyLDvAiwU8osIIiIdxTk
-	 0a6cS1tSOi+uERU0zO85oFltQK8TY1Dnw5ejDuYzYempgGVoQ3vO2L3TOQif99aQEl
-	 ag6fI9LnaxW0f4lOUti5xxDeHoI95WF8WB+7E9lI=
+	by mail.kernel.org (Postfix) with ESMTP id 258E521582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ubfbVMHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgEHMCJ (ORCPT
+        id S1727111AbgEHMCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:02:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgEHMCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:02:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B0B208DB;
-        Fri,  8 May 2020 12:02:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588939327;
-        bh=MVgAInBlHbFucqqOMS2zpzCl41mt8McPbpWInuTvt7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Twetzls2F3Jeu+KmG5FUOutvjCz/WoqfrsBaX8GvAALNLGFDnKHPy8LdLPUulm0yK
-         tBOfN6D3JwamP0kQgp3199ol6mSEtcR3ZeMDY8UHhllndREBSrWk/ouW1UclYwkLr1
-         L125iRZ6ei661Ah3Bz5HYH2pfNhM462Cs2rBmyg0=
-Date:   Fri, 8 May 2020 14:02:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Netdev <netdev@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH net 11/16] net: ethernet: marvell: mvneta: fix fixed-link
- phydev leaks
-Message-ID: <20200508120205.GA4089177@kroah.com>
-References: <1480357509-28074-1-git-send-email-johan@kernel.org>
- <1480357509-28074-12-git-send-email-johan@kernel.org>
- <CA+G9fYvBjUVkVhtRHVm6xXcKe2+tZN4rGdB9FzmpcfpaLhY1+g@mail.gmail.com>
- <20200507064412.GL2042@localhost>
- <20200507064734.GA798308@kroah.com>
- <20200507111312.GA1497799@kroah.com>
- <CA+G9fYu2SrkEHyAzF57xJz5WjgHv361qdL2wPqON_pGS4Vtxmw@mail.gmail.com>
- <20200508062119.GE25962@localhost>
+        Fri, 8 May 2020 08:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726618AbgEHMCh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:02:37 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CDFFC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 05:02:37 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b26so1209473lfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 05:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lNKVrkJdHzfMbK2WFg5Y7tu/Zp5ibf2iNC5EM1tQRJo=;
+        b=ubfbVMHFvkGFqi6/lMGAmUyGcg20V5yh8C00LQp7ohCZxq2z4EmwwX3B73H8EZ7Y6+
+         aJCVbMOvPuRCut0Bnl8ET5c2XfZXweuNYjo3brQ6CEYILBG8HhEgVuhFWVWA1BmL+7wr
+         PaMOGT8qiPBOFsYR+vprL3K/7EVvJ8oJXMBygdJ6uGjhciK55QG7biHSQuFnHCtyvZe5
+         srhzCTXCfW52nQOZMKMQqUcLd8x7Ffk6Kk/ZsU0oOHDAWkNAqGX1e8h1hy8E4RAfCjEQ
+         6gCD/cXPSscJnlWgSBvvUILe/g9S3+oDCA5v+IgSinV7FqAm/oZSQvwlhvdPaLD8bWMp
+         QpoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lNKVrkJdHzfMbK2WFg5Y7tu/Zp5ibf2iNC5EM1tQRJo=;
+        b=jt5T2pwbkIemVv8rKA16OwkyDfrU/+p9bDtLKvVdzImOJToB0yhWFtxxx9dwaZ71mi
+         ckX/3hQ/mthYGnmD5Rre0Wd2uHEghx05tPTUQMWlWu0vc6TP9RyzSM8oecDSyuGYBklQ
+         9nLKLFWIMH3QOpFrrfLqp9nrZz570AUTFDlKeU8sUdhltvmaD2Segc52nUGN2IpfYbuv
+         TxeHeaDgtJ7CDSKQKIK/TR0+L2WCGpGX1ZItTev2ogjH0lT94EAyKsR6vdZa+exe545g
+         Bgu60HnRtZlDq9+xJkckPtcV2EG7bilwk2vgInYK+2j2lx7STMkSQrtdgF/BAylcFN7b
+         cOOA==
+X-Gm-Message-State: AOAM530LdvhDd9OANJ6/3F1QmPj0GorCULNZZ1A3aBsTYY6Ujdntc9a9
+        arW5qHlnhkQDNY1fJ9TJZnD8+FiuSP/STfJnV/dw2Q==
+X-Google-Smtp-Source: ABdhPJwC7HcQZBmnzQTCK4sgJwvhh1shXjGpCyyI6P2ffCkh7V87ZwnoziPmO0iHtAk8wnYX7eQKeQNhe8U2VKMv2Qo=
+X-Received: by 2002:a19:ccce:: with SMTP id c197mr1688763lfg.59.1588939355636;
+ Fri, 08 May 2020 05:02:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200508062119.GE25962@localhost>
+References: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
+In-Reply-To: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 8 May 2020 17:32:24 +0530
+Message-ID: <CAFA6WYNbrhiagmqLGOGq+-WRdmbA0Y8FP9PYYsOoerqHeQcmoQ@mail.gmail.com>
+Subject: Re: [PATCH] kdb: Cleanup math with KDB_CMD_HISTORY_COUNT
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:21:19AM +0200, Johan Hovold wrote:
-> On Fri, May 08, 2020 at 03:35:02AM +0530, Naresh Kamboju wrote:
-> > On Thu, 7 May 2020 at 16:43, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > <trim>
-> > > > >
-> > > > > Greg, 3f65047c853a ("of_mdio: add helper to deregister fixed-link
-> > > > > PHYs") needs to be backported as well for these.
-> > > > >
-> > > > > Original series can be found here:
-> > > > >
-> > > > >     https://lkml.kernel.org/r/1480357509-28074-1-git-send-email-johan@kernel.org
-> > > >
-> > > > Ah, thanks for that, I thought I dropped all of the ones that caused
-> > > > build errors, but missed the above one.  I'll go take the whole series
-> > > > instead.
-> > >
-> > > This should now all be fixed up, thanks.
-> > 
-> > While building kernel Image for arm architecture on stable-rc 4.4 branch
-> > the following build error found.
-> > 
-> > of_mdio: add helper to deregister fixed-link PHYs
-> > commit 3f65047c853a2a5abcd8ac1984af3452b5df4ada upstream.
-> > 
-> > Add helper to deregister fixed-link PHYs registered using
-> > of_phy_register_fixed_link().
-> > 
-> > Convert the two drivers that care to deregister their fixed-link PHYs to
-> > use the new helper, but note that most drivers currently fail to do so.
-> > 
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > Signed-off-by: David S. Miller <davem@davemloft.net>
-> > [only take helper function for 4.4.y - gregkh]
-> > 
-> >  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
-> > CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> > arm-linux-gnueabihf-gcc" O=build zImage
-> > 70 #
-> > 71 ../drivers/of/of_mdio.c: In function ‘of_phy_deregister_fixed_link’:
-> > 72 ../drivers/of/of_mdio.c:379:2: error: implicit declaration of
-> > function ‘fixed_phy_unregister’; did you mean ‘fixed_phy_register’?
-> > [-Werror=implicit-function-declaration]
-> > 73  379 | fixed_phy_unregister(phydev);
-> > 74  | ^~~~~~~~~~~~~~~~~~~~
-> > 75  | fixed_phy_register
-> > 76 ../drivers/of/of_mdio.c:381:22: error: ‘struct phy_device’ has no
-> > member named ‘mdio’; did you mean ‘mdix’?
-> > 77  381 | put_device(&phydev->mdio.dev); /* of_phy_find_device() */
-> > 78  | ^~~~
-> > 79  | mdix
-> 
-> Another dependency: 5bcbe0f35fb1 ("phy: fixed: Fix removal of phys.")
-> 
-> Greg, these patches are from four years ago so can't really remember if
-> there are other dependencies or reasons against backporting them (the
-> missing stable tags are per Dave's preference), sorry.
-> 
-> The cover letter also mentions another dependency, but that may just
-> have been some context conflict.
-> 
-> Perhaps you better drop these unless you want to review them closer.
+On Fri, 8 May 2020 at 04:42, Douglas Anderson <dianders@chromium.org> wrote:
+>
+> From code inspection the math in handle_ctrl_cmd() looks super sketchy
+> because it subjects -1 from cmdptr and then does a "%
+> KDB_CMD_HISTORY_COUNT".  It turns out that this code works because
+> "cmdptr" is unsigned and KDB_CMD_HISTORY_COUNT is a nice power of 2.
+> Let's make this a little less sketchy.
+>
+> This patch should be a no-op.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
 
-Good idea, I've dropped them all for now, sorry for the noise.
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
-greg k-h
+>  kernel/debug/kdb/kdb_main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> index 515379cbf209..6865a0f58d38 100644
+> --- a/kernel/debug/kdb/kdb_main.c
+> +++ b/kernel/debug/kdb/kdb_main.c
+> @@ -1108,7 +1108,8 @@ static int handle_ctrl_cmd(char *cmd)
+>         switch (*cmd) {
+>         case CTRL_P:
+>                 if (cmdptr != cmd_tail)
+> -                       cmdptr = (cmdptr-1) % KDB_CMD_HISTORY_COUNT;
+> +                       cmdptr = (cmdptr + KDB_CMD_HISTORY_COUNT - 1) %
+> +                                KDB_CMD_HISTORY_COUNT;
+>                 strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
+>                 return 1;
+>         case CTRL_N:
+> --
+> 2.26.2.645.ge9eca65c58-goog
+>
