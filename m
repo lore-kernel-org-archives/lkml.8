@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F0EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D09C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC1B24968
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6920524971
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941654;
-	bh=uyUtCCfEOMXx/HM8+s2jNeNjGzgsriRXI766PY6HXD4=;
+	s=default; t=1588941662;
+	bh=40u871YJ9o8oK080r6+2RBE7QW3VdIIeM4m8daGeq/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXjoUK0MFlRpAx6fNjTg2cwWcJ0KtlLBBCECLZAiMQi2Wmcr7E5ZdG9sIi65M693U
-	 UcErHm/KWNonlsRhQqAzJcvi9vFKagOHebMk2rhxWyPcyuryW2nkSOTNPeEK2S3OdJ
-	 XFwePQ2gBZGTPJzA07Sx+oBac28bPn3VE2E6kJK8=
+	b=xmw32z4qkjot6uZMowx64my0yqz29UOuVektSHFS5p9CHxTIj3mmZjoO1X8hbK7LD
+	 SFT7rylDFBCIfJoTjbFAW3Q8fNZLNqlobjhDs/ueJ6eujhinarprLPkeeVoxxb/9xW
+	 lM6c1ctZGD/5eLzHqGeh6VOeE37PqD16EcedJeco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgEHMkx (ORCPT
+        id S1728760AbgEHMlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgEHMkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:23 -0400
+        id S1728156AbgEHMkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E785A21835;
-        Fri,  8 May 2020 12:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2964F2495C;
+        Fri,  8 May 2020 12:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941623;
-        bh=uyUtCCfEOMXx/HM8+s2jNeNjGzgsriRXI766PY6HXD4=;
+        s=default; t=1588941635;
+        bh=40u871YJ9o8oK080r6+2RBE7QW3VdIIeM4m8daGeq/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wr8T5T/WUnHap52ZRdCWxzlpgYtkpr5/b3x1eV3Y8CfDTdFFOnoHRlOLv9xuCvWo1
-         55ovk8bZmQBetc2s+OgX6yscyIxRDvAxl0MWYZsK7zye+Z/Y7RYSBD1EyB6U06Sp1W
-         FY+Ku+tC45Uam9v8zjuGMKzm9P5nhByqcT+35cTw=
+        b=gZXVryt7xJxXXf3zQDpunUBUIAn3h9qixKUpRfa2hNjc4rEVypALpQWvq+nL/vSdn
+         6cgK2ygk8sl6bJ/pVsKJlF7dJeIq1SpL7Zo1Bkzxu7VJSxlF5IumZhoEJZSQFFa+la
+         0EjTGoJepa4SNXOnXJZPyiej3OfSRXxJ/cr86t4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matan Barak <matanb@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 4.4 066/312] IB/mlx4: Initialize hop_limit when creating address handle
-Date:   Fri,  8 May 2020 14:30:57 +0200
-Message-Id: <20200508123129.195324355@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sowmini Varadhan <sowmini.varadhan@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 112/312] RDS:TCP: Synchronize rds_tcp_accept_one with rds_send_xmit when resetting t_sock
+Date:   Fri,  8 May 2020 14:31:43 +0200
+Message-Id: <20200508123132.361006801@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,32 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matan Barak <matanb@mellanox.com>
+From: Sowmini Varadhan <sowmini.varadhan@oracle.com>
 
-commit 4e4081673445485aa6bc90383bdb83e7a96cc48a upstream.
+commit eb192840266fab3e3da644018121eed30153355d upstream.
 
-Hop limit value wasn't copied from attributes  when ah was created.
-This may influence packets for unconnected services to get dropped in
-routers when endpoints are not in the same subnet.
+There is a race condition between rds_send_xmit -> rds_tcp_xmit
+and the code that deals with resolution of duelling syns added
+by commit 241b271952eb ("RDS-TCP: Reset tcp callbacks if re-using an
+outgoing socket in rds_tcp_accept_one()").
 
-Fixes: fa417f7b520e ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Matan Barak <matanb@mellanox.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Specifically, we may end up derefencing a null pointer in rds_send_xmit
+if we have the interleaving sequence:
+           rds_tcp_accept_one                  rds_send_xmit
+
+                                             conn is RDS_CONN_UP, so
+    					 invoke rds_tcp_xmit
+
+                                             tc = conn->c_transport_data
+        rds_tcp_restore_callbacks
+            /* reset t_sock */
+    					 null ptr deref from tc->t_sock
+
+The race condition can be avoided without adding the overhead of
+additional locking in the xmit path: have rds_tcp_accept_one wait
+for rds_tcp_xmit threads to complete before resetting callbacks.
+The synchronization can be done in the same manner as rds_conn_shutdown().
+First set the rds_conn_state to something other than RDS_CONN_UP
+(so that new threads cannot get into rds_tcp_xmit()), then wait for
+RDS_IN_XMIT to be cleared in the conn->c_flags indicating that any
+threads in rds_tcp_xmit are done.
+
+Fixes: 241b271952eb ("RDS-TCP: Reset tcp callbacks if re-using an
+outgoing socket in rds_tcp_accept_one()")
+Signed-off-by: Sowmini Varadhan <sowmini.varadhan@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx4/ah.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/rds/tcp.c        |    2 +-
+ net/rds/tcp_listen.c |   38 +++++++++++++++++++++++---------------
+ 2 files changed, 24 insertions(+), 16 deletions(-)
 
---- a/drivers/infiniband/hw/mlx4/ah.c
-+++ b/drivers/infiniband/hw/mlx4/ah.c
-@@ -107,6 +107,7 @@ static struct ib_ah *create_iboe_ah(stru
- 		return ERR_PTR(ret);
- 	ah->av.eth.gid_index = ret;
- 	ah->av.eth.vlan = cpu_to_be16(vlan_tag);
-+	ah->av.eth.hop_limit = ah_attr->grh.hop_limit;
- 	if (ah_attr->static_rate) {
- 		ah->av.eth.stat_rate = ah_attr->static_rate + MLX4_STAT_RATE_OFFSET;
- 		while (ah->av.eth.stat_rate > IB_RATE_2_5_GBPS + MLX4_STAT_RATE_OFFSET &&
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -110,7 +110,7 @@ void rds_tcp_restore_callbacks(struct so
+ 
+ /*
+  * This is the only path that sets tc->t_sock.  Send and receive trust that
+- * it is set.  The RDS_CONN_CONNECTED bit protects those paths from being
++ * it is set.  The RDS_CONN_UP bit protects those paths from being
+  * called while it isn't set.
+  */
+ void rds_tcp_set_callbacks(struct socket *sock, struct rds_connection *conn)
+--- a/net/rds/tcp_listen.c
++++ b/net/rds/tcp_listen.c
+@@ -115,24 +115,32 @@ int rds_tcp_accept_one(struct socket *so
+ 	 * rds_tcp_state_change() will do that cleanup
+ 	 */
+ 	rs_tcp = (struct rds_tcp_connection *)conn->c_transport_data;
+-	if (rs_tcp->t_sock &&
+-	    ntohl(inet->inet_saddr) < ntohl(inet->inet_daddr)) {
+-		struct sock *nsk = new_sock->sk;
++	rds_conn_transition(conn, RDS_CONN_DOWN, RDS_CONN_CONNECTING);
++	if (rs_tcp->t_sock) {
++		/* Need to resolve a duelling SYN between peers.
++		 * We have an outstanding SYN to this peer, which may
++		 * potentially have transitioned to the RDS_CONN_UP state,
++		 * so we must quiesce any send threads before resetting
++		 * c_transport_data.
++		 */
++		wait_event(conn->c_waitq,
++			   !test_bit(RDS_IN_XMIT, &conn->c_flags));
++		if (ntohl(inet->inet_saddr) < ntohl(inet->inet_daddr)) {
++			struct sock *nsk = new_sock->sk;
+ 
+-		nsk->sk_user_data = NULL;
+-		nsk->sk_prot->disconnect(nsk, 0);
+-		tcp_done(nsk);
+-		new_sock = NULL;
+-		ret = 0;
+-		goto out;
+-	} else if (rs_tcp->t_sock) {
+-		rds_tcp_restore_callbacks(rs_tcp->t_sock, rs_tcp);
+-		conn->c_outgoing = 0;
++			nsk->sk_user_data = NULL;
++			nsk->sk_prot->disconnect(nsk, 0);
++			tcp_done(nsk);
++			new_sock = NULL;
++			ret = 0;
++			goto out;
++		} else if (rs_tcp->t_sock) {
++			rds_tcp_restore_callbacks(rs_tcp->t_sock, rs_tcp);
++			conn->c_outgoing = 0;
++		}
+ 	}
+-
+-	rds_conn_transition(conn, RDS_CONN_DOWN, RDS_CONN_CONNECTING);
+ 	rds_tcp_set_callbacks(new_sock, conn);
+-	rds_connect_complete(conn);
++	rds_connect_complete(conn); /* marks RDS_CONN_UP */
+ 	new_sock = NULL;
+ 	ret = 0;
+ 
 
 
