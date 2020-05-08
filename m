@@ -2,76 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03AFC47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65AA2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB682051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgEHVeL (ORCPT
+        id S1727926AbgEHVfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:34:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36542 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:34:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D51EAAD60;
-        Fri,  8 May 2020 21:34:11 +0000 (UTC)
-Date:   Fri, 8 May 2020 23:34:07 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
-Message-ID: <20200508213407.GT8135@suse.de>
-References: <20200508144043.13893-1-joro@8bytes.org>
- <20200508192000.GB2957@hirez.programming.kicks-ass.net>
+        Fri, 8 May 2020 17:35:39 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35392 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHVfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:35:38 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t11so1454962pgg.2;
+        Fri, 08 May 2020 14:35:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FLhU08i9MqQAxt45X5E12IP3TxcGwzE1Yesl7vr4uv4=;
+        b=FpzAvSD8gGSbuZ4p7oC0tCwX/CgQR9FGVerL9oYFiCG+PInfUHgaB4wljzgNAIV0A9
+         cRoq+US7xLAlKCF3Dpwr/fXvtsAQuiv96g1mNpTT+Qr1rey334nK6X/Y3PRbH4AqsDGT
+         kZ0lWU90lCg2Zi5V5V5AzGlFckcTkEopAzlVcFiTZ8YKXr+tNx+SwqEmggZ59W7sgIWc
+         sKNcETx41mMNJplas/56MCZyYyI8Sws5y27HEaUd0Mneef+795Gsd22wbbhgwPTdXWun
+         SL7NZyVOR2+g6w/SuAbN5UYHQQdhNjS6dmJgcL4Fn1vxt+BgPJSlgSXTXpe7Y3tF+Vwh
+         h4Nw==
+X-Gm-Message-State: AGi0PubY1DbDYRA8dt4ur5cp9OVGKRE8N02TJ/1sWrDUxLOk2WEIC5+8
+        ndVRmO8irQDG4MydZMkcqws8PBEk
+X-Google-Smtp-Source: APiQypLEj2OIJrlXfBfTSIsW2YdaKHpfeAeclRYJaWWjPDFHCxQ6C0r3tfdDBiffb6lLP5qMzlcNMw==
+X-Received: by 2002:a65:6208:: with SMTP id d8mr3717609pgv.225.1588973737710;
+        Fri, 08 May 2020 14:35:37 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:bc73:49fb:3114:443? ([2601:647:4802:9070:bc73:49fb:3114:443])
+        by smtp.gmail.com with ESMTPSA id y13sm2739507pfc.78.2020.05.08.14.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 14:35:37 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
+ processing
+To:     Christoph Hellwig <hch@infradead.org>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Cc:     axboe@kernel.dk, ulf.hansson@linaro.org, adrian.hunter@intel.com,
+        arnd@arndb.de, linus.walleij@linaro.org, paolo.valente@linaro.org,
+        ming.lei@redhat.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1587888520.git.baolin.wang7@gmail.com>
+ <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
+ <20200427154645.GA1201@infradead.org>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
+Date:   Fri, 8 May 2020 14:35:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508192000.GB2957@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200427154645.GA1201@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-thanks for reviewing this!
-
-On Fri, May 08, 2020 at 09:20:00PM +0200, Peter Zijlstra wrote:
-> The only concern I have is the pgd_lock lock hold times.
+>> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+>> index f389d7c724bd..6a20f8e8eb85 100644
+>> --- a/include/linux/blk-mq.h
+>> +++ b/include/linux/blk-mq.h
+>> @@ -391,6 +391,7 @@ struct blk_mq_ops {
+>>   enum {
+>>   	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
+>>   	BLK_MQ_F_TAG_SHARED	= 1 << 1,
+>> +	BLK_MQ_F_FORCE_COMMIT_RQS = 1 << 3,
 > 
-> By not doing on-demand faults anymore, and consistently calling
-> sync_global_*(), we iterate that pgd_list thing much more often than
-> before if I'm not mistaken.
+> Maybe BLK_MQ_F_ALWAYS_COMMIT might be a better name?  Also this
+> flag (just like the existing ones..) could really use a comment
+> explaining it.
 
-Should not be a problem, from what I have seen this function is not
-called often on x86-64.  The vmalloc area needs to be synchronized at
-the top-level there, which is by now P4D (with 4-level paging). And the
-vmalloc area takes 64 entries, when all of them are populated the
-function will not be called again.
+Would it make sense to elevate this flag to a request_queue flag
+(QUEUE_FLAG_ALWAYS_COMMIT)?
 
-On 32bit it might be called more often, because synchronization happens
-on the PMD level, which is also used for large-page mapped ioremap
-regions. But these don't happen very often and there are also no VMAP
-stacks on x86-32 which could cause this function to be called
-frequently.
-
-
-	Joerg
+I'm thinking of a possibility that an I/O scheduler may be used
+to activate this functionality rather than having the driver set
+it necessarily...
