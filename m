@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7641C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BC2C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B2B21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1438124958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942184;
-	bh=xktOPO+lo9iGrhSYFcTcjnuNNkEKYIfj+EE6VDjCbb8=;
+	s=default; t=1588942187;
+	bh=EAKMgY6xCrZM4up5avqLeTfZ9cOLJffNlQWSPmJWuEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahzv/400zMDT4xJ6jwUjGh6zLn3y7K43uFn5MLR8LvXUMdx7K1ytM9RJZ0QmGewOH
-	 ffRSUTmQuNiNZpgNTCirzCR9ytRE2ejPx5bohXjlvmS5h+TjRPwFa1hINH7x8VqUj5
-	 gS2RU+25twrPkmYvEjr0oN9xLHLWwXXoiu/x/XBo=
+	b=NxDGgKDlrZFqc+b7aF/wk4hW4EnPdlSWPHal4/yUyV+hBMEIwqvgjaJ8ucsmLi59r
+	 XcxGYqxziJ/41+WPnU1g4Tv4WJbuOODElOR4iy/x42fsH9dSm2YpjsGztbuLkSIVRa
+	 AYI/I3ZHVxxpIjWZRN9X7JQV/fa7J9s2XjPljqts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgEHMtn (ORCPT
+        id S1729772AbgEHMtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgEHMtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:35 -0400
+        id S1729471AbgEHMto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC0F21473;
-        Fri,  8 May 2020 12:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB62D21473;
+        Fri,  8 May 2020 12:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942175;
-        bh=xktOPO+lo9iGrhSYFcTcjnuNNkEKYIfj+EE6VDjCbb8=;
+        s=default; t=1588942183;
+        bh=EAKMgY6xCrZM4up5avqLeTfZ9cOLJffNlQWSPmJWuEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqIhpqpAaGZ6UT/c0f12uddud0HPJVAxqDeeNHX50nckouRKCTWByy5XzIqAemhU8
-         MJAj50i1/WfB5cslXRNHYpNEJg7hsI9skKn+C/d9JVkQ8IpCcss7R6ypqHT1vGy9sE
-         Ahaa/iWp036LHF85CoutSg27olqXFbqh+Vh/Vn0M=
+        b=M2Gu5buDsv8aGgqbijBg657Atc0kq/ObIHoMf24XaoytszVFcMqgESaAhIzH2JoZE
+         /tQ21LCtIUQpjoSm6DsX/aFasvxPN9VZDOq5VDsP7WNfgm/FvMT4YxnzChjy4xCk+X
+         2MeEllwWWqdJrXi2Yx2B8hsFzolnJnC24laY4Iyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcin Nowakowski <marcin.nowakowski@imgtec.com>,
-        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.9 15/18] MIPS: perf: Remove incorrect odd/even counter handling for I6400
-Date:   Fri,  8 May 2020 14:35:18 +0200
-Message-Id: <20200508123033.980681215@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 18/18] mac80211: add ieee80211_is_any_nullfunc()
+Date:   Fri,  8 May 2020 14:35:21 +0200
+Message-Id: <20200508123034.475166325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
@@ -60,47 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+From: Thomas Pedersen <thomas@adapt-ip.com>
 
-commit f7a31b5e7874f77464a4eae0a8ba84b9ae0b3a54 upstream.
+commit 30b2f0be23fb40e58d0ad2caf8702c2a44cda2e1 upstream.
 
-All performance counters on I6400 (odd and even) are capable of counting
-any of the available events, so drop current logic of using the extra
-bit to determine which counter to use.
+commit 08a5bdde3812 ("mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED")
+Fixed a bug where we failed to take into account a
+nullfunc frame can be either non-QoS or QoS. It turns out
+there is at least one more bug in
+ieee80211_sta_tx_notify(), introduced in
+commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing"),
+where we forgot to check for the QoS variant and so
+assumed the QoS nullfunc frame never went out
 
-Signed-off-by: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
-Fixes: 4e88a8621301 ("MIPS: Add cases for CPU_I6400")
-Fixes: fd716fca10fc ("MIPS: perf: Fix I6400 event numbers")
-Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/15991/
-Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+Fix this by adding a helper ieee80211_is_any_nullfunc()
+which consolidates the check for non-QoS and QoS nullfunc
+frames. Replace existing compound conditionals and add a
+couple more missing checks for QoS variant.
+
+Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
+Link: https://lore.kernel.org/r/20200114055940.18502-3-thomas@adapt-ip.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/perf_event_mipsxx.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/ieee80211.h |    9 +++++++++
+ net/mac80211/mlme.c       |    2 +-
+ net/mac80211/rx.c         |    8 +++-----
+ net/mac80211/status.c     |    5 ++---
+ net/mac80211/tx.c         |    2 +-
+ 5 files changed, 16 insertions(+), 10 deletions(-)
 
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -1605,7 +1605,6 @@ static const struct mips_perf_event *mip
- 		break;
- 	case CPU_P5600:
- 	case CPU_P6600:
--	case CPU_I6400:
- 		/* 8-bit event numbers */
- 		raw_id = config & 0x1ff;
- 		base_id = raw_id & 0xff;
-@@ -1618,6 +1617,11 @@ static const struct mips_perf_event *mip
- 		raw_event.range = P;
- #endif
- 		break;
-+	case CPU_I6400:
-+		/* 8-bit event numbers */
-+		base_id = config & 0xff;
-+		raw_event.cntr_mask = CNTR_EVEN | CNTR_ODD;
-+		break;
- 	case CPU_1004K:
- 		if (IS_BOTH_COUNTERS_1004K_EVENT(base_id))
- 			raw_event.cntr_mask = CNTR_EVEN | CNTR_ODD;
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -620,6 +620,15 @@ static inline bool ieee80211_is_qos_null
+ }
+ 
+ /**
++ * ieee80211_is_any_nullfunc - check if frame is regular or QoS nullfunc frame
++ * @fc: frame control bytes in little-endian byteorder
++ */
++static inline bool ieee80211_is_any_nullfunc(__le16 fc)
++{
++	return (ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc));
++}
++
++/**
+  * ieee80211_is_bufferable_mmpdu - check if frame is bufferable MMPDU
+  * @fc: frame control field in little-endian byteorder
+  */
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -2277,7 +2277,7 @@ void ieee80211_sta_tx_notify(struct ieee
+ 	if (!ieee80211_is_data(hdr->frame_control))
+ 	    return;
+ 
+-	if (ieee80211_is_nullfunc(hdr->frame_control) &&
++	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
+ 	    sdata->u.mgd.probe_send_count > 0) {
+ 		if (ack)
+ 			ieee80211_sta_reset_conn_monitor(sdata);
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -1231,8 +1231,7 @@ ieee80211_rx_h_check_dup(struct ieee8021
+ 		return RX_CONTINUE;
+ 
+ 	if (ieee80211_is_ctl(hdr->frame_control) ||
+-	    ieee80211_is_nullfunc(hdr->frame_control) ||
+-	    ieee80211_is_qos_nullfunc(hdr->frame_control) ||
++	    ieee80211_is_any_nullfunc(hdr->frame_control) ||
+ 	    is_multicast_ether_addr(hdr->addr1))
+ 		return RX_CONTINUE;
+ 
+@@ -1617,8 +1616,7 @@ ieee80211_rx_h_sta_process(struct ieee80
+ 	 * Drop (qos-)data::nullfunc frames silently, since they
+ 	 * are used only to control station power saving mode.
+ 	 */
+-	if (ieee80211_is_nullfunc(hdr->frame_control) ||
+-	    ieee80211_is_qos_nullfunc(hdr->frame_control)) {
++	if (ieee80211_is_any_nullfunc(hdr->frame_control)) {
+ 		I802_DEBUG_INC(rx->local->rx_handlers_drop_nullfunc);
+ 
+ 		/*
+@@ -2112,7 +2110,7 @@ static int ieee80211_drop_unencrypted(st
+ 
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+-		     !ieee80211_is_nullfunc(fc) &&
++		     !ieee80211_is_any_nullfunc(fc) &&
+ 		     ieee80211_is_data(fc) && rx->key))
+ 		return -EACCES;
+ 
+--- a/net/mac80211/status.c
++++ b/net/mac80211/status.c
+@@ -480,8 +480,7 @@ static void ieee80211_report_ack_skb(str
+ 		rcu_read_lock();
+ 		sdata = ieee80211_sdata_from_skb(local, skb);
+ 		if (sdata) {
+-			if (ieee80211_is_nullfunc(hdr->frame_control) ||
+-			    ieee80211_is_qos_nullfunc(hdr->frame_control))
++			if (ieee80211_is_any_nullfunc(hdr->frame_control))
+ 				cfg80211_probe_status(sdata->dev, hdr->addr1,
+ 						      cookie, acked,
+ 						      GFP_ATOMIC);
+@@ -914,7 +913,7 @@ void ieee80211_tx_status(struct ieee8021
+ 			I802_DEBUG_INC(local->dot11FailedCount);
+ 	}
+ 
+-	if (ieee80211_is_nullfunc(fc) && ieee80211_has_pm(fc) &&
++	if (ieee80211_is_any_nullfunc(fc) && ieee80211_has_pm(fc) &&
+ 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
+ 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
+ 	    local->ps_sdata && !(local->scanning)) {
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -294,7 +294,7 @@ ieee80211_tx_h_check_assoc(struct ieee80
+ 	if (unlikely(test_bit(SCAN_SW_SCANNING, &tx->local->scanning)) &&
+ 	    test_bit(SDATA_STATE_OFFCHANNEL, &tx->sdata->state) &&
+ 	    !ieee80211_is_probe_req(hdr->frame_control) &&
+-	    !ieee80211_is_nullfunc(hdr->frame_control))
++	    !ieee80211_is_any_nullfunc(hdr->frame_control))
+ 		/*
+ 		 * When software scanning only nullfunc frames (to notify
+ 		 * the sleep state to the AP) and probe requests (for the
 
 
