@@ -2,132 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5FBC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0768EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7AE62192A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61972083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:12:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K9gNKQtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgEHRIX (ORCPT
+        id S1727097AbgEHRMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:08:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31736 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbgEHRIX (ORCPT
+        Fri, 8 May 2020 13:12:16 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45565 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726750AbgEHRMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:08:23 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048H1aow181718;
-        Fri, 8 May 2020 13:08:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtw0tstj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 13:08:11 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048H2GHA183411;
-        Fri, 8 May 2020 13:08:11 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtw0tssw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 13:08:11 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048H4s14002508;
-        Fri, 8 May 2020 17:08:09 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g5dn2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 17:08:09 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048H87PH8847814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 17:08:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37D1EA405C;
-        Fri,  8 May 2020 17:08:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3B4FA4065;
-        Fri,  8 May 2020 17:08:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.139.55])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 May 2020 17:08:05 +0000 (GMT)
-Message-ID: <1588957684.5146.70.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Fri, 08 May 2020 13:08:04 -0400
-In-Reply-To: <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_15:2020-05-08,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- clxscore=1015 mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005080142
+        Fri, 8 May 2020 13:12:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588957933;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8+r27QEVc922AMQwlflZfe/5bYEencNqgqRoffWDxwc=;
+        b=K9gNKQtP6STRKkwTw0EqAHYUC4ifN//pUZtMRIGEsfe00Eh8AWOEtfdv1vQMqsLhR7kaYo
+        KhYzaNyfWl9t9v3x8YiRnK9aEjnO7fqhMYLw2Mj8QzX/5V9R9qwtVDfRmLtagVN3RU0C2m
+        EA6RW678Gtd9GHz8Zr/hMNjZpxcM+Bk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-fqwc1f5WMGS_lRcgvfSCyg-1; Fri, 08 May 2020 13:12:12 -0400
+X-MC-Unique: fqwc1f5WMGS_lRcgvfSCyg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82BB8107BEFE;
+        Fri,  8 May 2020 17:12:09 +0000 (UTC)
+Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 06EF810016E8;
+        Fri,  8 May 2020 17:12:05 +0000 (UTC)
+Date:   Fri, 8 May 2020 12:12:03 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>, Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 1 35/36] x86: Replace ist_enter() with nmi_enter()
+Message-ID: <20200508171203.kjhpk4c6zo3xy3ci@treble>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134101.525508608@linutronix.de>
+ <CALCETrXfemPJrVx+Nfp7k_PvKGezSK46_+dL5oNNV3o5i1qWVw@mail.gmail.com>
+ <1603808584.1778.1588875478687.JavaMail.zimbra@efficios.com>
+ <20200508085002.GT5298@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200508085002.GT5298@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-08 at 10:20 +0000, Roberto Sassu wrote:
-> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> > On Thu, 2020-05-07 at 16:47 +0000, Roberto Sassu wrote:
-
-<snip>
-
-> > > > the file metadata to the file data.  The IMA and EVM policies really
-> > > > need to be in sync.
-> > >
-> > > It would be nice, but at the moment EVM considers also files that are
-> > > not selected by the IMA policy. An example of why this is a problem is
-> > > the audit service that fails to start when it tries to adjust the permissions
-> > > of the log files. Those files don't have security.evm because they are
-> > > not appraised by IMA, but EVM denies the operation.
+On Fri, May 08, 2020 at 10:50:02AM +0200, Peter Zijlstra wrote:
+> On Thu, May 07, 2020 at 02:17:58PM -0400, Mathieu Desnoyers wrote:
+> > ----- On May 7, 2020, at 2:04 PM, Andy Lutomirski luto@kernel.org wrote:
 > > 
-> > No, this is a timing issue as to whether or not the builtin policy or
-> > a custom policy has been loaded.  A custom policy could exclude the
-> > log files based on LSM labels, but they are included in the builtin
-> > policy.
+> > > On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >>
+> > >> From: Peter Zijlstra <peterz@infradead.org>
+> > >>
+> > >> A few exceptions (like #DB and #BP) can happen at any location in the code,
+> > >> this then means that tracers should treat events from these exceptions as
+> > >> NMI-like. The interrupted context could be holding locks with interrupts
+> > >> disabled for instance.
+> > >>
+> > >> Similarly, #MC is an actual NMI-like exception.
+> > > 
+> > > Is it permissible to send a signal from inside nmi_enter()?  I imagine
+> > > so, but I just want to make sure.
+> > 
+> > If you mean sending a proper signal, I would guess not.
+> > 
+> > I suspect you'll rather want to use "irq_work()" from NMI context to ensure
+> > the rest of the work (e.g. sending a signal or a wakeup) is performed from
+> > IRQ context very soon after the NMI, rather than from NMI context.
+> > 
+> > AFAIK this is how this is done today by perf, ftrace, ebpf, and lttng.
 > 
-> Yes, I was referring to a custom policy. In this case, EVM will not adapt
-> to the custom policy but still verifies all files. If access control is done
-> exclusively by IMA at the time evm_verifyxattr() is called, we wouldn't
-> need to add security.evm to all files.
+> What Mathieu says. But I suspect you want to keep reading until
+> part4-18. That should get you what you really want.
 
-Roberto, EVM is only triggered by IMA, unless you've modified the
-kernel to do otherwise.
+LALALALA
 
-I'm not interested in a complicated solution, just one that addresses
-the new EVM immutable and portable signature.  It might require EVM
-HMAC, IMA differentiating between a new file and an existing file, or
-it might require writing the new EVM signature last, after all the
-other xattrs or metadata are updated.  Please nothing that changes
-existing expectations.
+At least give a spoiler alert for those of us still enjoying part 1!
 
-Mimi
+-- 
+Josh
+
