@@ -2,144 +2,170 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D128C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F5CC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDF78206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944193;
-	bh=PbT681jOOI7ZWJTo+4QR9HI1FqWfboxcgTDxZnPyIwk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQDnHZUucuA2MaI88sUqrAHGYfVCyBBmdLOCw0d2N0/evn4dmVhsEW++/FhAHX512
-	 7sSKFELBubODzh0OuM25X59sPHqcdKNDxQWZCG6CzEKCnAnHkmqoZy45UPMVUKP0my
-	 p33q5uA9A/H5az5ZKpKWIJs6HFmOitfxvtQAJWPA=
+	by mail.kernel.org (Postfix) with ESMTP id E80E1206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3ecS+EQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEHMig (ORCPT
+        id S1729058AbgEHNXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbgEHMiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB6121835;
-        Fri,  8 May 2020 12:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941501;
-        bh=PbT681jOOI7ZWJTo+4QR9HI1FqWfboxcgTDxZnPyIwk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HN+QPsYOMq5RbwySvO3BkD/lUy/LuVGGMfELwTlfvlglFt2vVHvAFRJggnCJ+icnT
-         jU0dTnGwz1RdXPezFuBeAXVoWzQUWnbsPmaU81MNnMtx8qZef4x3BW4KH/33zF7KEY
-         xaH7GB9a6hypTxSQwAO4ua0UOyCafKAvruPfW4WA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chin-Ran Lo <crlo@marvell.com>,
-        Amitkumar Karwar <akarwar@marvell.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.4 056/312] Bluetooth: btmrvl: fix hung task warning dump
-Date:   Fri,  8 May 2020 14:30:47 +0200
-Message-Id: <20200508123128.498002009@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
-References: <20200508123124.574959822@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 May 2020 09:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728988AbgEHNXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:23:09 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB04C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:23:09 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id b26so1400048lfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VIU8yowc2+V8zkMLN+ep9zXZ58SIv77iw9jZ8rjfvrk=;
+        b=x3ecS+EQSfs1Ivb0Effx7BC2qW6VK0RgGMyWkN1KysgXKJJbbnrP6SCO676GhKEZXO
+         sQ2oKgxBAaIRXNXRQLhVMuIm29qEEWtreP+iEkGP2GeNXiUdIuvC+7uPZ85x30069/X2
+         RYMzh8SJswH6UReBKcCMznaKe+WTJOTW5301kpAXHJY7WRTVzyPaBSAZddYyxfmJxIoH
+         pXnDZnh/LYb6SI2Q58x2RR3wu/CW5o1owKOY90kIo0i1+pkidceCzyGJqy1XUGFFCm1I
+         SL1mc4h1Wq++a4PyfFFyJx5RsB9dngGKjb9OCOKoF3wOsOQUugj7/nWq25pzW73UWCZb
+         tfmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VIU8yowc2+V8zkMLN+ep9zXZ58SIv77iw9jZ8rjfvrk=;
+        b=sALQdW3acTgtIJpzAKZ8/mWVabLyEcqqjXlTLs7vMZuIZMunu5WVgz2FIKKjgGcbCk
+         4KbkcioNUIx5B39Xx1LC/CUPA8kemNe/aGUzy+1TgKjR1PRImBwweAqDuRQvh/Sa2ZHV
+         ZBSoQB21USM5NiUACJVrrkl5h+UsFntarxd+TerBgCdXwLZP3N3+D+MixEOVd2kDU/rF
+         bx3fscZdzsy7xhAt2iMrF3gh2wPN9Da0YwbYMxht9rklkNcWroqjQJDfoz/M1qvXUcIs
+         oSiCR5gxShZJzVjQ1PKKXZfukEH/ta3p7qEC4V3rhtYQg06dvRop3TyUxxVhH0CUhf51
+         Rz+g==
+X-Gm-Message-State: AOAM532HCCoFbbd7pKX5Xa/21jqpSFYfWMP9eFDiMLdpkfTMzgFUfGwM
+        VVpgXmGDIWFMjCfE50BNAzodg7x82w/RAEa8z9cnKg==
+X-Google-Smtp-Source: ABdhPJzEJjpe16vQv80zYgMKsgsrfGZYRUbLuquVKFzrdtEbGoQTZmrtg7HMWaXV6M+SBfvOeIZlVvloc8btzEbocvY=
+X-Received: by 2002:a19:3817:: with SMTP id f23mr1863933lfa.6.1588944187717;
+ Fri, 08 May 2020 06:23:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200508123043.085296641@linuxfoundation.org>
+In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 8 May 2020 18:52:56 +0530
+Message-ID: <CA+G9fYu6e9ytJejS=No4ytQT=U+YjqOPghVQXD=gAHB82L-WUw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/50] 5.4.40-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chin-Ran Lo <crlo@marvell.com>
+On Fri, 8 May 2020 at 18:23, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.40 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.40-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+<trim>
+> Christoph Hellwig <hch@lst.de>
+>     dma-direct: exclude dma_direct_map_resource from the min_low_pfn chec=
+k
+While building kernel Image for arm architecture the following error notice=
+d
+on stable-rc 5.4 kernel branch.
+ # make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm
+CROSS_COMPILE=3Darm-linux-gnueabihf- HOSTCC=3Dgcc CC=3D"sccache
+arm-linux-gnueabihf-gcc" O=3Dbuild zImage
+ #
+ ../kernel/dma/direct.c: In function =E2=80=98dma_direct_possible=E2=80=99:
+ ../kernel/dma/direct.c:330:3: error: too many arguments to function
+=E2=80=98dma_capable=E2=80=99
+   330 |   dma_capable(dev, dma_addr, size, true);
+       |   ^~~~~~~~~~~
+ In file included from ../include/linux/dma-direct.h:12,
+                  from ../kernel/dma/direct.c:10:
+ ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+addr, size_t size)
+       |                    ^~~~~~~~~~~
+ In file included from ../include/linux/init.h:5,
+                  from ../include/linux/memblock.h:12,
+                  from ../kernel/dma/direct.c:7:
+ ../kernel/dma/direct.c: In function =E2=80=98dma_direct_map_resource=E2=80=
+=99:
+ ../kernel/dma/direct.c:379:16: error: too many arguments to function
+=E2=80=98dma_capable=E2=80=99
+   379 |  if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+       |                ^~~~~~~~~~~
+ ../include/linux/compiler.h:78:42: note: in definition of macro =E2=80=98u=
+nlikely=E2=80=99
+    78 | # define unlikely(x) __builtin_expect(!!(x), 0)
+       |                                          ^
+ In file included from ../include/linux/dma-direct.h:12,
+                  from ../kernel/dma/direct.c:10:
+ ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+addr, size_t size)
+       |                    ^~~~~~~~~~~
+ make[3]: *** [../scripts/Makefile.build:266: kernel/dma/direct.o] Error 1
+ In file included from ../include/linux/string.h:6,
+                  from ../include/linux/dma-mapping.h:6,
+                  from ../include/linux/dma-direct.h:5,
+                  from ../kernel/dma/swiotlb.c:24:
+ ../kernel/dma/swiotlb.c: In function =E2=80=98swiotlb_map=E2=80=99:
+ ../kernel/dma/swiotlb.c:681:16: error: too many arguments to function
+=E2=80=98dma_capable=E2=80=99
+   681 |  if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
+       |                ^~~~~~~~~~~
+ ../include/linux/compiler.h:78:42: note: in definition of macro =E2=80=98u=
+nlikely=E2=80=99
+    78 | # define unlikely(x) __builtin_expect(!!(x), 0)
+       |                                          ^
+ In file included from ../include/linux/dma-direct.h:12,
+                  from ../kernel/dma/swiotlb.c:24:
+ ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+addr, size_t size)
+       |                    ^~~~~~~~~~~
 
-commit 86f7ac77d4035e22ec7e58dcdb96327e2ecc3a9b upstream.
+Full build log,
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/544288767
 
-It's been observed that when bluetooth driver fails to
-activate the firmware, below hung task warning dump is
-displayed after 120 seconds.
-
-[   36.461022] Bluetooth: vendor=0x2df, device=0x912e, class=255, fn=2
-[   56.512128] Bluetooth: FW failed to be active in time!
-[   56.517264] Bluetooth: Downloading firmware failed!
-[  240.252176] INFO: task kworker/3:2:129 blocked for more than 120 seconds.
-[  240.258931]       Not tainted 3.18.0 #254
-[  240.262972] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  240.270751] kworker/3:2     D ffffffc000205760     0   129      2 0x00000000
-[  240.277825] Workqueue: events request_firmware_work_func
-[  240.283134] Call trace:
-[  240.285581] [<ffffffc000205760>] __switch_to+0x80/0x8c
-[  240.290693] [<ffffffc00088dae0>] __schedule+0x540/0x7b8
-[  240.295921] [<ffffffc00088ddd0>] schedule+0x78/0x84
-[  240.300764] [<ffffffc0006dfd48>] __mmc_claim_host+0xe8/0x1c8
-[  240.306395] [<ffffffc0006edd6c>] sdio_claim_host+0x74/0x84
-[  240.311840] [<ffffffbffc163d08>] 0xffffffbffc163d08
-[  240.316685] [<ffffffbffc165104>] 0xffffffbffc165104
-[  240.321524] [<ffffffbffc130cf8>] mwifiex_dnld_fw+0x98/0x110 [mwifiex]
-[  240.327918] [<ffffffbffc12ee88>] mwifiex_remove_card+0x2c4/0x5fc [mwifiex]
-[  240.334741] [<ffffffc000596780>] request_firmware_work_func+0x44/0x80
-[  240.341127] [<ffffffc00023b934>] process_one_work+0x2ec/0x50c
-[  240.346831] [<ffffffc00023c6a0>] worker_thread+0x350/0x470
-[  240.352272] [<ffffffc0002419bc>] kthread+0xf0/0xfc
-[  240.357019] 2 locks held by kworker/3:2/129:
-[  240.361248]  #0:  ("events"){.+.+.+}, at: [<ffffffc00023b840>] process_one_work+0x1f8/0x50c
-[  240.369562]  #1:  ((&fw_work->work)){+.+.+.}, at: [<ffffffc00023b840>] process_one_work+0x1f8/0x50c
-[  240.378589]   task                        PC stack   pid father
-[  240.384501] kworker/1:1     D ffffffc000205760     0    40      2 0x00000000
-[  240.391524] Workqueue: events mtk_atomic_work
-[  240.395884] Call trace:
-[  240.398317] [<ffffffc000205760>] __switch_to+0x80/0x8c
-[  240.403448] [<ffffffc00027279c>] lock_acquire+0x128/0x164
-[  240.408821] kworker/3:2     D ffffffc000205760     0   129      2 0x00000000
-[  240.415867] Workqueue: events request_firmware_work_func
-[  240.421138] Call trace:
-[  240.423589] [<ffffffc000205760>] __switch_to+0x80/0x8c
-[  240.428688] [<ffffffc00088dae0>] __schedule+0x540/0x7b8
-[  240.433886] [<ffffffc00088ddd0>] schedule+0x78/0x84
-[  240.438732] [<ffffffc0006dfd48>] __mmc_claim_host+0xe8/0x1c8
-[  240.444361] [<ffffffc0006edd6c>] sdio_claim_host+0x74/0x84
-[  240.449801] [<ffffffbffc163d08>] 0xffffffbffc163d08
-[  240.454649] [<ffffffbffc165104>] 0xffffffbffc165104
-[  240.459486] [<ffffffbffc130cf8>] mwifiex_dnld_fw+0x98/0x110 [mwifiex]
-[  240.465882] [<ffffffbffc12ee88>] mwifiex_remove_card+0x2c4/0x5fc [mwifiex]
-[  240.472705] [<ffffffc000596780>] request_firmware_work_func+0x44/0x80
-[  240.479090] [<ffffffc00023b934>] process_one_work+0x2ec/0x50c
-[  240.484794] [<ffffffc00023c6a0>] worker_thread+0x350/0x470
-[  240.490231] [<ffffffc0002419bc>] kthread+0xf0/0xfc
-
-This patch adds missing sdio_release_host() call so that wlan driver
-thread can claim sdio host.
-
-Fixes: 4863e4cc31d647e1 ("Bluetooth: btmrvl: release sdio bus after firmware is up")
-Signed-off-by: Chin-Ran Lo <crlo@marvell.com>
-Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/bluetooth/btmrvl_sdio.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/drivers/bluetooth/btmrvl_sdio.c
-+++ b/drivers/bluetooth/btmrvl_sdio.c
-@@ -1112,7 +1112,8 @@ static int btmrvl_sdio_download_fw(struc
- 	 */
- 	if (btmrvl_sdio_verify_fw_download(card, pollnum)) {
- 		BT_ERR("FW failed to be active in time!");
--		return -ETIMEDOUT;
-+		ret = -ETIMEDOUT;
-+		goto done;
- 	}
- 
- 	sdio_release_host(card->func);
-
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
