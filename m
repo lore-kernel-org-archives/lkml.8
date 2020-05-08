@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E7DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF4C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CEB206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C977B24967
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944000;
-	bh=JBZn2eZWhVoMDMqiSBAAvAthotH6EXetLCwAy9dZPuY=;
+	s=default; t=1588944003;
+	bh=OKUqUsMF/GSfd3r2wfBBACozUoRiXEVwUIIrInx4V04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmM5SfXczHczgXjxRcxCKUnx/Xej5peJJH/EeX/NEzgBMCz0rdFtKusyuafOgR9PT
-	 UWDFCEDjD6x8Vn7zMhheRkBbslt7DdXdekXAx+zrRwoPYWJUZfOv99FqJe+oUw7XT2
-	 d9R7h6+n5+bBsQ3mTm6KJml5JJZn+p5uggJrabPk=
+	b=PJhpnpdUcJfo0asG28KYScIz2NyiYZ/D7wcBZ5Rfz5kXHuSV2yI1sSTmm+l2gKd7z
+	 OvoGpw36a7Disuh4QZVuZjA+bb5ak0U+2/j3qK2O7JOk8Geru2RhR2+4MRt5HnK5l9
+	 ZRYz85l6ZDOT4Bkh9lHA2/3BJqRun76PnX6eZycY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgEHNT6 (ORCPT
+        id S1728788AbgEHMlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgEHMlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:20 -0400
+        id S1728710AbgEHMk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9B4121835;
-        Fri,  8 May 2020 12:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB97A24968;
+        Fri,  8 May 2020 12:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941680;
-        bh=JBZn2eZWhVoMDMqiSBAAvAthotH6EXetLCwAy9dZPuY=;
+        s=default; t=1588941658;
+        bh=OKUqUsMF/GSfd3r2wfBBACozUoRiXEVwUIIrInx4V04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ou6Z07ov7WRslRFB0eUuw+4k24AxUAA06EVrFf7tw0UHyG5nvVUAEIGTtVy2wf0qs
-         yBizTmuPVI+sADUZFPhrEcF3m69/jeTjSaBXW6f4d7bp8G19DxPMmpcy5tJ8QnUXpZ
-         9Y/d9MXpy1iVYSRtflR0OPVk71mKw8h7morGKmz0=
+        b=C/Dm/Ab2cHmBuOhoTT/ZXmFl3m+CkQbUn6X0rFO/o80C44sCxzWjEmG5BA5FVTbVU
+         L3rNPxKLSkCcd7aGAIsuZntm4wJ7Ul5o97whJud9ZRNqcnxO63IfKhYilAieyvt16J
+         2P/98BhT1NGXNnWMOAUmn/WxU0Qd+gBXzAI8iBsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 129/312] mac80211: Fix BW upgrade for TDLS peers
-Date:   Fri,  8 May 2020 14:32:00 +0200
-Message-Id: <20200508123133.579725395@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 121/312] Input: gpio-keys - fix check for disabling unsupported keys
+Date:   Fri,  8 May 2020 14:31:52 +0200
+Message-Id: <20200508123132.963839150@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,46 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 4b559ec0bfc3a9f41a127cea6964f38b2b4bb323 upstream.
+commit 8679ee4204cfd5cf78b996508ccadc1ec6130f1a upstream.
 
-It is possible that the station is connected to an AP
-with bandwidth of 80+80MHz or 160MHz. In such cases
-there is no need to perform an upgrade as the maximal
-supported bandwidth is 80MHz.
+Commit 4ea14a53d8f881034fa9e186653821c4e3d9a8fb ("Input: gpio-keys - report
+error when disabling unsupported key") tried let user know that they
+attempted to disable an unsupported key, unfortunately the check is wrong
+as it believes that all codes are invalid. Fix it by ensuring that keys
+that we try to disable are subset of keys (or switches) that device
+reports.
 
-In addition, when upgrading and setting center_freq1
-and bandwidth to 80MHz also set center_freq2 to 0.
-
-Fixes: 0fabfaafec3a ("mac80211: upgrade BW of TDLS peers when possible"
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 4ea14a53d8f8 ("Input: gpio-keys - report error when disabling unsupported key")
+Reported-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Tested-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/tdls.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/keyboard/gpio_keys.c |   29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
---- a/net/mac80211/tdls.c
-+++ b/net/mac80211/tdls.c
-@@ -314,7 +314,7 @@ ieee80211_tdls_chandef_vht_upgrade(struc
- 	if (max_width > NL80211_CHAN_WIDTH_80)
- 		max_width = NL80211_CHAN_WIDTH_80;
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -96,7 +96,7 @@ struct gpio_keys_drvdata {
+  * Return value of this function can be used to allocate bitmap
+  * large enough to hold all bits for given type.
+  */
+-static inline int get_n_events_by_type(int type)
++static int get_n_events_by_type(int type)
+ {
+ 	BUG_ON(type != EV_SW && type != EV_KEY);
  
--	if (uc.width == max_width)
-+	if (uc.width >= max_width)
- 		return;
- 	/*
- 	 * Channel usage constrains in the IEEE802.11ac-2013 specification only
-@@ -325,6 +325,7 @@ ieee80211_tdls_chandef_vht_upgrade(struc
- 	for (i = 0; i < ARRAY_SIZE(centers_80mhz); i++)
- 		if (abs(uc.chan->center_freq - centers_80mhz[i]) <= 30) {
- 			uc.center_freq1 = centers_80mhz[i];
-+			uc.center_freq2 = 0;
- 			uc.width = NL80211_CHAN_WIDTH_80;
- 			break;
+@@ -104,6 +104,22 @@ static inline int get_n_events_by_type(i
+ }
+ 
+ /**
++ * get_bm_events_by_type() - returns bitmap of supported events per @type
++ * @input: input device from which bitmap is retrieved
++ * @type: type of button (%EV_KEY, %EV_SW)
++ *
++ * Return value of this function can be used to allocate bitmap
++ * large enough to hold all bits for given type.
++ */
++static const unsigned long *get_bm_events_by_type(struct input_dev *dev,
++						  int type)
++{
++	BUG_ON(type != EV_SW && type != EV_KEY);
++
++	return (type == EV_KEY) ? dev->keybit : dev->swbit;
++}
++
++/**
+  * gpio_keys_disable_button() - disables given GPIO button
+  * @bdata: button data for button to be disabled
+  *
+@@ -213,6 +229,7 @@ static ssize_t gpio_keys_attr_store_help
+ 					   const char *buf, unsigned int type)
+ {
+ 	int n_events = get_n_events_by_type(type);
++	const unsigned long *bitmap = get_bm_events_by_type(ddata->input, type);
+ 	unsigned long *bits;
+ 	ssize_t error;
+ 	int i;
+@@ -226,6 +243,11 @@ static ssize_t gpio_keys_attr_store_help
+ 		goto out;
+ 
+ 	/* First validate */
++	if (!bitmap_subset(bits, bitmap, n_events)) {
++		error = -EINVAL;
++		goto out;
++	}
++
+ 	for (i = 0; i < ddata->pdata->nbuttons; i++) {
+ 		struct gpio_button_data *bdata = &ddata->data[i];
+ 
+@@ -239,11 +261,6 @@ static ssize_t gpio_keys_attr_store_help
  		}
+ 	}
+ 
+-	if (i == ddata->pdata->nbuttons) {
+-		error = -EINVAL;
+-		goto out;
+-	}
+-
+ 	mutex_lock(&ddata->disable_lock);
+ 
+ 	for (i = 0; i < ddata->pdata->nbuttons; i++) {
 
 
