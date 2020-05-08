@@ -2,92 +2,133 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBEFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4ABC54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7226F216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8984A24969
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFtOvUkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgEHVRX (ORCPT
+        id S1727870AbgEHVUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:17:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:43117 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgEHVRX (ORCPT
+        Fri, 8 May 2020 17:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHVUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:17:23 -0400
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N7zW7-1j2UZ13jt5-014zR7; Fri, 08 May 2020 23:17:21 +0200
-Received: by mail-qt1-f171.google.com with SMTP id i68so2666803qtb.5;
-        Fri, 08 May 2020 14:17:20 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaeFJIU8XIdfoAHtwvhX2yMwpgymFmBKL0RcoglYQK2Ote8IZYc
-        nxaFxZgUyERiJvpR7ipOwrK9Tsi0xXc387ehLjM=
-X-Google-Smtp-Source: APiQypIvad7aLitn+xmQk8X/JPRvw7lw5m5ERGWfXFfVhFVyjM1R3g6aMc8Zoq+xZMsllg7Bcor/yZaVVRwxCxHOGHU=
-X-Received: by 2002:ac8:4c8d:: with SMTP id j13mr5033840qtv.142.1588972639703;
- Fri, 08 May 2020 14:17:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508194132.3412384-1-natechancellor@gmail.com>
-In-Reply-To: <20200508194132.3412384-1-natechancellor@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 8 May 2020 23:17:03 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2YqJojpS7eDgVzqRPLibXBzWDp5JWSf=U81EbvA81Y6Q@mail.gmail.com>
-Message-ID: <CAK8P3a2YqJojpS7eDgVzqRPLibXBzWDp5JWSf=U81EbvA81Y6Q@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: ipa: Remove ipa_endpoint_stop{,_rx_dma} again
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Alex Elder <elder@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:yVmCAf9a3z5zbArULHCkeKcnA54A/0bIGRvyKkIfMaKwvlO8NIq
- EqKUDQR4d68LrxzjMvI3mrQJ3Kr3Gh3k12t+xFD5yDawloLNziYvepIuWb/rsrl0HydHyBl
- HJuwUmmzvXjUEFsbPNGqhb6zsboaHzU4wpfBOHb65eyzLTnarA0xCWV3K76zsDstnMsr/iM
- QJYkuZ/18TCmuYcBv4Azg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nIxqF1si7OA=:rLD/U0qximF00Y5RH89lG8
- YzNEP1y7PtiPYe3zlxjSzSQZ/tvmucqppqG83V8CP06E3EcGw0psGhcrgKBQuafj5qdPB9STj
- e7Ag6DIa5gWV7jqjIqfdYTX3c/vxSj/iIHLGGf3BVlIpBuaJzEGa9bcNRaOGpRebtC3yOOcQS
- nzJeQUgDGkq5PvYhKMVbeGJz5XzrJCooEb9rGW7fbt3zF3cScWy+po1cVW/YWtRNgxSnj7rxB
- UtoTrDl3EHjcE8dKmQfJjxvluWsRcQuOaOt+9THRGuA5H6Xg0/wAgYsXbNx0BMbqGEdG9qoh3
- UOjneAOyHtjsDoODngx5eDzPw3UGPjPeDG6C7BNpGt3Qrr0imXUPgaOx2POYmmVwlEPlFl+Bx
- Gy+jyMcHjwqdbt4d1wXJOxyJ/HBW1l0k6JwbA7IVquI1uf8H3qBmG1c7d7w7pKbWo1QjfQd4F
- GaxhZqfwh7LpdZ3oyZu3jhb20wx7vyvacbmRTPqm9Hjf0fMaU0m1jvsJ4nNcPSS9eWW4kmhbm
- HOw+McR/dJxRFJ/h8lgW4X8ABzdmNkjcFpkCLXTGGSFFil3plUn+hwxf0/7qPkSLXDP0oWhZB
- OMWw3nhC+01cXVwT65AE+FR83i4FK44vn4nlDQqqVyBICMfobmHofsI0EaD+0VohREjDo/bO9
- HWEqLumDGMIGDqxTDBUGu/0OeERx6Sxw1saLURwOJiTz+YEWrgUrkFgBVR8VZSuM6ujL43Z5z
- 0zxnXvS6j24KexLYzvQc5Jk0i/hZ+57eNYDscYZfkxlnQ6Rc4AuBFZ4UmtqPHYmizky2oEjXh
- 4bimjTuum4CUf6cfF5ZlRBh9Q8rt5IS7OEYgvhfUWISo57uaB8=
+        Fri, 8 May 2020 17:20:01 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570E3C061A0C;
+        Fri,  8 May 2020 14:20:01 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so11641788wmj.3;
+        Fri, 08 May 2020 14:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dq0TqQky1nAFrd/UmJjerH5DUbLlLnhiDz64ca0nS+c=;
+        b=BFtOvUkb9cbuzMMRhdzBNK5ecXEQM9byzqclZfaTmo8jWlWrx6L9He1mdy+Oicdpmy
+         C2wpLwR4YwShUVE2tDjxEsNxw630unsx/V7Exl68ovCKx9bcttuUXdQBMSPxKR1Vga8c
+         TJuy7qafu2UeYOspf+o/58evciXpbWP25FqkIrxTxxyi9gQd78GAwY09T5hnNTsqitOx
+         F5WTxRrtCJBTA1CRuJAdxmfq0tMEd9fRF7wDNrop93QCpEtTGvkE+WNVbecX5icnEnlP
+         tU9o50N90gD97YxKR08fEFe6vAXu90Agi8XRvmqx/s/75UxkNXQM0DUBJygnNdQE9GDg
+         dPog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dq0TqQky1nAFrd/UmJjerH5DUbLlLnhiDz64ca0nS+c=;
+        b=CrZVpPkbJLzjnBDX0Js4D/aVBzZdHcvP0EqWfwo5W5flgDCr3zXzLt3rqoe2aMcsIX
+         wYQbbU3MN5P0Kq/IANNxBTeXAHIv5Kcf7/sp0+03bDm2Q1JOniS8HQOKtpKLAU4DAuRm
+         TvR41uKcOEK5KEIEom1fCoNKRQluryhF4QtOc2W753jl9jta65+GZJ7bPGFwwEFLMV6o
+         OioIcac3F4GSpWgU8AcZNFSobsxXaIMosx2w9LG2RDuvfp/7qFQUxmXT4VTFM3M111kn
+         fbpUUVv9wI61aa1cgwu0NNuIhasTloLw6ghiH5PGLwi5h51Ft/OH+bOKfjK0dyiZabyl
+         FqIg==
+X-Gm-Message-State: AGi0Pub+CXAiNUHz9GgiFtRfp2KxR2Px4BBnyTibIbv/BWH7uaRq7e0G
+        wWO3JFyP8h8z75wXUg/FMVbl76tQqdQ=
+X-Google-Smtp-Source: APiQypKJ+gnuUbus38CVokjh5igSLze560rfF4SF8l36zNto5ZlMR2hFAWskJxCoVQ8iCXxb1AiSSQ==
+X-Received: by 2002:a05:600c:2f17:: with SMTP id r23mr17145297wmn.81.1588972799227;
+        Fri, 08 May 2020 14:19:59 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id n9sm4669705wrv.43.2020.05.08.14.19.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 14:19:58 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v8 1/5] usb: xhci: Change the XHCI link order in the Makefile
+Date:   Fri,  8 May 2020 17:19:25 -0400
+Message-Id: <20200508211929.39020-2-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508211929.39020-1-alcooperx@gmail.com>
+References: <20200508211929.39020-1-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 9:44 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building arm64 allyesconfig:
->
-> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop_rx_dma':
-> drivers/net/ipa/ipa_endpoint.c:1274:13: error: 'IPA_ENDPOINT_STOP_RX_SIZE' undeclared (first use in this function)
-> drivers/net/ipa/ipa_endpoint.c:1274:13: note: each undeclared identifier is reported only once for each function it appears in
-> drivers/net/ipa/ipa_endpoint.c:1289:2: error: implicit declaration of function 'ipa_cmd_dma_task_32b_addr_add' [-Werror=implicit-function-declaration]
-> drivers/net/ipa/ipa_endpoint.c:1291:45: error: 'ENDPOINT_STOP_DMA_TIMEOUT' undeclared (first use in this function)
-> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop':
-> drivers/net/ipa/ipa_endpoint.c:1309:16: error: 'IPA_ENDPOINT_STOP_RX_RETRIES' undeclared (first use in this function)
->
-> These functions were removed in a series, merged in as
-> commit 33395f4a5c1b ("Merge branch 'net-ipa-kill-endpoint-stop-workaround'").
->
-> Remove them again so that the build works properly.
->
-> Fixes: 3793faad7b5b ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+devices and OHCI handles <2.0 devices. Currently the Makefile
+has XHCI linking at the bottom which will result in the XHIC driver
+initalizing after the EHCI and OHCI drivers and any installed 3.0
+device will be seen as a 2.0 device. Moving the XHCI linking
+above the EHCI and OHCI linking fixes the issue.
 
-I ran into the same issue but didn't see the solution right away. Your patch
-looks good to me.
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ drivers/usb/host/Makefile | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index b191361257cc..a7f0b8ff7179 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -37,6 +37,16 @@ endif
+ 
+ obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
+ 
++# NOTE: BRCMSTB systems require that xhci driver be linked before the
++# ehci/ohci drivers because they share a port and need the XHCI driver
++# to come up first to properly enumerate 3.0 devices.
++obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
++obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
++obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
++obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
++obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
++obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
++
+ obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
+ obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
+ obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
+@@ -69,12 +79,6 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
+ 
+ obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
+ obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
+-obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
+-obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
+-obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
+-obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
+-obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
+-obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
+ obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
+ obj-$(CONFIG_USB_SL811_CS)	+= sl811_cs.o
+ obj-$(CONFIG_USB_U132_HCD)	+= u132-hcd.o
+-- 
+2.17.1
+
