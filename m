@@ -2,55 +2,58 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41129C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07174C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2009F206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A40206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942815;
-	bh=56wc2T2Ds3OP+AwV4IRMX/evqxsa+vTXshBIIEREP3E=;
+	s=default; t=1588942824;
+	bh=nVcYsa2JnQlt53ghbuwwTdE45CPzc9/yUgMq+3xxz3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hECR1ZXWEvNL3KK8MSjHzViE+rGcUo8Rd5pYdLNE1iYdSeThRgmI6YCAexQLTuFzM
-	 rCR+vEoerQYfjig97v3aMyTNIkRtMwsrvQQIdqVma7/gLH4v/AQMedfr8uuNVwiF9Z
-	 blydJCV0ct3D0gmVSlDu0oR14ERDA23a0y7mi5Os=
+	b=vTvHiasA60LZmy+5izewX5xUWUd8dOF5v6jQKu2k3Il7gAA7mVYI1orZPMdSHWXfe
+	 V8yLwwqwUb8RL/E4DVZLl83WJq0weAYy8iMI286dDO6ep0w6bKzbX7WFbtw5uMI0uZ
+	 CNSWENPb2bTu/sH3c80ZCp+6dcJcr6Xca8GfEHos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgEHNAN (ORCPT
+        id S1730089AbgEHNAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33768 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbgEHMwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:33 -0400
+        id S1729951AbgEHMwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912F224953;
-        Fri,  8 May 2020 12:52:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D6F218AC;
+        Fri,  8 May 2020 12:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942352;
-        bh=56wc2T2Ds3OP+AwV4IRMX/evqxsa+vTXshBIIEREP3E=;
+        s=default; t=1588942344;
+        bh=nVcYsa2JnQlt53ghbuwwTdE45CPzc9/yUgMq+3xxz3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZMAvLLxd8d0VzP2PvIusGN9T82CEPnSxo9HRL2UaCDD3zla11per6aMJGj7iMHXZ
-         fmmkMKFFGmjFGZB56DLnoJEPfjZwjiGdbVQ7vgs7eXPxPnAEA1kWKx2Wist5Z1OnMx
-         l/oWY9xEikZn4YSf5XtL8qqm/fLrFvU3CN/pL7WE=
+        b=sUWktnc/UyzDeDM3Z1lyWRQ2FRLzNzpAF1ZLKnPmvlBn9tGghvdH81Z2TmGPYWao7
+         6IS/fvioFJ2lt84o2q428eZR6+Z1oZOPuw+BidEYBj/m3AiOYscwgbEsZdDYqnW1HL
+         tLXZ7rTEAGfWFC4QQ1XTje1bOPzkH5640yatoHnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 11/50] usb: dwc3: gadget: Properly set maxpacket limit
-Date:   Fri,  8 May 2020 14:35:17 +0200
-Message-Id: <20200508123044.998764402@linuxfoundation.org>
+        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Roman Gilg <subdiff@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 25/32] mfd: intel-lpss: Use devm_ioremap_uc for MMIO
+Date:   Fri,  8 May 2020 14:35:38 +0200
+Message-Id: <20200508123038.544813235@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
-References: <20200508123043.085296641@linuxfoundation.org>
+In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
+References: <20200508123034.886699170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,135 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Tuowen Zhao <ztuowen@gmail.com>
 
-[ Upstream commit d94ea5319813658ad5861d161ae16a194c2abf88 ]
+commit a8ff78f7f773142eb8a8befe5a95dd6858ebd635 upstream.
 
-Currently the calculation of max packet size limit for IN endpoints is
-too restrictive. This prevents a matching of a capable hardware endpoint
-during configuration. Below is the minimum recommended HW configuration
-to support a particular endpoint setup from the databook:
+Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
+in MTRR. This will cause the system to hang during boot. If possible,
+this bug could be corrected with a firmware update.
 
-For OUT endpoints, the databook recommended the minimum RxFIFO size to
-be at least 3x MaxPacketSize + 3x setup packets size (8 bytes each) +
-clock crossing margin (16 bytes).
+This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
+by forcing the use of strongly uncachable pages for intel-lpss.
 
-For IN endpoints, the databook recommended the minimum TxFIFO size to be
-at least 3x MaxPacketSize for endpoints that support burst. If the
-endpoint doesn't support burst or when the device is operating in USB
-2.0 mode, a minimum TxFIFO size of 2x MaxPacketSize is recommended.
+The BIOS bug is present on Dell XPS 13 7390 2-in-1:
 
-Base on these recommendations, we can calculate the MaxPacketSize limit
-of each endpoint. This patch revises the IN endpoint MaxPacketSize limit
-and also sets the MaxPacketSize limit for OUT endpoints.
+[    0.001734]   5 base 4000000000 mask 6000000000 write-combining
 
-Reference: Databook 3.30a section 3.2.2 and 3.2.3
+4000000000-7fffffffff : PCI Bus 0000:00
+  4000000000-400fffffff : 0000:00:02.0 (i915)
+  4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
 
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
+Cc: <stable@vger.kernel.org> # v4.19+
+Tested-by: AceLan Kao <acelan.kao@canonical.com>
+Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Roman Gilg <subdiff@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/dwc3/core.h   |  4 +++
- drivers/usb/dwc3/gadget.c | 52 ++++++++++++++++++++++++++++++---------
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ drivers/mfd/intel-lpss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 3ecc69c5b150f..ce4acbf7fef90 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -310,6 +310,10 @@
- #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
- #define DWC3_GTXFIFOSIZ_TXFSTADDR(n)	((n) & 0xffff0000)
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -397,7 +397,7 @@ int intel_lpss_probe(struct device *dev,
+ 	if (!lpss)
+ 		return -ENOMEM;
  
-+/* Global RX Fifo Size Register */
-+#define DWC31_GRXFIFOSIZ_RXFDEP(n)	((n) & 0x7fff)	/* DWC_usb31 only */
-+#define DWC3_GRXFIFOSIZ_RXFDEP(n)	((n) & 0xffff)
-+
- /* Global Event Size Registers */
- #define DWC3_GEVNTSIZ_INTMASK		BIT(31)
- #define DWC3_GEVNTSIZ_SIZE(n)		((n) & 0xffff)
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 379f978db13d5..3d30dec42c81a 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2220,7 +2220,6 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- {
- 	struct dwc3 *dwc = dep->dwc;
- 	int mdwidth;
--	int kbytes;
- 	int size;
- 
- 	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
-@@ -2236,17 +2235,17 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- 	/* FIFO Depth is in MDWDITH bytes. Multiply */
- 	size *= mdwidth;
- 
--	kbytes = size / 1024;
--	if (kbytes == 0)
--		kbytes = 1;
--
- 	/*
--	 * FIFO sizes account an extra MDWIDTH * (kbytes + 1) bytes for
--	 * internal overhead. We don't really know how these are used,
--	 * but documentation say it exists.
-+	 * To meet performance requirement, a minimum TxFIFO size of 3x
-+	 * MaxPacketSize is recommended for endpoints that support burst and a
-+	 * minimum TxFIFO size of 2x MaxPacketSize for endpoints that don't
-+	 * support burst. Use those numbers and we can calculate the max packet
-+	 * limit as below.
- 	 */
--	size -= mdwidth * (kbytes + 1);
--	size /= kbytes;
-+	if (dwc->maximum_speed >= USB_SPEED_SUPER)
-+		size /= 3;
-+	else
-+		size /= 2;
- 
- 	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
- 
-@@ -2264,8 +2263,39 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- static int dwc3_gadget_init_out_endpoint(struct dwc3_ep *dep)
- {
- 	struct dwc3 *dwc = dep->dwc;
-+	int mdwidth;
-+	int size;
-+
-+	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
-+
-+	/* MDWIDTH is represented in bits, convert to bytes */
-+	mdwidth /= 8;
- 
--	usb_ep_set_maxpacket_limit(&dep->endpoint, 1024);
-+	/* All OUT endpoints share a single RxFIFO space */
-+	size = dwc3_readl(dwc->regs, DWC3_GRXFIFOSIZ(0));
-+	if (dwc3_is_usb31(dwc))
-+		size = DWC31_GRXFIFOSIZ_RXFDEP(size);
-+	else
-+		size = DWC3_GRXFIFOSIZ_RXFDEP(size);
-+
-+	/* FIFO depth is in MDWDITH bytes */
-+	size *= mdwidth;
-+
-+	/*
-+	 * To meet performance requirement, a minimum recommended RxFIFO size
-+	 * is defined as follow:
-+	 * RxFIFO size >= (3 x MaxPacketSize) +
-+	 * (3 x 8 bytes setup packets size) + (16 bytes clock crossing margin)
-+	 *
-+	 * Then calculate the max packet limit as below.
-+	 */
-+	size -= (3 * 8) + 16;
-+	if (size < 0)
-+		size = 0;
-+	else
-+		size /= 3;
-+
-+	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
- 	dep->endpoint.max_streams = 15;
- 	dep->endpoint.ops = &dwc3_gadget_ep_ops;
- 	list_add_tail(&dep->endpoint.ep_list,
--- 
-2.20.1
-
+-	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
++	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
+ 				  LPSS_PRIV_SIZE);
+ 	if (!lpss->priv)
+ 		return -ENOMEM;
 
 
