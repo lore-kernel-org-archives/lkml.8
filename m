@@ -2,171 +2,137 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC4C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F8FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C339720A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE5421582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n/5n/GKG"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="FPXcRMvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEHKWZ (ORCPT
+        id S1726807AbgEHKXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgEHKWY (ORCPT
+        Fri, 8 May 2020 06:23:25 -0400
+Received: from sonic303-21.consmr.mail.ne1.yahoo.com ([66.163.188.147]:36303
+        "EHLO sonic303-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgEHKXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:22:24 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE45C05BD43;
-        Fri,  8 May 2020 03:22:23 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JRGN5tpbz9sRf;
-        Fri,  8 May 2020 20:22:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588933341;
-        bh=0eP6U+NWK0xCwg5huvpFDX9P9MaHXUOvW79JeY6HvRY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=n/5n/GKGGCsZdI4upKuvZCEou+MpCKkdSqV1mA54dEnbVlIOuyiOs2AX+tcp5exdc
-         401m+LJkSJnKtyYCGWlSIo/KHDG7v/c8JLGreZmYB5u5vVNVdF5ZwKDUao26RGhEZJ
-         /OqrgHyyZyLuXrM8CuQrp9HnjN8UjSi7qFhrVu2QnkyI7hOpvvRwwyvoVMuisTGel7
-         EpY3Kb9ek0KflnY6UvkRjspUgU+ebzSpKm+BuUMjAgqxkA3Zp2zJrHKaWPXm9I1Bw1
-         SryKvC/JcdX/D45TFPwTiUegqxIxuGlrRwoKmfjqRYFcNEiyvK/o3QBKQP+KC6SxFt
-         YDhohpfhqPEUA==
-Date:   Fri, 8 May 2020 20:22:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm-current tree with the hmm tree
-Message-ID: <20200508202217.4e5b9442@canb.auug.org.au>
+        Fri, 8 May 2020 06:23:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1588933403; bh=mLZbzqDVjv8e3oYQsLVwIRJfnDsYf81fgz2h1+WqMVY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=FPXcRMvBkuTAHgxt6eUwgHiD19GpsXuDBhLhrQyEdNI4jk9QzV/fZyj+qU7S35t8lr9pSTrjXllqKNZd95RXO1UdC4FXf2kcFw0D5LO1+BCBuLCa2cJEHIpww+0E/e77BATKOQm5J9K5svQSAf6IykeictNqFI5v7ci15dYIsbLMS0LJZRdX7Vf3wqa9sS0ndGA4N2pStHhbbSfzj/CwwlEoRFHQKYvOPd0wZ/WGEtThb3Firb6O+yb4uWUaT+oH6Cx7+9dbalHyoau7KFodOo+id2UYmO2am4D9uuvkKtq9X5HFfLsBK1KRW5UmiXz35C0qLfqSlwH7hcZfIdgjrQ==
+X-YMail-OSG: QPpm7UAVM1k7eW11nCV6kJD42efQiGBUMSp_OGpj.w.DFSedwuswbxVjMXjQEHP
+ SNwcufnLy8_7fjvABCV.4g6KrDHxzyM7fgpYGeBNf73t73r5cehG1T71TMHhkjEpn5S5eUwhjokC
+ ZCpe8eCeHzYmV857ZdaCCC4AfD9c1xFxMvKha6j5xHFtldibKESpgfzgBEeUnZ4LirAwRiytwU25
+ WxIUqEY8aJRndJ0iG2JvvBqEnDAh9vnwgWk9p1erHcqE2julIoc_sdeEptXzc48mGnEyA7MHzXsO
+ BasnqQHPkZ5U7sRgYkSoQonXhIp96vAc5ksUuOLvylCQsdyiq82K4ZcFo6_urM9HKWG.6KLmXQKa
+ RjREr1yXNFxjjdMIssXSMwPnwwI4K7kd74Dvq5Yw8CubolxYkjo5VJQ2pe1Gs2tuj9WSD7ZckuhF
+ zP8jZ4eAbWSVwPt__iAYpgtSES.mIMKfB6F6UXKvvqJD.k4z0F.gMD10EmNviCEQW7DD3CX6pfc9
+ lfxeYZCFR7OAja3Oifx0EZC53Ya7.8uDC79_bTAdGc189IjVwZgz6ZnOiP8z7O1moTfRTtLfEXkl
+ rVIbq_3EcoXIDTQzXSdgNk.FV6TAkpBOTohHCb9Lm6QNmfoL.z3GKmgE5k77Ctxyz2SpTkYTwfB5
+ 23XGs2AihKOmrh5qYS06DMj7YspdGIns0Br4plnQbC_CYKXn_iGYrgtiTPTz.tKD58NuBCpykdJZ
+ Cc_XJBYZEqAm9JWkJB4SU0mDIABiwBWavlmN.A38hEeJ.Iik75aXOKl_zrp.HnHrR7bo8vCBh_Fe
+ ZP7pVi6m1Ub1EZmE2kj2XDbneAuAtlEEQEFO0MAN4ruEza.geHHRdBxXOmckEBg8Gk_7boNYxS7h
+ utjhlyY2dTOqRbBbPSgIYe7.gad2BPEkomNMkizuu4z03L9_sD8bvEmdrivSeHQ0MPmOw4xEU28N
+ pjNClL1XYP8YKPR5Z9aiuunCJ81Hsn7QNwhk53BvArl1VFIWZADLyUubnbrrheZVke0YXckq20ml
+ LB.d8wZAfTCLm4R1IynbLlASZ37fSY_4NEZZV5QmwA2YKK4F522JABvJbBe40Rf_OSUmNmlp0QBf
+ NbFYsgxd08POY_KFpMjygWmMoD5_tZQFoFh2ObjEWcaetL0RDy4CKNOQVRCf5u7__W.A4mFu4Zdj
+ 2rriablvRmordQWzfRMgbSRbrlr7Rq6FzaqgF_chLCf.Q.7sM3NHSgsYubLL9vqKMiZhUibky8NK
+ 3_EsBxOLuYC6boFStP9x.Qh8LjMTbNo_z5SgB05ZMXWiGck3d.mSxMbHyGtKZqsTtb4CzbJ7r66W
+ IyR.zwBrWrMQ67QXyAbbkQjQj4h9CqdXRYFF_oVvUUUdXfpMt_FJCWDqpWiWci0gCiIS_RpeKUY1
+ p9INsrWQLiQG3HlPzgJsu8wK_z02w5cKv
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ne1.yahoo.com with HTTP; Fri, 8 May 2020 10:23:23 +0000
+Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 72c80166a945fbda854cadf4314d8de0;
+          Fri, 08 May 2020 10:23:21 +0000 (UTC)
+Date:   Fri, 8 May 2020 18:23:14 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, chao@kernel.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: compress: allow lz4 to compress data
+ partially
+Message-ID: <20200508102306.GA18849@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200508094709.40048-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iOmcVrOf7YhC3l4oDlRuo/9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508094709.40048-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.15902 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iOmcVrOf7YhC3l4oDlRuo/9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Chao,
 
-Hi all,
+On Fri, May 08, 2020 at 05:47:09PM +0800, Chao Yu wrote:
+> For lz4 worst compress case, caller should allocate buffer with size
+> of LZ4_compressBound(inputsize) for target compressed data storing.
+> 
+> However lz4 supports partial data compression, so we can get rid of
+> output buffer size limitation now, then we can avoid 2 * 4KB size
+> intermediate buffer allocation when log_cluster_size is 2, and avoid
+> unnecessary compressing work of compressor if we can not save at
+> least 4KB space.
+> 
+> Suggested-by: Daeho Jeong <daehojeong@google.com>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/compress.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 5e4947250262..23825f559bcf 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -228,7 +228,12 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
+>  	if (!cc->private)
+>  		return -ENOMEM;
+>  
+> -	cc->clen = LZ4_compressBound(PAGE_SIZE << cc->log_cluster_size);
+> +	/*
+> +	 * we do not change cc->clen to LZ4_compressBound(inputsize) to
+> +	 * adapt worst compress case, because lz4 algorithm supports partial
+> +	 * compression.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Actually, in this case the lz4 compressed block is not valid (at least not ended
+in a valid lz4 EOF), and AFAIK the current public lz4 API cannot keep on
+compressing this block. so IMO "partial compression" for an invalid lz4
+block may be confusing.
 
-  tools/testing/selftests/vm/Makefile
+I think some words like "because lz4 implementation can handle output buffer
+budget properly" or similar stuff could be better.
 
-between commit:
+The same to the patch title and the commit message.
 
-  b0d449922eb8 ("mm/hmm/test: add selftests for HMM")
+Thanks,
+Gao Xiang
 
-from the hmm tree and commit:
 
-  3a07caa68f66 ("selftests: vm: pkeys: fix multilib builds for x86")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/vm/Makefile
-index c6eb5305a0f6,d7eae41be628..000000000000
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@@ -34,8 -58,55 +59,57 @@@ TEST_FILES :=3D test_vmalloc.s
-  KSFT_KHDR_INSTALL :=3D 1
-  include ../lib.mk
- =20
-+ ifeq ($(ARCH),x86_64)
-+ BINARIES_32 :=3D $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
-+ BINARIES_64 :=3D $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
-+=20
-+ define gen-target-rule-32
-+ $(1) $(1)_32: $(OUTPUT)/$(1)_32
-+ .PHONY: $(1) $(1)_32
-+ endef
-+=20
-+ define gen-target-rule-64
-+ $(1) $(1)_64: $(OUTPUT)/$(1)_64
-+ .PHONY: $(1) $(1)_64
-+ endef
-+=20
-+ ifeq ($(CAN_BUILD_I386),1)
-+ $(BINARIES_32): CFLAGS +=3D -m32
-+ $(BINARIES_32): LDLIBS +=3D -lrt -ldl -lm
-+ $(BINARIES_32): %_32: %.c
-+ 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(notdir $^) $(LDLIBS) -o $@
-+ $(foreach t,$(TARGETS),$(eval $(call gen-target-rule-32,$(t))))
-+ endif
-+=20
-+ ifeq ($(CAN_BUILD_X86_64),1)
-+ $(BINARIES_64): CFLAGS +=3D -m64
-+ $(BINARIES_64): LDLIBS +=3D -lrt -ldl
-+ $(BINARIES_64): %_64: %.c
-+ 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(notdir $^) $(LDLIBS) -o $@
-+ $(foreach t,$(TARGETS),$(eval $(call gen-target-rule-64,$(t))))
-+ endif
-+=20
-+ # x86_64 users should be encouraged to install 32-bit libraries
-+ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
-+ all: warn_32bit_failure
-+=20
-+ warn_32bit_failure:
-+ 	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;		\
-+ 	echo  "environment. This will reduce test coverage of 64-bit" 2>&1;	\
-+ 	echo  "kernels. If you are using a Debian-like distribution," 2>&1;	\
-+ 	echo  "try:"; 2>&1;							\
-+ 	echo  "";								\
-+ 	echo  "  apt-get install gcc-multilib libc6-i386 libc6-dev-i386";	\
-+ 	echo  "";								\
-+ 	echo  "If you are using a Fedora-like distribution, try:";		\
-+ 	echo  "";								\
-+ 	echo  "  yum install glibc-devel.*i686";				\
-+ 	exit 0;
-+ endif
-+ endif
-+=20
- +$(OUTPUT)/hmm-tests: LDLIBS +=3D -lhugetlbfs -lpthread
- +
-  $(OUTPUT)/userfaultfd: LDLIBS +=3D -lpthread
- =20
-  $(OUTPUT)/mlock-random-test: LDLIBS +=3D -lcap
-
---Sig_/iOmcVrOf7YhC3l4oDlRuo/9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl61MtkACgkQAVBC80lX
-0Gw3qgf+ORbO3azVXtR8qyfH3XIufSQI+LSOmdlh6sLbHMSrZTaQF/dww/JzxYjt
-2O6dkaT77oYyk0rELeL1H3NG/BRCZqZrbf4MmOn8DjgrBLjEEr/jbBn3d79Xs57z
-PiheQC95xeWrQsW5YwWv/AjSHEJRCUfjZx7YZY01Q1ResrhqVRuiROI9G6zIPg8L
-hgbv4z9A8BDeOlyVqqN18nAA2oT+a9I0GN+8dCqQI+dwobs8u5vozIn2HLEctAlZ
-sVISSdQt8buVd1q50CEFdovstbgVoBC7Jh+IHLOhOQZ7DaiuWwGoU2Y8g/C+q3RD
-wWQkJWZPcX4kVZ2kh1WsYCqkxfGFZA==
-=O108
------END PGP SIGNATURE-----
-
---Sig_/iOmcVrOf7YhC3l4oDlRuo/9--
+> +	 */
+> +	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>  	return 0;
+>  }
+>  
+> @@ -244,11 +249,9 @@ static int lz4_compress_pages(struct compress_ctx *cc)
+>  
+>  	len = LZ4_compress_default(cc->rbuf, cc->cbuf->cdata, cc->rlen,
+>  						cc->clen, cc->private);
+> -	if (!len) {
+> -		printk_ratelimited("%sF2FS-fs (%s): lz4 compress failed\n",
+> -				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id);
+> -		return -EIO;
+> -	}
+> +	if (!len)
+> +		return -EAGAIN;
+> +
+>  	cc->clen = len;
+>  	return 0;
+>  }
+> -- 
+> 2.18.0.rc1
