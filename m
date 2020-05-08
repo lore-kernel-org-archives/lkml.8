@@ -2,254 +2,173 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F43C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38726C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EF824999
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15064208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588943564;
+	bh=QECoqsjAOlzsQnEN/5AzupQV6tE0FCuKShc1FENqbJU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kGRV/GjhmzgvPMdqRJ9llkifry92F231lybSTLK2NsFCoX3uMg32TxXsaoDnz2rDv
+	 E2LPj7inmGxhNhX7VyDVXVTqeRHAnXDNJsB7LeL5R3wAVKvrsB9DwYk31SzunSdjVx
+	 iif5Xf1PGFxPY+8Y15X61W234VrGDpLUV/G09qps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgEHNMf (ORCPT
+        id S1728287AbgEHMsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729992AbgEHNEs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:04:48 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67ADC05BD43;
-        Fri,  8 May 2020 06:04:48 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gC-00074Q-Vm; Fri, 08 May 2020 15:04:41 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 852AE1C0080;
-        Fri,  8 May 2020 15:04:40 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:40 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf bench: Add kallsyms parsing
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200501221315.54715-2-irogers@google.com>
-References: <20200501221315.54715-2-irogers@google.com>
+        Fri, 8 May 2020 08:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729256AbgEHMsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EC09206D6;
+        Fri,  8 May 2020 12:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942113;
+        bh=QECoqsjAOlzsQnEN/5AzupQV6tE0FCuKShc1FENqbJU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jrmea+aMCfiX7TMxcJgHnpIZ/mOCISvsKsjAsJfmwtEimMls3YWyxYu43SCL26rqu
+         YmSCGhKWSDowX/nfKhss8SX4wCMgcKVdTj7xCcT3OY5SkCJcdo9Vs6J+OBk2zTuaDJ
+         Ni1Q5qF0AWBW/zwLckW3ANNEvQx+uX0y9fYCc8bM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Mans Rullgard <mans@mansr.com>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.4 301/312] ata: sata_dwc_460ex: remove incorrect locking
+Date:   Fri,  8 May 2020 14:34:52 +0200
+Message-Id: <20200508123145.606861021@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <158894308049.8414.4871161798699899047.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+From: Mans Rullgard <mans@mansr.com>
 
-Commit-ID:     51876bd45263f62083bbb823220bfb48909f313a
-Gitweb:        https://git.kernel.org/tip/51876bd45263f62083bbb823220bfb48909f313a
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Fri, 01 May 2020 15:13:13 -07:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:32 -03:00
+commit 55e610cdd28c0ad3dce0652030c0296d549673f3 upstream.
 
-perf bench: Add kallsyms parsing
+This lock is already taken in ata_scsi_queuecmd() a few levels up the
+call stack so attempting to take it here is an error.  Moreover, it is
+pointless in the first place since it only protects a single, atomic
+assignment.
 
-Add a benchmark for kallsyms parsing. Example output:
+Enabling lock debugging gives the following output:
 
-  Running 'internals/kallsyms-parse' benchmark:
-  Average kallsyms__parse took: 103.971 ms (+- 0.121 ms)
+=============================================
+[ INFO: possible recursive locking detected ]
+4.4.0-rc5+ #189 Not tainted
+---------------------------------------------
+kworker/u2:3/37 is trying to acquire lock:
+ (&(&host->lock)->rlock){-.-...}, at: [<90283294>] sata_dwc_exec_command_by_tag.constprop.14+0x44/0x8c
 
-Committer testing:
+but task is already holding lock:
+ (&(&host->lock)->rlock){-.-...}, at: [<902761ac>] ata_scsi_queuecmd+0x2c/0x330
 
-Test Machine: AMD Ryzen 5 3600X 6-Core Processor
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-  [root@five ~]# perf bench internals kallsyms-parse
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 79.692 ms (+- 0.101 ms)
-  [root@five ~]# perf stat -r5 perf bench internals kallsyms-parse
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 80.563 ms (+- 0.079 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.046 ms (+- 0.155 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 80.874 ms (+- 0.104 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.173 ms (+- 0.133 ms)
-  # Running 'internals/kallsyms-parse' benchmark:
-    Average kallsyms__parse took: 81.169 ms (+- 0.074 ms)
+       CPU0
+       ----
+  lock(&(&host->lock)->rlock);
+  lock(&(&host->lock)->rlock);
 
-   Performance counter stats for 'perf bench internals kallsyms-parse' (5 runs):
+ *** DEADLOCK ***
+ May be due to missing lock nesting notation
 
-            8,093.54 msec task-clock                #    0.999 CPUs utilized            ( +-  0.14% )
-               3,165      context-switches          #    0.391 K/sec                    ( +-  0.18% )
-                  10      cpu-migrations            #    0.001 K/sec                    ( +- 23.13% )
-                 744      page-faults               #    0.092 K/sec                    ( +-  0.21% )
-      34,551,564,954      cycles                    #    4.269 GHz                      ( +-  0.05% )  (83.33%)
-       1,160,584,308      stalled-cycles-frontend   #    3.36% frontend cycles idle     ( +-  1.60% )  (83.33%)
-      14,974,323,985      stalled-cycles-backend    #   43.34% backend cycles idle      ( +-  0.24% )  (83.33%)
-      58,712,905,705      instructions              #    1.70  insn per cycle
-                                                    #    0.26  stalled cycles per insn  ( +-  0.01% )  (83.34%)
-      14,136,433,778      branches                  # 1746.632 M/sec                    ( +-  0.01% )  (83.33%)
-         141,943,217      branch-misses             #    1.00% of all branches          ( +-  0.04% )  (83.33%)
+4 locks held by kworker/u2:3/37:
+ #0:  ("events_unbound"){.+.+.+}, at: [<9003a0a4>] process_one_work+0x12c/0x430
+ #1:  ((&entry->work)){+.+.+.}, at: [<9003a0a4>] process_one_work+0x12c/0x430
+ #2:  (&bdev->bd_mutex){+.+.+.}, at: [<9011fd54>] __blkdev_get+0x50/0x380
+ #3:  (&(&host->lock)->rlock){-.-...}, at: [<902761ac>] ata_scsi_queuecmd+0x2c/0x330
 
-              8.1040 +- 0.0115 seconds time elapsed  ( +-  0.14% )
+stack backtrace:
+CPU: 0 PID: 37 Comm: kworker/u2:3 Not tainted 4.4.0-rc5+ #189
+Workqueue: events_unbound async_run_entry_fn
+Stack : 90b38e30 00000021 00000003 9b2a6040 00000000 9005f3f0 904fc8dc 00000025
+        906b96e4 00000000 90528648 9b3336c4 904fc8dc 9009bf18 00000002 00000004
+        00000000 00000000 9b3336c4 9b3336e4 904fc8dc 9003d074 00000000 90500000
+        9005e738 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+        6e657665 755f7374 756f626e 0000646e 00000000 00000000 9b00ca00 9b025000
+          ...
+Call Trace:
+[<90009d6c>] show_stack+0x88/0xa4
+[<90057744>] __lock_acquire+0x1ce8/0x2154
+[<900583e4>] lock_acquire+0x64/0x8c
+[<9045ff10>] _raw_spin_lock_irqsave+0x54/0x78
+[<90283294>] sata_dwc_exec_command_by_tag.constprop.14+0x44/0x8c
+[<90283484>] sata_dwc_qc_issue+0x1a8/0x24c
+[<9026b39c>] ata_qc_issue+0x1f0/0x410
+[<90273c6c>] ata_scsi_translate+0xb4/0x200
+[<90276234>] ata_scsi_queuecmd+0xb4/0x330
+[<9025800c>] scsi_dispatch_cmd+0xd0/0x128
+[<90259934>] scsi_request_fn+0x58c/0x638
+[<901a3e50>] __blk_run_queue+0x40/0x5c
+[<901a83d4>] blk_queue_bio+0x27c/0x28c
+[<901a5914>] generic_make_request+0xf0/0x188
+[<901a5a54>] submit_bio+0xa8/0x194
+[<9011adcc>] submit_bh_wbc.isra.23+0x15c/0x17c
+[<9011c908>] block_read_full_page+0x3e4/0x428
+[<9009e2e0>] do_read_cache_page+0xac/0x210
+[<9009fd90>] read_cache_page+0x18/0x24
+[<901bbd18>] read_dev_sector+0x38/0xb0
+[<901bd174>] msdos_partition+0xb4/0x5c0
+[<901bcb8c>] check_partition+0x140/0x274
+[<901bba60>] rescan_partitions+0xa0/0x2b0
+[<9011ff68>] __blkdev_get+0x264/0x380
+[<901201ac>] blkdev_get+0x128/0x36c
+[<901b9378>] add_disk+0x3c0/0x4bc
+[<90268268>] sd_probe_async+0x100/0x224
+[<90043a44>] async_run_entry_fn+0x50/0x124
+[<9003a11c>] process_one_work+0x1a4/0x430
+[<9003a4f4>] worker_thread+0x14c/0x4fc
+[<900408f4>] kthread+0xd0/0xe8
+[<90004338>] ret_from_kernel_thread+0x14/0x1c
 
-  [root@five ~]#
+Fixes: 62936009f35a ("[libata] Add 460EX on-chip SATA driver, sata_dwc_460ex")
+Tested-by: Christian Lamparter <chunkeey@googlemail.com>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200501221315.54715-2-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/Build            |  1 +-
- tools/perf/bench/bench.h          |  1 +-
- tools/perf/bench/kallsyms-parse.c | 75 ++++++++++++++++++++++++++++++-
- tools/perf/builtin-bench.c        |  1 +-
- 4 files changed, 78 insertions(+)
- create mode 100644 tools/perf/bench/kallsyms-parse.c
+ drivers/ata/sata_dwc_460ex.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index 0428273..768e408 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -9,6 +9,7 @@ perf-y += futex-lock-pi.o
- perf-y += epoll-wait.o
- perf-y += epoll-ctl.o
- perf-y += synthesize.o
-+perf-y += kallsyms-parse.o
+--- a/drivers/ata/sata_dwc_460ex.c
++++ b/drivers/ata/sata_dwc_460ex.c
+@@ -924,15 +924,13 @@ static void sata_dwc_exec_command_by_tag
+ 					 struct ata_taskfile *tf,
+ 					 u8 tag, u32 cmd_issued)
+ {
+-	unsigned long flags;
+ 	struct sata_dwc_device_port *hsdevp = HSDEVP_FROM_AP(ap);
  
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index 4d669c8..61cae49 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -44,6 +44,7 @@ int bench_futex_lock_pi(int argc, const char **argv);
- int bench_epoll_wait(int argc, const char **argv);
- int bench_epoll_ctl(int argc, const char **argv);
- int bench_synthesize(int argc, const char **argv);
-+int bench_kallsyms_parse(int argc, const char **argv);
+ 	dev_dbg(ap->dev, "%s cmd(0x%02x): %s tag=%d\n", __func__, tf->command,
+ 		ata_get_cmd_descript(tf->command), tag);
  
- #define BENCH_FORMAT_DEFAULT_STR	"default"
- #define BENCH_FORMAT_DEFAULT		0
-diff --git a/tools/perf/bench/kallsyms-parse.c b/tools/perf/bench/kallsyms-parse.c
-new file mode 100644
-index 0000000..2b0d0f9
---- /dev/null
-+++ b/tools/perf/bench/kallsyms-parse.c
-@@ -0,0 +1,75 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Benchmark of /proc/kallsyms parsing.
-+ *
-+ * Copyright 2020 Google LLC.
-+ */
-+#include <stdlib.h>
-+#include "bench.h"
-+#include "../util/stat.h"
-+#include <linux/time64.h>
-+#include <subcmd/parse-options.h>
-+#include <symbol/kallsyms.h>
+-	spin_lock_irqsave(&ap->host->lock, flags);
+ 	hsdevp->cmd_issued[tag] = cmd_issued;
+-	spin_unlock_irqrestore(&ap->host->lock, flags);
 +
-+static unsigned int iterations = 100;
-+
-+static const struct option options[] = {
-+	OPT_UINTEGER('i', "iterations", &iterations,
-+		"Number of iterations used to compute average"),
-+	OPT_END()
-+};
-+
-+static const char *const bench_usage[] = {
-+	"perf bench internals kallsyms-parse <options>",
-+	NULL
-+};
-+
-+static int bench_process_symbol(void *arg __maybe_unused,
-+				const char *name __maybe_unused,
-+				char type __maybe_unused,
-+				u64 start __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static int do_kallsyms_parse(void)
-+{
-+	struct timeval start, end, diff;
-+	u64 runtime_us;
-+	unsigned int i;
-+	double time_average, time_stddev;
-+	int err;
-+	struct stats time_stats;
-+
-+	init_stats(&time_stats);
-+
-+	for (i = 0; i < iterations; i++) {
-+		gettimeofday(&start, NULL);
-+		err = kallsyms__parse("/proc/kallsyms", NULL,
-+				bench_process_symbol);
-+		if (err)
-+			return err;
-+
-+		gettimeofday(&end, NULL);
-+		timersub(&end, &start, &diff);
-+		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+		update_stats(&time_stats, runtime_us);
-+	}
-+
-+	time_average = avg_stats(&time_stats) / USEC_PER_MSEC;
-+	time_stddev = stddev_stats(&time_stats) / USEC_PER_MSEC;
-+	printf("  Average kallsyms__parse took: %.3f ms (+- %.3f ms)\n",
-+		time_average, time_stddev);
-+	return 0;
-+}
-+
-+int bench_kallsyms_parse(int argc, const char **argv)
-+{
-+	argc = parse_options(argc, argv, options, bench_usage, 0);
-+	if (argc) {
-+		usage_with_options(bench_usage, options);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	return do_kallsyms_parse();
-+}
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 11c79a8..0832732 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -78,6 +78,7 @@ static struct bench epoll_benchmarks[] = {
- 
- static struct bench internals_benchmarks[] = {
- 	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
-+	{ "kallsyms-parse", "Benchmark kallsyms parsing",	bench_kallsyms_parse	},
- 	{ NULL,		NULL,					NULL			}
- };
- 
+ 	/*
+ 	 * Clear SError before executing a new command.
+ 	 * sata_dwc_scr_write and read can not be used here. Clearing the PM
+
+
