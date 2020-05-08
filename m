@@ -2,155 +2,111 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A3AC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835F4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9D224953
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="c1OctmAO"
+	by mail.kernel.org (Postfix) with ESMTP id 5D12B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588969691;
+	bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=vMWC4Y/vTDbiRa5tychEtzpu3+UhD+0bsP/J3HjfGt3blSOa8J5q9YSUgI5BE3bWt
+	 e2KIq4LW9w+Pm0GFvsI7ksS5IyX5wql5DeLe3LO+So15bc4i+kiow2QtA+lH5tLlMF
+	 BbNty7Tx9M9USqhzxQRuSzuFwZFAjuq4iwPODhhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEHU1n (ORCPT
+        id S1727840AbgEHU2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47512 "EHLO
+        Fri, 8 May 2020 16:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHU1m (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgEHU2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:27:42 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5674FC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:27:42 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 188so2432519lfa.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:27:42 -0700 (PDT)
+        Fri, 8 May 2020 16:28:10 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA7DC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:28:08 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id fb4so1260861qvb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H7hdF+TXU+z5warwWctoW0ejNkNB5ByIm48BqwSmIjk=;
-        b=c1OctmAOUzcC966xGv96Qy3CyvDsCLzmCpNDffti/u3sU9BbV7CH3jhpTMMnRsQSwy
-         qE/7vlHukdClIs8gJ+/yOBckSTdPtUCHbNat27L/asSCI8yCf7TNIQSupXSEIYeLorKw
-         /Oo84qo2i0jTtaDj0v2XbivFiJB6+KoTwVXotTxMXlfD/QZ/lcRieNieqTYO8Sz0SMLN
-         JAnJJ2IcgwapNOrq+zSYmyyTuLqH2N6S4kuizaDqnXodQnpHnfzkH2zal8UrGUKy+Bjy
-         5ghZtvqFRuR3nHSQdIXG/6t3ETIBTnzqmmvDbo44EGOtKhaLdt3s6v01G3WS+WduZRHZ
-         lqtw==
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
+        b=OQZoCfheERUX2DtkmSqCvmJTdkZ5GnadHCDZ+KCbqY9bsa5S86FPUElvzTcUEQfeBy
+         jYtXgLVHA2+iBs6X+pWwKnMIr8Bti0BzignC7Dk3fhVWmntdaXnSaXtVrxU9AuIi3493
+         8d2aw6wAeePItIEMBZPZSSj+VwNUmOWKZR/ts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=H7hdF+TXU+z5warwWctoW0ejNkNB5ByIm48BqwSmIjk=;
-        b=RUgOKLAKGgLcanzNh2KWONA6gwzubw+qnZFxiMTjcnOFka58KsblxO7AdN/YRQkOrW
-         a2Vbv4t88jUBZR4wbsAL1ztpf2I52C7nF4ciYXGHFQFnQ1bnfnU863gLvUGvPjbOxdSC
-         OlPESROP7vAD0LUhvfLRTL/8PwdGzaQyf5C+UMimG5XFN9PI//aaLL+3k/5WJokspdCu
-         aBYLZOpUhIGjlii/3kSBg8hoolqeI5gWKmr1kIh1dCwxzwP/HSEMwf5n3doairKu3OYU
-         KBCdpNxOznuztRuYAisHnOtkLgq0q91wnhkQ0D26jZ5umx4/xQNpFCxmyXZa9/pWlv64
-         YuOA==
-X-Gm-Message-State: AOAM530dMNhErCg/7+RHsb95MkdoS/vP096dITy/h3FzqPRZvhJt6Lxx
-        pGHyyZU2wjsREbkXtBFylIFZRA==
-X-Google-Smtp-Source: ABdhPJwhM6HSpwQmv/7uHamxME3MWQs8CZ24wPPZCd6IAhDGdZQI+53saRBbO43ShtN8OjAP4cmK9Q==
-X-Received: by 2002:ac2:4304:: with SMTP id l4mr3074961lfh.87.1588969660574;
-        Fri, 08 May 2020 13:27:40 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:222:bcfb:3767:1ed2:9bbb:4cab])
-        by smtp.gmail.com with ESMTPSA id g22sm1950160ljl.17.2020.05.08.13.27.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 13:27:39 -0700 (PDT)
-Subject: Re: [PATCH] USB: host: ehci: Add error handlinginehci_mxc_drv_probe()
-To:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
- <20200508114858.GA4085349@kroah.com>
- <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
- <20200508143110.GA447591@kroah.com>
- <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <66a6bbca-4218-fb71-7284-37f73d5a3c58@cogentembedded.com>
-Date:   Fri, 8 May 2020 23:27:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
+        b=CVwTHw8OCSJMkVsx7tdrYBi5g1Btse5j5wqXzvTe69JPSyR9w7Heie8VUfXcfawE2x
+         6P7J56UtEx2rJySLkwAZcS4dyz0ipiVHm+7nOvp2M8UA9YQzVguH9DSJFcjHXntp3Rnx
+         SIeUidyjw1lZyItDmqXWGUBLGj7llSmLuxd1vITjGU30AovN7v+GghG18RamcmuCTKGJ
+         v5+Lt7gHOY71M7sis/wi3b20cFSaLSckdUcXRRBwjIv/prjkB6htlje0hucnjV63gDlT
+         YPsq1mQwBqX77Uo21O8Itv5QXuuKD9zeZnh0WcJt8fIPrA2lyEJpTlscFfr+VmuDt3ye
+         RqtA==
+X-Gm-Message-State: AGi0PuaAdUz9if5H9a6bf+wfGTOuM6tijqWE8NRgNahCZHBBWcBB5eoQ
+        uwZuU0M98H0xPlbHg6yAaaVj7Q==
+X-Google-Smtp-Source: APiQypKc6TNsMOecJ6omgxiAaKe1l2+kixkHfrAI/5noGGHdVzQ5EtUdd30fnGRPngi7spZX+DNZxw==
+X-Received: by 2002:a05:6214:188a:: with SMTP id cx10mr4557487qvb.119.1588969687732;
+        Fri, 08 May 2020 13:28:07 -0700 (PDT)
+Received: from i7.mricon.com (107-179-243-71.cpe.teksavvy.com. [107.179.243.71])
+        by smtp.gmail.com with ESMTPSA id o68sm1950028qka.110.2020.05.08.13.28.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 13:28:06 -0700 (PDT)
+Received: by i7.mricon.com (sSMTP sendmail emulation); Fri, 08 May 2020 16:28:04 -0400
+Date:   Fri, 8 May 2020 16:28:04 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     webmaster@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [sysadmin] New Wiki URLs?
+Message-ID: <20200508202804.tiqcdgpamq4sbhw2@chatter.i7.local>
+Mail-Followup-To: webmaster@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200428044440.kd2rf3cxa5rffewm@falbala.internal.home.lespocky.de>
 MIME-Version: 1.0
-In-Reply-To: <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q3wvykdlcinmtkcu"
+Content-Disposition: inline
+In-Reply-To: <20200428044440.kd2rf3cxa5rffewm@falbala.internal.home.lespocky.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 06:03 PM, Tang Bin wrote:
 
->>>> On Fri, May 08, 2020 at 07:44:53PM +0800, Tang Bin wrote:
->>>>> The function ehci_mxc_drv_probe() does not perform sufficient error
->>>>> checking after executing platform_get_irq(), thus fix it.
->>>>>
->>>>> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
->>>>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->>>>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->>>>> ---
->>>>>    drivers/usb/host/ehci-mxc.c | 2 ++
->>>>>    1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
->>>>> index a1eb5ee77..a0b42ba59 100644
->>>>> --- a/drivers/usb/host/ehci-mxc.c
->>>>> +++ b/drivers/usb/host/ehci-mxc.c
->>>>> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->>>>>        }
->>>>>        irq = platform_get_irq(pdev, 0);
->>>>> +    if (irq < 0)
->>>>> +        return irq;
->>>> <= ?
->>> In the file 'drivers/base/platform.c'， the function platform_get_irq() is
->>> explained and used as follows:
->>>
->>>       * Gets an IRQ for a platform device and prints an error message if
->>> finding the
->>>       * IRQ fails. Device drivers should check the return value for errors so
->>> as to
->>>       * not pass a negative integer value to the request_irq() APIs.
->>>       *
->>>       * Example:
->>>       *        int irq = platform_get_irq(pdev, 0);
->>>       *        if (irq < 0)
->>>       *            return irq;
->>>       *
->>>       * Return: IRQ number on success, negative error number on failure.
->>>
->>> And in my hardware experiment, even if I set the irq failed deliberately in
->>> the DTS, the returned value is negative instead of zero.
->> Please read the thread at
->>     https://lore.kernel.org/r/20200501224042.141366-1-helgaas%40kernel.org
->> for more details about this.
->>
-> Great, It looks beautiful, finally someone took a knife to the file 'platform.c'.
+--q3wvykdlcinmtkcu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   I thought I did that already couple years ago, when returned 0 from platform_get_irq() could mean both IRQ # and error... :-)
+On Tue, Apr 28, 2020 at 06:44:40AM +0200, Alexander Dahl wrote:
+> Could the webmasters of kernel.org please configure some kind of
+> redirects so people don't get 404 errors when looking for docs?
 
-> 
-> I have been studied this place for a long time, and don't know what platform can return 0, which made me curious.
-> 
-> So the example should be:
-> 
->      *        int irq = platform_get_irq(pdev, 0);
->      *        if (irq <= 0)
->      *            return irq;
+If someone goes through the trouble of compiling a list of such=20
+redirects, then perhaps. The previous site (wireless.kernel.org) was not=20
+maintained by the Linux Foundation, so we don't have any kind of=20
+definitive mapping of old URLs to new URLs.
 
-   And you then return 0 (success) as if your probe() succeeded. Congratulations! :-P
+Regards,
+-K
 
-> 
-> Thanks,
-> 
-> Tang Bin
+--q3wvykdlcinmtkcu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-MBR, Sergei
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXrXA0gAKCRC2xBzjVmSZ
+bIg2AQCK85jhipcysZcwpd4q6layN3GUb3iuQLwv0ELLjBjyAgD/b64rAt/TUSCN
+/NKNyCTD+eGCYA+680rXiY6l1zrpBAk=
+=ze7e
+-----END PGP SIGNATURE-----
+
+--q3wvykdlcinmtkcu--
