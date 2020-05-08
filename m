@@ -4,120 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB62C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D03C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668042083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5C02083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEHOkP (ORCPT
+        id S1728083AbgEHOkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:40:15 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:50002 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgEHOkP (ORCPT
+        Fri, 8 May 2020 10:40:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:57927 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgEHOkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:40:15 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65eb56f398a3-5ab21; Fri, 08 May 2020 22:39:57 +0800 (CST)
-X-RM-TRANSID: 2ee65eb56f398a3-5ab21
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.104.148.118])
-        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35eb56f39bf1-33a14;
-        Fri, 08 May 2020 22:39:56 +0800 (CST)
-X-RM-TRANSID: 2ee35eb56f39bf1-33a14
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH v2] USB: host: ehci-mxc: Use the defined variable to simplify code
-Date:   Fri,  8 May 2020 22:40:24 +0800
-Message-Id: <20200508144024.7836-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Fri, 8 May 2020 10:40:45 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MXp1Q-1jcT0s3K16-00Y70j; Fri, 08 May 2020 16:40:23 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] HMM: test: fix CONFIG_DEVICE_PRIVATE dependencies
+Date:   Fri,  8 May 2020 16:40:08 +0200
+Message-Id: <20200508144017.3501418-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:oEjOcKIyUKknp3ml6pCR7GOzJlBrlenpFz/gnnhel3lRHA1e6hl
+ DS2ASRlD9j2N1iHIgIV3asc2AeDB6GzjcLfCCqiWUAsOQGn4YuDInwq4yzAeh4m99A6+hb8
+ FZfz26uHWWWQS7p8MAyqtMNyxzsEXOIECntwGk8eACceGfVr2eLNt4ElvcNlPzWqdxbP+Yd
+ 9NkaaAbgBMRTGiuBJ6ZYQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:21X1C9y4tcM=:aDIGpK/Rrrc4jg1qAbf3ws
+ l/fmznTHhXzMCLTLidJ9yTYgm3WEXKNzdMQGA1rnNB/9NqxFfqP/Xv6hTDeGJ/VDUKMD8p38h
+ b/e9NjmgYuXQ9WLtDv7JGIBsskQYBg3u9Hp5K5aCu1mS24Ly2MZ7mzosL27uGRn/njo4P4b+M
+ GxAhzvTKeVp6KdbVvZbXGu3sRJ3+6TabGFaf422XOE/rxa/EvKLGvRQMHJee/yZ0uWKpIC85T
+ cOTgiAMnrq8z44O1ORrfMVefYjvWc+ZvX1zJMUTBZfiZOP0M/Bi6iNm2KdC7Sof9jAoXH2f7W
+ vrjSP5qiWxSeQ0CEPwzPRuz2UXjGj2OgOPHogqiLdBowO4z3UeXPlb0i7MQtbDNWMRQC9gF7l
+ zJhSo9chC57l7UEMsNyG7WF1JZWvdcACQwk9eHNis0CPW7/EzG2zN9nDrgI62YqYPz6l3j/up
+ nPscjodRSYN+g/vti4H7i1l9MJZxE/gHw124lLFxNn1aP/kKFWDk0uneoGYiRyCc9PEwe0IHW
+ RqCCxzOoXq4/gR+/lTPNMYSUlT8gMP66edquKyPO5bfVbDpTwnK0lL/7tckiED14yJYXtKY3N
+ XWDRCvlMpEWy1Wr07GJ6LC4uv1akdR88oUU/pex8ad7rK0oL0qZjjdHuTjfUF6+IBXvSbt2bN
+ GPu9mLnl/nlGgEcH8I4280tg/a2ixcsckoPmPenXYib1zRLuhdmieoKZdWACZEvFcBFnS8eOf
+ F/HUijyjD1XcKnifLVgOdq7jGA/QtinS0GdKTUDKS9zagf8CoZaK7swBMsHCZiXtKz89rJLy0
+ SE4Yms+h3Mu9fgbGIrt3DdrhBRcpE8LAbRoNLz/EOtvXsqZLU0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the defined variable "dev" to make the code cleaner. And
-delete an extra blank line.
+One cannot select DEVICE_PRIVATE when its dependencies are disabled:
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
-Changes from v1:
- - fix the subject and the code.
----
- drivers/usb/host/ehci-mxc.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
+  Depends on [n]: ZONE_DEVICE [=n]
+  Selected by [m]:
+  - TEST_HMM [=m] && RUNTIME_TESTING_MENU [=y] && TRANSPARENT_HUGEPAGE [=y]
+lib/test_hmm.c:480:8: error: implicit declaration of function 'memremap_pages' [-Werror,-Wimplicit-function-declaration]
+        ptr = memremap_pages(&devmem->pagemap, numa_node_id());
+              ^
+lib/test_hmm.c:480:8: note: did you mean 'memcmp_pages'?
+include/linux/mm.h:3082:12: note: 'memcmp_pages' declared here
+extern int memcmp_pages(struct page *page1, struct page *page2);
+           ^
+lib/test_hmm.c:480:6: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Werror,-Wint-conversion]
+        ptr = memremap_pages(&devmem->pagemap, numa_node_id());
+            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lib/test_hmm.c:1089:4: error: implicit declaration of function 'memunmap_pages' [-Werror,-Wimplicit-function-declaration]
+                        memunmap_pages(&devmem->pagemap);
 
-diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-index c9f91e6c7..09e01397f 100644
---- a/drivers/usb/host/ehci-mxc.c
-+++ b/drivers/usb/host/ehci-mxc.c
-@@ -36,12 +36,12 @@ static const struct ehci_driver_overrides ehci_mxc_overrides __initconst = {
- 
- static int ehci_mxc_drv_probe(struct platform_device *pdev)
- {
--	struct mxc_usbh_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct device *dev = &pdev->dev;
-+	struct mxc_usbh_platform_data *pdata = dev_get_platdata(dev);
- 	struct usb_hcd *hcd;
- 	struct resource *res;
- 	int irq, ret;
- 	struct ehci_mxc_priv *priv;
--	struct device *dev = &pdev->dev;
- 	struct ehci_hcd *ehci;
- 
- 	if (!pdata) {
-@@ -56,7 +56,7 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
-+	hcd->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(hcd->regs)) {
- 		ret = PTR_ERR(hcd->regs);
- 		goto err_alloc;
-@@ -69,14 +69,14 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
- 	priv = (struct ehci_mxc_priv *) ehci->priv;
- 
- 	/* enable clocks */
--	priv->usbclk = devm_clk_get(&pdev->dev, "ipg");
-+	priv->usbclk = devm_clk_get(dev, "ipg");
- 	if (IS_ERR(priv->usbclk)) {
- 		ret = PTR_ERR(priv->usbclk);
- 		goto err_alloc;
- 	}
- 	clk_prepare_enable(priv->usbclk);
- 
--	priv->ahbclk = devm_clk_get(&pdev->dev, "ahb");
-+	priv->ahbclk = devm_clk_get(dev, "ahb");
- 	if (IS_ERR(priv->ahbclk)) {
- 		ret = PTR_ERR(priv->ahbclk);
- 		goto err_clk_ahb;
-@@ -84,13 +84,12 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
- 	clk_prepare_enable(priv->ahbclk);
- 
- 	/* "dr" device has its own clock on i.MX51 */
--	priv->phyclk = devm_clk_get(&pdev->dev, "phy");
-+	priv->phyclk = devm_clk_get(dev, "phy");
- 	if (IS_ERR(priv->phyclk))
- 		priv->phyclk = NULL;
- 	if (priv->phyclk)
- 		clk_prepare_enable(priv->phyclk);
- 
--
- 	/* call platform specific init function */
- 	if (pdata->init) {
- 		ret = pdata->init(pdev);
+Add a dependency from CONFIG_TEST_HMM to ZONE_DEVICE, to disallow
+those broken configurations.
+
+Fixes: 5d5e54be8a1e ("mm/hmm/test: add selftest driver for HMM")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index d9885fa37cc0..63667d62c9d8 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2262,6 +2262,7 @@ config TEST_MEMINIT
+ config TEST_HMM
+ 	tristate "Test HMM (Heterogeneous Memory Management)"
+ 	depends on TRANSPARENT_HUGEPAGE
++	depends on ZONE_DEVICE
+ 	select DEVICE_PRIVATE
+ 	select HMM_MIRROR
+ 	select MMU_NOTIFIER
 -- 
-2.20.1.windows.1
-
-
+2.26.0
 
