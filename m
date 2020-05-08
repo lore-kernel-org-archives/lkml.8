@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4309CC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3E221473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8712145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941996;
-	bh=fPRyYirZGI46harqaBoy4ZXpVIopBJ/BGCpq1G7F0TE=;
+	s=default; t=1588941999;
+	bh=jZI7BxO1atDLgaBvV6tlBctdL7A+TIXVYuXOMePXN7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTEb2QHYyvgWIS5c+Jrxn2ly4+t3RtJ2E5ShTM5gdsiEgA6oGUEWo/2bpDNkVncx2
-	 kZv/Xxp8+cAnlNMNpTh9YvXwg3Dv7w1jbG4NBW3Oj+Jaxj9IRDdaWCnSAdGTXDxGV5
-	 bq5YthbqKA1aEnRs9/MO1UEXinjfZj8uuKaoLKEw=
+	b=FASot1XJcv/wk31LOXwv1NP/bc/8aWJc5i4AVVhJkGLYrUoCS4os/OBVQYS9JCNXb
+	 tOvn88cYrRr+hLg9uTlYgVefYGa05qmvbqUD0KjkjnaMNkFUeUvksytRE0od9yk3Qv
+	 CjR/LifXtPT1T1kLfDw9tWGOaLhOeUrV+6a8RTk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgEHMqf (ORCPT
+        id S1729448AbgEHMqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47810 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729430AbgEHMq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:29 -0400
+        id S1729437AbgEHMqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED1921473;
-        Fri,  8 May 2020 12:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4904208D6;
+        Fri,  8 May 2020 12:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941988;
-        bh=fPRyYirZGI46harqaBoy4ZXpVIopBJ/BGCpq1G7F0TE=;
+        s=default; t=1588941991;
+        bh=jZI7BxO1atDLgaBvV6tlBctdL7A+TIXVYuXOMePXN7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lli1VBU7tmdR+tHTQ96ZLyzoYadGXstNwchGacR2LxnivqVVNsrL4j6gdGXUakZA
-         3ncmuj7rLuyn20H/udUCQhKW1odzVYvYHD7ldvJJSFW21rq04o/oneoJ+F4eBTRNF8
-         U64LTI+lIFYQlNq5qZXlXYi8argTV0Di2w0vyuZQ=
+        b=FZynecrDBQc+7q3sXzYSzyJTicAwZz2O0MqQ1g8lIjWvLgM2eP+9FJAQpm1O9PHjz
+         NiupwCuj4lOF6KcUOrYcc1cAmLgIS8LcMvM9rDw0kT6lYXYsyEx6CGkiUcWaYh9r8M
+         eF51HiZlq9enfO1Gt5Pkro66Zs4dNzunTsjx3zXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Thomas Graf <tgraf@suug.ch>,
+        Pravin B Shelar <pshelar@nicira.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 252/312] net: bcmgenet: device stats are unsigned long
-Date:   Fri,  8 May 2020 14:34:03 +0200
-Message-Id: <20200508123142.135187266@linuxfoundation.org>
+Subject: [PATCH 4.4 253/312] ovs/gre: fix rtnl notifications on iface deletion
+Date:   Fri,  8 May 2020 14:34:04 +0200
+Message-Id: <20200508123142.202807026@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit 6517eb59b03965689e6bb16bb2d480096b3ef95d upstream.
+commit da6f1da819d4b9c081a477dec74dc468a0b44290 upstream.
 
-On 64bit kernels, device stats are 64bit wide, not 32bit.
+The function gretap_fb_dev_create() (only used by ovs) never calls
+rtnl_configure_link(). The consequence is that dev->rtnl_link_state is
+never set to RTNL_LINK_INITIALIZED.
+During the deletion phase, the function rollback_registered_many() sends
+a RTM_DELLINK only if dev->rtnl_link_state is set to RTNL_LINK_INITIALIZED.
 
-Fixes: 1c1008c793fa4 ("net: bcmgenet: add main driver file")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: b2acd1dc3949 ("openvswitch: Use regular GRE net_device instead of vport")
+CC: Thomas Graf <tgraf@suug.ch>
+CC: Pravin B Shelar <pshelar@nicira.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/ipv4/ip_gre.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -927,7 +927,11 @@ static void bcmgenet_get_ethtool_stats(s
- 		else
- 			p = (char *)priv;
- 		p += s->stat_offset;
--		data[i] = *(u32 *)p;
-+		if (sizeof(unsigned long) != sizeof(u32) &&
-+		    s->stat_sizeof == sizeof(unsigned long))
-+			data[i] = *(unsigned long *)p;
-+		else
-+			data[i] = *(u32 *)p;
- 	}
- }
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1265,6 +1265,10 @@ struct net_device *gretap_fb_dev_create(
+ 	if (err)
+ 		goto out;
  
++	err = rtnl_configure_link(dev, NULL);
++	if (err < 0)
++		goto out;
++
+ 	return dev;
+ out:
+ 	ip_tunnel_dellink(dev, &list_kill);
 
 
