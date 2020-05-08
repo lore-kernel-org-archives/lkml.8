@@ -2,63 +2,59 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3302C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF28C24967
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A500524959
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942354;
-	bh=HtJtrn7JwVuOd7YJhv7kbzpt4F0amW7hxGYen/hosUA=;
+	s=default; t=1588942358;
+	bh=jWot4m4mxpf9/pZ5DNn1nyy/ItK9M0Sdv4/SH8DJw+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4Xig6r4y9vHGTjwyXVnv5hI9ww0v8TZ8PnzAhJfE4pgcbORpoLS2m7bUx1J6eDHP
-	 k63h7pqR/sdS+aYdAdSHhjPWNgwfBcpGFJUlxF5uKZAusVLlswTGPc94NrOugm3zJ1
-	 69DXlajW3g+aSgaJOuKyggqtvnZI9K6LTvnFDWK4=
+	b=MK26WPl0mH7m0e5zLRQGc9z9WyyIV/qfISs2bRapTXjGNSL4W2lpakE62wdjCM6vH
+	 WoPOg3aDYEobNy1IjikK5eXw1WMx4l95mli/gvL0w3JDWC/6s3EvvK7K8Qen7za9x8
+	 WaZKA/nK/nlBy0AO52yOaxz4fAvcBWVAfWp4CbqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgEHMwe (ORCPT
+        id S1729979AbgEHMwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729946AbgEHMwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:23 -0400
+        id S1729319AbgEHMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 906B724953;
-        Fri,  8 May 2020 12:52:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE69924959;
+        Fri,  8 May 2020 12:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942342;
-        bh=HtJtrn7JwVuOd7YJhv7kbzpt4F0amW7hxGYen/hosUA=;
+        s=default; t=1588942347;
+        bh=jWot4m4mxpf9/pZ5DNn1nyy/ItK9M0Sdv4/SH8DJw+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kB10gsvVCIrxZTM3k6DDcOEGpAJTfU+4Nrz4yHTGTVAq5m1mMhsHLX8jYruKnhQCe
-         5vJden20T2fOLG847htPi/z9flfqGSs9CJYNi8fO3Glez/PEwoOaxW0EcX7H0PelI0
-         NfMmxF3IpcSJE3lfZjXh/TKTpMeZvV35vrUaw81U=
+        b=X+3vSl2ZiRfgg1m3X2h+n6ZqAzlFlZSki2j562QUzIvNsAf8SK153ykWURnTwRxO1
+         fHNvjetb6pRktQtd18GK0EZfpHSKPl3XXYzf+N0qt13L5kxqMCTTLkH3P4i/x0c85k
+         fbHS002Un7q5ACYsEwhGYHEYzjURJPVfTpM7RiRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel@daenzer.net>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Adam Jackson <ajax@redhat.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Yves-Alexis Perez <corsac@debian.org>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 4.19 32/32] drm/atomic: Take the atomic toys away from X
-Date:   Fri,  8 May 2020 14:35:45 +0200
-Message-Id: <20200508123039.718403889@linuxfoundation.org>
+        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jia He <justin.he@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.4 01/50] vhost: vsock: kick send_pkt worker once device is started
+Date:   Fri,  8 May 2020 14:35:07 +0200
+Message-Id: <20200508123043.374747222@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
-References: <20200508123034.886699170@linuxfoundation.org>
+In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
+References: <20200508123043.085296641@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,74 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Jia He <justin.he@arm.com>
 
-commit 26b1d3b527e7bf3e24b814d617866ac5199ce68d upstream.
+commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
 
-The -modesetting ddx has a totally broken idea of how atomic works:
-- doesn't disable old connectors, assuming they get auto-disable like
-  with the legacy setcrtc
-- assumes ASYNC_FLIP is wired through for the atomic ioctl
-- not a single call to TEST_ONLY
+Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+connecting from the client side. The vhost vsock client tries to connect
+an initializing virtio vsock server.
 
-Iow the implementation is a 1:1 translation of legacy ioctls to
-atomic, which is a) broken b) pointless.
+The abnormal flow looks like:
+host-userspace           vhost vsock                       guest vsock
+==============           ===========                       ============
+connect()     -------->  vhost_transport_send_pkt_work()   initializing
+   |                     vq->private_data==NULL
+   |                     will not be queued
+   V
+schedule_timeout(2s)
+                         vhost_vsock_start()  <---------   device ready
+                         set vq->private_data
 
-We already have bugs in both i915 and amdgpu-DC where this prevents us
-from enabling neat features.
+wait for 2s and failed
+connect() again          vq->private_data!=NULL         recv connecting pkt
 
-If anyone ever cares about atomic in X we can easily add a new atomic
-level (req->value == 2) for X to get back the shiny toys.
+Details:
+1. Host userspace sends a connect pkt, at that time, guest vsock is under
+   initializing, hence the vhost_vsock_start has not been called. So
+   vq->private_data==NULL, and the pkt is not been queued to send to guest
+2. Then it sleeps for 2s
+3. After guest vsock finishes initializing, vq->private_data is set
+4. When host userspace wakes up after 2s, send connecting pkt again,
+   everything is fine.
 
-Since these broken versions of -modesetting have been shipping,
-there's really no other way to get out of this bind.
+As suggested by Stefano Garzarella, this fixes it by additional kicking the
+send_pkt worker in vhost_vsock_start once the virtio device is started. This
+makes the pending pkt sent again.
 
-v2:
-- add an informational dmesg output (Rob, Ajax)
-- reorder after the DRIVER_ATOMIC check to avoid useless noise (Ilia)
-- allow req->value > 2 so that X can do another attempt at atomic in
-  the future
+After this patch, kata-runtime (with vsock enabled) boot time is reduced
+from 3s to 1s on a ThunderX2 arm64 server.
 
-v3: Go with paranoid, insist that the X should be first (suggested by
-Rob)
+[1] https://github.com/kata-containers/runtime/issues/1917
 
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com> (v1)
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com> (v1)
-Cc: Michel Dänzer <michel@daenzer.net>
-Cc: Alex Deucher <alexdeucher@gmail.com>
-Cc: Adam Jackson <ajax@redhat.com>
-Acked-by: Adam Jackson <ajax@redhat.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Rob Clark <robdclark@gmail.com>
-Acked-by: Rob Clark <robdclark@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190905185318.31363-1-daniel.vetter@ffwll.ch
-Cc: Yves-Alexis Perez <corsac@debian.org>
+Reported-by: Ning Bo <n.b@live.com>
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_ioctl.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/vhost/vsock.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/gpu/drm/drm_ioctl.c
-+++ b/drivers/gpu/drm/drm_ioctl.c
-@@ -321,7 +321,12 @@ drm_setclientcap(struct drm_device *dev,
- 	case DRM_CLIENT_CAP_ATOMIC:
- 		if (!drm_core_check_feature(dev, DRIVER_ATOMIC))
- 			return -EINVAL;
--		if (req->value > 1)
-+		/* The modesetting DDX has a totally broken idea of atomic. */
-+		if (current->comm[0] == 'X' && req->value == 1) {
-+			pr_info("broken atomic modeset userspace detected, disabling atomic\n");
-+			return -EOPNOTSUPP;
-+		}
-+		if (req->value > 2)
- 			return -EINVAL;
- 		file_priv->atomic = req->value;
- 		file_priv->universal_planes = req->value;
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -500,6 +500,11 @@ static int vhost_vsock_start(struct vhos
+ 		mutex_unlock(&vq->mutex);
+ 	}
+ 
++	/* Some packets may have been queued before the device was started,
++	 * let's kick the send worker to send them.
++	 */
++	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++
+ 	mutex_unlock(&vsock->dev.mutex);
+ 	return 0;
+ 
 
 
