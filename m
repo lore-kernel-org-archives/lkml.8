@@ -2,51 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB44EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB38C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9202495F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CA120731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941763;
-	bh=DOq5NyZI2kGxV9MUSFomxzrGe8f3TwtoAqsyEsp4P68=;
+	s=default; t=1588941768;
+	bh=ZQ0XHbfBWQiIWiONf5FTHXKsilzV6KRIvH4mlihmPd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wi8IJ44FKpfXXu7GGvhtWGxLdp0FFaSa9r2/Av32yt4o+pqrRiOnCl1k5DPAZR0uK
-	 8fzAeLxquHquF6mISxqhP9I8oQ2o8XG8DHhP3qKj136FFmpQQXbPtcBN491vhWxviw
-	 jM3iXhvPvyF9UL0tpfoE5rwtAPkIJXFJlseS1Sbw=
+	b=nyqrlW66vn97hFKroVe5flxCRE2ErQ5j04SoXTg+xWwEvPvO8/VITWAgAV25byU5e
+	 ddeAy8zAsHQM65GExqGBZPMi6iYUGrzUloC7OrTrTfQ5VgaPR/LYEH5YAyzSvdF9fq
+	 pVq84mKjNwQ2AxyQNyxhFFKNVhwOA4dbmzTc1a4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgEHMmm (ORCPT
+        id S1729010AbgEHMmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39726 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728958AbgEHMme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:34 -0400
+        id S1728974AbgEHMmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0BA20731;
-        Fri,  8 May 2020 12:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7E624970;
+        Fri,  8 May 2020 12:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941753;
-        bh=DOq5NyZI2kGxV9MUSFomxzrGe8f3TwtoAqsyEsp4P68=;
+        s=default; t=1588941758;
+        bh=ZQ0XHbfBWQiIWiONf5FTHXKsilzV6KRIvH4mlihmPd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUHG7V+IpaLNqtTDXm53e3KHnyOhsV89o7aCK9nw7t1+WpGjGlxKBNtC8rQQHK/8b
-         U6riamlxUtpyJV8n1F7raSBtuun2DX6nk2iB3Or1sU4zP0dwrJCBpKl3qPXFJgCWxU
-         fgJg3lF9tObUdf2TApaFmTWSvHyxLvr1cyhv4kig=
+        b=mnRNANWtfxRUZyP1IroffIhMBqymu4fenGDEopGd190rsy6L6mLJEpTp0V81hTwJp
+         sIf1oQ+vaiBhlukzt257FkNpyf8nMWmd3ugUNxVcWR3wY2viIwLm9qHdRFMydYEdQx
+         BmEJxPSSICM68ShkAVjZ6p/E8RKWX/EcXdQjasc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.4 159/312] iommu/dma: Respect IOMMU aperture when allocating
-Date:   Fri,  8 May 2020 14:32:30 +0200
-Message-Id: <20200508123135.636127742@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 161/312] iio:ad7797: Use correct attribute_group
+Date:   Fri,  8 May 2020 14:32:32 +0200
+Message-Id: <20200508123135.778053240@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,70 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit c987ff0d3cb37d7fe1ddaa370811dfd9f73643fa upstream.
+[ Upstream commit 28535877ac5b2b84f0d394fd67a5ec71c0c48b10 ]
 
-Where a device driver has set a 64-bit DMA mask to indicate the absence
-of addressing limitations, we still need to ensure that we don't
-allocate IOVAs beyond the actual input size of the IOMMU. The reported
-aperture is the most reliable way we have of inferring that input
-address size, so use that to enforce a hard upper limit where available.
+It should use ad7797_attribute_group in ad7797_info,
+according to commit ("iio:ad7793: Add support for the ad7796 and ad7797").
 
-Fixes: 0db2e5d18f76 ("iommu: Implement common IOMMU ops for DMA mapping")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Scale is fixed for the ad7796 and not programmable, hence
+should not have the scale_available attribute.
 
+Fixes: fd1a8b912841 ("iio:ad7793: Add support for the ad7796 and ad7797")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dma-iommu.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/iio/adc/ad7793.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -152,12 +152,15 @@ int dma_direction_to_prot(enum dma_data_
- 	}
- }
- 
--static struct iova *__alloc_iova(struct iova_domain *iovad, size_t size,
-+static struct iova *__alloc_iova(struct iommu_domain *domain, size_t size,
- 		dma_addr_t dma_limit)
- {
-+	struct iova_domain *iovad = domain->iova_cookie;
- 	unsigned long shift = iova_shift(iovad);
- 	unsigned long length = iova_align(iovad, size) >> shift;
- 
-+	if (domain->geometry.force_aperture)
-+		dma_limit = min(dma_limit, domain->geometry.aperture_end);
- 	/*
- 	 * Enforce size-alignment to be safe - there could perhaps be an
- 	 * attribute to control this per-device, or at least per-domain...
-@@ -297,7 +300,7 @@ struct page **iommu_dma_alloc(struct dev
- 	if (!pages)
- 		return NULL;
- 
--	iova = __alloc_iova(iovad, size, dev->coherent_dma_mask);
-+	iova = __alloc_iova(domain, size, dev->coherent_dma_mask);
- 	if (!iova)
- 		goto out_free_pages;
- 
-@@ -369,7 +372,7 @@ dma_addr_t iommu_dma_map_page(struct dev
- 	phys_addr_t phys = page_to_phys(page) + offset;
- 	size_t iova_off = iova_offset(iovad, phys);
- 	size_t len = iova_align(iovad, size + iova_off);
--	struct iova *iova = __alloc_iova(iovad, len, dma_get_mask(dev));
-+	struct iova *iova = __alloc_iova(domain, len, dma_get_mask(dev));
- 
- 	if (!iova)
- 		return DMA_ERROR_CODE;
-@@ -483,7 +486,7 @@ int iommu_dma_map_sg(struct device *dev,
- 		prev = s;
- 	}
- 
--	iova = __alloc_iova(iovad, iova_len, dma_get_mask(dev));
-+	iova = __alloc_iova(domain, iova_len, dma_get_mask(dev));
- 	if (!iova)
- 		goto out_restore_sg;
- 
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index 91d34ed756eaf..fe0c5a155e211 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -579,7 +579,7 @@ static const struct iio_info ad7797_info = {
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+-	.attrs = &ad7793_attribute_group,
++	.attrs = &ad7797_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.driver_module = THIS_MODULE,
+ };
+-- 
+2.20.1
+
 
 
