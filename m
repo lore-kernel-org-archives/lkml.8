@@ -2,164 +2,75 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880FCC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72131C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F91121974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588975460;
-	bh=avZYZU8DXmnKvpPLGgUx20xCLw9v/4nfaCqlduZjnv4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=esnha5RvPLApbSE9ouZ39bNbgMRhFdQO+h/ZkWF3rspHe4tLxk8O5FG4+gpQejKyV
-	 g4JyCqs9yaT7w9hFpcOslrPYNnjYUhDdmWXagagCwzkHgolrSsACGwsAx66YVB5UV2
-	 K8C4atQXGzp5/+YJFE4R1qLplR3FXKcSrMhIjViQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3833F214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:08:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P48PSq3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgEHWET (ORCPT
+        id S1727969AbgEHWIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 18:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgEHWET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 18:04:19 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 18:08:24 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37175 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726811AbgEHWIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 18:08:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588975703;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Peg2YF2ND29ekNS6MGkynfv7ACrX9QEyGb3a4hyznQ0=;
+        b=P48PSq3dv3W9+44dAxbs2ofUEVRP78yJvMbB5br5Epqv7C5vx9+l0PTbBK3/59AcZ9BDzF
+        W4123traLCKoYlgt2UaI3Z+BmhdxUmFF5WAE5D2BEj36XLIFNZeHnbpecHi68ErGkM07jM
+        CWJ/qM1dPnqUEkP2SaSUqC8LXHuJpTU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-b6UCqDmWNjSy4M4G7KOTOQ-1; Fri, 08 May 2020 18:08:22 -0400
+X-MC-Unique: b6UCqDmWNjSy4M4G7KOTOQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48981214D8;
-        Fri,  8 May 2020 22:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588975458;
-        bh=avZYZU8DXmnKvpPLGgUx20xCLw9v/4nfaCqlduZjnv4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KBavIX4Pysh7EosejxjixI0cFqB9BEaEdy0QPxU3GCLD3fv51XYL6ZPBg4+wru/Er
-         iTF08hKBfdE59zWgKOUG/OGLxgDA1qqRMG98awwWJ9J3AeALSzdxn3dxeHUiW9TRZN
-         3oQrr5y84xuut4/pP2vgOKnUpc03F7YuEfgeVuOw=
-Date:   Fri, 8 May 2020 17:04:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     maz@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v8 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Message-ID: <20200508220416.GA96874@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B53880058A;
+        Fri,  8 May 2020 22:08:20 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C0AF2E183;
+        Fri,  8 May 2020 22:08:13 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
+References: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] cachefiles, nfs: Fixes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508113414.3091532-5-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1118495.1588975692.1@warthog.procyon.org.uk>
+Date:   Fri, 08 May 2020 23:08:12 +0100
+Message-ID: <1118496.1588975692@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 07:34:05PM +0800, Jiaxun Yang wrote:
-> We can now enable generic PCI driver in Kconfig, and remove legacy
-> PCI driver code.
-> 
-> Radeon vbios quirk is moved to the platform folder to fit the
-> new structure.
+Oops - I forgot to include a patch.  I'll resend.
 
-> diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
-> new file mode 100644
-> index 000000000000..1f0a462aeddd
-> --- /dev/null
-> +++ b/arch/mips/loongson64/vbios_quirk.c
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
+David
 
-In arch/mips/pci/fixup-loongson3.c, pci_fixup_radeon() was under "GPL
-version 2 or (at your option) any later version."
-
-Documentation/process/license-rules.rst says that corresponds to
-GPL-2.0+, not GPL-2.0.
-
-> +static void pci_fixup_radeon(struct pci_dev *pdev)
-> +{
-> ...
-> +}
-
-> diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-> deleted file mode 100644
-> index 8a741c2c6685..000000000000
-> --- a/arch/mips/pci/fixup-loongson3.c
-> +++ /dev/null
-> @@ -1,71 +0,0 @@
-> -/*
-> - * fixup-loongson3.c
-> - *
-> - * Copyright (C) 2012 Lemote, Inc.
-> - * Author: Xiang Yu, xiangy@lemote.com
-> - *         Chen Huacai, chenhc@lemote.com
-> - *
-> - * This program is free software; you can redistribute  it and/or modify it
-> - * under  the terms of  the GNU General  Public License as published by the
-> - * Free Software Foundation;  either version 2 of the  License, or (at your
-> - * option) any later version.
-> - *
-> - * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-> - * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-> - * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-> - * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-> - * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> - * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-> - * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> - * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> - * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> - *
-> - */
-> -
-> -#include <linux/pci.h>
-> -#include <boot_param.h>
-> -
-> -static void print_fixup_info(const struct pci_dev *pdev)
-> -{
-> -	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
-> -			pdev->vendor, pdev->device, pdev->irq);
-> -}
-> -
-> -int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> -{
-> -	print_fixup_info(dev);
-> -	return dev->irq;
-> -}
-> -
-> -static void pci_fixup_radeon(struct pci_dev *pdev)
-> -{
-> -	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
-> -
-> -	if (res->start)
-> -		return;
-> -
-> -	if (!loongson_sysconf.vgabios_addr)
-> -		return;
-> -
-> -	pci_disable_rom(pdev);
-> -	if (res->parent)
-> -		release_resource(res);
-> -
-> -	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-> -	res->end   = res->start + 256*1024 - 1;
-> -	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-> -		     IORESOURCE_PCI_FIXED;
-> -
-> -	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-> -		 PCI_ROM_RESOURCE, res);
-> -}
-> -
-> -DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
-> -				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-> -
-> -/* Do platform specific device initialization at pci_enable_device() time */
-> -int pcibios_plat_dev_init(struct pci_dev *dev)
-> -{
-> -	return 0;
-> -}
