@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CEBC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D91C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63BD2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623EF24964
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942429;
-	bh=4aXsBr/dL/0+ttwploB5BdhKcSkd4UKS64y/LQDQrx4=;
+	s=default; t=1588942438;
+	bh=56woS8LEI0GUYirpNpsY8qbcbWSMp8QDzGBNhNmOXEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYYIlHG5zKkopTs3Vh1fcssVlBDbPhK4kpSCT8YRPj5khdo2Vn8kz/bTDmZKFB5l6
-	 xl1MzDYPJIoOaUhzDDx8edMxWoS9+wdK/zHmkjJGC7tMy5/G/78JVkOogDJ6okaWnx
-	 SwuYazM5aXXfeMDG6qwzrpqOcDzdwI3WpLf0gV2Q=
+	b=K/KM+zsq5HjmDbUPBNJAwWMmXRTbGCnvxSwcG7y3tVdSXdqr7ojErHVI0X4BwauMA
+	 RWhGZwZjO/+8zH8oUDeUwEDgVvOwNJWOUxLlFHWslB8TCpEGS7ChWtcicfizsR7Y0g
+	 hN8yl0ow5GWXGKDxJ+iSheIbexnUWPh1fbA/rjCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgEHMxt (ORCPT
+        id S1730139AbgEHMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbgEHMxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:46 -0400
+        id S1730123AbgEHMxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A19C24963;
-        Fri,  8 May 2020 12:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B056824953;
+        Fri,  8 May 2020 12:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942423;
-        bh=4aXsBr/dL/0+ttwploB5BdhKcSkd4UKS64y/LQDQrx4=;
+        s=default; t=1588942431;
+        bh=56woS8LEI0GUYirpNpsY8qbcbWSMp8QDzGBNhNmOXEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejdPe8AGsWE9UVkzZXshRPEIgLM+FudRgAwrizcnXUsdPy/Zeiu13ilZLwh5Fu/w7
-         rqlVzBIPDJB5o08ZVRiTv4UG73wCSepzASkkGuMN0xQ8i664wKwYymWWE215ETS2Ux
-         oz6af/lGmnKQCUM/fdc/uCrDIES0iwaBGLUM/+Vk=
+        b=jAUIniaX9SC8U1ohSP3sfiTFu8IyFP+Me3ZKNEWO7rXHKanVrDDVNwJvbGg9HuLfI
+         OawgPAgWIZh8Qo5eJl2diEDwcmYpMIh8c7eVa+4+lZ0OftPQ8Y8r7E4dUzwCexmfsG
+         gjvIevr+qvRxzCHOc/4sHPlbHOKU94zuVUiPXwaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.4 40/50] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
-Date:   Fri,  8 May 2020 14:35:46 +0200
-Message-Id: <20200508123048.730720753@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 43/50] mac80211: add ieee80211_is_any_nullfunc()
+Date:   Fri,  8 May 2020 14:35:49 +0200
+Message-Id: <20200508123049.036844424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -60,118 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Thomas Pedersen <thomas@adapt-ip.com>
 
-commit 68a33b1794665ba8a1d1ef1d3bfcc7c587d380a6 upstream.
+commit 30b2f0be23fb40e58d0ad2caf8702c2a44cda2e1 upstream.
 
-The valid memory address check in dma_capable only makes sense when mapping
-normal memory, not when using dma_map_resource to map a device resource.
-Add a new boolean argument to dma_capable to exclude that check for the
-dma_map_resource case.
+commit 08a5bdde3812 ("mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED")
+Fixed a bug where we failed to take into account a
+nullfunc frame can be either non-QoS or QoS. It turns out
+there is at least one more bug in
+ieee80211_sta_tx_notify(), introduced in
+commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing"),
+where we forgot to check for the QoS variant and so
+assumed the QoS nullfunc frame never went out
 
-Fixes: b12d66278dd6 ("dma-direct: check for overflows on 32 bit DMA addresses")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Fix this by adding a helper ieee80211_is_any_nullfunc()
+which consolidates the check for non-QoS and QoS nullfunc
+frames. Replace existing compound conditionals and add a
+couple more missing checks for QoS variant.
+
+Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
+Link: https://lore.kernel.org/r/20200114055940.18502-3-thomas@adapt-ip.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/amd_gart_64.c |    4 ++--
- drivers/xen/swiotlb-xen.c     |    4 ++--
- include/linux/dma-direct.h    |    5 +++--
- kernel/dma/direct.c           |    4 ++--
- kernel/dma/swiotlb.c          |    2 +-
- 5 files changed, 10 insertions(+), 9 deletions(-)
+ include/linux/ieee80211.h |    9 +++++++++
+ net/mac80211/mlme.c       |    2 +-
+ net/mac80211/rx.c         |    8 +++-----
+ net/mac80211/status.c     |    5 ++---
+ net/mac80211/tx.c         |    2 +-
+ 5 files changed, 16 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -185,13 +185,13 @@ static void iommu_full(struct device *de
- static inline int
- need_iommu(struct device *dev, unsigned long addr, size_t size)
- {
--	return force_iommu || !dma_capable(dev, addr, size);
-+	return force_iommu || !dma_capable(dev, addr, size, true);
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -620,6 +620,15 @@ static inline bool ieee80211_is_qos_null
  }
  
- static inline int
- nonforced_iommu(struct device *dev, unsigned long addr, size_t size)
- {
--	return !dma_capable(dev, addr, size);
-+	return !dma_capable(dev, addr, size, true);
- }
+ /**
++ * ieee80211_is_any_nullfunc - check if frame is regular or QoS nullfunc frame
++ * @fc: frame control bytes in little-endian byteorder
++ */
++static inline bool ieee80211_is_any_nullfunc(__le16 fc)
++{
++	return (ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc));
++}
++
++/**
+  * ieee80211_is_bufferable_mmpdu - check if frame is bufferable MMPDU
+  * @fc: frame control field in little-endian byteorder
+  */
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -2460,7 +2460,7 @@ void ieee80211_sta_tx_notify(struct ieee
+ 	if (!ieee80211_is_data(hdr->frame_control))
+ 	    return;
  
- /* Map a single continuous physical area into the IOMMU.
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -375,7 +375,7 @@ static dma_addr_t xen_swiotlb_map_page(s
- 	 * we can safely return the device addr and not worry about bounce
- 	 * buffering it.
+-	if (ieee80211_is_nullfunc(hdr->frame_control) &&
++	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
+ 	    sdata->u.mgd.probe_send_count > 0) {
+ 		if (ack)
+ 			ieee80211_sta_reset_conn_monitor(sdata);
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -1450,8 +1450,7 @@ ieee80211_rx_h_check_dup(struct ieee8021
+ 		return RX_CONTINUE;
+ 
+ 	if (ieee80211_is_ctl(hdr->frame_control) ||
+-	    ieee80211_is_nullfunc(hdr->frame_control) ||
+-	    ieee80211_is_qos_nullfunc(hdr->frame_control) ||
++	    ieee80211_is_any_nullfunc(hdr->frame_control) ||
+ 	    is_multicast_ether_addr(hdr->addr1))
+ 		return RX_CONTINUE;
+ 
+@@ -1838,8 +1837,7 @@ ieee80211_rx_h_sta_process(struct ieee80
+ 	 * Drop (qos-)data::nullfunc frames silently, since they
+ 	 * are used only to control station power saving mode.
  	 */
--	if (dma_capable(dev, dev_addr, size) &&
-+	if (dma_capable(dev, dev_addr, size, true) &&
- 	    !range_straddles_page_boundary(phys, size) &&
- 		!xen_arch_need_swiotlb(dev, phys, dev_addr) &&
- 		swiotlb_force != SWIOTLB_FORCE)
-@@ -397,7 +397,7 @@ static dma_addr_t xen_swiotlb_map_page(s
- 	/*
- 	 * Ensure that the address returned is DMA'ble
- 	 */
--	if (unlikely(!dma_capable(dev, dev_addr, size))) {
-+	if (unlikely(!dma_capable(dev, dev_addr, size, true))) {
- 		swiotlb_tbl_unmap_single(dev, map, size, size, dir,
- 				attrs | DMA_ATTR_SKIP_CPU_SYNC);
- 		return DMA_MAPPING_ERROR;
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -25,14 +25,15 @@ static inline phys_addr_t __dma_to_phys(
- 	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
- }
+-	if (ieee80211_is_nullfunc(hdr->frame_control) ||
+-	    ieee80211_is_qos_nullfunc(hdr->frame_control)) {
++	if (ieee80211_is_any_nullfunc(hdr->frame_control)) {
+ 		I802_DEBUG_INC(rx->local->rx_handlers_drop_nullfunc);
  
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
-+static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
-+		bool is_ram)
- {
- 	dma_addr_t end = addr + size - 1;
+ 		/*
+@@ -2319,7 +2317,7 @@ static int ieee80211_drop_unencrypted(st
  
- 	if (!dev->dma_mask)
- 		return false;
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+-		     !ieee80211_is_nullfunc(fc) &&
++		     !ieee80211_is_any_nullfunc(fc) &&
+ 		     ieee80211_is_data(fc) && rx->key))
+ 		return -EACCES;
  
--	if (!IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-+	if (is_ram && !IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
- 	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
- 		return false;
- 
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -327,7 +327,7 @@ static inline bool dma_direct_possible(s
- 		size_t size)
- {
- 	return swiotlb_force != SWIOTLB_FORCE &&
--		dma_capable(dev, dma_addr, size);
-+		dma_capable(dev, dma_addr, size, true);
- }
- 
- dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
-@@ -376,7 +376,7 @@ dma_addr_t dma_direct_map_resource(struc
- {
- 	dma_addr_t dma_addr = paddr;
- 
--	if (unlikely(!dma_capable(dev, dma_addr, size))) {
-+	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
- 		report_addr(dev, dma_addr, size);
- 		return DMA_MAPPING_ERROR;
+--- a/net/mac80211/status.c
++++ b/net/mac80211/status.c
+@@ -643,8 +643,7 @@ static void ieee80211_report_ack_skb(str
+ 		rcu_read_lock();
+ 		sdata = ieee80211_sdata_from_skb(local, skb);
+ 		if (sdata) {
+-			if (ieee80211_is_nullfunc(hdr->frame_control) ||
+-			    ieee80211_is_qos_nullfunc(hdr->frame_control))
++			if (ieee80211_is_any_nullfunc(hdr->frame_control))
+ 				cfg80211_probe_status(sdata->dev, hdr->addr1,
+ 						      cookie, acked,
+ 						      info->status.ack_signal,
+@@ -1030,7 +1029,7 @@ static void __ieee80211_tx_status(struct
+ 			I802_DEBUG_INC(local->dot11FailedCount);
  	}
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -678,7 +678,7 @@ bool swiotlb_map(struct device *dev, phy
  
- 	/* Ensure that the address returned is DMA'ble */
- 	*dma_addr = __phys_to_dma(dev, *phys);
--	if (unlikely(!dma_capable(dev, *dma_addr, size))) {
-+	if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
- 		swiotlb_tbl_unmap_single(dev, *phys, size, size, dir,
- 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
- 		return false;
+-	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
++	if (ieee80211_is_any_nullfunc(fc) &&
+ 	    ieee80211_has_pm(fc) &&
+ 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
+ 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -297,7 +297,7 @@ ieee80211_tx_h_check_assoc(struct ieee80
+ 	if (unlikely(test_bit(SCAN_SW_SCANNING, &tx->local->scanning)) &&
+ 	    test_bit(SDATA_STATE_OFFCHANNEL, &tx->sdata->state) &&
+ 	    !ieee80211_is_probe_req(hdr->frame_control) &&
+-	    !ieee80211_is_nullfunc(hdr->frame_control))
++	    !ieee80211_is_any_nullfunc(hdr->frame_control))
+ 		/*
+ 		 * When software scanning only nullfunc frames (to notify
+ 		 * the sleep state to the AP) and probe requests (for the
 
 
