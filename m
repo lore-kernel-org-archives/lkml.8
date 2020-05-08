@@ -2,108 +2,112 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D03C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DB7C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5C02083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F15D20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgEHOkq (ORCPT
+        id S1728129AbgEHOkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:40:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:57927 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgEHOkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:40:45 -0400
-Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MXp1Q-1jcT0s3K16-00Y70j; Fri, 08 May 2020 16:40:23 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@mellanox.com>,
+        Fri, 8 May 2020 10:40:52 -0400
+Received: from 8bytes.org ([81.169.241.247]:41590 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgEHOkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:40:52 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 404DF423; Fri,  8 May 2020 16:40:50 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] HMM: test: fix CONFIG_DEVICE_PRIVATE dependencies
-Date:   Fri,  8 May 2020 16:40:08 +0200
-Message-Id: <20200508144017.3501418-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:oEjOcKIyUKknp3ml6pCR7GOzJlBrlenpFz/gnnhel3lRHA1e6hl
- DS2ASRlD9j2N1iHIgIV3asc2AeDB6GzjcLfCCqiWUAsOQGn4YuDInwq4yzAeh4m99A6+hb8
- FZfz26uHWWWQS7p8MAyqtMNyxzsEXOIECntwGk8eACceGfVr2eLNt4ElvcNlPzWqdxbP+Yd
- 9NkaaAbgBMRTGiuBJ6ZYQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:21X1C9y4tcM=:aDIGpK/Rrrc4jg1qAbf3ws
- l/fmznTHhXzMCLTLidJ9yTYgm3WEXKNzdMQGA1rnNB/9NqxFfqP/Xv6hTDeGJ/VDUKMD8p38h
- b/e9NjmgYuXQ9WLtDv7JGIBsskQYBg3u9Hp5K5aCu1mS24Ly2MZ7mzosL27uGRn/njo4P4b+M
- GxAhzvTKeVp6KdbVvZbXGu3sRJ3+6TabGFaf422XOE/rxa/EvKLGvRQMHJee/yZ0uWKpIC85T
- cOTgiAMnrq8z44O1ORrfMVefYjvWc+ZvX1zJMUTBZfiZOP0M/Bi6iNm2KdC7Sof9jAoXH2f7W
- vrjSP5qiWxSeQ0CEPwzPRuz2UXjGj2OgOPHogqiLdBowO4z3UeXPlb0i7MQtbDNWMRQC9gF7l
- zJhSo9chC57l7UEMsNyG7WF1JZWvdcACQwk9eHNis0CPW7/EzG2zN9nDrgI62YqYPz6l3j/up
- nPscjodRSYN+g/vti4H7i1l9MJZxE/gHw124lLFxNn1aP/kKFWDk0uneoGYiRyCc9PEwe0IHW
- RqCCxzOoXq4/gR+/lTPNMYSUlT8gMP66edquKyPO5bfVbDpTwnK0lL/7tckiED14yJYXtKY3N
- XWDRCvlMpEWy1Wr07GJ6LC4uv1akdR88oUU/pex8ad7rK0oL0qZjjdHuTjfUF6+IBXvSbt2bN
- GPu9mLnl/nlGgEcH8I4280tg/a2ixcsckoPmPenXYib1zRLuhdmieoKZdWACZEvFcBFnS8eOf
- F/HUijyjD1XcKnifLVgOdq7jGA/QtinS0GdKTUDKS9zagf8CoZaK7swBMsHCZiXtKz89rJLy0
- SE4Yms+h3Mu9fgbGIrt3DdrhBRcpE8LAbRoNLz/EOtvXsqZLU0=
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Date:   Fri,  8 May 2020 16:40:36 +0200
+Message-Id: <20200508144043.13893-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One cannot select DEVICE_PRIVATE when its dependencies are disabled:
+Hi,
 
-WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
-  Depends on [n]: ZONE_DEVICE [=n]
-  Selected by [m]:
-  - TEST_HMM [=m] && RUNTIME_TESTING_MENU [=y] && TRANSPARENT_HUGEPAGE [=y]
-lib/test_hmm.c:480:8: error: implicit declaration of function 'memremap_pages' [-Werror,-Wimplicit-function-declaration]
-        ptr = memremap_pages(&devmem->pagemap, numa_node_id());
-              ^
-lib/test_hmm.c:480:8: note: did you mean 'memcmp_pages'?
-include/linux/mm.h:3082:12: note: 'memcmp_pages' declared here
-extern int memcmp_pages(struct page *page1, struct page *page2);
-           ^
-lib/test_hmm.c:480:6: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Werror,-Wint-conversion]
-        ptr = memremap_pages(&devmem->pagemap, numa_node_id());
-            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/test_hmm.c:1089:4: error: implicit declaration of function 'memunmap_pages' [-Werror,-Wimplicit-function-declaration]
-                        memunmap_pages(&devmem->pagemap);
+after the recent issue with vmalloc and tracing code[1] on x86 and a
+long history of previous issues related to the vmalloc_sync_mappings()
+interface, I thought the time has come to remove it. Please
+see [2], [3], and [4] for some other issues in the past.
 
-Add a dependency from CONFIG_TEST_HMM to ZONE_DEVICE, to disallow
-those broken configurations.
+The patches are based on v5.7-rc4 and add tracking of page-table
+directory changes to the vmalloc and ioremap code. Depending on which
+page-table levels changes have been made, a new per-arch function is
+called: arch_sync_kernel_mappings().
 
-Fixes: 5d5e54be8a1e ("mm/hmm/test: add selftest driver for HMM")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/Kconfig.debug | 1 +
- 1 file changed, 1 insertion(+)
+On x86-64 with 4-level paging, this function will not be called more
+than 64 times in a systems runtime (because vmalloc-space takes 64 PGD
+entries which are only populated, but never cleared).
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d9885fa37cc0..63667d62c9d8 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2262,6 +2262,7 @@ config TEST_MEMINIT
- config TEST_HMM
- 	tristate "Test HMM (Heterogeneous Memory Management)"
- 	depends on TRANSPARENT_HUGEPAGE
-+	depends on ZONE_DEVICE
- 	select DEVICE_PRIVATE
- 	select HMM_MIRROR
- 	select MMU_NOTIFIER
+As a side effect this also allows to get rid of vmalloc faults on x86,
+making it safe to touch vmalloc'ed memory in the page-fault handler.
+Note that this potentially includes per-cpu memory.
+
+The code is tested on x86-64, x86-32 with and without PAE. It also fixes
+the issue described in [1]. Additionally this code has been
+compile-tested on almost all architectures supported by Linux. I
+couldn't find working compilers for hexagon and unicore32, so these are
+not tested.
+
+Please review.
+
+Regards,
+
+	Joerg
+
+[1] https://lore.kernel.org/lkml/20200430141120.GA8135@suse.de/
+[2] https://lore.kernel.org/lkml/20191009124418.8286-1-joro@8bytes.org/
+[3] https://lore.kernel.org/lkml/20190719184652.11391-1-joro@8bytes.org/
+[4] https://lore.kernel.org/lkml/20191126111119.GA110513@gmail.com/
+
+Joerg Roedel (7):
+  mm: Add functions to track page directory modifications
+  mm/vmalloc: Track which page-table levels were modified
+  mm/ioremap: Track which page-table levels were modified
+  x86/mm/64: Implement arch_sync_kernel_mappings()
+  x86/mm/32: Implement arch_sync_kernel_mappings()
+  mm: Remove vmalloc_sync_(un)mappings()
+  x86/mm: Remove vmalloc faulting
+
+ arch/x86/include/asm/pgtable-2level_types.h |   2 +
+ arch/x86/include/asm/pgtable-3level_types.h |   2 +
+ arch/x86/include/asm/pgtable_64_types.h     |   2 +
+ arch/x86/include/asm/switch_to.h            |  23 ---
+ arch/x86/kernel/setup_percpu.c              |   6 +-
+ arch/x86/mm/fault.c                         | 176 +-------------------
+ arch/x86/mm/init_64.c                       |   5 +
+ arch/x86/mm/pti.c                           |   8 +-
+ drivers/acpi/apei/ghes.c                    |   6 -
+ include/asm-generic/5level-fixup.h          |   5 +-
+ include/asm-generic/pgtable.h               |  23 +++
+ include/linux/mm.h                          |  46 +++++
+ include/linux/vmalloc.h                     |  13 +-
+ kernel/notifier.c                           |   1 -
+ lib/ioremap.c                               |  46 +++--
+ mm/nommu.c                                  |  12 --
+ mm/vmalloc.c                                | 109 +++++++-----
+ 17 files changed, 199 insertions(+), 286 deletions(-)
+
 -- 
-2.26.0
+2.17.1
 
