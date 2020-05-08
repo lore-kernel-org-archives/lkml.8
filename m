@@ -2,129 +2,150 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5259DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76687C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 281CA24958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD3F2192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tbu/3oWl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ws3HSrFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgEHDur (ORCPT
+        id S1726906AbgEHDw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 23:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32910 "EHLO
+        Thu, 7 May 2020 23:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEHDur (ORCPT
+        with ESMTP id S1726618AbgEHDw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 23:50:47 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80529C05BD43;
-        Thu,  7 May 2020 20:50:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JGZS6pgTz9sRf;
-        Fri,  8 May 2020 13:50:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588909844;
-        bh=Cmc1FVhoEKlY9s9LgXvIPNjxGWl3kjq2kdUKA+rElg0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Tbu/3oWlfZR1mjXnv3YcFtn8fPEOluy8oRvmFWgRtwSfXDQeR+qA4+NiccqOhIPOY
-         qx29zz3YOITLmF1Q2fUN6mbBMv9Dw01bbh68z+f2G5tZQGpbciSx5EhZKesyZXCvtB
-         fF17nmHg9uu2BJpGS9KcmFjbcfhtPU5X9mK2Du234PEEqkqPInnyM7JcGZ6aWGSx55
-         DXHJstkSYGHbK3lVEbZlcydQ4U6uKc0cbiMT+TegfsQ9dXy/+iq3kVl7snZzr/ArMv
-         3pG0u5BVFMyDoh6GMwZskeO1AaG4BAvLLKIjQzguDAJq0F6lu8/hZo3KXX1yYl0JPQ
-         LHNM5DlBG+DCg==
-Date:   Fri, 8 May 2020 13:50:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
- tree
-Message-ID: <20200508135038.7b6547bd@canb.auug.org.au>
+        Thu, 7 May 2020 23:52:56 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EF8C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 20:52:56 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id g2so285979vsb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 20:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AofEIL6YwXkUVr1SNl6pGav5cBT+5klZGSSb4tIGh2s=;
+        b=Ws3HSrFplgBdKEF0d6Ef/CDW5EwS0mXz/l1DIcB7Yh88VTMzo5MJ1/iiMYqJgvjIps
+         jZg+hxl63XPpkntjE6T09riZ2WW1K61v5WIqxg3xsIhYwQxmE9xabjYObXdDyEBG0BhN
+         8VAe1as355JZIKEi5T6z7jcGg7UCgngipOJMay+JgSZzBvvfdm/Y/HE6PGURFLejYcae
+         Qtj8iGyb6pngMMlDtfEwrZ0/7V8aPDpDm/HfLafQRWixtrEN1tg7Y1xjHAfOIXjAfH69
+         mCETeiAkyA5W7hcljWLKKIu1/rag+QSkJSJ+/oMXE9NhCaqWtxFh2DTEV+zJZmpiIx2X
+         Jxzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AofEIL6YwXkUVr1SNl6pGav5cBT+5klZGSSb4tIGh2s=;
+        b=LdWoJNDLHJuIkABPgTkPzvZt/JA5VubsYqd/+Lg4XWsaZ/NE8mnd8E3htKYnx7pV0K
+         8NPmLZ7hxqn4LhTzuRQ6BUdSGdCwWzLEPE9FIaMOR1jaSzGk5PjwMyDOLQSNnl1oNXcx
+         hpOd4f60M3MyMUy3cVKg0mlmgyTSVKDjpPvGIHLaJLggZaCX7sABD9tuK4YbRoJWnyx9
+         EpJbPQY10TxSxiOYGezGtstyGF0XeMwwk3MwaShX0e+9+bvhsOE6tCr747Na03FOBIhe
+         +P4O+C6bpM1zuxmUKkhBQvFw5paauZogtCey/Y9Gu/5EQA6WZTity6+8bc+ra9my3etj
+         BbuA==
+X-Gm-Message-State: AGi0PuZZn1jiJAlPFxhgv/x5mR9IrCXn43BjaPB40wIkQmrZrSCuE9+3
+        iidsL2ge0LTx3oTVtJ8WY0Bn0q6WGmW0Z18Ee6g60w==
+X-Google-Smtp-Source: APiQypK0VwJrY4iB2MHXq8SKZlSKQAWMfhS/ZAicl7WYe0F28/ri1drVF8Qs2B+UBwYxgSQnt7BKpD8v0MZ88ZPq2H4=
+X-Received: by 2002:a67:302:: with SMTP id 2mr347325vsd.165.1588909975527;
+ Thu, 07 May 2020 20:52:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1K3goufP+ySveH8YfPl.3wn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
+ <CAPDyKFrY0ApUCNL4gVHRc2FRcYaS0PKr_P4a18RUZHxcVceVWg@mail.gmail.com> <CAFBinCAhLiunUvw+BAHnv3XVmmU=Wxs1i=WLAAFL5=Hn0RPOvQ@mail.gmail.com>
+In-Reply-To: <CAFBinCAhLiunUvw+BAHnv3XVmmU=Wxs1i=WLAAFL5=Hn0RPOvQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 8 May 2020 05:52:18 +0200
+Message-ID: <CAPDyKFqO8D-UUvq3Ebtnp73xfD_0kaWBq=75wvFL=4xbK5Zj-g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: meson-mx-sdio: trigger a soft reset after a timeout
+ or CRC error
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tobias Baumann <017623705678@o2online.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1K3goufP+ySveH8YfPl.3wn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 7 May 2020 at 23:14, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Ulf,
+>
+> On Thu, May 7, 2020 at 11:29 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Mon, 4 May 2020 at 00:28, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > >
+> > > The vendor driver (from the 3.10 kernel) triggers a soft reset every
+> > > time before starting a new command. While this fixes a problem where
+> > > SDIO cards are not detected at all (because all commands simply
+> > > timed out) this hurts SD card read performance a bit (in my tests
+> > > between 10% to 20%).
+> > >
+> > > Trigger a soft reset after we got a CRC error or if the previous command
+> > > timed out (just like the vendor driver from the same 3.10 kernel for the
+> > > newer SDHC controller IP does). This fixes detection of SDIO cards and
+> > > doesn't hurt SD card read performance at the same time.
+> > >
+> > > With this patch the initialization of an RTL8723BS SDIO card looks like
+> > > this:
+> > >   req done (CMD52): -110: 00000000 00000000 00000000 00000000
+> > >   clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
+> > >   starting CMD0 arg 00000000 flags 000000c0
+> > >   req done (CMD0): 0: 00000000 00000000 00000000 00000000
+> > >   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
+> > >   starting CMD8 arg 000001aa flags 000002f5
+> > >   req done (CMD8): -110: 00000000 00000000 00000000 00000000
+> > >   starting CMD5 arg 00000000 flags 000002e1
+> > >   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+> > >   starting CMD5 arg 00200000 flags 000002e1
+> > >   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+> > >   starting CMD3 arg 00000000 flags 00000075
+> > >   req done (CMD3): 0: 00010000 00000000 00000000 00000000
+> > >   starting CMD7 arg 00010000 flags 00000015
+> > >   req done (CMD7): 0: 00001e00 00000000 00000000 00000000
+> > >   starting CMD52 arg 00000000 flags 00000195
+> > >   req done (CMD52): 0: 00001032 00000000 00000000 00000000
+> > >   [... more CMD52 omitted ...]
+> > >   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+> > >   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+> > >   starting CMD52 arg 00000e00 flags 00000195
+> > >   req done (CMD52): 0: 00001000 00000000 00000000 00000000
+> > >   starting CMD52 arg 80000e02 flags 00000195
+> > >   req done (CMD52): 0: 00001002 00000000 00000000 00000000
+> > >   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
+> > >   starting CMD52 arg 00020000 flags 00000195
+> > >   req done (CMD52): 0: 00001007 00000000 00000000 00000000
+> > >   [... more CMD52 omitted ...]
+> > >   new high speed SDIO card at address 0001
+> > >
+> > > Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > > ---
+> > > Ulf, I consider this non-critical because as long as the meson-mx-sdhc
+> > > driver is not merged we only have one MMC driver for these platforms.
+> > > I don't know anybody to prefer SDIO wifi over SD card access, so this
+> > > can go into -next (in my option at least).
+> > >
+> >
+> > Alright, applied for next, thanks!
+> thank you for taking this patch!
+>
+> I received a confirmation (off-list) saying that this patch works as it should.
+> Tobias was not Cc'ed on the original mail so he gave me to permission
+> (again, off-list - he's Cc'ed now) to add his:
+> Tested-by: Tobias Baumann <017623705678@o2online.de>
 
-Hi all,
+I will add it next time I rebase my branch, probably on Monday, thanks!
 
-Today's linux-next merge of the drm tree got a conflict in:
-
-  drivers/gpu/drm/i915/gem/i915_gem_domain.c
-
-between commit:
-
-  47bf7b7a7151 ("drm/i915/gem: Remove object_is_locked assertion from unpin=
-_from_display_plane")
-
-from the drm-intel-fixes tree and commit:
-
-  9da0ea09639f ("drm/i915/gem: Drop cached obj->bind_count")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/gem/i915_gem_domain.c
-index 4f96c8788a2e,af43e82f45c7..000000000000
---- a/drivers/gpu/drm/i915/gem/i915_gem_domain.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_domain.c
-@@@ -368,7 -368,8 +368,7 @@@ static void i915_gem_object_bump_inacti
-  	struct drm_i915_private *i915 =3D to_i915(obj->base.dev);
-  	struct i915_vma *vma;
- =20
-- 	if (!atomic_read(&obj->bind_count))
- -	GEM_BUG_ON(!i915_gem_object_has_pinned_pages(obj));
-+ 	if (list_empty(&obj->vma.list))
-  		return;
- =20
-  	mutex_lock(&i915->ggtt.vm.mutex);
-
---Sig_/1K3goufP+ySveH8YfPl.3wn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl601w4ACgkQAVBC80lX
-0GwdVAgAmeyPSkyP3akZ3WA4t5E5ZXWpjmKjiUEI39WPVfg7hkbtiilDlJhl4h0L
-y9F2/mGtpCnITUIvX77XJaNLXc//+oTNxbr8k+MzDNbWzf4Gc9ILTbNMh+TuNFCI
-/vgVvGEn/B6GHPCMlZb7fxG+talqbCSz7iDaKzZXVPymuJNO8RhMZ9zzenoRUzNK
-CInTggZTP+D2N71QxZ1qj5VRA/n5yfbxhQiWXap7rgV39ZEtfE6Z/wGTWU4+Y4m6
-B0f8lLTbj8KjFnlkxrWRxQW8nJy0pot2U/1mjHe9zmCP0hRPc8/pKvu6BSb7aqq9
-2Y8tM9yinStAbQb/cNMcyXyraQzHjg==
-=xa1Z
------END PGP SIGNATURE-----
-
---Sig_/1K3goufP+ySveH8YfPl.3wn--
+Kind regards
+Uffe
