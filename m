@@ -2,105 +2,77 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A00C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA29C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2C120661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEF92070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgEHLSo (ORCPT
+        id S1726946AbgEHLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:18:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42674 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHLSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:18:44 -0400
-IronPort-SDR: stimH1Oq1Vwo/tGPtBr9NJJTTbJNJ/X6d7DHw5RY94xHEtjN8y9hx+t9On7+zwnUpdrPiUSCy/
- 2A0p6wm1mfiw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:18:43 -0700
-IronPort-SDR: BiZcFTMRaL46E4gjmyLn2L68RKXVMFLXr374xd+Cwni8pAAnp7pSvXyUlIsX7gCspUL+cW0eU7
- tehvFA8kf1Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="370428589"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 08 May 2020 04:18:41 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 08 May 2020 14:18:40 +0300
-Date:   Fri, 8 May 2020 14:18:40 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
- SBU/HSL orientation
-Message-ID: <20200508111840.GG645261@kuha.fi.intel.com>
-References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
- <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
- <20200507224041.GA247416@google.com>
+        Fri, 8 May 2020 07:19:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726616AbgEHLTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:19:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9BE995CE615340AAD23F;
+        Fri,  8 May 2020 19:18:58 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 19:18:51 +0800
+Subject: Re: [PATCH v3] tools/bootconfig: fix resource leak in apply_xbc()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Shiyuan Hu" <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
+ <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
+Date:   Fri, 8 May 2020 19:18:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507224041.GA247416@google.com>
+In-Reply-To: <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
 
-On Thu, May 07, 2020 at 03:40:41PM -0700, Prashant Malani wrote:
-> > +static int sbu_orientation(struct pmc_usb_port *port)
-> > +{
-> > +	if (port->sbu_orientation)
-> > +		return port->sbu_orientation - 1;
-> > +
-> > +	return port->orientation - 1;
-> > +}
-> > +
-> > +static int hsl_orientation(struct pmc_usb_port *port)
-> > +{
-> > +	if (port->hsl_orientation)
-> > +		return port->hsl_orientation - 1;
-> > +
-> > +	return port->orientation - 1;
-> > +}
-> > +
-> >  static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
-> >  {
-> >  	u8 response[4];
-> > @@ -151,8 +170,9 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
-> >  
-> >  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
-> >  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
-> > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
-> > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
-> > +
-> > +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+
+On 2020/5/8 19:03, Markus Elfring wrote:
+> …
+>> +++ b/tools/bootconfig/main.c
+>> @@ -314,31 +314,35 @@ int apply_xbc(const char *path, const char *xbc_path)
+> …
+>> +free_data:
+>>  	free(data);
+> …
 > 
-> I'm curious to know what would happen when sbu-orientation == "normal".
-> That means |port->sbu_orientation| == 1.
+> Would any software users prefer to omit the memory release for
+> a quicker program termination?
 > 
-> It sounds like what should happen is the AUX_SHIFT orientation
-> setting should follow what |port->orientation| is, but here it
-> looks like it will always be set to |port->sbu_orientation - 1|, i.e 0,
-> even if port->orientation == TYPEC_ORIENTATION_REVERSE, i.e 2, meaning
-> it should be set to 1 ?
+> Can the commit message become clearer about the explanation for
+> the importance of the proposed change?
+> 
+ok, thanks. this change can fix the warning of tools.
 
-I'll double check this, and get back to you..
+> Regards,
+> Markus
+> 
+> 
 
-Thanks a lot for reviewing this. If you guys have time, then please
-check also that the documentation I'm proposing in patch 3/4 for this
-driver has everything explained clearly enough, and nothing is missing.
-
-Br,
-
--- 
-heikki
