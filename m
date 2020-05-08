@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1903C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B829C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B89FC2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4421A206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942960;
-	bh=0x3kQkUa8Zh85K1c8F16CnNNrJ+HlYowwG8mn5Ij7sw=;
+	s=default; t=1588942966;
+	bh=/n8bR6qEQEFiWRHggcyYjAzLLFE0mHLo93NI3PBUp94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPm2Bl3KuVi/xj6aUM/V1cd6nxLguXab1rOGQCEaZQ1ngKyk8VNQSjYS+g3Wo6wOt
-	 hl+l/gjG6rkZXJld3Y/z1vq1YQUwiSY7tFWPaYxwsOjSHpWVseodJWrKWPeeVYHOAC
-	 WyQ/g9yhBx4zUOfDJurCh/sbQR9xpKrznncUdHIs=
+	b=cdt/qeNGFe2un9EZwBiKD40cp2Xz8KwdwgesDy72hA4MODzB5kr8bvR3ivQyOZBxd
+	 LAO7K7mYfQ4piXa+EXlVukrUC28qbtIQ1rhgyf7hQGZhiKbk3/poPSn3A2h5yEjHjE
+	 LrRIdeYOF+XH0iDex5tpsbd2UM9zoCihoQm1P4RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgEHMul (ORCPT
+        id S1729811AbgEHNCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbgEHMuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:13 -0400
+        id S1728171AbgEHMuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9164124958;
-        Fri,  8 May 2020 12:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61B424954;
+        Fri,  8 May 2020 12:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942213;
-        bh=0x3kQkUa8Zh85K1c8F16CnNNrJ+HlYowwG8mn5Ij7sw=;
+        s=default; t=1588942240;
+        bh=/n8bR6qEQEFiWRHggcyYjAzLLFE0mHLo93NI3PBUp94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBf8kPXFtA/75qngUfP7xuhEWCuwSUNlvclFBd2LPwz+NG/OyDYY42Way/7cassuO
-         Br8tAH+qzVHaGKoXfPrHMinu9+2PH0xZfvSNESjHBMMABl+4J0SIWohXv2cnVcjdDH
-         UsXzXYro0jNr2eEzVhjlcYwJB6tCOMtbpyW4FPrQ=
+        b=VKPb+wWUOu+Qd6TDON/KUtOZhdzc7DGoIxoaat+Vw4FDRzfHgN+HuFQg+9BnWrXs8
+         MuxZUtPCCe9wbl6RgspDYDsTX6zPeQKNnS0tOJWcpWMcpXIJl/9vBHrXIFsnX6X/pk
+         HNsWAeAa7YlyLl9guARRUx/CLoSoLH/wiywDXjnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/22] cifs: protect updating server->dstaddr with a spinlock
-Date:   Fri,  8 May 2020 14:35:23 +0200
-Message-Id: <20200508123035.271450729@linuxfoundation.org>
+Subject: [PATCH 4.14 03/22] ASoC: topology: Check return value of pcm_new_ver
+Date:   Fri,  8 May 2020 14:35:15 +0200
+Message-Id: <20200508123034.315432739@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
@@ -61,37 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
+[ Upstream commit b3677fc3d68dd942c92de52f0bd9dd8b472a40e6 ]
 
-We use a spinlock while we are reading and accessing the destination address for a server.
-We need to also use this spinlock to protect when we are modifying this address from
-reconn_set_ipaddr().
+Function pcm_new_ver can fail, so we should check it's return value and
+handle possible error.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200327204729.397-6-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 697edc92dff27..58e7288e5151c 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -348,8 +348,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
- 		return rc;
- 	}
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index a215b9ad148c4..50aa45525be5a 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1954,7 +1954,9 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
+ 			_pcm = pcm;
+ 		} else {
+ 			abi_match = false;
+-			pcm_new_ver(tplg, pcm, &_pcm);
++			ret = pcm_new_ver(tplg, pcm, &_pcm);
++			if (ret < 0)
++				return ret;
+ 		}
  
-+	spin_lock(&cifs_tcp_ses_lock);
- 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
- 				  strlen(ipaddr));
-+	spin_unlock(&cifs_tcp_ses_lock);
- 	kfree(ipaddr);
- 
- 	return !rc ? -1 : 0;
+ 		/* create the FE DAIs and DAI links */
 -- 
 2.20.1
 
