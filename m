@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1066C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C50C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B025524966
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47FC206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943880;
-	bh=rIvUnN0qPCeX6EYEn5S5OcwALRbUK6B/Lh0xuvzRDXg=;
+	s=default; t=1588943883;
+	bh=o09AbihFk1U8cZaNVlDxAFf6s2POqISJ26OQPdbCOUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qX0wJ1mo4dChViza1f+qIVoi9ZIO6zbcmT5qlwfuHsjbcyAByycMGTWQk3T4hPJJ+
-	 /Y7wRtHPRsmsgYh2kp1Bw8Yg/UZ08IroBQyFAQggvHdrc32wh98stSKJ8+PG1NQFMA
-	 nfLjJBcEzpP75Af+RqUJehj63zuExFkwDOBZ5JuI=
+	b=Zz1qp3O8B84O/lEhjlUD1cWBdHDYgkfAWdYoGyyYyJL1HjM8U7M8834sYMEsbMOe+
+	 qCJRxv7HgFC0hksY3Zo7lVDDUEGHwd++R3L/lknycE945HsNxXUdjPAMQY85i8aEfG
+	 BufsfXsF+jKdR216xQXxk1AIuZSVOjXAK8PiQKOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgEHNR7 (ORCPT
+        id S1729079AbgEHMn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41380 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbgEHMnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:33 -0400
+        id S1728628AbgEHMnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4631224978;
-        Fri,  8 May 2020 12:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B94624973;
+        Fri,  8 May 2020 12:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941812;
-        bh=rIvUnN0qPCeX6EYEn5S5OcwALRbUK6B/Lh0xuvzRDXg=;
+        s=default; t=1588941800;
+        bh=o09AbihFk1U8cZaNVlDxAFf6s2POqISJ26OQPdbCOUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhzMWv7QRdBMuMilMOSZE25fttjVc+vzuuNep4gZLzCC+y5nH9O+k3/bJ2JkwBhl/
-         4mDySXSs/bBJFRY75w3v6B4vCk5HwOmOPDdpaySVJIE0BZJsBumkU5M+6iiP8XHkgD
-         o46bj6XiYwfEEgAPz4oUlCpBAWxeP17hzxcz9XVo=
+        b=NTadYBaYnE7aoj/586UqtVDXHvw/7zd4tMmW3bW8UYL2miGxCBnhwan5UpAl/qiUi
+         Je/Cw+MAdInQxaQ0WnqFSCMvsCCLRNvQP36EP2Y8by5eB07mQ4oKIUeE0bgKGe9ZiM
+         HKzCEZnL35XX+BWoYyPi2dT0BkspQtVG/6Xo0PGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 181/312] qlcnic: potential NULL dereference in qlcnic_83xx_get_minidump_template()
-Date:   Fri,  8 May 2020 14:32:52 +0200
-Message-Id: <20200508123137.216615221@linuxfoundation.org>
+        Milo Kim <milo.kim@ti.com>, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.4 176/312] mfd: lp8788-irq: Uninitialized variable in irq handler
+Date:   Fri,  8 May 2020 14:32:47 +0200
+Message-Id: <20200508123136.871251981@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,43 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 5f46feab87bb105d6a217d966b327fdc56696802 upstream.
+commit 22aab38e7b59fd79ce1045006be69a9abab58e5a upstream.
 
-If qlcnic_fw_cmd_get_minidump_temp() fails then "fw_dump->tmpl_hdr" is
-NULL or possibly freed.  It can lead to an oops later.
+Instead to being true/false, the "handled" is true/uninitialized.
+Presumably this doesn't cause that many problems in real life because
+normally we handle the IRQ.
 
-Fixes: d01a6d3c8ae1 ('qlcnic: Add support to enable capability to extend minidump for iSCSI')
+Fixes: eea6b7cc53aa ('mfd: Add lp8788 mfd driver')
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Milo Kim <milo.kim@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/mfd/lp8788-irq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-@@ -1419,6 +1419,7 @@ void qlcnic_83xx_get_minidump_template(s
- 	struct qlcnic_fw_dump *fw_dump = &ahw->fw_dump;
- 	struct pci_dev *pdev = adapter->pdev;
- 	bool extended = false;
-+	int ret;
+--- a/drivers/mfd/lp8788-irq.c
++++ b/drivers/mfd/lp8788-irq.c
+@@ -112,7 +112,7 @@ static irqreturn_t lp8788_irq_handler(in
+ 	struct lp8788_irq_data *irqd = ptr;
+ 	struct lp8788 *lp = irqd->lp;
+ 	u8 status[NUM_REGS], addr, mask;
+-	bool handled;
++	bool handled = false;
+ 	int i;
  
- 	prev_version = adapter->fw_version;
- 	current_version = qlcnic_83xx_get_fw_version(adapter);
-@@ -1429,8 +1430,11 @@ void qlcnic_83xx_get_minidump_template(s
- 		if (qlcnic_83xx_md_check_extended_dump_capability(adapter))
- 			extended = !qlcnic_83xx_extend_md_capab(adapter);
- 
--		if (!qlcnic_fw_cmd_get_minidump_temp(adapter))
--			dev_info(&pdev->dev, "Supports FW dump capability\n");
-+		ret = qlcnic_fw_cmd_get_minidump_temp(adapter);
-+		if (ret)
-+			return;
-+
-+		dev_info(&pdev->dev, "Supports FW dump capability\n");
- 
- 		/* Once we have minidump template with extended iSCSI dump
- 		 * capability, update the minidump capture mask to 0x1f as
+ 	if (lp8788_read_multi_bytes(lp, LP8788_INT_1, status, NUM_REGS))
 
 
