@@ -4,90 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FE5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3C8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982FD20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD7E208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgEHGuV (ORCPT
+        id S1726770AbgEHGvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:50:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33446 "EHLO huawei.com"
+        Fri, 8 May 2020 02:51:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48270 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbgEHGuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:50:21 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D6EC0D4A70CC61C5C7D9;
-        Fri,  8 May 2020 14:50:15 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 8 May 2020
- 14:50:11 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: remove race condition in releasing
- cblocks
-To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-CC:     Daeho Jeong <daehojeong@google.com>
-References: <20200508042506.143395-1-daeho43@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <4dfb73d9-03a0-bb2f-a112-1dd42db4d7bb@huawei.com>
-Date:   Fri, 8 May 2020 14:50:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725971AbgEHGvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 02:51:24 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5A4FDF0DB85854F959CA;
+        Fri,  8 May 2020 14:51:22 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 14:51:16 +0800
+To:     <mhiramat@kernel.org>, <rostedt@goodmis.org>,
+        <linux-kernel@vger.kernel.org>, <Markus.Elfring@web.de>,
+        <rostedt@goodmis.org>, <kernel-janitors@vger.kernel.org>,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH v2] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <189d719f-a8b8-6e10-ae2f-8120c3d2b7a9@huawei.com>
+Date:   Fri, 8 May 2020 14:51:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20200508042506.143395-1-daeho43@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+X-Originating-IP: [10.166.215.237]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/8 12:25, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> Now, if writing pages and releasing compress blocks occur
-> simultaneously, and releasing cblocks is executed more than one time
-> to a file, then total block count of filesystem and block count of the
-> file could be incorrect and damaged.
-> 
-> We have to execute releasing compress blocks only one time for a file
-> without being interfered by writepages path.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> ---
->  fs/f2fs/file.c | 31 ++++++++++++++++++++++++-------
->  1 file changed, 24 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 4aab4b42d8ba..a92bc51b9b28 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3488,6 +3488,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->  	pgoff_t page_idx = 0, last_idx;
->  	unsigned int released_blocks = 0;
->  	int ret;
-> +	int writecount;
->  
->  	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
->  		return -EOPNOTSUPP;
+Fix the @data and @fd allocations that are leaked in the error path of
+apply_xbc().
 
-Before inode_lock(), there is one case we may jump to out label, in
-this case, we may unlock inode incorrectly.
+Fixes: 85c46b78da58 ("bootconfig: Add bootconfig magic word for indicating bootconfig explicitly")
+Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/bootconfig/main.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-	if (!F2FS_I(inode)->i_compr_blocks)
-		goto out;
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 16b9a420e6fd..d034f86022b7 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -314,31 +314,33 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	ret = delete_xbc(path);
+ 	if (ret < 0) {
+ 		pr_err("Failed to delete previous boot config: %d\n", ret);
+-		return ret;
++		goto free_data;
+ 	}
 
-> -
-> -	inode_unlock(inode);
->  out:
-> +	inode_unlock(inode);
-> +
->  	mnt_drop_write_file(filp);
+ 	/* Apply new one */
+ 	fd = open(path, O_RDWR | O_APPEND);
+ 	if (fd < 0) {
+ 		pr_err("Failed to open %s: %d\n", path, fd);
+-		return fd;
++		ret = fd;
++		goto free_data;
+ 	}
+ 	/* TODO: Ensure the @path is initramfs/initrd image */
+ 	ret = write(fd, data, size + 8);
+ 	if (ret < 0) {
+ 		pr_err("Failed to apply a boot config: %d\n", ret);
+-		return ret;
++		goto close_fd;
+ 	}
+ 	/* Write a magic word of the bootconfig */
+ 	ret = write(fd, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		pr_err("Failed to apply a boot config magic: %d\n", ret);
+-		return ret;
+-	}
++
++close_fd:
+ 	close(fd);
++free_data:
+ 	free(data);
 
-Thanks,
+-	return 0;
++	return ret;
+ }
+
+ int usage(void)
+-- 
+1.8.3.1
+
