@@ -2,114 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1F8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD38C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E1F221F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8522124958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588942091;
+	bh=1tUFM6fNGiDqtCHQbKjTGwJSyZBHktSvZBFVdBsQkYw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Rd/1TfDZILcPHDj8qSz/vDoXht4zuzNo4d4cNlQLzStxujrxRvbK8VuCWfGwMwQ3I
+	 JqpW6clcoDDo7L3Wfnro/gU0DRb6RZVXtIccA5J6CVI3pmfxbA1JtqlFYEHOSazuvT
+	 Q8AfdHb/RApcNdCLvOjFa96vXcrcG0KsqaeQkq6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgEHMsG (ORCPT
+        id S1728835AbgEHMsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:48:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2167 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729607AbgEHMr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:58 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 708D1EDF60E665A57672;
-        Fri,  8 May 2020 13:47:56 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 13:47:55 +0100
-Date:   Fri, 8 May 2020 13:47:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Input <linux-input@vger.kernel.org>
-Subject: Re: [PATCH 0/5] iio: accel: Add bma023 support to bma180
-Message-ID: <20200508134733.0000233a@Huawei.com>
-In-Reply-To: <BN6PR04MB0660BD7ABF64EC0C19A65A03A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
-References: <BN6PR04MB0660046ABD79433EA94A85A9A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-        <CACRpkdbb89q2FRJZ1=2QoQs8JFYcwWpNZwJUbnjsVvZYEE-LKw@mail.gmail.com>
-        <BN6PR04MB0660BD7ABF64EC0C19A65A03A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 08:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729602AbgEHMr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E73F6221F7;
+        Fri,  8 May 2020 12:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942076;
+        bh=1tUFM6fNGiDqtCHQbKjTGwJSyZBHktSvZBFVdBsQkYw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Kh3QMsNop0zc3b4+YFrYG23DvWZJYPryeCwxNG014yHzaywwV54y8GUExBJ3aUC2Z
+         8VbMomP0CJJXshX2aLEK0Lw1h1GzNBuxOOAT8ZtxNz1IWccDgL/pcfxf9HoJmHvPd7
+         KHv4BE35xfn78EiwtHtHICSMT0x0NUTggbh9WkkE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 288/312] net: macb: replace macb_writel() call by queue_writel() to update queue ISR
+Date:   Fri,  8 May 2020 14:34:39 +0200
+Message-Id: <20200508123144.643175909@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:49:17 -0700
-Jonathan Bakker <xc-racer2@live.ca> wrote:
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 
-> Hi Linus,
-> 
-> On 2020-05-06 5:47 a.m., Linus Walleij wrote:
-> > On Sun, May 3, 2020 at 7:22 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
-> >   
-> >> This patchset adds support for the bma023 three axis accelerometer
-> >> to the bma180 IIO driver.  The bma023 is found on several ~2010
-> >> phones, including the first-gen Galaxy S series.
-> >>
-> >> The bma023 differs from later chips (bma180, bma25x) in that it
-> >> has no low power but still working mode and no temperature
-> >> channel.
-> >>
-> >> The bma023 is already supported by a misc input driver (bma150), so
-> >> when both are enabled, the iio driver is preferred.  The bma150
-> >> is very similar to the bma023, but has a temperature channel.
-> >> Support for the bma150 is not added in this patchset.  
-> > 
-> > I'd say, if it's not too much trouble please also patch in
-> > support for BMA150 and SMB380 to the IIO driver so
-> > we can delete this old Input driver, we have done this
-> > before and thes "input drivers" are just causing headaches
-> > and wasting time for the Input maintainer.
-> >   
-> 
-> Looking at the bma150, it looks the same.  The temperature is implemented
-> slightly differently than on the bma180+ (unsigned vs signed) but should
-> be quite easy to add.  I'll add a new patch for it in v2.
+commit ba5049945421b8d2f3e2af786a15d13b82316503 upstream.
 
-Great.  Series looks fine to me as well, so should be fine to apply v2.
-(subject to Dmitry Ack).
+macb_interrupt() should not use macb_writel(bp, ISR, <value>) but only
+queue_writel(queue, ISR, <value>).
 
-Jonathan
+There is one IRQ and one set of {ISR, IER, IDR, IMR} [1] registers per
+queue on gem hardware, though only queue0 is actually used for now to
+receive frames: other queues can already be used to transmit frames.
 
-> 
-> > It can be in a separate patch set from this one if you
-> > don't want to get stuck on this.
-> > 
-> > Yours,
-> > Linus Walleij
-> >   
-> 
-> Thanks,
-> Jonathan
+The queue_readl() and queue_writel() helper macros are designed to access
+the relevant IRQ registers.
+
+[1]
+ISR: Interrupt Status Register
+IER: Interrupt Enable Register
+IDR: Interrupt Disable Register
+IMR: Interrupt Mask Register
+
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Fixes: bfbb92c44670 ("net: macb: Handle the RXUBR interrupt on all devices")
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/net/ethernet/cadence/macb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -1104,7 +1104,7 @@ static irqreturn_t macb_interrupt(int ir
+ 			macb_writel(bp, NCR, ctrl | MACB_BIT(RE));
+ 
+ 			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+-				macb_writel(bp, ISR, MACB_BIT(RXUBR));
++				queue_writel(queue, ISR, MACB_BIT(RXUBR));
+ 		}
+ 
+ 		if (status & MACB_BIT(ISR_ROVR)) {
 
 
