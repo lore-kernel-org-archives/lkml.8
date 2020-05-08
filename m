@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19AC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3DCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4082424955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDB024955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgEHOI3 (ORCPT
+        id S1727119AbgEHOJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:08:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4307 "EHLO huawei.com"
+        Fri, 8 May 2020 10:09:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43014 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727882AbgEHOI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:08:27 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 827FE8275CCD21E11AD5;
-        Fri,  8 May 2020 22:08:17 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 22:08:10 +0800
+        id S1726817AbgEHOJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:09:26 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5CB18DFBFAE8AAA0CC89;
+        Fri,  8 May 2020 22:09:24 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 22:09:15 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <x86@kernel.org>, <hpa@zytor.com>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] x86/ioapic: Remove unused inline function mp_init_irq_at_boot
-Date:   Fri, 8 May 2020 22:08:08 +0800
-Message-ID: <20200508140808.49428-1-yuehaibing@huawei.com>
+To:     <leoyang.li@nxp.com>, <roy.pledge@nxp.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: fsl: qbman: Remove unused inline function qm_eqcr_get_ci_stashing
+Date:   Fri, 8 May 2020 22:08:46 +0800
+Message-ID: <20200508140846.47608-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,38 +43,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree anymore since commit
-ef9e56d894ea ("x86/ioapic: Remove obsolete post hotplug update")
+There's no callers in-tree anymore.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/kernel/apic/io_apic.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/soc/fsl/qbman/qman.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 913c88617848..ce61e3e7d399 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -154,19 +154,6 @@ static inline bool mp_is_legacy_irq(int irq)
- 	return irq >= 0 && irq < nr_legacy_irqs();
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index 1e164e03410a..9888a7061873 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -449,11 +449,6 @@ static inline int qm_eqcr_init(struct qm_portal *portal,
+ 	return 0;
  }
  
--/*
-- * Initialize all legacy IRQs and all pins on the first IOAPIC
-- * if we have legacy interrupt controller. Kernel boot option "pirq="
-- * may rely on non-legacy pins on the first IOAPIC.
-- */
--static inline int mp_init_irq_at_boot(int ioapic, int irq)
+-static inline unsigned int qm_eqcr_get_ci_stashing(struct qm_portal *portal)
 -{
--	if (!nr_legacy_irqs())
--		return 0;
--
--	return ioapic == 0 || mp_is_legacy_irq(irq);
+-	return (qm_in(portal, QM_REG_CFG) >> 28) & 0x7;
 -}
 -
- static inline struct irq_domain *mp_ioapic_irqdomain(int ioapic)
+ static inline void qm_eqcr_finish(struct qm_portal *portal)
  {
- 	return ioapics[ioapic].irqdomain;
+ 	struct qm_eqcr *eqcr = &portal->eqcr;
 -- 
 2.17.1
 
