@@ -2,131 +2,174 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811B5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B0224956
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AQt+ZF9/"
+	by mail.kernel.org (Postfix) with ESMTP id 81CC2214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgEHQ3r (ORCPT
+        id S1727769AbgEHQeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgEHQ3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:29:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DC8C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 09:29:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so2600106wrx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 09:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+iuOH/WKVgDwlOpqLtEZz1Xk/okLvZZF5WbQRpij0D4=;
-        b=AQt+ZF9/H2qk/OzomabTHPI7WvMlnn1Z6hG6gqNJIe5EizYLqFoDrDWpINidOLAgaq
-         qkxTNC5J00AzTlAZQvnF/dbaHsDAfE/fqpCtkW3hlE9kjdjAD2q5eUUncCpBNBKPnrdk
-         2wk+lL8bnj8EForOpu5KW38XHvLpS//BMB7EkbmGLPrMNq3FjPdICxV0v9XVmU+jc4kp
-         1fEPrrVGBkose3eZ3JXKQscdx2Fq7231IQxf8FdX6I8EeAomwFNy7dhjmQ01wP6ryr5h
-         eH5eNWJrEHOenSXHxlSlCIxzCFu3/8/Fr8Nu6qAxo7p87nmqcfk0mWMEd+JSCV8IHaUm
-         FvRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+iuOH/WKVgDwlOpqLtEZz1Xk/okLvZZF5WbQRpij0D4=;
-        b=qZkIYPdLVKVyf6NGNgcDYG5DEj1ARxc6ENPjbuAtcD1YtthDFHNqyCmoMRmqIVpCq5
-         bSyP0VFSHqw4dBfvK3OgKHfH+LHqgmIBHwW7KTuLXUYd3m+sd3R4w4Xatgyy71cm/F4X
-         /DNKhtlw424UKJ789wa4rZLBOYkN2vPapXwZ1fodov3IMYt9NcsNYGVSP5Af6pGDBfOr
-         /B0vfXuHyq2G3O+KJYJHYb1Ywjsy3FU2iroMfabLiBvZ1AVtqk3IiiTpJFpMCY4LMoAZ
-         Db6dEDKH5Sko9bK9d4nZZC3aesg5aPkr8uKQlVCA6wlSVamkgUraPhOePr0rqD8F1rQF
-         hpVg==
-X-Gm-Message-State: AGi0PuY1r7ioY1/3UWWEnwSLYrpBDXYb1gz41m6/Z03YrxBBdHUDGeuY
-        PiYTSDmTA6bGKnfcysTItotZ0w==
-X-Google-Smtp-Source: APiQypIvwEN8ANKN3qCA5nhSd3XIXtCZSkyca1PpubPK0GASNJT8ODNwqlF/DEWhTVLbHg8aa6qFlA==
-X-Received: by 2002:a5d:61c5:: with SMTP id q5mr3933822wrv.398.1588955384626;
-        Fri, 08 May 2020 09:29:44 -0700 (PDT)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id w15sm3602749wrl.73.2020.05.08.09.29.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 09:29:43 -0700 (PDT)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, bryan.odonoghue@linaro.org
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        chenqiwu <chenqiwu@xiaomi.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: roles: Switch on role-switch uevent reporting
-Date:   Fri,  8 May 2020 17:29:37 +0100
-Message-Id: <20200508162937.2566818-1-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 8 May 2020 12:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgEHQeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:34:00 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E72C20CC7;
+        Fri,  8 May 2020 16:33:59 +0000 (UTC)
+Date:   Fri, 8 May 2020 11:38:26 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] tpm: eventlog: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200508163826.GA768@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now we don't report to user-space a role switch when doing a
-usb_role_switch_set_role() despite having registered the uevent callbacks.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-This patch switches on the notifications allowing user-space to see
-role-switch change notifications and subsequently determine the current
-controller data-role.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-example:
-PFX=/devices/platform/soc/78d9000.usb/ci_hdrc.0
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-root@somebox# udevadm monitor -p
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-KERNEL[49.894994] change $PFX/usb_role/ci_hdrc.0-role-switch (usb_role)
-ACTION=change
-DEVPATH=$PFX/usb_role/ci_hdrc.0-role-switch
-SUBSYSTEM=usb_role
-DEVTYPE=usb_role_switch
-USB_ROLE_SWITCH=ci_hdrc.0-role-switch
-SEQNUM=2432
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Cc: chenqiwu <chenqiwu@xiaomi.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+Also, the following issue shows up due to the flexible-array member
+having incomplete type[4]:
+
+drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_bios_measurements_start’:
+drivers/char/tpm/eventlog/tpm2.c:54:46: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
+   54 |  size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
+      |                                              ^
+drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_bios_measurements_next’:
+drivers/char/tpm/eventlog/tpm2.c:102:10: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
+  102 |    sizeof(event_header->event) + event_header->event_size;
+      |          ^
+drivers/char/tpm/eventlog/tpm2.c: In function ‘tpm2_binary_bios_measurements_show’:
+drivers/char/tpm/eventlog/tpm2.c:140:10: error: invalid application of ‘sizeof’ to incomplete type ‘u8[]’ {aka ‘unsigned char[]’}
+  140 |    sizeof(event_header->event) + event_header->event_size;
+      |          ^
+scripts/Makefile.build:266: recipe for target 'drivers/char/tpm/eventlog/tpm2.o' failed
+make[3]: *** [drivers/char/tpm/eventlog/tpm2.o] Error 1
+
+As mentioned above: "Flexible array members have incomplete type, and
+so the sizeof operator may not be applied. As a quirk of the original
+implementation of zero-length arrays, sizeof evaluates to zero."[1] As
+in "sizeof(event_header->event) always evaluated to 0, so removing it
+has no effect".
+
+Lastly, make use of the struct_size() helper to deal with the
+flexible array member and its host structure.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+[4] https://github.com/KSPP/linux/issues/43
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/usb/roles/class.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Changes in v2:
+ - Update changelog text.
+ - Make use of the struct_size() helper.
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 5b17709821df..27d92af29635 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -49,8 +49,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
+ drivers/char/tpm/eventlog/tpm2.c | 12 +++++-------
+ include/linux/tpm_eventlog.h     |  2 +-
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
+index e741b1157525..37a05800980c 100644
+--- a/drivers/char/tpm/eventlog/tpm2.c
++++ b/drivers/char/tpm/eventlog/tpm2.c
+@@ -51,8 +51,7 @@ static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
+ 	int i;
  
- 	ret = sw->set(sw, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE);
-+	}
+ 	event_header = addr;
+-	size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
+-		+ event_header->event_size;
++	size = struct_size(event_header, event, event_header->event_size);
  
- 	mutex_unlock(&sw->lock);
+ 	if (*pos == 0) {
+ 		if (addr + size < limit) {
+@@ -98,8 +97,8 @@ static void *tpm2_bios_measurements_next(struct seq_file *m, void *v,
+ 	event_header = log->bios_event_log;
  
+ 	if (v == SEQ_START_TOKEN) {
+-		event_size = sizeof(struct tcg_pcr_event) -
+-			sizeof(event_header->event) + event_header->event_size;
++		event_size = struct_size(event_header, event,
++					 event_header->event_size);
+ 		marker = event_header;
+ 	} else {
+ 		event = v;
+@@ -136,9 +135,8 @@ static int tpm2_binary_bios_measurements_show(struct seq_file *m, void *v)
+ 	size_t size;
+ 
+ 	if (v == SEQ_START_TOKEN) {
+-		size = sizeof(struct tcg_pcr_event) -
+-			sizeof(event_header->event) + event_header->event_size;
+-
++		size = struct_size(event_header, event,
++				   event_header->event_size);
+ 		temp_ptr = event_header;
+ 
+ 		if (size > 0)
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index c253461b1c4e..4f8c90c93c29 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -97,7 +97,7 @@ struct tcg_pcr_event {
+ 	u32 event_type;
+ 	u8 digest[20];
+ 	u32 event_size;
+-	u8 event[0];
++	u8 event[];
+ } __packed;
+ 
+ struct tcg_event_field {
 -- 
-2.25.1
+2.26.2
 
