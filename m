@@ -2,63 +2,83 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14F3C54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F02C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 885F921841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C6721841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588967511;
+	bh=OVuxbhvIBcgPH7Y4k3MgKcgqbkz0nC6rL/mG3dUjm74=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=R5LMbzYF3x3t4hYLq/OFDQzCRLz4zBh4bXsDi2nt8tKGmyRXaIyf8B2EOzbyghaCq
+	 adPwMLoQpaoazC3myeSFntWG5KGS4lCAtiNyNyI/51bcd01lkcvUR0porYvKil+11W
+	 sY6hQOEWv3Gmeo6tsDDUrMQrCdN4cBrqmW4EOs6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgEHTvf (ORCPT
+        id S1727810AbgEHTvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:51:35 -0400
-Received: from verein.lst.de ([213.95.11.211]:54154 "EHLO verein.lst.de"
+        Fri, 8 May 2020 15:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHTve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:51:34 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6EAA068C7B; Fri,  8 May 2020 21:51:30 +0200 (CEST)
-Date:   Fri, 8 May 2020 21:51:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@linuxfoundation.org>, willy@infradead.org
-Subject: Re: [PATCH 4/6] mm/hmm: add output flag for compound page mapping
-Message-ID: <20200508195129.GA19740@lst.de>
-References: <20200508192009.15302-1-rcampbell@nvidia.com> <20200508192009.15302-5-rcampbell@nvidia.com>
+        id S1726767AbgEHTvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:51:49 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A4C221841;
+        Fri,  8 May 2020 19:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588967509;
+        bh=OVuxbhvIBcgPH7Y4k3MgKcgqbkz0nC6rL/mG3dUjm74=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zW7UOjMShQ7VFDxfSzaTkEdRzsFE7ct+vlTB+aXDLItfvmWcphWrIJ6zA4HCOkWr0
+         WvPIDdW/c3fO/tMBlBcNIED2dpCYmtM3nMNKDhwJ+MPxiAGci+U6lyjuJrThhBJeVq
+         gX2kobL5dy2G4mySR6pCYeMOhzSwZ9JtKnolJoI0=
+Received: by pali.im (Postfix)
+        id 350837F5; Fri,  8 May 2020 21:51:47 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ipw2x00: Fix comment for CLOCK_BOOTTIME constant
+Date:   Fri,  8 May 2020 21:51:39 +0200
+Message-Id: <20200508195139.20078-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508192009.15302-5-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:20:07PM -0700, Ralph Campbell wrote:
-> hmm_range_fault() returns an array of page frame numbers and flags for
-> how the pages are mapped in the requested process' page tables. The PFN
-> can be used to get the struct page with hmm_pfn_to_page() and the page size
-> order can be determined with compound_order(page) but if the page is larger
-> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
-> using a larger page size. To be fully general, hmm_range_fault() would need
-> to return the mapping size to handle cases like a 1GB compound page being
-> mapped with 2MB PMD entries. However, the most common case is the mapping
-> size the same as the underlying compound page size.
-> Add a new output flag to indicate this so that callers know it is safe to
-> use a large device page table mapping if one is available.
+Correct name of constant is CLOCK_BOOTTIME and not CLOCK_BOOTIME.
 
-Why do you need the flag?  The caller should be able to just use
-page_size() (or willys new thp_size helper).
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.h b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
+index 4346520545c4..91864e146761 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.h
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
+@@ -1329,7 +1329,7 @@ struct ipw_priv {
+ 
+ 	s8 tx_power;
+ 
+-	/* Track time in suspend using CLOCK_BOOTIME */
++	/* Track time in suspend using CLOCK_BOOTTIME */
+ 	time64_t suspend_at;
+ 	time64_t suspend_time;
+ 
+-- 
+2.20.1
 
