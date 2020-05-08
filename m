@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7495C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567F3C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0054206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CE7206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942795;
-	bh=r2EjWEVUPezkNE5CyIxnKq1/Poy/iWkkjjfp4PKowvA=;
+	s=default; t=1588942801;
+	bh=Cqr8eghnHCwYfy32Xoq0YNy2OmKR9+KhkhznVTmFUrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WxSkuIt6Qq8PRrvduQFv4F1hPk7LgyjWIZSvT9v2s6t7KpvUSbgitxwT5MPCxCHva
-	 idSb6nFCpCKK6QIA9pz0WqaqRh9km+VBG0JU49p/8HX4RSA8jooBDXoeVkuaxR8+BG
-	 DfCuW8vpxe9pEeUw6bE/WmfZi8js3HjWb2Nio8O4=
+	b=pKEdMWygStBzHAfeBCU8nMx81F8CCilfy8+KvH8LKH2CUtt0AFOqht2SLCFfBmMh9
+	 FE1Y9pQFPYNLX9/NYVqz2mupmkl1qj1zzH8/AvUok4qqrQIAf8yGplvuwid0dPKiKA
+	 gT8iFy892YaiZxuUmG69RhlsRdHk6DCfo+KDV1Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbgEHM7z (ORCPT
+        id S1729997AbgEHMwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgEHMw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:56 -0400
+        id S1729337AbgEHMwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F4024959;
-        Fri,  8 May 2020 12:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B883A24953;
+        Fri,  8 May 2020 12:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942374;
-        bh=r2EjWEVUPezkNE5CyIxnKq1/Poy/iWkkjjfp4PKowvA=;
+        s=default; t=1588942364;
+        bh=Cqr8eghnHCwYfy32Xoq0YNy2OmKR9+KhkhznVTmFUrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DaYyIYSy6d15K5lH/XVqD0eJCI30gzsR9qzk7W+3j/fH/mbP88QtpNHkxGA2QQCbU
-         KpU+xOGTLVBF3V2v9pMavLQa5enK1YTp/BRv6msJRLVlaIduYHh0lV7L3+RN254uSJ
-         LQthhN2x4K2Aaqu5GVoQLsgRLaq/VCe3BFEeBdxA=
+        b=ThteyYYTDf8ib7lp7qIPnJP/Aa45j426h8/b+wQ94XTY9bOcmXU31FUTCaxNu5NFf
+         FbNZYXabc0O2gQm+6Tz4PtgbmliRXv63MUfwkQuldtVegdbuNvXe/XMmfODFgY7Nt5
+         RjNG66r6hBvwM0m+cPWrmL6NLKzn/xbOzT0dKXKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 02/50] drm/bridge: analogix_dp: Split bind() into probe() and real bind()
-Date:   Fri,  8 May 2020 14:35:08 +0200
-Message-Id: <20200508123043.546501854@linuxfoundation.org>
+Subject: [PATCH 5.4 16/50] drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
+Date:   Fri,  8 May 2020 14:35:22 +0200
+Message-Id: <20200508123045.667422556@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -62,328 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Sandeep Raghuraman <sandy.8925@gmail.com>
 
-[ Upstream commit 83a196773b8bc6702f49df1eddc848180e350340 ]
+[ Upstream commit bbc25dadc7ed19f9d6b2e30980f0eb4c741bb8bf ]
 
-Analogix_dp driver acquires all its resources in the ->bind() callback,
-what is a bit against the component driver based approach, where the
-driver initialization is split into a probe(), where all resources are
-gathered, and a bind(), where all objects are created and a compound
-driver is initialized.
+Initialize thermal controller fields in the PowerPlay table for Hawaii
+GPUs, so that fan speeds are reported.
 
-Extract all the resource related operations to analogix_dp_probe() and
-analogix_dp_remove(), then call them before/after registration of the
-device components from the main Exynos DP and Rockchip DP drivers. Also
-move the plat_data initialization to the probe() to make it available for
-the analogix_dp_probe() function.
-
-This fixes the multiple calls to the bind() of the DRM compound driver
-when the DP PHY driver is not yet loaded/probed:
-
-[drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops [exynosdrm])
-exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops [exynosdrm])
-exynos-dp 145b0000.dp-controller: no DP phy configured
-exynos-drm exynos-drm: failed to bind 145b0000.dp-controller (ops exynos_dp_ops [exynosdrm]): -517
-exynos-drm exynos-drm: master bind failed: -517
-...
-[drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-exynos-drm exynos-drm: bound 14400000.fimd (ops hdmi_enable [exynosdrm])
-exynos-drm exynos-drm: bound 14450000.mixer (ops hdmi_enable [exynosdrm])
-exynos-drm exynos-drm: bound 145b0000.dp-controller (ops hdmi_enable [exynosdrm])
-exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_enable [exynosdrm])
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-Console: switching to colour frame buffer device 170x48
-exynos-drm exynos-drm: fb0: exynosdrmfb frame buffer device
-[drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 1
-...
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Andy Yan <andy.yan@rock-chips.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200310103427.26048-1-m.szyprowski@samsung.com
+Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/bridge/analogix/analogix_dp_core.c    | 33 +++++++++++------
- drivers/gpu/drm/exynos/exynos_dp.c            | 29 ++++++++-------
- .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 36 ++++++++++---------
- include/drm/bridge/analogix_dp.h              |  5 +--
- 4 files changed, 61 insertions(+), 42 deletions(-)
+ .../drm/amd/powerplay/hwmgr/processpptables.c | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 22885dceaa177..1f26890a8da6e 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -1635,8 +1635,7 @@ static ssize_t analogix_dpaux_transfer(struct drm_dp_aux *aux,
- }
- 
- struct analogix_dp_device *
--analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
--		 struct analogix_dp_plat_data *plat_data)
-+analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
+index 77c14671866c0..719597c5d27d9 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
+@@ -984,6 +984,32 @@ static int init_thermal_controller(
+ 			struct pp_hwmgr *hwmgr,
+ 			const ATOM_PPLIB_POWERPLAYTABLE *powerplay_table)
  {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct analogix_dp_device *dp;
-@@ -1739,22 +1738,30 @@ analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
- 					irq_flags, "analogix-dp", dp);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to request irq\n");
--		goto err_disable_pm_runtime;
-+		return ERR_PTR(ret);
- 	}
- 	disable_irq(dp->irq);
- 
-+	return dp;
-+}
-+EXPORT_SYMBOL_GPL(analogix_dp_probe);
++	hwmgr->thermal_controller.ucType =
++			powerplay_table->sThermalController.ucType;
++	hwmgr->thermal_controller.ucI2cLine =
++			powerplay_table->sThermalController.ucI2cLine;
++	hwmgr->thermal_controller.ucI2cAddress =
++			powerplay_table->sThermalController.ucI2cAddress;
 +
-+int analogix_dp_bind(struct analogix_dp_device *dp, struct drm_device *drm_dev)
-+{
-+	int ret;
++	hwmgr->thermal_controller.fanInfo.bNoFan =
++		(0 != (powerplay_table->sThermalController.ucFanParameters &
++			ATOM_PP_FANPARAMETERS_NOFAN));
 +
- 	dp->drm_dev = drm_dev;
- 	dp->encoder = dp->plat_data->encoder;
- 
- 	dp->aux.name = "DP-AUX";
- 	dp->aux.transfer = analogix_dpaux_transfer;
--	dp->aux.dev = &pdev->dev;
-+	dp->aux.dev = dp->dev;
- 
- 	ret = drm_dp_aux_register(&dp->aux);
- 	if (ret)
--		return ERR_PTR(ret);
-+		return ret;
- 
--	pm_runtime_enable(dev);
-+	pm_runtime_enable(dp->dev);
- 
- 	ret = analogix_dp_create_bridge(drm_dev, dp);
- 	if (ret) {
-@@ -1762,13 +1769,12 @@ analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
- 		goto err_disable_pm_runtime;
- 	}
- 
--	return dp;
-+	return 0;
- 
- err_disable_pm_runtime:
-+	pm_runtime_disable(dp->dev);
- 
--	pm_runtime_disable(dev);
--
--	return ERR_PTR(ret);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(analogix_dp_bind);
- 
-@@ -1785,10 +1791,15 @@ void analogix_dp_unbind(struct analogix_dp_device *dp)
- 
- 	drm_dp_aux_unregister(&dp->aux);
- 	pm_runtime_disable(dp->dev);
--	clk_disable_unprepare(dp->clock);
- }
- EXPORT_SYMBOL_GPL(analogix_dp_unbind);
- 
-+void analogix_dp_remove(struct analogix_dp_device *dp)
-+{
-+	clk_disable_unprepare(dp->clock);
-+}
-+EXPORT_SYMBOL_GPL(analogix_dp_remove);
++	hwmgr->thermal_controller.fanInfo.ucTachometerPulsesPerRevolution =
++		powerplay_table->sThermalController.ucFanParameters &
++		ATOM_PP_FANPARAMETERS_TACHOMETER_PULSES_PER_REVOLUTION_MASK;
 +
- #ifdef CONFIG_PM
- int analogix_dp_suspend(struct analogix_dp_device *dp)
- {
-diff --git a/drivers/gpu/drm/exynos/exynos_dp.c b/drivers/gpu/drm/exynos/exynos_dp.c
-index 3a0f0ba8c63a0..e0cfae744afc9 100644
---- a/drivers/gpu/drm/exynos/exynos_dp.c
-+++ b/drivers/gpu/drm/exynos/exynos_dp.c
-@@ -158,15 +158,8 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
- 	struct drm_device *drm_dev = data;
- 	int ret;
- 
--	dp->dev = dev;
- 	dp->drm_dev = drm_dev;
- 
--	dp->plat_data.dev_type = EXYNOS_DP;
--	dp->plat_data.power_on_start = exynos_dp_poweron;
--	dp->plat_data.power_off = exynos_dp_poweroff;
--	dp->plat_data.attach = exynos_dp_bridge_attach;
--	dp->plat_data.get_modes = exynos_dp_get_modes;
--
- 	if (!dp->plat_data.panel && !dp->ptn_bridge) {
- 		ret = exynos_dp_dt_parse_panel(dp);
- 		if (ret)
-@@ -184,13 +177,11 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
- 
- 	dp->plat_data.encoder = encoder;
- 
--	dp->adp = analogix_dp_bind(dev, dp->drm_dev, &dp->plat_data);
--	if (IS_ERR(dp->adp)) {
-+	ret = analogix_dp_bind(dp->adp, dp->drm_dev);
-+	if (ret)
- 		dp->encoder.funcs->destroy(&dp->encoder);
--		return PTR_ERR(dp->adp);
--	}
- 
--	return 0;
-+	return ret;
- }
- 
- static void exynos_dp_unbind(struct device *dev, struct device *master,
-@@ -221,6 +212,7 @@ static int exynos_dp_probe(struct platform_device *pdev)
- 	if (!dp)
- 		return -ENOMEM;
- 
-+	dp->dev = dev;
- 	/*
- 	 * We just use the drvdata until driver run into component
- 	 * add function, and then we would set drvdata to null, so
-@@ -246,16 +238,29 @@ static int exynos_dp_probe(struct platform_device *pdev)
- 
- 	/* The remote port can be either a panel or a bridge */
- 	dp->plat_data.panel = panel;
-+	dp->plat_data.dev_type = EXYNOS_DP;
-+	dp->plat_data.power_on_start = exynos_dp_poweron;
-+	dp->plat_data.power_off = exynos_dp_poweroff;
-+	dp->plat_data.attach = exynos_dp_bridge_attach;
-+	dp->plat_data.get_modes = exynos_dp_get_modes;
- 	dp->plat_data.skip_connector = !!bridge;
++	hwmgr->thermal_controller.fanInfo.ulMinRPM
++		= powerplay_table->sThermalController.ucFanMinRPM * 100UL;
++	hwmgr->thermal_controller.fanInfo.ulMaxRPM
++		= powerplay_table->sThermalController.ucFanMaxRPM * 100UL;
 +
- 	dp->ptn_bridge = bridge;
- 
- out:
-+	dp->adp = analogix_dp_probe(dev, &dp->plat_data);
-+	if (IS_ERR(dp->adp))
-+		return PTR_ERR(dp->adp);
++	set_hw_cap(hwmgr,
++		   ATOM_PP_THERMALCONTROLLER_NONE != hwmgr->thermal_controller.ucType,
++		   PHM_PlatformCaps_ThermalController);
 +
- 	return component_add(&pdev->dev, &exynos_dp_ops);
- }
- 
- static int exynos_dp_remove(struct platform_device *pdev)
- {
-+	struct exynos_dp_device *dp = platform_get_drvdata(pdev);
++	hwmgr->thermal_controller.use_hw_fan_control = 1;
 +
- 	component_del(&pdev->dev, &exynos_dp_ops);
-+	analogix_dp_remove(dp->adp);
- 
  	return 0;
  }
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index f38f5e113c6b3..ce98c08aa8b44 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -325,15 +325,9 @@ static int rockchip_dp_bind(struct device *dev, struct device *master,
- 			    void *data)
- {
- 	struct rockchip_dp_device *dp = dev_get_drvdata(dev);
--	const struct rockchip_dp_chip_data *dp_data;
- 	struct drm_device *drm_dev = data;
- 	int ret;
  
--	dp_data = of_device_get_match_data(dev);
--	if (!dp_data)
--		return -ENODEV;
--
--	dp->data = dp_data;
- 	dp->drm_dev = drm_dev;
- 
- 	ret = rockchip_dp_drm_create_encoder(dp);
-@@ -344,16 +338,9 @@ static int rockchip_dp_bind(struct device *dev, struct device *master,
- 
- 	dp->plat_data.encoder = &dp->encoder;
- 
--	dp->plat_data.dev_type = dp->data->chip_type;
--	dp->plat_data.power_on_start = rockchip_dp_poweron_start;
--	dp->plat_data.power_off = rockchip_dp_powerdown;
--	dp->plat_data.get_modes = rockchip_dp_get_modes;
--
--	dp->adp = analogix_dp_bind(dev, dp->drm_dev, &dp->plat_data);
--	if (IS_ERR(dp->adp)) {
--		ret = PTR_ERR(dp->adp);
-+	ret = analogix_dp_bind(dp->adp, drm_dev);
-+	if (ret)
- 		goto err_cleanup_encoder;
--	}
- 
- 	return 0;
- err_cleanup_encoder:
-@@ -368,8 +355,6 @@ static void rockchip_dp_unbind(struct device *dev, struct device *master,
- 
- 	analogix_dp_unbind(dp->adp);
- 	dp->encoder.funcs->destroy(&dp->encoder);
--
--	dp->adp = ERR_PTR(-ENODEV);
- }
- 
- static const struct component_ops rockchip_dp_component_ops = {
-@@ -380,10 +365,15 @@ static const struct component_ops rockchip_dp_component_ops = {
- static int rockchip_dp_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	const struct rockchip_dp_chip_data *dp_data;
- 	struct drm_panel *panel = NULL;
- 	struct rockchip_dp_device *dp;
- 	int ret;
- 
-+	dp_data = of_device_get_match_data(dev);
-+	if (!dp_data)
-+		return -ENODEV;
-+
- 	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, 0, &panel, NULL);
- 	if (ret < 0)
- 		return ret;
-@@ -394,7 +384,12 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 
- 	dp->dev = dev;
- 	dp->adp = ERR_PTR(-ENODEV);
-+	dp->data = dp_data;
- 	dp->plat_data.panel = panel;
-+	dp->plat_data.dev_type = dp->data->chip_type;
-+	dp->plat_data.power_on_start = rockchip_dp_poweron_start;
-+	dp->plat_data.power_off = rockchip_dp_powerdown;
-+	dp->plat_data.get_modes = rockchip_dp_get_modes;
- 
- 	ret = rockchip_dp_of_probe(dp);
- 	if (ret < 0)
-@@ -402,12 +397,19 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dp);
- 
-+	dp->adp = analogix_dp_probe(dev, &dp->plat_data);
-+	if (IS_ERR(dp->adp))
-+		return PTR_ERR(dp->adp);
-+
- 	return component_add(dev, &rockchip_dp_component_ops);
- }
- 
- static int rockchip_dp_remove(struct platform_device *pdev)
- {
-+	struct rockchip_dp_device *dp = platform_get_drvdata(pdev);
-+
- 	component_del(&pdev->dev, &rockchip_dp_component_ops);
-+	analogix_dp_remove(dp->adp);
- 
- 	return 0;
- }
-diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/analogix_dp.h
-index 7aa2f93da49ca..b0dcc07334a1e 100644
---- a/include/drm/bridge/analogix_dp.h
-+++ b/include/drm/bridge/analogix_dp.h
-@@ -42,9 +42,10 @@ int analogix_dp_resume(struct analogix_dp_device *dp);
- int analogix_dp_suspend(struct analogix_dp_device *dp);
- 
- struct analogix_dp_device *
--analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
--		 struct analogix_dp_plat_data *plat_data);
-+analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data);
-+int analogix_dp_bind(struct analogix_dp_device *dp, struct drm_device *drm_dev);
- void analogix_dp_unbind(struct analogix_dp_device *dp);
-+void analogix_dp_remove(struct analogix_dp_device *dp);
- 
- int analogix_dp_start_crc(struct drm_connector *connector);
- int analogix_dp_stop_crc(struct drm_connector *connector);
 -- 
 2.20.1
 
