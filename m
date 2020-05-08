@@ -2,97 +2,163 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41E2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DA0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C189C2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D212173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:05:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TFzl/YNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgEHPFX (ORCPT
+        id S1728060AbgEHPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:05:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:49983 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgEHPFW (ORCPT
+        Fri, 8 May 2020 11:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgEHPFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:05:22 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N3KkM-1j7GGw2wni-010Pd1 for <linux-kernel@vger.kernel.org>; Fri, 08 May
- 2020 17:05:20 +0200
-Received: by mail-lf1-f43.google.com with SMTP id j14so1672456lfg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:05:20 -0700 (PDT)
-X-Gm-Message-State: AOAM530sEhG2LhQKs8fqpX1K2ATP784L5UcjJOYW2aFiehG6Ev7OHENH
-        fqGyJyr7VOA5gHVbGUTWpDKZI/nC9egQQ2vpyxo=
-X-Google-Smtp-Source: ABdhPJyBltViryv41vDy3Je/p+d9AY37nsBBCYK0KZkRu7fGETBmMjCRR1El62fP+c+cIE40ko0QZEWIDYVXanRJ3Wk=
-X-Received: by 2002:ac2:5df9:: with SMTP id z25mr2260623lfq.125.1588950320229;
- Fri, 08 May 2020 08:05:20 -0700 (PDT)
+        Fri, 8 May 2020 11:05:43 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C974AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 08:05:42 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id b1so689606qtt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IhwHM3vWsZyNiLOz6qrYkX84URnnDzt9jte52kOygqQ=;
+        b=TFzl/YNStMC7c/QO4v5za8XO+KdWc8V3Wd8lfoEEFivJ45eAabfZwazGMN+/jcEkzo
+         xig3oNkFG8G1NbfhmPaNtCG7zmj7A96+13gjzJL3s7roQ6Jtzmvmjnwa6pChGt8KdQDP
+         iwopRVy6jwdAuPvbQzWXoxHzTzwTXFf0OEqHSEvgVAvxLhm4G+cQ/0RkGRzXst6FSjX1
+         G9hBAZSNHljo8WNWLgNMwT+rfJipymy6Qhjis4QaVTLGf+f2YhrKWyPi4CXnwnuYA6ha
+         8MCYs3K1Sg84Iu3kbMKf7OnoyGDX4bvdPrb6yoBat/Bm3hlBKYOCIZk7/EWsQAaIgVFz
+         tltw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IhwHM3vWsZyNiLOz6qrYkX84URnnDzt9jte52kOygqQ=;
+        b=N0/j5PNIdcgFB5pOMP3JANBjGIRbJt8CKB/Uj4FQ2/DWVcYXJL/88xhZCO7SH42L1J
+         8QfGWS0SprczgR2Ty5Tru1iE35lsVBuXD1IQE+ngIWJrQRSoL0zoOudt+TRmr4dwKbIf
+         AyYzoxumeR/vBNBX6dwB+YPQHJXSJ/ilhAGOTQdB46NIuh+wtHtbJTEII0B7y5Gtq0mA
+         9Y1lNgxquGamwwZXqNJnw+lCGImz1fKRmCGix4Bu6w4GM9LN6cjJf6gBbKMlCH7gkfUR
+         l8iN2cB6ME9sb5Kkf4FRh8D2IfqMqKItzzHqHgTtjVQskyRtU7xwVVMRIXH/wrmvbvOn
+         /dEA==
+X-Gm-Message-State: AGi0PuZESdL+3oRG9vxzOvt9rkUOlpmDmGs8jhlwTSaxNFi2y3uQjzbU
+        Jvvbp3M2HdXvOu6mJdbHf8S5jA==
+X-Google-Smtp-Source: APiQypIzfpPPpWkThEtQHQ+2L99BXJTCmi6V8H/s7oDAx98Nk4vgzA4mIqR8Yb8KQY1WKgC0JZAz1Q==
+X-Received: by 2002:ac8:7758:: with SMTP id g24mr3275992qtu.85.1588950341927;
+        Fri, 08 May 2020 08:05:41 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id z18sm1598288qti.47.2020.05.08.08.05.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 08:05:41 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jX4ZI-0006Yk-Fu; Fri, 08 May 2020 12:05:40 -0300
+Date:   Fri, 8 May 2020 12:05:40 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200508150540.GP26002@ziepe.ca>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871568480.15589.17339878308143043906.stgit@gimli.home>
+ <20200507212443.GO228260@xz-x1>
+ <20200507235421.GK26002@ziepe.ca>
+ <20200508021939.GT228260@xz-x1>
+ <20200508121013.GO26002@ziepe.ca>
+ <20200508143042.GY228260@xz-x1>
 MIME-Version: 1.0
-References: <20200508144017.3501418-1-arnd@arndb.de> <20200508144017.3501418-2-arnd@arndb.de>
- <20200508150041.GI19158@mellanox.com>
-In-Reply-To: <20200508150041.GI19158@mellanox.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 8 May 2020 17:05:03 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1vCx=XibDdoDqG9obpCFx0JCibAvcKFh6E7_NR_hJ03A@mail.gmail.com>
-Message-ID: <CAK8P3a1vCx=XibDdoDqG9obpCFx0JCibAvcKFh6E7_NR_hJ03A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nouveau: fix dependencies for DEVICE_PRIVATE
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Ss6tzcoeShesaaSVWhQ0NQZpwEzMrufJtto17TdKkCDBo+bRHBj
- 2Q91UaWpd7UdI4GMI9V994WXHziGoixY0EOUN9mbDt4uuC24jg9KDVv31r+y27v2A8eWu8l
- xnbWpbEONoM70SY4N0S+ccGYR+yXEp/sLFlL7zJ40leWfY/MY0hpZc/rB8EUBKKCy7ewTHq
- svH2EccWhMEXNGnwkKlSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hDXebroNOXk=:UDhJfvKSYsY7yNhTnBzQj3
- VwiqA2qIi5c2OCakxnDZkPM3JyCbErdDiQz7aoLWyRt1E+j/FqIXPwl96hU3aT5EQS7Rme7P2
- N4YYGyYH2sZ233e1Wfn7p5VokwfnXs3E5qO/Gav0tlV3pK2w7zKCPrzweIzM6WefwQ8P/64ub
- z417nUrs5wfIdrpXzDIBoVHhQjLhfOr/Ju/xS5IBsYu3bO+tWQEkrE6CPC2HxAsySB7zL9xjy
- AZtek4MFHt9InMjgKyNZCN+H+9eZW3d71HkAq6sESh7XZCvT5JemUTakpCoxkHrirduoN9QZp
- Vt+u1icb87QA+tasGbSXmPtg4ZnOnQJhnsGMObzKxBbPQM2ooJRyjvtpovLTdE6NUOB81FjPH
- llk8O/FCUYkASMhFAtDbMT5VLKz2nHrdTIDaPZtYz+t5tey+ppoTXjvH7+nUwbtupao3XzcCd
- dw6C7iI9qGU0DbFkV9JB77FvY0cUtBOcS1yuAoWl4ANLwPdL1a10r5NyEd9Mi5LnhS4qcXCuC
- 5hLsfIAleCw/7mBQ1TpGtuZ31FCHunnsEQcMWwFFn2B+WY3U1KpqdfBSXeZlYrAJUDe4q1Yr8
- wg3FdBuioxkV/vDza67AK13fUiu171fWodmzMDgtEXw/uRlSw+SUEN07cHaOEuxunCV2cdHKj
- 6HnBOTESgNOgytKs7TJ01rV7Rn2FA8jXV+Mzz44RaJdErH6qpPXlIxJ/cJ5rDiKsbsMaI/FF3
- djkhYEYkRguWZ5Czg2ME/yX6OOp9KEYb6Hek4JiLgqwQLX82Tb/vVf/wHYwr4rFhNMCb0ZLaT
- sIDfGQPYLvsXqlLMZXAjmRQrhXvoxbPsToj39DFilhtlgwTjCE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508143042.GY228260@xz-x1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 5:00 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Fri, May 08, 2020 at 04:40:09PM +0200, Arnd Bergmann wrote:
-> > CONFIG_DEVICE_PRIVATE cannot be selected in configurations
-> > without ZONE_DEVICE:
->
-> It is kind of unfortunate to lift dependencies from DEVICE_PRIVATE
-> into the users, is this really how kconfig is supposed to work or is
-> something else wrong here?
+On Fri, May 08, 2020 at 10:30:42AM -0400, Peter Xu wrote:
+> On Fri, May 08, 2020 at 09:10:13AM -0300, Jason Gunthorpe wrote:
+> > On Thu, May 07, 2020 at 10:19:39PM -0400, Peter Xu wrote:
+> > > On Thu, May 07, 2020 at 08:54:21PM -0300, Jason Gunthorpe wrote:
+> > > > On Thu, May 07, 2020 at 05:24:43PM -0400, Peter Xu wrote:
+> > > > > On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
+> > > > > > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> > > > > > the range being faulted into the vma.  Add support to manually provide
+> > > > > > that, in the same way as done on KVM with hva_to_pfn_remapped().
+> > > > > > 
+> > > > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > > >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+> > > > > >  1 file changed, 33 insertions(+), 3 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > > > > > index cc1d64765ce7..4a4cb7cd86b2 100644
+> > > > > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > > > > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >  
+> > > > > > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> > > > > > +			    unsigned long vaddr, unsigned long *pfn,
+> > > > > > +			    bool write_fault)
+> > > > > > +{
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	ret = follow_pfn(vma, vaddr, pfn);
+> > > > > > +	if (ret) {
+> > > > > > +		bool unlocked = false;
+> > > > > > +
+> > > > > > +		ret = fixup_user_fault(NULL, mm, vaddr,
+> > > > > > +				       FAULT_FLAG_REMOTE |
+> > > > > > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> > > > > > +				       &unlocked);
+> > > > > > +		if (unlocked)
+> > > > > > +			return -EAGAIN;
+> > > > > 
+> > > > > Hi, Alex,
+> > > > > 
+> > > > > IIUC this retry is not needed too because fixup_user_fault() will guarantee the
+> > > > > fault-in is done correctly with the valid PTE as long as ret==0, even if
+> > > > > unlocked==true.
+> > > > 
+> > > > It is true, and today it is fine, but be careful when reworking this
+> > > > to use notifiers as unlocked also means things like the vma pointer
+> > > > are invalidated.
+> > > 
+> > > Oh right, thanks for noticing that.  Then we should probably still keep the
+> > > retry logic... because otherwise the latter follow_pfn() could be referencing
+> > > an invalid vma already...
+> > 
+> > I looked briefly and thought this flow used the vma only once?
+> 
+>         ret = follow_pfn(vma, vaddr, pfn);
+>         if (ret) {
+>                 bool unlocked = false;
+>  
+>                 ret = fixup_user_fault(NULL, mm, vaddr,
+>                                        FAULT_FLAG_REMOTE |
+>                                        (write_fault ?  FAULT_FLAG_WRITE : 0),
+>                                        &unlocked);
+>                 if (unlocked)
+>                         return -EAGAIN;
+>  
+>                 if (ret)
+>                         return ret;
+>  
+>                 ret = follow_pfn(vma, vaddr, pfn);      <--------------- [1]
+>         }
+> 
+> So imo the 2nd follow_pfn() [1] could be racy if without the unlocked check.
 
-Usually the problem is trying to use 'select' for something that can
-be done with 'depends on'. I have actually no idea what
-CONFIG_DEVICE_PRIVATE does, as it lacks a help text
-and is a rather generic term.
+Ah yes, I didn't notice that, you can't touch vma here if unlocked is true.
 
-Would it be possible to decouple DEVICE_PRIVATE from ZONE_DEVICE?
-It sounds like the first is related to the device model, while
-the second is for memory management, so maybe the dependency
-is not necessary.
-
-       Arnd
+Jason
