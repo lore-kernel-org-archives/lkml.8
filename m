@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F45C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B87C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4822054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534AB2495C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942497;
-	bh=92fzWmuJDPXuqoNMnvf0B2lwUjxV7b8HmUcTNgIuHfw=;
+	s=default; t=1588942502;
+	bh=7KhIi5HbIUi+mJ6HlfhTjVe87HCe7Ai7DqwQYwyE+sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9ys84kHD8n45GwBw1aXLcsZkj0wCIWW3KzgSjQr4SP5NGyC2qGVpJNQtTcxTnw2N
-	 yqQrl8q6PHcdGfn5+aJtsSkAabphwhwSn89dFD8BfJsuMIvcjNNUPqvxTRSgvyKHWE
-	 Bcex01coAXTQ7dfvdNHoQ0k40ZE5MMphPk1LKhmE=
+	b=DHBhqOC31vzsMQEJb/lK7CwZE5n33rsiGc/5axUYfdDW4s4Tj0lR50sxby1pr6gJT
+	 PanxmK9OLOuk3xVohborWoT/kp+1m9Y4jFl0CVD7NPqeNpLynDHYXL473EE4sOj0xR
+	 3EoeoB6jz3r62JtRzMXkEZsmaliKaa1XX6q7Jn1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgEHMy4 (ORCPT
+        id S1728592AbgEHMzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37434 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:55:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbgEHMyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:53 -0400
+        id S1730268AbgEHMy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FA8218AC;
-        Fri,  8 May 2020 12:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C84218AC;
+        Fri,  8 May 2020 12:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942492;
-        bh=92fzWmuJDPXuqoNMnvf0B2lwUjxV7b8HmUcTNgIuHfw=;
+        s=default; t=1588942495;
+        bh=7KhIi5HbIUi+mJ6HlfhTjVe87HCe7Ai7DqwQYwyE+sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZvg4QtgaAos3x+pr82AsMD6B8gk5QvBIVEKkbbUbP3v0Z0baEQEeriqk2CNPYFfb
-         4ydlz840EVHx9utsfBYaus4YkbjPl8bVlRHlxZ6+sbrJWNQTZ0dITpNlesV16YJ8C/
-         ul27SbxJCJM/8sPoG6QuVpS96cnwAVPucs/ZLZgA=
+        b=0l9GyXZHx341ihSf8eGCBrFFPirsaKwB4A6qYdT/HteJMd61H2dTos/QxQBeY/2pL
+         IyuCfdZVN5JX1WaR8NY3im0RqWCfEi3iPlNdfzr8qg+h86rmCKYKfodTlK6B/sqNiU
+         UWRhBmIYknE1qusk9xULGEHAuVKmfEqO4dhZLBko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 17/49] ASoC: topology: Fix endianness issue
-Date:   Fri,  8 May 2020 14:35:34 +0200
-Message-Id: <20200508123045.447295886@linuxfoundation.org>
+Subject: [PATCH 5.6 18/49] usb: dwc3: gadget: Properly set maxpacket limit
+Date:   Fri,  8 May 2020 14:35:35 +0200
+Message-Id: <20200508123045.578356830@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -62,34 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 26d87881590fd55ccdd8f829498d7b3033f81990 ]
+[ Upstream commit d94ea5319813658ad5861d161ae16a194c2abf88 ]
 
-As done in already existing cases, we should use le32_to_cpu macro while
-accessing hdr->magic. Found with sparse.
+Currently the calculation of max packet size limit for IN endpoints is
+too restrictive. This prevents a matching of a capable hardware endpoint
+during configuration. Below is the minimum recommended HW configuration
+to support a particular endpoint setup from the databook:
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20200415162435.31859-2-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+For OUT endpoints, the databook recommended the minimum RxFIFO size to
+be at least 3x MaxPacketSize + 3x setup packets size (8 bytes each) +
+clock crossing margin (16 bytes).
+
+For IN endpoints, the databook recommended the minimum TxFIFO size to be
+at least 3x MaxPacketSize for endpoints that support burst. If the
+endpoint doesn't support burst or when the device is operating in USB
+2.0 mode, a minimum TxFIFO size of 2x MaxPacketSize is recommended.
+
+Base on these recommendations, we can calculate the MaxPacketSize limit
+of each endpoint. This patch revises the IN endpoint MaxPacketSize limit
+and also sets the MaxPacketSize limit for OUT endpoints.
+
+Reference: Databook 3.30a section 3.2.2 and 3.2.3
+
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.h   |  4 +++
+ drivers/usb/dwc3/gadget.c | 52 ++++++++++++++++++++++++++++++---------
+ 2 files changed, 45 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index e6a17ab433eea..009d65a6fb43a 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -2652,7 +2652,7 @@ static int soc_valid_header(struct soc_tplg *tplg,
- 	}
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 3ecc69c5b150f..ce4acbf7fef90 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -310,6 +310,10 @@
+ #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
+ #define DWC3_GTXFIFOSIZ_TXFSTADDR(n)	((n) & 0xffff0000)
  
- 	/* big endian firmware objects not supported atm */
--	if (hdr->magic == SOC_TPLG_MAGIC_BIG_ENDIAN) {
-+	if (le32_to_cpu(hdr->magic) == SOC_TPLG_MAGIC_BIG_ENDIAN) {
- 		dev_err(tplg->dev,
- 			"ASoC: pass %d big endian not supported header got %x at offset 0x%lx size 0x%zx.\n",
- 			tplg->pass, hdr->magic,
++/* Global RX Fifo Size Register */
++#define DWC31_GRXFIFOSIZ_RXFDEP(n)	((n) & 0x7fff)	/* DWC_usb31 only */
++#define DWC3_GRXFIFOSIZ_RXFDEP(n)	((n) & 0xffff)
++
+ /* Global Event Size Registers */
+ #define DWC3_GEVNTSIZ_INTMASK		BIT(31)
+ #define DWC3_GEVNTSIZ_SIZE(n)		((n) & 0xffff)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index c4be4631937a8..bc1cf6d0412a3 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2223,7 +2223,6 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ {
+ 	struct dwc3 *dwc = dep->dwc;
+ 	int mdwidth;
+-	int kbytes;
+ 	int size;
+ 
+ 	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
+@@ -2239,17 +2238,17 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ 	/* FIFO Depth is in MDWDITH bytes. Multiply */
+ 	size *= mdwidth;
+ 
+-	kbytes = size / 1024;
+-	if (kbytes == 0)
+-		kbytes = 1;
+-
+ 	/*
+-	 * FIFO sizes account an extra MDWIDTH * (kbytes + 1) bytes for
+-	 * internal overhead. We don't really know how these are used,
+-	 * but documentation say it exists.
++	 * To meet performance requirement, a minimum TxFIFO size of 3x
++	 * MaxPacketSize is recommended for endpoints that support burst and a
++	 * minimum TxFIFO size of 2x MaxPacketSize for endpoints that don't
++	 * support burst. Use those numbers and we can calculate the max packet
++	 * limit as below.
+ 	 */
+-	size -= mdwidth * (kbytes + 1);
+-	size /= kbytes;
++	if (dwc->maximum_speed >= USB_SPEED_SUPER)
++		size /= 3;
++	else
++		size /= 2;
+ 
+ 	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
+ 
+@@ -2267,8 +2266,39 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ static int dwc3_gadget_init_out_endpoint(struct dwc3_ep *dep)
+ {
+ 	struct dwc3 *dwc = dep->dwc;
++	int mdwidth;
++	int size;
++
++	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
++
++	/* MDWIDTH is represented in bits, convert to bytes */
++	mdwidth /= 8;
+ 
+-	usb_ep_set_maxpacket_limit(&dep->endpoint, 1024);
++	/* All OUT endpoints share a single RxFIFO space */
++	size = dwc3_readl(dwc->regs, DWC3_GRXFIFOSIZ(0));
++	if (dwc3_is_usb31(dwc))
++		size = DWC31_GRXFIFOSIZ_RXFDEP(size);
++	else
++		size = DWC3_GRXFIFOSIZ_RXFDEP(size);
++
++	/* FIFO depth is in MDWDITH bytes */
++	size *= mdwidth;
++
++	/*
++	 * To meet performance requirement, a minimum recommended RxFIFO size
++	 * is defined as follow:
++	 * RxFIFO size >= (3 x MaxPacketSize) +
++	 * (3 x 8 bytes setup packets size) + (16 bytes clock crossing margin)
++	 *
++	 * Then calculate the max packet limit as below.
++	 */
++	size -= (3 * 8) + 16;
++	if (size < 0)
++		size = 0;
++	else
++		size /= 3;
++
++	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
+ 	dep->endpoint.max_streams = 15;
+ 	dep->endpoint.ops = &dwc3_gadget_ep_ops;
+ 	list_add_tail(&dep->endpoint.ep_list,
 -- 
 2.20.1
 
