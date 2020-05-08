@@ -7,50 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6565BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49FFC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED4C24979
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89202499C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgEHNEz (ORCPT
+        id S1729582AbgEHNE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
+        Fri, 8 May 2020 09:04:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729951AbgEHNEs (ORCPT
+        by vger.kernel.org with ESMTP id S1730044AbgEHNEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:04:48 -0400
+        Fri, 8 May 2020 09:04:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83290C05BD09;
-        Fri,  8 May 2020 06:04:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27945C05BD0C;
+        Fri,  8 May 2020 06:04:49 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gC-000746-4z; Fri, 08 May 2020 15:04:40 +0200
+        id 1jX2gE-00077C-2p; Fri, 08 May 2020 15:04:42 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C11731C0080;
-        Fri,  8 May 2020 15:04:39 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:39 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABD9B1C0080;
+        Fri,  8 May 2020 15:04:41 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:41 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libsymbols kallsyms: Move hex2u64 out of header
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Subject: [tip: perf/core] perf inject: Rename perf_evsel__*() operating on
+ 'struct evsel *' to evsel__*()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200501221315.54715-4-irogers@google.com>
-References: <20200501221315.54715-4-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158894307971.8414.1458046703138557117.tip-bot2@tip-bot2>
+Message-ID: <158894308165.8414.13958886304604863474.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,98 +60,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     32add10f9597f2e4e46fa8342a83ae7bdfefd1ae
-Gitweb:        https://git.kernel.org/tip/32add10f9597f2e4e46fa8342a83ae7bdfefd1ae
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Fri, 01 May 2020 15:13:15 -07:00
+Commit-ID:     b14b36d0206549abd843523ae8891591eaceeb6f
+Gitweb:        https://git.kernel.org/tip/b14b36d0206549abd843523ae8891591eaceeb6f
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 04 May 2020 13:57:44 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:32 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
 
-libsymbols kallsyms: Move hex2u64 out of header
+perf inject: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
 
-hex2u64 is a helper that's out of place in kallsyms.h as not being
-kallsyms related. Move from kallsyms.h to the only user.
+As those is a 'struct evsel' methods, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-Committer notes:
-
-Move it out of tools/lib/symbol/kallsyms.c as well, as we had to leave
-it there in the previous patch lest we break the build.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200501221315.54715-4-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/symbol/kallsyms.c | 13 -------------
- tools/lib/symbol/kallsyms.h |  2 --
- tools/perf/util/symbol.c    | 14 ++++++++++++++
- 3 files changed, 14 insertions(+), 15 deletions(-)
+ tools/perf/builtin-inject.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-index a5edc75..e335ac2 100644
---- a/tools/lib/symbol/kallsyms.c
-+++ b/tools/lib/symbol/kallsyms.c
-@@ -11,19 +11,6 @@ u8 kallsyms2elf_type(char type)
- 	return (type == 't' || type == 'w') ? STT_FUNC : STT_OBJECT;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index aad007b..53932db 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -561,8 +561,7 @@ static void sig_handler(int sig __maybe_unused)
+ 	session_done = 1;
  }
  
--/*
-- * While we find nice hex chars, build a long_val.
-- * Return number of chars processed.
-- */
--int hex2u64(const char *ptr, u64 *long_val)
--{
--	char *p;
--
--	*long_val = strtoull(ptr, &p, 16);
--
--	return p - ptr;
--}
--
- bool kallsyms__is_function(char symbol_type)
+-static int perf_evsel__check_stype(struct evsel *evsel,
+-				   u64 sample_type, const char *sample_msg)
++static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *sample_msg)
  {
- 	symbol_type = toupper(symbol_type);
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index bd988f7..72ab987 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -18,8 +18,6 @@ static inline u8 kallsyms2elf_binding(char type)
- 	return isupper(type) ? STB_GLOBAL : STB_LOCAL;
- }
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	const char *name = evsel__name(evsel);
+@@ -625,7 +624,7 @@ static int __cmd_inject(struct perf_inject *inject)
+ 			const char *name = evsel__name(evsel);
  
--int hex2u64(const char *ptr, u64 *long_val);
--
- u8 kallsyms2elf_type(char type);
+ 			if (!strcmp(name, "sched:sched_switch")) {
+-				if (perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
++				if (evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
+ 					return -EINVAL;
  
- bool kallsyms__is_function(char symbol_type);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8f43004..381da6b 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -566,6 +566,20 @@ void dso__sort_by_name(struct dso *dso)
- 	return symbols__sort_by_name(&dso->symbol_names, &dso->symbols);
- }
- 
-+/*
-+ * While we find nice hex chars, build a long_val.
-+ * Return number of chars processed.
-+ */
-+static int hex2u64(const char *ptr, u64 *long_val)
-+{
-+	char *p;
-+
-+	*long_val = strtoull(ptr, &p, 16);
-+
-+	return p - ptr;
-+}
-+
-+
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
- 					 u64 start, u64 size))
+ 				evsel->handler = perf_inject__sched_switch;
