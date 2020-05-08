@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4621BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE651C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22FBF24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D49206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944029;
-	bh=pS2MkzUVTHGK2IXgWPKz/863sTdQ694vuAWFOZaRb2E=;
+	s=default; t=1588944030;
+	bh=q5eylGLhRXdWXDttS54e99ejHhVcbX7hzaz1XTM5AFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5skgch5N8+GIYm4e82BJCXQveuOvdwQBAO0+Hz5KOlagL4Xu9i7VoQI+eIdi6IYq
-	 ZtxeONI5oHWU9h5ATCsZvP8RMZ9ILRJgUjq+hd/XPCwl+eJXfvuZPbwu4EZrd6D7X9
-	 uVnmqlnpaqbpxblNsIcMrPsoJdMQbaTN7D35Ef4Q=
+	b=W9Q5PYWuXrJ54xf+8WNhQAS7GkV21Rh+3b9hWQK3Wo7MdxBj0xIGHMZbCi0Zj/TL3
+	 Ww8wwq1+OHUe2nz7ivoAx9KQk1XKpmRO9Hjus7eCA7TIVS0hUAJmrBS9j7nVq+X41P
+	 4NeK2U/ijFAYzEptGIxF0cKlpau0FLnllJkHFLC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgEHNU2 (ORCPT
+        id S1728747AbgEHMk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:40:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbgEHMlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:01 -0400
+        id S1728710AbgEHMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2401F20731;
-        Fri,  8 May 2020 12:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E86F24968;
+        Fri,  8 May 2020 12:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941660;
-        bh=pS2MkzUVTHGK2IXgWPKz/863sTdQ694vuAWFOZaRb2E=;
+        s=default; t=1588941630;
+        bh=q5eylGLhRXdWXDttS54e99ejHhVcbX7hzaz1XTM5AFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgfk6fMiHAYviya0YvyS/+iLE2gn134lixM5PugEiM2hrHr9Ilbj6v3MinsDEbfzj
-         6p2qr2SNjEzhpwjAkgtVmuQKLYWFGO+cRDf+OVBKWIg8NagIBAaxedUfl3Xc0aHsmq
-         pZ0MJrJrL8FP5r5yAyszTnICSBw9cUkTqSGvIJVI=
+        b=Qu7SGvOKJqMg+OFRK8thaLoO8HkPTtFS3ag3HBIGZxzM/vSZX8pLV69Ag+4ZG07N0
+         SdGPPrk4coibM+BZ4AFGUKiOplSCj1MjKQe5ajyyLtbVl3KQw6wcb/5fdsKlC1buyt
+         +08RiT4sCm36ZNfMyz0jqqxitz6jFiivPjOjMPrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Honggang Li <honli@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: [PATCH 4.4 104/312] RDMA/cxgb3: device driver frees DMA memory with different size
-Date:   Fri,  8 May 2020 14:31:35 +0200
-Message-Id: <20200508123131.823296116@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 059/312] mlxsw: pci: Correctly determine if descriptor queue is full
+Date:   Fri,  8 May 2020 14:30:50 +0200
+Message-Id: <20200508123128.705713327@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,72 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Honggang Li <honli@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit 0de4cbb3dddca35ecd06b95918f38439c9c6401f upstream.
+commit 5091730d7795ccb21eb880699b5194730641c70b upstream.
 
-[  598.852037] ------------[ cut here ]------------
-[  598.856698] WARNING: at lib/dma-debug.c:887 check_unmap+0xf8/0x920()
-[  598.863079] cxgb3 0000:01:00.0: DMA-API: device driver frees DMA memory with different size [device address=0x0000000003310000] [map size=17 bytes] [unmap size=16 bytes]
-[  598.878265] Modules linked in: xprtrdma ib_isert iscsi_target_mod ib_iser libiscsi scsi_transport_iscsi ib_srpt target_core_mod ib_srp scsi_transport_srp scsi_tgt ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm ib_sa ib_mad kvm_amd kvm ipmi_devintf ipmi_ssif dcdbas pcspkr ipmi_si sg ipmi_msghandler acpi_power_meter amd64_edac_mod shpchp edac_core sp5100_tco k10temp edac_mce_amd i2c_piix4 acpi_cpufreq nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic crct10dif_common ata_generic iw_cxgb3 pata_acpi ib_core ib_addr mgag200 syscopyarea sysfillrect sysimgblt i2c_algo_bit drm_kms_helper ttm pata_atiixp drm ahci libahci serio_raw i2c_core cxgb3 libata bnx2 mdio dm_mirror dm_region_hash dm_log dm_mod
-[  598.946822] CPU: 3 PID: 11820 Comm: cmtime Not tainted 3.10.0-327.el7.x86_64.debug #1
-[  598.954681] Hardware name: Dell Inc. PowerEdge R415/0GXH08, BIOS 2.0.2 10/22/2012
-[  598.962193]  ffff8808077479a8 000000000381a432 ffff880807747960 ffffffff81700918
-[  598.969663]  ffff880807747998 ffffffff8108b6c0 ffff880807747a80 ffff8808063f55c0
-[  598.977132]  ffffffff833ca850 0000000000000282 ffff88080b1bb800 ffff880807747a00
-[  598.984602] Call Trace:
-[  598.987062]  [<ffffffff81700918>] dump_stack+0x19/0x1b
-[  598.992224]  [<ffffffff8108b6c0>] warn_slowpath_common+0x70/0xb0
-[  598.998254]  [<ffffffff8108b75c>] warn_slowpath_fmt+0x5c/0x80
-[  599.004033]  [<ffffffff813903b8>] check_unmap+0xf8/0x920
-[  599.009369]  [<ffffffff81025959>] ? sched_clock+0x9/0x10
-[  599.014702]  [<ffffffff81390cee>] debug_dma_free_coherent+0x7e/0xa0
-[  599.021008]  [<ffffffffa01ece2c>] cxio_destroy_cq+0xcc/0x160 [iw_cxgb3]
-[  599.027654]  [<ffffffffa01e8da0>] iwch_destroy_cq+0xf0/0x140 [iw_cxgb3]
-[  599.034307]  [<ffffffffa01c4bfe>] ib_destroy_cq+0x1e/0x30 [ib_core]
-[  599.040601]  [<ffffffffa04ff2d2>] ib_uverbs_close+0x302/0x4d0 [ib_uverbs]
-[  599.047417]  [<ffffffff812335a2>] __fput+0x102/0x310
-[  599.052401]  [<ffffffff8123388e>] ____fput+0xe/0x10
-[  599.057297]  [<ffffffff810bbde4>] task_work_run+0xb4/0xe0
-[  599.062719]  [<ffffffff81092a84>] do_exit+0x304/0xc60
-[  599.067789]  [<ffffffff81025905>] ? native_sched_clock+0x35/0x80
-[  599.073820]  [<ffffffff81025959>] ? sched_clock+0x9/0x10
-[  599.079153]  [<ffffffff8170a49c>] ? _raw_spin_unlock_irq+0x2c/0x50
-[  599.085358]  [<ffffffff8109346c>] do_group_exit+0x4c/0xc0
-[  599.090779]  [<ffffffff810a8661>] get_signal_to_deliver+0x2e1/0x960
-[  599.097071]  [<ffffffff8101c497>] do_signal+0x57/0x6e0
-[  599.102229]  [<ffffffff81714bd1>] ? sysret_signal+0x5/0x4e
-[  599.107738]  [<ffffffff8101cb7f>] do_notify_resume+0x5f/0xb0
-[  599.113418]  [<ffffffff81714e7d>] int_signal+0x12/0x17
-[  599.118576] ---[ end trace 1e4653102e7e7019 ]---
-[  599.123211] Mapped at:
-[  599.125577]  [<ffffffff8138ed8b>] debug_dma_alloc_coherent+0x2b/0x80
-[  599.131968]  [<ffffffffa01ec862>] cxio_create_cq+0xf2/0x1f0 [iw_cxgb3]
-[  599.139920]  [<ffffffffa01e9c05>] iwch_create_cq+0x105/0x4e0 [iw_cxgb3]
-[  599.147895]  [<ffffffffa0500584>] create_cq.constprop.14+0x184/0x2e0 [ib_uverbs]
-[  599.156649]  [<ffffffffa05027fb>] ib_uverbs_create_cq+0x10b/0x140 [ib_uverbs]
+The descriptor queues for sending (SDQs) and receiving (RDQs) packets
+are managed by two counters - producer and consumer - which are both
+16-bit in size. A queue is considered full when the difference between
+the two equals the queue's maximum number of descriptors.
 
-Fixes: b955150ea784 ('RDMA/cxgb3: When a user QP is marked in error, also mark the CQs in error')
-Signed-off-by: Honggang Li <honli@redhat.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+However, if the producer counter overflows, then it's possible for the
+full queue check to fail, as it doesn't take the overflow into account.
+In such a case, descriptors already passed to the device - but for which
+a completion has yet to be posted - will be overwritten, thereby causing
+undefined behavior. The above can be achieved under heavy load (~30
+netperf instances).
+
+Fix that by casting the subtraction result to u16, preventing it from
+being treated as a signed integer.
+
+Fixes: eda6500a987a ("mlxsw: Add PCI bus implementation")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb3/cxio_hal.c |    2 +-
+ drivers/net/ethernet/mellanox/mlxsw/pci.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/cxgb3/cxio_hal.c
-+++ b/drivers/infiniband/hw/cxgb3/cxio_hal.c
-@@ -327,7 +327,7 @@ int cxio_destroy_cq(struct cxio_rdev *rd
- 	kfree(cq->sw_queue);
- 	dma_free_coherent(&(rdev_p->rnic_info.pdev->dev),
- 			  (1UL << (cq->size_log2))
--			  * sizeof(struct t3_cqe), cq->queue,
-+			  * sizeof(struct t3_cqe) + 1, cq->queue,
- 			  dma_unmap_addr(cq, mapping));
- 	cxio_hal_put_cqid(rdev_p->rscp, cq->cqid);
- 	return err;
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+@@ -215,7 +215,7 @@ mlxsw_pci_queue_elem_info_producer_get(s
+ {
+ 	int index = q->producer_counter & (q->count - 1);
+ 
+-	if ((q->producer_counter - q->consumer_counter) == q->count)
++	if ((u16) (q->producer_counter - q->consumer_counter) == q->count)
+ 		return NULL;
+ 	return mlxsw_pci_queue_elem_info_get(q, index);
+ }
 
 
