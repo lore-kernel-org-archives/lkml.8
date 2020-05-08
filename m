@@ -7,64 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27C6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D24C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B019724970
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E39424969
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgEHNGW (ORCPT
+        id S1730657AbgEHNGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34832 "EHLO
+        Fri, 8 May 2020 09:06:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730574AbgEHNFr (ORCPT
+        by vger.kernel.org with ESMTP id S1730502AbgEHNFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:47 -0400
+        Fri, 8 May 2020 09:05:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFCBC05BD43;
-        Fri,  8 May 2020 06:05:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E10F6C05BD43;
+        Fri,  8 May 2020 06:05:49 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2h0-0007mE-7L; Fri, 08 May 2020 15:05:30 +0200
+        id 1jX2h4-0007tn-Ed; Fri, 08 May 2020 15:05:34 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B89131C0868;
-        Fri,  8 May 2020 15:05:08 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:05:08 -0000
-From:   "tip-bot2 for Kajol Jain" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC9251C0857;
+        Fri,  8 May 2020 15:05:12 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:05:12 -0000
+From:   "tip-bot2 for Stephane Eranian" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf metricgroups: Enhance JSON/metric
- infrastructure to handle "?"
-Cc:     Kajol Jain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf record: Add num-synthesize-threads option
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Joe Mario <jmario@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
+        Tony Jones <tonyj@suse.de>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-5-kjain@linux.ibm.com>
-References: <20200401203340.31402-5-kjain@linux.ibm.com>
+In-Reply-To: <20200422155038.9380-1-irogers@google.com>
+References: <20200422155038.9380-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158894310866.8414.13586017664085832240.tip-bot2@tip-bot2>
+Message-ID: <158894311277.8414.1121482637436259181.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -80,439 +69,218 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     1e1a873dc67fc748cc319a27603f33db91027730
-Gitweb:        https://git.kernel.org/tip/1e1a873dc67fc748cc319a27603f33db91027730
-Author:        Kajol Jain <kjain@linux.ibm.com>
-AuthorDate:    Thu, 02 Apr 2020 02:03:37 +05:30
+Commit-ID:     d99c22eabee45f40ca44b877a1adde028f14b6b4
+Gitweb:        https://git.kernel.org/tip/d99c22eabee45f40ca44b877a1adde028f14b6b4
+Author:        Stephane Eranian <eranian@google.com>
+AuthorDate:    Wed, 22 Apr 2020 08:50:38 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 30 Apr 2020 10:48:33 -03:00
+CommitterDate: Thu, 23 Apr 2020 11:10:41 -03:00
 
-perf metricgroups: Enhance JSON/metric infrastructure to handle "?"
+perf record: Add num-synthesize-threads option
 
-Patch enhances current metric infrastructure to handle "?" in the metric
-expression. The "?" can be use for parameters whose value not known
-while creating metric events and which can be replace later at runtime
-to the proper value. It also add flexibility to create multiple events
-out of single metric event added in JSON file.
+To control degree of parallelism of the synthesize_mmap() code which
+is scanning /proc/PID/task/PID/maps and can be time consuming.
+Mimic perf top way of handling the option.
+If not specified will default to 1 thread, i.e. default behavior before
+this option.
 
-Patch adds function 'arch_get_runtimeparam' which is a arch specific
-function, returns the count of metric events need to be created.  By
-default it return 1.
+On a desktop computer the processing of /proc/PID/task/PID/maps isn't
+slow enough to warrant parallel processing and the thread creation has
+some cost - hence the default of 1. On a loaded server with
+>100 cores it is possible to see synthesis times in the order of
+seconds and in this case having the option is desirable.
 
-This infrastructure needed for hv_24x7 socket/chip level events.
-"hv_24x7" chip level events needs specific chip-id to which the data is
-requested. Function 'arch_get_runtimeparam' implemented in header.c
-which extract number of sockets from sysfs file "sockets" under
-"/sys/devices/hv_24x7/interface/".
+As the processing is a synchronization point, it is legitimate to worry if
+Amdahl's law will apply to this patch. Profiling with this patch in
+place:
+https://lore.kernel.org/lkml/20200415054050.31645-4-irogers@google.com/
+shows:
+...
+      - 32.59% __perf_event__synthesize_threads
+         - 32.54% __event__synthesize_thread
+            + 22.13% perf_event__synthesize_mmap_events
+            + 6.68% perf_event__get_comm_ids.constprop.0
+            + 1.49% process_synthesized_event
+            + 1.29% __GI___readdir64
+            + 0.60% __opendir
+...
+That is the processing is 1.49% of execution time and there is plenty to
+make parallel. This is shown in the benchmark in this patch:
 
-With this patch basically we are trying to create as many metric events
-as define by runtime_param.
+https://lore.kernel.org/lkml/20200415054050.31645-2-irogers@google.com/
 
-For that one loop is added in function 'metricgroup__add_metric', which
-create multiple events at run time depend on return value of
-'arch_get_runtimeparam' and merge that event in 'group_list'.
+  Computing performance of multi threaded perf event synthesis by
+  synthesizing events on CPU 0:
+   Number of synthesis threads: 1
+     Average synthesis took: 127729.000 usec (+- 3372.880 usec)
+     Average num. events: 21548.600 (+- 0.306)
+     Average time per event 5.927 usec
+   Number of synthesis threads: 2
+     Average synthesis took: 88863.500 usec (+- 385.168 usec)
+     Average num. events: 21552.800 (+- 0.327)
+     Average time per event 4.123 usec
+   Number of synthesis threads: 3
+     Average synthesis took: 83257.400 usec (+- 348.617 usec)
+     Average num. events: 21553.200 (+- 0.327)
+     Average time per event 3.863 usec
+   Number of synthesis threads: 4
+     Average synthesis took: 75093.000 usec (+- 422.978 usec)
+     Average num. events: 21554.200 (+- 0.200)
+     Average time per event 3.484 usec
+   Number of synthesis threads: 5
+     Average synthesis took: 64896.600 usec (+- 353.348 usec)
+     Average num. events: 21558.000 (+- 0.000)
+     Average time per event 3.010 usec
+   Number of synthesis threads: 6
+     Average synthesis took: 59210.200 usec (+- 342.890 usec)
+     Average num. events: 21560.000 (+- 0.000)
+     Average time per event 2.746 usec
+   Number of synthesis threads: 7
+     Average synthesis took: 54093.900 usec (+- 306.247 usec)
+     Average num. events: 21562.000 (+- 0.000)
+     Average time per event 2.509 usec
+   Number of synthesis threads: 8
+     Average synthesis took: 48938.700 usec (+- 341.732 usec)
+     Average num. events: 21564.000 (+- 0.000)
+     Average time per event 2.269 usec
 
-To achieve that we are actually passing this parameter value as part of
-`expr__find_other` function and changing "?" present in metric
-expression with this value.
+Where average time per synthesized event goes from 5.927 usec with 1
+thread to 2.269 usec with 8. This isn't a linear speed up as not all of
+synthesize code has been made parallel. If the synthesis time was about
+10 seconds then using 8 threads may bring this down to less than 4.
 
-As in our JSON file, there gonna be single metric event, and out of
-which we are creating multiple events.
-
-To understand which data count belongs to which parameter value,
-we also printing param value in generic_metric function.
-
-For example,
-
-  command:# ./perf stat  -M PowerBUS_Frequency -C 0 -I 1000
-    1.000101867  9,356,933  hv_24x7/pm_pb_cyc,chip=0/ #  2.3 GHz  PowerBUS_Frequency_0
-    1.000101867  9,366,134  hv_24x7/pm_pb_cyc,chip=1/ #  2.3 GHz  PowerBUS_Frequency_1
-    2.000314878  9,365,868  hv_24x7/pm_pb_cyc,chip=0/ #  2.3 GHz  PowerBUS_Frequency_0
-    2.000314878  9,366,092  hv_24x7/pm_pb_cyc,chip=1/ #  2.3 GHz  PowerBUS_Frequency_1
-
-So, here _0 and _1 after PowerBUS_Frequency specify parameter value.
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Mackerras <paulus@ozlabs.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-5-kjain@linux.ibm.com
+Cc: Tony Jones <tonyj@suse.de>
+Cc: yuzhoujian <yuzhoujian@didichuxing.com>
+Link: http://lore.kernel.org/lkml/20200422155038.9380-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/header.c |  8 +++++++-
- tools/perf/tests/expr.c               |  8 +++----
- tools/perf/util/expr.c                | 11 +++++-----
- tools/perf/util/expr.h                |  5 +++--
- tools/perf/util/expr.l                | 27 ++++++++++++++++++-------
- tools/perf/util/metricgroup.c         | 28 +++++++++++++++++++++++---
- tools/perf/util/metricgroup.h         |  2 ++-
- tools/perf/util/stat-shadow.c         | 17 ++++++++++------
- 8 files changed, 79 insertions(+), 27 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  4 +++-
+ tools/perf/builtin-record.c              | 34 +++++++++++++++++++++--
+ tools/perf/util/record.h                 |  1 +-
+ 3 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 3b4cdfc..d487007 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -7,6 +7,8 @@
- #include <string.h>
- #include <linux/stringify.h>
- #include "header.h"
-+#include "metricgroup.h"
-+#include <api/fs/fs.h>
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b3f3b3f..6e8b464 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -596,6 +596,10 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
+ Limit the sample data max size, <size> is expected to be a number with
+ appended unit character - B/K/M/G
  
- #define mfspr(rn)       ({unsigned long rval; \
- 			 asm volatile("mfspr %0," __stringify(rn) \
-@@ -44,3 +46,9 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 
- 	return bufp;
- }
++--num-thread-synthesize::
++	The number of threads to run when synthesizing events for existing processes.
++	By default, the number of threads equals 1.
 +
-+int arch_get_runtimeparam(void)
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349a..2e8011f 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -43,6 +43,7 @@
+ #include "util/time-utils.h"
+ #include "util/units.h"
+ #include "util/bpf-event.h"
++#include "util/util.h"
+ #include "asm/bug.h"
+ #include "perf.h"
+ 
+@@ -50,6 +51,7 @@
+ #include <inttypes.h>
+ #include <locale.h>
+ #include <poll.h>
++#include <pthread.h>
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
+@@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
+ 	return record__write(rec, NULL, event, event->header.size);
+ }
+ 
++static int process_locked_synthesized_event(struct perf_tool *tool,
++				     union perf_event *event,
++				     struct perf_sample *sample __maybe_unused,
++				     struct machine *machine __maybe_unused)
 +{
-+	int count;
-+	return sysfs__read_int("/devices/hv_24x7/interface/sockets", &count) < 0 ? 1 : count;
-+}
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index ea10fc4..516504c 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -10,7 +10,7 @@ static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
- {
- 	double val;
- 
--	if (expr__parse(&val, ctx, e))
-+	if (expr__parse(&val, ctx, e, 1))
- 		TEST_ASSERT_VAL("parse test failed", 0);
- 	TEST_ASSERT_VAL("unexpected value", val == val2);
- 	return 0;
-@@ -44,15 +44,15 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 		return ret;
- 
- 	p = "FOO/0";
--	ret = expr__parse(&val, &ctx, p);
-+	ret = expr__parse(&val, &ctx, p, 1);
- 	TEST_ASSERT_VAL("division by zero", ret == -1);
- 
- 	p = "BAR/";
--	ret = expr__parse(&val, &ctx, p);
-+	ret = expr__parse(&val, &ctx, p, 1);
- 	TEST_ASSERT_VAL("missing operand", ret == -1);
- 
- 	TEST_ASSERT_VAL("find other",
--			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO", &other, &num_other) == 0);
-+			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO", &other, &num_other, 1) == 0);
- 	TEST_ASSERT_VAL("find other", num_other == 3);
- 	TEST_ASSERT_VAL("find other", !strcmp(other[0], "BAR"));
- 	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c3382d5..aa631e3 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -27,10 +27,11 @@ void expr__ctx_init(struct expr_parse_ctx *ctx)
- 
- static int
- __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
--	      int start)
-+	      int start, int runtime)
- {
- 	struct expr_scanner_ctx scanner_ctx = {
- 		.start_token = start,
-+		.runtime = runtime,
- 	};
- 	YY_BUFFER_STATE buffer;
- 	void *scanner;
-@@ -54,9 +55,9 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	return ret;
- }
- 
--int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
-+int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
- {
--	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
-+	return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
- }
- 
- static bool
-@@ -74,13 +75,13 @@ already_seen(const char *val, const char *one, const char **other,
- }
- 
- int expr__find_other(const char *expr, const char *one, const char ***other,
--		     int *num_other)
-+		     int *num_other, int runtime)
- {
- 	int err, i = 0, j = 0;
- 	struct expr_parse_ctx ctx;
- 
- 	expr__ctx_init(&ctx);
--	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
-+	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER, runtime);
- 	if (err)
- 		return -1;
- 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 0938ad1..87d627b 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -17,12 +17,13 @@ struct expr_parse_ctx {
- 
- struct expr_scanner_ctx {
- 	int start_token;
-+	int runtime;
- };
- 
- void expr__ctx_init(struct expr_parse_ctx *ctx);
- void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
--int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
-+int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime);
- int expr__find_other(const char *expr, const char *one, const char ***other,
--		int *num_other);
-+		int *num_other, int runtime);
- 
- #endif
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 2582c24..74b9b59 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -35,7 +35,7 @@ static int value(yyscan_t scanner, int base)
-  * Allow @ instead of / to be able to specify pmu/event/ without
-  * conflicts with normal division.
-  */
--static char *normalize(char *str)
-+static char *normalize(char *str, int runtime)
- {
- 	char *ret = str;
- 	char *dst = str;
-@@ -45,6 +45,19 @@ static char *normalize(char *str)
- 			*dst++ = '/';
- 		else if (*str == '\\')
- 			*dst++ = *++str;
-+		 else if (*str == '?') {
-+			char *paramval;
-+			int i = 0;
-+			int size = asprintf(&paramval, "%d", runtime);
++	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
++	int ret;
 +
-+			if (size < 0)
-+				*dst++ = '0';
-+			else {
-+				while (i < size)
-+					*dst++ = paramval[i++];
-+				free(paramval);
-+			}
-+		}
- 		else
- 			*dst++ = *str;
- 		str++;
-@@ -54,16 +67,16 @@ static char *normalize(char *str)
- 	return ret;
- }
- 
--static int str(yyscan_t scanner, int token)
-+static int str(yyscan_t scanner, int token, int runtime)
- {
- 	YYSTYPE *yylval = expr_get_lval(scanner);
- 	char *text = expr_get_text(scanner);
- 
--	yylval->str = normalize(strdup(text));
-+	yylval->str = normalize(strdup(text), runtime);
- 	if (!yylval->str)
- 		return EXPR_ERROR;
- 
--	yylval->str = normalize(yylval->str);
-+	yylval->str = normalize(yylval->str, runtime);
- 	return token;
- }
- %}
-@@ -72,8 +85,8 @@ number		[0-9]+
- 
- sch		[-,=]
- spec		\\{sch}
--sym		[0-9a-zA-Z_\.:@]+
--symbol		{spec}*{sym}*{spec}*{sym}*
-+sym		[0-9a-zA-Z_\.:@?]+
-+symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
- 
- %%
- 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
-@@ -93,7 +106,7 @@ if		{ return IF; }
- else		{ return ELSE; }
- #smt_on		{ return SMT_ON; }
- {number}	{ return value(yyscanner, 10); }
--{symbol}	{ return str(yyscanner, ID); }
-+{symbol}	{ return str(yyscanner, ID, sctx->runtime); }
- "|"		{ return '|'; }
- "^"		{ return '^'; }
- "&"		{ return '&'; }
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7ad81c8..b071df3 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -90,6 +90,7 @@ struct egroup {
- 	const char *metric_name;
- 	const char *metric_expr;
- 	const char *metric_unit;
-+	int runtime;
- };
- 
- static struct evsel *find_evsel_group(struct evlist *perf_evlist,
-@@ -202,6 +203,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		expr->metric_name = eg->metric_name;
- 		expr->metric_unit = eg->metric_unit;
- 		expr->metric_events = metric_events;
-+		expr->runtime = eg->runtime;
- 		list_add(&expr->nd, &me->head);
- 	}
- 
-@@ -485,15 +487,20 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
- 	return false;
- }
- 
-+int __weak arch_get_runtimeparam(void)
-+{
-+	return 1;
++	pthread_mutex_lock(&synth_lock);
++	ret = process_synthesized_event(tool, event, sample, machine);
++	pthread_mutex_unlock(&synth_lock);
++	return ret;
 +}
 +
- static int __metricgroup__add_metric(struct strbuf *events,
--			struct list_head *group_list, struct pmu_event *pe)
-+		struct list_head *group_list, struct pmu_event *pe, int runtime)
+ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
  {
+ 	struct record *rec = to;
+@@ -1288,6 +1304,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	struct perf_tool *tool = &rec->tool;
+ 	int fd = perf_data__fd(data);
+ 	int err = 0;
++	event_op f = process_synthesized_event;
  
- 	const char **ids;
- 	int idnum;
- 	struct egroup *eg;
+ 	if (rec->opts.tail_synthesize != tail)
+ 		return 0;
+@@ -1402,9 +1419,18 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize cgroup events.\n");
  
--	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
-+	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, runtime) < 0)
- 		return -EINVAL;
- 
- 	if (events->len > 0)
-@@ -513,6 +520,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
- 	eg->metric_name = pe->metric_name;
- 	eg->metric_expr = pe->metric_expr;
- 	eg->metric_unit = pe->unit;
-+	eg->runtime = runtime;
- 	list_add_tail(&eg->nd, group_list);
- 
- 	return 0;
-@@ -540,7 +548,21 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
--			ret = __metricgroup__add_metric(events,	group_list, pe);
-+			if (!strstr(pe->metric_expr, "?")) {
-+				ret = __metricgroup__add_metric(events, group_list, pe, 1);
-+			} else {
-+				int j, count;
++	if (rec->opts.nr_threads_synthesize > 1) {
++		perf_set_multithreaded();
++		f = process_locked_synthesized_event;
++	}
 +
-+				count = arch_get_runtimeparam();
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
+-					    process_synthesized_event, opts->sample_address,
+-					    1);
++					    f, opts->sample_address,
++					    rec->opts.nr_threads_synthesize);
 +
-+				/* This loop is added to create multiple
-+				 * events depend on count value and add
-+				 * those events to group_list.
-+				 */
++	if (rec->opts.nr_threads_synthesize > 1)
++		perf_set_singlethreaded();
 +
-+				for (j = 0; j < count; j++)
-+					ret = __metricgroup__add_metric(events, group_list, pe, j);
-+			}
- 			if (ret == -ENOMEM)
- 				break;
- 		}
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 475c7f9..6b09eb3 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -22,6 +22,7 @@ struct metric_expr {
- 	const char *metric_name;
- 	const char *metric_unit;
- 	struct evsel **metric_events;
-+	int runtime;
+ out:
+ 	return err;
+ }
+@@ -2232,6 +2258,7 @@ static struct record record = {
+ 			.default_per_cpu = true,
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
++		.nr_threads_synthesize = 1,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -2421,6 +2448,9 @@ static struct option __record_options[] = {
+ #endif
+ 	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+ 		     "size", "Limit the maximum size of the output file", parse_output_max_size),
++	OPT_UINTEGER(0, "num-thread-synthesize",
++		     &record.opts.nr_threads_synthesize,
++		     "number of threads to run for event synthesis"),
+ 	OPT_END()
  };
  
- struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-@@ -34,4 +35,5 @@ int metricgroup__parse_groups(const struct option *opt,
- void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
- bool metricgroup__has_metric(const char *metric);
-+int arch_get_runtimeparam(void);
- #endif
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 1ad5c5b..518fbb3 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -336,7 +336,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
- 		metric_events = counter->metric_events;
- 		if (!metric_events) {
- 			if (expr__find_other(counter->metric_expr, counter->name,
--						&metric_names, &num_metric_names) < 0)
-+						&metric_names, &num_metric_names, 1) < 0)
- 				continue;
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 2431645..923565c 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -68,6 +68,7 @@ struct record_opts {
+ 	int	      affinity;
+ 	int	      mmap_flush;
+ 	unsigned int  comp_level;
++	unsigned int  nr_threads_synthesize;
+ };
  
- 			metric_events = calloc(sizeof(struct evsel *),
-@@ -723,6 +723,7 @@ static void generic_metric(struct perf_stat_config *config,
- 			   char *name,
- 			   const char *metric_name,
- 			   const char *metric_unit,
-+			   int runtime,
- 			   double avg,
- 			   int cpu,
- 			   struct perf_stat_output_ctx *out,
-@@ -777,7 +778,7 @@ static void generic_metric(struct perf_stat_config *config,
- 	}
- 
- 	if (!metric_events[i]) {
--		if (expr__parse(&ratio, &pctx, metric_expr) == 0) {
-+		if (expr__parse(&ratio, &pctx, metric_expr, runtime) == 0) {
- 			char *unit;
- 			char metric_bf[64];
- 
-@@ -786,9 +787,13 @@ static void generic_metric(struct perf_stat_config *config,
- 					&unit, &scale) >= 0) {
- 					ratio *= scale;
- 				}
--
--				scnprintf(metric_bf, sizeof(metric_bf),
-+				if (strstr(metric_expr, "?"))
-+					scnprintf(metric_bf, sizeof(metric_bf),
-+					  "%s  %s_%d", unit, metric_name, runtime);
-+				else
-+					scnprintf(metric_bf, sizeof(metric_bf),
- 					  "%s  %s", unit, metric_name);
-+
- 				print_metric(config, ctxp, NULL, "%8.1f",
- 					     metric_bf, ratio);
- 			} else {
-@@ -1022,7 +1027,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 			print_metric(config, ctxp, NULL, NULL, name, 0);
- 	} else if (evsel->metric_expr) {
- 		generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
--				evsel->metric_name, NULL, avg, cpu, out, st);
-+				evsel->metric_name, NULL, 1, avg, cpu, out, st);
- 	} else if (runtime_stat_n(st, STAT_NSECS, 0, cpu) != 0) {
- 		char unit = 'M';
- 		char unit_buf[10];
-@@ -1051,7 +1056,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 				out->new_line(config, ctxp);
- 			generic_metric(config, mexp->metric_expr, mexp->metric_events,
- 					evsel->name, mexp->metric_name,
--					mexp->metric_unit, avg, cpu, out, st);
-+					mexp->metric_unit, mexp->runtime, avg, cpu, out, st);
- 		}
- 	}
- 	if (num == 0)
+ extern const char * const *record_usage;
