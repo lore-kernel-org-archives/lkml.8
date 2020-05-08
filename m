@@ -2,147 +2,159 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2991C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67E1C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FD721841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DC221841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHN6cLQ/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSenJWRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgEHPb4 (ORCPT
+        id S1727892AbgEHPcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEHPbz (ORCPT
+        Fri, 8 May 2020 11:32:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20207 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbgEHPcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:31:55 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E236BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 08:31:54 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g4so2126094ljl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8/qxcCinVx3qpG+wTYhBsTLLj5bq0SQmN1OViQlqAY4=;
-        b=mHN6cLQ/jyiWNFTX0ilsa6opS9C0RTaizC1N7pClSFFg27OCAD0/ygl/UQlLwoKol0
-         +rSkIV2addeHFq1Rsjmhx9JqdrGcN+k7pMa8PZz3jI4gdktnCo3lW7qKftPdOR4Hm/D9
-         NT1RbH7wuhg+HAajeVRIIqwvlFKKkJ9eywwHTF3aiwjnpBO5hNi4XHXXsxRJoM6+0aSN
-         MQNAO2edZ7k67N5f/RHllOKnTO0b+apfDrmVmQCSVSP4mU5HOwWNpBO9wGBlcJ5MOTZF
-         zA/quJjBsV/RtQJgQv1lh4nFvfUOqyD1S+HIepoy8jGR6FRDKj8yldRbheTXXOtUDDQR
-         wwNg==
+        Fri, 8 May 2020 11:32:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588951937;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0DyykdflDVUki0L9BuRfwBnn/zEUOvBXEj/RVUNAsOM=;
+        b=KSenJWRiQNmirmSHdiGDPBaI3fIEs3rBM+aWfzAOxnqPeRT3An2uy3puj29e8aZ8uDbXq/
+        LQv3+K0s5mR+rTjezWM2xQDJ5PZHV7kWEyP0WM5M+wFtgKq+rcbWnHcZf20Dfl3kXfNFZn
+        Bc9SaVcuZbT901uk8S7ZI98EmcrC9dY=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-zqy86_ozPiixTt4HVADlQg-1; Fri, 08 May 2020 11:32:13 -0400
+X-MC-Unique: zqy86_ozPiixTt4HVADlQg-1
+Received: by mail-qv1-f71.google.com with SMTP id ck5so2099900qvb.18
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:32:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8/qxcCinVx3qpG+wTYhBsTLLj5bq0SQmN1OViQlqAY4=;
-        b=I2u6khXK8A+EmDtCK0BFv8xYk22SNqsCsSu80eAAfXPxTOo9nC/PcNgx+I5CKHpwRb
-         31oBMJlFDiCmq87wJrPB1Mvqg4g1E0FTIo0j0LK/iohR5FVy+OAUSLT4srIqzI/nVCnm
-         nlXtu+8EpWwSQmD/b0EQSx5EJPDjcc4cboBsdkeUSoaZO34D3BK28G0aOAOjb5o6LIYp
-         ynu4Sf8i5mYAqKA63ge9ny1FHDJlZN89VxdAEyismBWIZqI2tYnmTJH5FLHIgqG//HYr
-         2b8HpIUHxJvMqZXBpjQQCIVfVnoJTs5Bd/OHJ7Nz1DdPz1g52Q8bqtE3ou7oez94f4Df
-         Qp7g==
-X-Gm-Message-State: AOAM533NF4GDAQGMimtIYnXCmGBnl6YyYxOTyfFKrjrj1WjD9r5h8vco
-        QiUaXS+kQ2RX5rRAUezoqBuIpU2FFzZyDdsTJavZYg==
-X-Google-Smtp-Source: ABdhPJzPV4bHTT+T/V0EKBt+F5F7R6D899CO+cKJO5jtnj7kRjYgK7jSXBYSc6fb+mNmgo0QmyVGSfHHMut2WjTii8U=
-X-Received: by 2002:a05:651c:319:: with SMTP id a25mr1978985ljp.209.1588951912361;
- Fri, 08 May 2020 08:31:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0DyykdflDVUki0L9BuRfwBnn/zEUOvBXEj/RVUNAsOM=;
+        b=j1RuRS97dLAEV3bSHY7kzNKZ5xGGIHUJT94TNNaDLFAy1PUICfLWwef/ugFugBvYlN
+         LB0Zmdb6T0KLiRRw5xjpAx+iyZdrtO9WRpeu5jiFqO2BF9/dQFUrQXP5nfTCDumR9PnH
+         bvqBahVAOtkK3bDGpV19sCUwqukZFIVf3POuRwQpgFs00sqNfuJidH+TEUQPmd7iVfrf
+         2I02/cqN8NP1BEbQ0IPZrJgv7BLsoKGjzBGUG+6PO/X3iPFg/SXxzUqdLIAEfYX/IRlQ
+         q+lfSkeMnnCDtnikE/0US+HVRivZPIVch84KFJfZ5qhstQebR3RqoNY3X79O0JGQ2rbR
+         zJAg==
+X-Gm-Message-State: AGi0PuZs0ClF3iznyuPpozctkAmTGMObAPUWbUrGsD1oBdYtKSQh6/r3
+        iKo4UvSXFf0c9fnLADvasg7dm5+h+c9QcyU6ILbm6upXlhfI0Rs8VvzJJuPpgmfQkR7Hm5h8+GH
+        60MtTJFnKA99OZ2N5CAfqEa0f
+X-Received: by 2002:ad4:4d06:: with SMTP id l6mr3440391qvl.34.1588951933140;
+        Fri, 08 May 2020 08:32:13 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKTUxfYKuj8cTaLbMJPJDpg+HZLLUYd2UvsYRdIdNjT8g6WJWzBB/nG1RdQZ6kL7p6i2SbCbQ==
+X-Received: by 2002:ad4:4d06:: with SMTP id l6mr3440362qvl.34.1588951932758;
+        Fri, 08 May 2020 08:32:12 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id u7sm1422893qkc.1.2020.05.08.08.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:32:12 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:32:10 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
+ vmcb->save.dr6
+Message-ID: <20200508153210.GZ228260@xz-x1>
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-9-pbonzini@redhat.com>
+ <20200507192808.GK228260@xz-x1>
+ <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
 MIME-Version: 1.0
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
- <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
- <20200505134056.GA31680@iZj6chx1xj0e0buvshuecpZ> <20200505142711.GA12952@vingu-book>
- <20200508130118.GA4514@iZj6chx1xj0e0buvshuecpZ>
-In-Reply-To: <20200508130118.GA4514@iZj6chx1xj0e0buvshuecpZ>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 8 May 2020 17:31:40 +0200
-Message-ID: <CAKfTPtDRxrSvLMy1WD-J2zK7=OxE+ozjX052fvtwmFy96w14hg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 15:01, Peng Liu <iwtbavbm@gmail.com> wrote:
->
-> On Tue, May 05, 2020 at 04:27:11PM +0200, Vincent Guittot wrote:
-> > Le mardi 05 mai 2020 =C3=A0 21:40:56 (+0800), Peng Liu a =C3=A9crit :
-> >
->
-> [...]
->
-> >
-> > Your proposal below looks quite complex. IMO, one solution would be to =
-move the
-> > update of nohz.next_balance before calling rebalance_domains(this_rq, C=
-PU_IDLE)
-> > so you are back to the previous behavior.
-> >
-> > The only difference is that in case of an break because of need_resched=
-, it
-> > doesn't update nohz.next_balance. But on the other hand, we haven't yet
-> > finished run rebalance_domains for all CPUs and some load_balance are s=
-till
-> > pending. In fact, this will be done during next tick by an idle CPU.
-> >
-> > So I would be in favor of something as simple as :
-> >
->
-> Vincent, could you refine this patch with some changelog?
+On Fri, May 08, 2020 at 12:33:57AM +0200, Paolo Bonzini wrote:
+> On 07/05/20 21:28, Peter Xu wrote:
+> >> -	svm->vcpu.arch.dr6 = dr6;
+> >> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+> >> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+> >> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+> > I failed to figure out what the above calculation is going to do... 
+> 
+> The calculation is merging the cause of the #DB with the guest DR6.
+> It's basically the same effect as kvm_deliver_exception_payload. The
+> payload has DR6_RTM flipped compared to DR6, so you have the following
+> simplfications:
+> 
+> 	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
+> 	/* This is kvm_deliver_exception_payload: */
+>         vcpu->arch.dr6 &= ~DR_TRAP_BITS;
+>         vcpu->arch.dr6 |= DR6_RTM;
+> 	/* copy dr6 bits other than RTM */
+>         vcpu->arch.dr6 |= payload;
+> 	/* copy flipped RTM bit */
+>         vcpu->arch.dr6 ^= payload & DR6_RTM;
+> 
+> ->
+> 
+> 	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
+> 	/* clear RTM here, so that we can OR it below */
+>         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+> 	/* copy dr6 bits other than RTM */
+>         vcpu->arch.dr6 |= payload & ~DR6_RTM;
+> 	/* copy flipped RTM bit */
+>         vcpu->arch.dr6 |= (payload ^ DR6_RTM) & DR6_RTM;
+> 
+> ->
+> 
+> 	/* we can drop the double XOR of DR6_RTM */
+> 	dr6 &= ~DR6_FIXED_1;
+>         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+>         vcpu->arch.dr6 |= dr6 & ~DR6_RTM;
+>         vcpu->arch.dr6 |= dr6 & DR6_RTM;
+> 
+> ->
+> 
+> 	/* we can do the two ORs with a single operation */
+>         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+>         vcpu->arch.dr6 |= dr6 & ~DR6_FIXED_1;
 
-Hi Peng , I'm going to prepare it and another one for the case that we
-discussed about kicking a new ilb in case of abort
+Oh that's quite some math. :) Thanks Paolo!
 
-> And have my reported-by if possible.
+Shall we introduce a helper for both kvm_deliver_exception_payload and here
+(e.g. kvm_merge_dr6)?  Also, wondering whether this could be a bit easier to
+follow by defining:
 
-Yes I will
+/*
+ * These bits could be kept being set until the next #DB if not
+ * explicitly cleared.
+ */
+#define  DR6_CARRY_OVER_BITS  (DR6_BT | DR6_BS | DR6_BD)
 
->
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 04098d678f3b..e028bc1c4744 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -10457,6 +10457,14 @@ static bool _nohz_idle_balance(struct rq *this=
-_rq, unsigned int flags,
-> >                 }
-> >         }
-> >
-> > +       /*
-> > +        * next_balance will be updated only when there is a need.
-> > +        * When the CPU is attached to null domain for ex, it will not =
-be
-> > +        * updated.
-> > +        */
-> > +       if (likely(update_next_balance))
-> > +               nohz.next_balance =3D next_balance;
-> > +
-> >         /* Newly idle CPU doesn't need an update */
-> >         if (idle !=3D CPU_NEWLY_IDLE) {
-> >                 update_blocked_averages(this_cpu);
-> > @@ -10477,14 +10485,6 @@ static bool _nohz_idle_balance(struct rq *this=
-_rq, unsigned int flags,
-> >         if (has_blocked_load)
-> >                 WRITE_ONCE(nohz.has_blocked, 1);
-> >
-> > -       /*
-> > -        * next_balance will be updated only when there is a need.
-> > -        * When the CPU is attached to null domain for ex, it will not =
-be
-> > -        * updated.
-> > -        */
-> > -       if (likely(update_next_balance))
-> > -               nohz.next_balance =3D next_balance;
-> > -
-> >         return ret;
-> >  }
-> >
+Then the imho above calculation could also become:
+
+    vcpu->arch.dr6 = (vcpu->arch.dr6 & DR6_CARRY_OVER_BITS) | save.dr6;
+
+What do you think?
+
+> 
+> > E.g., I
+> > think the old "BT|BS|BD" bits in the old arch.dr6 cache will be leftover even
+> > if none of them is set in save.dr6, while we shouldn't?
+> 
+> Those bits should be kept; this is covered for example by the "hw
+> breakpoint (test that dr6.BS is not cleared)" testcase in kvm-unit-tests
+> x86/debug.c.
+
+Right.  Thanks!
+
+-- 
+Peter Xu
+
