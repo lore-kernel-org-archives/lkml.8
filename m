@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E4CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF6DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630A5206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D559C206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944007;
-	bh=dtMqCeN0jf3ytObDrTDdY1U5ezSq4z//xU03AYErxMM=;
+	s=default; t=1588944012;
+	bh=Vt1E6h/8teG4la10Aa3CVwgcn7EGyQmMix7SnCqlbhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+7uklK3ksCOpoKeMU8G0TftIL6LYr8LAYHE5EpnedxrxpxICefpYJXISnyaDBPJO
-	 u2sGE4haVA5jquQI8t73c5j85uERE5y/XiUC3tLzEjCr/paJivnXispsUu12I1Jk7W
-	 RvI1NZE1cF69n79oVsec2YDL5UR45JBT8B0/kTSk=
+	b=vHCNW19MPwpf3+UwRPp5ohFmta98xjtMwaZAJRTcTT1p2QJ8F/9CWK2F2bZgYXY+U
+	 tVckPK2nm9TBLO8UGqYUvcVlG9o0BmqmjbZA2VyrJWCRRpOHfawyMlj+jjeaDeWWu+
+	 cqFhLGP2OhUE19rpx+Aynd5QIpvQj0d5iuLoMzTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgEHNUF (ORCPT
+        id S1730397AbgEHNUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728790AbgEHMlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:13 -0400
+        id S1728785AbgEHMlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F4F21835;
-        Fri,  8 May 2020 12:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD0721835;
+        Fri,  8 May 2020 12:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941672;
-        bh=dtMqCeN0jf3ytObDrTDdY1U5ezSq4z//xU03AYErxMM=;
+        s=default; t=1588941667;
+        bh=Vt1E6h/8teG4la10Aa3CVwgcn7EGyQmMix7SnCqlbhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asiy5aWeLzFW2DH09WlycEOSGUdMYplGUzmQubzaMldp5/jzLUY3PWGQjQFX2iA40
-         OZuyd4Y9pyGIMVL6N3xENlPxkmCsshCGSQisPb8AaWTbrdaHQljfDLQXefP6WiHCKp
-         uzKgEtXqMucz1Z9t13qCNPz/Cq3RUO6QO0meXSN8=
+        b=EO44OASlGEMo1nrLY/Gx2KuRZ69UZzk6JIuy5b7eiAhTbvIB6Hl//KjkfGWMhaXZQ
+         NysiCySniG8nI42Gr8OgZIL6ukEPYVQIeW9gPXTPCDeMEchgzralw9s2szZj1urPLZ
+         KHWtcoDxHXiBYBrI2ySgHv0wnacOdq7OzqoKj7/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 126/312] mac80211: fix mgmt-tx abort cookie and leak
-Date:   Fri,  8 May 2020 14:31:57 +0200
-Message-Id: <20200508123133.362186114@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 124/312] xfrm_user: propagate sec ctx allocation errors
+Date:   Fri,  8 May 2020 14:31:55 +0200
+Message-Id: <20200508123133.193869720@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -58,38 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Mathias Krause <minipli@googlemail.com>
 
-commit e673a65952b4ab045a3e3eb200fdf408004fb4fd upstream.
+commit 2f30ea5090cbc57ea573cdc66421264b3de3fb0a upstream.
 
-If a mgmt-tx operation is aborted before it runs, the wrong
-cookie is reported back to userspace, and the ack_skb gets
-leaked since the frame is freed directly instead of freeing
-it using ieee80211_free_txskb(). Fix that.
+When we fail to attach the security context in xfrm_state_construct()
+we'll return 0 as error value which, in turn, will wrongly claim success
+to userland when, in fact, we won't be adding / updating the XFRM state.
 
-Fixes: 3b79af973cf4 ("mac80211: stop using pointers as userspace cookies")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This is a regression introduced by commit fd21150a0fe1 ("[XFRM] netlink:
+Inline attach_encap_tmpl(), attach_sec_ctx(), and attach_one_addr()").
+
+Fix it by propagating the error returned by security_xfrm_state_alloc()
+in this case.
+
+Fixes: fd21150a0fe1 ("[XFRM] netlink: Inline attach_encap_tmpl()...")
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Cc: Thomas Graf <tgraf@suug.ch>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/offchannel.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/xfrm/xfrm_user.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/mac80211/offchannel.c
-+++ b/net/mac80211/offchannel.c
-@@ -308,11 +308,10 @@ void ieee80211_roc_notify_destroy(struct
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -609,9 +609,12 @@ static struct xfrm_state *xfrm_state_con
+ 	if (err)
+ 		goto error;
  
- 	/* was never transmitted */
- 	if (roc->frame) {
--		cfg80211_mgmt_tx_status(&roc->sdata->wdev,
--					(unsigned long)roc->frame,
-+		cfg80211_mgmt_tx_status(&roc->sdata->wdev, roc->mgmt_tx_cookie,
- 					roc->frame->data, roc->frame->len,
- 					false, GFP_KERNEL);
--		kfree_skb(roc->frame);
-+		ieee80211_free_txskb(&roc->sdata->local->hw, roc->frame);
- 	}
+-	if (attrs[XFRMA_SEC_CTX] &&
+-	    security_xfrm_state_alloc(x, nla_data(attrs[XFRMA_SEC_CTX])))
+-		goto error;
++	if (attrs[XFRMA_SEC_CTX]) {
++		err = security_xfrm_state_alloc(x,
++						nla_data(attrs[XFRMA_SEC_CTX]));
++		if (err)
++			goto error;
++	}
  
- 	if (!roc->mgmt_tx_cookie)
+ 	if ((err = xfrm_alloc_replay_state_esn(&x->replay_esn, &x->preplay_esn,
+ 					       attrs[XFRMA_REPLAY_ESN_VAL])))
 
 
