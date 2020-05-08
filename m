@@ -2,102 +2,111 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA09C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D2FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5F7218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9815C2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942674;
-	bh=+oeNiTYPadaKg8OL8/VAEVfJ9NdIfn3+Zuj8RJ/QEGc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ps9m6J/aOSJ/snXkcf0+3POl6FS9EVZTCGyW+4vgofUEn0g8plkweDsFmuXBPcooI
-	 L8kvnrBZ68Nk+g6pukk3OVYWW+SUQNa2v3Rgicvl3FgezYzAq1HDF6UjIUcYZxqCqZ
-	 OGX1x09Up4R50SfCAeJcG2rySCynrRRtCx9tKNNc=
+	s=default; t=1588942677;
+	bh=48NqrDGnrzppujpNDFRQjW7iHDemvgNPr206uvHmtdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cPP3kJERb0ddMuFc/iadGaz1QOWFNw9e1/tbMJxqvVm4LXrOiHpO9oicEViK1lPeZ
+	 9C+LfBI34MwKhKhVggh2+uN9crcxONNatqWQDspHZ0OfFxcwg3lmBmvsueKpw0VVtw
+	 vtW2K/9UQaUvYoq+LF3urfCKyM51W03IbHwrhQNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgEHM5x (ORCPT
+        id S1730247AbgEHM54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:57:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbgEHMzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:55:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730040AbgEHM5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:57:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656902495C;
-        Fri,  8 May 2020 12:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 040F42054F;
+        Fri,  8 May 2020 12:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942507;
-        bh=+oeNiTYPadaKg8OL8/VAEVfJ9NdIfn3+Zuj8RJ/QEGc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pIhTfhdHwRTsd6IOtCnhjW7JQAy17VvdzCqAD5wjycW7jWXsrST9A/w29C1OXeyvl
-         DOA4SsIMlD/W6poJChDO3HXt4AYNX8eYS5dI7VtX3/S6FUf4Rg/6gM2TKRAaYgruzv
-         y/emWH2xokOS1H/QaXfZgrqaQGQR3uXnkt2YEzaI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 06/49] ASoC: topology: Check soc_tplg_add_route return value
-Date:   Fri,  8 May 2020 14:35:23 +0200
-Message-Id: <20200508123043.815690910@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
-References: <20200508123042.775047422@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1588942669;
+        bh=48NqrDGnrzppujpNDFRQjW7iHDemvgNPr206uvHmtdQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lSYuM++ubZ3ockKq+n3h6a2DVmUvWRNVWl0SoP8sbObUsreMUAATV9FMCSRJDyv9c
+         OjR/Kp0y75wcpwGzOwboHeAnxoeANCLQuWXR/uMt3uTSdvbo0RSDjh/Ry9fRtdH95N
+         5zEm6vufOL9EPVf0rZdO+nr2INz3Wmi1JYdrDoLo=
+Date:   Fri, 8 May 2020 13:57:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: iio: ad5933: rework probe to use devm_ function
+ variants
+Message-ID: <20200508125746.GH4820@sirena.org.uk>
+References: <20200428093128.60747-1-alexandru.ardelean@analog.com>
+ <20200502192542.63cc25a2@archlinux>
+ <20200507095016.GC9365@kadam>
+ <20200508134307.0000233a@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUk9VBj82R8Xhb8H"
+Content-Disposition: inline
+In-Reply-To: <20200508134307.0000233a@Huawei.com>
+X-Cookie: Give him an evasive answer.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 6856e887eae3efc0fe56899cb3f969fe063171c5 ]
+--SUk9VBj82R8Xhb8H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Function soc_tplg_add_route can propagate error code from callback, we
-should check its return value and handle fail in correct way.
+On Fri, May 08, 2020 at 01:43:07PM +0100, Jonathan Cameron wrote:
+> Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200327204729.397-5-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/soc-topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> > It feels like we should just make a devm_ version of regulator_enable().
+> > Or potentially this is more complicated than it seems, but in that case
+> > probably adding devm_add_action_or_reset() is more complicated than it
+> > seems as well.
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index c86c3ea533f68..aa7714f2b78fd 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1284,7 +1284,9 @@ static int soc_tplg_dapm_graph_elems_load(struct soc_tplg *tplg,
- 		routes[i]->dobj.index = tplg->index;
- 		list_add(&routes[i]->dobj.list, &tplg->comp->dobj_list);
- 
--		soc_tplg_add_route(tplg, routes[i]);
-+		ret = soc_tplg_add_route(tplg, routes[i]);
-+		if (ret < 0)
-+			break;
- 
- 		/* add route, but keep going if some fail */
- 		snd_soc_dapm_add_routes(dapm, routes[i], 1);
--- 
-2.20.1
+> It has been a while since that was last proposed.   At the time the
+> counter argument was that you should almost always be doing some form
+> of PM and hence the regulator shouldn't have the same lifetime as the
+> driver.   Reality is that a lot of simple drivers either don't do
+> PM or have elected to not turn the regulator off so as to retain state
+> etc.
 
+Same issue as before - I fear it's far too error prone in conjunction
+with runtime PM, and if the driver really is just doing an enable and
+disable at probe and remove then that seems fairly trivial anyway.  I
+am constantly finding abuses of things like regulator_get_optional()
+(which we do actually need) in drivers and it's not like I can review
+all the users, I don't have much confidence in this stuff especially
+when practically speaking few regulators ever change state at runtime so
+issues don't manifest so often.
 
+--SUk9VBj82R8Xhb8H
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61V0oACgkQJNaLcl1U
+h9C8yAf+PavksgqAsWThGDHNhdDBAGYyMuu+VSKMkNo1+NN5f/Pso4SPcBnIVTuo
+Me4WbVrl2pnpJ6KPtKyAzfg/AqKVX15JpL3rhHikzjN+7HSV5sslQVNkdl4UuGB4
+edt3kNZyDsfLLBhhs3FF9gW9TgeZsMPN5f0mJZrMGF6cTvgM5c1k1JxWBXKDRGZw
+pDYq3nCPDt2yELv7N2jvV14CgitA/fgpxKQ7D4ejbzR7XBryPrCV29LCjKNfBAHS
+y8N0uQYduMFAJ9/TKJm8NgYQsiEW6iRbxXBoBOTT4hsEaroUnBqHTTOR/PyGt3zO
+rRTPM1hsbuFXjh9PajDXpUgLlSAv7w==
+=mxsy
+-----END PGP SIGNATURE-----
+
+--SUk9VBj82R8Xhb8H--
