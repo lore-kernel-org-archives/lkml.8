@@ -2,100 +2,103 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98F5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0ACC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC50820870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="lBieyN44"
+	by mail.kernel.org (Postfix) with ESMTP id 1AB2721974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEHGxu (ORCPT
+        id S1727094AbgEHGxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725971AbgEHGxs (ORCPT
+        Fri, 8 May 2020 02:53:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58485 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgEHGxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:53:48 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38809C05BD43;
-        Thu,  7 May 2020 23:53:48 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49JLdh6JfQz9sSy; Fri,  8 May 2020 16:53:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1588920824;
-        bh=9Ynms6h27w3AbHNpPH8n4uEonv1y0P/FM3hzIpDmeh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBieyN440rRpPXdGKZOP/FUv65pTIR2LQbC4+L21Xu6LA4zmzWIQafdUr6+jxSeiW
-         l5m5McNHxwk5XIa9VtBvcx4dmDfD0zH0b8hNkXEp2ql0y+HcaISvLyNHR+lJb+8bRq
-         IJl+jgMjI2qVUVFUiQUTz/ouKLyiCeMr9O3bEiZBfKGsxKcKp3tQXfPqfFuPVZXsQj
-         MXK4NEVfsv/qDbYdI7o+J1iw2jpjgJUOrs4V0HcNJ6r6KCmmi85gVAiiJ6Aj/3R4EP
-         V9wtD8tWLW6JeC6uV8EAiRVXYJXdSmITh0po6xMm/O73AXtX3HWCXA2ayzGF7V8sLL
-         6dfxqUlxwidog==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     keescook@chromium.org, linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] selftests/lkdtm: Use grep -E instead of egrep
-Date:   Fri,  8 May 2020 16:53:56 +1000
-Message-Id: <20200508065356.2493343-2-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200508065356.2493343-1-mpe@ellerman.id.au>
-References: <20200508065356.2493343-1-mpe@ellerman.id.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 8 May 2020 02:53:54 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jWwtL-0004ZC-VT; Fri, 08 May 2020 06:53:52 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] PCI: Prevent Pericom USB controller OHCI/EHCI PME# defect
+Date:   Fri,  8 May 2020 14:53:41 +0800
+Message-Id: <20200508065343.32751-2-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508065343.32751-1-kai.heng.feng@canonical.com>
+References: <20200508065343.32751-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-shellcheck complains that egrep is deprecated, and the grep man page
-agrees. Use grep -E instead.
+Both Pericom OHCI and EHCI devices support PME# from all power states:
+06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
+	Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin A routed to IRQ 17
+	Region 0: Memory at a5502000 (32-bit, non-prefetchable) [size=4K]
+	Capabilities: [80] Power Management version 3
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
+	Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin C routed to IRQ 19
+	Region 0: Memory at a5500000 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [80] Power Management version 3
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+
+Though my original approach [1] appears to work, further testing shows
+that there is a 20% chance PME# won't be asserted when USB device is
+plugged.
+
+So remove the PME support for both devices to make USB plugging works.
+
+[1] https://lore.kernel.org/lkml/20191227092405.29588-1-kai.heng.feng@canonical.com/
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- tools/testing/selftests/lkdtm/run.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/quirks.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-index 0b409e187c7b..ee64ff8df8f4 100755
---- a/tools/testing/selftests/lkdtm/run.sh
-+++ b/tools/testing/selftests/lkdtm/run.sh
-@@ -25,13 +25,13 @@ fi
- # Figure out which test to run from our script name.
- test=$(basename $0 .sh)
- # Look up details about the test from master list of LKDTM tests.
--line=$(egrep '^#?'"$test"'\b' tests.txt)
-+line=$(grep -E '^#?'"$test"'\b' tests.txt)
- if [ -z "$line" ]; then
- 	echo "Skipped: missing test '$test' in tests.txt"
- 	exit $KSELFTEST_SKIP_TEST
- fi
- # Check that the test is known to LKDTM.
--if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
-+if ! grep -E -q '^'"$test"'$' "$TRIGGER" ; then
- 	echo "Skipped: test '$test' missing in $TRIGGER!"
- 	exit $KSELFTEST_SKIP_TEST
- fi
-@@ -80,11 +80,11 @@ dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" -
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..db2590243f0d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5568,6 +5568,18 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
  
- cat "$LOG"
- # Check for expected output
--if egrep -qi "$expect" "$LOG" ; then
-+if grep -E -qi "$expect" "$LOG" ; then
- 	echo "$test: saw '$expect': ok"
- 	exit 0
- else
--	if egrep -qi XFAIL: "$LOG" ; then
-+	if grep -E -qi XFAIL: "$LOG" ; then
- 		echo "$test: saw 'XFAIL': [SKIP]"
- 		exit $KSELFTEST_SKIP_TEST
- 	else
++/*
++ * Device [12d8:0x400e] and [12d8:0x400f]
++ * PME# doesn't always get asserted on all power states claim to support PME#
++ */
++static void pci_fixup_no_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# isn't reliable, disabling it\n");
++	dev->pme_support = 0;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
++
+ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ {
+ 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
 -- 
-2.25.1
+2.17.1
 
