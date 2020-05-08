@@ -2,138 +2,154 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D941C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D580C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724FE208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EE4208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgEHIlH (ORCPT
+        id S1726913AbgEHImF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:41:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40562 "EHLO mx2.suse.de"
+        Fri, 8 May 2020 04:42:05 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16873 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEHIlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:41:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 35CFBAA55;
-        Fri,  8 May 2020 08:41:07 +0000 (UTC)
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     talho@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        afaerber@suse.de, Mian Yousaf Kaukab <ykaukab@suse.de>
-Subject: arm64: tegra186: bpmp: kernel crash while decompressing initrd
-Date:   Fri,  8 May 2020 10:40:41 +0200
-Message-Id: <20200508084041.23366-1-ykaukab@suse.de>
-X-Mailer: git-send-email 2.25.0
+        id S1726598AbgEHImE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:42:04 -0400
+IronPort-SDR: JzLmgT8388nsuRevE1If3FhfU6Sv9gotl3pIXB3cp/uw+/OGNxmciOnKbg+LFSw3bxEkYDCYib
+ LYY7Fj+XpPWw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 01:42:04 -0700
+IronPort-SDR: Zrk0YVJAwrNi0wgEAjBxIEnF+Ma2ZBKnHXD1TJaTvJI/h2NX/Xp4qAuJEOeksFV5F4s5scW25V
+ aJW/QaMWG53A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
+   d="scan'208";a="296009850"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 01:42:01 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v2] KVM: x86/pmu: Support full width counting
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Like Xu <like.xu@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200507021452.174646-1-like.xu@linux.intel.com>
+ <3fb56700-7f0b-59e1-527a-f8eb601185b1@redhat.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <72d7d120-85af-d846-a0d5-fe8fe058be34@intel.com>
+Date:   Fri, 8 May 2020 16:42:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fb56700-7f0b-59e1-527a-f8eb601185b1@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am seeing following kernel crash on Jetson TX2. Board is flashed with
-firmware bits from L4T R32.4.2 with upstream u-boot. Crash always
-happens while decompressing initrd. Initrd is approximately 80 MiB in
-size and compressed with xz (xz --check=crc32 --lzma2=dict=32MiB).
-Crash is not observed if the same initrd is compressed with gzip.
-[1] was a previous attempt to workaround the same issue.
+Hi Paolo,
 
-[    0.651168] Trying to unpack rootfs image as initramfs...
-[    2.890171] SError Interrupt on CPU0, code 0xbf40c000 -- SError
-[    2.890174] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G S                5.7.0-rc4-next-20200505 #22
-[    2.890175] Hardware name: nvidia p2771-0000/p2771-0000, BIOS 2020.04-rc3 03/25/2020
-[    2.890176] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
-[    2.890177] pc : lzma_main+0x648/0x908
-[    2.890178] lr : lzma_main+0x330/0x908
-[    2.890179] sp : ffff80001003bb70
-[    2.890180] x29: ffff80001003bb70 x28: 0000000004d794a4
-[    2.890183] x27: 0000000004769941 x26: ffff0001eb064000
-[    2.890185] x25: ffff0001eb060028 x24: 0000000000000002
-[    2.890187] x23: 0000000000000003 x22: 0000000000000007
-[    2.890189] x21: 0000000000611f4b x20: ffff0001eb060000
-[    2.890192] x19: ffff80001003bcb8 x18: 0000000000000068
-[    2.890194] x17: 00000000000000c0 x16: fffffe00076b2108
-[    2.890196] x15: 0000000000000800 x14: 0000000000ffffff
-[    2.890198] x13: 0000000000000001 x12: ffff0001eb060000
-[    2.890200] x11: 0000000000000600 x10: ffff0001eb060028
-[    2.890202] x9 : 00000000ffbb2a08 x8 : 0000000000000ed0
-[    2.890204] x7 : 00000000011553ec x6 : 0000000000000000
-[    2.890206] x5 : 0000000000000000 x4 : 0000000000000006
-[    2.890208] x3 : 00000000015a29e4 x2 : ffff0001eb062d0c
-[    2.890210] x1 : 000000000000000c x0 : 000000000263de44
+Thanks for your detailed comments.
 
-With some debugging aid ported from Nvidia downstream kernel [2] the
-actual cause was found:
+On 2020/5/7 15:57, Paolo Bonzini wrote:
+> On 07/05/20 04:14, Like Xu wrote:
+>> +static inline u64 vmx_get_perf_capabilities(void)
+>> +{
+>> +	u64 perf_cap = 0;
+>> +
+>> +	if (boot_cpu_has(X86_FEATURE_PDCM))
+>> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
+>> +
+>> +	/* Currently, KVM only supports Full-Width Writes. */
+>> +	perf_cap &= PMU_CAP_FW_WRITES;
+>> +
+>> +	return perf_cap;
+>> +}
+>> +
+> Since counters are virtualized, it seems to me that you can support
+> PMU_CAP_FW_WRITES unconditionally, even if the host lacks it.  So just
+> return PMU_CAP_FW_WRITES from this function.
+Sure, let's export PMU_CAP_FW_WRITES unconditionally.
+>
+>> +	case MSR_IA32_PERF_CAPABILITIES:
+>> +		return 1; /* RO MSR */
+>>   	default:
+> You need to allow writes from the host if (data &
+> ~vmx_get_perf_capabilities()) == 0.
+Yes, it makes sense after I understand the intention of host_initiated.
+>
+>> -			if (!msr_info->host_initiated)
+>> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+>> +			(pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+>> +			if (data & ~pmu->counter_bitmask[KVM_PMC_GP])
+>> +				return 1;
+>> +			if (!fw_writes_is_enabled(pmu))
+>>   				data = (s64)(s32)data;
+>
+> You are dropping the test on msr_info->host_initiated here, you should
+> keep it otherwise you allow full-width write to MSR_IA32_PERFCTR0 as
+> well.  So:
+>
+> #define MSR_PMC_FULL_WIDTH_BIT      (MSR_IA32_PMC0 - MSR_IA32_PERFCTR0)
+>
+> 	if (!msr_info->host_initiated && !(msr & MSR_PMC_FULL_WIDTH_BIT))
+> 		data = (s64)(s32)data;
+Thanks, it looks good to me and I'll apply it.
+>
+>> +	case MSR_IA32_PERF_CAPABILITIES:
+>> +		if (!nested)
+>> +			return 1;
+>> +		msr->data = vmx_get_perf_capabilities();
+>> +		return 0;
+> The !nested check is wrong.
+You're absolutely right about this.
+>
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -1220,6 +1220,13 @@ static const u32 msrs_to_save_all[] = {
+>>   	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
+>>   	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
+>>   	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+>> +
+>> +	MSR_IA32_PMC0, MSR_IA32_PMC0 + 1, MSR_IA32_PMC0 + 2,
+>> +	MSR_IA32_PMC0 + 3, MSR_IA32_PMC0 + 4, MSR_IA32_PMC0 + 5,
+>> +	MSR_IA32_PMC0 + 6, MSR_IA32_PMC0 + 7, MSR_IA32_PMC0 + 8,
+>> +	MSR_IA32_PMC0 + 9, MSR_IA32_PMC0 + 10, MSR_IA32_PMC0 + 11,
+>> +	MSR_IA32_PMC0 + 12, MSR_IA32_PMC0 + 13, MSR_IA32_PMC0 + 14,
+>> +	MSR_IA32_PMC0 + 15, MSR_IA32_PMC0 + 16, MSR_IA32_PMC0 + 17,
+>>   };
+> This is not needed because the full-width content is already accessible
+> from the host via MSR_IA32_PERFCTRn.
+That's true because they're just alias registers for MSR_IA32_PERFCTRn.
+>
+> Given the bugs, it is clear that you should also modify the pmu.c
+> testcase for kvm-unit-tests to cover full-width writes (and especially
+> the non-full-width write behavior of MSR_IA32_PERFCTRn).  Even before
+> the QEMU side is begin worked on, you can test it with "-cpu
+> host,migratable=off".
+Sure, I added some testcases in pmu.c to cover this feature.
 
-[    0.761525] Trying to unpack rootfs image as initramfs...
-[    2.955499] CPU0: SError: mpidr=0x80000100, esr=0xbf40c000
-[    2.955502] CPU1: SError: mpidr=0x80000000, esr=0xbe000000
-[    2.955505] CPU2: SError: mpidr=0x80000001, esr=0xbe000000
-[    2.955506] CPU3: SError: mpidr=0x80000101, esr=0xbf40c000
-[    2.955507] ROC:CCE Machine Check Error:
-[    2.955508] ROC:CCE Registers:
-[    2.955509]  STAT: 0xb400000000400415
-[    2.955510]  ADDR: 0x400c00e7a00c
-[    2.955511]  MSC1: 0x80ffc
-[    2.955512]  MSC2: 0x3900000000800
-[    2.955513] --------------------------------------
-[    2.955514] Decoded ROC:CCE Machine Check:
-[    2.955515]  Uncorrected (this is fatal)
-[    2.955516]  Error reporting enabled when error arrived
-[    2.955517]  Error Code = 0x415
-[    2.955518]  Poison Error
-[    2.955518]  Command = NCRd (0xc)
-[    2.955519]  Address Type = Non-Secure DRAM
-[    2.955521]  Address = 0x30039e80 -- 30000000.sysram + 0x39e80
-[    2.955521]  TLimit = 0x3ff
-[    2.955522]  Poison Error Mask = 0x80
-[    2.955523]  More Info = 0x800
-[    2.955524]  Timeout Info = 0x0
-[    2.955525]          Poison Info = 0x800
-[    2.955526]          Read Request failed GSC checks
-[    2.955527]  Source = L2_1 (A57) (0x1)
-[    2.955528]  TID = 0xe
+Please review the v3 patch 
+https://lore.kernel.org/kvm/20200508083218.120559-1-like.xu@linux.intel.com/
+as well as the kvm-unit-tests testcase.
 
-IIUC, there was read request for 0x30039e80 from EL1/2 which failed.
-This address falls in the sysram security aperture and hence a read
-from normal mode failed.
+Thanks,
+Like Xu
+>
+> Thanks,
+>
+> Paolo
+>
 
-sysram is mapped at 0x3000_0000 to 0x3004_ffff and is managed by the
-sram driver (drivers/misc/sram.c). There are two reserved pools for
-BPMP driver communication at 0x3004_e000 and 0x3004_f000 of 0x1000
-bytes each.
-
-sram driver maps complete 0x3000_0000 to 0x3004_ffff range as normal
-memory. However, only the BPMP reserved pools (0x3004_e000 - 0x3004_ffff)
-are accessible from the kernel. Address 0x3003_9e80 is inaccessible
-from the kernel and a read to it (which I believe is speculative)
-causes the SError. Only driver which uses sysram is not initialized at
-this point (rootfs_initcall level). As since
-commit d70f5e541ab3 ("firmware: tegra: Make BPMP a regular driver")
-bpmp driver is initialized at device_initcall level.
-
-If none of the drivers on the kernel side using 0x3003_9e80 address
-range. Why a read to it occurs even speculatively? Could it be that
-some EL3 software didn’t cleanup after itself properly? Any
-suggestions on debugging this issue further?
-
-Another solution suggested in [1] was to add no-memory-wc in sysram
-node in device-tree so that sysram is mapped as device-memory. Thus
-preventing any speculative access. However, it causes another set of
-issues with the bpmp driver. That's may be a discussion for another
-time.
-
-BR,
-Yousaf
-
-[1]: https://lore.kernel.org/patchwork/patch/1132429/
-[2]: git://nv-tegra.nvidia.com/linux-4.9.git
