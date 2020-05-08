@@ -2,130 +2,95 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01532C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2317FC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D259F218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012702184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7+iqsCA"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VLfu18xv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgEHSEl (ORCPT
+        id S1727833AbgEHSE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
+        Fri, 8 May 2020 14:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726756AbgEHSEl (ORCPT
+        by vger.kernel.org with ESMTP id S1726756AbgEHSE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:04:41 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39321C061A0C;
-        Fri,  8 May 2020 11:04:41 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z2so2655181iol.11;
-        Fri, 08 May 2020 11:04:41 -0700 (PDT)
+        Fri, 8 May 2020 14:04:58 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD44C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:04:58 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id p16so1945591edm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6n7N9OP5xGlbdCY3wbnFvbe92wVnKtN4kGkgM+TDOk0=;
-        b=V7+iqsCA8GIu6utgH2UMhByKaA2/FCf7MLe6adjxHlKp1CGufE5CkcjrPULjDhUhw7
-         C1SLnkOu88d+kq7GTGEhYnndx2U218EuNKPCi15Iiw9YgiVEqobpg1xfBRNb565+4Dp3
-         Iiv0OGfmbGMgvKl8dp8hg3QClDCHjoK/AFnzaxFngSlMIQlWZm8eFljIrCJRE/7Iq8K0
-         HMUTpORzJaindByoGANqSJKIIRJvXnTjroQPEYkH81WLuEqy43XDfVcdpMmIGcTdpzrq
-         +rtv6Ksf7hvlvzZ3bFK0I66nt123P7WSrgDRR7mDmyqiaVEKZwGriVhn0/jackUrHwl1
-         IXFg==
+        bh=+vtj9kAvnXfdA0IFN6kkpOkjHUwpRBJt7518BSBQldY=;
+        b=VLfu18xvdyYvX+V3um74QbEgFlho/gmsdlebCehHgRC64LZ2LrwpLSPmFXlKyiifMG
+         /2mXN3cYmzMOG97rtljf0sT2QTUcVKx0FHG3wqHOn7YZJCXdCNGibohHbksMUKyWKlmI
+         u1s1YRJzpU1L2la8Jh5ttA2RLPctTxbiNdxv5J+1g/qta/vl3/3fnC/sNfCJYpUd8mBU
+         rhA0RJUtnY0TDMxjb+AxGbqdOAZaUfuuGplRawkJdhwtGOz/RRQ8kRykAiOe7EfzaLOX
+         DLh537yRKgaNM5aAIB51dRs9O5e+S0jhrluFx3rLNSiCGFuLiqA0Hj3QpKIo8KItLtbA
+         P4DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6n7N9OP5xGlbdCY3wbnFvbe92wVnKtN4kGkgM+TDOk0=;
-        b=LhrwEZqrpCH8wKGSqb9GllcoaQ/qCDlAe6RlGIJLjOWQG/5ewZdTaWuVk4kHvdwZ50
-         CB3gc9t/Jogikce2+KY4H2WnJzHlOA58CW3hZeriJaKxJt7SZa/seCXSNRU4TH7NXtbj
-         6gs9Z7ATzB6ls07S81LKySdnQJuWTt2tqs26PWqwJmZq1ri+Dw6abf4cEFNC7a+mcH4O
-         qbpoyGztkL6Es7OO0hka5IufZWYbR76Og0gfH4018Fz93bzjaoP1qngqSIawdzQuU1tc
-         gwZfvkgykaR3Z/HSWqTeD+4En2kmMhIaI69rmgC60uLWGYt/12jDI9nV8/dp5Gbp/xv5
-         onyA==
-X-Gm-Message-State: AGi0PubhBT9Ag+8O5xt51tmoWq1nHdhjWic+uW8FwRP2Xyabeff/AP6z
-        dJYtn6Eh6abKkMg8QF6mLqFPl8xHjYEAK4Orwsg=
-X-Google-Smtp-Source: APiQypLb5fZO4mkjqTLGPaD0VhNwGL/3AK5hbJeXdURVDlAJjd5J9F30z8u63HbQu6cSTn9Iu36jeUpzMGuIYDHUQ6I=
-X-Received: by 2002:a5d:970e:: with SMTP id h14mr3769395iol.117.1588961080652;
- Fri, 08 May 2020 11:04:40 -0700 (PDT)
+        bh=+vtj9kAvnXfdA0IFN6kkpOkjHUwpRBJt7518BSBQldY=;
+        b=q3gSQX9HN0XJ68/UyTO5EA+JhHU0kH1pyXuc45rIw+KG8OCxEBM6+f+Xt/IlwK8YrX
+         KH7qOJgIY9Qp/fb0fCh0k6Jjtn76udJmPlzDTc28fG5KVj6qNjHQGPv13DxC3Gt4kc/0
+         wnoOnJkqo6ZrDaQxZvBoMpF4ChuEjnWkLM9l0reo6vN/uonHzl/SMiE7tkwyRb4EwmIO
+         Noacry12luvlHq03+2AXrw5s0QrVhFYlbrn1QwobhRJa+Tgdcjbesuf1QWGjvyplCdrd
+         drS/kG7AHVIhpH/bjuiTmnLbhCHjtfFhVD5fMibE+93uKUT+f6gtQY/z4tgckTnYFgR4
+         TY5A==
+X-Gm-Message-State: AGi0PuarXcU6+i26jlt9hAONxVFjPCeBmAw9TVnsdgYnz8BBkbgj/gKh
+        +SQUYTpf2bkvFxJuGQfGrI/Dtgjd2WZduBPkf5aqtA==
+X-Google-Smtp-Source: APiQypLP4j4lAauikZOSYW9imDv/qSFGiWgh0ghiKFKN6QKIltyJGJv056sHO7WKbYwrvEJrNoRF76BYTsHSimP70IA=
+X-Received: by 2002:a50:c3c2:: with SMTP id i2mr3146588edf.93.1588961096815;
+ Fri, 08 May 2020 11:04:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508063954.256593-1-irogers@google.com> <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
- <CAP-5=fU-QxfdkQoHP=Ksqeb9gPTE4xYcgEcp9Ej6trZpkCDvPA@mail.gmail.com>
-In-Reply-To: <CAP-5=fU-QxfdkQoHP=Ksqeb9gPTE4xYcgEcp9Ej6trZpkCDvPA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 8 May 2020 11:04:29 -0700
-Message-ID: <CAEf4BzZFWsRKz+dUj6MHw2=qOpXpmna6ommRE9OxQZEoHH6UmA@mail.gmail.com>
-Subject: Re: [PATCH] libbpf hashmap: fix undefined behavior in hash_bits
-To:     Ian Rogers <irogers@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200508161517.252308-1-hch@lst.de>
+In-Reply-To: <20200508161517.252308-1-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 8 May 2020 11:04:45 -0700
+Message-ID: <CAPcyv4j3gVqrZWCCc2Q-6JizGAQXW0b+R1BcvWCZOvzaukGLQg@mail.gmail.com>
+Subject: Re: remove a few uses of ->queuedata
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-m68k@lists.linux-m68k.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:21 AM Ian Rogers <irogers@google.com> wrote:
+On Fri, May 8, 2020 at 9:16 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Fri, May 8, 2020 at 12:12 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, May 7, 2020 at 11:40 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > If bits is 0, the case when the map is empty, then the >> is the size of
-> > > the register which is undefined behavior - on x86 it is the same as a
-> > > shift by 0. Fix by handling the 0 case explicitly.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> >
-> > No need. The only case when bits can be 0 is when hashmap is
-> > completely empty (no elements have ever been added yet). In that case,
-> > it doesn't matter what value hash_bits() returns,
-> > hashmap__for_each_key_entry/hashmap__for_each_key_entry_safe will
-> > behave correctly, because map->buckets will be NULL.
+> Hi all,
 >
-> Agreed. Unfortunately the LLVM undefined behavior sanitizer (I've not
-> tested with GCC to the same extent) will cause an exit when it sees >>
-> 64 regardless of whether the value is used or not. It'd be possible to
-> #ifdef this code on whether a sanitizer was present.
+> various bio based drivers use queue->queuedata despite already having
+> set up disk->private_data, which can be used just as easily.  This
+> series cleans them up to only use a single private data pointer.
 
-Yeah, let's do that rather than slowing down hashing function.
-
->
-> Thanks,
-> Ian
->
-> > >  tools/lib/bpf/hashmap.h | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-> > > index d5ef212a55ba..781db653d16c 100644
-> > > --- a/tools/lib/bpf/hashmap.h
-> > > +++ b/tools/lib/bpf/hashmap.h
-> > > @@ -19,6 +19,8 @@
-> > >  static inline size_t hash_bits(size_t h, int bits)
-> > >  {
-> > >         /* shuffle bits and return requested number of upper bits */
-> > > +       if (bits == 0)
-> > > +               return 0;
-> > >         return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
-> > >  }
-> > >
-> > > --
-> > > 2.26.2.645.ge9eca65c58-goog
-> > >
+...but isn't the queue pretty much guaranteed to be cache hot and the
+gendisk cache cold? I'm not immediately seeing what else needs the
+gendisk in the I/O path. Is there another motivation I'm missing?
