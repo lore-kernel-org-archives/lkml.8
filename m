@@ -2,74 +2,138 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D11C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185F2C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0888208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4E920725
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fOMZJstT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgEHMH0 (ORCPT
+        id S1727769AbgEHMIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:07:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4305 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726616AbgEHMHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:07:25 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3F83352ABC14E86219A9;
-        Fri,  8 May 2020 20:07:24 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 20:07:14 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 1/1] mm/page_io.c: remove an unnecessary goto in generic_swapfile_activate()
-Date:   Fri, 8 May 2020 20:06:40 +0800
-Message-ID: <20200508120640.1852-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200508120640.1852-1-thunder.leizhen@huawei.com>
-References: <20200508120640.1852-1-thunder.leizhen@huawei.com>
+        Fri, 8 May 2020 08:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726701AbgEHMID (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:08:03 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70780C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 05:08:03 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id h26so979021qtu.8
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 05:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jNcOJdj0FMsiZ/cz6XctSErT2eXavWVo0wmEW9tkg9M=;
+        b=fOMZJstT2RX/AhoKfmsee3tP8RBwx6fgcky3Oxy2XCpR2wyYS1EN/nFjW0Tl68c4TD
+         nNIwZs4awDPpb4PDBSsopqtK3+4peg+9piOjTodwwsZdQVFEe6M2yK1bop1RQdHisLOg
+         JmENbj6q6f/y1kBXv9XnsnqCNgg0gI8itmOmk7PWYcbIOi/aJgH3qlf3btCcNLQOOZeB
+         OLeLiJiB6KzK0nmW82mL9ijXOtXT1i+RHQ9fn1hhR61LtwFSLKUasqzYwrQk0CaCyt5r
+         oWr9CozcTpX0YZzrmJkCD1X0r28l/mRCuXPzS555GQLfctnJfsZBRc0hl8chhDph7Kaj
+         z2vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jNcOJdj0FMsiZ/cz6XctSErT2eXavWVo0wmEW9tkg9M=;
+        b=iQbv6HNOLTfcDClXMwPdf/+5+smLOpkvHu+jKvhdQ0xtCez9BoCOW4Yi0H6Sys8Wf6
+         6SxeezLiuzioeql7Y836sWzY93poQVgDKmvYarhkrtL/LCVP0LfTujf/ld8JP9PeFuU4
+         tAxVpxS3Z9oYbVaoJlbWw6LLec5Gp7+IDjvOiaxIe5OPTaB5nL4EskfU8tEP81d3g5Vg
+         L3Y9+2GP+6Ak+fZtXDQiBr5HCqU0PY4vdzxdQcaMUtDK+GgSj2xeOZ041m7JCTZ0YBAP
+         L0EvU9U94Fg6J1+1cSvn5NCKk2r/Kr8KGjuDL1lHGGjc2Mfv+B/8Vtgu4Nw2PREdeXVK
+         GWpQ==
+X-Gm-Message-State: AGi0PuZWBqCZFYexFIJqS1rFjlyRx4yILQ2ljUABcxd7dsVT1NJQhN/q
+        1P0GCqN2r0lBasbZ6PTaiMOF4A==
+X-Google-Smtp-Source: APiQypImoGg3seh1MMi5XajuwTrRav+mB7403kAKyblW/aBj9ai6BW7rHo9BQVpeLS/fQ4quUO41YA==
+X-Received: by 2002:ac8:7942:: with SMTP id r2mr2764437qtt.288.1588939682425;
+        Fri, 08 May 2020 05:08:02 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id x19sm965232qkb.136.2020.05.08.05.08.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 05:08:01 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jX1nN-0003Yl-5m; Fri, 08 May 2020 09:08:01 -0300
+Date:   Fri, 8 May 2020 09:08:01 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH v2 2/3] vfio-pci: Fault mmaps to enable vma tracking
+Message-ID: <20200508120801.GN26002@ziepe.ca>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871569380.15589.16950418949340311053.stgit@gimli.home>
+ <20200507214744.GP228260@xz-x1>
+ <20200507160334.4c029518@x1.home>
+ <20200507222223.GR228260@xz-x1>
+ <20200507235633.GL26002@ziepe.ca>
+ <20200508021656.GS228260@xz-x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508021656.GS228260@xz-x1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This "goto" doesn't reduce any code, but bother the readers.
+On Thu, May 07, 2020 at 10:16:56PM -0400, Peter Xu wrote:
+> On Thu, May 07, 2020 at 08:56:33PM -0300, Jason Gunthorpe wrote:
+> > On Thu, May 07, 2020 at 06:22:23PM -0400, Peter Xu wrote:
+> > > On Thu, May 07, 2020 at 04:03:34PM -0600, Alex Williamson wrote:
+> > > > On Thu, 7 May 2020 17:47:44 -0400
+> > > > Peter Xu <peterx@redhat.com> wrote:
+> > > > 
+> > > > > Hi, Alex,
+> > > > > 
+> > > > > On Tue, May 05, 2020 at 03:54:53PM -0600, Alex Williamson wrote:
+> > > > > > +/*
+> > > > > > + * Zap mmaps on open so that we can fault them in on access and therefore
+> > > > > > + * our vma_list only tracks mappings accessed since last zap.
+> > > > > > + */
+> > > > > > +static void vfio_pci_mmap_open(struct vm_area_struct *vma)
+> > > > > > +{
+> > > > > > +	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);  
+> > > > > 
+> > > > > A pure question: is this only a safety-belt or it is required in some known
+> > > > > scenarios?
+> > > > 
+> > > > It's not required.  I originally did this so that I'm not allocating a
+> > > > vma_list entry in a path where I can't return error, but as Jason
+> > > > suggested I could zap here only in the case that I do encounter that
+> > > > allocation fault.  However I still like consolidating the vma_list
+> > > > handling to the vm_ops .fault and .close callbacks and potentially we
+> > > > reduce the zap latency by keeping the vma_list to actual users, which
+> > > > we'll get to eventually anyway in the VM case as memory BARs are sized
+> > > > and assigned addresses.
+> > > 
+> > > Yes, I don't see much problem either on doing the vma_list maintainance only in
+> > > .fault() and .close().  My understandingg is that the worst case is the perf
+> > > critical applications (e.g. DPDK) could pre-fault these MMIO region easily
+> > > during setup if they want.  My question was majorly about whether the vma
+> > > should be guaranteed to have no mapping at all when .open() is called.  But I
+> > > agree with you that it's always good to have that as safety-belt anyways.
+> > 
+> > If the VMA has a mapping then that specific VMA has to be in the
+> > linked list.
+> > 
+> > So if the zap is skipped then the you have to allocate something and
+> > add to the linked list to track the VMA with mapping.
+> > 
+> > It is not a 'safety belt'
+> 
+> But shouldn't open() only be called when the VMA is created for a memory range?
+> If so, does it also mean that the address range must have not been mapped yet?
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
----
- mm/page_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+open is called whenever a VMA is copied, I don't think it is called
+when the VMA is first created?
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 76965be1d40e..19d429abb2cc 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -237,8 +237,7 @@ int generic_swapfile_activate(struct swap_info_struct *sis,
- 	return ret;
- bad_bmap:
- 	pr_err("swapon: swapfile has holes\n");
--	ret = -EINVAL;
--	goto out;
-+	return -EINVAL;
- }
- 
- /*
--- 
-2.26.0.106.g9fadedd
-
-
+Jason
