@@ -2,223 +2,703 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106AFC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96D4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD05208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfSvnW/M"
+	by mail.kernel.org (Postfix) with ESMTP id CAD8520736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgEHOA6 (ORCPT
+        id S1728033AbgEHOBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:00:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgEHOA5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:00:57 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA87BC05BD43;
-        Fri,  8 May 2020 07:00:57 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x15so386508pfa.1;
-        Fri, 08 May 2020 07:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BrhHlE2Zmb8qG7aodLCCwPMutnU0QeSrvMETJzhMIzo=;
-        b=GfSvnW/M6U6IuLYoHa4fNyMJj8DlRFSRdgmYXkgG/AK82dCbbFbgtZRWEZkQOxCGVp
-         K3Tu2JeYqM/XkqHDIlF/fZxXxI45eWiY5Q0FI+WZxikJ6zb5FXldONUG0MxrWjd2/zJ9
-         qjXDBPfotNh5uahFaI3EwJUHDgzuu31YAj7U46CRTE46zs95JLFmEyNWSYkcpbFUNmc2
-         wgz7esvtbU3/TW1zTYt+YOJh61m3ZYL9OmRI1zbvP5lIoaYq7xeAeYe1UO0+U/BPJGBK
-         icdGGF1vQcd84o7e+57Zf+BdF1qfrxjMBHRTUmLM4xLBHeMpysSsa64Jbo9kDCy5Z2gp
-         wJjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BrhHlE2Zmb8qG7aodLCCwPMutnU0QeSrvMETJzhMIzo=;
-        b=Cemh5Fvr8fjdeAyQr2NC++xASPJEX2ezPJKUjphYv0lZn0yjUbnMDa1F1zPGmH6H20
-         DsjDbfyr0+FnpzBwZbKa6KMgYqHrK3kpZNxgrOr2xxz8RF3OCUvZUuDq+7Hw8XTnmM7y
-         Rn3wqauormmZrNzJ68HHhHzvDZX6rgqjEK7N51OMtFt9NbI/e2NvdHAYdx8xcYGv5ctx
-         oIxCb37Bettz3OzBrnR/X7bkW+JMBp6aj5Hk9CiOSkofG1V+EBt8boMkxnabu4F14VLA
-         wx6SWyKNXWExfJYDkJNTuzPImp+JjQqvnYUCTxrRJXSl/E1JazfcZfNcZA5lWlBbNcM4
-         gOEw==
-X-Gm-Message-State: AGi0PuZ1rXmEd3n0ilSWDyc4MPD9GrFVtNQy1EB3qF/t/y55oZ0gRAWS
-        Ys3FRY6pOckp4Q1HHqyi1fgY0g72rH4=
-X-Google-Smtp-Source: APiQypK4DubtHwM1Vu8C8FpSXFjuCvRo/r5RQVxEQi5FWF3UHohrmabVSVe8bPGqMapjaOjvGqe4Zw==
-X-Received: by 2002:a62:7982:: with SMTP id u124mr800006pfc.298.1588946457081;
-        Fri, 08 May 2020 07:00:57 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id 207sm1458329pgh.34.2020.05.08.07.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 07:00:55 -0700 (PDT)
-Date:   Fri, 8 May 2020 22:00:47 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some
- kconfigs
-Message-ID: <20200508140047.rln4iogroxw7esxa@mail.google.com>
-References: <20200503001141.9647-1-changbin.du@gmail.com>
- <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
- <20200507091807.0a789fbd@gandalf.local.home>
+        Fri, 8 May 2020 10:01:30 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2171 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbgEHOB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:01:29 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 48E5839EDB81459772AE;
+        Fri,  8 May 2020 15:01:27 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:01:26 +0100
+Date:   Fri, 8 May 2020 15:01:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
+        <mchehab+huawei@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] iio: imu: inv_icm42600: add gyroscope IIO device
+Message-ID: <20200508150104.000010c2@Huawei.com>
+In-Reply-To: <20200507144222.20989-5-jmaneyrol@invensense.com>
+References: <20200507144222.20989-1-jmaneyrol@invensense.com>
+        <20200507144222.20989-5-jmaneyrol@invensense.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507091807.0a789fbd@gandalf.local.home>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 09:18:07AM -0400, Steven Rostedt wrote:
-> On Thu, 7 May 2020 12:19:57 +0900
-> Masahiro Yamada <masahiroy@kernel.org> wrote:
-> 
-> > On Sun, May 3, 2020 at 9:11 AM Changbin Du <changbin.du@gmail.com> wrote:
-> > >
-> > > Sometimes it is useful to preserve batches of configs when making
-> > > localmodconfig. For example, I usually don't want any usb and fs
-> > > modules to be disabled. Now we can do it by:
-> > >
-> > >  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
-> > >
-> > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > >
-> > > ---
-> > > v4: fix typo.
-> > > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-> > > v2: fix typo in documentation. (Randy Dunlap)
-> > > ---  
-> > 
-> > 
-> > Personally, I do not mind the long LOCALMODCONFIG_PRESERVE,
-> 
-> Perhasp we allow both? ;-)
-> 
-> And just have one set to the other.
-> 
-> > but this tends to be bike-sheding.
-> > I do not have a strong opinion.
-> > 
-> > 
-> > >  Documentation/admin-guide/README.rst |  8 +++++++-
-> > >  scripts/kconfig/Makefile             |  1 +
-> > >  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
-> > >  3 files changed, 31 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> > > index cc6151fc0845..1371deab8bc7 100644
-> > > --- a/Documentation/admin-guide/README.rst
-> > > +++ b/Documentation/admin-guide/README.rst
-> > > @@ -209,10 +209,16 @@ Configuring the kernel
-> > >                             store the lsmod of that machine into a file
-> > >                             and pass it in as a LSMOD parameter.
-> > >
-> > > +                           Also, you can preserve modules in certain folders
-> > > +                           or kconfig files by specifying their paths in
-> > > +                           parameter LMC_KEEP.
-> > > +
-> > >                     target$ lsmod > /tmp/mylsmod
-> > >                     target$ scp /tmp/mylsmod host:/tmp
-> > >
-> > > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> > > +                   host$ make LSMOD=/tmp/mylsmod \
-> > > +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \  
-> > 
-> > 
-> > This might be another bike-sheding item, but
-> > can you use a space for the delimiter?
-> > 
-> > 
-> > LMC_KEEP="drivers/usb drivers/gpu fs"
-> > 
-> > If you pass multiple directories,
-> > you will need to surround them with double-quotes.
-> 
-> I agree that spaces look better.
->
-I am okay with space. But what about ":" which is used by shell PATH and many
-others?
+On Thu, 7 May 2020 16:42:14 +0200
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
-> > 
-> > 
-> > 
-> > 
-> > > +                           localmodconfig
-> > >
-> > >                             The above also works when cross compiling.
-> > >
-> > > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> > > index c9d0a4a8efb3..e0abbf5805f5 100644
-> > > --- a/scripts/kconfig/Makefile
-> > > +++ b/scripts/kconfig/Makefile
-> > > @@ -123,6 +123,7 @@ help:
-> > >         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
-> > >         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
-> > >         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
-> > > +       @echo  '                    except those preserved by LMC_KEEP environment variable'
-> > >         @echo  '  localyesconfig  - Update current config converting local mods to core'
-> > >         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
-> > >         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-> > > diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> > > index e2f8504f5a2d..d26543a807c9 100755
-> > > --- a/scripts/kconfig/streamline_config.pl
-> > > +++ b/scripts/kconfig/streamline_config.pl
-> > > @@ -143,6 +143,7 @@ my %depends;
-> > >  my %selects;
-> > >  my %prompts;
-> > >  my %objects;
-> > > +my %config2kfile;
-> > >  my $var;
-> > >  my $iflevel = 0;
-> > >  my @ifdeps;
-> > > @@ -201,6 +202,7 @@ sub read_kconfig {
-> > >         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
-> > >             $state = "NEW";
-> > >             $config = $2;
-> > > +           $config2kfile{"CONFIG_$config"} = $kconfig;
-> > >
-> > >             # Add depends for 'if' nesting
-> > >             for (my $i = 0; $i < $iflevel; $i++) {
-> > > @@ -592,6 +594,22 @@ while ($repeat) {
-> > >
-> > >  my %setconfigs;
-> > >
-> > > +my @preserved_kconfigs;
-> > > +@preserved_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));  
-> > 
-> > Maybe, you can do 'my' declaration and the assignment
-> > in a single line?
-> > 
-> > Can you drop the 'if ...' conditional?
-> > 
-> > 
-> > Does this work for you?
-> > 
-> > my @preserved_kconfigs = split(/;/,$ENV{LMC_KEEP});
-> > 
-> > 
+> Add IIO device for gyroscope sensor with data polling interface.
+> Attributes: raw, scale, sampling_frequency, calibbias.
 > 
-> Will an undefined warning happen if LMC_KEEP isn't defined?
+> Gyroscope in low noise mode.
 > 
-I just verifed there is no warning raised.
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Few trivial things and questions inline.
 
-> -- Steve
+J
 
--- 
-Cheers,
-Changbin Du
+> ---
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h   |   4 +
+>  .../iio/imu/inv_icm42600/inv_icm42600_core.c  |   5 +
+>  .../iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 549 ++++++++++++++++++
+>  3 files changed, 558 insertions(+)
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> 
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> index 8da4c8249aed..ca41a9d6404a 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> @@ -120,6 +120,7 @@ struct inv_icm42600_suspended {
+>   *  @orientation:	sensor chip orientation relative to main hardware.
+>   *  @conf:		chip sensors configurations.
+>   *  @suspended:		suspended sensors configuration.
+> + *  @indio_gyro:	gyroscope IIO device.
+>   */
+>  struct inv_icm42600_state {
+>  	struct mutex lock;
+> @@ -131,6 +132,7 @@ struct inv_icm42600_state {
+>  	struct iio_mount_matrix orientation;
+>  	struct inv_icm42600_conf conf;
+>  	struct inv_icm42600_suspended suspended;
+> +	struct iio_dev *indio_gyro;
+>  };
+>  
+>  /* Virtual register addresses: @bank on MSB (4 upper bits), @address on LSB */
+> @@ -369,4 +371,6 @@ int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
+>  int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  			    inv_icm42600_bus_setup bus_setup);
+>  
+> +int inv_icm42600_gyro_init(struct inv_icm42600_state *st);
+> +
+>  #endif
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> index 35bdf4f9d31e..151257652ce6 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> @@ -503,6 +503,11 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* create and init gyroscope iio device */
+
+'Kind' of obvious from function name?   Maybe drop the comment?
+
+> +	ret = inv_icm42600_gyro_init(st);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* setup runtime power management */
+>  	ret = pm_runtime_set_active(dev);
+>  	if (ret)
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> new file mode 100644
+> index 000000000000..74aa2b5fa611
+> --- /dev/null
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+> @@ -0,0 +1,549 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2020 Invensense, Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +
+> +#include "inv_icm42600.h"
+> +
+> +#define INV_ICM42600_GYRO_CHAN(_modifier, _index, _ext_info)		\
+> +	{								\
+> +		.type = IIO_ANGL_VEL,					\
+> +		.modified = 1,						\
+> +		.channel2 = _modifier,					\
+> +		.info_mask_separate =					\
+> +			BIT(IIO_CHAN_INFO_RAW) |			\
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
+> +		.info_mask_shared_by_type =				\
+> +			BIT(IIO_CHAN_INFO_SCALE),			\
+> +		.info_mask_shared_by_type_available =			\
+> +			BIT(IIO_CHAN_INFO_SCALE),			\
+> +		.info_mask_shared_by_all =				\
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
+> +		.info_mask_shared_by_all_available =			\
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
+> +		.scan_index = _index,					\
+> +		.scan_type = {						\
+> +			.sign = 's',					\
+> +			.realbits = 16,					\
+> +			.storagebits = 16,				\
+> +			.shift = 0,					\
+
+Shift has the 'obviously' default of 0, so normally we don't bother explicitly
+setting it to 0 like this.
+
+> +			.endianness = IIO_BE,				\
+> +		},							\
+> +		.ext_info = _ext_info,					\
+> +	}
+> +
+> +enum inv_icm42600_gyro_scan {
+> +	INV_ICM42600_GYRO_SCAN_X,
+> +	INV_ICM42600_GYRO_SCAN_Y,
+> +	INV_ICM42600_GYRO_SCAN_Z,
+> +};
+> +
+> +static const struct iio_chan_spec_ext_info inv_icm42600_gyro_ext_infos[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, inv_icm42600_get_mount_matrix),
+> +	{},
+> +};
+> +
+> +static const struct iio_chan_spec inv_icm42600_gyro_channels[] = {
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_X, INV_ICM42600_GYRO_SCAN_X,
+> +			       inv_icm42600_gyro_ext_infos),
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_Y, INV_ICM42600_GYRO_SCAN_Y,
+> +			       inv_icm42600_gyro_ext_infos),
+> +	INV_ICM42600_GYRO_CHAN(IIO_MOD_Z, INV_ICM42600_GYRO_SCAN_Z,
+> +			       inv_icm42600_gyro_ext_infos),
+> +};
+> +
+> +static int inv_icm42600_gyro_read_sensor(struct inv_icm42600_state *st,
+> +					 struct iio_chan_spec const *chan,
+> +					 int16_t *val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	unsigned int reg;
+> +	__be16 data;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_X;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_Y;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_GYRO_DATA_Z;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	pm_runtime_get_sync(dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	/* enable gyro sensor */
+> +	conf.mode = INV_ICM42600_SENSOR_MODE_LOW_NOISE;
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	/* read gyro register data */
+> +	ret = regmap_bulk_read(st->map, reg, &data, sizeof(data));
+
+IIRC bulk reads need to be to dma safe buffers.  So typically on the stack and
+in appropriately aligned location in any containing structure.
+
+> +	if (ret)
+> +		goto exit;
+> +
+> +	*val = (int16_t)be16_to_cpu(data);
+> +	if (*val == INV_ICM42600_DATA_INVALID)
+> +		ret = -EINVAL;
+> +exit:
+> +	mutex_unlock(&st->lock);
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +/* IIO format int + nano */
+> +static const int inv_icm42600_gyro_scale[] = {
+> +	/* +/- 2000dps => 0.001065264 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_2000DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_2000DPS + 1] = 1065264,
+> +	/* +/- 1000dps => 0.000532632 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_1000DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_1000DPS + 1] = 532632,
+> +	/* +/- 500dps => 0.000266316 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_500DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_500DPS + 1] = 266316,
+> +	/* +/- 250dps => 0.000133158 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_250DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_250DPS + 1] = 133158,
+> +	/* +/- 125dps => 0.000066579 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_125DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_125DPS + 1] = 66579,
+> +	/* +/- 62.5dps => 0.000033290 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_62_5DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_62_5DPS + 1] = 33290,
+> +	/* +/- 31.25dps => 0.000016645 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_31_25DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_31_25DPS + 1] = 16645,
+> +	/* +/- 15.625dps => 0.000008322 rad/s */
+> +	[2 * INV_ICM42600_GYRO_FS_15_625DPS] = 0,
+> +	[2 * INV_ICM42600_GYRO_FS_15_625DPS + 1] = 8322,
+> +};
+> +
+> +static int inv_icm42600_gyro_read_scale(struct inv_icm42600_state *st,
+> +					int *val, int *val2)
+> +{
+> +	unsigned int idx;
+> +
+> +	mutex_lock(&st->lock);
+> +	idx = st->conf.gyro.fs;
+
+Seems like we shouldn't need the lock to retrieve a single value.
+Is there some odd intermediate state somewhere I'm missing?
+
+> +	mutex_unlock(&st->lock);
+> +
+> +	*val = inv_icm42600_gyro_scale[2 * idx];
+> +	*val2 = inv_icm42600_gyro_scale[2 * idx + 1];
+> +	return IIO_VAL_INT_PLUS_NANO;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_scale(struct inv_icm42600_state *st,
+> +					 int val, int val2)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int idx;
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	int ret;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(inv_icm42600_gyro_scale); idx += 2) {
+> +		if (val == inv_icm42600_gyro_scale[idx] &&
+> +				val2 == inv_icm42600_gyro_scale[idx + 1])
+
+Alignment of code seems odd.
+
+> +			break;
+> +	}
+> +	if (idx >= ARRAY_SIZE(inv_icm42600_gyro_scale))
+> +		return -EINVAL;
+> +
+> +	/* update gyro fs */
+> +	pm_runtime_get_sync(dev);
+> +
+> +	mutex_lock(&st->lock);
+> +	conf.fs = idx / 2;
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	mutex_unlock(&st->lock);
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +/* IIO format int + micro */
+> +static const int inv_icm42600_gyro_odr[] = {
+> +	/* 12.5Hz */
+> +	12, 500000,
+> +	/* 25Hz */
+> +	25, 0,
+> +	/* 50Hz */
+> +	50, 0,
+> +	/* 100Hz */
+> +	100, 0,
+> +	/* 200Hz */
+> +	200, 0,
+> +	/* 1kHz */
+> +	1000, 0,
+> +	/* 2kHz */
+> +	2000, 0,
+> +	/* 4kHz */
+> +	4000, 0,
+> +};
+> +
+> +static const int inv_icm42600_gyro_odr_conv[] = {
+> +	INV_ICM42600_ODR_12_5HZ,
+> +	INV_ICM42600_ODR_25HZ,
+> +	INV_ICM42600_ODR_50HZ,
+> +	INV_ICM42600_ODR_100HZ,
+> +	INV_ICM42600_ODR_200HZ,
+> +	INV_ICM42600_ODR_1KHZ_LN,
+> +	INV_ICM42600_ODR_2KHZ_LN,
+> +	INV_ICM42600_ODR_4KHZ_LN,
+> +};
+> +
+> +static int inv_icm42600_gyro_read_odr(struct inv_icm42600_state *st,
+> +				      int *val, int *val2)
+> +{
+> +	unsigned int odr;
+> +	unsigned int i;
+> +
+> +	mutex_lock(&st->lock);
+> +	odr = st->conf.gyro.odr;
+> +	mutex_unlock(&st->lock);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(inv_icm42600_gyro_odr_conv); ++i) {
+> +		if (inv_icm42600_gyro_odr_conv[i] == odr)
+> +			break;
+> +	}
+> +	if (i >= ARRAY_SIZE(inv_icm42600_gyro_odr_conv))
+> +		return -EINVAL;
+> +
+> +	*val = inv_icm42600_gyro_odr[2 * i];
+> +	*val2 = inv_icm42600_gyro_odr[2 * i + 1];
+> +
+> +	return IIO_VAL_INT_PLUS_MICRO;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_odr(struct inv_icm42600_state *st,
+> +				       int val, int val2)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int idx;
+> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> +	int ret;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(inv_icm42600_gyro_odr); idx += 2) {
+> +		if (val == inv_icm42600_gyro_odr[idx] &&
+> +				val2 == inv_icm42600_gyro_odr[idx + 1])
+> +			break;
+> +	}
+> +	if (idx >= ARRAY_SIZE(inv_icm42600_gyro_odr))
+> +		return -EINVAL;
+> +
+> +	/* update gyro odr */
+> +	pm_runtime_get_sync(dev);
+> +
+> +	mutex_lock(&st->lock);
+> +	conf.odr = inv_icm42600_gyro_odr_conv[idx / 2];
+> +	ret = inv_icm42600_set_gyro_conf(st, &conf, NULL);
+> +	mutex_unlock(&st->lock);
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_read_offset(struct inv_icm42600_state *st,
+> +					 struct iio_chan_spec const *chan,
+> +					 int16_t *val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int reg;
+> +	uint8_t data[2];
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_OFFSET_USER0;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_OFFSET_USER1;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_OFFSET_USER3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	pm_runtime_get_sync(dev);
+> +
+> +	/* read gyro offset data */
+> +	mutex_lock(&st->lock);
+> +	ret = regmap_bulk_read(st->map, reg, &data, sizeof(data));
+> +	mutex_unlock(&st->lock);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		*val = (int16_t)(((data[1] & 0x0F) << 8) | data[0]);
+
+This doesn't look right for negative values.  You would be better
+off with a sign extend of the 12 bit value.
+
+> +		break;
+> +	case IIO_MOD_Y:
+> +		*val = (int16_t)(((data[0] & 0xF0) << 4) | data[1]);
+> +		break;
+> +	case IIO_MOD_Z:
+> +		*val = (int16_t)(((data[1] & 0x0F) << 8) | data[0]);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +exit:
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_write_offset(struct inv_icm42600_state *st,
+> +					  struct iio_chan_spec const *chan,
+> +					  int val)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int reg, regval;
+> +	uint8_t data[2];
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		reg = INV_ICM42600_REG_OFFSET_USER0;
+> +		break;
+> +	case IIO_MOD_Y:
+> +		reg = INV_ICM42600_REG_OFFSET_USER1;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		reg = INV_ICM42600_REG_OFFSET_USER3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* value is limited to 12 bits signed */
+> +	if (val < -2048 || val > 2047)
+> +		return -EINVAL;
+
+Perhaps worth an available callback to give the range?
+
+> +
+> +	pm_runtime_get_sync(dev);
+> +	mutex_lock(&st->lock);
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_X:
+> +		/* OFFSET_USER1 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER1,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = val & 0xFF;
+> +		data[1] = (regval & 0xF0) | ((val & 0xF00) >> 8);
+> +		break;
+> +	case IIO_MOD_Y:
+> +		/* OFFSET_USER1 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER1,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = ((val & 0xF00) >> 4) | (regval & 0x0F);
+> +		data[1] = val & 0xFF;
+> +		break;
+> +	case IIO_MOD_Z:
+> +		/* OFFSET_USER4 register is shared */
+> +		ret = regmap_read(st->map, INV_ICM42600_REG_OFFSET_USER4,
+> +				  &regval);
+> +		if (ret)
+> +			goto out_unlock;
+> +		data[0] = val & 0xFF;
+> +		data[1] = (regval & 0xF0) | ((val & 0xF00) >> 8);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +
+> +	ret = regmap_bulk_write(st->map, reg, data, sizeof(data));
+> +
+> +out_unlock:
+> +	mutex_unlock(&st->lock);
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_gyro_read_raw(struct iio_dev *indio_dev,
+> +				      struct iio_chan_spec const *chan,
+> +				      int *val, int *val2, long mask)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	int16_t data;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_read_sensor(st, chan, &data);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		*val = data;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return inv_icm42600_gyro_read_scale(st, val, val2);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return inv_icm42600_gyro_read_odr(st, val, val2);
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+
+I'm curious.  Why can't we read back a calibration offset whilst doing
+buffered capture?
+
+> +		ret = inv_icm42600_gyro_read_offset(st, chan, &data);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		*val = data;
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_read_avail(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec const *chan,
+> +					const int **vals,
+> +					int *type, int *length, long mask)
+> +{
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals = inv_icm42600_gyro_scale;
+> +		*type = IIO_VAL_INT_PLUS_NANO;
+> +		*length = ARRAY_SIZE(inv_icm42600_gyro_scale);
+> +		return IIO_AVAIL_LIST;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*vals = inv_icm42600_gyro_odr;
+> +		*type = IIO_VAL_INT_PLUS_MICRO;
+> +		*length = ARRAY_SIZE(inv_icm42600_gyro_odr);
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_write_raw(struct iio_dev *indio_dev,
+> +				       struct iio_chan_spec const *chan,
+> +				       int val, int val2, long mask)
+> +{
+> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> +	int ret;
+> +
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_write_scale(st, val, val2);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return inv_icm42600_gyro_write_odr(st, val, val2);
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_gyro_write_offset(st, chan, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int inv_icm42600_gyro_write_raw_get_fmt(struct iio_dev *indio_dev,
+> +					       struct iio_chan_spec const *chan,
+> +					       long mask)
+> +{
+> +	if (chan->type != IIO_ANGL_VEL)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info inv_icm42600_gyro_info = {
+> +	.read_raw = inv_icm42600_gyro_read_raw,
+> +	.read_avail = inv_icm42600_gyro_read_avail,
+> +	.write_raw = inv_icm42600_gyro_write_raw,
+> +	.write_raw_get_fmt = inv_icm42600_gyro_write_raw_get_fmt,
+> +	.debugfs_reg_access = inv_icm42600_debugfs_reg,
+> +};
+> +
+> +int inv_icm42600_gyro_init(struct inv_icm42600_state *st)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	const char *name;
+> +	struct iio_dev *indio_dev;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "%s-gyro", st->name);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, 0);
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	iio_device_set_drvdata(indio_dev, st);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->name = name;
+> +	indio_dev->info = &inv_icm42600_gyro_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = inv_icm42600_gyro_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(inv_icm42600_gyro_channels);
+> +
+> +	st->indio_gyro = indio_dev;
+> +	return devm_iio_device_register(dev, st->indio_gyro);
+> +}
+
+
