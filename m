@@ -2,91 +2,140 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3C4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8C2C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 164D22184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588969143;
-	bh=rtlkxCw6OP75lsWf55o9FNytUMK3linnTNSPigtZ3HI=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=fT1hbzDy/+18Sp2AiOnEkh0tqbhCegL8F+GBJuf/FZVtEwCZrmA3hShIWmV0spf3A
-	 80OrNDsDWOwrtWD74LAYPXLfxwUgqflxQahe5bHVAiW90Gt9gPRUfx2DunF+XuAH2f
-	 WBLUh/qoZTmT58gWl8Rg6wAnPn3i57vkVELv2B4I=
+	by mail.kernel.org (Postfix) with ESMTP id 3BF942173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W5D2scAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHUTC (ORCPT
+        id S1727803AbgEHU1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 16:27:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49908 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHUTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:19:02 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BCA206D3;
-        Fri,  8 May 2020 20:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588969141;
-        bh=rtlkxCw6OP75lsWf55o9FNytUMK3linnTNSPigtZ3HI=;
-        h=Date:From:To:Subject:From;
-        b=AcY0gOYDM85+4XD72AjMoyytiWvIzYmECA1mU4+IFdM2NkTZmBh81nNYiue1gWStf
-         UqbtipNy6Nu9fQ87R+29mFlmmUzgjPrU3/u0olxymbuH3ifOydh+NRwsvmbXLlOmgF
-         E1YKjtZ5E1YWhO5X7VZ58cC1AzBspxq3w/0HDW7Y=
-Received: by pali.im (Postfix)
-        id 708A07F5; Fri,  8 May 2020 22:18:59 +0200 (CEST)
-Date:   Fri, 8 May 2020 22:18:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Missing CLOCK_BOOTTIME_RAW?
-Message-ID: <20200508201859.vlffp4fomw2fr4qc@pali>
+        id S1726811AbgEHU1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 16:27:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=99PO3vaZTM46qvS0LR8bXv5m1BEVlIFvFmNNPuHSrcU=; b=W5D2scAPXtxzyvIYaVnSFKVXeL
+        ZqkHeN4Ll77OUV9rI72SL8SPBFaWhVarfaXMhS/ggsB1zhom6zD9coCA0B5vJ6qy2LhJH2ZHGvFAV
+        h0NldpoKACJnE+1za8zyt18VTFJZO3SPLta76FPexc3DJhgMMy2idyfNfkFugBkt8QKE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jX9ac-001Pvw-Kd; Fri, 08 May 2020 22:27:22 +0200
+Date:   Fri, 8 May 2020 22:27:22 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+Message-ID: <20200508202722.GI298574@lunn.ch>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+ <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+ <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
+ <20200508181301.GF298574@lunn.ch>
+ <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thomas!
+> > There is a very small number of devices where the vendor messed up,
+> > and did not put valid contents in the ID registers. In such cases, we
+> > can read the IDs from device tree. These are then used in exactly the
+> > same way as if they were read from the device.
+> > 
+> 
+> Is that the case here?
 
-I'm looking at clocks which are provided by kernel for userspace
-applications via clock_gettime() syscall and I think that there is
-missing clock variant CLOCK_BOOTTIME_RAW.
+Sorry, I don't understand the question?
 
-If userspace application wants to measure time difference between two
-events then I think all of available clocks CLOCK_REALTIME,
-CLOCK_MONOTONIC, CLOCK_MONOTONIC_RAW and CLOCK_BOOTTIME have some issues
-for such task.
+> Also, how much of this was caused by uboot being deficient
 
-CLOCK_REALTIME may be changed but userspace and therefore time
-difference between two events may be also negative.
+None. It is a silicon issue. The PHY chip simply has the wrong or no
+ID value in the registers.
 
-CLOCK_MONOTONIC does not have to precise as there may be incremental
-jumps caused by NTP or measured time difference may be smaller as
-elapsed when system is suspended. During system suspend is clock
-CLOCK_MONOTONIC stopped.
+> > Not exactly true. It is the combination of can the bus master do C45
+> > and can the device do C45. Unfortunately, we have no knowledge of the
+> > bus masters capabilities, if it can do C45. And many MDIO drivers will
+> > do a C22 transaction when asked to perform a C45 transaction. All new
+> > submissions for MDIO drivers i ask for EOPNOTSUPP to be returned if
+> > C45 is not supported. But we cannot rely on that. Too much history >
+> > > 
+> > > I tend to agree with you on this. Even for DT, ideal case, IMO should be:
+> > > 
+> > > 1) mdiobus_scan scans the mdiobus for c22 devices by reading phy id from
+> > > registers 2 and 3
+> > > 2) if not found scan for c45 devices <= looks like this is missing in Linux
+> > > 3) look for phy_id from compatible string.
+> > 
+> > It is somewhat more complex, in that there are a small number of
+> > devices which will respond to both C22 and C45. Generally, you want to
+> > use C45 if supported. So you would want to do the C45 scan first. But
+> > then the earlier problem comes to play, you have no idea if the bus
+> > master actually correctly supports C45.
+> 
+> But this shouldn't this be implied by the mdio vendor/model?
 
-CLOCK_MONOTONIC_RAW is not affected by NTP jumps but still is not
-suitable for measuring time differences when system is suspended.
+Nope. Many MDIO bus masters don't even appear in DT, because they are
+embedded into the MAC driver. The MAC driver just instantiates an MDIO
+device, maybe passing a pointer where to find the PHY properties in
+DT. If the MDIO bus master is in its own address range, then it
+probably does exist in device tree, and has a compatible string. But
+that just gets the driver loaded, it says nothing about what it is
+capable of, C22 and or C45. And there are cases where the MDIO bus is
+embedded inside an Ethernet switch, which is hanging off another MDIO
+bus, etc.
 
-CLOCK_BOOTTIME is affected by NTP jumps but provides correct time
-difference when system was suspended during measurement.
+> How much of this can be simplified for ACPI buy ignoring the legacy and
+> putting some guides around the ACPI/platform requirements?
 
-So for me it looks like that there is missing CLOCK_BOOTTIME_RAW clock
-which would not be affected by NTP jumps (like CLOCK_MONOTONIC_RAW) and
-also would not be affected by system suspend (like CLOCK_BOOTTIME).
+You can probably ignore the phy-idXXXX.YYYY compatible, since that is
+working around silicon issues, and put in place some guidelines that
+the PHY silicon needs to conform to the basics of C22 and C45 in terms
+of ID registers.
 
-Please correct me if I'm wrong in some of my above assumptions. It is
-how I understood documentation for clock_gettime() function from Linux
-manpage.
+C45 you are going to need. ACPI tends to be more high end devices,
+which in general have higher speed network interfaces. Multi-Gige PHYs
+tend to be C45. But there is also interest in using ACPI on 1G PHYs
+where the majority is C22.
 
-Is there any reason why kernel does not provide such CLOCK_BOOTTIME_RAW
-clock for userspace applications which would be interested in measuring
-time difference which occurred between two events?
+      Andrew
