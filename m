@@ -2,214 +2,335 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506B9C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A58C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 366CC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE6021841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgEHPpL convert rfc822-to-8bit (ORCPT
+        id S1728219AbgEHPpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:45:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59832 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgEHPpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:45:09 -0400
-IronPort-SDR: rzY9RnjQ0KQwEinW4jAxw1l8ZvCujQkFDUUM0m0o+c6vDRkKmSIJme+gvQ9KPHwMus1xCXsJV9
- dUiCTzlS+vTw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 08:45:08 -0700
-IronPort-SDR: zuLAiuchje8B0YyQv0S/mbUVBsaBhKQ3aT39CD4wudUZg6RsHy7KKcVB23qKFBK/RFueqW6QIA
- q31289LMt4LQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="285505776"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 08:45:08 -0700
-Received: from fmsmsx121.amr.corp.intel.com (10.18.125.36) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 8 May 2020 08:45:08 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
- fmsmsx121.amr.corp.intel.com ([169.254.6.5]) with mapi id 14.03.0439.000;
- Fri, 8 May 2020 08:45:08 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Bernard Zhao <bernard@vivo.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        "Sam Ravnborg" <sam@ravnborg.org>,
-        Ori Messinger <Ori.Messinger@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
-Subject: RE: [PATCH v2] drm/amd/amdgpu: cleanup coding style a bit
-Thread-Topic: [PATCH v2] drm/amd/amdgpu: cleanup coding style a bit
-Thread-Index: AQHWJE+3bau47Y1nb0Gh/jTCob7xpaieVcIg
-Date:   Fri, 8 May 2020 15:45:07 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E20C5BD@FMSMSX108.amr.corp.intel.com>
-References: <20200507091311.10898-1-bernard@vivo.com>
-In-Reply-To: <20200507091311.10898-1-bernard@vivo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Fri, 8 May 2020 11:45:43 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34832 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgEHPpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:45:42 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g4so2172618ljl.2;
+        Fri, 08 May 2020 08:45:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N9gYLaHYZJKZckAryntApHd1C+vXPx8xLJKhLTIvXSY=;
+        b=Dkihip5gLtQi6wr7fAekMFRzge0DOGLBG43nLxsmYvldhLDvhH6RQFTGlhwGGFVjGW
+         sPI7kU71X7pdddsmXN1ewZU3Mg2+YzWsekafFxXJd8bsDhSSoZr/xNbVqZkCYv5LUXKq
+         tk+nzZ3Y8P75vJwYEmH9VA7CzGl69lBnMrn8mE30Ds2DijZ/ej/C0mFfMTZ9Sy+ZxOGG
+         YB236yrvMtAAFiqv+HLo74GgibwQdexrxGNfiuSX/6FosHj1Uo3LjEka4qVxAI7myH1Y
+         8Hgy0LdlZcAO+QiUTsKZbvTNiJEu6P/YdIuke98XdSzVW9cgo/A3EB2GS/cGLBNz5FMs
+         Dkug==
+X-Gm-Message-State: AOAM531tQTD5MKWh34Fkg89MmQvD8A/YsqKQATet7CNJ5eueBpvafDRU
+        9aLLbqv7tyoDbw0UN+CsAdM=
+X-Google-Smtp-Source: ABdhPJz/TSluaqTPI9YgOwnoCghL3uo5gIoWekqagbcmMpPFY606cgReVrBBAtGztw5sRu4x8VSaMw==
+X-Received: by 2002:a05:651c:1121:: with SMTP id e1mr2111226ljo.205.1588952737591;
+        Fri, 08 May 2020 08:45:37 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id m6sm1632978ljp.32.2020.05.08.08.45.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:45:37 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:44:45 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 05/11] power: supply: bd70528: use linear ranges
+Message-ID: <46fa0d17ac06aeda054d2080fb39693c6eabfea6.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Bernard Zhao
->Sent: Thursday, May 7, 2020 5:13 AM
->To: Alex Deucher <alexander.deucher@amd.com>; Christian König
-><christian.koenig@amd.com>; David (ChunMing) Zhou
-><David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
-><daniel@ffwll.ch>; Tom St Denis <tom.stdenis@amd.com>; Sam Ravnborg
-><sam@ravnborg.org>; Ori Messinger <Ori.Messinger@amd.com>; Bernard
->Zhao <bernard@vivo.com>; amd-gfx@lists.freedesktop.org; dri-
->devel@lists.freedesktop.org; linux-kernel@vger.kernel.org
->Cc: opensource.kernel@vivo.com
->Subject: [PATCH v2] drm/amd/amdgpu: cleanup coding style a bit
->
->There is DEVICE_ATTR mechanism in separate attribute define.
->So this change is to use attr array, also use
->sysfs_create_files in init function & sysfs_remove_files in
->fini function.
->This maybe make the code a bit readable.
->
->Signed-off-by: Bernard Zhao <bernard@vivo.com>
->
->Changes since V1:
->*Use DEVICE_ATTR mechanism
->
->Link for V1:
->*https://lore.kernel.org/patchwork/patch/1228076/
->---
-> drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 43 ++++++-------------
->-
-> 1 file changed, 13 insertions(+), 30 deletions(-)
->
->diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->index 82a3299e53c0..57bbc70662ff 100644
->--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->@@ -148,6 +148,15 @@ static DEVICE_ATTR(mem_info_vis_vram_used,
->S_IRUGO,
-> static DEVICE_ATTR(mem_info_vram_vendor, S_IRUGO,
-> 		   amdgpu_mem_info_vram_vendor, NULL);
->
->+static struct attribute *amdgpu_vram_mgr_attributes[] = {
->+	&dev_attr_mem_info_vram_total.attr,
->+	&dev_attr_mem_info_vis_vram_total.attr,
->+	&dev_attr_mem_info_vram_used.attr,
->+	&dev_attr_mem_info_vis_vram_used.attr,
->+	&dev_attr_mem_info_vram_vendor.attr,
->+	NULL
->+};
->+
-> /**
->  * amdgpu_vram_mgr_init - init VRAM manager and DRM MM
->  *
->@@ -172,31 +181,9 @@ static int amdgpu_vram_mgr_init(struct
->ttm_mem_type_manager *man,
-> 	man->priv = mgr;
->
-> 	/* Add the two VRAM-related sysfs files */
->-	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_total);
->-	if (ret) {
->-		DRM_ERROR("Failed to create device file
->mem_info_vram_total\n");
->-		return ret;
->-	}
->-	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vis_vram_total);
->-	if (ret) {
->-		DRM_ERROR("Failed to create device file
->mem_info_vis_vram_total\n");
->-		return ret;
->-	}
->-	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_used);
->-	if (ret) {
->-		DRM_ERROR("Failed to create device file
->mem_info_vram_used\n");
->-		return ret;
->-	}
->-	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vis_vram_used);
->-	if (ret) {
->-		DRM_ERROR("Failed to create device file
->mem_info_vis_vram_used\n");
->-		return ret;
->-	}
->-	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_vendor);
->-	if (ret) {
->-		DRM_ERROR("Failed to create device file
->mem_info_vram_vendor\n");
->-		return ret;
->-	}
->+	ret = sysfs_create_files(&adev->dev->kobj,
->amdgpu_vram_mgr_attributes);
->+	if (ret)
->+		DRM_ERROR("Failed to register sysfs\n");
+Change the bd70528 to use common linear_range code instead of
+implementing a copy of it in this driver.
 
-This looks good to me.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/power/supply/Kconfig           |   1 +
+ drivers/power/supply/bd70528-charger.c | 144 ++++++++++---------------
+ 2 files changed, 56 insertions(+), 89 deletions(-)
 
-I think that there is a new error macro (drm_err?) that you might
-want to use instead of DRM_ERROR().
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index f3424fdce341..9f19636db922 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -695,6 +695,7 @@ config CHARGER_UCS1002
+ config CHARGER_BD70528
+ 	tristate "ROHM bd70528 charger driver"
+ 	depends on MFD_ROHM_BD70528
++	select LINEAR_RANGES
+ 	default n
+ 	help
+ 	 Say Y here to enable support for getting battery status
+diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
+index 3b820110ecfa..7c1f0b99c71b 100644
+--- a/drivers/power/supply/bd70528-charger.c
++++ b/drivers/power/supply/bd70528-charger.c
+@@ -72,6 +72,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
++#include <linux/linear_range.h>
+ 
+ #define CHG_STAT_SUSPEND	0x0
+ #define CHG_STAT_TRICKLE	0x1
+@@ -335,38 +336,37 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
+ 	return 0;
+ }
+ 
+-struct bd70528_linear_range {
+-	int min;
+-	int step;
+-	int vals;
+-	int low_sel;
+-};
+-
+-static const struct bd70528_linear_range current_limit_ranges[] = {
++static const struct linear_range current_limit_ranges[] = {
+ 	{
+ 		.min = 5,
+ 		.step = 1,
+-		.vals = 36,
+-		.low_sel = 0,
++		.min_sel = 0,
++		.max_sel = 0x22,
+ 	},
+ 	{
+ 		.min = 40,
+ 		.step = 5,
+-		.vals = 5,
+-		.low_sel = 0x23,
++		.min_sel = 0x23,
++		.max_sel = 0x26,
+ 	},
+ 	{
+ 		.min = 60,
+ 		.step = 20,
+-		.vals = 8,
+-		.low_sel = 0x27,
++		.min_sel = 0x27,
++		.max_sel = 0x2d,
+ 	},
+ 	{
+ 		.min = 200,
+ 		.step = 50,
+-		.vals = 7,
+-		.low_sel = 0x2e,
+-	}
++		.min_sel = 0x2e,
++		.max_sel = 0x34,
++	},
++	{
++		.min = 500,
++		.step = 0,
++		.min_sel = 0x35,
++		.max_sel = 0x3f,
++	},
+ };
+ 
+ /*
+@@ -374,18 +374,18 @@ static const struct bd70528_linear_range current_limit_ranges[] = {
+  * voltage for low temperatures. The driver currently only reads
+  * the charge current at room temperature. We do set both though.
+  */
+-static const struct bd70528_linear_range warm_charge_curr[] = {
++static const struct linear_range warm_charge_curr[] = {
+ 	{
+ 		.min = 10,
+ 		.step = 10,
+-		.vals = 20,
+-		.low_sel = 0,
++		.min_sel = 0,
++		.max_sel = 0x12,
+ 	},
+ 	{
+ 		.min = 200,
+ 		.step = 25,
+-		.vals = 13,
+-		.low_sel = 0x13,
++		.min_sel = 0x13,
++		.max_sel = 0x1f,
+ 	},
+ };
+ 
+@@ -398,56 +398,6 @@ static const struct bd70528_linear_range warm_charge_curr[] = {
+ #define MAX_WARM_CHG_CURR_SEL 0x1f
+ #define MIN_CHG_CURR_SEL 0x0
+ 
+-static int find_value_for_selector_low(const struct bd70528_linear_range *r,
+-				       int selectors, unsigned int sel,
+-				       unsigned int *val)
+-{
+-	int i;
+-
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
+-			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
+-			return 0;
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+-/*
+- * For BD70528 voltage/current limits we happily accept any value which
+- * belongs the range. We could check if value matching the selector is
+- * desired by computing the range min + (sel - sel_low) * range step - but
+- * I guess it is enough if we use voltage/current which is closest (below)
+- * the requested?
+- */
+-static int find_selector_for_value_low(const struct bd70528_linear_range *r,
+-				       int selectors, unsigned int val,
+-				       unsigned int *sel, bool *found)
+-{
+-	int i;
+-	int ret = -EINVAL;
+-
+-	*found = false;
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].min <= val) {
+-			if (r[i].min + r[i].step * r[i].vals >= val) {
+-				*found = true;
+-				*sel = r[i].low_sel + (val - r[i].min) /
+-				       r[i].step;
+-				ret = 0;
+-				break;
+-			}
+-			/*
+-			 * If the range max is smaller than requested
+-			 * we can set the max supported value from range
+-			 */
+-			*sel = r[i].low_sel + r[i].vals;
+-			ret = 0;
+-		}
+-	}
+-	return ret;
+-}
+-
+ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+ {
+ 	unsigned int sel;
+@@ -463,9 +413,9 @@ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+ 
+ 	sel &= BD70528_MASK_CHG_CHG_CURR;
+ 
+-	ret = find_value_for_selector_low(&warm_charge_curr[0],
+-					  ARRAY_SIZE(warm_charge_curr), sel,
+-					  ma);
++	ret = linear_range_get_value_array(&warm_charge_curr[0],
++					   ARRAY_SIZE(warm_charge_curr),
++					   sel, ma);
+ 	if (ret) {
+ 		dev_err(bdpsy->dev,
+ 			"Unknown charge current value 0x%x\n",
+@@ -491,10 +441,9 @@ static int get_current_limit(struct bd70528_psy *bdpsy, int *ma)
+ 
+ 	sel &= BD70528_MASK_CHG_DCIN_ILIM;
+ 
+-	ret = find_value_for_selector_low(&current_limit_ranges[0],
+-					  ARRAY_SIZE(current_limit_ranges), sel,
+-					  ma);
+-
++	ret = linear_range_get_value_array(&current_limit_ranges[0],
++					   ARRAY_SIZE(current_limit_ranges),
++					   sel, ma);
+ 	if (ret) {
+ 		/* Unspecified values mean 500 mA */
+ 		*ma = 500;
+@@ -588,15 +537,28 @@ static int set_charge_current(struct bd70528_psy *bdpsy, int ma)
+ 		goto set;
+ 	}
+ 
+-	ret = find_selector_for_value_low(&warm_charge_curr[0],
+-					  ARRAY_SIZE(warm_charge_curr), ma,
+-					  &reg, &found);
++/*
++ * For BD70528 voltage/current limits we happily accept any value which
++ * belongs the range. We could check if value matching the selector is
++ * desired by computing the range min + (sel - sel_low) * range step - but
++ * I guess it is enough if we use voltage/current which is closest (below)
++ * the requested?
++ */
++
++	ret = linear_range_get_selector_low_array(warm_charge_curr,
++						  ARRAY_SIZE(warm_charge_curr),
++						  ma, &reg, &found);
+ 	if (ret) {
++		dev_err(bdpsy->dev,
++			 "Unsupported charge current %u mA\n", ma);
+ 		reg = MIN_CHG_CURR_SEL;
+ 		goto set;
+ 	}
+ 	if (!found) {
+-		/* There was a gap in supported values and we hit it */
++		/*
++		 * There was a gap in supported values and we hit it.
++		 * Yet a smaller value was found so we use it.
++		 */
+ 		dev_warn(bdpsy->dev,
+ 			 "Unsupported charge current %u mA\n", ma);
+ 	}
+@@ -648,17 +610,21 @@ static int set_current_limit(struct bd70528_psy *bdpsy, int ma)
+ 		goto set;
+ 	}
+ 
+-	ret = find_selector_for_value_low(&current_limit_ranges[0],
+-					  ARRAY_SIZE(current_limit_ranges), ma,
+-					  &reg, &found);
++	ret = linear_range_get_selector_low_array(current_limit_ranges,
++					ARRAY_SIZE(current_limit_ranges),
++					ma, &reg, &found);
+ 	if (ret) {
++		dev_err(bdpsy->dev, "Unsupported current limit %umA\n", ma);
+ 		reg = MIN_CURR_LIMIT_SEL;
+ 		goto set;
+ 	}
+ 	if (!found) {
+-		/* There was a gap in supported values and we hit it ?*/
+-		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n",
+-			 ma);
++		/*
++		 * There was a gap in supported values and we hit it.
++		 * We found a smaller value from ranges and use it.
++		 * Warn user though.
++		 */
++		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n", ma);
+ 	}
+ 
+ set:
+-- 
+2.21.0
 
-Otherwise:
 
-Acked-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-m
-
->
-> 	return 0;
-> }
->@@ -219,11 +206,7 @@ static int amdgpu_vram_mgr_fini(struct
->ttm_mem_type_manager *man)
-> 	spin_unlock(&mgr->lock);
-> 	kfree(mgr);
-> 	man->priv = NULL;
->-	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
->-	device_remove_file(adev->dev,
->&dev_attr_mem_info_vis_vram_total);
->-	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
->-	device_remove_file(adev->dev,
->&dev_attr_mem_info_vis_vram_used);
->-	device_remove_file(adev->dev,
->&dev_attr_mem_info_vram_vendor);
->+	sysfs_remove_files(&adev->dev->kobj,
->amdgpu_vram_mgr_attributes);
-> 	return 0;
-> }
->
->--
->2.26.2
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
