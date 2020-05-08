@@ -2,374 +2,245 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771A4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C104EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5770420736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FEE20736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jFHkxdZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgEHHVo (ORCPT
+        id S1727076AbgEHHYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:21:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56692 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgEHHUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:47 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE24D1A13FC;
-        Fri,  8 May 2020 09:20:43 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E0F061A1286;
-        Fri,  8 May 2020 09:20:43 +0200 (CEST)
-Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6137F204BD;
-        Fri,  8 May 2020 09:20:43 +0200 (CEST)
-From:   Diana Craciun <diana.craciun@oss.nxp.com>
-To:     alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        bharatb.linux@gmail.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: [PATCH v2 1/9] vfio/fsl-mc: Add VFIO framework skeleton for fsl-mc devices
-Date:   Fri,  8 May 2020 10:20:31 +0300
-Message-Id: <20200508072039.18146-2-diana.craciun@oss.nxp.com>
+        Fri, 8 May 2020 03:24:22 -0400
+Received: from mail-db8eur05on2041.outbound.protection.outlook.com ([40.107.20.41]:62977
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726048AbgEHHYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:24:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iAA5Bct1FD9mCId/nFdmAmA2fiX4SbI93JvWRlQosoD3SUOT/78xfFmhUuG1hicyiK77MGMlAu4LWgfI6wW5a0EF6IzdN36Tx5dGLgS8VGa1uthFjFaEtHseZuTPVR77cY0dR5D9IEcD3r++bRuQshTkZbydZlUwoTzOnAVGsUDuwJu6Mw3+/WOjMb+02xKRm5gR8B9tlN+9icFEg9ezSyuw/4++jBpw9fjqZZgLpoMuLtHo+rFjNHDrodwpY4KaN8xF6hWoYEKzqCM8LcT86jK5zKAVhzJLaPyX9mWghNJpqQnB8428bCwPV9HCAAiC3xsBtLnLra/zgqfJkY7JMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4xVLWhG///qGe0ZYVgQwCt3PBJv4ZWaX6EldxDAb21E=;
+ b=LepBLqMhM75XugxX7BsyMlCFRSIrvv1jzfYRocZ2lfc/rQ6SQ95JfOCnvsFhxOVY+VyYP8Uh1cbhUzVjg/q/aK1/7XXwKCp/mgtHt4io4ClfLr5eDQo8R/jwsrpH8+jdqCOqJ7l7ZiYMO3jgTMDrD6L4fzw/50MdvtSKFlocnnyXYef3iOis43HJXjUH9USLm36WLdEPWgKqM1CpEyfh+PziEQIuAVGKBQiJ+YEXb73RGR8riw4FO56D2cc2tWyupml7+xy1Rty11UVHZgvE7mM70fvdidVSA7vQm5yFzSmNu46h0NNieCdAX1LIdRwRAgOE5dwnzEjnVw0IuIXRow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4xVLWhG///qGe0ZYVgQwCt3PBJv4ZWaX6EldxDAb21E=;
+ b=jFHkxdZzkdvK9WMxCFcvltwFQjvh9lC/pr9uDSXyvIE2TABSNLOHxOR0xI/Ue8FBQ6qrpOd0kddqcn7no5CNW952HRejrgeneGeJKrIsbhyB19x/5iSo25joPBQIXObKOMOhDoUi9n63t/sD8L8SpLphbFbLm8gDh2bCG0F2ksU=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VE1PR04MB6720.eurprd04.prod.outlook.com (2603:10a6:803:123::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.21; Fri, 8 May
+ 2020 07:24:17 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173%7]) with mapi id 15.20.2958.034; Fri, 8 May 2020
+ 07:24:17 +0000
+From:   Po Liu <Po.Liu@nxp.com>
+To:     dsahern@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     vinicius.gomes@intel.com, stephen@networkplumber.org,
+        dcaratti@redhat.com, davem@davemloft.net, vlad@buslov.dev,
+        po.liu@nxp.com, claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, Po Liu <Po.Liu@nxp.com>
+Subject: [v5,iproute2-next 2/2] iproute2-next: add gate action man page
+Date:   Fri,  8 May 2020 15:02:47 +0800
+Message-Id: <20200508070247.6084-2-Po.Liu@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200508070247.6084-1-Po.Liu@nxp.com>
+References: <20200506084020.18106-2-Po.Liu@nxp.com>
+ <20200508070247.6084-1-Po.Liu@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR06CA0041.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::18) To VE1PR04MB6496.eurprd04.prod.outlook.com
+ (2603:10a6:803:11c::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.73) by BYAPR06CA0041.namprd06.prod.outlook.com (2603:10b6:a03:14b::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 07:24:10 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 393cd40c-4473-4c33-7cd5-08d7f320d0ed
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6720:|VE1PR04MB6720:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB67206C1272A68DB778C1CD6B92A20@VE1PR04MB6720.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BiHgFWmJIx76F8QHJlTGz5lvxhbGX892+5EH3nSgZadW1Wk1qsjO3sWIZcX6m7SczpHJ+ORP6l9hC5/K123qb1A+RSDSsh4jMWKtZZJfKf5r/QE9L/zliRbQ8XPTXAOFKHLWtC2Phfqa8pK2sJXg9ElBpG9byJfKAmllKm36MYgW2OFWiG39cnrjZILn5/km7/2RrmLAL8p1mjR/q561qvmWrQTEV4S0/t9u2mvbD444GfgRvqsld59VnM0fjjf7cgSPF+oyS9nd1nWufsZwYrILCxD2+5a4pwcAHMK7It/qSGeJY4tQIgZhKT4yk69ahBSwSbg6iIopAPeMAjTozwACv2cgTOsuN8V6R899sFU6S0IAhj1mbj5NqNiK+j0T7U/2J9LszZMWy3+wqbHziN9v2kypfnWvJua5n07WFuL1ZF4vl5NG56rNn8k6JZxSsbbQ+iOdmiGZfWpz6lsso5oF+p1SRktSwUIG/CNgo1PGnX7BcAKeSc+7SEUCWht8ki8k+BYFdGCNl4Z+MMNlEFcGzAW7scpqRA9RZQys1QuAMO3FRSffzvWash971ca2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(33430700001)(66476007)(66946007)(4326008)(52116002)(26005)(33440700001)(5660300002)(6666004)(6506007)(8676002)(36756003)(1076003)(8936002)(2906002)(6486002)(86362001)(186003)(16526019)(66556008)(478600001)(83320400001)(83290400001)(83280400001)(83310400001)(69590400007)(316002)(956004)(2616005)(83300400001)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: FejOY0/3PtNIa8H2FIAY2rqWGill3+D5wdiqh0NpCMQ8O+GrC+8cRAmglgGeYrqEGtCEp767kemGCpH8wiWCz6I7eMAR6WcNjT8h7ogD3jREoMmJXNn58ibol1drujY8eRdLrTGwLpOO1Uvy7gIxS4RRiXOwJaxj/lhSJWOKU7uSz1rPyTQf5auWmbFKL8UHwDp+5nrDG06GiqmC5CyHn1Zuy19MCzyIy7wVMV5jsc1D3YqXjTo6OtENYdT/AimpIAYavV4Vrg3ZFp8XIrQZmAxrlAWU66adFfPwXlh+JMn7tTUGg1Q2tPdkIoRWlfe+V4cJD0NzwqthqPu4zxr3D9pVW0hJV13Jl5VInaFn3Te1dP/X8cbBqiSra5EyfO4igGeYMd4sS4oXSI/sRrj/Mh6ClvquBIz6lUH0G/LnEEBuaxx5DL/XjkdZggfgl6SexKTEN7AE/aOH24p1YIGLAAxcMOKCO5r1iIB1VocaVi0=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 393cd40c-4473-4c33-7cd5-08d7f320d0ed
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 07:24:17.0379
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t7MD+q1T7nB/hDI54JyjdSlcWuIcNjc+F3sGc9wdV3Hb1QkGwskmBbmA6sM46g1B
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6720
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+This patch is to add the man page for the tc gate action.
 
-DPAA2 (Data Path Acceleration Architecture) consists in
-mechanisms for processing Ethernet packets, queue management,
-accelerators, etc.
-
-The Management Complex (mc) is a hardware entity that manages the DPAA2
-hardware resources. It provides an object-based abstraction for software
-drivers to use the DPAA2 hardware. The MC mediates operations such as
-create, discover, destroy of DPAA2 objects.
-The MC provides memory-mapped I/O command interfaces (MC portals) which
-DPAA2 software drivers use to operate on DPAA2 objects.
-
-A DPRC is a container object that holds other types of DPAA2 objects.
-Each object in the DPRC is a Linux device and bound to a driver.
-The MC-bus driver is a platform driver (different from PCI or platform
-bus). The DPRC driver does runtime management of a bus instance. It
-performs the initial scan of the DPRC and handles changes in the DPRC
-configuration (adding/removing objects).
-
-All objects inside a container share the same hardware isolation
-context, meaning that only an entire DPRC can be assigned to
-a virtual machine.
-When a container is assigned to a virtual machine, all the objects
-within that container are assigned to that virtual machine.
-The DPRC container assigned to the virtual machine is not allowed
-to change contents (add/remove objects) by the guest. The restriction
-is set by the host and enforced by the mc hardware.
-
-The DPAA2 objects can be directly assigned to the guest. However
-the MC portals (the memory mapped command interface to the MC) need
-to be emulated because there are commands that configure the
-interrupts and the isolation IDs which are virtual in the guest.
-
-Example:
-echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.2/driver_override
-echo dprc.2 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
-
-The dprc.2 is bound to the VFIO driver and all the objects within
-dprc.2 are going to be bound to the VFIO driver.
-
-This patch adds the infrastructure for VFIO support for fsl-mc
-devices. Subsequent patches will add support for binding and secure
-assigning these devices using VFIO.
-
-More details about the DPAA2 objects can be found here:
-Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
-
-Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+Signed-off-by: Po Liu <Po.Liu@nxp.com>
 ---
- MAINTAINERS                               |   6 +
- drivers/vfio/Kconfig                      |   1 +
- drivers/vfio/Makefile                     |   1 +
- drivers/vfio/fsl-mc/Kconfig               |   9 ++
- drivers/vfio/fsl-mc/Makefile              |   4 +
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 160 ++++++++++++++++++++++
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  14 ++
- include/uapi/linux/vfio.h                 |   1 +
- 8 files changed, 196 insertions(+)
- create mode 100644 drivers/vfio/fsl-mc/Kconfig
- create mode 100644 drivers/vfio/fsl-mc/Makefile
- create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc.c
- create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+changes before v4:
+No changes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2926327e4976..14cf1f1fb4cd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17755,6 +17755,12 @@ F:	drivers/vfio/
- F:	include/linux/vfio.h
- F:	include/uapi/linux/vfio.h
- 
-+VFIO FSL-MC DRIVER
-+M:	Diana Craciun <diana.craciun@oss.nxp.com>
-+L:	kvm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/vfio/fsl-mc/
-+
- VFIO MEDIATED DEVICE DRIVERS
- M:	Kirti Wankhede <kwankhede@nvidia.com>
- L:	kvm@vger.kernel.org
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index fd17db9b432f..5533df91b257 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -47,4 +47,5 @@ menuconfig VFIO_NOIOMMU
- source "drivers/vfio/pci/Kconfig"
- source "drivers/vfio/platform/Kconfig"
- source "drivers/vfio/mdev/Kconfig"
-+source "drivers/vfio/fsl-mc/Kconfig"
- source "virt/lib/Kconfig"
-diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
-index de67c4725cce..fee73f3d9480 100644
---- a/drivers/vfio/Makefile
-+++ b/drivers/vfio/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
- obj-$(CONFIG_VFIO_PCI) += pci/
- obj-$(CONFIG_VFIO_PLATFORM) += platform/
- obj-$(CONFIG_VFIO_MDEV) += mdev/
-+obj-$(CONFIG_VFIO_FSL_MC) += fsl-mc/
-diff --git a/drivers/vfio/fsl-mc/Kconfig b/drivers/vfio/fsl-mc/Kconfig
+changes from v4:
+- Update the examples with input/output time and size routine support
+
+ man/man8/tc-gate.8 | 123 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 man/man8/tc-gate.8
+
+diff --git a/man/man8/tc-gate.8 b/man/man8/tc-gate.8
 new file mode 100644
-index 000000000000..b1a527d6b6f2
+index 00000000..23d93ca4
 --- /dev/null
-+++ b/drivers/vfio/fsl-mc/Kconfig
-@@ -0,0 +1,9 @@
-+config VFIO_FSL_MC
-+	tristate "VFIO support for QorIQ DPAA2 fsl-mc bus devices"
-+	depends on VFIO && FSL_MC_BUS && EVENTFD
-+	help
-+	  Driver to enable support for the VFIO QorIQ DPAA2 fsl-mc
-+	  (Management Complex) devices. This is required to passthrough
-+	  fsl-mc bus devices using the VFIO framework.
++++ b/man/man8/tc-gate.8
+@@ -0,0 +1,123 @@
++.TH GATE 8 "12 Mar 2020" "iproute2" "Linux"
++.SH NAME
++gate \- Stream Gate Action
++.SH SYNOPSIS
++.B tc " ... " action gate
++.ti +8
++.B [ base-time
++BASETIME ]
++.B [ clockid
++CLOCKID ]
++.ti +8
++.B sched-entry
++<gate state> <interval 1> [ <internal priority> <max octets> ]
++.ti +8
++.B sched-entry
++<gate state> <interval 2> [ <internal priority> <max octets> ]
++.ti +8
++.B sched-entry
++<gate state> <interval 3> [ <internal priority> <max octets> ]
++.ti +8
++.B ......
++.ti +8
++.B sched-entry
++<gate state> <interval N> [ <internal priority> <max octets> ]
 +
-+	  If you don't know what to do here, say N.
-diff --git a/drivers/vfio/fsl-mc/Makefile b/drivers/vfio/fsl-mc/Makefile
-new file mode 100644
-index 000000000000..0c6e5d2ddaae
---- /dev/null
-+++ b/drivers/vfio/fsl-mc/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++.SH DESCRIPTION
++GATE action allows specified ingress frames can be passed at
++specific time slot, or be dropped at specific time slot. Tc filter
++filters the ingress frames, then tc gate action would specify which time
++slot and how many bytes these frames can be passed to device and
++which time slot frames would be dropped.
++Gate action also assign a base-time to tell when the entry list start.
++Then gate action would start to repeat the gate entry list cyclically
++at the start base-time.
++For the software simulation, gate action requires the user assign reference
++time clock type.
 +
-+vfio-fsl-mc-y := vfio_fsl_mc.o
-+obj-$(CONFIG_VFIO_FSL_MC) += vfio-fsl-mc.o
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-new file mode 100644
-index 000000000000..8b53c2a25b32
---- /dev/null
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright 2013-2016 Freescale Semiconductor Inc.
-+ * Copyright 2016-2017,2019-2020 NXP
-+ */
++.SH PARAMETERS
 +
-+#include <linux/device.h>
-+#include <linux/iommu.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/vfio.h>
-+#include <linux/fsl/mc.h>
++.TP
++base-time
++.br
++Specifies the instant in nanoseconds, defining the time when the schedule
++starts. If 'base-time' is a time in the past, the schedule will start at
 +
-+#include "vfio_fsl_mc_private.h"
++base-time + (N * cycle-time)
 +
-+static int vfio_fsl_mc_open(void *device_data)
-+{
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
++where N is the smallest integer so the resulting time is greater than
++"now", and "cycle-time" is the sum of all the intervals of the entries
++in the schedule. Without base-time specified, will default to be 0.
 +
-+	return 0;
-+}
++.TP
++clockid
++.br
++Specifies the clock to be used by qdisc's internal timer for measuring
++time and scheduling events. Not valid if gate action is used for offloading
++filter.
++For example, tc filter command with
++.B skip_sw
++parameter.
 +
-+static void vfio_fsl_mc_release(void *device_data)
-+{
-+	module_put(THIS_MODULE);
-+}
++.TP
++sched-entry
++.br
++There may multiple
++.B sched-entry
++parameters in a single schedule. Each one has the format:
 +
-+static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
-+			      unsigned long arg)
-+{
-+	switch (cmd) {
-+	case VFIO_DEVICE_GET_INFO:
-+	{
-+		return -ENOTTY;
-+	}
-+	case VFIO_DEVICE_GET_REGION_INFO:
-+	{
-+		return -ENOTTY;
-+	}
-+	case VFIO_DEVICE_GET_IRQ_INFO:
-+	{
-+		return -ENOTTY;
-+	}
-+	case VFIO_DEVICE_SET_IRQS:
-+	{
-+		return -ENOTTY;
-+	}
-+	case VFIO_DEVICE_RESET:
-+	{
-+		return -ENOTTY;
-+	}
-+	default:
-+		return -ENOTTY;
-+	}
-+}
++sched-entry <gate state> <interval> [ <internal priority> <max octets> ]
 +
-+static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
-+				size_t count, loff_t *ppos)
-+{
-+	return -EINVAL;
-+}
++.br
++<gate state> means gate states. 'open' keep gate open, 'close' keep gate close.
++.br
++<interval> means how much nano seconds for this time slot.
++.br
++<internal priority> means internal priority value. Present of the
++internal receiving queue for this stream. "-1" means wildcard.
++<internal priority> and <max octets> can be omit default to be "-1" which both
++ value to be "-1" for this <sched-entry>.
++.br
++<max octets> means how many octets size could pass in this time slot. Dropped
++if overlimited. "-1" means wildcard. <max octets> can be omit default to be
++"-1" which value to be "-1" for this <sched-entry>.
++.br
++Note that <internal priority> and <max octets> are nothing meaning for gate state
++is "close" in a "sched-entry". All frames are dropped when "sched-entry" with
++"close" state.
 +
-+static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
-+				 size_t count, loff_t *ppos)
-+{
-+	return -EINVAL;
-+}
++.SH EXAMPLES
 +
-+static int vfio_fsl_mc_mmap(void *device_data, struct vm_area_struct *vma)
-+{
-+	return -EINVAL;
-+}
++The following example shows tc filter frames source ip match to the
++192.168.0.20 will keep the gate open for 200ms and limit the traffic to 8MB
++in this sched-entry. Then keep the traffic gate to be close for 100ms.
++Frames arrived at gate close state would be dropped. Then the cycle would
++run the gate entries periodically. The schedule will start at instant 200.0s
++using the reference CLOCK_TAI. The schedule is composed of two entries
++each of 300ms duration.
 +
-+static const struct vfio_device_ops vfio_fsl_mc_ops = {
-+	.name		= "vfio-fsl-mc",
-+	.open		= vfio_fsl_mc_open,
-+	.release	= vfio_fsl_mc_release,
-+	.ioctl		= vfio_fsl_mc_ioctl,
-+	.read		= vfio_fsl_mc_read,
-+	.write		= vfio_fsl_mc_write,
-+	.mmap		= vfio_fsl_mc_mmap,
-+};
++.EX
++# tc qdisc add dev eth0 ingress
++# tc filter add dev eth0 parent ffff: protocol ip \\
++           flower skip_hw src_ip 192.168.0.20 \\
++           action gate index 2 clockid CLOCK_TAI \\
++           base-time 200000000000ns \\
++           sched-entry open 200000000ns -1 8000000b \\
++           sched-entry close 100000000ns
 +
-+static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
-+{
-+	struct iommu_group *group;
-+	struct vfio_fsl_mc_device *vdev;
-+	struct device *dev = &mc_dev->dev;
-+	int ret;
++.EE
 +
-+	group = vfio_iommu_group_get(dev);
-+	if (!group) {
-+		dev_err(dev, "%s: VFIO: No IOMMU group\n", __func__);
-+		return -EINVAL;
-+	}
++Following commands is an example to filter a stream source mac match to the
++10:00:80:00:00:00 icmp frames will be dropped at any time with cycle 200ms.
++With a default basetime 0 and clockid is CLOCK_TAI as default.
 +
-+	vdev = devm_kzalloc(dev, sizeof(*vdev), GFP_KERNEL);
-+	if (!vdev) {
-+		vfio_iommu_group_put(group, dev);
-+		return -ENOMEM;
-+	}
++.EX
++# tc qdisc add dev eth0 ingress
++# tc filter add dev eth0 parent ffff:  protocol ip \\
++	flower ip_proto icmp dst_mac 10:00:80:00:00:00 \\
++	action gate index 12 sched-entry close 200000000ns
 +
-+	vdev->mc_dev = mc_dev;
++.EE
 +
-+	ret = vfio_add_group_dev(dev, &vfio_fsl_mc_ops, vdev);
-+	if (ret) {
-+		dev_err(dev, "%s: Failed to add to vfio group\n", __func__);
-+		vfio_iommu_group_put(group, dev);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
-+{
-+	struct vfio_fsl_mc_device *vdev;
-+	struct device *dev = &mc_dev->dev;
-+
-+	vdev = vfio_del_group_dev(dev);
-+	if (!vdev)
-+		return -EINVAL;
-+
-+	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
-+
-+	return 0;
-+}
-+
-+/*
-+ * vfio-fsl_mc is a meta-driver, so use driver_override interface to
-+ * bind a fsl_mc container with this driver and match_id_table is NULL.
-+ */
-+static struct fsl_mc_driver vfio_fsl_mc_driver = {
-+	.probe		= vfio_fsl_mc_probe,
-+	.remove		= vfio_fsl_mc_remove,
-+	.match_id_table = NULL,
-+	.driver	= {
-+		.name	= "vfio-fsl-mc",
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+static int __init vfio_fsl_mc_driver_init(void)
-+{
-+	return fsl_mc_driver_register(&vfio_fsl_mc_driver);
-+}
-+
-+static void __exit vfio_fsl_mc_driver_exit(void)
-+{
-+	fsl_mc_driver_unregister(&vfio_fsl_mc_driver);
-+}
-+
-+module_init(vfio_fsl_mc_driver_init);
-+module_exit(vfio_fsl_mc_driver_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("VFIO for FSL-MC devices - User Level meta-driver");
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-new file mode 100644
-index 000000000000..e79cc116f6b8
---- /dev/null
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright 2013-2016 Freescale Semiconductor Inc.
-+ * Copyright 2016,2019-2020 NXP
-+ */
-+
-+#ifndef VFIO_FSL_MC_PRIVATE_H
-+#define VFIO_FSL_MC_PRIVATE_H
-+
-+struct vfio_fsl_mc_device {
-+	struct fsl_mc_device		*mc_dev;
-+};
-+
-+#endif /* VFIO_FSL_MC_PRIVATE_H */
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 015516bcfaa3..45ee6f64a5a1 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -201,6 +201,7 @@ struct vfio_device_info {
- #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)	/* vfio-amba device */
- #define VFIO_DEVICE_FLAGS_CCW	(1 << 4)	/* vfio-ccw device */
- #define VFIO_DEVICE_FLAGS_AP	(1 << 5)	/* vfio-ap device */
-+#define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
- 	__u32	num_regions;	/* Max region index + 1 */
- 	__u32	num_irqs;	/* Max IRQ index + 1 */
- };
++.SH AUTHORS
++Po Liu <Po.Liu@nxp.com>
 -- 
 2.17.1
 
