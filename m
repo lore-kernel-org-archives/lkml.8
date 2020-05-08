@@ -2,119 +2,85 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2926CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A6CC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BED620746
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588898428;
-	bh=6DvqviWnsP5o86+PhIomjPeqp2M6x7IJfqoZNaxxcDg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B07laZlB3+MuQq0EDEEbjQiWpcSySZgZ+Rf/vveqczAEJlRl/emTSigMw+5QZhfkR
-	 vXoAtkJeuDH57XbSghq07+7WMQNjIsFjjrJ2JQa5FL/PuOl3+xqvPVSFkbjH0K75WE
-	 4bnVQdROty1UaE5HLczaJeclKipwuCWsT7O+g6Us=
+	by mail.kernel.org (Postfix) with ESMTP id 59F1820746
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Shlav7+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgEHAk1 (ORCPT
+        id S1726807AbgEHAke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 20:40:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgEHAk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 20:40:26 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C664B21841
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 00:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588898426;
-        bh=6DvqviWnsP5o86+PhIomjPeqp2M6x7IJfqoZNaxxcDg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CmJN7cvkpT6h2/Ygm8zn3kkmnMlgnIgznuN13Yeyn989fiekb7Ss6tvUF5j7N6jVd
-         LbFZwA4Hh2PJoy09qNNCbIknr9pZjgzWvmSW9w1nDFxqBhbBr6ckKpPbrAHFLEvoUe
-         XyjhCjnRU4ZfX3u6MzPPKDIxPbevbWERiv4D+qas=
-Received: by mail-wm1-f44.google.com with SMTP id u127so8848751wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 17:40:25 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY8qr3anib6yQ+uE/syTP9qki6Z2rBzuv0nJr7NyWpO0DHDP+Lr
-        dHKkvkn9tlJjVuQGs7bCWVeL8WwEpkPuPzuLbc/yyQ==
-X-Google-Smtp-Source: APiQypIiNdEVngEJqufHhpfzHhTA6Ke6tWhuGIVec6lorOQ3VlVHnGPVwiFmqm+URaG+oH5Zn1AX8OpBQzK+85IIG64=
-X-Received: by 2002:a7b:c5d3:: with SMTP id n19mr6049575wmk.21.1588898424128;
- Thu, 07 May 2020 17:40:24 -0700 (PDT)
+        Thu, 7 May 2020 20:40:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54122 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgEHAkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 20:40:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0480eTnb053648;
+        Thu, 7 May 2020 19:40:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588898429;
+        bh=sZLqc6bcUyrr7YvApm7EgW/hqpn5lokyznG7/dwl9Q4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Shlav7+D1aY0m3636dTmu/xp9CH0EpC2xAasUq9An7zHGalx6giqVV4UWT171oQw1
+         Lil3Psl+Q0XLgmA94qPA/Q0l26whowWdJHsAnAtWnUoavoPrDPUmU/9vGsj6yhQR32
+         Lee5TYqKGkn+mR7hBTxL0KXeCi+fA3715en3nXEg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0480eTGM072433
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 May 2020 19:40:29 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
+ 2020 19:40:28 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 7 May 2020 19:40:28 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0480eLZN024416;
+        Thu, 7 May 2020 19:40:24 -0500
+Subject: Re: [PATCH net/master] net: ethernet: ti: cpts: Fix linker issue when
+ TI_CPTS is defined
+To:     <davem@davemloft.net>, <richardcochran@gmail.com>,
+        <ivan.khoronzhuk@linaro.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200507214740.14693-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ab0a9a19-c96b-f90f-827d-aa10bf49a4b7@ti.com>
+Date:   Thu, 7 May 2020 19:31:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com> <20200429153004.GD15992@linux.intel.com>
-In-Reply-To: <20200429153004.GD15992@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 7 May 2020 17:40:11 -0700
-X-Gmail-Original-Message-ID: <CALCETrX9w3anusPhNWkv-hs554N6MF9GfChazrG+Br16oFfCaw@mail.gmail.com>
-Message-ID: <CALCETrX9w3anusPhNWkv-hs554N6MF9GfChazrG+Br16oFfCaw@mail.gmail.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     "Dr. Greg" <greg@enjellic.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>, puiterwijk@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200507214740.14693-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 8:30 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
-> > In closing, it is important to note that the proposed SGX driver is
-> > not available as a module.  This effectively excludes any alternative
-> > implementations of the driver without replacement of the kernel at
-> > large.
->
-> No it doesn't.  The SGX subsytem won't allocate EPC pages unless userspace
-> creates an enclave, i.e. preventing unprivileged userspace from accessing
-> /dev/sgx/enclave will allow loading an alternative out-of-tree SGX module.
-> Yes, SGX sanitizes the EPC on boot, but that's arguably a good thing for
-> out-of-tree modules.
->
-> And if you want to get crafty and squash in-kernel SGX altogether, boot
-> with "clearcpuid=<SGX_LC>" and/or "clearcpuid=<SGX>" to disable in-kernel
-> support entirely.  SGX won't be correctly enumerated in /proc/cpuinfo
-> relative to the existence of an out-of-tree module, but that seems like a
-> very minor issue if you're running with a completely different SGX driver.
->
-> > It also means that any platform, with SGX hardware support,
-> > running a kernel with this driver, has the potential for the
-> > security/privacy issues noted above.
->
-> Unless I'm mistaken, /dev/sgx is root-only by default.  There are far
-> scarier mechanisms available to root for hosing the system.
->
-> > If key based policy management is not allowed, then the driver needs
-> > to be re-architected to have modular support so that alternative
-> > implementations or the absence of any driver support are at least
-> > tenable.
->
-> As above, using an alternative implementation is teneble, albeit a bit
-> kludgy.
+All
 
-It is worth noting that, if someone actualy does this, and a future
-kernel patch breaks it, the upstream developers are unlikely to
-apologize or even feel particularly bad.  See, for example, the
-current situation with VirtualBox.
+On 5/7/20 4:47 PM, Dan Murphy wrote:
+> Fix build issue when CONFIG_TI_CPTS is defined in the defconfig but
+> CONFIG_TI_CPTS_MOD is not set.
+
+I see this already has a pending patch to fix this so unless this 
+solution is better I will drop the patch
+
+https://lore.kernel.org/patchwork/patch/1235642/
+
+Dan
+
