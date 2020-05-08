@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE32C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC95C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2874324987
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2D8206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944172;
-	bh=3EUQqHlhW0Waxsf+eerSa7T/QTJ4Wx2e2/bYdkjLhug=;
+	s=default; t=1588944185;
+	bh=M9gSkXQOztQYBL+rayQQa0EvYDh8PgCf9HEypXWE5fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SSrxdgEgqNcRzoB5LZ3tIUztQynGWy0oiHNEiDEAslXaIj5jyy+fouXekMbUx1wGa
-	 DvN1FzBBDoQQrfvTxvEdOkrDmxYqNoyMmwqHWr+TpCIOvQc7/AgIHdAfPyNdBIxu3C
-	 68t+Gch7yzxnFqTyNVa2T3ALKOBqbSW432Pw+8l4=
+	b=cNYYn2M5NqPOX1CrLAdCJAQvdCn7A39519ZfOjhZ5uhf+qto5ADaDdlezRln4xdV7
+	 hDiQnhPvL7+pKHrVqQEWZ+/1M4Z9LeGUUH7r0nTQ+KYhhAEPhF/dOhEkJaX9lSRFWD
+	 7SGhehzFTJqhmC5Ju9dTWmO1zUGh5Ek9myrweMMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgEHNWu (ORCPT
+        id S1728776AbgEHNXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgEHMio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:44 -0400
+        id S1726883AbgEHMin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6702D2496E;
-        Fri,  8 May 2020 12:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EF624977;
+        Fri,  8 May 2020 12:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941523;
-        bh=3EUQqHlhW0Waxsf+eerSa7T/QTJ4Wx2e2/bYdkjLhug=;
+        s=default; t=1588941521;
+        bh=M9gSkXQOztQYBL+rayQQa0EvYDh8PgCf9HEypXWE5fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ze1HhdryUY2n1oXBoaCJzlPmtv95f4zuD8nLfT1aQsGdMgxqcBfUgD0X7vZpXggyR
-         ClTHyMoyGXuBVkzDCMvUu3ZAYA5tHSKlZT+fEJngheHe1xZ3fFg8PhWsA4lJ1j6jeu
-         CNWae3BctYX9QVB9qIC8e+oVqJ/gtjOJrjAIiY/M=
+        b=1GAiiLJlOwWx3Te+oYR1C5gKrWumuYAYeKzKPpFh9VLEY6Z2JwhLokBD5Qn+BrOBJ
+         iCd1pzOCLuAro4ZbrT3U40s0mEonV11k+R6wyD2Rb7EnnLEqex5J/3vNjVyaOWXTZU
+         5EFMPKj7kCvMfz476V4UjCCcLXhjOKxH4Ik1hVug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
-        "Steven J. Hill" <sjhill@realitydiluted.com>,
         Paul Burton <paul.burton@imgtec.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        David Daney <david.daney@cavium.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Hongliang Tao <taohl@lemote.com>, Hua Yan <yanh@lemote.com>,
         linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 018/312] MIPS: Fix HTW config on XPA kernel without LPA enabled
-Date:   Fri,  8 May 2020 14:30:09 +0200
-Message-Id: <20200508123125.770053528@linuxfoundation.org>
+Subject: [PATCH 4.4 027/312] MIPS: SMP: Update cpu_foreign_map on CPU disable
+Date:   Fri,  8 May 2020 14:30:18 +0200
+Message-Id: <20200508123126.393919988@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -64,46 +67,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: James Hogan <james.hogan@imgtec.com>
 
-commit 14bc241443e126c62fcbf571b7d4c79740debc58 upstream.
+commit 826e99be6ab5189dbfb096389016ffb8d20a683e upstream.
 
-The hardware page table walker (HTW) configuration is broken on XPA
-kernels where XPA couldn't be enabled (either nohtw or the hardware
-doesn't support it). This is because the PWSize.PTEW field (PTE width)
-was only set to 8 bytes (an extra shift of 1) in config_htw_params() if
-PageGrain.ELPA (enable large physical addressing) is set. On an XPA
-kernel though the size of PTEs is fixed at 8 bytes regardless of whether
-XPA could actually be enabled.
+When a CPU is disabled via CPU hotplug, cpu_foreign_map is not updated.
+This could result in cache management SMP calls being sent to offline
+CPUs instead of online siblings in the same core.
 
-Fix the initialisation of this field based on sizeof(pte_t) instead.
+Add a call to calculate_cpu_foreign_map() in the various MIPS cpu
+disable callbacks after set_cpu_online(). All cases are updated for
+consistency and to keep cpu_foreign_map strictly up to date, not just
+those which may support hardware multithreading.
 
-Fixes: c5b367835cfc ("MIPS: Add support for XPA.")
+Fixes: cccf34e9411c ("MIPS: c-r4k: Fix cache flushing for MT cores")
 Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Steven J. Hill <sjhill@realitydiluted.com>
 Cc: Paul Burton <paul.burton@imgtec.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: David Daney <david.daney@cavium.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Hongliang Tao <taohl@lemote.com>
+Cc: Hua Yan <yanh@lemote.com>
 Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Patchwork: https://patchwork.linux-mips.org/patch/13113/
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Patchwork: https://patchwork.linux-mips.org/patch/13799/
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/tlbex.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/cavium-octeon/smp.c         |    1 +
+ arch/mips/include/asm/smp.h           |    2 ++
+ arch/mips/kernel/smp-bmips.c          |    1 +
+ arch/mips/kernel/smp-cps.c            |    1 +
+ arch/mips/kernel/smp.c                |    2 +-
+ arch/mips/loongson64/loongson-3/smp.c |    1 +
+ 6 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -2329,9 +2329,7 @@ static void config_htw_params(void)
- 	if (CONFIG_PGTABLE_LEVELS >= 3)
- 		pwsize |= ilog2(PTRS_PER_PMD) << MIPS_PWSIZE_MDW_SHIFT;
+--- a/arch/mips/cavium-octeon/smp.c
++++ b/arch/mips/cavium-octeon/smp.c
+@@ -239,6 +239,7 @@ static int octeon_cpu_disable(void)
+ 		return -ENOTSUPP;
  
--	/* If XPA has been enabled, PTEs are 64-bit in size. */
--	if (config_enabled(CONFIG_64BITS) || (read_c0_pagegrain() & PG_ELPA))
--		pwsize |= 1;
-+	pwsize |= ilog2(sizeof(pte_t)/4) << MIPS_PWSIZE_PTEW_SHIFT;
+ 	set_cpu_online(cpu, false);
++	calculate_cpu_foreign_map();
+ 	cpumask_clear_cpu(cpu, &cpu_callin_map);
+ 	octeon_fixup_irqs();
  
- 	write_c0_pwsize(pwsize);
+--- a/arch/mips/include/asm/smp.h
++++ b/arch/mips/include/asm/smp.h
+@@ -63,6 +63,8 @@ extern cpumask_t cpu_coherent_mask;
  
+ extern void asmlinkage smp_bootstrap(void);
+ 
++extern void calculate_cpu_foreign_map(void);
++
+ /*
+  * this function sends a 'reschedule' IPI to another CPU.
+  * it goes straight through and wastes no time serializing
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -362,6 +362,7 @@ static int bmips_cpu_disable(void)
+ 	pr_info("SMP: CPU%d is offline\n", cpu);
+ 
+ 	set_cpu_online(cpu, false);
++	calculate_cpu_foreign_map();
+ 	cpumask_clear_cpu(cpu, &cpu_callin_map);
+ 	clear_c0_status(IE_IRQ5);
+ 
+--- a/arch/mips/kernel/smp-cps.c
++++ b/arch/mips/kernel/smp-cps.c
+@@ -338,6 +338,7 @@ static int cps_cpu_disable(void)
+ 	atomic_sub(1 << cpu_vpe_id(&current_cpu_data), &core_cfg->vpe_mask);
+ 	smp_mb__after_atomic();
+ 	set_cpu_online(cpu, false);
++	calculate_cpu_foreign_map();
+ 	cpumask_clear_cpu(cpu, &cpu_callin_map);
+ 
+ 	return 0;
+--- a/arch/mips/kernel/smp.c
++++ b/arch/mips/kernel/smp.c
+@@ -118,7 +118,7 @@ static inline void set_cpu_core_map(int
+  * Calculate a new cpu_foreign_map mask whenever a
+  * new cpu appears or disappears.
+  */
+-static inline void calculate_cpu_foreign_map(void)
++void calculate_cpu_foreign_map(void)
+ {
+ 	int i, k, core_present;
+ 	cpumask_t temp_foreign_map;
+--- a/arch/mips/loongson64/loongson-3/smp.c
++++ b/arch/mips/loongson64/loongson-3/smp.c
+@@ -417,6 +417,7 @@ static int loongson3_cpu_disable(void)
+ 		return -EBUSY;
+ 
+ 	set_cpu_online(cpu, false);
++	calculate_cpu_foreign_map();
+ 	cpumask_clear_cpu(cpu, &cpu_callin_map);
+ 	local_irq_save(flags);
+ 	fixup_irqs();
 
 
