@@ -2,92 +2,117 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD8DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30FDC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0994206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7D9206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943846;
-	bh=3afVTxvPGGedmPH0V3XdskRZC6TaovubqNcaoRvIw84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ISpq91KBEhxNHHrN/njOKiJadUjsAc7bJJfjbXG5wYw7zow2L+wYRs8/7Ccp6gui7
-	 VlXH6dlBDG5lF7QhZdVjIRIiiF2SrpRzJyLFh2VXJowMxrvtRreDBX8sAVnUlX4183
-	 qS6eHgfIA6ewXUZrVUu20T6oN/eg66lx58MnEFZk=
+	s=default; t=1588943850;
+	bh=Eza8NhI9L9YI4bSOy94/iPb7+PZtQz1qpTvrev4zn34=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gFJQiRMw08x0blHZB76Wj7/ba7Z1f2JgpjCLIqTju9iJC3nLg/0rF2RAVn69M6zaU
+	 v3OhTE0zFbrSK7EYT3rhbDW8Aw1KRi5m5N6nJPHsKkEbpznpQPQd9Q8YR6fQGgON7O
+	 SKUc2x6/hg7g7fILTi6b3RwllI6fzOlkFc1BbiYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgEHNRZ (ORCPT
+        id S1728094AbgEHMoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39810 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbgEHNRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:17:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1728734AbgEHMn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E92A206B8;
-        Fri,  8 May 2020 13:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270A920731;
+        Fri,  8 May 2020 12:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588943842;
-        bh=3afVTxvPGGedmPH0V3XdskRZC6TaovubqNcaoRvIw84=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wljXzPmztGYalAoA9rpHKhIthnbvDxCDuUWxhLA7Ux6IyXHMuyVvipCwDeUZASH4v
-         1EK455Sr8j9CcqPSrL15a0cT9Rl1QmpaJSoZaLPajRbx8xwhrmS8SK2e0ceK4sTUz4
-         UN42bI9PAZGXE3IEkKsserK4lyePSkv2+6GHkAhQ=
-Date:   Fri, 8 May 2020 14:17:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, lgirdwood@gmail.com, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 00/11] Support ROHM BD99954 charger IC
-Message-ID: <20200508131719.GJ4820@sirena.org.uk>
-References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+        s=default; t=1588941837;
+        bh=Eza8NhI9L9YI4bSOy94/iPb7+PZtQz1qpTvrev4zn34=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ps7Lxn/8jmoGnp76C5lboaK38lDZY8u+772iRYBxQeLRG2aMa42fJlh1hlY2GAzu2
+         ABcfCF16sjtn5LvJE7Pa6ojMHdGP7Ke61igt9ThIJvPx6ETF9PCFBAA0Etk951Pg9s
+         KCUvrzT5YoFGMNAflLIkR2NIMUEM8MiMxfREAb6o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 152/312] net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
+Date:   Fri,  8 May 2020 14:32:23 +0200
+Message-Id: <20200508123135.152851246@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XigHxYirkHk2Kxsx"
-Content-Disposition: inline
-In-Reply-To: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Florian Fainelli <f.fainelli@gmail.com>
 
---XigHxYirkHk2Kxsx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit d5c3d84657db57bd23ecd58b97f1c99dd42a7b80 upstream.
 
-On Thu, May 07, 2020 at 09:03:06AM +0300, Matti Vaittinen wrote:
-> Sorry folks for excessive amount of emails. I am resending this once
-> more (I already resent v10 and v11 has no changes but was just rebased)
-> because I am afraid the previous version did not reach Mark. If this is
-> true - I am the one to blame. I see I sent original v10 to all other
+Commit 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT") changed
+a hunk in phy_state_machine() in the PHY_RUNNING case which was not
+needed. The change essentially makes the PHY library treat PHY devices
+with PHY_IGNORE_INTERRUPT to keep polling for the PHY device, even
+though the intent is not to do it.
 
-You probably should've mentioned in this mail something about applying
-on a shared branch - I had seen the mail about that and was planning to
-handle these this week but if I'd missed Sebastian's mail from earlier
-in the week I'd probably just look at this and realise I'd reviewed
-everything relevant in it.
+Fix this by reverting that specific hunk, which makes the PHY state
+machine wait for state changes, and stay in the PHY_RUNNING state for as
+long as needed.
 
---XigHxYirkHk2Kxsx
-Content-Type: application/pgp-signature; name="signature.asc"
+Fixes: 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
------BEGIN PGP SIGNATURE-----
+---
+ drivers/net/phy/phy.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61W98ACgkQJNaLcl1U
-h9AkfQf/e/9GJz9qTkXY5cZVnaFer3RazGsHnLxJrdUop24aL0otGQdqY/HW1box
-mUooQnGc65yBNG12MO4fNjeylRqJEzLpmnawWYXmxCChD1OJDPC+kaHFOdddPGaO
-WGIviYxXXH5nOqF1nOgX65ZhnGwMv+LXMG8wUd6Gj4s0lbxWfgDV7A3LkQ+fTssK
-iVIAc0X0cmA/YYSpgyBERUM1GlBcve0ep1HGk1VUlvcgKyHOerCWfSatpt2Wy8Rx
-Ilory7thQ+weCvjC3y++s1kSSI46bKw+em0pr9nyfQVKjB2qTx6mhe/uKOT/YX3k
-VmPQuOnH4KQyGi1ea88uKzN+fK1VZQ==
-=7/MS
------END PGP SIGNATURE-----
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -912,10 +912,10 @@ void phy_state_machine(struct work_struc
+ 		phydev->adjust_link(phydev->attached_dev);
+ 		break;
+ 	case PHY_RUNNING:
+-		/* Only register a CHANGE if we are polling or ignoring
+-		 * interrupts and link changed since latest checking.
++		/* Only register a CHANGE if we are polling and link changed
++		 * since latest checking.
+ 		 */
+-		if (!phy_interrupt_is_valid(phydev)) {
++		if (phydev->irq == PHY_POLL) {
+ 			old_link = phydev->link;
+ 			err = phy_read_status(phydev);
+ 			if (err)
+@@ -1015,8 +1015,13 @@ void phy_state_machine(struct work_struc
+ 	dev_dbg(&phydev->dev, "PHY state change %s -> %s\n",
+ 		phy_state_to_str(old_state), phy_state_to_str(phydev->state));
+ 
+-	queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
+-			   PHY_STATE_TIME * HZ);
++	/* Only re-schedule a PHY state machine change if we are polling the
++	 * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
++	 * between states from phy_mac_interrupt()
++	 */
++	if (phydev->irq == PHY_POLL)
++		queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
++				   PHY_STATE_TIME * HZ);
+ }
+ 
+ void phy_mac_interrupt(struct phy_device *phydev, int new_link)
 
---XigHxYirkHk2Kxsx--
+
