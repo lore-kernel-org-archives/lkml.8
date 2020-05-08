@@ -2,161 +2,118 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4A0C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A08DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60247214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="YUkuwILm"
+	by mail.kernel.org (Postfix) with ESMTP id 7946E214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgEHWDE (ORCPT
+        id S1728135AbgEHWDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 18:03:04 -0400
-Received: from mail-bn8nam11on2074.outbound.protection.outlook.com ([40.107.236.74]:62016
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727095AbgEHWDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 18:03:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EBV6WMzxtybTlrOATbcrIrSq+yqfK9LFB8DiZKlWv1IThvCBwVIHffasszbMZ84opv1W8gqpvMJLUn1y50OaAF+C3ApIgrNb97a65kgCYw7fgPuzDhthWcFcl7J+NHDNbpTrBBWdrJoN6XJfJpxQgOU3bhVZ/vLj+LnawaklX22DXRD2uDHTgDuq9yqEjV0ioS5f/o4B4ogr24zEX3/EE0q+v3j2qxqHosEqCV9igSKGlb5oiK1A65BZr+W0JowQeiC5roRR38GIhQoW//7HxmX49Bb9NASrZ6/eyvsZd2ElO21joGH9rch6N1qU8CzR8sZYLGX3cg6ynFzEIXGx3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91PaI/OphjNQGZXeKxT2UVHu4PV4AMr9IQdowg9dluY=;
- b=BJNSikDMivaNCPA2HWPNV3yBOXCDbP5nvio7o2f0L/PlO4abpKgsX0iZBCkq2UoaGdY/+a5wjLCGdi6Og5zuOmv3gO0hzZ8AcukVfD9tfUiSJ+uwM1eGlLBB9WtQznR1F60stoBseUYbdsZ4btOShRQuxI63qaVxOcaqjpTeogL+vLmDC/dK4MFfNDiorKLcByJGUyX6JyBehHlAElmUIFpNguDM5NQS+7U3UuL2hhenVku7GGI3krkOQ/2GsH3gaIlwYUILjvOuRzcgPO3+yS5GDCkJKGZJZDQ+KlpdCtiF+BQPu+pbVUSryI9yFg0c6/Dq4QnqSEmmb6JZEtWnuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91PaI/OphjNQGZXeKxT2UVHu4PV4AMr9IQdowg9dluY=;
- b=YUkuwILmGaz9yb1LzQZNAwpXNza91wGecDQHv1kebCbnJz2QgDWGXkcAI3lLwlZ4EIFw5qjAmHBpfmSOTLaUYUbaZeLQuC6gmicEuNjV4b6iQlUv9ofi+rBJbe3Qj14rNGeUJkA67Qvm66Q8qsnRxNk/yaXK+VB9Yps+LYJV0C4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2429.namprd12.prod.outlook.com (2603:10b6:802:26::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 8 May
- 2020 22:02:58 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.028; Fri, 8 May 2020
- 22:02:58 +0000
-Subject: Re: [PATCH v2 3/3] KVM: SVM: Add support for MPK feature on AMD
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, x86@kernel.org,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
- <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
- <20200508215554.GT27052@linux.intel.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <2f4126c1-3c6f-b2d0-2ebb-80dc8f86304c@amd.com>
-Date:   Fri, 8 May 2020 17:02:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <20200508215554.GT27052@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0801CA0015.namprd08.prod.outlook.com
- (2603:10b6:803:29::25) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        Fri, 8 May 2020 18:03:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:42367 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgEHWDI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 18:03:08 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MCsgS-1jOPdr2RNo-008sQA; Sat, 09 May 2020 00:02:03 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huang Rui <ray.huang@amd.com>, Ingo Molnar <mingo@redhat.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: vmwgfx: include linux/highmem.h
+Date:   Sat,  9 May 2020 00:01:31 +0200
+Message-Id: <20200508220150.649044-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.87] (165.204.77.1) by SN4PR0801CA0015.namprd08.prod.outlook.com (2603:10b6:803:29::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Fri, 8 May 2020 22:02:56 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 73cd85ef-be49-4c17-7efb-08d7f39b915a
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2429:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2429C40405D21FE43088594A95A20@SN1PR12MB2429.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 039735BC4E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NvtZC543HcQuQ0ZIBmNmWT/3JVYrMoXA8gCOdmEWkbcSXD6Axsz1XouVS/eGlWE/96ZWP1cPpv0mCEOupargmW7VQfJnlQlMTQQd7glnqlmOLRqipkBAZ9S5Dq376hh/SissOFpStWa6aEsJ4lmseWXH1AIOwCHHuml4/npJAH5sSpHPVkRqzdVlYbckoxLygZJ0Ke2Sp5ofuyvII0s/GZTrDQHFwi4hkGgIBGrAAViWP3HWsnPT34PrRq3uS0ZOUyg4qnrbaDWEqjg0TIjh42Fh1kCjx3GWQiQAYIrfcn4HIGHk1+QkwE2A6RBqlNOBGfeLcp+/j+3qHVk73YcecrR4w0GMkELmwyDaHx5WPP6h88WYx+vjxXtgBd5eHTR7jyNptScSWgG/I+QqiEm4RvEmPMnSOgwdrA17LZns6IGCaa4A9Uyfk+pMeJoLo0tOBbUajy8CSga38U44wFbApln01HyHMG5fnirlU/ly/ihV1h4hsihTKd027fPzzWyo3BUUujHMZT1UqE5Y4NrITsuZ4IsuSzkF8WUYaJFCyd2u3pQYUNUZeRItu9Ud+W7ClDEAYPNAGKh9/lUJXjiQUaHxPOCZIgnu+G4oVmrnMoIQINRoheJVWhQvMioN1F5myTEOMpkoTPDELWYSqHP52w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(33430700001)(2906002)(16576012)(7406005)(66946007)(31696002)(31686004)(6916009)(966005)(45080400002)(478600001)(26005)(53546011)(186003)(16526019)(52116002)(316002)(6486002)(4326008)(66556008)(66476007)(86362001)(7416002)(44832011)(36756003)(8936002)(2616005)(956004)(5660300002)(8676002)(33440700001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 8ptMWkRla/5MBt2wMvk+cwGpkui3Tn67szx6RvZptAwcrk3/1W7ob27cEoXT7SXj8u0PLcfHmQjg5rvigPO9um84+J7FOJRvbCEchwptyXEOwp98HfkDI9g7SVCUTjc/kb8TwkzQhtmcQU6jJlZo9GLISkzA52c7VzczKM6/bMqeoQyPv+XUJN0PRnl13IMJULY5wk2CaHYK8I94D1u+U3uhAHZLbYk97eHhq/FfsWdSiXSsKoodLVfCuWcf5Lt2Y43BFB3pzXz6HVRzeQWlSB9Dja2gdwBf0emit3OrtvcamAxFePEzfpMOTk0Rh5irymGiNIaY1Y/9xamT7M77f/gDHEf65Md8+aG5uePQAazOQd75eSQoMoqvbGme+i82qt40Xw2GUhtItRfDdnqFxvQCwllbD2ajPYknd6UCDJW8qg1BahRCuw3N+VM1Pux2WTnZNsy1Yy4wMCl1N3IELvO+QV2miANhVorI9ggaXSU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73cd85ef-be49-4c17-7efb-08d7f39b915a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 22:02:58.4009
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rD6hmgg4X7uJ7dATucZjpd2NMYin3QTf/Z139DQjeUcqgtcpNvGBBF8XoTjWhGa0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2429
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TAKq1R05pzqZudtB3/eJjJKa8Xbr2qqNSVjJes2lRdzfJo28ior
+ jpG2oBKBCIM9I0meRg4Do/dfII5ARO/ZpAAObB5iNU3iCCuxDZGC9ur9gy/e8/N5KH40xtl
+ zubxBxUZ2TAxp6I2EEFhblKzvIbDSX2HvY1w7/WTEtxBhmU5S1+U1tGYNScR9bWvVvA9Lwt
+ SUVJX3OpN5y1qagavtf6A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pQ7ZCJSaxLY=:CvneInVbDCF7wVcYheL91B
+ bulOWg0njJ2uR9LvROcwWe/vwyNzxp5K6WfdXMFHBwEkfhTNw0bVcxvD8IrSFpD0KC8TviK3o
+ 2mf/G8Dp7vGxGjScYm3LYde4pML/2dOUn9jiACrP7euRObZ2ijeOmEhl7jDEy27owpQao6o2f
+ /SO03TB54PKwjk02/NXDsKOt4s7Vlel69d5geccRqk/dbPKsFx8eNeNQ70KZvuXUCYo+4gVNq
+ AyrJYxx33AFDDBvjdTHUp8WSM6BvmQY8xW8tmCKPFZ/OY3h4XDKYApKCqQcok9vc/Qo/vaGhs
+ Cy4G1g/dwFG7OyX+Lzq0K7xNNA1ZNy7YHIwqeqk0Kux4fHCq1lYpEGJqCsjRZ8zv5LJpjF4S2
+ 7p3LKoai6c/b8gZZJsch7W0e69UvHCI8bPdzFlRuGC7rm0ykWB4NZuqLTBuIC/HlzC9Z+kAId
+ aBhvtAWagKCUIX31Q2v8+S47zcy1i2Z7zC+nzpqp3TUXriMCajRt6Kg+rQkJdIQhxFj4HX+jd
+ rcSxAvUskYewdmUfBkJAQ2hiaX28j3DARTaEFxcJRbZdL2FCMy19Ug0uF0zjogz2OxmG2Uqkr
+ 4diBlDY9L7RHRrP3Hfb1MvdUSmkkFobkFN3S/ePNCydC65ZSo35zuFVrC7nvJguXY4+X0LBBM
+ 0Kr81poPPMNRnAsqTGRyZTs6vUqrzVL99DXoxms9mSGpDdIlNAzAvd3gqYwC/y7Ucy7HAA+YU
+ 3LyKV0Rosfc327PpqLHUs9jXHfSB+As31A6g12Nkokh9AIYp17vU1b8xjoLwZtQf1wF1C7YSD
+ 0MBAFq4u699ZjeZp0+NmUAQBJjY3JBFW0XlU185Wm7IMJzeY7w=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In order to call kmap_atomic() etc, we need to include linux/highmem.h:
 
+drivers/gpu/drm/vmwgfx/vmwgfx_blit.c: In function 'vmw_bo_cpu_blit_line':
+drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:377:4: error: implicit declaration of function 'kunmap_atomic'; did you mean 'in_atomic'? [-Werror=implicit-function-declaration]
+  377 |    kunmap_atomic(d->src_addr);
+      |    ^~~~~~~~~~~~~
+      |    in_atomic
+drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:391:5: error: implicit declaration of function 'kmap_atomic_prot' [-Werror=implicit-function-declaration]
+  391 |     kmap_atomic_prot(d->dst_pages[dst_page],
+      |     ^~~~~~~~~~~~~~~~
+drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:390:16: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  390 |    d->dst_addr =
+      |                ^
+drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:403:16: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  403 |    d->src_addr =
+      |                ^
 
-On 5/8/20 4:55 PM, Sean Christopherson wrote:
-> On Fri, May 08, 2020 at 04:10:03PM -0500, Babu Moger wrote:
->> The Memory Protection Key (MPK) feature provides a way for applications
->> to impose page-based data access protections (read/write, read-only or
->> no access), without requiring modification of page tables and subsequent
->> TLB invalidations when the application changes protection domains.
->>
->> This feature is already available in Intel platforms. Now enable the
->> feature on AMD platforms.
->>
->> AMD documentation for MPK feature is available at "AMD64 Architecture
->> Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
->> Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
->> obtained at the link below.
->>
->> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D206537&amp;data=02%7C01%7Cbabu.moger%40amd.com%7Ceca826ce565e450edc0b08d7f39a95f1%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637245717572330988&amp;sdata=IaZXO8LLyXMqP0pZBYKzkXY4cInzpjBbSyzcnIcj%2BoA%3D&amp;reserved=0
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
->>  arch/x86/kvm/svm/svm.c |    4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->> index 2f379bacbb26..37fb41ad9149 100644
->> --- a/arch/x86/kvm/svm/svm.c
->> +++ b/arch/x86/kvm/svm/svm.c
->> @@ -818,6 +818,10 @@ static __init void svm_set_cpu_caps(void)
->>  	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
->>  	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
->>  		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
->> +
->> +	/* PKU is not yet implemented for shadow paging. */
->> +	if (npt_enabled && boot_cpu_has(X86_FEATURE_OSPKE))
->> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
-> 
-> This can actually be done in common code as well since both VMX and SVM
-> call kvm_set_cpu_caps() after kvm_configure_mmu(), i.e. key off of
-> tdp_enabled.
+Fixes: 46385a895322 ("drm: remove drm specific kmap_atomic code")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_blit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ok. Sure. Will change it in next revision. Thanks.
-> 
->>  }
->>  
->>  static __init int svm_hardware_setup(void)
->>
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+index 94d456a1d1a9..1629427d5734 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+@@ -27,6 +27,7 @@
+  **************************************************************************/
+ 
+ #include "vmwgfx_drv.h"
++#include <linux/highmem.h>
+ 
+ /*
+  * Template that implements find_first_diff() for a generic
+-- 
+2.26.0
+
