@@ -4,239 +4,356 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A226C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C5EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E60721974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A1821841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgEHPkk (ORCPT
+        id S1727972AbgEHPle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:40:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2180 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727911AbgEHPkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:40:39 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id CD46C5E8A0A3A8D41663;
-        Fri,  8 May 2020 16:40:37 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 16:40:37 +0100
-Date:   Fri, 8 May 2020 16:40:15 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jic23@kernel.org>
-Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
- object
-Message-ID: <20200508164015.0000223f@Huawei.com>
-In-Reply-To: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 11:41:34 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40314 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgEHPle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:41:34 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u4so1769168lfm.7;
+        Fri, 08 May 2020 08:41:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kMRstuQ4C+0ueulo9c/PMnnUy//TC/HKKnVfQiSa3p4=;
+        b=hTsfCaYz/kfYHZOe+93LKl8Td9TIropE5njHT1WC5+k9H7whqfEAIvWgUJcxFvs8km
+         33rsqsQo43JnaVSKxvQM8gdKvCavooCtPPEfdar/R7eSy6IQ3sWw5lN+fiULuT9Sa3xB
+         pDA9McK2+cRBd15r7bEltiBe3L5AhR0yQGanksxPAliy3xryMPEbScJ48PqZ1n73PHlD
+         hES1foExJxF5GN8m/0F0eZKXZdPofH/4GqlwTTdw79ouESHekDNjKQdVSBJmuu+lMRV/
+         RbVCwnRqDYCjlPIC2JczWPiXRlhuBREyQDYZgmZcBi0AE8zrshwoddWOnoCzTyCiZill
+         tWlg==
+X-Gm-Message-State: AOAM530aeFue/2wI5Ur1MhgpzCVYP0Nwm75uizISOPvkCRl354zF+RdH
+        Hp3uXlh1GIMt6PTmBjyv2ao=
+X-Google-Smtp-Source: ABdhPJwOQ3UjhGF3Sk/gcmrjirWcblQfl4zumcpIyDW9vS5/2QS0QU51jfSpS/nGaPjp5UntBEw1HA==
+X-Received: by 2002:ac2:58c8:: with SMTP id u8mr2382355lfo.142.1588952490703;
+        Fri, 08 May 2020 08:41:30 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id j29sm1679056lfp.90.2020.05.08.08.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:41:30 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:40:43 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 02/11] lib/test_linear_ranges: add a test for the
+ 'linear_ranges'
+Message-ID: <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 17:13:04 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+    Add a KUnit test for the linear_ranges helper.
 
-> There are plenty of bad designs we want to discourage or not have to review
-> manually usually about accessing private (marked as [INTERN]) fields of
-> 'struct iio_dev'.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
 
-This has been on the todo list for many years so great you are having a go.
+Changes since v11: Added missing dependency to LINEAR_RANGES lib.
+
+ lib/Kconfig.debug        |  12 +++
+ lib/Makefile             |   1 +
+ lib/test_linear_ranges.c | 228 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 lib/test_linear_ranges.c
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 21d9c5f6e7ec..f3322a620674 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2092,6 +2092,18 @@ config LIST_KUNIT_TEST
  
-> 
-> This is difficult, as a lot of users copy drivers, and not always the best
-> examples.
-> 
-> A better idea is to hide those fields into the framework.
-> For 'struct iio_dev' this is a 'struct iio_dev_priv' which wraps a public
-> 'struct iio_dev' object.
-> 
-> In the next patches, some fields will be moved to this new struct, each
-> with it's own rework.
-> 
-> This rework will not be complete[-able] for a while, as many fields need
-> some drivers to be reworked in order to finalize them
-> (e.g. 'indio_dev->mlock').
-> 
-> But some fields can already be moved, and in time, all of them may get
-> there (in the 'struct iio_dev_priv' object).
-> 
-> We also need to hide the implementations for 'iio_priv()' &
-> 'iio_priv_to_dev()', as the pointer arithmetic will not match once things
-> are moved.
+ 	  If unsure, say N.
+ 
++config LINEAR_RANGES_TEST
++	tristate "KUnit test for linear_ranges"
++	depends on KUNIT
++	select LINEAR_RANGES
++	help
++	  This builds the linear_ranges unit test, which runs on boot.
++	  Tests the linear_ranges logic correctness.
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 20b9cfdcad69..cd548bfa8df9 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -310,3 +310,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ 
+ # KUnit tests
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
++obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+diff --git a/lib/test_linear_ranges.c b/lib/test_linear_ranges.c
+new file mode 100644
+index 000000000000..676e0b8abcdd
+--- /dev/null
++++ b/lib/test_linear_ranges.c
+@@ -0,0 +1,228 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test for the linear_ranges helper.
++ *
++ * Copyright (C) 2020, ROHM Semiconductors.
++ * Author: Matti Vaittinen <matti.vaittien@fi.rohmeurope.com>
++ */
++#include <kunit/test.h>
++
++#include <linux/linear_range.h>
++
++/* First things first. I deeply dislike unit-tests. I have seen all the hell
++ * breaking loose when people who think the unit tests are "the silver bullet"
++ * to kill bugs get to decide how a company should implement testing strategy...
++ *
++ * Believe me, it may get _really_ ridiculous. It is tempting to think that
++ * walking through all the possible execution branches will nail down 100% of
++ * bugs. This may lead to ideas about demands to get certain % of "test
++ * coverage" - measured as line coverage. And that is one of the worst things
++ * you can do.
++ *
++ * Ask people to provide line coverage and they do. I've seen clever tools
++ * which generate test cases to test the existing functions - and by default
++ * these tools expect code to be correct and just generate checks which are
++ * passing when ran against current code-base. Run this generator and you'll get
++ * tests that do not test code is correct but just verify nothing changes.
++ * Problem is that testing working code is pointless. And if it is not
++ * working, your test must not assume it is working. You won't catch any bugs
++ * by such tests. What you can do is to generate a huge amount of tests.
++ * Especially if you were are asked to proivde 100% line-coverage x_x. So what
++ * does these tests - which are not finding any bugs now - do?
++ *
++ * They add inertia to every future development. I think it was Terry Pratchet
++ * who wrote someone having same impact as thick syrup has to chronometre.
++ * Excessive amount of unit-tests have this effect to development. If you do
++ * actually find _any_ bug from code in such environment and try fixing it...
++ * ...chances are you also need to fix the test cases. In sunny day you fix one
++ * test. But I've done refactoring which resulted 500+ broken tests (which had
++ * really zero value other than proving to managers that we do do "quality")...
++ *
++ * After this being said - there are situations where UTs can be handy. If you
++ * have algorithms which take some input and should produce output - then you
++ * can implement few, carefully selected simple UT-cases which test this. I've
++ * previously used this for example for netlink and device-tree data parsing
++ * functions. Feed some data examples to functions and verify the output is as
++ * expected. I am not covering all the cases but I will see the logic should be
++ * working.
++ *
++ * Here we also do some minor testing. I don't want to go through all branches
++ * or test more or less obvious things - but I want to see the main logic is
++ * working. And I definitely don't want to add 500+ test cases that break when
++ * some simple fix is done x_x. So - let's only add few, well selected tests
++ * which ensure as much logic is good as possible.
++ */
++
++/*
++ * Test Range 1:
++ * selectors:	2	3	4	5	6
++ * values (5):	10	20	30	40	50
++ *
++ * Test Range 2:
++ * selectors:	7	8	9	10
++ * values (4):	100	150	200	250
++ */
++
++#define RANGE1_MIN 10
++#define RANGE1_MIN_SEL 2
++#define RANGE1_STEP 10
++
++/* 2, 3, 4, 5, 6 */
++static const unsigned int range1_sels[] = { RANGE1_MIN_SEL, RANGE1_MIN_SEL + 1,
++					    RANGE1_MIN_SEL + 2,
++					    RANGE1_MIN_SEL + 3,
++					    RANGE1_MIN_SEL + 4 };
++/* 10, 20, 30, 40, 50 */
++static const unsigned int range1_vals[] = { RANGE1_MIN, RANGE1_MIN +
++					    RANGE1_STEP,
++					    RANGE1_MIN + RANGE1_STEP * 2,
++					    RANGE1_MIN + RANGE1_STEP * 3,
++					    RANGE1_MIN + RANGE1_STEP * 4 };
++
++#define RANGE2_MIN 100
++#define RANGE2_MIN_SEL 7
++#define RANGE2_STEP 50
++
++/*  7, 8, 9, 10 */
++static const unsigned int range2_sels[] = { RANGE2_MIN_SEL, RANGE2_MIN_SEL + 1,
++					    RANGE2_MIN_SEL + 2,
++					    RANGE2_MIN_SEL + 3 };
++/* 100, 150, 200, 250 */
++static const unsigned int range2_vals[] = { RANGE2_MIN, RANGE2_MIN +
++					    RANGE2_STEP,
++					    RANGE2_MIN + RANGE2_STEP * 2,
++					    RANGE2_MIN + RANGE2_STEP * 3 };
++
++#define RANGE1_NUM_VALS (ARRAY_SIZE(range1_vals))
++#define RANGE2_NUM_VALS (ARRAY_SIZE(range2_vals))
++#define RANGE_NUM_VALS (RANGE1_NUM_VALS + RANGE2_NUM_VALS)
++
++#define RANGE1_MAX_SEL (RANGE1_MIN_SEL + RANGE1_NUM_VALS - 1)
++#define RANGE1_MAX_VAL (range1_vals[RANGE1_NUM_VALS - 1])
++
++#define RANGE2_MAX_SEL (RANGE2_MIN_SEL + RANGE2_NUM_VALS - 1)
++#define RANGE2_MAX_VAL (range2_vals[RANGE2_NUM_VALS - 1])
++
++#define SMALLEST_SEL RANGE1_MIN_SEL
++#define SMALLEST_VAL RANGE1_MIN
++
++static struct linear_range testr[] = {
++	{
++		.min = RANGE1_MIN,
++		.min_sel = RANGE1_MIN_SEL,
++		.max_sel = RANGE1_MAX_SEL,
++		.step = RANGE1_STEP,
++	}, {
++		.min = RANGE2_MIN,
++		.min_sel = RANGE2_MIN_SEL,
++		.max_sel = RANGE2_MAX_SEL,
++		.step = RANGE2_STEP
++	},
++};
++
++static void range_test_get_value(struct kunit *test)
++{
++	int ret, i;
++	unsigned int sel, val;
++
++	for (i = 0; i < RANGE1_NUM_VALS; i++) {
++		sel = range1_sels[i];
++		ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
++		KUNIT_EXPECT_EQ(test, 0, ret);
++		KUNIT_EXPECT_EQ(test, val, range1_vals[i]);
++	}
++	for (i = 0; i < RANGE2_NUM_VALS; i++) {
++		sel = range2_sels[i];
++		ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
++		KUNIT_EXPECT_EQ(test, 0, ret);
++		KUNIT_EXPECT_EQ(test, val, range2_vals[i]);
++	}
++	ret = linear_range_get_value_array(&testr[0], 2, sel + 1, &val);
++	KUNIT_EXPECT_NE(test, 0, ret);
++}
++
++static void range_test_get_selector_high(struct kunit *test)
++{
++	int ret, i;
++	unsigned int sel;
++	bool found;
++
++	for (i = 0; i < RANGE1_NUM_VALS; i++) {
++		ret = linear_range_get_selector_high(&testr[0], range1_vals[i],
++						     &sel, &found);
++		KUNIT_EXPECT_EQ(test, 0, ret);
++		KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
++		KUNIT_EXPECT_TRUE(test, found);
++	}
++
++	ret = linear_range_get_selector_high(&testr[0], RANGE1_MAX_VAL + 1,
++					     &sel, &found);
++	KUNIT_EXPECT_LE(test, ret, 0);
++
++	ret = linear_range_get_selector_high(&testr[0], RANGE1_MIN - 1,
++					     &sel, &found);
++	KUNIT_EXPECT_EQ(test, 0, ret);
++	KUNIT_EXPECT_FALSE(test, found);
++	KUNIT_EXPECT_EQ(test, sel, range1_sels[0]);
++}
++
++static void range_test_get_value_amount(struct kunit *test)
++{
++	int ret;
++
++	ret = linear_range_values_in_range_array(&testr[0], 2);
++	KUNIT_EXPECT_EQ(test, (int)RANGE_NUM_VALS, ret);
++}
++
++static void range_test_get_selector_low(struct kunit *test)
++{
++	int i, ret;
++	unsigned int sel;
++	bool found;
++
++	for (i = 0; i < RANGE1_NUM_VALS; i++) {
++		ret = linear_range_get_selector_low_array(&testr[0], 2,
++							  range1_vals[i], &sel,
++							  &found);
++		KUNIT_EXPECT_EQ(test, 0, ret);
++		KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
++		KUNIT_EXPECT_TRUE(test, found);
++	}
++	for (i = 0; i < RANGE2_NUM_VALS; i++) {
++		ret = linear_range_get_selector_low_array(&testr[0], 2,
++							  range2_vals[i], &sel,
++							  &found);
++		KUNIT_EXPECT_EQ(test, 0, ret);
++		KUNIT_EXPECT_EQ(test, sel, range2_sels[i]);
++		KUNIT_EXPECT_TRUE(test, found);
++	}
++
++	/*
++	 * Seek value greater than range max => get_selector_*_low should
++	 * return Ok - but set found to false as value is not in range
++	 */
++	ret = linear_range_get_selector_low_array(&testr[0], 2,
++					range2_vals[RANGE2_NUM_VALS - 1] + 1,
++					&sel, &found);
++
++	KUNIT_EXPECT_EQ(test, 0, ret);
++	KUNIT_EXPECT_EQ(test, sel, range2_sels[RANGE2_NUM_VALS - 1]);
++	KUNIT_EXPECT_FALSE(test, found);
++}
++
++static struct kunit_case range_test_cases[] = {
++	KUNIT_CASE(range_test_get_value_amount),
++	KUNIT_CASE(range_test_get_selector_high),
++	KUNIT_CASE(range_test_get_selector_low),
++	KUNIT_CASE(range_test_get_value),
++	{},
++};
++
++static struct kunit_suite range_test_module = {
++	.name = "linear-ranges-test",
++	.test_cases = range_test_cases,
++};
++
++kunit_test_suites(&range_test_module);
++
++MODULE_LICENSE("GPL");
+-- 
+2.21.0
 
-This last bit has the disadvantage of potentially putting a function
-call in some fast paths where there wasn't one before.
 
-We may not need to 'forcefully' hide the internal parts.  May be
-enough to just make their use really obvious.  If you have to cast
-to an iio_dev_priv then you are doing something very wrong.
-The old stick __ in front of it may make that even more obvious.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Naming is a bit confusing though.  iio_dev_priv sounds like private
-to the device... iio_dev_opaque maybe?
-
-
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
-> 
-> Just as a note here, I've been running this patchset without a problem
-> for 2 weeks now in a work branch.
-> But it's only been a setup, so no idea if some other thing may cause
-> bigger issues.
-> 
-> This small patchset is meant to kickstart this, for GSoC people or for
-> people wanting to start contributing to IIO.
-> 
->  drivers/iio/iio_core.h          | 11 +++++++++++
->  drivers/iio/industrialio-core.c | 32 +++++++++++++++++++++++++++-----
->  include/linux/iio/iio.h         | 12 ++----------
->  3 files changed, 40 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-> index fd9a5f1d5e51..84f3b4590c05 100644
-> --- a/drivers/iio/iio_core.h
-> +++ b/drivers/iio/iio_core.h
-> @@ -17,6 +17,17 @@ struct iio_dev;
->  
->  extern struct device_type iio_device_type;
->  
-> +/**
-> + * struct iio_dev_priv - industrial I/O device private information
-> + * @indio_dev:			public IIO device object
-> + */
-> +struct iio_dev_priv {
-> +	struct iio_dev			indio_dev;
-> +};
-> +
-> +#define to_iio_dev_priv(indio_dev)	\
-> +	container_of(indio_dev, struct iio_dev_priv, indio_dev)
-> +
->  int __iio_add_chan_devattr(const char *postfix,
->  			   struct iio_chan_spec const *chan,
->  			   ssize_t (*func)(struct device *dev,
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 462d3e810013..f0888dd84d3d 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -164,6 +164,23 @@ static const char * const iio_chan_info_postfix[] = {
->  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
->  };
->  
-> +
-> +void *iio_priv(const struct iio_dev *indio_dev)
-> +{
-> +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> +	return (char *)iio_dev_priv + ALIGN(sizeof(struct iio_dev_priv), IIO_ALIGN);
-> +}
-> +EXPORT_SYMBOL_GPL(iio_priv);
-> +
-> +struct iio_dev *iio_priv_to_dev(void *priv)
-> +{
-> +	struct iio_dev_priv *iio_dev_priv =
-> +		(struct iio_dev_priv *)((char *)priv -
-> +				  ALIGN(sizeof(struct iio_dev_priv), IIO_ALIGN));
-> +	return &iio_dev_priv->indio_dev;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_priv_to_dev);
-> +
->  /**
->   * iio_find_channel_from_si() - get channel from its scan index
->   * @indio_dev:		device
-> @@ -1476,6 +1493,8 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
->  static void iio_dev_release(struct device *device)
->  {
->  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
-> +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> +
->  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
->  		iio_device_unregister_trigger_consumer(indio_dev);
->  	iio_device_unregister_eventset(indio_dev);
-> @@ -1484,7 +1503,7 @@ static void iio_dev_release(struct device *device)
->  	iio_buffer_put(indio_dev->buffer);
->  
->  	ida_simple_remove(&iio_ida, indio_dev->id);
-> -	kfree(indio_dev);
-> +	kfree(iio_dev_priv);
->  }
->  
->  struct device_type iio_device_type = {
-> @@ -1498,10 +1517,11 @@ struct device_type iio_device_type = {
->   **/
->  struct iio_dev *iio_device_alloc(int sizeof_priv)
->  {
-> +	struct iio_dev_priv *iio_dev_priv;
->  	struct iio_dev *dev;
->  	size_t alloc_size;
->  
-> -	alloc_size = sizeof(struct iio_dev);
-> +	alloc_size = sizeof(struct iio_dev_priv);
->  	if (sizeof_priv) {
->  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
->  		alloc_size += sizeof_priv;
-> @@ -1509,10 +1529,12 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
->  	/* ensure 32-byte alignment of whole construct ? */
->  	alloc_size += IIO_ALIGN - 1;
->  
-> -	dev = kzalloc(alloc_size, GFP_KERNEL);
-> -	if (!dev)
-> +	iio_dev_priv = kzalloc(alloc_size, GFP_KERNEL);
-> +	if (!iio_dev_priv)
->  		return NULL;
->  
-> +	dev = &iio_dev_priv->indio_dev;
-> +
->  	dev->dev.groups = dev->groups;
->  	dev->dev.type = &iio_device_type;
->  	dev->dev.bus = &iio_bus_type;
-> @@ -1526,7 +1548,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
->  	if (dev->id < 0) {
->  		/* cannot use a dev_err as the name isn't available */
->  		pr_err("failed to get device id\n");
-> -		kfree(dev);
-> +		kfree(iio_dev_priv);
->  		return NULL;
->  	}
->  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 5f9f439a4f01..38c4ea505394 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -678,16 +678,8 @@ static inline void *iio_device_get_drvdata(struct iio_dev *indio_dev)
->  #define IIO_ALIGN L1_CACHE_BYTES
->  struct iio_dev *iio_device_alloc(int sizeof_priv);
->  
-> -static inline void *iio_priv(const struct iio_dev *indio_dev)
-> -{
-> -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
-> -}
-> -
-> -static inline struct iio_dev *iio_priv_to_dev(void *priv)
-> -{
-> -	return (struct iio_dev *)((char *)priv -
-> -				  ALIGN(sizeof(struct iio_dev), IIO_ALIGN));
-> -}
-> +void *iio_priv(const struct iio_dev *indio_dev);
-> +struct iio_dev *iio_priv_to_dev(void *priv);
->  
->  void iio_device_free(struct iio_dev *indio_dev);
->  struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
-
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
