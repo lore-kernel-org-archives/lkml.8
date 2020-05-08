@@ -2,80 +2,132 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF76C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7D1C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D436E215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A675B2495B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgEHKCE (ORCPT
+        id S1727780AbgEHKCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:02:04 -0400
-Received: from relay.sw.ru ([185.231.240.75]:59018 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgEHKCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:02:03 -0400
-Received: from vvs-ws.sw.ru ([172.16.24.21])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1jWzp5-0004Tv-Er; Fri, 08 May 2020 13:01:39 +0300
-Subject: Re: [PATCH] ipc/util.c: sysvipc_find_ipc() incorrectly updates
- position index
-From:   Vasily Averin <vvs@virtuozzo.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Andreas Schwab <schwab@suse.de>
-References: <ad24ee52-21a8-3ff0-e968-63d315472b91@virtuozzo.com>
- <4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com>
- <20200507170242.6cbb88ae672deed67152e221@linux-foundation.org>
- <20200508033625.GO16070@bombadil.infradead.org>
- <e25e5a42-159c-6bad-4f14-d70461a78b72@virtuozzo.com>
-Message-ID: <c89b587a-b570-2a11-3001-d1c8444f3a2f@virtuozzo.com>
-Date:   Fri, 8 May 2020 13:01:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 06:02:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39366 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgEHKCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:02:14 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B78641C0257; Fri,  8 May 2020 12:02:12 +0200 (CEST)
+Date:   Fri, 8 May 2020 12:02:12 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: ofono for d4: less hcked and more working version was Re: USB
+ networking news, ofono for d4: less hacked version
+Message-ID: <20200508100211.GA19646@amd>
+References: <20200506101125.GA7490@amd>
+ <20200506144338.GT37466@atomide.com>
+ <20200506230525.GA22354@amd>
+ <20200507140732.GU37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <e25e5a42-159c-6bad-4f14-d70461a78b72@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <20200507140732.GU37466@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 9:07 AM, Vasily Averin wrote:
-> On 5/8/20 6:36 AM, Matthew Wilcox wrote:
->> On Thu, May 07, 2020 at 05:02:42PM -0700, Andrew Morton wrote:
->>> Here's how I resolved things.  Please check?
->>>
->>> static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
->>> 					      loff_t *new_pos)
->>> {
->>> 	unsigned long index = pos;
->>> 	struct kern_ipc_perm *ipc;
->>>
->>> 	rcu_read_lock();
->>> 	ipc = xa_find(&ids->ipcs, &index, ULONG_MAX, XA_PRESENT);
->>> 	if (ipc)
->>> 		ipc_lock_object(ipc);
->>> 	else
->>> 		rcu_read_unlock();
->>> 	*new_pos = pos + 1;
->>> 	return ipc;
->>> }
->>
->> Surely that should be '*new_pos = index + 1'?  Or did I misunderstand
->> the reasoning behind the other patch?
-> 
-> I'm not sure however it looks like xa_find() can return index < pos
-it seems, I was wrong here.
-So I'm agree with Matthew, '*new_pos = index + 1' should be used.
 
-Thank you,
-	Vasily Averin
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > But I might be confused. I recall some audio patches were needed for
+> > basic phone calls (setting up mixers to connect gsm<->audio), but
+> > those worked before gsmux support was enabled. (Maybe some hardcoded
+> > commands were needed to be sent to gsmmux somewhere).
+>=20
+> We're currently reconfiguring the TDM transport that based on the
+> unsolicited messages on dlci1. I still need to figure out how to add
+> that back while keeping the serdev-ngsm driver generic.
+
+Is it really neccessary? I believe I was simply configuring codecs for
+voice call and left them like that.
+
+> > I assume neither gsmmux audio parts nor mixer parts are available in
+> > -next at the moment?
+>=20
+> Sorry not yet, will post as soon as I have the audio notifiers part
+> working, so it will be some days away still with time permitting.
+
+Thanks... feel free to cc me.
+
+I pushed new version of ofono: I'm still not sure about those incoming
+sms (but _some_ sms are received). Rest should be better.
+
+Best regards,
+								Pavel
+
+user@devuan:/my/ofono$ git push
+Counting objects: 5, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 479 bytes | 0 bytes/s, done.
+Total 5 (delta 4), reused 0 (delta 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To github.com:pavelmachek/ofono.git
+   606faf92..f6f43041  mux-v1.29-3 -> mux-v1.29-3
+
+
+commit f6f43041ab33e2b811b73d4009ecfa0692d192aa
+Author: Pavel <pavel@ucw.cz>
+Date:   Fri May 8 11:57:04 2020 +0200
+
+    Trivial fix for incoming calls. Now basic functionality should
+    work.
+
+commit 606faf92c289166a5577963f1f987bc321edd226
+Author: Pavel <pavel@ucw.cz>
+Date:   Fri May 8 11:45:32 2020 +0200
+
+    Got enough of netreg to work for ofone to talk to us.
+
+    Incoming calls do NOT seem to work.
+
+    Outgoing calls seem ok.
+
+    Incoming SMS seem ok.
+
+    Outgoing SMS seem ok.
+   =20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl61LiMACgkQMOfwapXb+vLIZQCfTkdEtzhMK9+vPZc7yt/nH1EU
+WJkAoKMnCPPHidDjAa969bgYAVkr7rSo
+=qz9P
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
