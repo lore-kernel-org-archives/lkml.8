@@ -2,51 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB342C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666C6C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD5C20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395A220870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943907;
-	bh=OEOXJp0GplwOqua4HXBdjeGkIycP+sjXal95fZYY9Dc=;
+	s=default; t=1588943912;
+	bh=bVOLY6qCCBKUOcXkUwFbnUT2UzHZrxXpjThWje4InnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVAHziSRW/v3AvJUGLBq5FfxEVvnsI8hnytTDhXs1wkfZj8Btf2gZGt799V5QYWSF
-	 08uFKpA01atnrewllhNMTgk2ErlcpV90IouXhNlfbMEZguRTbRNnMWMmPgZutppcon
-	 NSONNmLjDr7aL/ACNELntjMTPIEClXKKu0iMHvnU=
+	b=v2GeXq60ZEjM1TLTgqKziq9LcvAH5vUe6aK+rdYssucmp8N51vNSmQtqLLaMt1jA5
+	 1cqCktxMFX8YDA4Y/KB2Ejz7H8bMQH6qs0HMWpgrUur5XabTswkH4xWRz62+dydO5b
+	 hFcLzczxn1AOWycOTDEseonE+gBFiNzZE1G+GBfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgEHNS1 (ORCPT
+        id S1730307AbgEHNSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40614 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbgEHMnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:04 -0400
+        id S1727853AbgEHMm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23C532495F;
-        Fri,  8 May 2020 12:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B3682495F;
+        Fri,  8 May 2020 12:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941783;
-        bh=OEOXJp0GplwOqua4HXBdjeGkIycP+sjXal95fZYY9Dc=;
+        s=default; t=1588941778;
+        bh=bVOLY6qCCBKUOcXkUwFbnUT2UzHZrxXpjThWje4InnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtZ41GTfTlqVC3Jg2mPu2sm0OqYI98vlB30T/cA5gJikR1IEqNUnk/coxVpKfrPsk
-         QzK2RKdyW0bc5RkW4AdrRLJ3weELwN0PFMGxzUHvVb/8qAxPy32g+vKRQr2IeRm4c4
-         p/c1Cm/GeS/BFNt2RPZLiFrwVu2G53/wQvzqJ9l4=
+        b=yoEkbBydgTjXZUV7J2F0wetuV/zw3RW4I8QD5NszK/zPy2vN6QRAempPD8Y+jbPok
+         IL+qhOcZAyzseTR4BWea0sjrnRBbJ1iAyAqbrG/p51Hu4Yjro6EHGfgzO8lTO1NdGd
+         T8kVk3v7PSLGJJ13672+uizgjCn6CtmwodLdUPag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: [PATCH 4.4 170/312] [media] lirc_imon: do not leave imon_probe() with mutex held
-Date:   Fri,  8 May 2020 14:32:41 +0200
-Message-Id: <20200508123136.454970850@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 168/312] net: systemport: suppress warnings on failed Rx SKB allocations
+Date:   Fri,  8 May 2020 14:32:39 +0200
+Message-Id: <20200508123136.293229477@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,44 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+From: Doug Berger <opendmb@gmail.com>
 
-commit b833d0df943d70682e288c38c96b8e7bfff4023a upstream.
+[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
 
-Commit af8a819a2513 ("[media] lirc_imon: simplify error handling code")
-lost mutex_unlock(&context->ctx_lock), so imon_probe() exits with
-the context->ctx_lock mutex acquired.
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
-The patch adds mutex_unlock(&context->ctx_lock) back.
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
 
-Fixes: af8a819a2513 ("[media] lirc_imon: simplify error handling code")
-
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/lirc/lirc_imon.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/media/lirc/lirc_imon.c
-+++ b/drivers/staging/media/lirc/lirc_imon.c
-@@ -885,12 +885,14 @@ static int imon_probe(struct usb_interfa
- 		vendor, product, ifnum, usbdev->bus->busnum, usbdev->devnum);
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 3cb99ce7325b7..d46ea7a5e0886 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -526,7 +526,8 @@ static struct sk_buff *bcm_sysport_rx_refill(struct bcm_sysport_priv *priv,
+ 	dma_addr_t mapping;
  
- 	/* Everything went fine. Just unlock and return retval (with is 0) */
-+	mutex_unlock(&context->ctx_lock);
- 	goto driver_unlock;
- 
- unregister_lirc:
- 	lirc_unregister_driver(driver->minor);
- 
- free_tx_urb:
-+	mutex_unlock(&context->ctx_lock);
- 	usb_free_urb(tx_urb);
- 
- free_rx_urb:
+ 	/* Allocate a new SKB for a new packet */
+-	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
++	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
+-- 
+2.20.1
+
 
 
