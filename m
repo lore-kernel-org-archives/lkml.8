@@ -2,62 +2,67 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D8CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E8FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F1420A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53487217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XY5On+Go"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljlb+5Jo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgEHVW1 (ORCPT
+        id S1727973AbgEHVWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56124 "EHLO
+        Fri, 8 May 2020 17:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgEHVW0 (ORCPT
+        with ESMTP id S1727787AbgEHVWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:22:26 -0400
+        Fri, 8 May 2020 17:22:37 -0400
 Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA49BC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:22:26 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id r5so3020557pfh.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:22:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13732C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:22:37 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id b13so3051346pfp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=H7ED1E6iU6GJrL2T+LX5Bj/uEQY3JnE8s7k3T/+egkg=;
-        b=XY5On+GozPMjP6G7zkPxPhW0eE2rp4+jjdvdyV+TE6avG+bX2A6pptdCo2RW+Rn3no
-         KQU1jyKtWYfy9dkYUy4EImZ9+uEOAdDNPH0YwlyphH5/olIWRcFiT8PHrG0uYO6VgAgO
-         E/dVasAEh4SuLPL7R9m2RQCh6iAMAIo8SZvlMpxpYiJTLphr4eSjp2MuwGrDq5yyaNzx
-         4N+w8pQqM2elRyzuI36Dqha8UAGJbBpiCNZBetFNyysG+bhxK79vAv6P6/dmFhDWQ0cZ
-         53BuMgiu5tPKdTehsHF+yErNAw9OFP+cGYZN4uCLlChZJodaZgBljzVYxcpHxpU3zoun
-         Gm9A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=WB4fh0ll1orLfT6cXNAXpIF6IJgnNIJAflmvuUUH6tI=;
+        b=ljlb+5JoPOLhwCwo/9ooaMm5dNWWqB4RKavWnR1bMTb4L6DZlaJkSQfWkg3sAAEQ0X
+         UMnUuP9OvKrvFO2Zf1tnvuK0HExsQ2dYx49Deh2BpHI0OnP5ZatGHYAs8ZTI/yxrils3
+         xzpe4ILlD48aErissngz/JZQjPXUgLkKPbNMlhHbgVIt6JvI2Qqhq9LILj81H24qLUpd
+         2GqNHMP6geeEqMap9slI4hgNGU5PWE9SdVjpN1ZygLe6+JYzxYDnJcgw76g8ZJaiwYbx
+         XGaBJ2xHrlPcPEipfB3nycm7Y2ZiWhkuNvSYmpS4fjdgG5Kmdhl2nIvXnPOUcLCgKgr5
+         47gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=H7ED1E6iU6GJrL2T+LX5Bj/uEQY3JnE8s7k3T/+egkg=;
-        b=SiTgpESgsFuSGfGunnk9edXQ6fvNo9OgtcO+741Bh3W7WKK+Qv7SGcIqJR1MUSO6fP
-         GfEhdqQymO7kvgSAQ6eA39/PnGky01JKrpNH06I31K14Adf2seseTI590Ozbe9kLqRvr
-         e94uuly5MAmZcYCV4kCnUHKOxJnGUsqJCxhpXpesIVBBg/TX2xhFwUZfxkw0U4Vk/15D
-         rPj9WDACeIt/15kClNPYSjNtonyyz/krjbju7ICwrs55if5YpeZ79Sq7YMkFIwRjzTWk
-         nDRO9TwrIBSJRHmlvxRaNCLdErVCH7WEmQQiIi3ivV68K6r3wyIjilcoFUab1j8JoYeK
-         FE4Q==
-X-Gm-Message-State: AGi0PuZTu8ZXU8Dd3Oe1Smwsrr+J5OxWiI9slqzvlrjwRP6umI0p1C8H
-        /uy2BDG3T+111SWiTU9LMgKj1AScWLi8KQ==
-X-Google-Smtp-Source: APiQypLfungZ5Nzv+f2ielEC+coRuoHMgMXQgXBUaRp75fbEnt3diNF+/f9OMq68YEUmbJsRsjKINr5ubL8GLQ==
-X-Received: by 2002:a17:90a:cb0b:: with SMTP id z11mr7520557pjt.62.1588972946092;
- Fri, 08 May 2020 14:22:26 -0700 (PDT)
-Date:   Fri,  8 May 2020 14:22:13 -0700
-Message-Id: <20200508212215.181307-1-shakeelb@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=WB4fh0ll1orLfT6cXNAXpIF6IJgnNIJAflmvuUUH6tI=;
+        b=Yd7Ddnolv66K/NwMbqQ5bB9ezxYGMPJ/XrCEfHjcuFzot1DaSFruBpX7U3edrg+l+Y
+         nSWUWm4ZC0UwpmGHcotIr2j8EahRtMy9ySoMCZWv0svKm0zZTT2Li2w/7TnPxgghkXL4
+         LxUCFgAV+lUdZmD57pAtgsxd1MBiNWrirns624mk7tT2pJUmm1yotugN6OzjzIwDRXw9
+         8ngMBJ8eLi9bkKNZPeyJ148PpQcgOGR2YPQ2Ii1WnjjsaLJ0OX2gi/y/DnDvolyg002N
+         w/jVmMN42tB+2OWO+AiPDJl3BdtMvWqDr0Zy/y029i32PZBIeYx89GSZfFToWNqWCbyl
+         XJHw==
+X-Gm-Message-State: AGi0Puai5Ln6FqCPaFaOg9As8BdVJxPtBF4DTv2NUjN5nC6AxX6tbpUi
+        VaQwwBDSD19tAcZ5GQlOuR9cyKMKNDMZZg==
+X-Google-Smtp-Source: APiQypLOtqKOw6qGIFJrdKSoiXSUY0c+iu42+pRBK9bHu2cCiYtB9/Zi/7+9qgttPV+xyxHeaRmrB0aXGe1j9A==
+X-Received: by 2002:a17:90a:6f22:: with SMTP id d31mr7728053pjk.14.1588972956538;
+ Fri, 08 May 2020 14:22:36 -0700 (PDT)
+Date:   Fri,  8 May 2020 14:22:14 -0700
+In-Reply-To: <20200508212215.181307-1-shakeelb@google.com>
+Message-Id: <20200508212215.181307-2-shakeelb@google.com>
 Mime-Version: 1.0
+References: <20200508212215.181307-1-shakeelb@google.com>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH 1/3] mm: swap: fix vmstats for huge pages
+Subject: [PATCH 2/3] mm: swap: memcg: fix memcg stats for huge pages
 From:   Shakeel Butt <shakeelb@google.com>
 To:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
         Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>
@@ -71,84 +76,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many of the callbacks called by pagevec_lru_move_fn() do not correctly
-update the vmstats for huge pages. Fix that. Also __pagevec_lru_add_fn()
-use the irq-unsafe alternative to update the stat as the irqs are
+The commit 2262185c5b28 ("mm: per-cgroup memory reclaim stats") added
+PGLAZYFREE, PGACTIVATE & PGDEACTIVATE stats for cgroups but missed
+couple of places and PGLAZYFREE missed huge page handling. Fix that.
+Also for PGLAZYFREE use the irq-unsafe function to update as the irq is
 already disabled.
 
+Fixes: 2262185c5b28 ("mm: per-cgroup memory reclaim stats")
 Signed-off-by: Shakeel Butt <shakeelb@google.com>
 ---
- mm/swap.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mm/swap.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/mm/swap.c b/mm/swap.c
-index a37bd7b202ac..3dbef6517cac 100644
+index 3dbef6517cac..4eb179ee0b72 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -225,7 +225,7 @@ static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		ClearPageActive(page);
- 		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
--		(*pgmoved)++;
-+		(*pgmoved) += hpage_nr_pages(page);
- 	}
- }
+@@ -278,6 +278,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
+ 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+ 		int file = page_is_file_lru(page);
+ 		int lru = page_lru_base_type(page);
++		int nr_pages = hpage_nr_pages(page);
  
-@@ -285,7 +285,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
+ 		del_page_from_lru_list(page, lruvec, lru);
+ 		SetPageActive(page);
+@@ -285,7 +286,8 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
  		add_page_to_lru_list(page, lruvec, lru);
  		trace_mm_lru_activate(page);
  
--		__count_vm_event(PGACTIVATE);
-+		__count_vm_events(PGACTIVATE, hpage_nr_pages(page));
+-		__count_vm_events(PGACTIVATE, hpage_nr_pages(page));
++		__count_vm_events(PGACTIVATE, nr_pages);
++		__count_memcg_events(lruvec_memcg(lruvec), PGACTIVATE, nr_pages);
  		update_page_reclaim_stat(lruvec, file, 1);
  	}
  }
-@@ -503,6 +503,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- {
- 	int lru, file;
- 	bool active;
-+	int nr_pages = hpage_nr_pages(page);
- 
- 	if (!PageLRU(page))
- 		return;
-@@ -536,11 +537,11 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- 		 * We moves tha page into tail of inactive.
- 		 */
- 		add_page_to_lru_list_tail(page, lruvec, lru);
--		__count_vm_event(PGROTATED);
-+		__count_vm_events(PGROTATED, nr_pages);
+@@ -540,8 +542,10 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+ 		__count_vm_events(PGROTATED, nr_pages);
  	}
  
- 	if (active)
--		__count_vm_event(PGDEACTIVATE);
-+		__count_vm_events(PGDEACTIVATE, nr_pages);
+-	if (active)
++	if (active) {
+ 		__count_vm_events(PGDEACTIVATE, nr_pages);
++		__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_pages);
++	}
  	update_page_reclaim_stat(lruvec, file, 0);
  }
  
-@@ -929,6 +930,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
- {
- 	enum lru_list lru;
- 	int was_unevictable = TestClearPageUnevictable(page);
-+	int nr_pages = hpage_nr_pages(page);
+@@ -551,13 +555,15 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+ 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
+ 		int file = page_is_file_lru(page);
+ 		int lru = page_lru_base_type(page);
++		int nr_pages = hpage_nr_pages(page);
  
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 
-@@ -966,13 +968,13 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
- 		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
- 					 PageActive(page));
- 		if (was_unevictable)
--			count_vm_event(UNEVICTABLE_PGRESCUED);
-+			__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
- 	} else {
- 		lru = LRU_UNEVICTABLE;
+ 		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
  		ClearPageActive(page);
- 		SetPageUnevictable(page);
- 		if (!was_unevictable)
--			count_vm_event(UNEVICTABLE_PGCULLED);
-+			__count_vm_events(UNEVICTABLE_PGCULLED, nr_pages);
- 	}
+ 		ClearPageReferenced(page);
+ 		add_page_to_lru_list(page, lruvec, lru);
  
- 	add_page_to_lru_list(page, lruvec, lru);
+-		__count_vm_events(PGDEACTIVATE, hpage_nr_pages(page));
++		__count_vm_events(PGDEACTIVATE, nr_pages);
++		__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_pages);
+ 		update_page_reclaim_stat(lruvec, file, 0);
+ 	}
+ }
+@@ -568,6 +574,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+ 	    !PageSwapCache(page) && !PageUnevictable(page)) {
+ 		bool active = PageActive(page);
++		int nr_pages = hpage_nr_pages(page);
+ 
+ 		del_page_from_lru_list(page, lruvec,
+ 				       LRU_INACTIVE_ANON + active);
+@@ -581,8 +588,8 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 		ClearPageSwapBacked(page);
+ 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
+ 
+-		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
+-		count_memcg_page_event(page, PGLAZYFREE);
++		__count_vm_events(PGLAZYFREE, nr_pages);
++		__count_memcg_events(lruvec_memcg(lruvec), PGLAZYFREE, nr_pages);
+ 		update_page_reclaim_stat(lruvec, 1, 0);
+ 	}
+ }
 -- 
 2.26.2.645.ge9eca65c58-goog
 
