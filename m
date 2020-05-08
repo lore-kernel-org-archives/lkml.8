@@ -2,53 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49877C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF2AC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AE5206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67371206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942714;
-	bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
+	s=default; t=1588942718;
+	bh=AsdhOWSmGpAo9X9fraQLcchhnvazowDqGOabd/fCwm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plDi8K/Hm+C1Wmik/9YBO+tygqIlApJ5Rdv1EsYQ0bCz/D8WxKBkCRf6ajimho4Tx
-	 69/ddgvffjpaoycdoV96W2ehMVB4gcd25WiyDgslMZxa3DzyjUKa9XJkT9SxsxpwO7
-	 Whw3NdM2mRLHlJ/eNY0/uUEF2teglrpMtIwzWGzI=
+	b=H9orNPC/SmFFGGkzhct6zU+tVie11KAGgE6JVkxvQ/1lppAU8dO78dX9rUnJ3SkBj
+	 tEk2RL10YmKbnISn8WDgeGHxM+sCa5nSehSr8NrYrRns5P1GejTvmSlSwbBtJM1C6q
+	 uFvKHZSkEmd6cGuJT90pD0rsoJLy0NXaJd9BfiFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgEHMyV (ORCPT
+        id S1730264AbgEHM6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbgEHMyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:14 -0400
+        id S1730192AbgEHMyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF54724958;
-        Fri,  8 May 2020 12:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3712824958;
+        Fri,  8 May 2020 12:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942453;
-        bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
+        s=default; t=1588942460;
+        bh=AsdhOWSmGpAo9X9fraQLcchhnvazowDqGOabd/fCwm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZzGWQtx0iIfIDw1DkhTSKhqFTU8YLI1BylnjLz/Yu5YjNumO5+8cXrxap4I+2fy/
-         OGSKbiq3eXZxCMLdMzEpfAn3ewK8K2RLXuE8s98CQqUGyKUPQFkHbzUlBGEIoQ0Z8M
-         PVZc04HjnJvmUF16I7CVEUcKYFyRl1GP5thB5zJ0=
+        b=tbMVbJltCeH6QTSWPDViLEez/HO6uebHr43DZd2XXsAHY1/bpvYHVS8J7bey1i8BL
+         tIPymgq6UTpodR9M6g8phm/Oh9kR2WhnEenZwDdGoz35ngncPYqI1FGp15YXkAcFRf
+         z2iIc5sQby4VcU3odb2zRDQRdLCpUiuJC9jETO1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 28/50] net: bcmgenet: suppress warnings on failed Rx SKB allocations
-Date:   Fri,  8 May 2020 14:35:34 +0200
-Message-Id: <20200508123047.225761600@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 31/50] sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+Date:   Fri,  8 May 2020 14:35:37 +0200
+Message-Id: <20200508123047.622093625@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -61,47 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Jere Leppänen <jere.leppanen@nokia.com>
 
-[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
+commit 12dfd78e3a74825e6f0bc8df7ef9f938fbc6bfe3 upstream.
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+When starting shutdown in sctp_sf_do_dupcook_a(), get the value for
+SHUTDOWN Cumulative TSN Ack from the new association, which is
+reconstructed from the cookie, instead of the old association, which
+the peer doesn't have anymore.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+Otherwise the SHUTDOWN is either ignored or replied to with an ABORT
+by the peer because CTSN Ack doesn't match the peer's Initial TSN.
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
-
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
+Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sctp/sm_make_chunk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index ff09ee777b2bf..6f01f4e03cef1 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1697,7 +1697,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
- 	dma_addr_t mapping;
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -858,7 +858,11 @@ struct sctp_chunk *sctp_make_shutdown(co
+ 	struct sctp_chunk *retval;
+ 	__u32 ctsn;
  
- 	/* Allocate a new Rx skb */
--	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
-+	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, priv->dev,
--- 
-2.20.1
-
+-	ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
++	if (chunk && chunk->asoc)
++		ctsn = sctp_tsnmap_get_ctsn(&chunk->asoc->peer.tsn_map);
++	else
++		ctsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map);
++
+ 	shut.cum_tsn_ack = htonl(ctsn);
+ 
+ 	retval = sctp_make_control(asoc, SCTP_CID_SHUTDOWN, 0,
 
 
