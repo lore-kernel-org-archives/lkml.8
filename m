@@ -2,102 +2,111 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6059AC47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A885CC54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F8A206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3982173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="BO4e5bD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgEHVnf (ORCPT
+        id S1728027AbgEHVoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:43:35 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60101 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgEHVnf (ORCPT
+        Fri, 8 May 2020 17:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbgEHVoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:43:35 -0400
-Received: from mail-lj1-f169.google.com ([209.85.208.169]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M8yoa-1jSCyB2flW-0066pb; Fri, 08 May 2020 23:43:33 +0200
-Received: by mail-lj1-f169.google.com with SMTP id g4so3242276ljl.2;
-        Fri, 08 May 2020 14:43:33 -0700 (PDT)
-X-Gm-Message-State: AOAM531qluAr+diUzl7ZPQnIW0NZmgFhSdPoTHaUeN337gYGXV/XFY6e
-        ow2GKythDkyUwL2kwn/Tk40KXKDNAxsGIceOfbg=
-X-Google-Smtp-Source: ABdhPJyRp2oxjOeqeg5ENiT9+DXJ38iq1iUgrmbVJE77HNSlXmj4qNJze/k7fGHouA2c4pFLbRFncyp77YcpDJaXnCg=
-X-Received: by 2002:a2e:6a08:: with SMTP id f8mr3135164ljc.8.1588974213097;
- Fri, 08 May 2020 14:43:33 -0700 (PDT)
+        Fri, 8 May 2020 17:44:25 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE12FC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:44:23 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n14so3347219qke.8
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hfgFNTJ/A8Lg7nI9g+Xp3FmILdU0dHMohrFwQmfLQXo=;
+        b=BO4e5bD/Q+sMJjS2zPBJ9fA0BfYUE6sPFxYwsNOwSV4A2F0R22Kk02cgB2O7t3YZjN
+         WXq235+CpxzxCfyxC4UYLkH/H+vrK1wMRWc3F3A11zVLIM3R2j0B/m2cBQTChZS2n/IP
+         ycONKTo/SlL6z7hvTvz8LF/MSBS+pQTo+GfyZVFUF2s22DI7IQqTmOIRk93B6ONU/3d+
+         Pq1q9czvaqdabgSzhAER31wB8ODppfSiaxEfMXyIsYMZeQmm7jGvrzMFyqWdkB6tXXwH
+         A2Lb4VY/NrvuvTG+OprSMVStvHwAZoJcabj5QflkXcTJuSH6Gb0UOWCFSguBlgr8iiZr
+         7VuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hfgFNTJ/A8Lg7nI9g+Xp3FmILdU0dHMohrFwQmfLQXo=;
+        b=YpqnpExkNziJ76b/muuWzBmkUzQ/ZIxUADOvl+2rRWelqAYhrotrQr0PiaY/AAf/6h
+         fgFHFMJ5HNBYRfi+fUbXQmrduK5zhwlO4HUCmEs5pcabxeB9sR/u4l9D/i1A/JwaObJ4
+         kQr4QA5EGkBVzqGwIDrlaiHy1VEUFWc2ivzDafj0EuJ2jf7s1VjnHV6KCX3jIdDWREUN
+         n2IxuRGIl2PGop3rSFRxikjCjS/L1JRH8guKbT9Z2/5d1AR0mOBDM00DxUkkbb+wva8j
+         xFQ6cRbRZ7DqUp3lGZR3xUy3pb3zu8Y+Wn/5XDdQYp+XYrk2fFJJM4cVu5SC+BDRFiFI
+         WlSw==
+X-Gm-Message-State: AGi0Pubmc7H2JYFl/4/kPRMUILiU7Pqoehx5DJdsj9KFo94vo4NknV11
+        8KCcIsBrhBQzETjlj/xGjPRU2w==
+X-Google-Smtp-Source: APiQypIcaFiRBShLfyT2ZablqamrjqanqyX+wOuWHrrB6W4WNcimavEO382WKWr9Frqp3mIoOgsFNg==
+X-Received: by 2002:a05:620a:816:: with SMTP id s22mr5051840qks.348.1588974262923;
+        Fri, 08 May 2020 14:44:22 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id x19sm2116487qkh.42.2020.05.08.14.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 14:44:22 -0700 (PDT)
+Date:   Fri, 8 May 2020 17:44:05 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
+Message-ID: <20200508214405.GA226164@cmpxchg.org>
+References: <20200508170630.94406-1-shakeelb@google.com>
 MIME-Version: 1.0
-References: <20200508093553.2742898-1-arnd@arndb.de> <5849978b-7330-1dae-0896-7ecbc6083d34@gmx.de>
-In-Reply-To: <5849978b-7330-1dae-0896-7ecbc6083d34@gmx.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 8 May 2020 23:43:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a16Qb2-H5UGMftonvEAuJ2LrKMO4nVudg+JD6HtuYR==Q@mail.gmail.com>
-Message-ID: <CAK8P3a16Qb2-H5UGMftonvEAuJ2LrKMO4nVudg+JD6HtuYR==Q@mail.gmail.com>
-Subject: Re: [PATCH] parisc: use -fno-strict-aliasing for decompressor
-To:     Helge Deller <deller@gmx.de>
-Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        kbuild test robot <lkp@intel.com>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dG+jwwxM7Abw9pygChUF37Z4SE0mWCH6FDpCg3iv24rDRbhLaVY
- avObk6EnJSdf8Z1SjJ6TmuegQ7QAaVmfVAbiMa+62730yAFmFh8ExVjXKHqNqaRlvbrnOQZ
- 3V849i/dO9Qo9MCcvyYiYM9pHoMvhXA9Jt/Qm9WU1A/+qK+LUYY0il67KAqxH5cWl2JGPGG
- KjfrlJauulkoAW4SCx0+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PavUf7bxs9c=:6URT3eutfXhN/4L0DWBuz1
- SUjjSHzdMJ267ceacvNLcUz0tGDKHpuUrTd158svL6NC10rhFqZQRCiiceucoDTk3ixxYJr7R
- ZyaQDUppg4K50f4WObNwDYEnXfeeNqi9vdIuuGjAXytXMafduiCBbJrb+Lx6o6KTMJZe5sa8d
- evurAEGxaO1UIElRfJpZL7nUCBFiy9LHuBN0ioIr44JZJrbTpB02todT+oycOuWs799IymYZV
- kQd7oHjDuKlXsyS6vvWGz5U4CoGhdK2JxbXrAq2cVVROf/Kppy9iR1WcQDI/VH3CdQ/5AxjyZ
- dkR3QZPRm7hYLCPEB8OJzMIjyBIzO7VWk7BGU1IDlWhIzvciKjNa5TuRPMLf5fLlMjvVrY0II
- pOlKNulJw0L9U2I+XAG8TltSzhb9y7fgHf10c1loAOpwOMe+St3t8FYSeIdWqjr3WQnNEGb77
- aMOUxPJaWWHAmWT3c3RiUH0xnYi+C+bWEUuEOZYj11UCJS37dYnUh5rkPIpBW6ViHQwLMOVfm
- JEN7mQBZTB3kS3MGTJ3bwB3G6l9sf+J5pJZzJZLXPlFtiCJyu2BvDJF/L6TgvWfgbaaHnoLtT
- tqzb0NB+0IWPAvD168klaQ0XLLlwmeucOpr07VFuWYM+hpj32to+jaB6aKSfjbDnSV/YrkBWK
- FZzUfjUeUPH3YpfGFQTKVYpEQGgUZLHU2DKwi513Hlqdn+ZNZaS+EvOasK7VLgncU4lvMUV2a
- Dx36YNqV1F2JdBFadXngNlR7GUiGrh6uBda/gix87fwzaSBzzQHNafhortPAetUPO011etYja
- 0CKRsFDsKAyItJKGou0zMG2pcUYQKVrc559zF25w2gll2RhgyY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508170630.94406-1-shakeelb@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 11:40 PM Helge Deller <deller@gmx.de> wrote:
-> On 08.05.20 11:35, Arnd Bergmann wrote:
-> > An experimental patch series of mine reworks how warnings are processed
-> > in Kbuild. A side effect is a new warning about a harmless aliasing
-> > rule violation in an inline function:
-> >
-> > In file included from
-> > include/linux/rhashtable-types.h:15:0,
-> >                  from include/linux/ipc.h:7,
-> >                  from include/uapi/linux/sem.h:5,
-> >                  from include/linux/sem.h:5,
-> >                  from include/linux/sched.h:15,
-> >                  from include/linux/uaccess.h:6,
-> >                  from arch/parisc/boot/compressed/misc.c:7:
-> > include/linux/workqueue.h: In function 'work_static':
-> > include/linux/workqueue.h:212:2: warning: dereferencing
-> > type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-> >   return *work_data_bits(work) & WORK_STRUCT_STATIC;
-> >
-> > Make the decompressor use -fno-strict-aliasing like the rest of
-> > the kernel for consistency, and to ensure this warning never makes
-> > it into a release.
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Acked-by: Helge Deller <deller@gmx.de>
->
-> Arnd, will you take it through your trees when you push your experimental
-> patches, or do you want me to take it through the parisc tree?
+On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
+> One way to measure the efficiency of memory reclaim is to look at the
+> ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> not updated consistently at the system level and the ratio of these are
+> not very meaningful. The pgsteal and pgscan are updated for only global
+> reclaim while pgrefill gets updated for global as well as cgroup
+> reclaim.
+> 
+> Please note that this difference is only for system level vmstats. The
+> cgroup stats returned by memory.stat are actually consistent. The
+> cgroup's pgsteal contains number of reclaimed pages for global as well
+> as cgroup reclaim. So, one way to get the system level stats is to get
+> these stats from root's memory.stat, so, expose memory.stat for the root
+> cgroup.
+> 
+> 	from Johannes Weiner:
+> 	There are subtle differences between /proc/vmstat and
+> 	memory.stat, and cgroup-aware code that wants to watch the full
+> 	hierarchy currently has to know about these intricacies and
+> 	translate semantics back and forth.
+> 
+> 	Generally having the fully recursive memory.stat at the root
+> 	level could help a broader range of usecases.
 
-Please take it through your tree. It will take me a while to finish my
-series, and having one less change will make it easier to review.
+The changelog begs the question why we don't just "fix" the
+system-level stats. It may be useful to include the conclusions from
+that discussion, and why there is value in keeping the stats this way.
 
-       Arnd
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
