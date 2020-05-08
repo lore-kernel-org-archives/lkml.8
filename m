@@ -2,100 +2,128 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57D9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A97C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5CDD20731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD918208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WRAF6P7L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GR8yi/LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgEHJGX (ORCPT
+        id S1726770AbgEHJJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
+        Fri, 8 May 2020 05:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgEHJGW (ORCPT
+        with ESMTP id S1725710AbgEHJJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:06:22 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4090C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 02:06:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id h4so9432656wmb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 02:06:20 -0700 (PDT)
+        Fri, 8 May 2020 05:09:15 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D679FC05BD43;
+        Fri,  8 May 2020 02:09:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id v12so956924wrp.12;
+        Fri, 08 May 2020 02:09:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0CqA4loPPF6E9eRXK//8n8vhiVSDlCCFO/sM8CaSqh8=;
-        b=WRAF6P7Lzru/RsZhpQYVK5RwPfEBjpOEykwS4VrYsy4B//Gt6tVM2KVh57a55HIaM3
-         1W4mLA5CwGi9YD0K2VSlC/AUQv+LqfM2ISYrHX7bfEzmDA18RFN88UwsibUkQ2QshHoK
-         ss9zWRXeWSW5u5R8LOVDLiQr76U3G37B1CJt0=
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CSQz/16NegmLO3Gs8FCh+9dcNHGXLHCoCqOFnJP2G+8=;
+        b=GR8yi/LXdeGsQgWazi5YgoPI44ntAvEEp50myty0g/zr60tzqOwbQuXbV9xjEMwqop
+         XzfJUztkqlBb5L6JNW8rXKYDg1sw79+BTWCF5X/L+ReQhfgijoY1/YFf6NBII86gY78o
+         lpep9+N5VeHOCRZEt/Rp1/dgaRt1Q0oT0409ooatHo3LozcVUgLujHz8J6IdHYYW4gY3
+         k3nFvdDbGQrrvOOWDhLQcFYPCdx6Go9IFnjc5MjX1L+j8bmpnfbd7JAjhuDgsU1MSbl3
+         RqvS0RRm8/FgPlPNxfrGV2FMnYsHg8IkylBUCsHLPkYo0fYBq6/+L637EU5xLS4UdOIN
+         pyfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0CqA4loPPF6E9eRXK//8n8vhiVSDlCCFO/sM8CaSqh8=;
-        b=D1n3hMbBV9vrFEjadwnNgONCdEDBj2rRjlbT6ErSk+DcPaAUl7TTUI32ykLKw78X9N
-         lenxZzw5JIn/yuSPtN+3RnQqnO8XLQecdMzppt7Hoff7OSlkcGatkuqwpVl+Td9yiW9k
-         ppYfDZw5pp3Ut/cetjmGvPi3BSBvw3J06eLBCk0Q+s75dd6kc5hpRtJ4czLAiMaND9lo
-         diLD2UgCjxO4qgzIfX5jtL6sFGNGpYzfp+rmpS+jAzh0HjEUCYyLA55pRW5VTOmJtIww
-         28iAdgqkNAqBhLFeVh+lfbCVX0Ye3CzDBEG+bwYF49o49/00yfnDtlJDC0rtc7MFiQ9j
-         PIvQ==
-X-Gm-Message-State: AGi0PuYKDo6bKBhxSR9N+dB7zQRJUXlu3p/dM2jbfy5ZLlOVf8TLJMj7
-        vmb5jSocR4hcgFrvjcwm2e8ozw==
-X-Google-Smtp-Source: APiQypLVvi+Bp9Vcj2EZuKj4RL6kT3nDbXIZhn3/hZqczJTU9pHhYbcjYTgRY/zA6TvfD6PzDmcX/w==
-X-Received: by 2002:a7b:c5d3:: with SMTP id n19mr7929862wmk.21.1588928779186;
-        Fri, 08 May 2020 02:06:19 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
-        by smtp.gmail.com with ESMTPSA id c19sm1981766wrb.89.2020.05.08.02.06.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 02:06:18 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: Return true,false in
- voluntary_active_balance()
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Jason Yan <yanaijie@huawei.com>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, Julia.Lawall@lip6.fr
-References: <20200507110625.37254-1-yanaijie@huawei.com>
- <20200508081629.GN5298@hirez.programming.kicks-ass.net>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <005a3e5c-9362-dc63-4bf0-7ffdb1b2949d@rasmusvillemoes.dk>
-Date:   Fri, 8 May 2020 11:06:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200508081629.GN5298@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CSQz/16NegmLO3Gs8FCh+9dcNHGXLHCoCqOFnJP2G+8=;
+        b=JZEHVvxInjQZQlEVvDfHus+fmtzXXhXXHGOZ/Ek8T74UjSsmAjud5YrX+Y2yw3u/I8
+         cuNNwb7odgQu2mVhLW7LPw4mYX3ruu6ahkzsKvFotdhJtBcbVyXdfC+PsCnF8c7UX4nj
+         d7BwZAlzlZf6kIgEz4IjgxDBWgBswbcd0Nco+uK5JI/YU7T3ji9zLaCWty+GV5ivX6SO
+         Ahg/bAXCkRVOUSyPGus+WfHAVERjydoPaFz7dtN82q/MN2BgeUoFjczAU3LyypXl48e1
+         /9we5a+s3s/Fd5nR5zGI1Y9yQqEROIjqHGySikQQSFtQgaoPO5kA1d+FDBC4OorJku/E
+         vgZg==
+X-Gm-Message-State: AGi0PuYGHYxG4cAdFCjtsyeZTB9ccoWKPM8y+RVJz29IvQaRz1qnX4m/
+        H4f7LJtdkv3zb6jw8TRLrvI=
+X-Google-Smtp-Source: APiQypLdn9bkiOZTmbGDcIzznYL62b1js44tepFklBnkRp3CDVcUr6r/u45cKkffo/EVY8punplGzA==
+X-Received: by 2002:a05:6000:8:: with SMTP id h8mr1867206wrx.372.1588928952614;
+        Fri, 08 May 2020 02:09:12 -0700 (PDT)
+Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.googlemail.com with ESMTPSA id f5sm1905389wrp.70.2020.05.08.02.09.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 02:09:12 -0700 (PDT)
+Message-ID: <1e9dca38dba71b0a8437f752db5f97cab789af60.camel@gmail.com>
+Subject: Re: [RESENT PATCH RFC v3 1/5] scsi; ufs: add device descriptor for
+ Host Performance Booster
+From:   Bean Huo <huobean@gmail.com>
+To:     Bart Van Assche <bvanassche@acm.org>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, rdunlap@infradead.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, cang@codeaurora.org
+Date:   Fri, 08 May 2020 11:09:10 +0200
+In-Reply-To: <6d06ec34-04d2-93ff-1ff5-dc1317c3d060@acm.org>
+References: <20200504142032.16619-1-beanhuo@micron.com>
+         <20200504142032.16619-2-beanhuo@micron.com>
+         <6d06ec34-04d2-93ff-1ff5-dc1317c3d060@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/2020 10.16, Peter Zijlstra wrote:
-> On Thu, May 07, 2020 at 07:06:25PM +0800, Jason Yan wrote:
->> Fix the following coccicheck warning:
->>
->> kernel/sched/fair.c:9375:9-10: WARNING: return of 0/1 in function
->> 'voluntary_active_balance' with return type bool
+On Thu, 2020-05-07 at 17:59 -0700, Bart Van Assche wrote:
+> On 2020-05-04 07:20, huobean@gmail.com wrote:
+> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > index 698e8d20b4ba..de13d2333f1f 100644
+> > --- a/drivers/scsi/ufs/ufshcd.c
+> > +++ b/drivers/scsi/ufs/ufshcd.c
+> > @@ -6627,6 +6627,17 @@ static int ufs_get_device_desc(struct
+> > ufs_hba *hba)
+> >  		goto out;
+> >  	}
+> >  
+> > +	if (desc_buf[DEVICE_DESC_PARAM_UFS_FEAT] & 0x80) {
+> > +		hba->dev_info.hpb_control_mode =
+> > +			desc_buf[DEVICE_DESC_PARAM_HPB_CTRL_MODE];
+> > +		hba->dev_info.hpb_ver =
+> > +			(u16) (desc_buf[DEVICE_DESC_PARAM_HPB_VER] <<
+> > 8) |
+> > +			desc_buf[DEVICE_DESC_PARAM_HPB_VER + 1];
+> > +		dev_info(hba->dev, "HPB Version: 0x%2x\n",
+> > +			 hba->dev_info.hpb_ver);
+> > +		dev_info(hba->dev, "HPB control mode: %d\n",
+> > +			 hba->dev_info.hpb_control_mode);
+> > +	}
+> >  	/*
+> >  	 * getting vendor (manufacturerID) and Bank Index in big endian
+> >  	 * format
 > 
-> That's not a warning, that's a broken cocinelle script, which if these
-> stupid patches don't stop, I'm going to delete myself!
+> Please introduce a symbolic name for the constant 0x80, e.g.
+> UFS_FEATURE_HPB.
+> 
+> Please use get_unaligned_be16() instead of open-coding it.
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
+Bart
+thanks, I will change them in the next version.
 
+thanks.
 
-I was wondering why I got cc'ed here. Then it dawned on me. What can I
-say, I was young.
-
-Ack on nuking it.
-
-Rasmus
+Bean
 
