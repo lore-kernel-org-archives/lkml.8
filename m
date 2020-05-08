@@ -2,111 +2,198 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835F4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D43C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D12B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588969691;
-	bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=vMWC4Y/vTDbiRa5tychEtzpu3+UhD+0bsP/J3HjfGt3blSOa8J5q9YSUgI5BE3bWt
-	 e2KIq4LW9w+Pm0GFvsI7ksS5IyX5wql5DeLe3LO+So15bc4i+kiow2QtA+lH5tLlMF
-	 BbNty7Tx9M9USqhzxQRuSzuFwZFAjuq4iwPODhhg=
+	by mail.kernel.org (Postfix) with ESMTP id 1CC672184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyyBQ3kV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEHU2K (ORCPT
+        id S1727860AbgEHU2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
+        Fri, 8 May 2020 16:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHU2K (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgEHU2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:28:10 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA7DC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:28:08 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id fb4so1260861qvb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:28:08 -0700 (PDT)
+        Fri, 8 May 2020 16:28:38 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E48CC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:28:38 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t3so2538537otp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
-        b=OQZoCfheERUX2DtkmSqCvmJTdkZ5GnadHCDZ+KCbqY9bsa5S86FPUElvzTcUEQfeBy
-         jYtXgLVHA2+iBs6X+pWwKnMIr8Bti0BzignC7Dk3fhVWmntdaXnSaXtVrxU9AuIi3493
-         8d2aw6wAeePItIEMBZPZSSj+VwNUmOWKZR/ts=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IyFIhj/81iNIcxew/1W4kf3IkOg+PZK0fC0YxofxM9k=;
+        b=eyyBQ3kVmTEBdu/6V/sBFcv/Spj8vWFYPFgUaDuNst0uTIwmNioqW0DHl3QegBJWAh
+         N1Kq55FanpPUu6ZMwM0WPM4xfvli70oA9y89oDyBPWnz6r1OLr8TdpPmP4jh4fSOUBl7
+         VRIaZpDpafa8Ygf7axMVFO4xig0rFh+X55H77seDkMgvPw5WIplCqKr8VAArlhdfGG/J
+         LhuGzMWUydrNokuNcpWm1m+DH5X4enwSPNC0M07aTbmR3eQqxiM2JZodRIG+wxPScoxw
+         C8s+LtgHEwXW2v60WyL8P1kZWX5ZKa5TKYtV57u1x4OCsGX5dMypoKSNVXyxa8bxIJ5L
+         Rz3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yOarqGZ6EnoTymo8WqocMUJc/ZvwqBRa/vUsSMDQx8k=;
-        b=CVwTHw8OCSJMkVsx7tdrYBi5g1Btse5j5wqXzvTe69JPSyR9w7Heie8VUfXcfawE2x
-         6P7J56UtEx2rJySLkwAZcS4dyz0ipiVHm+7nOvp2M8UA9YQzVguH9DSJFcjHXntp3Rnx
-         SIeUidyjw1lZyItDmqXWGUBLGj7llSmLuxd1vITjGU30AovN7v+GghG18RamcmuCTKGJ
-         v5+Lt7gHOY71M7sis/wi3b20cFSaLSckdUcXRRBwjIv/prjkB6htlje0hucnjV63gDlT
-         YPsq1mQwBqX77Uo21O8Itv5QXuuKD9zeZnh0WcJt8fIPrA2lyEJpTlscFfr+VmuDt3ye
-         RqtA==
-X-Gm-Message-State: AGi0PuaAdUz9if5H9a6bf+wfGTOuM6tijqWE8NRgNahCZHBBWcBB5eoQ
-        uwZuU0M98H0xPlbHg6yAaaVj7Q==
-X-Google-Smtp-Source: APiQypKc6TNsMOecJ6omgxiAaKe1l2+kixkHfrAI/5noGGHdVzQ5EtUdd30fnGRPngi7spZX+DNZxw==
-X-Received: by 2002:a05:6214:188a:: with SMTP id cx10mr4557487qvb.119.1588969687732;
-        Fri, 08 May 2020 13:28:07 -0700 (PDT)
-Received: from i7.mricon.com (107-179-243-71.cpe.teksavvy.com. [107.179.243.71])
-        by smtp.gmail.com with ESMTPSA id o68sm1950028qka.110.2020.05.08.13.28.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IyFIhj/81iNIcxew/1W4kf3IkOg+PZK0fC0YxofxM9k=;
+        b=ibiQpgsKL/URDkDSJ1a5SUY3OlSdmpkW8uKksBHY2EiN5DIM1AUVJK/E6D8al5Z9Aw
+         Avql49u0lYKdobA5z2VHXRsJcNYTfIglnN7TVE/zc4zmLkA9B1XhG5xds+hphyjY6xem
+         jY286dSEvTglEuFdZk6LjMOIzMPNtisTBMsff93N7zDq6v29zB5Qc93uvQAQ2502nW9r
+         EtL9CAmG5qb0fhx1PZA+Yruu3XR2LTeNwehv7xbXPgFOINh56uWpNtOctAgSoHpmf307
+         22HnUsQdD7vlwv+uCCV6slyr8ta134BDScLpUjNKRKzTqtxOROBZbQG0ar3GcR8BWum4
+         SUCA==
+X-Gm-Message-State: AGi0PuZxeDoAhDt68lgdV2lWQsUaB9rrjHQ8brdT855OINcRnKvYksSR
+        N2jpRZA1BGpX5aK8lc1Qwe0eswUGIIY=
+X-Google-Smtp-Source: APiQypJ7A2HMOg+s0CNunxQgl5IbpSs1Egdf3tQfXA8gZPl9mVxD55Wbb6EVLYj8vFkkbUUtmy1ZVw==
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr3554812otm.145.1588969717893;
+        Fri, 08 May 2020 13:28:37 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n6sm722136oof.35.2020.05.08.13.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 13:28:06 -0700 (PDT)
-Received: by i7.mricon.com (sSMTP sendmail emulation); Fri, 08 May 2020 16:28:04 -0400
-Date:   Fri, 8 May 2020 16:28:04 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     webmaster@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [sysadmin] New Wiki URLs?
-Message-ID: <20200508202804.tiqcdgpamq4sbhw2@chatter.i7.local>
-Mail-Followup-To: webmaster@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20200428044440.kd2rf3cxa5rffewm@falbala.internal.home.lespocky.de>
+        Fri, 08 May 2020 13:28:37 -0700 (PDT)
+Date:   Fri, 8 May 2020 13:28:35 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Axtens <dja@axtens.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v5] x86: bitops: fix build regression
+Message-ID: <20200508202835.GA550540@ubuntu-s3-xlarge-x86>
+References: <20200508182835.228107-1-ndesaulniers@google.com>
+ <20200508183230.229464-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q3wvykdlcinmtkcu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428044440.kd2rf3cxa5rffewm@falbala.internal.home.lespocky.de>
+In-Reply-To: <20200508183230.229464-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 08, 2020 at 11:32:29AM -0700, Nick Desaulniers wrote:
+> This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+> 
+> It turns out that if your config tickles __builtin_constant_p via
+> differences in choices to inline or not, these statements produce
+> invalid assembly:
+> 
+> $ cat foo.c
+> long a(long b, long c) {
+>   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+>   return c;
+> }
+> $ gcc foo.c
+> foo.c: Assembler messages:
+> foo.c:2: Error: `%rax' not allowed with `orb'
+> 
+> Use the `%b` "x86 Operand Modifier" to instead force register allocation
+> to select a lower-8-bit GPR operand.
+> 
+> The "q" constraint only has meaning on -m32 otherwise is treated as
+> "r". Not all GPRs have low-8-bit aliases for -m32.
+> 
+> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/961
+> Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
+> Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
---q3wvykdlcinmtkcu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build, clang-11
 
-On Tue, Apr 28, 2020 at 06:44:40AM +0200, Alexander Dahl wrote:
-> Could the webmasters of kernel.org please configure some kind of
-> redirects so people don't get 404 errors when looking for docs?
-
-If someone goes through the trouble of compiling a list of such=20
-redirects, then perhaps. The previous site (wireless.kernel.org) was not=20
-maintained by the Linux Foundation, so we don't have any kind of=20
-definitive mapping of old URLs to new URLs.
-
-Regards,
--K
-
---q3wvykdlcinmtkcu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXrXA0gAKCRC2xBzjVmSZ
-bIg2AQCK85jhipcysZcwpd4q6layN3GUb3iuQLwv0ELLjBjyAgD/b64rAt/TUSCN
-/NKNyCTD+eGCYA+680rXiY6l1zrpBAk=
-=ze7e
------END PGP SIGNATURE-----
-
---q3wvykdlcinmtkcu--
+> ---
+> Changes V4 -> V5:
+> * actually use `%b` in arch_change_bit().
+> 
+> Changes V3 -> V4:
+> * drop (u8) cast from arch_change_bit() as well.
+> 
+> Changes V2 -> V3:
+> * use `%b` "x86 Operand Modifier" instead of bitwise op then cast.
+> * reword commit message.
+> * add Brian and HPA suggested by tags
+> * drop Nathan & Sedat Tested by/reviewed by tags (new patch is different
+>   enough).
+> * Take over authorship.
+> 
+> Changes V1 -> V2:
+> * change authorship/signed-off-by to Ilie
+> * add Nathan's Tested by/reviewed by
+> * update commit message slightly with info sent to HPA.
+>  arch/x86/include/asm/bitops.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index b392571c1f1d..35460fef39b8 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -52,9 +52,9 @@ static __always_inline void
+>  arch_set_bit(long nr, volatile unsigned long *addr)
+>  {
+>  	if (__builtin_constant_p(nr)) {
+> -		asm volatile(LOCK_PREFIX "orb %1,%0"
+> +		asm volatile(LOCK_PREFIX "orb %b1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" (CONST_MASK(nr) & 0xff)
+> +			: "iq" (CONST_MASK(nr))
+>  			: "memory");
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> @@ -72,9 +72,9 @@ static __always_inline void
+>  arch_clear_bit(long nr, volatile unsigned long *addr)
+>  {
+>  	if (__builtin_constant_p(nr)) {
+> -		asm volatile(LOCK_PREFIX "andb %1,%0"
+> +		asm volatile(LOCK_PREFIX "andb %b1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" (CONST_MASK(nr) ^ 0xff));
+> +			: "iq" (~CONST_MASK(nr)));
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+> @@ -123,9 +123,9 @@ static __always_inline void
+>  arch_change_bit(long nr, volatile unsigned long *addr)
+>  {
+>  	if (__builtin_constant_p(nr)) {
+> -		asm volatile(LOCK_PREFIX "xorb %1,%0"
+> +		asm volatile(LOCK_PREFIX "xorb %b1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)CONST_MASK(nr)));
+> +			: "iq" (CONST_MASK(nr)));
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
+>  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+> -- 
+> 2.26.2.645.ge9eca65c58-goog
+> 
