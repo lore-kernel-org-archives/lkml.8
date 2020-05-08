@@ -6,76 +6,84 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6FCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBEEC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321C920708
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0B524956
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgEHLzC (ORCPT
+        id S1727084AbgEHLzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:55:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4353 "EHLO huawei.com"
+        Fri, 8 May 2020 07:55:12 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49586 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726636AbgEHLzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:55:02 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B627BD4A694D61ED3C96;
-        Fri,  8 May 2020 19:54:59 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 19:54:51 +0800
-From:   Samuel Zou <zou_wei@huawei.com>
-To:     <olteanv@gmail.com>, <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Samuel Zou <zou_wei@huawei.com>
-Subject: [PATCH -next] net: dsa: sja1105: remove set but not used variable 'prev_time'
-Date:   Fri, 8 May 2020 20:00:55 +0800
-Message-ID: <1588939255-58038-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        id S1726636AbgEHLzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:55:12 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX92ZSLVebikyAA--.9S5;
+        Fri, 08 May 2020 19:55:07 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 3/3] MIPS: Loongson: Add log before power off due to high temperature
+Date:   Fri,  8 May 2020 19:55:04 +0800
+Message-Id: <1588938904-924-4-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxX92ZSLVebikyAA--.9S5
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF4UKF4kWFy3ZF48Gr1ftFb_yoWfuwc_uF
+        W0grnrGr1rKwn0yr12kFnxuryjk34kWF1xZr1Iq39Ik345Jr95Ar4UAFZ7X3WUGrWYkFn8
+        Ja90ya4fCFWfCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY02
+        0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I2
+        62IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG
+        0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+        xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
+        IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+        6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
+        CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRH7KJUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When the CPU temperature is too high, it is better to print a log before
+power off, this is useful when analysis the abnormal issues.
 
-drivers/net/dsa/sja1105/sja1105_vl.c:468:6: warning: variable ‘prev_time’ set but not used [-Wunused-but-set-variable]
-  u32 prev_time = 0;
-      ^~~~~~~~~
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/net/dsa/sja1105/sja1105_vl.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/platform/mips/cpu_hwmon.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja1105/sja1105_vl.c
-index b52f1af..aa9b0b9 100644
---- a/drivers/net/dsa/sja1105/sja1105_vl.c
-+++ b/drivers/net/dsa/sja1105/sja1105_vl.c
-@@ -465,7 +465,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_gating_config *gating_cfg,
- 	struct sja1105_gate_entry *last_e;
- 	struct sja1105_gate_entry *e;
- 	struct list_head *prev;
--	u32 prev_time = 0;
- 
- 	list_for_each_entry(e, &gating_cfg->entries, list) {
- 		struct sja1105_gate_entry *p;
-@@ -476,7 +475,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_gating_config *gating_cfg,
- 			continue;
- 
- 		p = list_entry(prev, struct sja1105_gate_entry, list);
--		prev_time = e->interval;
- 		p->interval = e->interval - p->interval;
+diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
+index 7b4bde1..6dfecd8 100644
+--- a/drivers/platform/mips/cpu_hwmon.c
++++ b/drivers/platform/mips/cpu_hwmon.c
+@@ -162,10 +162,12 @@ static void do_thermal_timer(struct work_struct *work)
+ 			temp_max = value;
  	}
- 	last_e = list_last_entry(&gating_cfg->entries,
+ 
+-	if (temp_max <= CPU_THERMAL_THRESHOLD)
++	if (temp_max <= CPU_THERMAL_THRESHOLD) {
+ 		schedule_delayed_work(&thermal_work, msecs_to_jiffies(5000));
+-	else
++	} else {
++		pr_emerg("Power off due to high temperature: %d\n", value);
+ 		orderly_poweroff(true);
++	}
+ }
+ 
+ static int __init loongson_hwmon_init(void)
 -- 
-2.6.2
+2.1.0
 
