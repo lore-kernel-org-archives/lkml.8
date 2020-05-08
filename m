@@ -4,333 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A58C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B279CC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE6021841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3B22173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgEHPpn (ORCPT
+        id S1728347AbgEHPpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:45:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34832 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgEHPpm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:45:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g4so2172618ljl.2;
-        Fri, 08 May 2020 08:45:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N9gYLaHYZJKZckAryntApHd1C+vXPx8xLJKhLTIvXSY=;
-        b=Dkihip5gLtQi6wr7fAekMFRzge0DOGLBG43nLxsmYvldhLDvhH6RQFTGlhwGGFVjGW
-         sPI7kU71X7pdddsmXN1ewZU3Mg2+YzWsekafFxXJd8bsDhSSoZr/xNbVqZkCYv5LUXKq
-         tk+nzZ3Y8P75vJwYEmH9VA7CzGl69lBnMrn8mE30Ds2DijZ/ej/C0mFfMTZ9Sy+ZxOGG
-         YB236yrvMtAAFiqv+HLo74GgibwQdexrxGNfiuSX/6FosHj1Uo3LjEka4qVxAI7myH1Y
-         8Hgy0LdlZcAO+QiUTsKZbvTNiJEu6P/YdIuke98XdSzVW9cgo/A3EB2GS/cGLBNz5FMs
-         Dkug==
-X-Gm-Message-State: AOAM531tQTD5MKWh34Fkg89MmQvD8A/YsqKQATet7CNJ5eueBpvafDRU
-        9aLLbqv7tyoDbw0UN+CsAdM=
-X-Google-Smtp-Source: ABdhPJz/TSluaqTPI9YgOwnoCghL3uo5gIoWekqagbcmMpPFY606cgReVrBBAtGztw5sRu4x8VSaMw==
-X-Received: by 2002:a05:651c:1121:: with SMTP id e1mr2111226ljo.205.1588952737591;
-        Fri, 08 May 2020 08:45:37 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id m6sm1632978ljp.32.2020.05.08.08.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:45:37 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:44:45 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 05/11] power: supply: bd70528: use linear ranges
-Message-ID: <46fa0d17ac06aeda054d2080fb39693c6eabfea6.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:45:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62555 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbgEHPpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:45:54 -0400
+IronPort-SDR: +yd/cQ4CtZ7SsM3ZCY+iu3EDEnr2cL1l+EeenYgwat+T4izcUC5cNHBKXm9rvzOqZWCLO+pD90
+ giXRzZeVzjlw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 08:45:53 -0700
+IronPort-SDR: kML9TWEw7QXFXDMKy14JPIY8Gk7mkGgTQgp+h9sR24hccB5Fq44lwLMHP5E/u0FvVNWCez+pxd
+ ErBoROaXN98A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="285506118"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 08:45:53 -0700
+Date:   Fri, 8 May 2020 08:45:53 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 10/11] fs: remove __vfs_read
+Message-ID: <20200508154552.GB1431382@iweiny-DESK2.sc.intel.com>
+References: <20200508092222.2097-1-hch@lst.de>
+ <20200508092222.2097-11-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200508092222.2097-11-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the bd70528 to use common linear_range code instead of
-implementing a copy of it in this driver.
+On Fri, May 08, 2020 at 11:22:21AM +0200, Christoph Hellwig wrote:
+> Fold it into the two callers.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- drivers/power/supply/Kconfig           |   1 +
- drivers/power/supply/bd70528-charger.c | 144 ++++++++++---------------
- 2 files changed, 56 insertions(+), 89 deletions(-)
+In 5.7-rc4, it looks like __vfs_read() is called from
+security/integrity/iint.c
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index f3424fdce341..9f19636db922 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -695,6 +695,7 @@ config CHARGER_UCS1002
- config CHARGER_BD70528
- 	tristate "ROHM bd70528 charger driver"
- 	depends on MFD_ROHM_BD70528
-+	select LINEAR_RANGES
- 	default n
- 	help
- 	 Say Y here to enable support for getting battery status
-diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
-index 3b820110ecfa..7c1f0b99c71b 100644
---- a/drivers/power/supply/bd70528-charger.c
-+++ b/drivers/power/supply/bd70528-charger.c
-@@ -72,6 +72,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/power_supply.h>
-+#include <linux/linear_range.h>
- 
- #define CHG_STAT_SUSPEND	0x0
- #define CHG_STAT_TRICKLE	0x1
-@@ -335,38 +336,37 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
- 	return 0;
- }
- 
--struct bd70528_linear_range {
--	int min;
--	int step;
--	int vals;
--	int low_sel;
--};
--
--static const struct bd70528_linear_range current_limit_ranges[] = {
-+static const struct linear_range current_limit_ranges[] = {
- 	{
- 		.min = 5,
- 		.step = 1,
--		.vals = 36,
--		.low_sel = 0,
-+		.min_sel = 0,
-+		.max_sel = 0x22,
- 	},
- 	{
- 		.min = 40,
- 		.step = 5,
--		.vals = 5,
--		.low_sel = 0x23,
-+		.min_sel = 0x23,
-+		.max_sel = 0x26,
- 	},
- 	{
- 		.min = 60,
- 		.step = 20,
--		.vals = 8,
--		.low_sel = 0x27,
-+		.min_sel = 0x27,
-+		.max_sel = 0x2d,
- 	},
- 	{
- 		.min = 200,
- 		.step = 50,
--		.vals = 7,
--		.low_sel = 0x2e,
--	}
-+		.min_sel = 0x2e,
-+		.max_sel = 0x34,
-+	},
-+	{
-+		.min = 500,
-+		.step = 0,
-+		.min_sel = 0x35,
-+		.max_sel = 0x3f,
-+	},
- };
- 
- /*
-@@ -374,18 +374,18 @@ static const struct bd70528_linear_range current_limit_ranges[] = {
-  * voltage for low temperatures. The driver currently only reads
-  * the charge current at room temperature. We do set both though.
-  */
--static const struct bd70528_linear_range warm_charge_curr[] = {
-+static const struct linear_range warm_charge_curr[] = {
- 	{
- 		.min = 10,
- 		.step = 10,
--		.vals = 20,
--		.low_sel = 0,
-+		.min_sel = 0,
-+		.max_sel = 0x12,
- 	},
- 	{
- 		.min = 200,
- 		.step = 25,
--		.vals = 13,
--		.low_sel = 0x13,
-+		.min_sel = 0x13,
-+		.max_sel = 0x1f,
- 	},
- };
- 
-@@ -398,56 +398,6 @@ static const struct bd70528_linear_range warm_charge_curr[] = {
- #define MAX_WARM_CHG_CURR_SEL 0x1f
- #define MIN_CHG_CURR_SEL 0x0
- 
--static int find_value_for_selector_low(const struct bd70528_linear_range *r,
--				       int selectors, unsigned int sel,
--				       unsigned int *val)
--{
--	int i;
--
--	for (i = 0; i < selectors; i++) {
--		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
--			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
--			return 0;
--		}
--	}
--	return -EINVAL;
--}
--
--/*
-- * For BD70528 voltage/current limits we happily accept any value which
-- * belongs the range. We could check if value matching the selector is
-- * desired by computing the range min + (sel - sel_low) * range step - but
-- * I guess it is enough if we use voltage/current which is closest (below)
-- * the requested?
-- */
--static int find_selector_for_value_low(const struct bd70528_linear_range *r,
--				       int selectors, unsigned int val,
--				       unsigned int *sel, bool *found)
--{
--	int i;
--	int ret = -EINVAL;
--
--	*found = false;
--	for (i = 0; i < selectors; i++) {
--		if (r[i].min <= val) {
--			if (r[i].min + r[i].step * r[i].vals >= val) {
--				*found = true;
--				*sel = r[i].low_sel + (val - r[i].min) /
--				       r[i].step;
--				ret = 0;
--				break;
--			}
--			/*
--			 * If the range max is smaller than requested
--			 * we can set the max supported value from range
--			 */
--			*sel = r[i].low_sel + r[i].vals;
--			ret = 0;
--		}
--	}
--	return ret;
--}
--
- static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
- {
- 	unsigned int sel;
-@@ -463,9 +413,9 @@ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
- 
- 	sel &= BD70528_MASK_CHG_CHG_CURR;
- 
--	ret = find_value_for_selector_low(&warm_charge_curr[0],
--					  ARRAY_SIZE(warm_charge_curr), sel,
--					  ma);
-+	ret = linear_range_get_value_array(&warm_charge_curr[0],
-+					   ARRAY_SIZE(warm_charge_curr),
-+					   sel, ma);
- 	if (ret) {
- 		dev_err(bdpsy->dev,
- 			"Unknown charge current value 0x%x\n",
-@@ -491,10 +441,9 @@ static int get_current_limit(struct bd70528_psy *bdpsy, int *ma)
- 
- 	sel &= BD70528_MASK_CHG_DCIN_ILIM;
- 
--	ret = find_value_for_selector_low(&current_limit_ranges[0],
--					  ARRAY_SIZE(current_limit_ranges), sel,
--					  ma);
--
-+	ret = linear_range_get_value_array(&current_limit_ranges[0],
-+					   ARRAY_SIZE(current_limit_ranges),
-+					   sel, ma);
- 	if (ret) {
- 		/* Unspecified values mean 500 mA */
- 		*ma = 500;
-@@ -588,15 +537,28 @@ static int set_charge_current(struct bd70528_psy *bdpsy, int ma)
- 		goto set;
- 	}
- 
--	ret = find_selector_for_value_low(&warm_charge_curr[0],
--					  ARRAY_SIZE(warm_charge_curr), ma,
--					  &reg, &found);
-+/*
-+ * For BD70528 voltage/current limits we happily accept any value which
-+ * belongs the range. We could check if value matching the selector is
-+ * desired by computing the range min + (sel - sel_low) * range step - but
-+ * I guess it is enough if we use voltage/current which is closest (below)
-+ * the requested?
-+ */
-+
-+	ret = linear_range_get_selector_low_array(warm_charge_curr,
-+						  ARRAY_SIZE(warm_charge_curr),
-+						  ma, &reg, &found);
- 	if (ret) {
-+		dev_err(bdpsy->dev,
-+			 "Unsupported charge current %u mA\n", ma);
- 		reg = MIN_CHG_CURR_SEL;
- 		goto set;
- 	}
- 	if (!found) {
--		/* There was a gap in supported values and we hit it */
-+		/*
-+		 * There was a gap in supported values and we hit it.
-+		 * Yet a smaller value was found so we use it.
-+		 */
- 		dev_warn(bdpsy->dev,
- 			 "Unsupported charge current %u mA\n", ma);
- 	}
-@@ -648,17 +610,21 @@ static int set_current_limit(struct bd70528_psy *bdpsy, int ma)
- 		goto set;
- 	}
- 
--	ret = find_selector_for_value_low(&current_limit_ranges[0],
--					  ARRAY_SIZE(current_limit_ranges), ma,
--					  &reg, &found);
-+	ret = linear_range_get_selector_low_array(current_limit_ranges,
-+					ARRAY_SIZE(current_limit_ranges),
-+					ma, &reg, &found);
- 	if (ret) {
-+		dev_err(bdpsy->dev, "Unsupported current limit %umA\n", ma);
- 		reg = MIN_CURR_LIMIT_SEL;
- 		goto set;
- 	}
- 	if (!found) {
--		/* There was a gap in supported values and we hit it ?*/
--		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n",
--			 ma);
-+		/*
-+		 * There was a gap in supported values and we hit it.
-+		 * We found a smaller value from ranges and use it.
-+		 * Warn user though.
-+		 */
-+		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n", ma);
- 	}
- 
- set:
--- 
-2.21.0
+Was that removed somewhere prior to this patch?
 
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/read_write.c    | 43 +++++++++++++++++++++----------------------
+>  include/linux/fs.h |  1 -
+>  2 files changed, 21 insertions(+), 23 deletions(-)
+> 
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 0ffbed5fd8136..f0009b506014c 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -419,17 +419,6 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
+>  	return ret;
+>  }
+>  
+> -ssize_t __vfs_read(struct file *file, char __user *buf, size_t count,
+> -		   loff_t *pos)
+> -{
+> -	if (file->f_op->read)
+> -		return file->f_op->read(file, buf, count, pos);
+> -	else if (file->f_op->read_iter)
+> -		return new_sync_read(file, buf, count, pos);
+> -	else
+> -		return -EINVAL;
+> -}
+> -
+>  ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+>  {
+>  	mm_segment_t old_fs = get_fs();
+> @@ -441,7 +430,12 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+>  	if (count > MAX_RW_COUNT)
+>  		count =  MAX_RW_COUNT;
+>  	set_fs(KERNEL_DS);
+> -	ret = __vfs_read(file, (void __user *)buf, count, pos);
+> +	if (file->f_op->read)
+> +		ret = file->f_op->read(file, (void __user *)buf, count, pos);
+> +	else if (file->f_op->read_iter)
+> +		ret = new_sync_read(file, (void __user *)buf, count, pos);
+> +	else
+> +		ret = -EINVAL;
+>  	set_fs(old_fs);
+>  	if (ret > 0) {
+>  		fsnotify_access(file);
+> @@ -474,17 +468,22 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+>  		return -EFAULT;
+>  
+>  	ret = rw_verify_area(READ, file, pos, count);
+> -	if (!ret) {
+> -		if (count > MAX_RW_COUNT)
+> -			count =  MAX_RW_COUNT;
+> -		ret = __vfs_read(file, buf, count, pos);
+> -		if (ret > 0) {
+> -			fsnotify_access(file);
+> -			add_rchar(current, ret);
+> -		}
+> -		inc_syscr(current);
+> -	}
+> +	if (ret)
+> +		return ret;
+> +	if (count > MAX_RW_COUNT)
+> +		count =  MAX_RW_COUNT;
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Couldn't this clean up still happen while keeping __vfs_read()?
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Ira
+
+> +	if (file->f_op->read)
+> +		ret = file->f_op->read(file, buf, count, pos);
+> +	else if (file->f_op->read_iter)
+> +		ret = new_sync_read(file, buf, count, pos);
+> +	else
+> +		ret = -EINVAL;
+> +	if (ret > 0) {
+> +		fsnotify_access(file);
+> +		add_rchar(current, ret);
+> +	}
+> +	inc_syscr(current);
+>  	return ret;
+>  }
+>  
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 6441aaa25f8f2..4c10a07a36178 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1905,7 +1905,6 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+>  			      struct iovec *fast_pointer,
+>  			      struct iovec **ret_pointer);
+>  
+> -extern ssize_t __vfs_read(struct file *, char __user *, size_t, loff_t *);
+>  extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
+>  extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
+>  extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
+> -- 
+> 2.26.2
+> 
