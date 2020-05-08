@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD59C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C06207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3EA20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941835;
-	bh=ORv7Qy0u/bkXmW6s/tiSk5SObYIvGzfdzSsuQt1zCVg=;
+	s=default; t=1588941840;
+	bh=yGfNa+n5Nyg6FPVOOg9qf7jiROMVkZog5tzowtrAA5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CopMkaYpseTGMsvKePcvmWSYG/tKTirn4sXlH3NnBqWqCt65xIIYbRSKLpw0e8R4
-	 i2mIdfSDVX0GUO9RK3JuTQEWncY2CuzANMYvPZ6AInK0smQ/T9z+BYr3KDOWq3OGnl
-	 X796PxK13bi5lGwWGvm9yB3BnDvgA0h81lhDpOTE=
+	b=tQbAx+aSXmyaKN14cQe344GHlhOcr5y0+f6u5cMz5Hy9FKn1UhgATespZ7uGLsQ3u
+	 0P98SVAsXGRLTtMQQ/wPVAp+2lOV3YmXx91In6c7jsGymJjxKWrCbmODq75cVZ6W+l
+	 1fdGEC33NCetsJRxvLLv0hcQq+L5koIHK/iW/5Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgEHMny (ORCPT
+        id S1729131AbgEHMn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729116AbgEHMnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:51 -0400
+        id S1729116AbgEHMnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C660C206B8;
-        Fri,  8 May 2020 12:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00CF20720;
+        Fri,  8 May 2020 12:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941830;
-        bh=ORv7Qy0u/bkXmW6s/tiSk5SObYIvGzfdzSsuQt1zCVg=;
+        s=default; t=1588941835;
+        bh=yGfNa+n5Nyg6FPVOOg9qf7jiROMVkZog5tzowtrAA5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsDNt/g5/ro7JOfbNHLHpd4YktO2IDZDSUmOjaSCWc1MYwe41AudRiGSwa2eAMkHK
-         wcaiAnUYe9CFqWzpWKAlof/AybqhzmynEtFkf/5p3vuHpLjhKsesJDlYx0PzJbgYYm
-         FJd81XVySXTnD9Y0uDsrRGyAF5WOHiYJWBGJXhsw=
+        b=0fVqGiaCDbdAeHADlfS1YqVmqy8MjhY3qvmxrYGHGGIon9gtEC9Qs3dfKugwBIKf4
+         lDM+HODyFf4xCfjDkkBhCRwO3O3ULZhQrS5KH9Gs3vTMp/XBa8LbiB8g7hkuLpPoOS
+         yxgW72hidAK3bYzGIkErAFJ+PMas4H4qPOUGOKCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 149/312] sctp: fix the transports round robin issue when init is retransmitted
-Date:   Fri,  8 May 2020 14:32:20 +0200
-Message-Id: <20200508123134.940148234@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe Ricard <christophe-h.ricard@st.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Samuel Ortiz <sameo@linux.intel.com>
+Subject: [PATCH 4.4 151/312] NFC: nci: memory leak in nci_core_conn_create()
+Date:   Fri,  8 May 2020 14:32:22 +0200
+Message-Id: <20200508123135.083649102@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,74 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 39d2adebf137de5f900843f69f5e500932e31047 upstream.
+commit c6dc65d885b98898bf287aaf44e020077b41769f upstream.
 
-prior to this patch, at the beginning if we have two paths in one assoc,
-they may have the same params other than the last_time_heard, it will try
-the paths like this:
+I've moved the check for "number_destination_params" forward
+a few lines to avoid leaking "cmd".
 
-1st cycle
-  try trans1 fail.
-  then trans2 is selected.(cause it's last_time_heard is after trans1).
+Fixes: caa575a86ec1 ('NFC: nci: fix possible crash in nci_core_conn_create')
 
-2nd cycle:
-  try  trans2 fail
-  then trans2 is selected.(cause it's last_time_heard is after trans1).
-
-3rd cycle:
-  try  trans2 fail
-  then trans2 is selected.(cause it's last_time_heard is after trans1).
-
-....
-
-trans1 will never have change to be selected, which is not what we expect.
-we should keeping round robin all the paths if they are just added at the
-beginning.
-
-So at first every tranport's last_time_heard should be initialized 0, so
-that we ensure they have the same value at the beginning, only by this,
-all the transports could get equal chance to be selected.
-
-Then for sctp_trans_elect_best, it should return the trans_next one when
-*trans == *trans_next, so that we can try next if it fails,  but now it
-always return trans. so we can fix it by exchanging these two params when
-we calls sctp_trans_elect_tie().
-
-Fixes: 4c47af4d5eb2 ('net: sctp: rework multihoming retransmission path selection to rfc4960')
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Samuel Ortiz <sameo@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sctp/associola.c |    2 +-
- net/sctp/transport.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/nfc/nci/core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/sctp/associola.c
-+++ b/net/sctp/associola.c
-@@ -1290,7 +1290,7 @@ static struct sctp_transport *sctp_trans
- 	if (score_curr > score_best)
- 		return curr;
- 	else if (score_curr == score_best)
--		return sctp_trans_elect_tie(curr, best);
-+		return sctp_trans_elect_tie(best, curr);
- 	else
- 		return best;
- }
---- a/net/sctp/transport.c
-+++ b/net/sctp/transport.c
-@@ -72,7 +72,7 @@ static struct sctp_transport *sctp_trans
- 	 */
- 	peer->rto = msecs_to_jiffies(net->sctp.rto_initial);
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -610,14 +610,14 @@ int nci_core_conn_create(struct nci_dev
+ 	struct nci_core_conn_create_cmd *cmd;
+ 	struct core_conn_create_data data;
  
--	peer->last_time_heard = ktime_get();
-+	peer->last_time_heard = ktime_set(0, 0);
- 	peer->last_time_ecne_reduced = jiffies;
++	if (!number_destination_params)
++		return -EINVAL;
++
+ 	data.length = params_len + sizeof(struct nci_core_conn_create_cmd);
+ 	cmd = kzalloc(data.length, GFP_KERNEL);
+ 	if (!cmd)
+ 		return -ENOMEM;
  
- 	peer->param_flags = SPP_HB_DISABLE |
+-	if (!number_destination_params)
+-		return -EINVAL;
+-
+ 	cmd->destination_type = destination_type;
+ 	cmd->number_destination_params = number_destination_params;
+ 	memcpy(cmd->params, params, params_len);
 
 
