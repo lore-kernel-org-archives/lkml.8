@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8DFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8270C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16222495F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0382495F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941740;
-	bh=QnA5e/swKIZPucP09Yx8qvSickkdiQEwsBpFGjTzc9o=;
+	s=default; t=1588941744;
+	bh=Esc86zY99rb4tSwkuVMshuFgUhwa3CRmyeRGvkVGdrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmQhJT2QRT1sgC4gpVqo0HxtoBxtAjQ6ye8lmp49MaVaZVhHPIZ0ViYw6U3C+DwxI
-	 TfX3IVBaJ/XVlpAH9z0LIq0uQbuuFXFdGM76aAkcasOTjjGS5UP0wtMv0oDDtyY6zk
-	 3I86pSr25FHGele5+30A1hQORyQqwl25iuTvru7E=
+	b=Gp1nla4M6YEcXv+6haSVQ53n33MEui+4eukQrB2HqrPZyPKVOapWtjNTmX0Cq/KIv
+	 f7KY3BLkMF84y1ewacsS1RYQ4gBkasmtqYvk1e8CRc2K+O7hY7ms+hdQxtkniwG3s/
+	 chyHX7J/CqAVBFIGkjDSHvNW6Fai18d8RP6kCR/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgEHMmT (ORCPT
+        id S1728938AbgEHMmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38414 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgEHMmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:05 -0400
+        id S1728911AbgEHMmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB6262495F;
-        Fri,  8 May 2020 12:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18CF21835;
+        Fri,  8 May 2020 12:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941725;
-        bh=QnA5e/swKIZPucP09Yx8qvSickkdiQEwsBpFGjTzc9o=;
+        s=default; t=1588941731;
+        bh=Esc86zY99rb4tSwkuVMshuFgUhwa3CRmyeRGvkVGdrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clGhx8bKR7/jyaiUbXe1r4c2RwB4ONAoMx7IWNNNpLBwT2RV+i1DGlep6ts++Y+DA
-         WGcXQNfno3LmggEUFDO3R8mBY53wF4xpjgc8z8ID55WXcZVQ5fmA+4Ydj9Wuvisyi/
-         WIX4VeagerGfqrcgVvY7hjAX1dus5Fn/jbdrDzgw=
+        b=PnjCCbuQUoPKNYZFzoqi+N+kWQ+6bHE8IuQO9IsriumVYXe36X/1Ub4zWJYQ+cfPF
+         Dcn5xopk1zYUfw/fKEXHT14kYUkJdlgsfMbyDvw+ZVmXxHN3USFnAUQIRKk6QUwUvC
+         Nz/Uyk5Q4yTPYZl9Ljpcxwv658SaXmClybqzlEDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yotam Gigi <yotamg@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 109/312] mlxsw: spectrum: Fix misuse of hard_header_len
-Date:   Fri,  8 May 2020 14:31:40 +0200
-Message-Id: <20200508123132.158392167@linuxfoundation.org>
+Subject: [PATCH 4.4 111/312] tcp: do not set rtt_min to 1
+Date:   Fri,  8 May 2020 14:31:42 +0200
+Message-Id: <20200508123132.294652218@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,38 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yotam Gigi <yotamg@mellanox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit feb7d387a6cf6c1ec66d4a2b6d4b2cc52309876e upstream.
+commit 372022830b06d9980c7e8b41fa0a4081cff883b0 upstream.
 
-In order to specify that the mlxsw spectrum driver needs additional
-headroom for packets, there have been use of the hard_header_len field of
-the netdevice struct.
+There are some cases where rtt_us derives from deltas of jiffies,
+instead of using usec timestamps.
 
-This commit changes that to use needed_headroom instead, as this is the
-correct way to do that.
+Since we want to track minimal rtt, better to assume a delta of 0 jiffie
+might be in fact be very close to 1 jiffie.
 
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Yotam Gigi <yotamg@mellanox.com>
-Acked-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+It is kind of sad jiffies_to_usecs(1) calls a function instead of simply
+using a constant.
+
+Fixes: f672258391b42 ("tcp: track min RTT using windowed min-filter")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Cc: Yuchung Cheng <ycheng@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_input.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1261,7 +1261,7 @@ static int mlxsw_sp_port_create(struct m
- 	/* Each packet needs to have a Tx header (metadata) on top all other
- 	 * headers.
- 	 */
--	dev->hard_header_len += MLXSW_TXHDR_LEN;
-+	dev->needed_headroom = MLXSW_TXHDR_LEN;
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -2926,7 +2926,10 @@ static void tcp_update_rtt_min(struct so
+ {
+ 	const u32 now = tcp_time_stamp, wlen = sysctl_tcp_min_rtt_wlen * HZ;
+ 	struct rtt_meas *m = tcp_sk(sk)->rtt_min;
+-	struct rtt_meas rttm = { .rtt = (rtt_us ? : 1), .ts = now };
++	struct rtt_meas rttm = {
++		.rtt = likely(rtt_us) ? rtt_us : jiffies_to_usecs(1),
++		.ts = now,
++	};
+ 	u32 elapsed;
  
- 	err = mlxsw_sp_port_module_check(mlxsw_sp_port, &usable);
- 	if (err) {
+ 	/* Check if the new measurement updates the 1st, 2nd, or 3rd choices */
 
 
