@@ -2,104 +2,142 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB097C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E4AC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6FD2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0402173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KL1/NkKR"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MjyyPjYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgEHS1h (ORCPT
+        id S1727923AbgEHS1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727801AbgEHS1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:27:36 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8D2C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:27:35 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f7so1368104pfa.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hN4aOQqQDUCJtoOHCvHdyqo0T+RL3xFpmONUoLpf4BA=;
-        b=KL1/NkKRX1oUYO7Z1N00JVKw1P+8x2REeQYN7Q7fhRrD1t6Et+WJx2YsK4Hf/RC4jM
-         7cduWWHx/DE4Swjex9x6osHhBCcNe9ec5q2LlkSr1CYh7E6rEDEEConjcTuPOoel7pN4
-         BRJXAiM8DzL0QvF3qO5gNLuIKJ4J1g8/h+VuXoT4tVFZ0hqnLlO4i4g5HC3ikNibtTf1
-         YhKzedBK7IaqTcL+GFpnhi0hTRDCoZqA5fkQsHu6SH0Ae+swncOm9g3E8RG95OsLmu1E
-         yx6RQGSkK/ZVi3zAnpfwgB6y/Rdx38cN+FxMCv3uAzoQIYyOtwiTp3sFpq+/9tOerkLJ
-         qgQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hN4aOQqQDUCJtoOHCvHdyqo0T+RL3xFpmONUoLpf4BA=;
-        b=rF/aOdwnrIFjA9FM6ndl0oEwGh8yO8Te6DByrmzjlakXmwKaGGbfBn6JU0UnXK7Dif
-         ZGPkv61JAsTqpN+cMXDZiVNyqvJNQkeNMZiVlWEHDrEkGor+3RUPzTClDtXtcb6xRrKW
-         86o8escuDmIIX7n0cvHn1WEUeYYWhWyTQ2Gt6glMp4GHkoAKt4ba56hvuuy4wCMtByuu
-         MPeoKYN9FW7SDg98On8B2DuCVnvNuPJQEw9RI7ZjjV4Ejul23sDJerwnrGVGiU4iKWrz
-         evFTCP6hkRsvARJfvAoVFj8kOhNKWMVmmNuBPI0AuJx9ntw4QIS6qq1Xlg+IdGgJEGhu
-         SQgA==
-X-Gm-Message-State: AGi0PuZ4x/qiKdKIV/4+zHly40wL65x24ZUXGO1yeyyZtHjli9TmlSb/
-        tZYb6w7Ac05xRe6bhfeNaZ1I
-X-Google-Smtp-Source: APiQypJVcjKVXAtc+RhgX8h8rDloj7wN3GTygiGNJPq9kGosRQivY72uQWPhjT9ky30hWj1dOyflFA==
-X-Received: by 2002:a63:ef4e:: with SMTP id c14mr3094540pgk.84.1588962454832;
-        Fri, 08 May 2020 11:27:34 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:9e:e39a:a052:f8c0:a37b:3255])
-        by smtp.gmail.com with ESMTPSA id y24sm2248379pfn.211.2020.05.08.11.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 11:27:34 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     jassisinghbrar@gmail.com, robh+dt@kernel.org
-Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add entry for Qualcomm IPCC driver
-Date:   Fri,  8 May 2020 23:57:03 +0530
-Message-Id: <20200508182703.29021-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508182703.29021-1-manivannan.sadhasivam@linaro.org>
-References: <20200508182703.29021-1-manivannan.sadhasivam@linaro.org>
+        Fri, 8 May 2020 14:27:43 -0400
+Received: from mout.web.de ([212.227.17.12]:48023 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbgEHS1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:27:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588962443;
+        bh=DPe3hJBNKW8YyLJ13YIoawSHFoqrJE5EaMxdAe7CZUI=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=MjyyPjYCFmC9235O9ym3k6l4R1liyOPx4rlVN1ypY0TxW+6ksvSquuIMboQLl41lV
+         95EW916vayqWdakBRlmK8dj+HO7xNiofN5RHFr1gbA4B2RJdS1Yuwe0JT/n2n9KpBA
+         xhG0yxGgKQ5l0jTPBBnqPEjvkIjRq7s3UAQyQhDg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.146.138]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N2SP7-1j80KT3znr-013rEn; Fri, 08
+ May 2020 20:27:23 +0200
+Cc:     linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Subject: Re: [PATCH] memory/samsung: reduce unnecessary mutex lock area
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Bernard Zhao <bernard@vivo.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Message-ID: <90c5ceac-c3dc-3811-a763-bd89173bb2c2@web.de>
+Date:   Fri, 8 May 2020 20:27:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vQHtR5OjxbsPzPp1cxOFZQUIS05I9mIXe1SI6YlFqX98z6V7gQB
+ RuV5sQQNSqiIBYt8Ya2FekNccTV5tUA+ZS37Yt7p0ZL5yn6c98NLXwgz04118v5ZlVf5JDW
+ dA0YcFy+1vWMIP0sRCBiGX/2yYnFFJYc+pPr2oV68Nm3VAURR8xXlYeZ3rUR7rR+odxXxjw
+ B4LYuHBUlhYH0JGGck4Uw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:e5hrm9ME85A=:VHfnumuUk8Q3i1mpg5ciiA
+ i95lk4xAhZjeDSPF2S3jBEVejd2rgg6AXucnffhz9wzIFsmFikKELCtIsFh3Zcaze4eKRvfby
+ zTUXLjJQygh7ji92FqyxAQrof9BdTOxf+sAteAstvrTbjkZ9o3dHXUWoE8nvo+gfl4N0PPU3W
+ h1B1IwsUYfURypHYT0GwHckGXnVrBIH6UMsnpUnh4gGwSFSpXSEe8cCMRqCG4KKS/bOMtjdP1
+ Wyh+l4OaHm7ajnO0pk0hy+OWiZRZeT4LlHn2p9JFdXRRGrCVyA+aALp9NMH5gRKjqiCz/MfPw
+ K+lZnwehd040ZSfDVqrXK0aQ25GWikXEbtP4kcBqsMc3oW1cGX5MmtZTGjDUSQokgAf8CVXTG
+ jozCtggbh9jekdDH38lZom6ReADAs3fo7gzx8dm7JcurmWjqrS5uU/yoEb766b85tnTt/5Jzn
+ yw8MggujOfmyWewrtBm7VtPJlRHlWrbks8O7wr5wwrjpupWmDs4j1NEBFnW+4Z3V6hzwKr9XD
+ eg24M27TfuWReT4j3NeEZt0c45bUTiWdue0XcqYFYICfd6Bkhw5mvc4k/ojVYH5aJo1WQhjPb
+ XXMIKI41qJBrFUaRSFWMx2oSpQcWkx6o7I0UFaCS1TnYMbGiK+/mdjLKaczIlucsabeLVvUCr
+ p8hDGUFZWLuIBJeXNQ6y86+XB3fYuXvPFOOpCpWn+TsMfvIXnheqITBOnaPr2XLkKDqVP2WjM
+ qXnus2TEKnfZDngnDZX5EsQUOw+eTgfjh1MwIqfxaOpC1WqNvAt+mOhOBAtZ6gBA9a5yiVOso
+ PAdGbmlhGY312ijexZmFTF34VWGurqwx+Uo+gHBGkQcNoXxzajFDZNZyoc2OypGfB19N/pIf8
+ sELNjG9edzVCJw371NH1KiVZEaVbNuVQwNVr6rw0JvJYj/DomPJO+5xJH3a6YVjzkuvTeFvxa
+ AMl2K9WDt0f7NXG87vBrD1vLNip0XhMzn+WA01o66HPllZ8wEOziHbAumpSjZqMZZEtUf8aoL
+ dq9KRhnpaHbAIKiypmun8QSb6OYg+S8QE7baladevfR0tZc9I5rEgqy6uVyRIKaERMoH3dUxg
+ AmWg6KNsdaMdJ2AXW2SkIufFO+aD2NsvuBBcgctlL7kZN/iqtZEIYqfEqDaBXOxbh/sdybXAr
+ I8byi/+wip1I/hZmcudCmgu9M1dvA3TTu6J5jyCW4pWLU/AoRYPJtv8tj9e3wIyZwPwuV+pAR
+ SfviyuEGNX2B40Po9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for Qualcomm IPCC driver and its binding.
+> Maybe dmc->df->lock is unnecessary to protect function
+> exynos5_dmc_perf_events_check(dmc). If we have to protect,
+> dmc->lock is more better and more effective.
+> Also, it seems not needed to protect "if (ret) & dev_warn"
+> branch.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I suggest to improve also this commit message.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..cc2fb991cc0d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14013,6 +14013,14 @@ L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- F:	drivers/iommu/qcom_iommu.c
- 
-+QUALCOMM IPCC MAILBOX DRIVER
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-+F:	drivers/mailbox/qcom-ipcc.c
-+F:	include/dt-bindings/mailbox/qcom-ipcc.h
-+
- QUALCOMM RMNET DRIVER
- M:	Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
- M:	Sean Tranchetti <stranche@codeaurora.org>
--- 
-2.17.1
+* Please reduce uncertainty.
 
+* An imperative wording is probably preferred, isn't it?
+
+* Will it be more appropriate to refer to the action =E2=80=9CReduce the l=
+ock scope=E2=80=9D?
+
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change desc=
+ription?
+
+Regards,
+Markus
