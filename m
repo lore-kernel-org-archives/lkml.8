@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47ADC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDE7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFBB2145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A2D2145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942015;
-	bh=zQEITwS3Tb1sOo6M0wkESRrjv9nok4D8igd06GWXhRo=;
+	s=default; t=1588942020;
+	bh=JhKR7i5dfEhFFTPYQ7tYFZZyr2se2f3HLZYXa4lpvmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S59dksArdLRnsPZ1MgnzNPkwOOdiU03rCQpI/5Q89JPPGlLgU3sT2ltOiQvyRf4gK
-	 a4yu5koRauJF/S+myTdQfAYqZBMmqNVOPLf7pTXAAZYBQUSIP9EEeyXpurX1AqczW9
-	 1o2paHSpY901lH4Zc/gpIfdKzPNdoxHWEqteNZJU=
+	b=LosRPz6w+nZSnQcDSwUbDsVchasp+czo4uWG5qKfe+WuahQbkzmqCfmeeKHtUxftP
+	 iFIzJwNDfM1sNX8xxC0o0AhnVpZRqAh+GZD8N6l357W6TOSdNA4eDf+2XLLl76Qjtu
+	 qHM4cagjvpXucYnDdwhLjdeoRrln7f93MG4f1O18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbgEHMqy (ORCPT
+        id S1727950AbgEHMq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbgEHMql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:41 -0400
+        id S1729464AbgEHMqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 888D52145D;
-        Fri,  8 May 2020 12:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B5A21974;
+        Fri,  8 May 2020 12:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942001;
-        bh=zQEITwS3Tb1sOo6M0wkESRrjv9nok4D8igd06GWXhRo=;
+        s=default; t=1588942003;
+        bh=JhKR7i5dfEhFFTPYQ7tYFZZyr2se2f3HLZYXa4lpvmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUj14SyP8W7Cg1Pb8vCW215/y/iuJerW8nP1B/V1rqv16pwj6kWCvrTxOEN5xYGjb
-         auDIcUAAmwS29ed7cFcbzQkJXsfRWdgue2V4tBKxL6xwuTfg6lcVoQlktebH6rgQDk
-         474SLE6uagsCmkBR9fymES2MCfuFzm/w/CtuIj90=
+        b=gxauS+wiDDGjM/66nOeBbtLnHPxeAPqKEb8Qsvm5iI658rTfC3nTc9PGkImWuzu4m
+         C8MyujIrHvBeeS2zmMtvNeJK/kuuPqigPazr37EMo4yHzKljXQ/mEZj6554b4Aordh
+         TgP5JrUehEOqUJGs6L5OBj2PissPUZNdL6VuQHmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 257/312] sfc: fix potential stack corruption from running past stat bitmask
-Date:   Fri,  8 May 2020 14:34:08 +0200
-Message-Id: <20200508123142.471062638@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Xiang <liu.xiang6@zte.com.cn>,
+        "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 4.4 231/312] power: bq27xxx_battery: Fix bq27541 AveragePower register address
+Date:   Fri,  8 May 2020 14:33:42 +0200
+Message-Id: <20200508123140.683195367@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,40 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
+From: Liu Xiang <liu.xiang6@zte.com.cn>
 
-commit e70c70c38d7a5ced76fc8b1c4a7ccee76e9c2911 upstream.
+commit 265b60497a57da56a4be7d5c72983ae89dc0765e upstream.
 
-On 32-bit systems, mask is only an array of 3 longs, not 4, so don't try
-to write to mask[3].
-Also include build-time checks in case the size of the bitmask changes.
+Currently in bq27541 driver, the average power register address is
+incorrectly set to 0x76, which would result in an error:
+bq27xxx-battery 2-0055: error reading average power register  10: -11
+According to the bq27541 datasheet, fix this problem by setting
+the average power register address to 0x24.
 
-Fixes: 3c36a2aded8c ("sfc: display vadaptor statistics for all interfaces")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d74534c27775 ("power: bq27xxx_battery: Add support for additional bq27xxx family devices")
+Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/sfc/ef10.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/power/bq27xxx_battery.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -1304,13 +1304,14 @@ static void efx_ef10_get_stat_mask(struc
- 	}
+--- a/drivers/power/bq27xxx_battery.c
++++ b/drivers/power/bq27xxx_battery.c
+@@ -242,7 +242,7 @@ static u8 bq27541_regs[] = {
+ 	INVALID_REG_ADDR,	/* AE - NA	*/
+ 	0x2c,	/* SOC(RSOC)	*/
+ 	0x3c,	/* DCAP		*/
+-	0x76,	/* AP		*/
++	0x24,	/* AP		*/
+ };
  
- #if BITS_PER_LONG == 64
-+	BUILD_BUG_ON(BITS_TO_LONGS(EF10_STAT_COUNT) != 2);
- 	mask[0] = raw_mask[0];
- 	mask[1] = raw_mask[1];
- #else
-+	BUILD_BUG_ON(BITS_TO_LONGS(EF10_STAT_COUNT) != 3);
- 	mask[0] = raw_mask[0] & 0xffffffff;
- 	mask[1] = raw_mask[0] >> 32;
- 	mask[2] = raw_mask[1] & 0xffffffff;
--	mask[3] = raw_mask[1] >> 32;
- #endif
- }
- 
+ static u8 bq27545_regs[] = {
 
 
