@@ -2,113 +2,106 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F215C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C34FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA725208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1460208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PpEFd8FQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGlphvp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHJJq (ORCPT
+        id S1726091AbgEHJOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54556 "EHLO
+        Fri, 8 May 2020 05:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgEHJJp (ORCPT
+        with ESMTP id S1725379AbgEHJOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:09:45 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90DC9C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 02:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Xb+C9x4SIhmpbdhdXWMSHO37biGDOHtvQ/W2i8m4dTo=; b=PpEFd8FQp6vNcOZNu0Da+9bMtN
-        ni4z8WEXHbTgTA/hc+iJOW5x9YzTaZGBxvGXE0nAMoMgl1bv7rVhPRZICHOpI+3E1SmxpOo4lsXp5
-        tgWZ9jwG5edPLnkQDPx+jzc1rFXgKXYxM+3O5svw0NqHXy52TeQCEQkxwAc9J4u82MgPzx/AfKRvN
-        omg53m7OHKaJ9Sgdn1MesdG0HiOKnERmt2/T44n2nYYhP5w+3IZ8QrtNtowI7LaTG7TmkEAOrSnjx
-        X/rVrEv3u3zPcMCnhkVODO25lHbaM+cecIk2taXFGHLWOasfNHX/paoS+/OCP7eje7t6u4EobX3zC
-        WYEtHesQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWz0b-0007QA-9s; Fri, 08 May 2020 09:09:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A776A301DFC;
-        Fri,  8 May 2020 11:09:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6C9942B93BDCE; Fri,  8 May 2020 11:09:25 +0200 (CEST)
-Date:   Fri, 8 May 2020 11:09:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Aaron Lu <aaron.lwe@gmail.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH updated v2] sched/fair: core wide cfs task priority
- comparison
-Message-ID: <20200508090925.GV5298@hirez.programming.kicks-ass.net>
-References: <20200415033408.GA168322@ziqianlu-desktop.localdomain>
- <20200415040741.GA169001@ziqianlu-desktop.localdomain>
- <CANaguZAXsjD=X-bB7dvQZ3FSqLioiZU=YREHH_7JqiFsZCTxHA@mail.gmail.com>
- <20200417094045.GA197704@ziqianlu-desktop.localdomain>
- <20200420080759.GA224731@ziqianlu-desktop.localdomain>
- <CANaguZDP3nyBdjLeeCZGoUoYk6Lf0HUv19N2Qxo4CpZfrjPZHA@mail.gmail.com>
- <20200421025131.GA227300@aaronlu-desktop>
- <20200424142443.GA263207@aaronlu-desktop>
- <20200506143506.GH5298@hirez.programming.kicks-ass.net>
- <20200508084419.GA120223@aaronlu-desktop>
+        Fri, 8 May 2020 05:14:52 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830E4C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 02:14:52 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b6so464613plz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 02:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nMxBmOmA0pSsTRUw0Y2HDt6KguOgwVLNatcARhBcWek=;
+        b=UGlphvp8K38wllfNZo25/p/gee62yCv5K/mw3jjK3Izj2ivGn5sOvxfchz/UekfLxM
+         7AzyMfBhLd17KQ5VSr+hVb/EDNVHaiOPIDHAO9c8zRofVoTPsWcvEn2wTBVB1MW8YCwE
+         91pVouyKwC9xq8xMRHi8bmWyuoeSDJx8OiP1Z2eF4S3SSsC2HRpKZR8Og5MJCMG4uX5w
+         kiZqibm2up6Lc8YqI5ca8YeU5j17Ko8tYj+cQOgD78B81i0kof72vstUjCFhG6V3nazw
+         PQRYe7jR3aBBi8hkS1JFym6cHMvdW1Bd73+M+qftJ7SxwJpx4XPFe/uFCUSRAGDn5JX9
+         hZtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nMxBmOmA0pSsTRUw0Y2HDt6KguOgwVLNatcARhBcWek=;
+        b=o9Fr1G/K0lyxCITmQZXwGyDl9zRqnAUr8Dvnkd6lbVvW9NF2yR+L3UBHxdAG3jvk2S
+         9+ZjMzyj8C+I9iPOO+Dat65zHksyKMveWBinDS6gtyoLfqLzk8IpuYvUfkGzW/MhlU9d
+         q8sqBhM7eusgA2hDMnJTLtwOAKJjpapjv7eAbo6peX6vHIG5H2bWjgNRmyKPN74eONDl
+         BvbHGG+ai2n+wO9xRDVvSSeeD1t/T6lI6PewdXQgO45d9Lpw9CdONNKpsdNvz9Odi1aO
+         4Mivo11OaonRnsR6+qE79TXOl+y1pLByAu3u9oIJm4h5CZf42aUdrt3J/J2rePxHgsXn
+         Pl2Q==
+X-Gm-Message-State: AGi0PubkXJJuiACUPyQ9/uejlhiGmPiXSZQI1zTzz+81oJzB8XWlOM3g
+        zNsbZwyVZo/pL2+S60qV/iCOcO9y
+X-Google-Smtp-Source: APiQypKo6zNGflFBY1FjZ8IG226PaDyITAYqx8t3A183iI8TJ+zQm04mg/0MSIZE/ZJFbHA17z6j3Q==
+X-Received: by 2002:a17:90a:d307:: with SMTP id p7mr4977045pju.207.1588929292004;
+        Fri, 08 May 2020 02:14:52 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id u188sm1187292pfu.33.2020.05.08.02.14.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 02:14:51 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH] coresight: tmc: mark coresight_tmc_groups with static
+Date:   Fri,  8 May 2020 17:13:40 +0800
+Message-Id: <20200508091340.11711-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508084419.GA120223@aaronlu-desktop>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:44:19PM +0800, Aaron Lu wrote:
-> On Wed, May 06, 2020 at 04:35:06PM +0200, Peter Zijlstra wrote:
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-> > Aside from this being way to complicated for what it does -- you
-> > could've saved the min_vruntime for each rq and compared them with
-> > subtraction -- it is also terminally broken afaict.
-> >
-> > Consider any infeasible weight scenario. Take for instance two tasks,
-> > each bound to their respective sibling, one with weight 1 and one with
-> > weight 2. Then the lower weight task will run ahead of the higher weight
-> > task without bound.
-> 
-> I don't follow how this could happen. Even the lower weight task runs
-> first, after some time, the higher weight task will get its turn and
-> from then on, the higher weight task will get more chance to run(due to
-> its higher weight and thus, slower accumulation of vruntime).
+Sparse reports a warning like:
+drivers/hwtracing/coresight/coresight-tmc.c:364:30: warning: symbol
+'coresight_tmc_groups' was not declared. Should it be static? [sparse]
 
-That seems to assume they're mutually exclusive. In that case, as I
-argued, we only have a single runqueue and then yes it works. But if
-they're not exclusive, and can run concurrently, it comes apart.
+coresight_tmc_groups is used in the local file only, so it should be
+marked with static.
+
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ drivers/hwtracing/coresight/coresight-tmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index 1cf82fa..39fba1d 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -361,7 +361,7 @@ static ssize_t buffer_size_store(struct device *dev,
+ 	.name = "mgmt",
+ };
+ 
+-const struct attribute_group *coresight_tmc_groups[] = {
++static const struct attribute_group *coresight_tmc_groups[] = {
+ 	&coresight_tmc_group,
+ 	&coresight_tmc_mgmt_group,
+ 	NULL,
+-- 
+1.9.1
 
