@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8017C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95DCC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBEF224953
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B38B24964
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942291;
-	bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
+	s=default; t=1588942295;
+	bh=jlxp6bHqaL5SLGNE4+p8W1vuvAGZv7qXffR7022qqeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONzfUoq7hlPZI6KqfzgCPnBwHXx8oXLtIMh+XUUwQqqoQkMhTmUWJcQyXmjLBYiYw
-	 ykpvfJdbo5ilOybrtCStmWirMR7yl6jOA7ojLSGxPPJV50WBI/YjhMjZ9tbSy7blIG
-	 g8j6KVseddYIXvApGcgVPAS5iQgs4rGxW20sJXL0=
+	b=xW7oUpb98El9lk3GVrrZbRuiVNBoepI67fAphxvi/6gs4u3svYDZU26WHquflZELG
+	 kM5VtJK+sCI9dwzOhV2lsFLHlIn3HT76hDjkz138/UXUVmXoFCd7nh+2gks7PShBbJ
+	 laomkeeF95L2YbxEcamkbx6kRs8ZcXuLDm0VKI30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgEHMvb (ORCPT
+        id S1728624AbgEHMve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60408 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbgEHMvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:23 -0400
+        id S1729910AbgEHMv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4536F24953;
-        Fri,  8 May 2020 12:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17EE24958;
+        Fri,  8 May 2020 12:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942282;
-        bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
+        s=default; t=1588942285;
+        bh=jlxp6bHqaL5SLGNE4+p8W1vuvAGZv7qXffR7022qqeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vbzVeR19TGNBOup/y7cAJLCfh1To+yLZuF5qUC6c4SCYRdnKxQDen3EMeFiV2//gZ
-         ER3WlYoaVicltjeMRt+guBDgtoXpVgi9sd96lot5BMt2734vfiwihxeZSAPWxPyW5z
-         BNOE95xOw7lGhWP1h/TAX7dOwLCtSYuUd5Qknx5Y=
+        b=CDfL2/52IUsEKcQMz34xoyPGJPvHDiQyFPsZgsw/dcneufsmIgSqbxQyY9/NaJVj6
+         fj2XavLa4mZbxEPgEyMIfRESgJyyyaVzLuycxibp88b7WWP+IGRcm91zLNnqcPMlHE
+         7imSglbigrHPX1X5CFgw23o/0AtJ2LoFgSBiDt6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/32] cifs: protect updating server->dstaddr with a spinlock
-Date:   Fri,  8 May 2020 14:35:29 +0200
-Message-Id: <20200508123036.981881820@linuxfoundation.org>
+Subject: [PATCH 4.19 17/32] s390/ftrace: fix potential crashes when switching tracers
+Date:   Fri,  8 May 2020 14:35:30 +0200
+Message-Id: <20200508123037.116783881@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -61,37 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
+[ Upstream commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 ]
 
-We use a spinlock while we are reading and accessing the destination address for a server.
-We need to also use this spinlock to protect when we are modifying this address from
-reconn_set_ipaddr().
+Switching tracers include instruction patching. To prevent that a
+instruction is patched while it's read the instruction patching is done
+in stop_machine 'context'. This also means that any function called
+during stop_machine must not be traced. Thus add 'notrace' to all
+functions called within stop_machine.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
+Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kernel/diag.c  | 2 +-
+ arch/s390/kernel/smp.c   | 4 ++--
+ arch/s390/kernel/trace.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 975f800b9dd4d..9e569d60c636b 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -353,8 +353,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
- 		return rc;
- 	}
+diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
+index 35c842aa87058..4c7cf8787a848 100644
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -128,7 +128,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
  
-+	spin_lock(&cifs_tcp_ses_lock);
- 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
- 				  strlen(ipaddr));
-+	spin_unlock(&cifs_tcp_ses_lock);
- 	kfree(ipaddr);
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index ecd24711f3aa9..8e31dfd85de32 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -393,7 +393,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
+ }
  
- 	return !rc ? -1 : 0;
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
+ {
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -403,7 +403,7 @@ bool arch_vcpu_is_preempted(int cpu)
+ }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
+ 
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
+ {
+ 	if (MACHINE_HAS_DIAG9C) {
+ 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
+diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
+index 490b52e850145..11a669f3cc93c 100644
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
 -- 
 2.20.1
 
