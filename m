@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE651C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B39FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D49206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7399F218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944030;
-	bh=q5eylGLhRXdWXDttS54e99ejHhVcbX7hzaz1XTM5AFE=;
+	s=default; t=1588944039;
+	bh=6n0ahUsSSAX0rdpWSQ18St5EorlUTtHxTcar9RoEJE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9Q5PYWuXrJ54xf+8WNhQAS7GkV21Rh+3b9hWQK3Wo7MdxBj0xIGHMZbCi0Zj/TL3
-	 Ww8wwq1+OHUe2nz7ivoAx9KQk1XKpmRO9Hjus7eCA7TIVS0hUAJmrBS9j7nVq+X41P
-	 4NeK2U/ijFAYzEptGIxF0cKlpau0FLnllJkHFLC0=
+	b=ddPT7QehKhBw+Tc+8sl5h5z6Mf1Yui81wlM8MnA+DRWIybPJ0IIjpGNBDLWoKXSCf
+	 pt5uyFGKIyQXW10a33srb0ghF08lPk1ICpEx5BEqyh7YMvJCHf9UCL8owwoCCN+i1m
+	 bHa15wkqz1YFMdV9n/nTAe1v6giR9cfEA0aFlVe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgEHMk6 (ORCPT
+        id S1730502AbgEHNUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgEHMkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:31 -0400
+        id S1728673AbgEHMkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E86F24968;
-        Fri,  8 May 2020 12:40:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA9D20731;
+        Fri,  8 May 2020 12:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941630;
-        bh=q5eylGLhRXdWXDttS54e99ejHhVcbX7hzaz1XTM5AFE=;
+        s=default; t=1588941650;
+        bh=6n0ahUsSSAX0rdpWSQ18St5EorlUTtHxTcar9RoEJE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qu7SGvOKJqMg+OFRK8thaLoO8HkPTtFS3ag3HBIGZxzM/vSZX8pLV69Ag+4ZG07N0
-         SdGPPrk4coibM+BZ4AFGUKiOplSCj1MjKQe5ajyyLtbVl3KQw6wcb/5fdsKlC1buyt
-         +08RiT4sCm36ZNfMyz0jqqxitz6jFiivPjOjMPrs=
+        b=NQvmR0cSEDX0r5xdki5zrqSUOrWb8JSQwyF+roR00akC+bAvkVnW/4FAvZpJSJAk6
+         z1XhpuQrBn3kdxjuD7zwNudM5dUkcw4jqgIJfQX9ZWkZYJioAAbJBcQHnm6D6nHk5B
+         K5lf+67F/3V2uecmuFNs5CUy+kvSxtlptR/nQqQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 059/312] mlxsw: pci: Correctly determine if descriptor queue is full
-Date:   Fri,  8 May 2020 14:30:50 +0200
-Message-Id: <20200508123128.705713327@linuxfoundation.org>
+        stable@vger.kernel.org, Olaf Hering <olaf@aepfle.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>
+Subject: [PATCH 4.4 118/312] Drivers: hv: utils: use memdup_user in hvt_op_write
+Date:   Fri,  8 May 2020 14:31:49 +0200
+Message-Id: <20200508123132.763575979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,45 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Olaf Hering <olaf@aepfle.de>
 
-commit 5091730d7795ccb21eb880699b5194730641c70b upstream.
+commit b00359642c2427da89dc8f77daa2c9e8a84e6d76 upstream.
 
-The descriptor queues for sending (SDQs) and receiving (RDQs) packets
-are managed by two counters - producer and consumer - which are both
-16-bit in size. A queue is considered full when the difference between
-the two equals the queue's maximum number of descriptors.
+Use memdup_user to handle OOM.
 
-However, if the producer counter overflows, then it's possible for the
-full queue check to fail, as it doesn't take the overflow into account.
-In such a case, descriptors already passed to the device - but for which
-a completion has yet to be posted - will be overwritten, thereby causing
-undefined behavior. The above can be achieved under heavy load (~30
-netperf instances).
+Fixes: 14b50f80c32d ('Drivers: hv: util: introduce hv_utils_transport abstraction')
 
-Fix that by casting the subtraction result to u16, preventing it from
-being treated as a signed integer.
-
-Fixes: eda6500a987a ("mlxsw: Add PCI bus implementation")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlxsw/pci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hv/hv_utils_transport.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
-@@ -215,7 +215,7 @@ mlxsw_pci_queue_elem_info_producer_get(s
- {
- 	int index = q->producer_counter & (q->count - 1);
+--- a/drivers/hv/hv_utils_transport.c
++++ b/drivers/hv/hv_utils_transport.c
+@@ -80,11 +80,10 @@ static ssize_t hvt_op_write(struct file
  
--	if ((q->producer_counter - q->consumer_counter) == q->count)
-+	if ((u16) (q->producer_counter - q->consumer_counter) == q->count)
- 		return NULL;
- 	return mlxsw_pci_queue_elem_info_get(q, index);
- }
+ 	hvt = container_of(file->f_op, struct hvutil_transport, fops);
+ 
+-	inmsg = kzalloc(count, GFP_KERNEL);
+-	if (copy_from_user(inmsg, buf, count)) {
+-		kfree(inmsg);
+-		return -EFAULT;
+-	}
++	inmsg = memdup_user(buf, count);
++	if (IS_ERR(inmsg))
++		return PTR_ERR(inmsg);
++
+ 	if (hvt->on_msg(inmsg, count))
+ 		return -EFAULT;
+ 	kfree(inmsg);
 
 
