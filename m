@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F5C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC47C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C512495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E762495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942694;
-	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+	s=default; t=1588942695;
+	bh=pNDq+qA0a6AeHHaZ1+wh57H8blS3M82LwnhCyrgPei8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Es/VO4/YMrQuzIFGWh2JTCM0mOlc9f7r7fUr4TchfUwk3hRR34+g3Pud5PvcRK4p6
-	 a3Bd4RCe36JLM5VHnqfGUVIF20t9mD2uIP3uSWiMwzEtgELpBBT3n2+jesgq02GsbQ
-	 tce0ULcsCAMAjALSL3/hErZTQNF7fbrTT0+bp7JY=
+	b=RU7PWQq9CfK+Au2b2rQ9xohT+O5CG9HmjNE1dEhmFjtqKiNWxjOgfzQB/pFUbfdkL
+	 i2C3C0CKcRgS+47acC86+hlOlAmVBHNKWjvqcFHzKsX0fShQGJYPUTF+8s8v6Clcn9
+	 7irdpynrPwg/cOBkog85TksGyQ1BtL+uVEHlxF5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgEHMys (ORCPT
+        id S1730221AbgEHMyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbgEHMyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:43 -0400
+        id S1730234AbgEHMyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DF282496A;
-        Fri,  8 May 2020 12:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E9C2496C;
+        Fri,  8 May 2020 12:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942483;
-        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+        s=default; t=1588942480;
+        bh=pNDq+qA0a6AeHHaZ1+wh57H8blS3M82LwnhCyrgPei8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xv5u1iYUByJZp2gee8o/BTCUGEtEjlH8T74u45eZTQa3GWoH6vqOdW++lMli3jUba
-         EHNp8BTeajA96JaOTPSfSCQx4SO1G7TZjbvuhgbgnAIn6p+CguFiFQcVNG4yQpXjlL
-         nkrRTh7FEk5hyMXLEl00PZzkCeoJfZsNXQ6jeRcE=
+        b=wbo9eTpkmuLe3xwhNkHxAFcgMjdFzyAvb8bDatgpfHjJDJMjMko3ICciMoD0EgVuZ
+         IE8Hh8Wvi4jyZHKKY7qRLeHWxLSWev/0+SnAp59OMxSHLhchsWFtalA7klA508BfgR
+         ZRraRogheHWdVIF1ByDvaChmlU3uFY91v/KT0FRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        stable@vger.kernel.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 13/49] selftests/ipc: Fix test failure seen after initial test run
-Date:   Fri,  8 May 2020 14:35:30 +0200
-Message-Id: <20200508123044.904724531@linuxfoundation.org>
+Subject: [PATCH 5.6 12/49] Revert "Kernel selftests: tpm2: check for tpm support"
+Date:   Fri,  8 May 2020 14:35:29 +0200
+Message-Id: <20200508123044.748082043@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -60,59 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+[ Upstream commit aaa2d92efe1f972567f1691b423ab8dc606ab3a9 ]
 
-After successfully running the IPC msgque test once, subsequent runs
-result in a test failure:
+This reverts commit b32694cd0724d4ceca2c62cc7c3d3a8d1ffa11fc.
 
-  $ sudo ./run_kselftest.sh
-  TAP version 13
-  1..1
-  # selftests: ipc: msgque
-  # Failed to get stats for IPC queue with id 0
-  # Failed to dump queue: -22
-  # Bail out!
-  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-  not ok 1 selftests: ipc: msgque # exit=1
+The original comment was neither reviewed nor tested. Thus, this the
+*only* possible action to take.
 
-The dump_queue() function loops through the possible message queue index
-values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
-represents the index value. The first time the test is ran, the initial
-index value of 0 is valid and the test is able to complete. The index
-value of 0 is not valid in subsequent test runs and the loop attempts to
-try index values of 1, 2, 3, and so on until a valid index value is
-found that corresponds to the message queue created earlier in the test.
-
-The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
-index values are used. The test failure is caused by incorrectly
-comparing errno to -EINVAL when cycling through possible index values.
-
-Fix invalid test failures on subsequent runs of the msgque test by
-correctly comparing errno values to a non-negated EINVAL.
-
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ipc/msgque.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/tpm2/test_smoke.sh | 13 ++-----------
+ tools/testing/selftests/tpm2/test_space.sh |  9 +--------
+ 2 files changed, 3 insertions(+), 19 deletions(-)
 
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 4c156aeab6b80..5ec4d9e18806c 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index b630c7b5950a9..8155c2ea7ccbb 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,17 +1,8 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+-self.flags = flags
+ 
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
+-
+-
+-if [ -f /dev/tpm0 ] ; then
+-	python -m unittest -v tpm2_tests.SmokeTest
+-	python -m unittest -v tpm2_tests.AsyncTest
+-else
+-	exit $ksft_skip
+-fi
++python -m unittest -v tpm2_tests.SmokeTest
++python -m unittest -v tpm2_tests.AsyncTest
+ 
+ CLEAR_CMD=$(which tpm2_clear)
+ if [ -n $CLEAR_CMD ]; then
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index 180b469c53b47..a6f5e346635e5 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,11 +1,4 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
+-
+-if [ -f /dev/tpmrm0 ] ; then
+-	python -m unittest -v tpm2_tests.SpaceTest
+-else
+-	exit $ksft_skip
+-fi
++python -m unittest -v tpm2_tests.SpaceTest
 -- 
 2.20.1
 
