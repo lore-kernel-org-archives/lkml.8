@@ -2,58 +2,58 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375F4C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D9BC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1400020870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B4520870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AGitAEjA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bWDhDxic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEHGkP (ORCPT
+        id S1728011AbgEHGlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:40:15 -0400
+        Fri, 8 May 2020 02:41:09 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726897AbgEHGkO (ORCPT
+        by vger.kernel.org with ESMTP id S1727826AbgEHGkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:40:14 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB3FC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 23:40:14 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so446471pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 23:40:14 -0700 (PDT)
+        Fri, 8 May 2020 02:40:15 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311BAC05BD0A
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 23:40:15 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y25so443915pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 23:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qiQcUnaOsTuYIdMr9pQhA9E0vZ/bgcYyUJ6NKwIoiA8=;
-        b=AGitAEjAmIYuKXy+lG43wJaRD8vsDY21A7oS+DPw/WXhdya0M2b77Hp2SjGy4IDeA7
-         0mXKCAbk5gyUBklW+6pHdkHCR05KcSgPpdfyhoVoNan7SFIeqEK/VVjckLgwFwrYPTDZ
-         OpOCzvcEaiQZBjlPAHAPh8sFU5hMWxw/60ScM=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1msrSyHZ6KfA51tZi5XgmUcYg/Y7t9cj83OUd8ZkNEY=;
+        b=bWDhDxic/fxlTFZu9VXJ5niKiHgQNotH2cKyRKjaOx3VmhF/9tO0oDOy+4Q7SCS/Fo
+         NzimCvCXTiQwZ/OttQPeFw9OtbLRrngc25eeJQaQjPqbJQPsAiB7zWEwEG+e4UG1pGt6
+         WyS8X+qYsdFpjynUnDUildk4q8Swr1p2Gr9gE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qiQcUnaOsTuYIdMr9pQhA9E0vZ/bgcYyUJ6NKwIoiA8=;
-        b=A6b9cXEcPUP9UF88XfwTQsAoKgryqwhN4a27XT5GoHEen0mR8WIR9FKC0urffCzBM9
-         kSBLlUxiTgPzkn6PgfwNmF/yApKiveuRCCoIFQ4bl8bGWKBPNETuvvUybsvkhYnLjBHD
-         uDXk1ii6dRpa+okhTYk181sn14mKgJcsNlMO1TAJCwHa96TBFHsoeOAp5GgQJg0jiiuB
-         vsVO30kfVKmrOesb19vYz6fkpUX28uXZgoQUQxRaoIIAyje95nZU3i/CgKxDw+oHgrEc
-         SB+SIU4GhgupUm0DXn4hnprvbMuX2waPsYksP0jd0FSAA8kdqp1bEo1TnAjzZRKzyeu8
-         xsIA==
-X-Gm-Message-State: AGi0PuZ2JF9udLHQ7bDoG3qqQMAfqUZtLOtMA7pEnOSBru87+hRcFbFB
-        wQuBuifSpWdFhMwq+e4G5D9kWA==
-X-Google-Smtp-Source: APiQypLhC9jPG3VyD0chnEVvbTzcUfM6EnXrvWXuM3nZ1Jmch+lbDR8507FGYLZRkZnFAwwsLzJRtg==
-X-Received: by 2002:a63:b649:: with SMTP id v9mr832219pgt.402.1588920013880;
-        Thu, 07 May 2020 23:40:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1msrSyHZ6KfA51tZi5XgmUcYg/Y7t9cj83OUd8ZkNEY=;
+        b=Def4LWnl66HFblvUjVrWkvolUDPYLiRvujfg9grvhdNzDMljXyd9wo+PMTSYMAQ7Uk
+         15xbk7wTtoJWTx0Hq6VEYrH7UGx5X3MKIGFYuFTBr+NBguyeTiP1ODdDRdCHJnbugEFX
+         sOe1mOlHE8eRNCZTKZ5cKRV8YbPmuR8KsN+jI44sr2Xvt0mpUP+mL2pX6pFKW9x5BHpq
+         9etr6J9WIeJ6ha5r3uPJ49MJ6oe1iDU/r/AedOhy+OKoPtqvWp9iWrWKnN6xFbfYor9x
+         s6rGN7slXjmktWbvqgIuv8NdgFrhvUzZwBKloNOf/cSsZZY0r3q42L2nFvlID389toqG
+         le9A==
+X-Gm-Message-State: AGi0PualQPgRm7NOkAoHzOO2dZAHELPpJvIlGOtbTili870KYm9KlSMJ
+        eJLBeBgE7woE2ZUJ/oABWDKUmw==
+X-Google-Smtp-Source: APiQypLk1Mg7kNeFeBwkDOe2wQg2PR/W23mwT2tRkzyl61Z5pOg8H5W6ETpAbHz0dzHI1KzyoDZfVA==
+X-Received: by 2002:a63:a043:: with SMTP id u3mr856506pgn.287.1588920014676;
+        Thu, 07 May 2020 23:40:14 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 140sm757265pfw.96.2020.05.07.23.40.12
+        by smtp.gmail.com with ESMTPSA id l137sm774866pfd.107.2020.05.07.23.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 07 May 2020 23:40:12 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -67,10 +67,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-doc@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/12] pstore: mtd: support crash log to block and mtd device
-Date:   Thu,  7 May 2020 23:39:52 -0700
-Message-Id: <20200508064004.57898-1-keescook@chromium.org>
+Subject: [PATCH v4 04/12] pstore/blk: Provide way to choose pstore frontend support
+Date:   Thu,  7 May 2020 23:39:56 -0700
+Message-Id: <20200508064004.57898-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200508064004.57898-1-keescook@chromium.org>
+References: <20200508064004.57898-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,95 +80,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 
-This is a v4 of WeiXiong Liao's series. I spent time porting this on top
-of the latest pstore (mainly to support max_reason), and I started making
-various other changes, mostly just bikeshed stuff.
+Most pstore backends lack support for all the pstore frontends, only
+handling kmsg dump and not things like pmsg, console, and ftrace.
+Provide a way for drivers using pstore/blk to list which frontends they
+expect to support.
 
-Changes since v3:
-	fixing up various typos, alternate phrases, and language. For
-	example:
-	        recorder -> frontend
-	        Pstore -> pstore
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Link: https://lore.kernel.org/r/1585126506-18635-4-git-send-email-liaoweixiong@allwinnertech.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/blk.c            | 16 +++++++++++++---
+ include/linux/pstore_blk.h |  4 +++-
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-	filenames:
-	        rename pstore_*.c -> *.c and adjust Makefile
-		(I decided fs/pstore/pstore_zone.c repeated "pstore" one too many time. ;)
-		pstore-block.rst -> pstore_blk.rst
-
-	conversion of dump_oops -> max_reason
-
-	refactor/rename get_reason_str() and move to kernel/printk/printk.c
-
-	psz* -> pstore_zone* renamings:
-	        psblk_usr_info() ->... pstore_blk_usr_info()
-	        psz_zone -> pstore_zone
-	        pszinfo -> pstore_zone_info
-
-	register_pstore_zone():
-	        registration reporting via pr_cont(), with max_reason
-	        remove needless get/put_module()
-
-	public API renamings: VERB_NOUN()
-	        psz_*register() -> *register_pstore_zone()
-
-v3: https://lore.kernel.org/lkml/1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com/
-v2: https://lore.kernel.org/lkml/1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com/
-v1: https://lore.kernel.org/lkml/1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com/
-
-So far, I've identified the following stuff left to do:
-        - settle on various function/struct renamings
-        - review locking
-        - implement ramoops-like probe feature for pstore/blk
-	- spend time seeing how ramoops might use pstore/zone
-
-But I wanted to get this update published just to show what I've done
-so far in my bikeshed review. :)
-
-Thanks!
-
--Kees
-
-
-Kees Cook (1):
-  printk: Introduce kmsg_dump_reason_str()
-
-WeiXiong Liao (11):
-  pstore/zone: Introduce common layer to manage storage zones
-  pstore/blk: Introduce backend for block devices
-  pstore/blk: Provide way to choose pstore frontend support
-  pstore/blk: Add support for pmsg frontend
-  pstore/blk: Add console frontend support
-  pstore/blk: Add ftrace frontend support
-  Documentation: Add details for pstore/blk
-  pstore/zone: Provide way to skip "broken" zone for MTD devices
-  pstore/blk: Provide way to query pstore configuration
-  pstore/blk: Support non-block storage devices
-  mtd: Support kmsg dumper based on pstore/blk
-
- Documentation/admin-guide/pstore-blk.rst |  243 ++++
- MAINTAINERS                              |    1 +
- drivers/mtd/Kconfig                      |   10 +
- drivers/mtd/Makefile                     |    1 +
- drivers/mtd/mtdpstore.c                  |  564 ++++++++
- fs/pstore/Kconfig                        |  109 ++
- fs/pstore/Makefile                       |    6 +
- fs/pstore/blk.c                          |  481 +++++++
- fs/pstore/platform.c                     |   22 +-
- fs/pstore/zone.c                         | 1498 ++++++++++++++++++++++
- include/linux/kmsg_dump.h                |    7 +
- include/linux/pstore_blk.h               |   77 ++
- include/linux/pstore_zone.h              |   60 +
- kernel/printk/printk.c                   |   21 +
- 14 files changed, 3079 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/admin-guide/pstore-blk.rst
- create mode 100644 drivers/mtd/mtdpstore.c
- create mode 100644 fs/pstore/blk.c
- create mode 100644 fs/pstore/zone.c
- create mode 100644 include/linux/pstore_blk.h
- create mode 100644 include/linux/pstore_zone.h
-
+diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
+index 286aa82aa483..d1c3074aa128 100644
+--- a/fs/pstore/blk.c
++++ b/fs/pstore/blk.c
+@@ -67,6 +67,9 @@ static struct bdev_info {
+  *
+  * @total_size: The total size in bytes pstore/blk can use. It must be greater
+  *		than 4096 and be multiple of 4096.
++ * @flags:	Refer to macro starting with PSTORE_FLAGS defined in
++ *		linux/pstore.h. It means what front-ends this device support.
++ *		Zero means all backends for compatible.
+  * @read:	The general read operation. Both of the function parameters
+  *		@size and @offset are relative value to bock device (not the
+  *		whole disk).
+@@ -79,6 +82,7 @@ static struct bdev_info {
+  */
+ struct psblk_device {
+ 	unsigned long total_size;
++	unsigned int flags;
+ 	psz_read_op read;
+ 	psz_write_op write;
+ 	psz_write_op panic_write;
+@@ -104,8 +108,11 @@ static int psblk_register_do(struct psblk_device *dev)
+ 		return -ENOMEM;
+ 	}
+ 
+-#define verify_size(name, alignsize) {					\
+-		long _##name_ = (name);					\
++	/* zero means all backends for compatible */
++	if (!dev->flags)
++		dev->flags = UINT_MAX;
++#define verify_size(name, alignsize, enable) {				\
++		long _##name_ = (enable) ? (name) : 0;			\
+ 		_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
+ 		if (_##name_ & ((alignsize) - 1)) {			\
+ 			pr_info(#name " must align to %d\n",		\
+@@ -312,6 +319,7 @@ static struct bdev_info *psblk_get_bdev_info(void)
+  * psblk_register_blkdev() - register block device to pstore/blk
+  *
+  * @major: the major device number of registering device
++ * @flags: refer to macro starting with PSTORE_FLAGS defined in linux/pstore.h
+  * @panic_write: the interface for panic case.
+  *
+  * Only the matching major to @blkdev can register.
+@@ -322,7 +330,8 @@ static struct bdev_info *psblk_get_bdev_info(void)
+  * * 0		- OK
+  * * Others	- something error.
+  */
+-int psblk_register_blkdev(unsigned int major, psblk_panic_write_op panic_write)
++int psblk_register_blkdev(unsigned int major, unsigned int flags,
++		psblk_panic_write_op panic_write)
+ {
+ 	struct block_device *bdev;
+ 	struct psblk_device dev = {0};
+@@ -353,6 +362,7 @@ int psblk_register_blkdev(unsigned int major, psblk_panic_write_op panic_write)
+ 	blkdev_panic_write = panic_write;
+ 
+ 	dev.total_size = psblk_bdev_size(bdev);
++	dev.flags = flags;
+ 	dev.panic_write = panic_write ? psblk_blk_panic_write : NULL;
+ 	dev.read = psblk_generic_blk_read;
+ 	dev.write = psblk_generic_blk_write;
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index 5ff465e3953e..d8f609e60288 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -4,6 +4,7 @@
+ #define __PSTORE_BLK_H_
+ 
+ #include <linux/types.h>
++#include <linux/pstore.h>
+ #include <linux/pstore_zone.h>
+ 
+ /**
+@@ -20,7 +21,8 @@
+ typedef int (*psblk_panic_write_op)(const char *buf, sector_t start_sect,
+ 		sector_t sects);
+ 
+-int  psblk_register_blkdev(unsigned int major, psblk_panic_write_op panic_write);
++int  psblk_register_blkdev(unsigned int major, unsigned int flags,
++		psblk_panic_write_op panic_write);
+ void psblk_unregister_blkdev(unsigned int major);
+ int  psblk_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect);
+ 
 -- 
 2.20.1
 
