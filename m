@@ -2,121 +2,184 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA72C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC409C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87082208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE550208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yOR+kZsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgEHFAM (ORCPT
+        id S1725988AbgEHFGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:00:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:43442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgEHFAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:00:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B83F530E;
-        Thu,  7 May 2020 22:00:11 -0700 (PDT)
-Received: from [10.163.73.155] (unknown [10.163.73.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 946313F71F;
-        Thu,  7 May 2020 22:00:09 -0700 (PDT)
-Subject: Re: [PATCH V3 03/16] arm64/cpufeature: Make doublelock a signed
- feature in ID_AA64DFR0
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-4-git-send-email-anshuman.khandual@arm.com>
- <20200505111045.GE19710@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <5cfe374b-d4fa-e17a-9fce-4334356caa19@arm.com>
-Date:   Fri, 8 May 2020 10:29:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 8 May 2020 01:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgEHFGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 01:06:07 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A90C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:06:06 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id z16so205887uae.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GOyJCplE0htCyKO+7S6/vnX0Dv0M9OHzxvwXwcOQOP4=;
+        b=yOR+kZsOgcu3/Opchfd0y0C8bGMkBMGR0doFFK9FPvDPc7z8ErZvL7sKHTdw/qa/dz
+         vwQb7uq+1bBHAJitd7DHu33y1u5/2XWL6XeR7xIfarln2m0W5tyjJxIQtragP/eGPxSZ
+         QICFM4RGditudJKQTQrhmZJqvAMtj+Yli1q6nJY0g3+7l/ikFJYY48TWu6Mx7KHEHC/4
+         Ir622C0eVbJVEXEqtkrkjMVfd/sijw36iAinDFuIlOYVM2FNShq5zd9P1r0ydAMOBLn9
+         4G1Ez4KEljvtrT13T1s5DY74tCI1M7t50tW71tit6nh8LhN7AeyBuWfJIeLwQXONv5aQ
+         yQig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GOyJCplE0htCyKO+7S6/vnX0Dv0M9OHzxvwXwcOQOP4=;
+        b=jQ5VlRNSNW3+MDm+K/Xw7o9Uaaz2wEU9UmcdV5iYgMq3nAXSsdxlNc9jid0RZh3uKg
+         +UTSiTXXQJBkzeAKCY1AvWQ5lCapKofXNM/WtSb0+g/XCNIi9UJ00m3AARo9/VVjS02m
+         QyCxYlKSbUYVgfSTirf/ga/tr49/4CplteSPWXvdP3AYTA4bAur8a7G7sguoHHgt5Y7Z
+         LjztCpPBr0cjWSB5o8zqfbWnKDym+akMB+8hoAgDwD4wch0dgTd3DIOh52k1gAgnTmrU
+         udAss0/tLFcfP1BDfbBnyg9ULilOC6yHP0a/o/2NVzp47ariQyzsl6FR6vQNLwZstVgH
+         pZnA==
+X-Gm-Message-State: AGi0Pua53W1BDx9lP16iOtZWqFC/bHuterz6k39/IT44TUzWARmp4FbQ
+        CYba2qhtv4EX96RAfrDR/dIqaCiTT3ASFSUcyLmT9Q==
+X-Google-Smtp-Source: APiQypIV3sbG4ZSLW2R9RC7kszUeNGv4pTkPCpr++SJIgTpFreELrbQMO3vTo+toXhRCi6FYQeprQHSzN9Qws1pY5HQ=
+X-Received: by 2002:ab0:5ca:: with SMTP id e68mr505205uae.19.1588914365738;
+ Thu, 07 May 2020 22:06:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505111045.GE19710@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1588031768-23677-2-git-send-email-chun-hung.wu@mediatek.com>
+ <9bc2454f-0b42-e256-7927-2564b56f369f@codeaurora.org> <CAPDyKFq7ffHeWg-S41tLvScg_BXCUULig=G=EzD_to1TG0NhVg@mail.gmail.com>
+ <f9fa0232-3945-4e47-9238-0b51f6531199@codeaurora.org>
+In-Reply-To: <f9fa0232-3945-4e47-9238-0b51f6531199@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 8 May 2020 07:05:29 +0200
+Message-ID: <CAPDyKFoAa3=Rg77Af7nNQOZN13m9NQYERosrqiK_kuL3s-YECA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] mmc: core: Extend mmc_of_parse() to parse CQE bindings
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/05/2020 04:40 PM, Will Deacon wrote:
-> On Sat, May 02, 2020 at 07:03:52PM +0530, Anshuman Khandual wrote:
->> Double lock feature can have the following possible values.
->>
->> 0b0000 - Double lock implemented
->> 0b1111 - Double lock not implemented
->>
->> But in case of a conflict the safe value should be 0b1111. Hence this must
->> be a signed feature instead. Also change FTR_EXACT to FTR_LOWER_SAFE.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->>
->> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/kernel/cpufeature.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 51386dade423..cba43e4a5c79 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -338,7 +338,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
->>  };
->>  
->>  static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
->> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_EXACT, 36, 28, 0),
->> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 36, 28, 0),
-> 
-> Wait, isn't this buggered today? Shouldn't that 28 be a 4? I think we really
-
-Ahh, right. Will fix it.
-
-> need to:
-> 
-> 	1. Make it impossible to describe overlapping fields, incomplete
-> 	   registers etc (ideally at build-time)
-
-AFICS the _SHIFT defines for a given register must be placed sequentially
-with dummy place holders (4 bit wide) for any missing fields. In that case
-we could just call BUILD_BUG_ON() for any possible breakage or overlap. But
-wondering how and where to loop over these SHIFT values for these registers.
-
-Another way (not build time though) will be to scan through ftr_id_xxx[],
-fetch individual arm64_ftr_bits (assuming there are dummy entries for non
-existing fields) and assert that arm6r_ftr_bits[shift, width] validates
-against the previous arm6r_ftr_bits[shift, width] in an increasing manner.
-
-Either of these methods will require some more thoughts.
-
-> 
-> 	2. Have a macro that for 4-bit fields so you don't have to type '4'
-> 	   all the time
-
-Except for ftr_single32[], all other arm64_ftr_bits entries have the exact
-same shift value (i.e 4). ARM64_FTR_WIDTH sounds good ?
-
-> 
-> Suzuki, any ideas how we can make this a bit more robust?
-> 
-> Will
+On Thu, 7 May 2020 at 18:33, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
 >
+>
+> On 5/6/2020 10:06 PM, Ulf Hansson wrote:
+> > On Wed, 6 May 2020 at 15:01, Veerabhadrarao Badiganti
+> > <vbadigan@codeaurora.org> wrote:
+> >>
+> >> On 4/28/2020 5:26 AM, Chun-Hung Wu wrote:
+> >>> Parse CQE bindings "supports-cqe" and "disable-cqe-dcmd"
+> >>> in mmc_of_parse().
+> >>>
+> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> >>> ---
+> >>>    drivers/mmc/core/host.c | 5 +++++
+> >>>    1 file changed, 5 insertions(+)
+> >>>
+> >>> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> >>> index c876872..47521c6 100644
+> >>> --- a/drivers/mmc/core/host.c
+> >>> +++ b/drivers/mmc/core/host.c
+> >>> @@ -302,6 +302,11 @@ int mmc_of_parse(struct mmc_host *host)
+> >>>                host->caps2 |= MMC_CAP2_NO_SD;
+> >>>        if (device_property_read_bool(dev, "no-mmc"))
+> >>>                host->caps2 |= MMC_CAP2_NO_MMC;
+> >>> +     if (device_property_read_bool(dev, "supports-cqe"))
+> >>> +             host->caps2 |= MMC_CAP2_CQE;
+> >> This change is breaking emmc driver on qcom platforms where this dt
+> >> property is defined.
+> >>
+> >> [    1.543453]  cqhci_deactivate+0xc/0x38
+> >> [    1.545627]  sdhci_msm_reset+0x40/0x58
+> >> [    1.549447]  sdhci_do_reset+0x48/0x7c
+> >> [    1.553180]  __sdhci_read_caps+0x7c/0x214
+> >> [    1.556913]  sdhci_setup_host+0x58/0xce8
+> >> [    1.560905]  sdhci_msm_probe+0x588/0x8a4
+> >> [    1.564900]  platform_drv_probe+0x4c/0xb0
+> >>
+> >> So, we cant have this flag defined before sdhci_setup_host().
+> >>
+> >> I will have to clear this cap and re-enable it in our initialization.
+> > Thanks for reporting! I have dropped all the four patches from
+> > Chun-Hung, so we can figure out how to fix this.
+> >
+> > Please help to review the next version of the series.
+>
+> Thanks Ulf.
+>
+> Hi Chun-Hung,
+>
+> On qcom controller CQE also gets reset when SDHC is reset. So we have to
+> explicitly disable CQE
+> by invoking  cqhci_deactivate() during sdhc reset
+>
+> SDHC gets reset in sdhci_setup_host() even before cqe is initialized.
+> With MMC_CAP2_CQE_DCMD cap set even before sdhci_set_host(), we are
+> getting null pointer access with cqhci_deactivate().
+>
+> If CQE getting reset with SDHC reset is generic (applicable to other
+> controllers) then you have revisit your logic.
+> If its not the case then only qcom driver would get affected.
+
+Thanks for clarifying the problem, much appreciated.
+
+To me, it looks like the DT parsing of the CQE properties are better
+suited to be managed by each sdhci variant, to continue to leave some
+room for flexibility.
+
+Chun-Hung, can you please drop patch 1 and patch2 from the series and
+adapt to this change in the mediatek variant?
+
+[...]
+
+Kind regards
+Uffe
