@@ -2,334 +2,176 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B421CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97EDE21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C3A21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMlHVCrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEHTlg (ORCPT
+        id S1727838AbgEHTl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:41:36 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54129 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgEHTlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:41:35 -0400
-IronPort-SDR: i9ihioUmJoj3x4vyVsA3zhcKcka4yKgZcgr0Mzf49hrJ1n6+WzxJAcZhlur7TJQloj3ZmIwL09
- ZuXKnLMVZ/gg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:41:34 -0700
-IronPort-SDR: fhabmOqBcdC+XBCYtEWhLT4FdVREruEpU4fdXul7v54ugQw01rf8nndo4AXb868/H0V5QIZOPd
- f4TFruPgphLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="285581357"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 12:41:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX8sD-005TEr-0Y; Fri, 08 May 2020 22:41:29 +0300
-Date:   Fri, 8 May 2020 22:41:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Eddie James <eajames@linux.ibm.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Raymond Tan <raymond.tan@intel.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/17] spi: dw: Split up the generic DMA code and Intel
- MID driver
-Message-ID: <20200508194129.GZ185537@smile.fi.intel.com>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-4-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 15:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726797AbgEHTl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:41:58 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5C4C061A0C;
+        Fri,  8 May 2020 12:41:58 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id t3so2431743otp.3;
+        Fri, 08 May 2020 12:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SF7w4IVLXKR2MN5g9z0w/WoW8pEbm4v0BnCRIDC/Omw=;
+        b=MMlHVCrYNt8/FKkH14O8Mb8KKWNzpOvTnGtPi/pg2/d55abXEK6K4BXYx+JWYaZIKn
+         21dr3qgLJVft+JV0agpkwz7lZ6dIFf3J9LpBh6eIoBX3pHizf3mhCyCbXDIO+Sgftyfm
+         NfKv5YPTThpuZepy1mg0MHUaZcwfZ9wodBmM0aOCi7Lmyw3xsLUAmdvblehzjAcSv73O
+         oXndWT72ezLE3WpSSFnaIn2kLAm0dlMnnVgV2NhpRIHBE0deEVE9C7nJKqKZJjN9JyPg
+         tPFTLsXGbEkRln1K8htoYEDJZafzmCBwlU3NvVWnd87CW65C5cq4yQxP8PD338+8GM4e
+         /8wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SF7w4IVLXKR2MN5g9z0w/WoW8pEbm4v0BnCRIDC/Omw=;
+        b=o2kmuaNCqIh8qU/E86CiMmc+m++pbqMcc0k4pjqRY7+X3PKwfvgyO9PEEqj3r+8H4V
+         iyqwjHX/sK8U370xYMD8Cb7IEhZSVKWzXPcrvMs/+LWj+kOOoVuX55KnuOCbcEslQzvz
+         Rj5zmUfCdhf5Mer71UA9UpzLExoXOumxOdiV036qEL3cz9IQSY9JDmVkkVheDDQtDajZ
+         yZZ1ACbXmfusYlTYoUbsQSmbvxCYW/Sc9GepJKyokaIcbC2df353YSu0g6wfyehLaf45
+         mNpb7hr5mk2LSoY8/UhbkvUR8ueaLVkxa3evhibYL50N9J5lnMAOaHPTn3V23Q4dS3eB
+         zC1g==
+X-Gm-Message-State: AGi0PubC3X48M10STs14mnKmx9XBL7QdudxYWZZ+b6ynwBkVp5reLi6f
+        vj1Q8H47qc7vBotynxj2YSE=
+X-Google-Smtp-Source: APiQypI+yZ/q+n9vOWzjkzHKWX+cCC3fC1eMEiyn/b8lAySJ9BQDFG+p68lSw7hsK1v+oIE3KSoncQ==
+X-Received: by 2002:a9d:a55:: with SMTP id 79mr3629382otg.295.1588966917698;
+        Fri, 08 May 2020 12:41:57 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q3sm715371oom.12.2020.05.08.12.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 12:41:57 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net-next] net: ipa: Remove ipa_endpoint_stop{,_rx_dma} again
+Date:   Fri,  8 May 2020 12:41:33 -0700
+Message-Id: <20200508194132.3412384-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508132943.9826-4-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:29:28PM +0300, Serge Semin wrote:
-> This is an initial preparation patch before adding the DW DMA support
-> into the DW SPI MMIO driver. We need to unpin the DMA-specific code
-> from the code intended to be used for Intel MID. This isn't that hard,
-> since most part of the spi-dw-mid.c driver in fact implements a generic
-> DW DMA interface for the DW SPI controller driver. The only Intel MID
-> specifics concern getting the max frequency from the MRST Clock
-> Control Unit and fetching the DMA controller channels from
-> corresponding PCIe DMA controller. Since first one is related with the
-> SPI interface configuration we moved it' implementation into the
-> DW PCIe-SPI driver object. While seeing there is no other than Medfield
-> board with DW DMA controller currently supported we left the DMA
-> channels search procedure in the DW SPI DMA module. After being
-> cleaned up of the Intel MID specifics former spi-dw-mid.c module
-> can be just renamed to be the DW SPI DMA driver.
+When building arm64 allyesconfig:
 
-And I guess this already been done in spi/for-next in less invasive way.
+drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop_rx_dma':
+drivers/net/ipa/ipa_endpoint.c:1274:13: error: 'IPA_ENDPOINT_STOP_RX_SIZE' undeclared (first use in this function)
+drivers/net/ipa/ipa_endpoint.c:1274:13: note: each undeclared identifier is reported only once for each function it appears in
+drivers/net/ipa/ipa_endpoint.c:1289:2: error: implicit declaration of function 'ipa_cmd_dma_task_32b_addr_add' [-Werror=implicit-function-declaration]
+drivers/net/ipa/ipa_endpoint.c:1291:45: error: 'ENDPOINT_STOP_DMA_TIMEOUT' undeclared (first use in this function)
+drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop':
+drivers/net/ipa/ipa_endpoint.c:1309:16: error: 'IPA_ENDPOINT_STOP_RX_RETRIES' undeclared (first use in this function)
 
-> 
-> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  drivers/spi/Kconfig                        |  8 ++---
->  drivers/spi/Makefile                       |  4 +--
->  drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} | 36 ++------------------
->  drivers/spi/spi-dw-pci.c                   | 38 ++++++++++++++++++++--
->  drivers/spi/spi-dw.h                       | 12 +++++--
->  5 files changed, 55 insertions(+), 43 deletions(-)
->  rename drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} (88%)
-> 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 741b9140992a..9653c7f271e9 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -226,14 +226,14 @@ config SPI_DESIGNWARE
->  	help
->  	  general driver for SPI controller core from DesignWare
->  
-> +config SPI_DW_DMA
-> +	tristate "DMA support for DW SPI controller"
-> +	depends on SPI_DESIGNWARE && DW_DMAC_PCI
-> +
->  config SPI_DW_PCI
->  	tristate "PCI interface driver for DW SPI core"
->  	depends on SPI_DESIGNWARE && PCI
->  
-> -config SPI_DW_MID_DMA
-> -	bool "DMA support for DW SPI controller on Intel MID platform"
-> -	depends on SPI_DW_PCI && DW_DMAC_PCI
-> -
->  config SPI_DW_MMIO
->  	tristate "Memory-mapped io interface driver for DW SPI core"
->  	depends on SPI_DESIGNWARE
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index 28f601327f8c..15eb760412a9 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -36,9 +36,9 @@ obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
->  obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
->  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
->  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
-> +obj-$(CONFIG_SPI_DW_DMA)		+= spi-dw-dma.o
->  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
-> -obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
-> -spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
-> +obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-pci.o
->  obj-$(CONFIG_SPI_EFM32)			+= spi-efm32.o
->  obj-$(CONFIG_SPI_EP93XX)		+= spi-ep93xx.o
->  obj-$(CONFIG_SPI_FALCON)		+= spi-falcon.o
-> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-dma.c
-> similarity index 88%
-> rename from drivers/spi/spi-dw-mid.c
-> rename to drivers/spi/spi-dw-dma.c
-> index 0d86c37e0aeb..0230b4252611 100644
-> --- a/drivers/spi/spi-dw-mid.c
-> +++ b/drivers/spi/spi-dw-dma.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Special handling for DW core on Intel MID platform
-> + * Special handling for DW DMA core
->   *
->   * Copyright (c) 2009, 2014 Intel Corporation.
->   */
-> @@ -14,7 +14,6 @@
->  
->  #include "spi-dw.h"
->  
-> -#ifdef CONFIG_SPI_DW_MID_DMA
->  #include <linux/pci.h>
->  #include <linux/platform_data/dma-dw.h>
->  
-> @@ -283,40 +282,11 @@ static const struct dw_spi_dma_ops mid_dma_ops = {
->  	.dma_transfer	= mid_spi_dma_transfer,
->  	.dma_stop	= mid_spi_dma_stop,
->  };
-> -#endif
->  
-> -/* Some specific info for SPI0 controller on Intel MID */
-> -
-> -/* HW info for MRST Clk Control Unit, 32b reg per controller */
-> -#define MRST_SPI_CLK_BASE	100000000	/* 100m */
-> -#define MRST_CLK_SPI_REG	0xff11d86c
-> -#define CLK_SPI_BDIV_OFFSET	0
-> -#define CLK_SPI_BDIV_MASK	0x00000007
-> -#define CLK_SPI_CDIV_OFFSET	9
-> -#define CLK_SPI_CDIV_MASK	0x00000e00
-> -#define CLK_SPI_DISABLE_OFFSET	8
-> -
-> -int dw_spi_mid_init(struct dw_spi *dws)
-> +void dw_spi_pci_dma_setup(struct dw_spi *dws)
->  {
-> -	void __iomem *clk_reg;
-> -	u32 clk_cdiv;
-> -
-> -	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
-> -	if (!clk_reg)
-> -		return -ENOMEM;
-> -
-> -	/* Get SPI controller operating freq info */
-> -	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
-> -	clk_cdiv &= CLK_SPI_CDIV_MASK;
-> -	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
-> -	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
-> -
-> -	iounmap(clk_reg);
-> -
-> -#ifdef CONFIG_SPI_DW_MID_DMA
->  	dws->dma_tx = &mid_dma_tx;
->  	dws->dma_rx = &mid_dma_rx;
->  	dws->dma_ops = &mid_dma_ops;
-> -#endif
-> -	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dw_spi_pci_dma_setup);
-> diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
-> index 12c131b5fb4e..068f6897b903 100644
-> --- a/drivers/spi/spi-dw-pci.c
-> +++ b/drivers/spi/spi-dw-pci.c
-> @@ -16,6 +16,17 @@
->  
->  #define DRIVER_NAME "dw_spi_pci"
->  
-> +/* HW info for MRST Clk Control Unit, 32b reg per controller */
-> +#define MRST_SPI_CLK_BASE	100000000	/* 100m */
-> +#define MRST_CLK_SPI_REG	0xff11d86c
-> +#define CLK_SPI_BDIV_OFFSET	0
-> +#define CLK_SPI_BDIV_MASK	0x00000007
-> +#define CLK_SPI_CDIV_OFFSET	9
-> +#define CLK_SPI_CDIV_MASK	0x00000e00
-> +#define CLK_SPI_DISABLE_OFFSET	8
-> +
-> +static int spi_mid_init(struct dw_spi *dws);
-> +
->  struct spi_pci_desc {
->  	int	(*setup)(struct dw_spi *);
->  	u16	num_cs;
-> @@ -24,13 +35,13 @@ struct spi_pci_desc {
->  };
->  
->  static struct spi_pci_desc spi_pci_mid_desc_1 = {
-> -	.setup = dw_spi_mid_init,
-> +	.setup = spi_mid_init,
->  	.num_cs = 5,
->  	.bus_num = 0,
->  };
->  
->  static struct spi_pci_desc spi_pci_mid_desc_2 = {
-> -	.setup = dw_spi_mid_init,
-> +	.setup = spi_mid_init,
->  	.num_cs = 2,
->  	.bus_num = 1,
->  };
-> @@ -41,6 +52,29 @@ static struct spi_pci_desc spi_pci_ehl_desc = {
->  	.max_freq = 100000000,
->  };
->  
-> +/* Some specific info for SPI0 controller on Intel MID */
-> +static int spi_mid_init(struct dw_spi *dws)
-> +{
-> +	void __iomem *clk_reg;
-> +	u32 clk_cdiv;
-> +
-> +	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
-> +	if (!clk_reg)
-> +		return -ENOMEM;
-> +
-> +	/* Get SPI controller operating freq info */
-> +	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
-> +	clk_cdiv &= CLK_SPI_CDIV_MASK;
-> +	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
-> +	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
-> +
-> +	iounmap(clk_reg);
-> +
-> +	dw_spi_pci_dma_setup(dws);
-> +
-> +	return 0;
-> +}
-> +
->  static int spi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  {
->  	struct dw_spi *dws;
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index 1bf5713e047d..0a4e0890ef85 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -253,6 +253,14 @@ extern void dw_spi_remove_host(struct dw_spi *dws);
->  extern int dw_spi_suspend_host(struct dw_spi *dws);
->  extern int dw_spi_resume_host(struct dw_spi *dws);
->  
-> -/* platform related setup */
-> -extern int dw_spi_mid_init(struct dw_spi *dws); /* Intel MID platforms */
-> +#ifdef CONFIG_SPI_DW_DMA
-> +
-> +extern void dw_spi_pci_dma_setup(struct dw_spi *dws);
-> +
-> +#else /* !CONFIG_SPI_DW_DMA */
-> +
-> +static inline void dw_spi_pci_dma_setup(struct dw_spi *dws) {}
-> +
-> +#endif /* !CONFIG_SPI_DW_DMA */
-> +
->  #endif /* DW_SPI_HEADER_H */
-> -- 
-> 2.25.1
-> 
+These functions were removed in a series, merged in as
+commit 33395f4a5c1b ("Merge branch 'net-ipa-kill-endpoint-stop-workaround'").
 
+Remove them again so that the build works properly.
+
+Fixes: 3793faad7b5b ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ipa/ipa_endpoint.c | 61 ----------------------------------
+ 1 file changed, 61 deletions(-)
+
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index 5fec30e542cb..82066a223a67 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -1269,67 +1269,6 @@ static void ipa_endpoint_reset(struct ipa_endpoint *endpoint)
+ 			ret, endpoint->channel_id, endpoint->endpoint_id);
+ }
+ 
+-static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
+-{
+-	u16 size = IPA_ENDPOINT_STOP_RX_SIZE;
+-	struct gsi_trans *trans;
+-	dma_addr_t addr;
+-	int ret;
+-
+-	trans = ipa_cmd_trans_alloc(ipa, 1);
+-	if (!trans) {
+-		dev_err(&ipa->pdev->dev,
+-			"no transaction for RX endpoint STOP workaround\n");
+-		return -EBUSY;
+-	}
+-
+-	/* Read into the highest part of the zero memory area */
+-	addr = ipa->zero_addr + ipa->zero_size - size;
+-
+-	ipa_cmd_dma_task_32b_addr_add(trans, size, addr, false);
+-
+-	ret = gsi_trans_commit_wait_timeout(trans, ENDPOINT_STOP_DMA_TIMEOUT);
+-	if (ret)
+-		gsi_trans_free(trans);
+-
+-	return ret;
+-}
+-
+-/**
+- * ipa_endpoint_stop() - Stops a GSI channel in IPA
+- * @client:	Client whose endpoint should be stopped
+- *
+- * This function implements the sequence to stop a GSI channel
+- * in IPA. This function returns when the channel is is STOP state.
+- *
+- * Return value: 0 on success, negative otherwise
+- */
+-int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+-{
+-	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
+-	int ret;
+-
+-	do {
+-		struct ipa *ipa = endpoint->ipa;
+-		struct gsi *gsi = &ipa->gsi;
+-
+-		ret = gsi_channel_stop(gsi, endpoint->channel_id);
+-		if (ret != -EAGAIN || endpoint->toward_ipa)
+-			break;
+-
+-		/* For IPA v3.5.1, send a DMA read task and check again */
+-		if (ipa->version == IPA_VERSION_3_5_1) {
+-			ret = ipa_endpoint_stop_rx_dma(ipa);
+-			if (ret)
+-				break;
+-		}
+-
+-		msleep(1);
+-	} while (retries--);
+-
+-	return retries ? ret : -EIO;
+-}
+-
+ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
+ {
+ 	if (endpoint->toward_ipa) {
+
+base-commit: 30e2206e11ce27ae910cc0dab21472429e400a87
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
