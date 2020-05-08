@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3842BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4309CC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169B621974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3E221473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941989;
-	bh=fINJ4RS1aGd8Oraqq6uFAhTIVFDtSTV451XO1mZblEE=;
+	s=default; t=1588941996;
+	bh=fPRyYirZGI46harqaBoy4ZXpVIopBJ/BGCpq1G7F0TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhC2/SZ4h4Ok9Qv3FyUGVkdZ/qY09b9c7+BRD3GQwJKhYv9ANRXfVJSuu+EoKbZp0
-	 mYRcROczvLh+gRRiuhGkzUK+eIlDx+E+eqSkAd83rXIwDCi07wo1NEohsMkpvKzmjA
-	 mBudoJR1tPy396O9yFHNiyaHeIKnCzamSNEuTiH4=
+	b=YTEb2QHYyvgWIS5c+Jrxn2ly4+t3RtJ2E5ShTM5gdsiEgA6oGUEWo/2bpDNkVncx2
+	 kZv/Xxp8+cAnlNMNpTh9YvXwg3Dv7w1jbG4NBW3Oj+Jaxj9IRDdaWCnSAdGTXDxGV5
+	 bq5YthbqKA1aEnRs9/MO1UEXinjfZj8uuKaoLKEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgEHMq1 (ORCPT
+        id S1729442AbgEHMqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47496 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgEHMqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:21 -0400
+        id S1729430AbgEHMq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC112495D;
-        Fri,  8 May 2020 12:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ED1921473;
+        Fri,  8 May 2020 12:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941981;
-        bh=fINJ4RS1aGd8Oraqq6uFAhTIVFDtSTV451XO1mZblEE=;
+        s=default; t=1588941988;
+        bh=fPRyYirZGI46harqaBoy4ZXpVIopBJ/BGCpq1G7F0TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wAcMC8LsL6PQQhGhxpeOBI1eZReEq9WIHw5PoJZiZPJSEpObMYkHsxCls80RJXz5i
-         5nHzyaQ2zotMVDRfA0zj6IZun83p/ORYcvDYp6Db6xEXEN5fM7FnIRQS+AsFbOzxXd
-         S/ptakfhLt3j62vmIkkzgNpprxumiSJeBxWn5arE=
+        b=0lli1VBU7tmdR+tHTQ96ZLyzoYadGXstNwchGacR2LxnivqVVNsrL4j6gdGXUakZA
+         3ncmuj7rLuyn20H/udUCQhKW1odzVYvYHD7ldvJJSFW21rq04o/oneoJ+F4eBTRNF8
+         U64LTI+lIFYQlNq5qZXlXYi8argTV0Di2w0vyuZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pravin Shelar <pshelar@nicira.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 249/312] openvswitch: update checksum in {push,pop}_mpls
-Date:   Fri,  8 May 2020 14:34:00 +0200
-Message-Id: <20200508123141.932214918@linuxfoundation.org>
+Subject: [PATCH 4.4 252/312] net: bcmgenet: device stats are unsigned long
+Date:   Fri,  8 May 2020 14:34:03 +0200
+Message-Id: <20200508123142.135187266@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,72 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Horman <simon.horman@netronome.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit bc7cc5999fd392cc799630d7e375b2f4e29cc398 upstream.
+commit 6517eb59b03965689e6bb16bb2d480096b3ef95d upstream.
 
-In the case of CHECKSUM_COMPLETE the skb checksum should be updated in
-{push,pop}_mpls() as they the type in the ethernet header.
+On 64bit kernels, device stats are 64bit wide, not 32bit.
 
-As suggested by Pravin Shelar.
-
-Cc: Pravin Shelar <pshelar@nicira.com>
-Fixes: 25cd9ba0abc0 ("openvswitch: Add basic MPLS support to kernel")
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Fixes: 1c1008c793fa4 ("net: bcmgenet: add main driver file")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/openvswitch/actions.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -137,11 +137,23 @@ static bool is_flow_key_valid(const stru
- 	return !!key->eth.type;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -927,7 +927,11 @@ static void bcmgenet_get_ethtool_stats(s
+ 		else
+ 			p = (char *)priv;
+ 		p += s->stat_offset;
+-		data[i] = *(u32 *)p;
++		if (sizeof(unsigned long) != sizeof(u32) &&
++		    s->stat_sizeof == sizeof(unsigned long))
++			data[i] = *(unsigned long *)p;
++		else
++			data[i] = *(u32 *)p;
+ 	}
  }
- 
-+static void update_ethertype(struct sk_buff *skb, struct ethhdr *hdr,
-+			     __be16 ethertype)
-+{
-+	if (skb->ip_summed == CHECKSUM_COMPLETE) {
-+		__be16 diff[] = { ~(hdr->h_proto), ethertype };
-+
-+		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
-+					~skb->csum);
-+	}
-+
-+	hdr->h_proto = ethertype;
-+}
-+
- static int push_mpls(struct sk_buff *skb, struct sw_flow_key *key,
- 		     const struct ovs_action_push_mpls *mpls)
- {
- 	__be32 *new_mpls_lse;
--	struct ethhdr *hdr;
- 
- 	/* Networking stack do not allow simultaneous Tunnel and MPLS GSO. */
- 	if (skb->encapsulation)
-@@ -160,9 +172,7 @@ static int push_mpls(struct sk_buff *skb
- 
- 	skb_postpush_rcsum(skb, new_mpls_lse, MPLS_HLEN);
- 
--	hdr = eth_hdr(skb);
--	hdr->h_proto = mpls->mpls_ethertype;
--
-+	update_ethertype(skb, eth_hdr(skb), mpls->mpls_ethertype);
- 	if (!skb->inner_protocol)
- 		skb_set_inner_protocol(skb, skb->protocol);
- 	skb->protocol = mpls->mpls_ethertype;
-@@ -193,7 +203,7 @@ static int pop_mpls(struct sk_buff *skb,
- 	 * field correctly in the presence of VLAN tags.
- 	 */
- 	hdr = (struct ethhdr *)(skb_mpls_header(skb) - ETH_HLEN);
--	hdr->h_proto = ethertype;
-+	update_ethertype(skb, hdr, ethertype);
- 	if (eth_p_mpls(skb->protocol))
- 		skb->protocol = ethertype;
  
 
 
