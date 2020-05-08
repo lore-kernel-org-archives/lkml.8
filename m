@@ -2,54 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C42C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA24C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC3521473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAA521974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941935;
-	bh=j01xWAyAuNXnR8tamYGcqZmr1N98cWIMCIaKrTG0R6s=;
+	s=default; t=1588941938;
+	bh=pYyn1sYWrtiRt37rxMZle5l0sYm/BxNM/I+kmoLRHVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qxhb4d/Zft0Tawfh9H3Md2Pd3kMBViJGPPgKOG/7iYq8CO215ZmFVuZxAo2uK3XPg
-	 iJLMuCPWgCfdDlpQMfLlaUKMj0GXBBXLazNuEEfHiWb0qiUEvzTD27pYiMyZPbN617
-	 OSWrjC0Qx1+XAzdJP0ctRVL0xelryCsooUTCt39Q=
+	b=Hu6IvDlqu8euoCsf0tj3xyzX6Ap7woaGCwAdKB8tTP7kWbCREaG0RRI7eYxdHQjxu
+	 US1wggcXLs60ahc69AncInI7MacFyQz7i2OgWLjyxW+Ae5nOWeCWALeM+Scfqczylz
+	 HUjKDcPLxx8mfmK9SwiMq0bXzXSdhEEBRwGT8m1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgEHMpe (ORCPT
+        id S1729322AbgEHMph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbgEHMpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:30 -0400
+        id S1728686AbgEHMpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96042495A;
-        Fri,  8 May 2020 12:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D63208D6;
+        Fri,  8 May 2020 12:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941930;
-        bh=j01xWAyAuNXnR8tamYGcqZmr1N98cWIMCIaKrTG0R6s=;
+        s=default; t=1588941932;
+        bh=pYyn1sYWrtiRt37rxMZle5l0sYm/BxNM/I+kmoLRHVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bEJxgQuF0u8AqvgBJqiSOSbcbD0iTJaD9aYVzQyVMP8+uaRB+k7rJAXH6fenOMdaz
-         IUTiFqboZzEMZVXud/M5P9va/ZxshgtIxOoVDB2Ejn5Ka1NYMvpllQIWXt0iWDko6g
-         sKHkfgCtE6lAE/BvJrjIpYIb5Lb7I9NIuUKP48Ng=
+        b=su0/FNyeg5jPz/X44T6IKPPNBuxY91/lYlzEg2DljS2Vk5zQCd4VsARO/JL325TvQ
+         T+E+R4AdSHx+DalGLvHqr9GfGy71l5mzmhOJv2tJHGBanMQ18J8frwV3P3av1PF9ed
+         ysxQ53r45DiLbz2AFAiHS3WTxzZvkYMR8GqTCpoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vikram Mulukutla <markivx@codeaurora.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 227/312] sched/preempt: Fix preempt_count manipulations
-Date:   Fri,  8 May 2020 14:33:38 +0200
-Message-Id: <20200508123140.416041207@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Francesco Fusco <ffusco@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 191/312] ipv4: accept u8 in IP_TOS ancillary data
+Date:   Fri,  8 May 2020 14:33:02 +0200
+Message-Id: <20200508123137.893496235@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,59 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 2e636d5e66c35dfcbaf617aa8fa963f6847478fe upstream.
+commit e895cdce683161081e3626c4f5a5c55cb72089f8 upstream.
 
-Vikram reported that his ARM64 compiler managed to 'optimize' away the
-preempt_count manipulations in code like:
+In commit f02db315b8d8 ("ipv4: IP_TOS and IP_TTL can be specified as
+ancillary data") Francesco added IP_TOS values specified as integer.
 
-	preempt_enable_no_resched();
-	put_user();
-	preempt_disable();
+However, kernel sends to userspace (at recvmsg() time) an IP_TOS value
+in a single byte, when IP_RECVTOS is set on the socket.
 
-Irrespective of that fact that that is horrible code that should be
-fixed for many reasons, it does highlight a deficiency in the generic
-preempt_count manipulators. As it is never right to combine/elide
-preempt_count manipulations like this.
+It can be very useful to reflect all ancillary options as given by the
+kernel in a subsequent sendmsg(), instead of aborting the sendmsg() with
+EINVAL after Francesco patch.
 
-Therefore sprinkle some volatile in the two generic accessors to
-ensure the compiler is aware of the fact that the preempt_count is
-observed outside of the regular program-order view and thus cannot be
-optimized away like this.
+So this patch extends IP_TOS ancillary to accept an u8, so that an UDP
+server can simply reuse same ancillary block without having to mangle
+it.
 
-x86; the only arch not using the generic code is not affected as we
-do all this in asm in order to use the segment base per-cpu stuff.
+Jesper can then augment
+https://github.com/netoptimizer/network-testing/blob/master/src/udp_example02.c
+to add TOS reflection ;)
 
-Reported-by: Vikram Mulukutla <markivx@codeaurora.org>
-Tested-by: Vikram Mulukutla <markivx@codeaurora.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: a787870924db ("sched, arch: Create asm/preempt.h")
-Link: http://lkml.kernel.org/r/20160516131751.GH3205@twins.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: f02db315b8d8 ("ipv4: IP_TOS and IP_TTL can be specified as ancillary data")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Francesco Fusco <ffusco@redhat.com>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/asm-generic/preempt.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/ip_sockglue.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/include/asm-generic/preempt.h
-+++ b/include/asm-generic/preempt.h
-@@ -7,10 +7,10 @@
- 
- static __always_inline int preempt_count(void)
- {
--	return current_thread_info()->preempt_count;
-+	return READ_ONCE(current_thread_info()->preempt_count);
- }
- 
--static __always_inline int *preempt_count_ptr(void)
-+static __always_inline volatile int *preempt_count_ptr(void)
- {
- 	return &current_thread_info()->preempt_count;
- }
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -279,9 +279,12 @@ int ip_cmsg_send(struct net *net, struct
+ 			ipc->ttl = val;
+ 			break;
+ 		case IP_TOS:
+-			if (cmsg->cmsg_len != CMSG_LEN(sizeof(int)))
++			if (cmsg->cmsg_len == CMSG_LEN(sizeof(int)))
++				val = *(int *)CMSG_DATA(cmsg);
++			else if (cmsg->cmsg_len == CMSG_LEN(sizeof(u8)))
++				val = *(u8 *)CMSG_DATA(cmsg);
++			else
+ 				return -EINVAL;
+-			val = *(int *)CMSG_DATA(cmsg);
+ 			if (val < 0 || val > 255)
+ 				return -EINVAL;
+ 			ipc->tos = val;
 
 
