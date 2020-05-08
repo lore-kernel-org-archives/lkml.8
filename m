@@ -2,147 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8ADC47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7FEC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA46E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:20:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KKNQarbr"
+	by mail.kernel.org (Postfix) with ESMTP id 76A0020CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEHTUv (ORCPT
+        id S1727771AbgEHTV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:20:51 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12187 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgEHTUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:20:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb5b0750002>; Fri, 08 May 2020 12:18:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 08 May 2020 12:20:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 08 May 2020 12:20:25 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 May
- 2020 19:20:23 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 8 May 2020 19:20:23 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5eb5b0f60004>; Fri, 08 May 2020 12:20:23 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@linuxfoundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 2/6] nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
-Date:   Fri, 8 May 2020 12:20:05 -0700
-Message-ID: <20200508192009.15302-3-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200508192009.15302-1-rcampbell@nvidia.com>
-References: <20200508192009.15302-1-rcampbell@nvidia.com>
+        Fri, 8 May 2020 15:21:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41431 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgEHTV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:21:57 -0400
+IronPort-SDR: TxLCXveHalteOVedoKqHRLv0VSbSLPGXJ8ynLSq0G8mu0My3SJ/jXXYyZJgdeaS9Lsy7PS2bm9
+ VZPWlhU41DFA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:21:50 -0700
+IronPort-SDR: WtEjrSXbSnOWs5TBQNk5R7op6mLpBt6gGXyX97G5Ac5a/xqHKi5k55kCWw70iiMy8Jm7xxgn8G
+ lvOn7hsN4uMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="462690689"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:21:41 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8Z6-005T5P-5V; Fri, 08 May 2020 22:21:44 +0300
+Date:   Fri, 8 May 2020 22:21:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] spi: dw: Initialize paddr in DW SPI MMIO private
+ data
+Message-ID: <20200508192144.GT185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-14-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588965493; bh=UimsBeIVOkWEdmHzrySmbrv0g1UsXEtKPJuhHnie4M0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=KKNQarbrKCL+A2uq6eUbu3sp1uxj3GGpuOL9lXpMyq52NNDdm48U3ifnP4/t/UorY
-         1SiTX4guN6BwWo1esZDajBTGO07fr6PAvRi/8UEXk0TE1y+jq8lklt1+SrRTitxi74
-         27WqawBqg/41WUPdk961/gGvPkUPvP40smrtp1TrWDmYNl2VnFkzVoxFZ54I+VnJam
-         ViCsCAJx30m2bgrSN5gERkQ6utV3XLAcwwP3MnKR8wPYEL3/sv7fTBw8Y3IrlRyJ/o
-         Pn5vzmJrhtoge7dEpylwIcZOXiTceBLBDQnYOT59JwKg6/z8rncY2K/4QYYw1GQYkd
-         01OWiexrsF5rQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508132943.9826-14-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions nvkm_vmm_ctor() and nvkm_mmu_ptp_get() are not called outside
-of the file defining them so make them static.
-Also, remove a useless semicolon after a {} statement block.
+On Fri, May 08, 2020 at 04:29:38PM +0300, Serge Semin wrote:
+> This field is used only for the DW SPI DMA code initialization, that's
+> why there were no problems with it being uninitialized in Dw SPI MMIO
+> driver. Since in a further patch we are going to introduce the DW SPI DMA
+> support in the MMIO version of the driver, lets set the field with the
+> physical address of the DW SPI controller registers region.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c  | 4 ++--
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h  | 3 ---
- 3 files changed, 3 insertions(+), 6 deletions(-)
+...
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c b/drivers/gpu/d=
-rm/nouveau/nvkm/subdev/mmu/base.c
-index ee11ccaf0563..de91e9a26172 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c
-@@ -61,7 +61,7 @@ nvkm_mmu_ptp_put(struct nvkm_mmu *mmu, bool force, struct=
- nvkm_mmu_pt *pt)
- 	kfree(pt);
- }
-=20
--struct nvkm_mmu_pt *
-+static struct nvkm_mmu_pt *
- nvkm_mmu_ptp_get(struct nvkm_mmu *mmu, u32 size, bool zero)
- {
- 	struct nvkm_mmu_pt *pt;
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c b/drivers/gpu/dr=
-m/nouveau/nvkm/subdev/mmu/vmm.c
-index 41640e0584ac..67b00dcef4b8 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-@@ -580,7 +580,7 @@ nvkm_vmm_iter(struct nvkm_vmm *vmm, const struct nvkm_v=
-mm_page *page,
- 				it.pte[it.lvl]++;
- 			}
- 		}
--	};
-+	}
-=20
- 	nvkm_vmm_flush(&it);
- 	return ~0ULL;
-@@ -1030,7 +1030,7 @@ nvkm_vmm_ctor_managed(struct nvkm_vmm *vmm, u64 addr,=
- u64 size)
- 	return 0;
- }
-=20
--int
-+static int
- nvkm_vmm_ctor(const struct nvkm_vmm_func *func, struct nvkm_mmu *mmu,
- 	      u32 pd_header, bool managed, u64 addr, u64 size,
- 	      struct lock_class_key *key, const char *name,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h b/drivers/gpu/dr=
-m/nouveau/nvkm/subdev/mmu/vmm.h
-index 5e55ecbd8005..fd722bdc4c78 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
-@@ -163,9 +163,6 @@ int nvkm_vmm_new_(const struct nvkm_vmm_func *, struct =
-nvkm_mmu *,
- 		  u32 pd_header, bool managed, u64 addr, u64 size,
- 		  struct lock_class_key *, const char *name,
- 		  struct nvkm_vmm **);
--int nvkm_vmm_ctor(const struct nvkm_vmm_func *, struct nvkm_mmu *,
--		  u32 pd_header, bool managed, u64 addr, u64 size,
--		  struct lock_class_key *, const char *name, struct nvkm_vmm *);
- struct nvkm_vma *nvkm_vmm_node_search(struct nvkm_vmm *, u64 addr);
- struct nvkm_vma *nvkm_vmm_node_split(struct nvkm_vmm *, struct nvkm_vma *,
- 				     u64 addr, u64 size);
---=20
-2.20.1
+> -	dws->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dws->regs = devm_ioremap_resource(&pdev->dev, mem);
+
+There is a helper
+	dws->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
+
+
+>  	if (IS_ERR(dws->regs)) {
+>  		dev_err(&pdev->dev, "SPI region map failed\n");
+>  		return PTR_ERR(dws->regs);
+>  	}
+> +	dws->paddr = mem->start;
+>  
+>  	dws->irq = platform_get_irq(pdev, 0);
+>  	if (dws->irq < 0)
+> -- 
+> 2.25.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
