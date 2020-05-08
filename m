@@ -2,88 +2,159 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B6C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54243C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C6621473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112E1208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fLVJDEOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEHL7D (ORCPT
+        id S1727104AbgEHL7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHL7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:59:02 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62828C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 04:59:02 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jX1eD-0004Qe-4X; Fri, 08 May 2020 13:58:33 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8CCE1101175; Fri,  8 May 2020 13:58:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 4 15/24] x86/db: Split out dr6/7 handling
-In-Reply-To: <20200508085909.GU5298@hirez.programming.kicks-ass.net>
-References: <20200505134926.578885807@linutronix.de> <20200505135314.808628211@linutronix.de> <16c57a7e-8d39-d77e-915d-41b7f5e042fd@oracle.com> <20200508085909.GU5298@hirez.programming.kicks-ass.net>
-Date:   Fri, 08 May 2020 13:58:30 +0200
-Message-ID: <87wo5mk595.fsf@nanos.tec.linutronix.de>
+        Fri, 8 May 2020 07:59:06 -0400
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:3950
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbgEHL7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:59:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EbHVKA7rYBut1TAeMLZ8BNT9cm6xURyyaP4VA+AAHTRxqU8pQQS4Xz+xgMhg2dVG1PK0uKYsE6FLvHspILJ6ocRUoc6nEbeYTAW5+4oUHcSm/sAw4HyFh4vDKqY+8SqzRz1AjQ1yJQZMvspueAG79PurXmMmpjuUaktYcdN96HgN72VgdWxDQ4ScQ7nYQHDrmOpJjgSc9UuR48cHMxFCa9j5kHAQWD37kgupgHSpazKREMpNbtsRJg6wdz20NZpbFN6K49poRanu8QJHB8uIuhfruVe559dgUZYojAwe7A+mUFWgbWa2Trrh3YJK5bVtft2rqOjCmN7Llv6O8bC1Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KpZZcXSxxrm4Sf9wNtz01CSA1UVcl9bVwIucZVROdr8=;
+ b=ZlmHEcSycOsTQW6I7ngDRDnbf7Tgoboh27xOM9v6NO5G2dQA42p58R2BEWeHFpUnxlvo2X9Aa6nxbiXeBSsMlhO0A4bCpIrtdwZlP/IMHKftvJsZpkMGN3O6rYzGRjPDx6aWPIrL/wfKn1jDi4PNHil/bpRWJWcaMsgSp72US97e9nfz5muCfJRkLuUTXny7VV+h1t9I28etrIkNsA9XamBz23GODlREdxnFjwf0Qp1vjHFmB7xrTQDWAmdNKYOuviuGI4IldVzuJM5v6Kr0hk2+Ivs19fOnp6LkPgEEAIHl9kTrsIwYJbrvXhCVH+bXchHrmMKopND56mxtE3fc1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KpZZcXSxxrm4Sf9wNtz01CSA1UVcl9bVwIucZVROdr8=;
+ b=fLVJDEOXQJTaFodme2aSl08+ZH/uCvGIRF2n9kO2Td8WNAgahe0zM1O4ik2kz1vj4BAbOiyT/QOXVF9lgDxaw26fNwNnwaIa7toV5DjFF+gFEWzXLmfPC3KPR6fnU1C2FqvvLfM+uPwst+bpR1fxefObT6rLWNvuJ0BhPHlnWkA=
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
+ by DB6PR0401MB2518.eurprd04.prod.outlook.com (2603:10a6:4:36::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 8 May
+ 2020 11:59:00 +0000
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.2958.035; Fri, 8 May 2020
+ 11:59:00 +0000
+From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Subject: RE: [PATCH 1/3] rtc: ds1374: add uie_unsupported property to drop
+ warning
+Thread-Topic: [PATCH 1/3] rtc: ds1374: add uie_unsupported property to drop
+ warning
+Thread-Index: AQHWJTAP1zCUHqdJKU+S5DjH5/rYUg==
+Date:   Fri, 8 May 2020 11:59:00 +0000
+Message-ID: <DB6PR0401MB2438A00D64C922C44B335E418FA20@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+References: <20200508054925.48237-1-biwen.li@oss.nxp.com>
+ <20200508114947.GK34497@piout.net>
+In-Reply-To: <20200508114947.GK34497@piout.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2ad3d512-520c-4649-07dd-08d7f3473203
+x-ms-traffictypediagnostic: DB6PR0401MB2518:|DB6PR0401MB2518:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB2518B4D62D866320E0DB84DBCEA20@DB6PR0401MB2518.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 039735BC4E
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Dyc9saOGZGmL26N982fCTn040tzd5DtYb3SGFWTFwflV7nzCNqjgiReXpES3uoZd2Ge/sgub7MkOnUbki4r28F0Ttkk7xn15PVg1/Cc8F4TePZ/gJPAuXDVN5v8xJYEUodKaV/hj0p9jTWYxxMzEQgf+CfzvD9qOjOcG7ux9Od2DMEgvWWbwt9iLdWuXDtXuozp/1cZf0WbfHtG1LyUFfSSNMWuFy4vvVpT9+331NC0blj+4hva8njk9aUQK9tD+W+0u0R8GrtrxN8BZcUh04s3G2lgATwTJHPL8ydNHdP0z58SOZYRUgvHDlxjvbEd7wQBaccBU5s6eLrZwzQvmnV5mGzSFGriyBfq/M+0ptmd2JjpA0uRVpNFbWnDzUJbwNY412XmSs+w8OKquAxGuVcHs0Obbfk75kyxrYV+5z8zNjxiPkc2vO2uz4IOf0Vbbq6qmwh3FHklyCmb0M3nUlilpyXehpbwm3/Uy/U98kGaBn/rjOvOUsTl8s68icb9OOGLrvPZ953gNfHBlHgPN32nSrZhgu9lPgJ7yS8Rx7w6c+xIbssfEKctgM6zIo1r9P3VXgWaIFfgShIf3MPoi8r1VsKFXBirN7Hz+BWITd6M=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(33430700001)(186003)(52536014)(2906002)(9686003)(55016002)(83280400001)(8676002)(83300400001)(5660300002)(83290400001)(83310400001)(86362001)(83320400001)(33440700001)(8936002)(478600001)(966005)(33656002)(66946007)(6506007)(7696005)(76116006)(66446008)(66476007)(64756008)(26005)(66556008)(110136005)(316002)(54906003)(71200400001)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: kEQDNwiMD1eQgISeM7sEMo6Oao3qqqjUYL9GIT/qN/IdgRp/UT8yXyUvnIG7p8r20jG/DhgF1RgzQmPxtqH3NX4vV963V/OfM6uYpaT2teVUU9OBR0LthJ23Us8gNSd719mJ/rwBqeLM47Kg3HNIJi0v1hbKP4iF8xS/b21Mxfo6UfiM/yS5CHaoe4Afqw6IvpEXEyNZcfwUSrFYR0F0ZqWop+5RbOQ7FLPNgZkSzd/1hUwBQbNFRag9vV1wKEtzltXfF8bCikpiYC7wFY95hzQzpivNP2JqX5dN9z+b5Vn0m/kckLEGnMKc+an+oJaybGky8+JmkioKDBJkbcQOkEKxuaT34bU8vkIdgJcD7Qwbu65gw9HGKZ8qV3JgWM56jeo0uGMKeuEQ32/s5sy1lvYZuzmhRltf1+XRJGeN2I1D7HtWBANU5mhXLNOKAI4SNhXEOWvVlpAagi0AFabh1p9Z14ZWocO3PLxTUrFXlHg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad3d512-520c-4649-07dd-08d7f3473203
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2020 11:59:00.1932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mn9reyBq2wD5XE09HRe5ynZtx59+htwl7snSw/UioWumDAeo7OsuoR/VZhmR3OLpkiIn6itcMqwWCjDjUz9TQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2518
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
->> > +static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
->> > +{
->> > +	/*
->> > +	 * Disable breakpoints during exception handling; recursive exceptions
->> > +	 * are exceedingly 'fun'.
->> > +	 *
->> > +	 * Since this function is NOKPROBE, and that also applies to
->> > +	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
->> > +	 * HW_BREAKPOINT_W on our stack)
->> > +	 *
->> > +	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
->> > +	 * includes the entry stack is excluded for everything.
->> > +	 */
->> > +	get_debugreg(*dr7, 6);
->> 
->> Do you mean  get_debugreg(*dr7, 7); ?
->
-> Shees, I have to go buy a new stack of brown paper bags at this rate,
-> don't I :/
-
-Not only you, but it's also  amazing that the selftests didn't catch
-that.
+>=20
+> Hi,
+>=20
+> On 08/05/2020 13:49:23+0800, Biwen Li wrote:
+> > From: Biwen Li <biwen.li@nxp.com>
+> >
+> > Add uie_unsupported property to drop warning as follows:
+> >     - $ hwclock.util-linux
+> >       hwclock.util-liux: select() /dev/rtc0
+> >       to wait for clock tick timed out
+> >
+> > My case:
+> >     - RTC ds1374's INT pin is connected to VCC on T4240RDB,
+> >       then the RTC cannot inform cpu about the alarm
+> >       interrupt
+> >
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  drivers/rtc/rtc-ds1374.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/rtc/rtc-ds1374.c b/drivers/rtc/rtc-ds1374.c index
+> > 9c51a12cf70f..e530e887a17e 100644
+> > --- a/drivers/rtc/rtc-ds1374.c
+> > +++ b/drivers/rtc/rtc-ds1374.c
+> > @@ -651,6 +651,10 @@ static int ds1374_probe(struct i2c_client *client,
+> >  	if (ret)
+> >  		return ret;
+> >
+> > +	if (of_property_read_bool(client->dev.of_node,
+> > +						 "uie_unsupported"))
+> > +		ds1374->rtc->uie_unsupported =3D true;
+> > +
+>=20
+> This is not how this is supposed to work, either the RTC support uie or d=
+on't, it is
+> not board dependent and certainly doesn't require an
+> (undocumented) DT property.
+Okay, got it. Thanks.
+>=20
+> >  #ifdef CONFIG_RTC_DRV_DS1374_WDT
+> >  	save_client =3D client;
+> >  	ret =3D misc_register(&ds1374_miscdev);
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
