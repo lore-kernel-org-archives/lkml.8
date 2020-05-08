@@ -2,98 +2,95 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E476C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40307C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6238C21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588958275;
-	bh=lq+hciLkQOEXzR19lHNCP9/llUqPt28NPxqL6V+Mcfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1a5CdZ6vUX/lIu9c8+IEmC2vmtnOejC8Ka9li0WPQz550BbVQLlo2djDWfcHZ5K3J
-	 GtiOIZx1f8uGew2Zr+dW+hvY1FCOOsgyt8KpYDzkwQN0B3ppmixwOu6HZhB/IfxkRw
-	 AwUbrUS4deejKIY0eKHgmU0qiMT4kr3hvMjpqExg=
+	by mail.kernel.org (Postfix) with ESMTP id 155F721775
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="taHZmK6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgEHRRy (ORCPT
+        id S1727119AbgEHRUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEHRRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:17:54 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 13:20:22 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53008 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726843AbgEHRUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:20:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588958421; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=g5t40zAHZN8q4M/OlN3ypjCaSJjppYPdopPDXTJaPxs=; b=taHZmK6x6UptB9hIzjtPy++8H7kEFMcSyQURYDzlU41pG0vMnDi1Irv7cWOfqaGrUo0kOelH
+ cVCRyY0jzTNP89JqKkmpVbOcTBYRV8l8d8tU0z006R6GadNVoZO5c8hd72TA4AnkFppzDjsb
+ qZIMs0bF+dPaSIiSMkFF3T2n7fw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb594d3.7fb2ee7d5960-smtp-out-n04;
+ Fri, 08 May 2020 17:20:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5FC09C433BA; Fri,  8 May 2020 17:20:19 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ACA721775;
-        Fri,  8 May 2020 17:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588958274;
-        bh=lq+hciLkQOEXzR19lHNCP9/llUqPt28NPxqL6V+Mcfk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2QVgicUlkn7SVE8LGZRa4qr6We0w4yt+xQ33GESPaZVQ5hc4vmYEpFd+TJD5C3f0I
-         alhXtrjE96VsPM094OdaHAxi0twP1bHFMzW6QoRYSa12PBbojtDH01uED5eoFcr9iS
-         Xt7eVLk6qWAQv6+eXD9GZKHt5TP+biMPQnuT8yN0=
-Date:   Fri, 8 May 2020 18:17:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, lgirdwood@gmail.com, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 02/11] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Message-ID: <20200508171751.GM4820@sirena.org.uk>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
- <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A4EFC433F2;
+        Fri,  8 May 2020 17:20:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A4EFC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
+ flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20200507185016.GA13883@embeddedor>
+ <1b3cda25-5f3a-5359-4bf7-d16a8364f545@codeaurora.org>
+ <20200508170233.GB23375@embeddedor>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <c4f4fc47-6add-1ba1-9f06-978003e47c4f@codeaurora.org>
+Date:   Fri, 8 May 2020 11:20:16 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iKKZt69u2Wx/rspf"
-Content-Disposition: inline
-In-Reply-To: <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508170233.GB23375@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/8/2020 11:02 AM, Gustavo A. R. Silva wrote:
+> On Thu, May 07, 2020 at 01:24:57PM -0600, Jeffrey Hugo wrote:
+>>>    drivers/dma/qcom/bam_dma.c         |    2 +-
+>>>    drivers/firmware/qcom_scm-legacy.c |    2 +-
+>>>    2 files changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>
+>> Shouldn't these two files be two different patches?
+>>
+> 
+> I believe so... I'll split this patch up into two patches.
+> 
+> Thanks
+> --
+> Gustavo
+> 
 
---iKKZt69u2Wx/rspf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sounds good to me.  When you do, you can add the following if you like
 
-On Fri, May 08, 2020 at 06:40:43PM +0300, Matti Vaittinen wrote:
->     Add a KUnit test for the linear_ranges helper.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-This now generates:
-
-WARNING: modpost: missing MODULE_LICENSE() in lib/linear_ranges.o
-see include/linux/module.h for more information
-
-when the tests are built as a module and select the library.
-
---iKKZt69u2Wx/rspf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61lD4ACgkQJNaLcl1U
-h9C4Lgf6AvdLJ8FQbtRP9+zEn6eqGAFhqIsuHJQMSO3Rfo4qyuCka5btjjUo24P8
-AZgvCw0fu23Ci2MURx/9ZWaI86NnBibPBYqSkpJrv4xiA4+hL14zILqUkuwwEzkt
-IcBwT9je+SM9rTnInZ+LhU3CKckEKXL+5GLPwwYEtBRkdwn1yS6IRTVIcZV71sgD
-6hqpVk9oI7J8y5phD0R7W5oIXHumr7sXVQT4PEuwEYFLm4PSdsOjno/GC9OE7BdK
-Tr9fMkMUVEOb/rCxVaOCqOw1TmEVDqTq+hY+r1GueiFLm4kH4NRfiCrkOd1GAIqO
-fU9BUK5FXn+1K9KTiaQACd3xRUn0XA==
-=XB6r
------END PGP SIGNATURE-----
-
---iKKZt69u2Wx/rspf--
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
