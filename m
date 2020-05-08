@@ -2,101 +2,216 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8064C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8DCC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1652495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588947977;
-	bh=6b8YGMJkYUmjuyizBgw94aYNmIm4Dx+h8LwG/nDQZUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ra+Y9RZ+UYWZvYOkCbZbPezzEh2DVETa6am2M7Z10ASd+ZVZloAnaeQ9LNSECTF/q
-	 L0O1qaVRaknbR3dAFjKSrta9KyiPmnaR3ZOB79fxS4zh4468IaG0VBIbYmV7VNnoUR
-	 E/zXy8aZwOB8bYj4tOC7qN7UFFGS8bC6Lsh75GSQ=
+	by mail.kernel.org (Postfix) with ESMTP id DA5AA24954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:26:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A1DKTf7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgEHO0R (ORCPT
+        id S1728162AbgEHO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHO0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:26:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B20824954;
-        Fri,  8 May 2020 14:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588947975;
-        bh=6b8YGMJkYUmjuyizBgw94aYNmIm4Dx+h8LwG/nDQZUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hgu6cwX1VlUfQlDjUijm1axY/KMFXW8hdj6fwxL/QPec9Ev8uywMXUltBUkxIDCF+
-         uFln6081TAZK6fBzAVNwh3qRrOGK7o8cKDxpIP38Mj3IY7xEvhfGPqLahoKVi6fJfO
-         ipq/yLg84K/8bFJPcBsGCO95wwjTBh/5dxQVjW00=
-Date:   Fri, 8 May 2020 16:26:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/312] 4.4.223-rc1 review
-Message-ID: <20200508142613.GA426400@kroah.com>
-References: <20200508123124.574959822@linuxfoundation.org>
- <fe060262-1712-9205-b1cd-cd209d0ed395@roeck-us.net>
- <20200508134408.GA196344@kroah.com>
- <cfb6cb83-81c2-7491-c58b-70986119eb65@roeck-us.net>
+        Fri, 8 May 2020 10:26:39 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:32606 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgEHO0i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:26:38 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200508142633epoutp03417d40821cb58d2366358a1ca2aea637~NE8gcdow43006130061epoutp03G
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:26:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200508142633epoutp03417d40821cb58d2366358a1ca2aea637~NE8gcdow43006130061epoutp03G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588947993;
+        bh=qJgUy4IMFj0K5N3SresA24W6Cz0ER/9akxjYN0Dhmr0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=A1DKTf7mfdl+a8FvKA6i9JJc9TlhRxgsvHAHZ6HpAgr9liKi9EXMAb2q78f85kXm9
+         mb/eEpsHG2B4QxqwbMq8FfLuxr9B+2WpOCWlECO6/C9oP8oBFnyX/c2S6tledZ0opu
+         f27decxneuBL5lvt9tRH70RqjuFi3odt6LKmGmnM=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200508142633epcas5p281d9261f05616c8d3d533b4ec9c4e1b5~NE8f7Srj-2972129721epcas5p2R;
+        Fri,  8 May 2020 14:26:33 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BF.C5.23389.81C65BE5; Fri,  8 May 2020 23:26:33 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200508142632epcas5p381c470b7a1da0ccc683ae6944f69d248~NE8fan6zm1259012590epcas5p3l;
+        Fri,  8 May 2020 14:26:32 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200508142632epsmtrp14a5c345c682cc3e1633c56f332e85799~NE8fZnzDb0119801198epsmtrp11;
+        Fri,  8 May 2020 14:26:32 +0000 (GMT)
+X-AuditID: b6c32a4b-7adff70000005b5d-e6-5eb56c18e443
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.63.18461.81C65BE5; Fri,  8 May 2020 23:26:32 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200508142628epsmtip2303280275302d6312062c2a1be36e3ca~NE8b0THJM1177711777epsmtip2W;
+        Fri,  8 May 2020 14:26:28 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <huobean@gmail.com>,
+        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
+        <beanhuo@micron.com>, <bvanassche@acm.org>,
+        <tomas.winkler@intel.com>, <cang@codeaurora.org>,
+        <rdunlap@infradead.org>, <seunguk.shin@samsung.com>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hch@infradead.org>
+In-Reply-To: <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
+Subject: RE: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
+ Booster(HPB) driver
+Date:   Fri, 8 May 2020 19:56:16 +0530
+Message-ID: <000401d62544$ab93ead0$02bbc070$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfb6cb83-81c2-7491-c58b-70986119eb65@roeck-us.net>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJO+B8HmB53n8gOhlSxo4VvqTv/wAGtj2ZpAcmq4aIBR3FF8aeGntbw
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGKsWRmVeSWpSXmKPExsWy7bCmlq5kztY4gxfnGS32tp1gt3j58yqb
+        xcGHnSwW0z78ZLb4tH4Zq8XpCYuYLOacbWCyWHRjG5PF5V1z2Cy6r+9gs1h+/B+Txds701ks
+        bm/hsli69SajxYeeOgd+j8tXvD0u9/UyeeycdZfdY/MKLY/Fe14yeUxYdIDRo+XkfhaP7+s7
+        2Dw+Pr3F4tG3ZRWjx+dNch7tB7qZAniiuGxSUnMyy1KL9O0SuDLaf3YxF5xVrvje9oatgfGj
+        XBcjJ4eEgInEqgUHGLsYuTiEBHYzSkyc/5UdJCEk8IlRorU9GCLxjVHiwK7FzDAdi553sEAk
+        9jJKHDwyAar9DaPEnVmbWECq2AR0JXYsbmMDSYgIHGGSuLq2HWwus0C4RM/LpYwgNqdArMSn
+        FQfB4sICMRKzPnaxgdgsAioSV0/cAovzClhKzH0BEecVEJQ4OfMJC8QcbYllC19DnaQg8fPp
+        MlYQW0TATeLTjEVQu8Qljv7sYQY5QkLgB4fEzI0PWSEaXCRab0EMlRAQlnh1fAs7hC0l8bK/
+        DcjmALKzJXp2GUOEaySWzjvGAmHbSxy4MocFpIRZQFNi/S59iFV8Er2/nzBBdPJKdLQJQVSr
+        SjS/uwrVKS0xsbsb6gAPiU0LHzBOYFScheSxWUgem4XkgVkIyxYwsqxilEwtKM5NTy02LTDO
+        Sy3XK07MLS7NS9dLzs/dxAhOilreOxgfPfigd4iRiYPxEKMEB7OSCO/Eii1xQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHkfNwKlBNITS1KzU1MLUotgskwcnFINTAXOXHclOLMaZ6Ubrb/16f0E
+        tZdZVyvCDH9PFWXo8TbN+3A3lPFCwZnZ748eeXz0qN6vwld2NTYqKo8uNetm1azevs/4U1VD
+        aN7UK7ubTCK/xH3OPOxuM7fwT1bJ248RrkGL45/X977n6zc5qR/xX0OW48nVGRcsLs6ad//k
+        +/wT7VbX51YVn6velGR7JGBuaNyZzVOdGC/F7EiUiDJM4v7378ohjpUpVi4GJ/fXPHa77fnn
+        9ca/3jOTFq9ONdTP2VhyaMeqRCZ7af126duVDD+OXa17/yLyupHNgk8JuR4OiyUVnJNSd0+5
+        ZLZ29qJnzz+tDlz3ZaLOtK7Dp+Uu79mqu+tK6e3Zkmryi63zN+spsRRnJBpqMRcVJwIAG6/I
+        i/kDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSvK5EztY4g5k/ZCz2tp1gt3j58yqb
+        xcGHnSwW0z78ZLb4tH4Zq8XpCYuYLOacbWCyWHRjG5PF5V1z2Cy6r+9gs1h+/B+Txds701ks
+        bm/hsli69SajxYeeOgd+j8tXvD0u9/UyeeycdZfdY/MKLY/Fe14yeUxYdIDRo+XkfhaP7+s7
+        2Dw+Pr3F4tG3ZRWjx+dNch7tB7qZAniiuGxSUnMyy1KL9O0SuDJunlvCXrBDvuL4m3uMDYxz
+        JbsYOTkkBEwkFj3vYOli5OIQEtjNKNGzYTsLREJa4vrGCewQtrDEyn/P2SGKXjFKzPi0nhUk
+        wSagK7FjcRsbSEJE4BKTxL4fr8E6mAUiJbYd+8QK0dHGJDF34WewBKdArMSnFQfBbGGBKIkL
+        55+xgdgsAioSV0/cAovzClhKzH3RxQZhC0qcnPmEBWKotkTvw1ZGGHvZwtfMEOcpSPx8ugzs
+        IhEBN4lPMxZBHSEucfRnD/MERuFZSEbNQjJqFpJRs5C0LGBkWcUomVpQnJueW2xYYJiXWq5X
+        nJhbXJqXrpecn7uJERzhWpo7GLev+qB3iJGJg/EQowQHs5II78SKLXFCvCmJlVWpRfnxRaU5
+        qcWHGKU5WJTEeW8ULowTEkhPLEnNTk0tSC2CyTJxcEo1MHk9Ef290PhemJJt4tl1+zZfXpml
+        I/UnQss5n4eNsXyy1ldF7XOv7ntEfI20lBZfpvIqaf7J4JvVWecst6XuEHKqUE/38PvArXuU
+        x/mxx07p1NCYn4EBj3QMQs69q5pfvUrj5XcOoac63KyCTCmTVm75fElISyZjQtsPu/zCb+cn
+        2xyc0+S4tU/dn+3s7qKH54OMatjKhZo9Dk9cNSu0+/rdky6/VwbcX3LWXu+o1/RrTELJzzXt
+        heYddzrBcHW61fuFrxinpWebm63JnRWs9tby/Ie1z00/ein/+C7H93BeplsFw3eD8/ZWotnX
+        zq1/7nQoU8ZCS8f63NyN90Vc/4nzzaytefBW/apauFA3nxJLcUaioRZzUXEiAMMM+VpfAwAA
+X-CMS-MailID: 20200508142632epcas5p381c470b7a1da0ccc683ae6944f69d248
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200508113840epcas5p1cee545219dd59b64eeea287f17d34cde
+References: <20200504142032.16619-1-beanhuo@micron.com>
+        <20200504142032.16619-6-beanhuo@micron.com>
+        <CGME20200508113840epcas5p1cee545219dd59b64eeea287f17d34cde@epcas5p1.samsung.com>
+        <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:54:11AM -0700, Guenter Roeck wrote:
-> On 5/8/20 6:44 AM, Greg Kroah-Hartman wrote:
-> > On Fri, May 08, 2020 at 06:37:56AM -0700, Guenter Roeck wrote:
-> >> On 5/8/20 5:29 AM, Greg Kroah-Hartman wrote:
-> >>> This is the start of the stable review cycle for the 4.4.223 release.
-> >>> There are 312 patches in this series, all will be posted as a response
-> >>> to this one.  If anyone has any issues with these being applied, please
-> >>> let me know.
-> >>>
-> >>> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-> >>> Anything received after that time might be too late.
-> >>>
-> >>
-> >> This is not a complete list of errors.
-> > 
-> > Yeah, I knew this was going to be a rough one.  I was hoping the "early
-> > warning" messages from Linaro would have caught most of these, oh well
-> > :(
-> > 
-> 
-> To be fair, I had noticed the errors yesterday. I just thought this was
-> so bad that it looked like a stray (bad) push to me, and I didn't send
-> feedback. Maybe I should always send feedback if I see errors prior to
-> an -rc release. I don't want to spam people with noise, so I am not sure.
-> Any thoughts on that ?
++ seunguk.shin (who is one of the original author of the HPB, in case he ha=
+s some more improvement inputs)
 
-If the tree is broken, I'd like to know about it.  Rarely do I know that
-it is broken and leave it alone.  One exception would be last night when
-it was too late for me to fix the build issues, but Sasha was kind
-enough to do so.
+Hi Bean,
+I second Avri input on splitting this patch series into logical smaller pat=
+ches, that will helps reviewers.
+Also if you can add support to build HPB as kernel module that will be usef=
+ul.=20
+I am looking into the HPB 1.0 spec, will review your patches soon.
 
-So it's not noise to me, if it's easy enough for you to do so.
+Regards,
+Alim
 
-I think I fixed up the MIPS stuff, turns out gcc was just crashing on a
-filesystem driver with an internal error.  I think I need a different
-version of gcc if I want to build more arches...
-
-I'll go push out a -rc with this fixed up now, thanks.
-
-greg k-h
+> -----Original Message-----
+> From: Avri Altman <Avri.Altman=40wdc.com>
+> Sent: 08 May 2020 17:09
+> To: huobean=40gmail.com; alim.akhtar=40samsung.com;
+> asutoshd=40codeaurora.org; jejb=40linux.ibm.com; martin.petersen=40oracle=
+.com;
+> stanley.chu=40mediatek.com; beanhuo=40micron.com; bvanassche=40acm.org;
+> tomas.winkler=40intel.com; cang=40codeaurora.org; rdunlap=40infradead.org
+> Cc: linux-scsi=40vger.kernel.org; linux-kernel=40vger.kernel.org;
+> hch=40infradead.org
+> Subject: RE: =5BRESENT PATCH RFC v3 5/5=5D scsi: ufs: UFS Host Performanc=
+e
+> Booster(HPB) driver
+>=20
+> Hi Bean,
+> This patch is =7E3,000 lines long.
+> Is it possible to divide it into a series of a smaller, more reviewable p=
+atches?
+> E.g. it can be something like:
+> 1) Init part I - Read HPB config
+> 2) Init part II - prepare for L2P cache management (introduce here all th=
+e new
+> data structures, memory allocation, etc.)
+> 3) L2P cache management - activation / inactivation / eviction handlers
+> 4) Add response API
+> 5) Add prep_fn handler - the flows that contruct HPB-READ command.
+> Or any other division that makes sense to you.
+>=20
+> Also, Is there a way to avoid all those =23ifdefs everywhere?
+>=20
+> Thanks,
+> Avri
+>=20
+>=20
+> >
+> > From: Bean Huo <beanhuo=40micron.com>
+> >
+> > This patch is to add support for the UFS Host Performance Booster (HPB
+> > v1.0), which is used to improve UFS read performance, especially for
+> > the random read.
+> >
+> > NAND flash-based storage devices, including UFS, have mechanisms to
+> > translate logical addresses of requests to the corresponding physical
+> > addresses of the flash storage. Traditionally this L2P mapping data is
+> > loaded to the internal SRAM in the storage controller. When the
+> > capacity of storage is larger, a larger size of SRAM for the L2P map
+> > data is required. Since increased SRAM size affects the manufacturing
+> > cost significantly, it is not cost-effective to allocate all the
+> > amount of SRAM needed to keep all the Logical-address to
+> > Physical-address (L2P) map data. Therefore, L2P map data, which is
+> > required to identify the physical address for the requested IOs, can
+> > only be partially stored in SRAM from NAND flash. Due to this partial
+> > loading, accessing the flash address area where the L2P information
+> > for that address is not loaded in the SRAM can result in serious perfor=
+mance
+> degradation.
+> >
+> > The HPB is a software solution for the above problem, which uses the
+> > host=E2=80=99s=20system=20memory=20as=20a=20cache=20for=20the=20FTL=20L=
+2P=20mapping=20table.=20It=20does=0D=0A>=20>=20not=20need=20additional=20ha=
+rdware=20support=20from=20the=20host=20side.=20By=20using=20HPB,=0D=0A>=20>=
+=20the=20L2P=20mapping=20table=20can=20be=20read=20from=20host=20memory=20a=
+nd=20stored=20in=0D=0A>=20>=20host-side=20memory.=20while=20reading=20the=
+=20operation,=20the=20corresponding=20L2P=0D=0A>=20>=20information=20will=
+=20be=20sent=20to=20the=20UFS=20device=20along=20with=20the=20reading=0D=0A=
+>=20>=20request.=20Since=20the=20L2P=20entry=20is=20provided=20in=20the=20r=
+ead=20request,=20UFS=0D=0A>=20>=20device=20does=20not=20have=20to=20load=20=
+L2P=20entry=20from=20flash=20memory.=0D=0A>=20>=20This=20will=20significant=
+ly=20improve=20random=20read=20performance.=0D=0A>=20>=0D=0A>=20>=20Signed-=
+off-by:=20Bean=20Huo=20<beanhuo=40micron.com>=0D=0A>=20>=20---=0D=0A>=20>=
+=20=20drivers/scsi/ufs/Kconfig=20=20=7C=20=20=2062=20+=0D=0A>=20>=20=20driv=
+ers/scsi/ufs/Makefile=20=7C=20=20=20=201=20+=0D=0A>=20>=20=20drivers/scsi/u=
+fs/ufshcd.c=20=7C=20=20234=20+++-=0D=0A>=20>=20=20drivers/scsi/ufs/ufshcd.h=
+=20=7C=20=20=2023=20+=0D=0A>=20>=20=20drivers/scsi/ufs/ufshpb.c=20=7C=20276=
+7=0D=0A>=20>=20+++++++++++++++++++++++++++++++++++++=0D=0A>=20>=20=20driver=
+s/scsi/ufs/ufshpb.h=20=7C=20=20423=20++++++=0D=0A>=20>=20=206=20files=20cha=
+nged,=203504=20insertions(+),=206=20deletions(-)=20=20create=20mode=0D=0A>=
+=20>=20100644=20drivers/scsi/ufs/ufshpb.c=20=20create=20mode=20100644=0D=0A=
+>=20>=20drivers/scsi/ufs/ufshpb.h=0D=0A>=20>=0D=0A=0D=0A
