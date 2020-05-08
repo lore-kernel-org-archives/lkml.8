@@ -2,300 +2,208 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE77EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3A9C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D172495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944643;
-	bh=YJHuyYQUMy5ygGz555o/uN/njIbPp3jNOoxtdWfpOG8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wHsStVRXM0BMysIe2d8FpwruKNIrinvPNXTOFQXEzTu1Zor1oq7sUFBdpc4gIfi88
-	 4YsgtLw45sxiSirv+72dAoR6+lw3sxQoB2hrbAuGGM4/zXTsPPviNdq/CAsXucMWCp
-	 RhYOIXJamlGqiOjGPZMFMH07h2ppXfzmEnNpF304=
+	by mail.kernel.org (Postfix) with ESMTP id 5ED032495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgEHNam (ORCPT
+        id S1728316AbgEHNas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:30:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgEHNad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:30:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0104206D6;
-        Fri,  8 May 2020 13:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588944632;
-        bh=YJHuyYQUMy5ygGz555o/uN/njIbPp3jNOoxtdWfpOG8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OM5E5CdyAJ7HatRGASNubsXEkL6oAzuJBc2VyCEtTeic50u+IUvJJc77CjbtTASbu
-         rCLeYtFvq9WcE1r5lr3usnJhZSAzfZZ3vrq9EyfQP5Z9djYlcvJx64T8TtxZxOH1TM
-         LCEXE5vt1ufwOlkaBXD72foe3hW50L0MzwQJDCPc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/49] 5.4.40-rc2 review
-Date:   Fri,  8 May 2020 15:30:29 +0200
-Message-Id: <20200508132934.548989409@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
+        Fri, 8 May 2020 09:30:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42774 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgEHNal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:30:41 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1A92E803087B;
+        Fri,  8 May 2020 13:30:34 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uAGSLXYKZDSR; Fri,  8 May 2020 16:30:32 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 04/17] spi: dw: Cleanup generic DW DMA code namings
+Date:   Fri, 8 May 2020 16:29:29 +0300
+Message-ID: <20200508132943.9826-5-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.40-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.40-rc2
-X-KernelTest-Deadline: 2020-05-10T13:29+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.40 release.
-There are 49 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Since from now the former Intel MID platform layer will be used
+as a generic DW SPI DMA module, lets alter the internal methods
+naming to be DMA-related instead of having the "mid_" prefix. In
+addition the DW PCI-DMA specific methods and structures should
+be named with pci-suffexes, since we'll implement the DW MMIO DMA
+specific functions and objects soon.
 
-Responses should be made by Sun, 10 May 2020 13:29:13 +0000.
-Anything received after that time might be too late.
+Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+ drivers/spi/spi-dw-dma.c | 42 ++++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.40-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.40-rc2
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    PM / devfreq: Add missing locking while setting suspend_freq
-
-Willem de Bruijn <willemb@google.com>
-    udp: document udp_rcv_segment special case for looped packets
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    tools headers UAPI: Sync copy of arm64's asm/unistd.h with the kernel sources
-
-Zhan Liu <Zhan.Liu@amd.com>
-    Revert "drm/amd/display: setting the DIG_MODE to the correct value."
-
-Will Deacon <will@kernel.org>
-    mm/mremap: Add comment explaining the untagging behaviour of mremap()
-
-Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-    libbpf: Fix readelf output parsing for Fedora
-
-Jiri Slaby <jslaby@suse.cz>
-    cgroup, netclassid: remove double cond_resched
-
-Thomas Pedersen <thomas@adapt-ip.com>
-    mac80211: add ieee80211_is_any_nullfunc()
-
-Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
-
-Hans de Goede <hdegoede@redhat.com>
-    platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
-
-Qian Cai <cai@lca.pw>
-    x86/kvm: fix a missing-prototypes "vmread_error"
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda: Match both PCI ID and SSID for driver blacklist
-
-Nick Desaulniers <ndesaulniers@google.com>
-    hexagon: define ioremap_uc
-
-Christoph Hellwig <hch@lst.de>
-    hexagon: clean up ioremap
-
-Tuowen Zhao <ztuowen@gmail.com>
-    mfd: intel-lpss: Use devm_ioremap_uc for MMIO
-
-Tuowen Zhao <ztuowen@gmail.com>
-    lib: devres: add a helper function for ioremap_uc
-
-Brendan Higgins <brendanhiggins@google.com>
-    Revert "software node: Simplify software_node_release() function"
-
-Aaron Ma <aaron.ma@canonical.com>
-    drm/amdgpu: Fix oops when pp_funcs is unset in ACPI event
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-
-Matt Roper <matthew.d.roper@intel.com>
-    drm/i915: Extend WaDisableDARBFClkGating to icl,ehl,tgl
-
-Doug Berger <opendmb@gmail.com>
-    net: systemport: suppress warnings on failed Rx SKB allocations
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: suppress warnings on failed Rx SKB allocations
-
-Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-    mac80211: sta_info: Add lockdep condition for RCU list usage
-
-Nathan Chancellor <natechancellor@gmail.com>
-    lib/mpi: Fix building for powerpc with clang
-
-Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-    tracing: Fix memory leaks in trace_events_hist.c
-
-Paulo Alcantara <pc@cjr.nz>
-    cifs: do not share tcons with DFS
-
-Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-    scripts/config: allow colons in option strings for sed
-
-Ronnie Sahlberg <lsahlber@redhat.com>
-    cifs: protect updating server->dstaddr with a spinlock
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: Fix sub-second increment
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: fix enabling socfpga's ptp_ref_clock
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    wimax/i2400m: Fix potential urb refcnt leak
-
-Sandeep Raghuraman <sandy.8925@gmail.com>
-    drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
-
-Alex Elder <elder@linaro.org>
-    remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: gadget: Properly set maxpacket limit
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Fix endianness issue
-
-Sebastian Reichel <sebastian.reichel@collabora.com>
-    ASoC: sgtl5000: Fix VAG power-on handling
-
-Tyler Hicks <tyhicks@linux.microsoft.com>
-    selftests/ipc: Fix test failure seen after initial test run
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_dai_config
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of pcm_new_ver
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check soc_tplg_add_route return value
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_*_create
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of soc_tplg_create_tlv
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    drm/bridge: analogix_dp: Split bind() into probe() and real bind()
-
-Jia He <justin.he@arm.com>
-    vhost: vsock: kick send_pkt worker once device is started
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/hexagon/include/asm/io.h                      | 12 ++---
- arch/hexagon/kernel/hexagon_ksyms.c                |  2 +-
- arch/hexagon/mm/ioremap.c                          |  2 +-
- arch/x86/kvm/vmx/ops.h                             |  1 +
- drivers/acpi/sleep.c                               |  5 +-
- drivers/base/swnode.c                              | 14 +++---
- drivers/devfreq/devfreq.c                          |  4 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |  3 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link.c      |  9 ----
- .../gpu/drm/amd/powerplay/hwmgr/processpptables.c  | 26 +++++++++++
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 33 +++++++++-----
- drivers/gpu/drm/exynos/exynos_dp.c                 | 29 +++++++-----
- drivers/gpu/drm/i915/display/intel_display.c       |  7 ++-
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 36 ++++++++-------
- drivers/mfd/intel-lpss.c                           |  2 +-
- drivers/net/ethernet/broadcom/bcmsysport.c         |  3 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  3 +-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |  9 ++--
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 12 +++--
- drivers/net/wimax/i2400m/usb-fw.c                  |  1 +
- drivers/platform/x86/gpd-pocket-fan.c              |  2 +-
- drivers/remoteproc/qcom_q6v5_mss.c                 |  2 +-
- drivers/usb/dwc3/core.h                            |  4 ++
- drivers/usb/dwc3/gadget.c                          | 52 ++++++++++++++++-----
- drivers/vhost/vsock.c                              |  5 ++
- fs/cifs/connect.c                                  |  6 +++
- include/drm/bridge/analogix_dp.h                   |  5 +-
- include/linux/ieee80211.h                          |  9 ++++
- include/linux/io.h                                 |  2 +
- include/net/udp.h                                  |  7 +++
- kernel/trace/trace_events_hist.c                   |  7 +++
- lib/devres.c                                       | 19 ++++++++
- lib/mpi/longlong.h                                 | 34 +++++++-------
- mm/mremap.c                                        | 10 ++++
- net/core/netclassid_cgroup.c                       |  4 +-
- net/mac80211/mlme.c                                |  2 +-
- net/mac80211/rx.c                                  |  8 ++--
- net/mac80211/sta_info.c                            |  3 +-
- net/mac80211/status.c                              |  5 +-
- net/mac80211/tx.c                                  |  2 +-
- net/sctp/sm_make_chunk.c                           |  6 ++-
- scripts/config                                     |  5 +-
- sound/pci/hda/hda_intel.c                          |  9 ++--
- sound/soc/codecs/hdac_hdmi.c                       |  6 +--
- sound/soc/codecs/sgtl5000.c                        | 34 ++++++++++++++
- sound/soc/codecs/sgtl5000.h                        |  1 +
- sound/soc/sh/rcar/ssi.c                            | 11 ++++-
- sound/soc/sh/rcar/ssiu.c                           |  2 +-
- sound/soc/soc-topology.c                           | 53 ++++++++++++++++------
- tools/arch/arm64/include/uapi/asm/unistd.h         |  1 +
- tools/lib/bpf/Makefile                             |  2 +
- tools/testing/selftests/ipc/msgque.c               |  2 +-
- 53 files changed, 380 insertions(+), 157 deletions(-)
-
+diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
+index 0230b4252611..523d9e39ffc1 100644
+--- a/drivers/spi/spi-dw-dma.c
++++ b/drivers/spi/spi-dw-dma.c
+@@ -20,10 +20,10 @@
+ #define RX_BUSY		0
+ #define TX_BUSY		1
+ 
+-static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
+-static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
++static struct dw_dma_slave pci_dma_tx = { .dst_id = 1 };
++static struct dw_dma_slave pci_dma_rx = { .src_id = 0 };
+ 
+-static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
++static bool dw_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ {
+ 	struct dw_dma_slave *s = param;
+ 
+@@ -34,7 +34,7 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ 	return true;
+ }
+ 
+-static int mid_spi_dma_init(struct dw_spi *dws)
++static int dw_spi_pci_dma_init(struct dw_spi *dws)
+ {
+ 	struct pci_dev *dma_dev;
+ 	struct dw_dma_slave *tx = dws->dma_tx;
+@@ -54,14 +54,14 @@ static int mid_spi_dma_init(struct dw_spi *dws)
+ 
+ 	/* 1. Init rx channel */
+ 	rx->dma_dev = &dma_dev->dev;
+-	dws->rxchan = dma_request_channel(mask, mid_spi_dma_chan_filter, rx);
++	dws->rxchan = dma_request_channel(mask, dw_spi_dma_chan_filter, rx);
+ 	if (!dws->rxchan)
+ 		goto err_exit;
+ 	dws->master->dma_rx = dws->rxchan;
+ 
+ 	/* 2. Init tx channel */
+ 	tx->dma_dev = &dma_dev->dev;
+-	dws->txchan = dma_request_channel(mask, mid_spi_dma_chan_filter, tx);
++	dws->txchan = dma_request_channel(mask, dw_spi_dma_chan_filter, tx);
+ 	if (!dws->txchan)
+ 		goto free_rxchan;
+ 	dws->master->dma_tx = dws->txchan;
+@@ -75,7 +75,7 @@ static int mid_spi_dma_init(struct dw_spi *dws)
+ 	return -EBUSY;
+ }
+ 
+-static void mid_spi_dma_exit(struct dw_spi *dws)
++static void dw_spi_dma_exit(struct dw_spi *dws)
+ {
+ 	if (!dws->dma_inited)
+ 		return;
+@@ -103,7 +103,7 @@ static irqreturn_t dma_transfer(struct dw_spi *dws)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static bool mid_spi_can_dma(struct spi_controller *master,
++static bool dw_spi_can_dma(struct spi_controller *master,
+ 		struct spi_device *spi, struct spi_transfer *xfer)
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(master);
+@@ -215,7 +215,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	return rxdesc;
+ }
+ 
+-static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 dma_ctrl = 0;
+ 
+@@ -236,7 +236,7 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ 	return 0;
+ }
+ 
+-static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	struct dma_async_tx_descriptor *txdesc, *rxdesc;
+ 
+@@ -262,7 +262,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 	return 0;
+ }
+ 
+-static void mid_spi_dma_stop(struct dw_spi *dws)
++static void dw_spi_dma_stop(struct dw_spi *dws)
+ {
+ 	if (test_bit(TX_BUSY, &dws->dma_chan_busy)) {
+ 		dmaengine_terminate_sync(dws->txchan);
+@@ -274,19 +274,19 @@ static void mid_spi_dma_stop(struct dw_spi *dws)
+ 	}
+ }
+ 
+-static const struct dw_spi_dma_ops mid_dma_ops = {
+-	.dma_init	= mid_spi_dma_init,
+-	.dma_exit	= mid_spi_dma_exit,
+-	.dma_setup	= mid_spi_dma_setup,
+-	.can_dma	= mid_spi_can_dma,
+-	.dma_transfer	= mid_spi_dma_transfer,
+-	.dma_stop	= mid_spi_dma_stop,
++static const struct dw_spi_dma_ops dw_spi_pci_dma_ops = {
++	.dma_init	= dw_spi_pci_dma_init,
++	.dma_exit	= dw_spi_dma_exit,
++	.dma_setup	= dw_spi_dma_setup,
++	.can_dma	= dw_spi_can_dma,
++	.dma_transfer	= dw_spi_dma_transfer,
++	.dma_stop	= dw_spi_dma_stop,
+ };
+ 
+ void dw_spi_pci_dma_setup(struct dw_spi *dws)
+ {
+-	dws->dma_tx = &mid_dma_tx;
+-	dws->dma_rx = &mid_dma_rx;
+-	dws->dma_ops = &mid_dma_ops;
++	dws->dma_tx = &pci_dma_tx;
++	dws->dma_rx = &pci_dma_rx;
++	dws->dma_ops = &dw_spi_pci_dma_ops;
+ }
+ EXPORT_SYMBOL_GPL(dw_spi_pci_dma_setup);
+-- 
+2.25.1
 
