@@ -2,114 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181C9C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8A8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB3B620CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588948274;
-	bh=rxJGu5drzSYlySe9vqiHE3VHx5o1VcEOkPGlZR8Lo3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZCM6JTUlhHPZcWAKKlutGnKxis9Sqf+fj1dr//n16LIw2Sl5X5G79r89RWDNyIO7R
-	 U5yI/UmpntcKAM6SzJ3FiGjnCJ2vfmVJyKJ+B5uGPJgWqR8jXXvvQxe+Emhe4h9unM
-	 ZkYjxij7fNQtanddXiIgmenn8N72VtpwIaGKz6Ig=
+	by mail.kernel.org (Postfix) with ESMTP id 4BED02083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=starlab.io header.i=@starlab.io header.b="pCSZKpS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgEHObO (ORCPT
+        id S1728007AbgEHObi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHObN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:31:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C622083B;
-        Fri,  8 May 2020 14:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588948273;
-        bh=rxJGu5drzSYlySe9vqiHE3VHx5o1VcEOkPGlZR8Lo3A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wZktF9m7g8nYEa9ZRPbOPppcX55CdaEXNGt4tq/QwNaZjeCd3Cx9CY1afEGvZbEy/
-         5VqH9lwxCpoFVdnXPDOTHakZAl448yXKr/oFjO6K3GMG5lHxpfgA2cIE4ZHTqXrs7A
-         J9uT/dzg4LEAEYZUZ3rPBSdjCD2CNsjk8P3MYEbg=
-Date:   Fri, 8 May 2020 16:31:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] USB: host: ehci: Add error handling
- inehci_mxc_drv_probe()
-Message-ID: <20200508143110.GA447591@kroah.com>
-References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
- <20200508114858.GA4085349@kroah.com>
- <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 8 May 2020 10:31:38 -0400
+Received: from mail-dm3gcc02on2127.outbound.protection.outlook.com ([40.107.91.127]:15904
+        "EHLO GCC02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726942AbgEHObh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:31:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nu8+E6C7R8BPU1JI9FiArnFt5XIHa09AdygWkGTOs2hzM60ingTv7LPT/Rs4bqI2VTF1aZJtobSgdoqy1hz0PBcU6CzH51Q+3dP+M2goJa8Pc8UXpxi/Gm2qaA1ShvrISVIFGTC1zyeUwSBQef7PU4dwSuWTgMjfW61V51hg6hDtpps12DdXSaDXnatQWntQKux1YTc4XGDg+iwwSWlbJ7LS8zv+Yzoxj39ja15u3VTF3xzLFAaUZLCLhm7e002ccc+VKDKluO7B/Xg4SenlYIRqFPHpKMlScazHpe2uroUw6NSRVtzzmCpupahwOhZGl2V6pflmCzioWFW2/92jVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyEI+5m7p2McLoG4GQXOBhi/I+hC1X+zqP5O098yzZk=;
+ b=m2QHoug+AnIMUFBnuwjItWMPyv/pAAnOuY2GbRyd6VZSEbr1gEyO8H1zKtpRgSOd4C+A+pdpcS5aZqNboij5uppvcSff2aqaE08F7fafW6b/K31ld6tu14HiD4n4VXhUVCeTpWVPf93DK1khlU5y07NRB+JP7FqxE+OSFcZCp0bLl5hZhut6pgv285LSQvaNBDrCtCK10IpOxveUfWC3hEd+S/zKa6ueEFsRc22Iqghxr8D6cOUaAAAJr6GNkY+7faSOegZbkyoa+50e7EPv+0gwVzQ+TqsA1dqOvAtaVfIkGcuqyKfW23DLY3g0w7n2vlfaSzQ7e4e2Xgmofl/VDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starlab.io; dmarc=pass action=none header.from=starlab.io;
+ dkim=pass header.d=starlab.io; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=starlab.io;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyEI+5m7p2McLoG4GQXOBhi/I+hC1X+zqP5O098yzZk=;
+ b=pCSZKpS9W80o/OlUZLw45dx35CS6Sbc4HJ/P+o5jDJxie8kkWgTm6WPAVYbtYRuI7o0Grpl3Qw+AxjH42dYrMvEWJzbQGAh8mzKOIdVgWVCTe4wCwGnKpOyf3/x5HalauiwygFM1pX7qOPHcfiDXPqKaqojOdKl9ETiUfcJ+bnU=
+Authentication-Results: starlab.io; dkim=none (message not signed)
+ header.d=none;starlab.io; dmarc=none action=none header.from=starlab.io;
+Received: from SA9PR09MB5246.namprd09.prod.outlook.com (2603:10b6:806:4b::9)
+ by SA9PR09MB5598.namprd09.prod.outlook.com (2603:10b6:806:40::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.33; Fri, 8 May
+ 2020 14:31:34 +0000
+Received: from SA9PR09MB5246.namprd09.prod.outlook.com
+ ([fe80::a930:8440:6c90:8d88]) by SA9PR09MB5246.namprd09.prod.outlook.com
+ ([fe80::a930:8440:6c90:8d88%7]) with mapi id 15.20.2979.025; Fri, 8 May 2020
+ 14:31:34 +0000
+Date:   Fri, 8 May 2020 09:31:33 -0500
+From:   Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+To:     Tyler Hicks <code@tyhicks.com>
+Cc:     ecryptfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.robertson@starlab.io
+Subject: [PATCH] ecryptfs: Fix inodes not being evicted until unmount
+Message-ID: <20200508143131.GA7116@jeffrey-work>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: SA9PR10CA0008.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::13) To SA9PR09MB5246.namprd09.prod.outlook.com
+ (2603:10b6:806:4b::9)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jeffrey-work (99.61.31.14) by SA9PR10CA0008.namprd10.prod.outlook.com (2603:10b6:806:a7::13) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2979.29 via Frontend Transport; Fri, 8 May 2020 14:31:33 +0000
+X-Originating-IP: [99.61.31.14]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c5afe32a-3443-4b47-4559-08d7f35c8208
+X-MS-TrafficTypeDiagnostic: SA9PR09MB5598:|SA9PR09MB5598:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA9PR09MB5598B259E5276B27D7B1A031F8A20@SA9PR09MB5598.namprd09.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cjMIOPCrbmJM8Xxw4VjJyE58uDaBMR+X72zS/ryvU3s9uDe+2h6yHRRoFqZj+qDm/YwIBXOLZZ+om6oO7uCNC4PFGh0BYVl34B6AKd/X0VUg7l6liLzTk2O+gfMfaUp2rdHqD8SLt3/lC9VIIx+9uGGIZiy462xKHUKB8yagEh2jVJXKoXVG/WnZZAKTO4gGLalIL7YaAaAQbqdtqAFNhOTr1x8/bbwL1ieQKCR2F+d0CTH6uOeePvfE0oBI1lO3jkpQtu9ecNrYwkqlCtDPXATKpDnmLeWBImNOYjgNIqboQwMVZWQBXa2Ed3KHQDucwD2EPy1xpRJ/Pb9qkUNqCpVqGGMPbLuEU7z2QUdc6ltfithKaqs+Y0Xfvxjy8xBArATnsQkKqyp0DB1qfpK0d2QKdzrzgDHd9T7/T1vLnL1JumDQszYhpxu4ILhrqDhi4X4IQw1HgNmuVQaHVhQAdOY1WtHIZjneaTlNPyOHax5wldzPxb8Eat8/l2FkcJsWylS+SsT2Lhie2jzDkBCSXw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA9PR09MB5246.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39830400003)(396003)(136003)(346002)(376002)(366004)(33430700001)(316002)(2906002)(186003)(956004)(66946007)(107886003)(16526019)(44832011)(1076003)(8936002)(86362001)(478600001)(8676002)(26005)(66476007)(55016002)(9686003)(33656002)(4326008)(4744005)(83280400001)(83300400001)(83310400001)(83290400001)(33440700001)(6916009)(83320400001)(6496006)(33716001)(52116002)(66556008)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: rP4PU4NW96gnCbpwIL8mjoLThpAr/3fboQG6ToKfkvMrECAuuuiJcm1cOWDpKIbX5DWn3hH+/E6pYZrTEaUE2FK6AgfUmkQKTCB92rMnFY7JKt9He4GXquj9HKwwdSB2iu0f3SS9dfpB966oVqt0Ee9vUOe69fdODj8TqNjBnQ4kk6WnDuodB4vYHogkmxxLuDnAhMOK2A5FmZ/vXDdP1GjehYnscmnBqAHRgtJl6fq6h91wIUdS19AFdlTnE6bCH81t+tRWhuXqmzXtuKVoN9KBh6pq745l1VACZ95RVKJBsqa5nHbdep53Rr5fdWIww4TDcGKv1uucfy+TDfsPE5EdfzPlEZNreMv2rJ32IUpLi/2zB8WRwTNhRJgFMBvRnFGLOKUHYcXLUos4WXNWtBXGbBh5wjZR6ACtQutDF3xdq5OkClmWcNaVJeghoIolNTdT34ZDI2drpJdhNyGdi9xNJ4YRZfpTmt66GYRLbzc=
+X-OriginatorOrg: starlab.io
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5afe32a-3443-4b47-4559-08d7f35c8208
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 14:31:34.2665
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e611933-986f-4838-a403-4acb432ce224
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: umcZylwzYklORDnsY7wNUFIeyCVOePQrUbwE2sZgz6S2XkfmQpeIWKexTIrrhCSgudEz95hbVWrrkYeK8yFYsBNovEwupIv6lI44sU/QuyY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA9PR09MB5598
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 09:55:53PM +0800, Tang Bin wrote:
-> Hi, Greg:
-> 
-> On 2020/5/8 19:48, Greg KH wrote:
-> > On Fri, May 08, 2020 at 07:44:53PM +0800, Tang Bin wrote:
-> > > The function ehci_mxc_drv_probe() does not perform sufficient error
-> > > checking after executing platform_get_irq(), thus fix it.
-> > > 
-> > > Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
-> > > Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> > > Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> > > ---
-> > >   drivers/usb/host/ehci-mxc.c | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-> > > index a1eb5ee77..a0b42ba59 100644
-> > > --- a/drivers/usb/host/ehci-mxc.c
-> > > +++ b/drivers/usb/host/ehci-mxc.c
-> > > @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
-> > >   	}
-> > >   	irq = platform_get_irq(pdev, 0);
-> > > +	if (irq < 0)
-> > > +		return irq;
-> > <= ?
-> 
-> In the file 'drivers/base/platform.c'， the function platform_get_irq() is
-> explained and used as follows:
-> 
->      * Gets an IRQ for a platform device and prints an error message if
-> finding the
->      * IRQ fails. Device drivers should check the return value for errors so
-> as to
->      * not pass a negative integer value to the request_irq() APIs.
->      *
->      * Example:
->      *        int irq = platform_get_irq(pdev, 0);
->      *        if (irq < 0)
->      *            return irq;
->      *
->      * Return: IRQ number on success, negative error number on failure.
-> 
-> And in my hardware experiment, even if I set the irq failed deliberately in
-> the DTS, the returned value is negative instead of zero.
+On asynchronous base filesystems like NFS, eCryptFS leaves inodes for
+deleted files in the cache until unmounting. Change call in
+ecryptfs_do_unlink() from set_nlink() to drop_nlink() in order to reliably
+evict inodes from the cache even on top of NFS.
 
-Please read the thread at
-	https://lore.kernel.org/r/20200501224042.141366-1-helgaas%40kernel.org
-for more details about this.
+Signed-off-by: Dan Robertson <daniel.robertson@starlab.io>
+Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+---
+ fs/ecryptfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+index e23752d..f7594b6 100644
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -147,7 +147,7 @@ static int ecryptfs_do_unlink(struct inode *dir, struct dentry *dentry,
+ 		goto out_unlock;
+ 	}
+ 	fsstack_copy_attr_times(dir, lower_dir_inode);
+-	set_nlink(inode, ecryptfs_inode_to_lower(inode)->i_nlink);
++	drop_nlink(inode);
+ 	inode->i_ctime = dir->i_ctime;
+ out_unlock:
+ 	dput(lower_dentry);
+-- 
+2.7.4
 
-greg k-h
