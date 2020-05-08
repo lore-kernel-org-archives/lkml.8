@@ -2,126 +2,139 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6744FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4204EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45DB824955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EBC2495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bXheKxFk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ceRHV0SN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgEHOEi (ORCPT
+        id S1727794AbgEHOGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:04:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50887 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHOEi (ORCPT
+        Fri, 8 May 2020 10:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726636AbgEHOF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588946676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ZJXTQJvptAV9cLZgw4Ng81VkyhSWVuCrfvyn+V+OyE=;
-        b=bXheKxFkavUxxz3Sacsx5moPTcgdcvlLqGTffRanl0A+dcx9xfjFxpEDFBMQuudC/0qLAg
-        +W2zqscjtZK9uCF3ZbGNp/eTXPlZQy8ALjuWjBcW36u0uRjOrH2+TEAYhiL/ukR8Ivgw4p
-        2N2OHjZgMWWbSzeoTP76N5Uq17JODHo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-oPMRAtl2NHqgHOWnUpQb_w-1; Fri, 08 May 2020 10:04:32 -0400
-X-MC-Unique: oPMRAtl2NHqgHOWnUpQb_w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D53780058A;
-        Fri,  8 May 2020 14:04:27 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D6FC70933;
-        Fri,  8 May 2020 14:04:18 +0000 (UTC)
-Date:   Fri, 8 May 2020 10:04:15 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, cai@lca.pw,
-        dyoung@redhat.com, bhe@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, gpiccoli@canonical.com, pmladek@suse.com,
-        tiwai@suse.de, schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] taint: add module firmware crash taint support
-Message-ID: <20200508140415.GC367616@optiplex-lnx>
-References: <20200508021438.4373-1-mcgrof@kernel.org>
+        Fri, 8 May 2020 10:05:59 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A2EC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:05:59 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id h26so1512443lfg.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 07:05:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=haWmS+1+Op4dfd1PUhzKPboaEpLi6w7LL8kma7vTFIQ=;
+        b=ceRHV0SNg4h4ryrKrtL+3goG0C5w1BGZ6KqlDlRV87kNxeqK3n/RrJb77F/LD7K2kA
+         ajA4v6WXyozZqr4ooDAaotW6Gmp4FSRZRsz+KBrUVuwipH9+gQAH66kcLQltW6kzCgAX
+         k56pf083vAds2fUez4gXK949rfm5yqXY7RJ9ZhCN852Nn1+lrsqAfTmNSxQxGKLJsu1p
+         xPNV21RUEmi+zihVeAo/MEyl18ZwkrvqtQ4oXiJ8L4EuE5auYTVNqBH9v8xXv+OBWUV9
+         +qXN+nn3ZxbaTQqQxc4yYAZK/ULG64bAfRo4PAypAXFuoM8Cn8KuLEWp7sW/DjSu70kd
+         egLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=haWmS+1+Op4dfd1PUhzKPboaEpLi6w7LL8kma7vTFIQ=;
+        b=tOIdt5uXadPU5Y658VpHtgd1qAxbuJBMl5UIaDm0obk0gSB91OO0X3NsMKvwmfyYQ4
+         ht+O0oPiQJ/o6lsv8go32Op+fUTz3QaxOtguu0VwBgCyZQfMWDoSVu0zMW9mOKAXZQ1K
+         YKhT/VRTEprIPrzlJJaU4jbaYaM+sXeE5IfAmN9PZiBnKYlqv41R4jwqWPDbP0grGJPo
+         wAEIvA95f9mKI8GQHRh1b1nP6cOFAIHy98stNHT3pkHJ6/SmebDxcGY/BQys0yQca+Wa
+         ykexEGuI+PWJ0Z7y/u8BjWufoWpG2q2hUxVUTCcrmgKkSXOzWPYvGBYMno0vqiyYOpCu
+         xR9A==
+X-Gm-Message-State: AOAM532K5Vsk2oFauf/L1tJFMpnfL195n55h7L8pr5uGMHAv8JTfNbz/
+        2hVsEAQ9+QgDqI8ZlYD7MoKwxXJW2vJrauxQdAs4/g==
+X-Google-Smtp-Source: ABdhPJzWKnpzpuP5Fo7MSokFci1F2YxKHYybV0HCCXbto4nKblgCcA1HHeNX6K7OjYTbWvgiqleAt6aGcHWTXLAbNOI=
+X-Received: by 2002:a19:f512:: with SMTP id j18mr2007829lfb.33.1588946757557;
+ Fri, 08 May 2020 07:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508021438.4373-1-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200507204913.18661-1-shakeelb@google.com> <CALOAHbAHK4b2p0oWXY6oHG+WQzK3+TEa46=dPabhYT8ab=65zA@mail.gmail.com>
+ <CALvZod7VujYgU=6XfgjSZnzLqDpbHwEYsp2Xbq9MK7w_z=LphA@mail.gmail.com> <20200508133833.GA181181@cmpxchg.org>
+In-Reply-To: <20200508133833.GA181181@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 8 May 2020 07:05:46 -0700
+Message-ID: <CALvZod4iq9vwgDsg1dV1eoVTpOpio0BSwxgf-H-QUGwzTDCc8g@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Yafang Shao <laoar.shao@gmail.com>, Mel Gorman <mgorman@suse.de>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:14:38AM +0000, Luis Chamberlain wrote:
-> Device driver firmware can crash, and sometimes, this can leave your
-> system in a state which makes the device or subsystem completely
-> useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-> of scraping some magical words from the kernel log, which is driver
-> specific, is much easier. So instead provide a helper which lets drivers
-> annotate this.
-> 
-> Once this happens, scrapers can easily scrape modules taint flags.
-> This will taint both the kernel and respective calling module.
-> 
-> The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
-> this fact should in no way shape or form affect lockdep. This taint
-> is device driver specific.
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
-> 
-> Below is the full diff stat of manual inspection throughout the kernel
-> when this happens. My methodology is to just scrape for "crash" and
-> then study the driver a bit to see if indeed it seems like that the
-> firmware crashes there. In *many* cases there is even infrastructure
-> for this, so this is sometimes clearly obvious. Some other times it
-> required a bit of deciphering.
-> 
-> The diff stat below is what I have so far, however the patch below
-> only includes the drivers that start with Q, as they were a source of
-> inspiration for this, and to make this RFC easier to read.
-> 
-> If this seems sensible, I can follow up with the kernel helper first,
-> and then tackle each subsystem independently.
-> 
-> I purposely skipped review of remoteproc and virtualization. That should
-> require its own separate careful review and considerations.
-> 
-...
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 04a5885cec1b..19e1541c82c7 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -601,7 +601,8 @@ extern enum system_states {
->  #define TAINT_LIVEPATCH			15
->  #define TAINT_AUX			16
->  #define TAINT_RANDSTRUCT		17
-> -#define TAINT_FLAGS_COUNT		18
-> +#define TAINT_FIRMWARE_CRASH		18
-> +#define TAINT_FLAGS_COUNT		19
->  
+On Fri, May 8, 2020 at 6:38 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Fri, May 08, 2020 at 06:25:14AM -0700, Shakeel Butt wrote:
+> > On Fri, May 8, 2020 at 3:34 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+> > >
+> > > On Fri, May 8, 2020 at 4:49 AM Shakeel Butt <shakeelb@google.com> wrote:
+> > > >
+> > > > One way to measure the efficiency of memory reclaim is to look at the
+> > > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> > > > not updated consistently at the system level and the ratio of these are
+> > > > not very meaningful. The pgsteal and pgscan are updated for only global
+> > > > reclaim while pgrefill gets updated for global as well as cgroup
+> > > > reclaim.
+> > > >
+> > >
+> > > Hi Shakeel,
+> > >
+> > > We always use pgscan and pgsteal for monitoring the system level
+> > > memory pressure, for example, by using sysstat(sar) or some other
+> > > monitor tools.
+>
+> I'm in the same boat. It's useful to have activity that happens purely
+> due to machine capacity rather than localized activity that happens
+> due to the limits throughout the cgroup tree.
+>
+> > Don't you need pgrefill in addition to pgscan and pgsteal to get the
+> > full picture of the reclaim activity?
+>
+> I actually almost never look at pgrefill.
+>
 
-As others have already mentioned (and I guess it was your idea too)
-it would be nicer to split the changes into a set.
+Nowadays we are looking at reclaim cost on high utilization
+machines/devices and noticed that rmap walk takes more than 60/70% of
+the CPU cost of the reclaim. Kernel does rmap walks in
+shrink_active_list and shrink_page_list and pgscan and pgrefill are
+good approximations of the number of rmap walks during a reclaim.
 
-We also will need to update Documentation/admin-guide/tainted-kernels.rst
-to reflect the inclusion of this new flag.
+> > > But with this change, these two counters include the memcg pressure as
+> > > well. It is not easy to know whether the pgscan and pgsteal are caused
+> > > by system level pressure or only some specific memcgs reaching their
+> > > memory limit.
+> > >
+> > > How about adding  cgroup_reclaim() to pgrefill as well ?
+> > >
+> >
+> > I am looking for all the reclaim activity on the system. Adding
+> > !cgroup_reclaim to pgrefill will skip the cgroup reclaim activity.
+> > Maybe adding pgsteal_cgroup and pgscan_cgroup would be better.
+>
+> How would you feel about adding memory.stat at the root cgroup level?
+>
 
--- Rafael
+Actually I would prefer adding memory.stat at the root cgroup level as
+you noted below that more use-cases would benefit from it.
 
+> There are subtle differences between /proc/vmstat and memory.stat, and
+> cgroup-aware code that wants to watch the full hierarchy currently has
+> to know about these intricacies and translate semantics back and forth.
+>
+> Generally having the fully recursive memory.stat at the root level
+> could help a broader range of usecases.
+
+Thanks for the feedback. I will send the patch with the additional motivation.
