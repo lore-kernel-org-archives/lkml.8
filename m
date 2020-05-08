@@ -2,129 +2,326 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8117C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C656BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F9B2495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960BC2495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="AUUUYFUn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ej3sZFuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgEHNcM (ORCPT
+        id S1729005AbgEHNcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:32:12 -0400
-Received: from mail-dm6nam10on2094.outbound.protection.outlook.com ([40.107.93.94]:62592
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727903AbgEHNcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:32:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lCq1REoD0dqdJzs66IoWxoZWSsVE4IsvO2K4+3bzkmti4zCSnWcNDVQ+jw2CMJ/fysfdiv3lDVCOh9imPZICQiHlckOLBDypWuguPQ/nwmL6srMlihcjIKwq7LMqVqHZONSwrZqoKQ2QIP+D55yuawxIY+LJL+q8aSn7MwV5hpqQonno2+orFg4dwrWygXRD6ADuiboo3A2VedmTKd+fPGDTHOzy56rKtgSJawebmn0/L+zsedOp+gdWcS4ONqaFOkuLjOeaOorikaUJ1rbXIyK4umyOmJDYH964xKJXrIO8Ndt5/uxdID07C2Q4nJISMktpjOpm3AwNgGZnY3QzcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WehEWW/hpb2u4FIzNu5NTywIbhQT4Io15URZdhZYMxc=;
- b=CiCPpwSIZdd0U01CTnGadILYMLy1Qa8AuspT3mD4GrVuRPlQZoV6Xci0eUNPIHH2xNTpor96iXFdFwvanTayefXXdZUBoWbHNsF/o8HpwTtJZKMylGt6W0rx4g9ECk/T6NBtWkfYODY3NtgAkio+7aLk3yJAFgtMXBmjU2/XZ4WlK9d5GfNsmgOSnbpoNUpfdRsNthSbZ5K9wBTDgR1GGi8xvuUaGz2/yAM0a4Rfslp5+rf20W5S+x+SKAklGZpwYbMo8Npm41wv5NlpKO+fQwIwRmoClBdf79uak1SyrhRPysuaM/7meoWw+DK8SjuWZXFt8foM+Q+xAG9sOd6a3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
- dkim=pass header.d=cypress.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WehEWW/hpb2u4FIzNu5NTywIbhQT4Io15URZdhZYMxc=;
- b=AUUUYFUnFAMs04tqpCquJg+4k8gtO57vIoSYIgEzswJTSDexNC8KDlNdTi4oMSVEdUirxwbM277qfd6alNuuA2/6K3TW7997k8sB6CPg1X12+gMBe8BRDwB7TcR2Oq+sQLU5By0ZxPEvKe3RpMbX8R7PA1vi5G8HJQOLEJw6plU=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=cypress.com;
-Received: from DM6PR06MB4748.namprd06.prod.outlook.com (2603:10b6:5:fd::18) by
- DM6PR06MB5324.namprd06.prod.outlook.com (2603:10b6:5:102::31) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.29; Fri, 8 May 2020 13:32:07 +0000
-Received: from DM6PR06MB4748.namprd06.prod.outlook.com
- ([fe80::85fb:1c0e:ce17:e7bb]) by DM6PR06MB4748.namprd06.prod.outlook.com
- ([fe80::85fb:1c0e:ce17:e7bb%7]) with mapi id 15.20.2979.033; Fri, 8 May 2020
- 13:32:07 +0000
-Subject: Re: [PATCH -next] brcmfmac: make non-global functions static
-To:     Chen Zhou <chenzhou10@huawei.com>, kvalo@codeaurora.org
-Cc:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200508013249.95196-1-chenzhou10@huawei.com>
-From:   Wright Feng <wright.feng@cypress.com>
-Message-ID: <97fd043c-bf60-b2c3-b901-f57d7fa957be@cypress.com>
-Date:   Fri, 8 May 2020 21:31:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200508013249.95196-1-chenzhou10@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYCPR01CA0024.jpnprd01.prod.outlook.com (2603:1096:405::36)
- To DM6PR06MB4748.namprd06.prod.outlook.com (2603:10b6:5:fd::18)
+        Fri, 8 May 2020 09:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728780AbgEHNcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:32:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80374C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ms4cIcg8hCLTUr0z0CcPk4qX/5M5Ay/W6c6+fEky25w=; b=Ej3sZFukGv0/8tFpavM0rLEk5k
+        RgOeWFk68LmxF8PuysCeqQ5CpyVHrlPzdUtkTnZMkVbQxROZJ9XshpxYdMGJ1Mk50dFZ1OJ4Bob29
+        MegmW+u8zW4BX8Fz4AJsRfQr6gIFSEpBx67/Dr5ttc/BR0Sf46M8ULU9b5U0vu9eznxN12I/0Cc/r
+        bET/OX5yUB2RmluEcmpiaPZLxsWOXMsbT1yIsihIZdrYJ9oI1JlPr23DoOq1EWpS1KBGUQLXfMfpw
+        L//lY0dYJjwe06deKVdnAEQKWouc9zdZop9X47iqQv17GORUCs3rxUv8BydRLm5qrB1P0Wunza64N
+        TCh2gBEg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX36d-0004UI-Ei; Fri, 08 May 2020 13:31:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D6B3F307A7F;
+        Fri,  8 May 2020 15:31:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BAF242B94B350; Fri,  8 May 2020 15:31:56 +0200 (CEST)
+Date:   Fri, 8 May 2020 15:31:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4 16/18] static_call: Allow early init
+Message-ID: <20200508133156.GC3762@hirez.programming.kicks-ass.net>
+References: <20200501202849.647891881@infradead.org>
+ <20200501202944.706674211@infradead.org>
+ <20200506211547.2vnuhkfzhgbi27dm@treble>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.50.236] (123.194.189.67) by TYCPR01CA0024.jpnprd01.prod.outlook.com (2603:1096:405::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend Transport; Fri, 8 May 2020 13:32:04 +0000
-X-Originating-IP: [123.194.189.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 77ed7be4-df52-4534-9aef-08d7f35433f0
-X-MS-TrafficTypeDiagnostic: DM6PR06MB5324:|DM6PR06MB5324:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR06MB53249F79DD595D7A9B568122FBA20@DM6PR06MB5324.namprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:296;
-X-Forefront-PRVS: 039735BC4E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mtlaQU/712NAMs7rFQj2AwBVIiHBgmcQDWiKa6Mz7C4ADgQX4LUdfM0eWmF2mWszKPUBwvE5+lYa1z1IVPMNH5Nq4u2RattLLBECH39LRbOrjKS7tuIuZVbI2yalhYFRHSrFH61AyFAMOfmPsxaDqo5g4nZGPn4xs+UeiGaNMPIozxpoBb1BjQf4tvPVKvWXwVp5bQZOXqiV8mz/B7Qdhd5qpJm1MfbmSuCMY9eJbsczeyd0wagfRgQxlrtjo2NSLTDU+It0S/faBccCPhFSNr4DXEqBK/LghBKqNI+SYkWPU55RSYD0zdDUaM9yTzY6rSylW7bhOpv3xh6H/JJlTDvQqFd3gwpEmHYGv11DYKf7a37y1C0N1HNqqp1v+qI3WnjvtRXjhEF9EKYvW5VI6UBVluXIjeAt+cioEnPl2m3uwfP/YUdueQrNJBELVKuEnqh5809Q7ShsAprGZ1S9ORHnQndnQMbehnd88Dxm7CWGLKb/FVVtHrpn/xY5tHkwo1v4/eiFbwuoJIM95xa6r59tGPglUXG/GirSolT3QsMwY4PiAisHIz/aBewfssYr
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR06MB4748.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(39860400002)(346002)(396003)(366004)(33430700001)(16576012)(186003)(4326008)(6486002)(6666004)(8676002)(44832011)(2906002)(31686004)(8936002)(52116002)(86362001)(33440700001)(16526019)(956004)(478600001)(36756003)(83280400001)(83310400001)(2616005)(83320400001)(83290400001)(66946007)(66476007)(316002)(5660300002)(31696002)(66556008)(83300400001)(26005)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: hc2xKokofronD1DcGXPAvROCpufA/EF9FbdZoPm4ftTAitbW/Omu30NixyzsqjuxiGxxWgmA8yYht4zAqXWBU6dbcv4xmFjDS829j3B+mNguRFidNL2H71pdG5oR7VIvwe/flGD3Gf7M7VpNaIORMx3Ljfui/fTrZPLv1GYeD6coOhiXzkGhunl5WCQy9+/+Izscj9Ugek5BCaT6EPFde55oi5gw/EwKmPTu5V3jHYrCTnTocA8B8rKibDvB0lFRBweHccnoNs93XsVWBl7pQuhCi442jlZAMtCRMwfo+eTjDGo8gm4Z+djNwloTnplZ8Xz0Ww1/P1iFt01uAi1yWwXf1GjBtjCU3vfFrG5D2hZJn2TmQuwvpHqImPP1d6Jm9uPnDsR3mCd1tVV1WRWpxzXJbZl/BovDQI0s7gEIQI0BVkg5T++Z5/5CR+BlwQ272N3ZJQTIlw60km4VRMU0cOQ+dA+P8X9+uolAbjrNcioDDWfQSWoW2MXngMjJRwSU
-X-OriginatorOrg: cypress.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77ed7be4-df52-4534-9aef-08d7f35433f0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 13:32:07.4980
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 011addfc-2c09-450d-8938-e0bbc2dd2376
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fVoVeP0TSQDJzV16oXyo9kGfLVgPbTw1aFooVqcXPT0K6FI4EyFWKH+YfPt56aMUWddq/SinNHEahN8RdxiViw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB5324
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506211547.2vnuhkfzhgbi27dm@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 06, 2020 at 04:15:47PM -0500, Josh Poimboeuf wrote:
 
+> This doesn't work when the key is defined in a module.  In
+> __static_call_update(), first.site_mod->mod is NULL, but
+> static_call_key_sites() points to the module's call sites.
+> 
+> This seems to fix it (sorry, also has the 'next' -> 'mods' rename).
+> The actual fix is in static_call_key_sites() and static_call_key_mods().
+> 
 
-Chen Zhou 於 5/8/2020 9:32 AM 寫道:
-> Fix sparse warning:
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:2206:5:
-> 	warning: symbol 'brcmf_p2p_get_conn_idx' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Reviewed-by: Wright Feng <wright.feng@cypress.com>
-> ---
->   drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-> index e32c24a2670d..2a2440031357 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-> @@ -2203,7 +2203,7 @@ static struct wireless_dev *brcmf_p2p_create_p2pdev(struct brcmf_p2p_info *p2p,
->   	return ERR_PTR(err);
->   }
->   
-> -int brcmf_p2p_get_conn_idx(struct brcmf_cfg80211_info *cfg)
-> +static int brcmf_p2p_get_conn_idx(struct brcmf_cfg80211_info *cfg)
->   {
->   	int i;
->   	struct brcmf_if *ifp = netdev_priv(cfg_to_ndev(cfg));
-> 
+> @@ -118,7 +118,12 @@ static inline struct static_call_site *static_call_key_sites(struct static_call_
+>  void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+>  {
+>  	struct static_call_site *site, *stop;
+> -	struct static_call_mod *site_mod, first;
+> +	struct static_call_mod *site_mod;
+> +	struct static_call_mod first = {
+> +		.next = static_call_key_mods(key),
+> +		.mod = NULL,
+> +		.sites = static_call_key_sites(key),
+> +	};
+>  
+>  	cpus_read_lock();
+>  	static_call_lock();
+
+This bit is actually broken, we need static_call_lock(), otherwise the
+values just read in @first are not reliable.
+
+New version below.
+
+---
+Subject: static_call: Allow early init
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri, 4 Oct 17:21:10 CEST 2019
+
+In order to use static_call() to wire up x86_pmu, we need to
+initialize earlier; copy some of the tricks from jump_label to enable
+this.
+
+Primarily we overload key->next to store a sites pointer when there
+are no modules, this avoids having to use kmalloc() to initialize the
+sites and allows us to run much earlier.
+
+(arguably, this is much much earlier than needed for perf, but it
+might allow other uses.)
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/setup.c       |    2 +
+ arch/x86/kernel/static_call.c |    8 +++++-
+ include/linux/static_call.h   |   15 +++++++++--
+ kernel/static_call.c          |   55 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 74 insertions(+), 6 deletions(-)
+
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -19,6 +19,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+ #include <linux/usb/xhci-dbgp.h>
++#include <linux/static_call.h>
+ 
+ #include <uapi/linux/mount.h>
+ 
+@@ -848,6 +849,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_cpu_init();
+ 	arch_init_ideal_nops();
+ 	jump_label_init();
++	static_call_init();
+ 	early_ioremap_init();
+ 
+ 	setup_olpc_ofw_pgd();
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -11,7 +11,7 @@ enum insn_type {
+ 	RET = 3,  /* tramp / site cond-tail-call */
+ };
+ 
+-static void __static_call_transform(void *insn, enum insn_type type, void *func)
++static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
+ {
+ 	int size = CALL_INSN_SIZE;
+ 	const void *code;
+@@ -33,11 +33,17 @@ static void __static_call_transform(void
+ 		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
+ 		size = RET_INSN_SIZE;
+ 		break;
++
++	default: /* GCC is a moron -- it figures @code can be uninitialized below */
++		BUG();
+ 	}
+ 
+ 	if (memcmp(insn, code, size) == 0)
+ 		return;
+ 
++	if (unlikely(system_state == SYSTEM_BOOTING))
++		return text_poke_early(insn, code, size);
++
+ 	text_poke_bp(insn, code, size, NULL);
+ }
+ 
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -99,6 +99,8 @@ extern void arch_static_call_transform(v
+ 
+ #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+ 
++extern void __init static_call_init(void);
++
+ struct static_call_mod {
+ 	struct static_call_mod *next;
+ 	struct module *mod; /* for vmlinux, mod == NULL */
+@@ -107,7 +109,12 @@ struct static_call_mod {
+ 
+ struct static_call_key {
+ 	void *func;
+-	struct static_call_mod *mods;
++	union {
++		/* bit 0: 0 = mods, 1 = sites */
++		unsigned long type;
++		struct static_call_mod *mods;
++		struct static_call_site *sites;
++	};
+ };
+ 
+ extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
+@@ -118,7 +125,7 @@ extern int static_call_text_reserved(voi
+ 	DECLARE_STATIC_CALL(name, _func);				\
+ 	struct static_call_key STATIC_CALL_KEY(name) = {		\
+ 		.func = _func,						\
+-		.next = NULL,						\
++		.type = 1,						\
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+@@ -143,6 +150,8 @@ extern int static_call_text_reserved(voi
+ 
+ #elif defined(CONFIG_HAVE_STATIC_CALL)
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+@@ -188,6 +197,8 @@ static inline int static_call_text_reser
+ 
+ #else /* Generic implementation */
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -94,10 +94,31 @@ static inline void static_call_sort_entr
+ 	     static_call_site_cmp, static_call_site_swap);
+ }
+ 
++static inline bool static_call_key_has_mods(struct static_call_key *key)
++{
++	return !(key->type & 1);
++}
++
++static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
++{
++	if (!static_call_key_has_mods(key))
++		return NULL;
++
++	return key->mods;
++}
++
++static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
++{
++	if (static_call_key_has_mods(key))
++		return NULL
++
++	return (struct static_call_site *)(key->type & ~1);
++}
++
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
+ 	struct static_call_site *site, *stop;
+-	struct static_call_mod *site_mod;
++	struct static_call_mod *site_mod, first;
+ 
+ 	cpus_read_lock();
+ 	static_call_lock();
+@@ -116,13 +137,22 @@ void __static_call_update(struct static_
+ 	if (WARN_ON_ONCE(!static_call_initialized))
+ 		goto done;
+ 
+-	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
++	first = (struct static_call_mod){
++		.next = static_call_key_next(key),
++		.mod = NULL,
++		.sites = static_call_key_sites(key),
++	};
++
++	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
+ 		struct module *mod = site_mod->mod;
+ 
+ 		if (!site_mod->sites) {
+ 			/*
+ 			 * This can happen if the static call key is defined in
+ 			 * a module which doesn't use it.
++			 *
++			 * It also happens in the has_mods case, where the
++			 * 'first' entry has no sites associated with it.
+ 			 */
+ 			continue;
+ 		}
+@@ -192,16 +222,35 @@ static int __static_call_init(struct mod
+ 		if (key != prev_key) {
+ 			prev_key = key;
+ 
++			if (!mod) {
++				key->sites = site;
++				key->type |= 1;
++				goto do_transform;
++			}
++
+ 			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+ 			if (!site_mod)
+ 				return -ENOMEM;
+ 
++			if (!static_call_key_has_mods(key)) {
++				site_mod->mod = NULL;
++				site_mod->next = NULL;
++				site_mod->sites = static_call_key_sites(key);
++
++				key->mods = site_mod;
++
++				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
++				if (!site_mod)
++					return -ENOMEM;
++			}
++
+ 			site_mod->mod = mod;
+ 			site_mod->sites = site;
+ 			site_mod->next = key->mods;
+ 			key->mods = site_mod;
+ 		}
+ 
++do_transform:
+ 		arch_static_call_transform(site_addr, NULL, key->func,
+ 				static_call_is_tail(site));
+ 	}
+@@ -344,7 +393,7 @@ int static_call_text_reserved(void *star
+ 	return ret;
+ }
+ 
+-static void __init static_call_init(void)
++void __init static_call_init(void)
+ {
+ 	int ret;
+ 
