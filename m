@@ -2,108 +2,168 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF1C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A6DC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8074E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588959098;
-	bh=WRzoALlV7ZN2GHdbZQhsE+HYWowuvtNz9dMDDXuhI88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n206SRUc95VyykMsrnR0u0DAdxkBovQZeW6Ff0SJQ++fqAZTipC9thFs7eIEpboqs
-	 69WIWVTKRGwwhfhQYsPDtkG0CzF1E7d+JSKq8rXaI95cyDec+1yYVfyFXXQKVtMwL7
-	 NEw9nrIpm/OTd7VLUJq3U/66W63bsLCIc7Q6i3t4=
+	by mail.kernel.org (Postfix) with ESMTP id E9F4121974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="taRppZsM";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IXmO1A7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgEHRbh (ORCPT
+        id S1727834AbgEHRbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgEHRbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:31:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Fri, 8 May 2020 13:31:41 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42800 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726746AbgEHRbi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:31:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5FFF58EE269;
+        Fri,  8 May 2020 10:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1588959098;
+        bh=ccfPUMPOZrwzfliVDDgWfLincd4TIFff8Vt2wm+HZWI=;
+        h=Subject:From:To:Cc:Date:From;
+        b=taRppZsMBhJyjIpGxGtMyRmZk/Cy6my59uQ0VNQGBN/tPuM1/0+dSSL6xg9UaaSzU
+         +2Xn9w8uWYP0lXZn5WP9rplrQAt19vv0Oq8XpG2VS8B3aQ5PHz4L9xnHmsXiLNPDqN
+         ivbPPmJ2U44N/Gql0vyNIYY4Rmw3MAy0jVl5uXY8=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 98BeorSCoWdG; Fri,  8 May 2020 10:31:38 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F0E2184D;
-        Fri,  8 May 2020 17:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588959096;
-        bh=WRzoALlV7ZN2GHdbZQhsE+HYWowuvtNz9dMDDXuhI88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N5naS5m/e40q+uLMWZT2ttFDa7TnLxzUiR71erzt4j7XYt5I6AOb2wMcM6kEGONTP
-         hw8OrJzgPzqmGwSbg9tIvYEwaV4mFe55M5HRNvvpzJrdEEnnbI7Smr1TNaGoHC8m6a
-         YH64UJVl1r2J0MtcG5ZYmGVX5V3q/ct1aI5IAh1I=
-Date:   Fri, 8 May 2020 18:31:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/17] spi: dw: Clear DMAC register when done or stopped
-Message-ID: <20200508173134.GP4820@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-9-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BnCwdHgQ2ZomtW9r"
-Content-Disposition: inline
-In-Reply-To: <20200508132943.9826-9-Sergey.Semin@baikalelectronics.ru>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A1F918EE0F8;
+        Fri,  8 May 2020 10:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1588959097;
+        bh=ccfPUMPOZrwzfliVDDgWfLincd4TIFff8Vt2wm+HZWI=;
+        h=Subject:From:To:Cc:Date:From;
+        b=IXmO1A7ebfLJ64cSREZLl5ap6rP85YReGhnMDZYGahMHFE68uBSgmTKK4OQfX6g8c
+         DFCjhABQKgVJqr4Utplx6NLWWOHFQj4oTxg2lin2hU7UIiIeJbOeOu10u4uPeaKGQ8
+         RDCkQ/x7g2EUXOISVFIhF8WvwZKeURb1jJN3mgaE=
+Message-ID: <1588959096.3837.12.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.7-rc4
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 08 May 2020 10:31:36 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Four minor fixes, all in drivers (qla2xxx, ibmvfc, ibmvscsi)
 
---BnCwdHgQ2ZomtW9r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The patch is available here:
 
-On Fri, May 08, 2020 at 04:29:33PM +0300, Serge Semin wrote:
-> If DMAC register is left uncleared any further DMAless transfers
-> may cause the DMAC hardware handshaking interface getting activated.
-> So the next DMA-based Rx/Tx transaction will be started right
-> after the dma_async_issue_pending() method is invoked even if no
-> DMATDLR/DMARDLR conditions are met. This at the same time may cause
-> the Tx/Rx FIFO buffers underrun/overrun. In order to fix this we
-> must clear DMAC register after a current DMA-based transaction is
-> finished.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-This also looks like a bugfix so should be pulled forwards to the start
-of the series if possible.
+The short changelog is:
 
---BnCwdHgQ2ZomtW9r
-Content-Type: application/pgp-signature; name="signature.asc"
+Arun Easi (1):
+      scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
 
------BEGIN PGP SIGNATURE-----
+Brian King (1):
+      scsi: ibmvfc: Don't send implicit logouts prior to NPIV login
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61l3UACgkQJNaLcl1U
-h9BYHgf9Fl+KkM9DAYgx9AGChw/IYpN7v0C5DO9u46ti7pzCXkna45nllKWyJ+W6
-/IBw7tAETN0X3Oeg7yrgik/DAKX58MapNxW3Iq3iYa/RBX/2Lkxqb441hmmNFgOp
-g8lI/G8gh9WkKF1E7lVqqBScEwiRbGDWTHWM2WuYSr8mAnK5FL+HLvF5YQKvAcHm
-1TD3/v8ckN2iTXWH8IWjBdqJI7Y+2TXXz1Xr13/laIDvDq51xtJk0YXUstdLcSnq
-sPwjaTA+RTDZKCa2NsFKx04M3JYrJMIq8YjAoCjhKOKBJf3EaJ/EalmfaTucfs0O
-NwU9G+7xV1+6hlkILdXn+sStvR7LTQ==
-=TR5g
------END PGP SIGNATURE-----
+Quinn Tran (1):
+      scsi: qla2xxx: Delete all sessions before unregister local nvme port
 
---BnCwdHgQ2ZomtW9r--
+Tyrel Datwyler (1):
+      scsi: ibmvscsi: Fix WARN_ON during event pool release
+
+And the diffstat:
+
+ drivers/scsi/ibmvscsi/ibmvfc.c   | 5 +++++
+ drivers/scsi/ibmvscsi/ibmvscsi.c | 4 ----
+ drivers/scsi/qla2xxx/qla_attr.c  | 2 +-
+ drivers/scsi/qla2xxx/qla_mbx.c   | 2 +-
+ 4 files changed, 7 insertions(+), 6 deletions(-)
+
+With full diff below
+
+James
+
+---
+
+diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+index 7da9e060b270..635f6f9cffc4 100644
+--- a/drivers/scsi/ibmvscsi/ibmvfc.c
++++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+@@ -3640,6 +3640,11 @@ static void ibmvfc_tgt_implicit_logout_and_del(struct ibmvfc_target *tgt)
+ 	struct ibmvfc_host *vhost = tgt->vhost;
+ 	struct ibmvfc_event *evt;
+ 
++	if (!vhost->logged_in) {
++		ibmvfc_set_tgt_action(tgt, IBMVFC_TGT_ACTION_DEL_RPORT);
++		return;
++	}
++
+ 	if (vhost->discovery_threads >= disc_threads)
+ 		return;
+ 
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 7f66a7783209..59f0f1030c54 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2320,16 +2320,12 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+ static int ibmvscsi_remove(struct vio_dev *vdev)
+ {
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	unsigned long flags;
+ 
+ 	srp_remove_host(hostdata->host);
+ 	scsi_remove_host(hostdata->host);
+ 
+ 	purge_requests(hostdata, DID_ERROR);
+-
+-	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
+-	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
+ 
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 97cabd7e0014..33255968f03a 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -3031,11 +3031,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
+ 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
+ 		msleep(1000);
+ 
+-	qla_nvme_delete(vha);
+ 
+ 	qla24xx_disable_vp(vha);
+ 	qla2x00_wait_for_sess_deletion(vha);
+ 
++	qla_nvme_delete(vha);
+ 	vha->flags.delete_progress = 1;
+ 
+ 	qlt_remove_target(ha, vha);
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 4ed90437e8c4..d6c991bd1bde 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3153,7 +3153,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
+ 
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
+ 	else
+ 		return QLA_FUNCTION_FAILED;
