@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2B3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC7FC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F1324999
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5883F24999
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgEHNKN (ORCPT
+        id S1730454AbgEHNKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
+        Fri, 8 May 2020 09:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728463AbgEHNFN (ORCPT
+        by vger.kernel.org with ESMTP id S1730112AbgEHNFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 09:05:13 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5270AC05BD0A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FC2C05BD0B;
         Fri,  8 May 2020 06:05:13 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gd-0007WI-Bs; Fri, 08 May 2020 15:05:07 +0200
+        id 1jX2gg-0007Te-1X; Fri, 08 May 2020 15:05:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CFA9F1C0852;
-        Fri,  8 May 2020 15:04:57 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:57 -0000
-From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D12881C04D0;
+        Fri,  8 May 2020 15:04:55 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:55 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf thread-stack: Add thread_stack__br_sample_late()
+Subject: [tip: perf/core] perf evsel: Rename perf_evsel__nr_cpus() to evsel__nr_cpus()
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200429150751.12570-7-adrian.hunter@intel.com>
-References: <20200429150751.12570-7-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158894309779.8414.7778487024910558473.tip-bot2@tip-bot2>
+Message-ID: <158894309579.8414.501622483910338341.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,154 +59,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     3749e0bbdef24efbf1698bf0dbd9575fddb9ed22
-Gitweb:        https://git.kernel.org/tip/3749e0bbdef24efbf1698bf0dbd9575fddb9ed22
-Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 29 Apr 2020 18:07:48 +03:00
+Commit-ID:     5eb88f0476aba76fd6aa48e34b328ff864e84651
+Gitweb:        https://git.kernel.org/tip/5eb88f0476aba76fd6aa48e34b328ff864e84651
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 29 Apr 2020 15:45:09 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:29 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:30 -03:00
 
-perf thread-stack: Add thread_stack__br_sample_late()
+perf evsel: Rename perf_evsel__nr_cpus() to evsel__nr_cpus()
 
-Add a thread stack function to create a branch stack for hardware events
-where the sample records get created some time after the event occurred.
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-7-adrian.hunter@intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 104 ++++++++++++++++++++++++++++++++-
- tools/perf/util/thread-stack.h |   3 +-
- 2 files changed, 107 insertions(+)
+ tools/perf/builtin-script.c    |  2 +-
+ tools/perf/util/evsel.h        |  2 +-
+ tools/perf/util/stat-display.c | 10 +++++-----
+ tools/perf/util/stat.c         |  4 ++--
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 7969883..1b992bb 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -645,6 +645,110 @@ void thread_stack__br_sample(struct thread *thread, int cpu,
- 	}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3aadefd..907b5c9 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1977,7 +1977,7 @@ static struct scripting_ops	*scripting_ops;
+ static void __process_stat(struct evsel *counter, u64 tstamp)
+ {
+ 	int nthreads = perf_thread_map__nr(counter->core.threads);
+-	int ncpus = perf_evsel__nr_cpus(counter);
++	int ncpus = evsel__nr_cpus(counter);
+ 	int cpu, thread;
+ 	static int header_printed;
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 7ff37c4..e2a0ebe 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -143,7 +143,7 @@ static inline struct perf_cpu_map *evsel__cpus(struct evsel *evsel)
+ 	return perf_evsel__cpus(&evsel->core);
  }
  
-+/* Start of user space branch entries */
-+static bool us_start(struct branch_entry *be, u64 kernel_start, bool *start)
-+{
-+	if (!*start)
-+		*start = be->to && be->to < kernel_start;
-+
-+	return *start;
-+}
-+
-+/*
-+ * Start of branch entries after the ip fell in between 2 branches, or user
-+ * space branch entries.
-+ */
-+static bool ks_start(struct branch_entry *be, u64 sample_ip, u64 kernel_start,
-+		     bool *start, struct branch_entry *nb)
-+{
-+	if (!*start) {
-+		*start = (nb && sample_ip >= be->to && sample_ip <= nb->from) ||
-+			 be->from < kernel_start ||
-+			 (be->to && be->to < kernel_start);
-+	}
-+
-+	return *start;
-+}
-+
-+/*
-+ * Hardware sample records, created some time after the event occurred, need to
-+ * have subsequent addresses removed from the branch stack.
-+ */
-+void thread_stack__br_sample_late(struct thread *thread, int cpu,
-+				  struct branch_stack *dst, unsigned int sz,
-+				  u64 ip, u64 kernel_start)
-+{
-+	struct thread_stack *ts = thread__stack(thread, cpu);
-+	struct branch_entry *d, *s, *spos, *ssz;
-+	struct branch_stack *src;
-+	unsigned int nr = 0;
-+	bool start = false;
-+
-+	dst->nr = 0;
-+
-+	if (!ts)
-+		return;
-+
-+	src = ts->br_stack_rb;
-+	if (!src->nr)
-+		return;
-+
-+	spos = &src->entries[ts->br_stack_pos];
-+	ssz  = &src->entries[ts->br_stack_sz];
-+
-+	d = &dst->entries[0];
-+	s = spos;
-+
-+	if (ip < kernel_start) {
-+		/*
-+		 * User space sample: start copying branch entries when the
-+		 * branch is in user space.
-+		 */
-+		for (s = spos; s < ssz && nr < sz; s++) {
-+			if (us_start(s, kernel_start, &start)) {
-+				*d++ = *s;
-+				nr += 1;
-+			}
-+		}
-+
-+		if (src->nr >= ts->br_stack_sz) {
-+			for (s = &src->entries[0]; s < spos && nr < sz; s++) {
-+				if (us_start(s, kernel_start, &start)) {
-+					*d++ = *s;
-+					nr += 1;
-+				}
-+			}
-+		}
-+	} else {
-+		struct branch_entry *nb = NULL;
-+
-+		/*
-+		 * Kernel space sample: start copying branch entries when the ip
-+		 * falls in between 2 branches (or the branch is in user space
-+		 * because then the start must have been missed).
-+		 */
-+		for (s = spos; s < ssz && nr < sz; s++) {
-+			if (ks_start(s, ip, kernel_start, &start, nb)) {
-+				*d++ = *s;
-+				nr += 1;
-+			}
-+			nb = s;
-+		}
-+
-+		if (src->nr >= ts->br_stack_sz) {
-+			for (s = &src->entries[0]; s < spos && nr < sz; s++) {
-+				if (ks_start(s, ip, kernel_start, &start, nb)) {
-+					*d++ = *s;
-+					nr += 1;
-+				}
-+				nb = s;
-+			}
-+		}
-+	}
-+
-+	dst->nr = nr;
-+}
-+
- struct call_return_processor *
- call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
- 			   void *data)
-diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-index c279a0c..3bc47a4 100644
---- a/tools/perf/util/thread-stack.h
-+++ b/tools/perf/util/thread-stack.h
-@@ -91,6 +91,9 @@ void thread_stack__sample_late(struct thread *thread, int cpu,
- 			       u64 kernel_start);
- void thread_stack__br_sample(struct thread *thread, int cpu,
- 			     struct branch_stack *dst, unsigned int sz);
-+void thread_stack__br_sample_late(struct thread *thread, int cpu,
-+				  struct branch_stack *dst, unsigned int sz,
-+				  u64 sample_ip, u64 kernel_start);
- int thread_stack__flush(struct thread *thread);
- void thread_stack__free(struct thread *thread);
- size_t thread_stack__depth(struct thread *thread, int cpu);
+-static inline int perf_evsel__nr_cpus(struct evsel *evsel)
++static inline int evsel__nr_cpus(struct evsel *evsel)
+ {
+ 	return evsel__cpus(evsel)->nr;
+ }
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 679aaa6..b0e5d85 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -333,7 +333,7 @@ static int first_shadow_cpu(struct perf_stat_config *config,
+ 	if (config->aggr_mode == AGGR_GLOBAL)
+ 		return 0;
+ 
+-	for (i = 0; i < perf_evsel__nr_cpus(evsel); i++) {
++	for (i = 0; i < evsel__nr_cpus(evsel); i++) {
+ 		int cpu2 = evsel__cpus(evsel)->map[i];
+ 
+ 		if (config->aggr_get_id(config, evlist->core.cpus, cpu2) == id)
+@@ -508,7 +508,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+ 		id = config->aggr_map->map[s];
+ 		evlist__for_each_entry(evlist, counter) {
+ 			val = 0;
+-			for (cpu = 0; cpu < perf_evsel__nr_cpus(counter); cpu++) {
++			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+ 				s2 = config->aggr_get_id(config, evlist->core.cpus, cpu);
+ 				if (s2 != id)
+ 					continue;
+@@ -599,7 +599,7 @@ static void aggr_cb(struct perf_stat_config *config,
+ 	struct aggr_data *ad = data;
+ 	int cpu, s2;
+ 
+-	for (cpu = 0; cpu < perf_evsel__nr_cpus(counter); cpu++) {
++	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+ 		struct perf_counts_values *counts;
+ 
+ 		s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
+@@ -847,7 +847,7 @@ static void print_counter(struct perf_stat_config *config,
+ 	double uval;
+ 	int cpu;
+ 
+-	for (cpu = 0; cpu < perf_evsel__nr_cpus(counter); cpu++) {
++	for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+ 		struct aggr_data ad = { .cpu = cpu };
+ 
+ 		if (!collect_data(config, counter, counter_cb, &ad))
+@@ -1148,7 +1148,7 @@ static void print_percore_thread(struct perf_stat_config *config,
+ 	int s, s2, id;
+ 	bool first = true;
+ 
+-	for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
++	for (int i = 0; i < evsel__nr_cpus(counter); i++) {
+ 		s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
+ 		for (s = 0; s < config->aggr_map->nr; s++) {
+ 			id = config->aggr_map->map[s];
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 242476e..da3a206 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -173,7 +173,7 @@ static void perf_evsel__reset_prev_raw_counts(struct evsel *evsel)
+ 
+ static int perf_evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
+ {
+-	int ncpus = perf_evsel__nr_cpus(evsel);
++	int ncpus = evsel__nr_cpus(evsel);
+ 	int nthreads = perf_thread_map__nr(evsel->core.threads);
+ 
+ 	if (perf_evsel__alloc_stat_priv(evsel) < 0 ||
+@@ -334,7 +334,7 @@ static int process_counter_maps(struct perf_stat_config *config,
+ 				struct evsel *counter)
+ {
+ 	int nthreads = perf_thread_map__nr(counter->core.threads);
+-	int ncpus = perf_evsel__nr_cpus(counter);
++	int ncpus = evsel__nr_cpus(counter);
+ 	int cpu, thread;
+ 
+ 	if (counter->core.system_wide)
