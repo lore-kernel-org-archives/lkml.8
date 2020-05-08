@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144E3C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25B321473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89421208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942741;
-	bh=W3z8GpEqUg7Gwz4mNu6eXk9h4W8cmjS7GxG53neu7o8=;
+	s=default; t=1588942749;
+	bh=ggRepalI9rxSZiHeWYpAhYBIqtEyUblOEGC0s7+G0Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MVTtdYfXeNQhfVNGJb0hV/5//qiiyyY8Due0mRlUQylHVHSI9GRHBROHAixctUVI
-	 GLZsp9r9xXtN8t12nL34dNylYH+0CRlA2wCxn6tJoTEq9an7XIITFTpZzYdutF6DpC
-	 SFTLeQ0t68bMFmGw1I96BEHAd+/Zjcv0NYcxy/mQ=
+	b=B5VL+BYkhBAtZE4ljmpa3zBP1TBf6F04SODQFrgG6rCC4Pb6D5EOcrtvA6pqRcHAL
+	 tga+y0IFbLdeeAjCUOVa1nNmPxlQ8dgzRTAvWd2cI5dBosNN3Ye9GYqnXOJh9fxV9i
+	 4GFuym75m/+UiuSD3QO3yalfPFW1sePPSbPwxDj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgEHMxw (ORCPT
+        id S1728138AbgEHM7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35762 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730087AbgEHMxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:46 -0400
+        id S1729576AbgEHMxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC0624953;
-        Fri,  8 May 2020 12:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABEA2054F;
+        Fri,  8 May 2020 12:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942426;
-        bh=W3z8GpEqUg7Gwz4mNu6eXk9h4W8cmjS7GxG53neu7o8=;
+        s=default; t=1588942421;
+        bh=ggRepalI9rxSZiHeWYpAhYBIqtEyUblOEGC0s7+G0Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRj3VQXb6V4Ea1xzfpcGNI5mayh50EgROeGlnJCa4JXTVk1jf+b2E2GiGzKpVFuuM
-         tQRLgtZkgun2UKjP3gGkreIVnjLIT6jU3GMyq6ebC0WYmDz1u9Tgyr9FpC5ynPSVA/
-         HQ+3UktRSMwEnRJe4qH6fdOm1rOZg+x12UU0MJz8=
+        b=qhtQhW+JsZSozGGQqqiJNscx16zmlwcP8AQ8oOphssscJtYIdw3qcAvdfRoZklBBR
+         wdnpveAEgnRMEVy2y2DK0BuI+hZcWnQh8OoXQ2ZR0MIMneYH9M5a/BREefzaXrU7By
+         m6GYSNlma+L28rRv5Uhq8vDGBckK5bLfwOz4HLyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 41/50] platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
-Date:   Fri,  8 May 2020 14:35:47 +0200
-Message-Id: <20200508123048.829805838@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 39/50] x86/kvm: fix a missing-prototypes "vmread_error"
+Date:   Fri,  8 May 2020 14:35:45 +0200
+Message-Id: <20200508123048.626812096@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -60,38 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-commit 1d6f8c5bac93cceb2d4ac8e6331050652004d802 upstream.
+commit 514ccc194971d0649e4e7ec8a9b3a6e33561d7bf upstream.
 
-Commit 1f27dbd8265d ("platform/x86: GPD pocket fan: Allow somewhat
-lower/higher temperature limits") changed the module-param sanity check
-to accept temperature limits between 20 and 90 degrees celcius.
+The commit 842f4be95899 ("KVM: VMX: Add a trampoline to fix VMREAD error
+handling") removed the declaration of vmread_error() causes a W=1 build
+failure with KVM_WERROR=y. Fix it by adding it back.
 
-But the error message printed when the module params are outside this
-range was not updated. This commit updates the error message to match
-the new min and max value for the temp-limits.
+arch/x86/kvm/vmx/vmx.c:359:17: error: no previous prototype for 'vmread_error' [-Werror=missing-prototypes]
+ asmlinkage void vmread_error(unsigned long field, bool fault)
+                 ^~~~~~~~~~~~
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Message-Id: <20200402153955.1695-1-cai@lca.pw>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/gpd-pocket-fan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/ops.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -128,7 +128,7 @@ static int gpd_pocket_fan_probe(struct p
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -12,6 +12,7 @@
  
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
- 		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
--			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
-+			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 20000 and 90000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
- 			temp_limits[1] = TEMP_LIMIT1_DEFAULT;
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
+ 
++asmlinkage void vmread_error(unsigned long field, bool fault);
+ __attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
+ 							 bool fault);
+ void vmwrite_error(unsigned long field, unsigned long value);
 
 
