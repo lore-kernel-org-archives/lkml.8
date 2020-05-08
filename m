@@ -2,152 +2,108 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EE3C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27456C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2591A206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:25:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OW1SdK+p"
+	by mail.kernel.org (Postfix) with ESMTP id 03B23208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEHLZ2 (ORCPT
+        id S1727099AbgEHLZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:25:28 -0400
-Received: from mout.web.de ([212.227.15.4]:50547 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHLZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:25:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588937121;
-        bh=KRtwDig6jNi/2gGxUoywgUs81u3yGPRZxNkFSLPvqvM=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=OW1SdK+phrRraO6wpjvEB+Qspc7FduqwNpB1mqeASrXFnbxsjUY17Mn58LvaK8syY
-         lsq+yLi2NChP5f1osffmk9/I0cv3p9YN60JNCuiFrnnhfoekhULJ4Omtuw07IsMj6t
-         wm+VxI/kzsrNwBmxN30X6MkZTqbgFkNEWTiZiBwU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.146.138]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LkhUq-1iwrQq3PgC-00aVT4; Fri, 08
- May 2020 13:25:20 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anton Vorontsov <anton.vorontsov@linaro.org>,
-        Milo Kim <milo.kim@ti.com>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power: supply: lp8788: Fix an error handling path in
- lp8788_charger_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        linux-pm@vger.kernel.org
-Message-ID: <ccb359c1-b157-6d41-5fd2-791a368d7cf5@web.de>
-Date:   Fri, 8 May 2020 13:25:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 8 May 2020 07:25:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:53715 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEHLZb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:25:31 -0400
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MLQl3-1jop8E0tIB-00IQOB; Fri, 08 May 2020 13:25:29 +0200
+Received: by mail-qv1-f51.google.com with SMTP id h6so530757qvz.8;
+        Fri, 08 May 2020 04:25:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PualJxPnxEKPSgGwLsW/QiwEv3yAoSye8KoQz66n2fv0mYwpEjpf
+        an56zmcaw6DmuMbPL+1ZP9mWwUcoahSu3pyR/+0=
+X-Google-Smtp-Source: APiQypKP7zSjz563Q47ftI8vSMTS44GtpXWK8IqV4snmbCtzxnXEyx+F4Gu3Bvc4WC6wp9pjrwFUD39xIhs1aUhY1bc=
+X-Received: by 2002:a0c:e781:: with SMTP id x1mr2425587qvn.4.1588937127849;
+ Fri, 08 May 2020 04:25:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:95copn6+sFJb5Hv5dLgrhtuzFCIVzSgoKbKDtuz+a74fYlwYhY1
- shaOC5gMkLUk1hKzqK0RGmuHltZtuDy+xN18foobCmt1EKCE8maDkx2Cm1BjhomTMyespiT
- /PDfD9nuuUyVFXgA7qkmsdIcwavy8wJPRhAZsSELvnNrJ9+SiV6YlSOm88X+1uOEW9fVvl2
- epTqC4Uebe4c7fNSTkfwg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mg3N+Ul5hXE=:H9xGnI8DOclGrzBUbGrVLy
- HwsEz8gE2CeRkwAeqDsQfZgQD89f/6GLuskhjIUDmGD0tkZN6znq9PJ6orEzn6IclEjou4iao
- AdlWAN0HmC44vsFeL76Xnxm3leAXD2Yb1I9eNG/Czz15zDyeZxsLQsQlRVbj3IR5U9QuxhZYM
- 5z3CUi8UZ26eKUl5tRtxMxB7D4Llm3Hu+iJUW3JGsGe9Cc0snt/28KnvB93yveV6RXoh3XGq2
- MJ4aPPjmhMZPWb4YIMOsojgIcf83NmPz+9gu5Pg55iitZ8oGX6FmUyBV/UzYjXE2qza5H/hNP
- rhkaVnBtKT4nYo9pISePMZI6iOzjx3l25dLdTql93Kbupel6KtpUTV2Fq7culIgzvTKvH9Pmy
- VoZQ3uuAV+VaT/wK0fXpdzV2RHzisIsn8jAT2CSml2+GGnKpEFu7nIOtRnfw5I+jC3ztyIzQt
- nNWKEUFrHmZ20lmvBCGaMoe2DrLgRkeWggeZJQRnhD5tYaXjxQLNeAr8ADtgrxhn0m/IjIq32
- r5DlXSA6G6kYKMh1iJlYSlIXqSo/CBEeGOYLLqlgfcdtsXL2CVfE3hDT770W6uo/f4nrySpvf
- G91izl/MtJrHAdto2o3TRuODifl9y5Ebhy5DDznD8SfmV4Q65ZI6ZxwKNmx9aDqas2PaFvits
- CJDo2qoG6ntduf/S9+Dbaf7YzDMaaxfUgEH732JHA9i6hhXY3wH3B+RQAW4DVpM9q1oFbQU3k
- bzssYjeIciqKuSBCgegYe0cuICLvYAWwPCB5vdIbsxFlzVcNRNXKlp0RWwN1s1wtf2394Q1ti
- qMtbiKqEnhm4p85+oQYg7PySoTzloom7v24kOgxXKZf7wHPW9QivHcWk/lUFfYbIJLr3vFrjj
- CVtcZrz6tL1AdrF9hnOMwfeeyLVBDYHdPRzc+mbZVn4x76Jz9iZWmF52UGoOcBH0Kdma+Y7rx
- +sosJ097v28UUtsrE+QNpc1k09QkJ0554tVR2vkGKxzfhjDxEuK3KHeZbeeormMno46gNZ284
- t6QEHDqDP7Z8U4bTezgruLdLBnEUDde6F1a8mTZL6Got6PFCqmqdXKWxRzq73L5xya2stQ7Pf
- QjaMR0Y4CEUC18NPH7AbPHvNP42eDYRGom3RWKlSUrjQL/Ps87pq2VZJG0bErXlpeZ0/lIOXw
- ymuTfa/4dbDCAlPGr+UK5KMqPEHsX3WvZ2NB/mFHriLXRdWNiLS1N+/t92lIGKCse+pxddieI
- 6UYfrdWO6hjLJfSZX
+References: <20200508095914.20509-1-grygorii.strashko@ti.com>
+ <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com> <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com>
+In-Reply-To: <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 8 May 2020 13:25:11 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0-6vRpHJugnUFhNNAALmqx4CUW9ffTOojxu5a80tAQTw@mail.gmail.com>
+Message-ID: <CAK8P3a0-6vRpHJugnUFhNNAALmqx4CUW9ffTOojxu5a80tAQTw@mail.gmail.com>
+Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
+ TI_CPTS_MOD workaround
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Networking <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:XZd2NI9K9woe7pS7VYePjL3/1sBMIWIWN3C1EZIKq2jfpUZOG/a
+ mUqNE2/PA/CLCnjefd/KgSZNVQuzbUX9tLZb5OaphUVB+xs+NCaSTbRCcnAG4CSSIuBtd2N
+ S/+2DI3mr4FH0huzMz0uyJsQa3eBS0jnBxsoZ1KXwcxWpeL4FzcMBtSI7ZiOYBrTU9D9Cwa
+ uPazwMgzWzZIMlc7X1iNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:77m6WKCYY70=:G7Ex5rkPFtdKiHJHnpDwH0
+ jbbAkDxOou9b3jh0zqHpCdFmrYFlIo73nJWSJmWc/dsfZa8EOPAaYjzJ6vS7K0wBD3TDRMTGl
+ 6DbBhj7d1/9bBStJ6SMr6dvRco9BbUnMozr3oSWmN54GYYsd0Kd2zH44FmGjw69QlEkiH3jPy
+ t71uXHPVfdEtocmRy7vhtJZi8PFWcTHKNWUYCqKWfzCad4hO5jtTyfgdKIbMW//V+f0qQN1Mh
+ W08tpjxp/9qWTp+8wmdbvWAcKDpvDpmvYXHEhj2//6rEDkCMJHs6Vm/nxurvT6qySUnUHBNLO
+ bQIEDktrq3CrIgv2HMkn3/tOlypPTneNGUDhkeDynA5BMH71CDb7TEbsZIKsXJdGP+uGj5Qnj
+ Lc76Z68U+DYKD09Pb3T1Xeh/qiKrY2lEnN80c/MjrZouEX10RNmtYuex07qDFMpETLR1jTX/b
+ acAfwzdqLmIlTTCScCXwBp9pDBV2im8cXL3VZNHUQ1zp9oj8NNUjv5HPwsz2uUtVEs2M1+9hd
+ 7YaGeiU7ZUKbER5azRIqFJRicDMDlj0s7EpwRhj66s9d2f7vn+/1xPkVWxgu7kBZNEkk7TBlN
+ fQFPQt8ZA+fRQhzBY4g3IL4aDrpje5tQovkUY0MH2OkhZQu0YGr/Whp/JLvFEa5zGrEp4svCT
+ 4ts3QxGBjAxOFkO+s6FA1vVkCm8xzr/FPCVZ5NcEFf3d2eyyf6p1LFCOqDshF+dS/USjmYT29
+ KtV/LN3rYqC0DKaMZD+o3ltbX3VvGFWRqQbvd1ijgHpi5TJ9eXwjOBHHtcYzBHZfu+bpILQgH
+ xeP6AoLdaBzenh4DSwgjr+Ppd3kPevRfSCxuS4S+CusKE4Zd50=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In case of error, resources allocated in 'lp8788_setup_adc_channel()' mu=
-st
-> be released.
+On Fri, May 8, 2020 at 1:14 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> On 08/05/2020 13:10, Arnd Bergmann wrote:
+> > On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
+
+> >> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+> >> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+> >> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+> >> functions) _is_ enabled. So we end up compiling calls to functions that
+> >> don't exist, resulting in the linker errors.
+> >>
+> >> This patch fixes build errors and restores previous behavior by:
+> >>   - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+> >>   - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
+> >
+> > I don't understand what IS_REACHABLE() is needed for once all the other
+> > changes are in place. I'd hope we can avoid that. Do you still see
+> > failures without
+> > that or is it just a precaution. I can do some randconfig testing on your patch
+> > to see what else might be needed to avoid IS_REACHABLE().
 >
-> Add a call to 'lp8788_release_adc_channel()' as already done in the remo=
-ve
-> function.
-
-I suggest to omit apostrophes from this commit message.
-
-
-=E2=80=A6
-> +++ b/drivers/power/supply/lp8788-charger.c
-> @@ -719,13 +719,17 @@  static int lp8788_charger_probe(struct platform_d=
-evice *pdev)
+> I've not changed this part of original patch, but seems you're right.
 >
->  	ret =3D lp8788_psy_register(pdev, pchg);
->  	if (ret)
-> -		return ret;
-> +		goto err_release_adc_channel;
->
->  	ret =3D lp8788_irq_register(pdev, pchg);
-=E2=80=A6
+> I can drop it and resend, but, unfortunately, i do not have time today for full build testing.
 
-You propose to perform another channel release only once for this
-function implementation.
-Thus I find nicer to specify the desired exception handling in
-this if branch directly.
+I have applied to patch locally to my randconfig tree, with the IS_REACHABLE()
+changes taken out.
 
-Regards,
-Markus
+> By the way in ptp_clock_kernel.h
+> #if IS_REACHABLE(CONFIG_PTP_1588_CLOCK)
+
+This should also be changed I think, but it can wait for another day.
+
+      Arnd
