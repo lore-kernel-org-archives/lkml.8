@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7973FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16EBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50BC824968
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEED21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941678;
-	bh=kV98EsgCCVwfYGIGyknDDHj3jNejnuhthv1D6favVD4=;
+	s=default; t=1588941684;
+	bh=SoH5jBDhuV4IM6MIA+ZA/Z2HW9G0P3TkRawdTS8TkI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcLDrWe5HfA5b9yQlS3DwU2Pu+w0ekjcJ7AqkgCLtw0uEZNfW6GRg6WZct/cv+x5t
-	 iilGHSFyS3WCTqQMFNihaCeMAs6HPT/jXAgxv1zhz3r7i6hVnVPGkmRLECaPG4KO1t
-	 DmMzk+ilrewtW5TgINeAoxAHhemGWeb+rywWS4/A=
+	b=hvjcEEqlJZbce51pHXFNZ+5xpLXi6iW4R+VZ///PkY8u0VAPxguEKM9EGHzD/m19W
+	 fTu3YHhxJ3RMCYns8FHB+SDtM65TC0fN2pW3JFZdugygUzUZ4WsfhrIP1vw65WLn/j
+	 xbKdRRIkx3VXSdSMi3VKnFBV4ZqiICkBjH9fEadU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHMlR (ORCPT
+        id S1728305AbgEHMlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35668 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgEHMlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:10 -0400
+        id S1728801AbgEHMlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5B920731;
-        Fri,  8 May 2020 12:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61B020731;
+        Fri,  8 May 2020 12:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941670;
-        bh=kV98EsgCCVwfYGIGyknDDHj3jNejnuhthv1D6favVD4=;
+        s=default; t=1588941675;
+        bh=SoH5jBDhuV4IM6MIA+ZA/Z2HW9G0P3TkRawdTS8TkI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+MZ0h6djnhrTDoT3EUln2aqdT45GDWCuJtXLkJJUL8S3Kvzjy2xXB2U4uA6Fpsk+
-         RoerjEZa1cuvWqdwDXPF2wdERf04CenRQI8IVPkC86Js5bSvtR7rc1csYjGOTeQYSx
-         tHF0CIvqqQfTuc4DTQuFF3+H1QbBw5FMRWLBMNuE=
+        b=fUIfb7slSPKSZbEvCkzL79QjPmrZgh2FbPKEHLT2JTrreizxD6X2ynX9r6ywb1BeV
+         u/ZIR3CIWVjLci3WzTgzu6WTY/XYCO4AH4kjDz25qWC9IrZIKOp19uKvKHp+xuQtT8
+         trfy8WJqojoMu4uKKVHhRkrJDTt2iVOCLxUR8+Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Tayari <ilant@mellanox.com>,
-        Rami Rosen <roszenrami@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 125/312] xfrm: Fix memory leak of aead algorithm name
-Date:   Fri,  8 May 2020 14:31:56 +0200
-Message-Id: <20200508123133.269293616@linuxfoundation.org>
+        stable@vger.kernel.org, Arik Nemtsov <arikx.nemtsov@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 127/312] mac80211: TDLS: always downgrade invalid chandefs
+Date:   Fri,  8 May 2020 14:31:58 +0200
+Message-Id: <20200508123133.437228718@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,38 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Tayari <ilant@mellanox.com>
+From: Arik Nemtsov <arik@wizery.com>
 
-commit b588479358ce26f32138e0f0a7ab0678f8e3e601 upstream.
+commit db8d99774c2682559b7648857697b9b588c6795a upstream.
 
-commit 1a6509d99122 ("[IPSEC]: Add support for combined mode algorithms")
-introduced aead. The function attach_aead kmemdup()s the algorithm
-name during xfrm_state_construct().
-However this memory is never freed.
-Implementation has since been slightly modified in
-commit ee5c23176fcc ("xfrm: Clone states properly on migration")
-without resolving this leak.
-This patch adds a kfree() call for the aead algorithm name.
+Even if the current chandef width is equal to the station's max-BW, it
+doesn't mean it's a valid width for TDLS. Make sure to always check
+regulatory constraints in these cases.
 
-Fixes: 1a6509d99122 ("[IPSEC]: Add support for combined mode algorithms")
-Signed-off-by: Ilan Tayari <ilant@mellanox.com>
-Acked-by: Rami Rosen <roszenrami@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 0fabfaafec3a ("mac80211: upgrade BW of TDLS peers when possible")
+Signed-off-by: Arik Nemtsov <arikx.nemtsov@intel.com>
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_state.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/mac80211/tdls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -332,6 +332,7 @@ static void xfrm_state_gc_destroy(struct
- {
- 	tasklet_hrtimer_cancel(&x->mtimer);
- 	del_timer_sync(&x->rtimer);
-+	kfree(x->aead);
- 	kfree(x->aalg);
- 	kfree(x->ealg);
- 	kfree(x->calg);
+--- a/net/mac80211/tdls.c
++++ b/net/mac80211/tdls.c
+@@ -332,7 +332,7 @@ ieee80211_tdls_chandef_vht_upgrade(struc
+ 		return;
+ 
+ 	/* proceed to downgrade the chandef until usable or the same */
+-	while (uc.width > max_width &&
++	while (uc.width > max_width ||
+ 	       !cfg80211_reg_can_beacon_relax(sdata->local->hw.wiphy, &uc,
+ 					      sdata->wdev.iftype))
+ 		ieee80211_chandef_downgrade(&uc);
 
 
