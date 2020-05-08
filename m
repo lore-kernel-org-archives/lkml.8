@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57183C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D35C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E9B21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD6021473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEHIAa (ORCPT
+        id S1727103AbgEHIAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:00:30 -0400
+        Fri, 8 May 2020 04:00:32 -0400
 Received: from mga18.intel.com ([134.134.136.126]:29311 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgEHIA1 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:00:27 -0400
-IronPort-SDR: J9oleHZj2AkjpZltX+8ZwM1KfBNvF8KeMBA21L09whHLpbp9V8eL2JQ3qXHBK+5ZTKvZJk0wY0
- UFkEmoC11mRw==
+        id S1727076AbgEHIAa (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:00:30 -0400
+IronPort-SDR: mqoCvGbJ8zfIQ7Vo33EjKcE9ns8TVme/Eo4MzF0EncDMT72XwLRB3EmfCKKq1BfiHV2ELgMq9w
+ Y3rDJUzRbXnw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 01:00:27 -0700
-IronPort-SDR: prE++C+j3nvm/PotFDZlOYZL9WZr9n9YGYfHiZPdohchKHco79UGJMyzcpjtAHN380zCDWWnmA
- 6GjRoP1eacRw==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 01:00:29 -0700
+IronPort-SDR: dV9QlGlDEIbymudBlGF0fo1KiFQDn/jQ3aV3MkxyoZrjvV4Wuy4LbmlrXG3/Y5riPzeZctbsy2
+ ujd51rHs5s4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="370372914"
+   d="scan'208";a="370372939"
 Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 01:00:24 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 01:00:27 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 3/4] perf stat: Copy counts from prev_raw_counts to evsel->counts
-Date:   Fri,  8 May 2020 15:58:16 +0800
-Message-Id: <20200508075817.10588-4-yao.jin@linux.intel.com>
+Subject: [PATCH v4 4/4] perf stat: Report summary for interval mode
+Date:   Fri,  8 May 2020 15:58:17 +0800
+Message-Id: <20200508075817.10588-5-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508075817.10588-1-yao.jin@linux.intel.com>
 References: <20200508075817.10588-1-yao.jin@linux.intel.com>
@@ -49,102 +49,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be useful to support the overall statistics for perf-stat
-interval mode. For example, report the summary at the end of
-"perf-stat -I" output.
+Currently perf-stat supports to print counts at regular interval (-I),
+but it's not very easy for user to get the overall statistics.
 
-But since perf-stat can support many aggregation modes, such as
---per-thread, --per-socket, -M and etc, we need a solution which
-doesn't bring much complexity.
+The patch uses 'evsel->prev_raw_counts' to get counts for summary.
+Copy the counts to 'evsel->counts' after printing the interval results.
+Next, we just follow the non-interval processing.
 
-The idea is to use 'evsel->prev_raw_counts' which is updated in
-each interval and it's saved with the latest counts. Before reporting
-the summary, we copy the counts from evsel->prev_raw_counts to
-evsel->counts, and next we just follow non-interval processing.
+Let's see some examples,
 
-In evsel__compute_deltas, this patch saves counts to the member
-[cpu0,thread0] of perf_counts for AGGR_GLOBAL.
+ root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000412064          2,281,114      cycles
+      2.001383658          2,547,880      cycles
 
-That's because after copying evsel->prev_raw_counts to evsel->counts,
-perf_counts(evsel->counts, cpu, thread) are all 0 for AGGR_GLOBAL.
-Once we go to process_counter_maps again, all members of perf_counts
-are 0.
+  Performance counter stats for 'system wide':
 
-So this patch uses a trick that saves the previous aggr value to
-the member [cpu0,thread0] of perf_counts, then aggr calculation
-in process_counter_values can work correctly.
+          4,828,994      cycles
+
+        2.002860349 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000389902          1,536,093      cycles
+      1.000389902            420,226      instructions              #    0.27  insn per cycle
+      2.001433453          2,213,952      cycles
+      2.001433453            735,465      instructions              #    0.33  insn per cycle
+
+  Performance counter stats for 'system wide':
+
+          3,750,045      cycles
+          1,155,691      instructions              #    0.31  insn per cycle
+
+        2.003023361 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000435121            905,303      inst_retired.any          #      2.9 CPI
+      1.000435121          2,663,333      cycles
+      1.000435121            914,702      inst_retired.any          #      0.3 IPC
+      1.000435121          2,676,559      cpu_clk_unhalted.thread
+      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
+      2.001615941          3,551,357      cycles
+      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
+      2.001615941          3,551,044      cpu_clk_unhalted.thread
+
+  Performance counter stats for 'system wide':
+
+          2,856,395      inst_retired.any          #      2.2 CPI
+          6,214,690      cycles
+          2,865,539      inst_retired.any          #      0.5 IPC
+          6,227,603      cpu_clk_unhalted.thread
+
+        2.003403078 seconds time elapsed
 
  v4:
  ---
- Change the commit message.
- No functional change.
+ Move affinity setup and read_counter_cpu to a new function
+ read_affinity_counters. It's only called when stat_config.summary
+ is not set.
+
+ v3:
+ ---
+ Use evsel->prev_raw_counts for summary counts
+
+ v2:
+ ---
+ Rebase to perf/core branch
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/evsel.c |  1 +
- tools/perf/util/stat.c  | 24 ++++++++++++++++++++++++
- tools/perf/util/stat.h  |  1 +
- 3 files changed, 26 insertions(+)
+ tools/perf/builtin-stat.c | 27 ++++++++++++++++++++++++---
+ tools/perf/util/stat.c    |  2 +-
+ tools/perf/util/stat.h    |  1 +
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 28683b0eb738..6fae1ec28886 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1283,6 +1283,7 @@ void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 	if (cpu == -1) {
- 		tmp = evsel->prev_raw_counts->aggr;
- 		evsel->prev_raw_counts->aggr = *count;
-+		*perf_counts(evsel->prev_raw_counts, 0, 0) = *count;
- 	} else {
- 		tmp = *perf_counts(evsel->prev_raw_counts, cpu, thread);
- 		*perf_counts(evsel->prev_raw_counts, cpu, thread) = *count;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index e397815f0dfb..aadc723ce871 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -225,6 +225,30 @@ void perf_evlist__reset_prev_raw_counts(struct evlist *evlist)
- 		evsel__reset_prev_raw_counts(evsel);
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index f3b3a59ac7d2..d6a6aa6b997d 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -314,14 +314,14 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
+ 	return 0;
  }
  
-+static void perf_evsel__copy_prev_raw_counts(struct evsel *evsel)
-+{
-+	int ncpus = evsel__nr_cpus(evsel);
-+	int nthreads = perf_thread_map__nr(evsel->core.threads);
+-static void read_counters(struct timespec *rs)
++static int read_affinity_counters(struct timespec *rs)
+ {
+ 	struct evsel *counter;
+ 	struct affinity affinity;
+ 	int i, ncpus, cpu;
+ 
+ 	if (affinity__setup(&affinity) < 0)
+-		return;
++		return -1;
+ 
+ 	ncpus = perf_cpu_map__nr(evsel_list->core.all_cpus);
+ 	if (!target__has_cpu(&target) || target__has_per_thread(&target))
+@@ -341,6 +341,15 @@ static void read_counters(struct timespec *rs)
+ 		}
+ 	}
+ 	affinity__cleanup(&affinity);
++	return 0;
++}
 +
-+	for (int thread = 0; thread < nthreads; thread++) {
-+		for (int cpu = 0; cpu < ncpus; cpu++) {
-+			*perf_counts(evsel->counts, cpu, thread) =
-+				*perf_counts(evsel->prev_raw_counts, cpu,
-+					     thread);
-+		}
++static void read_counters(struct timespec *rs)
++{
++	struct evsel *counter;
++
++	if (!stat_config.summary && (read_affinity_counters(rs) < 0))
++		return;
+ 
+ 	evlist__for_each_entry(evsel_list, counter) {
+ 		if (counter->err)
+@@ -394,6 +403,7 @@ static void runtime_stat_reset(struct perf_stat_config *config)
+ static void process_interval(void)
+ {
+ 	struct timespec ts, rs;
++	struct stats walltime_nsecs_stats_bak;
+ 
+ 	clock_gettime(CLOCK_MONOTONIC, &ts);
+ 	diff_timespec(&rs, &ts, &ref_time);
+@@ -407,9 +417,11 @@ static void process_interval(void)
+ 			pr_err("failed to write stat round event\n");
+ 	}
+ 
++	walltime_nsecs_stats_bak = walltime_nsecs_stats;
+ 	init_stats(&walltime_nsecs_stats);
+ 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
+ 	print_counters(&rs, 0, NULL);
++	walltime_nsecs_stats = walltime_nsecs_stats_bak;
+ }
+ 
+ static void enable_counters(void)
+@@ -765,6 +777,15 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 
+ 	update_stats(&walltime_nsecs_stats, t1 - t0);
+ 
++	if (interval) {
++		stat_config.interval = 0;
++		stat_config.summary = true;
++		perf_evlist__copy_prev_raw_counts(evsel_list);
++		perf_evlist__reset_prev_raw_counts(evsel_list);
++		runtime_stat_reset(&stat_config);
++		perf_stat__reset_shadow_per_stat(&rt_stat);
 +	}
 +
-+	evsel->counts->aggr = evsel->prev_raw_counts->aggr;
-+}
-+
-+void perf_evlist__copy_prev_raw_counts(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__copy_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct evsel *counter)
- {
- 	if (counter->per_pkg_mask)
+ 	/*
+ 	 * Closing a group leader splits the group, and as we only disable
+ 	 * group leaders, results in remaining events becoming enabled. To
+@@ -2159,7 +2180,7 @@ int cmd_stat(int argc, const char **argv)
+ 		}
+ 	}
+ 
+-	if (!forever && status != -1 && !interval)
++	if (!forever && status != -1 && (!interval || stat_config.summary))
+ 		print_counters(NULL, argc, argv);
+ 
+ 	if (STAT_RECORD) {
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index aadc723ce871..49e832a9c109 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -388,7 +388,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+ 	 * interval mode, otherwise overall avg running
+ 	 * averages will be shown for each interval.
+ 	 */
+-	if (config->interval) {
++	if (config->interval || config->summary) {
+ 		for (i = 0; i < 3; i++)
+ 			init_stats(&ps->res_stats[i]);
+ 	}
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..62cf72c71869 100644
+index 62cf72c71869..c60e9e5d6474 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -198,6 +198,7 @@ int perf_evlist__alloc_stats(struct evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct evlist *evlist);
- void perf_evlist__reset_stats(struct evlist *evlist);
- void perf_evlist__reset_prev_raw_counts(struct evlist *evlist);
-+void perf_evlist__copy_prev_raw_counts(struct evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
+@@ -110,6 +110,7 @@ struct perf_stat_config {
+ 	bool			 all_kernel;
+ 	bool			 all_user;
+ 	bool			 percore_show_thread;
++	bool			 summary;
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
 -- 
 2.17.1
 
