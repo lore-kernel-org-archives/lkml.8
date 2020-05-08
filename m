@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B48BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1FD52495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1485A218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942703;
-	bh=osGwwFtM7e5rMfw3M0DmRZxNr6qfcTUhOtTET+KOvqk=;
+	s=default; t=1588942712;
+	bh=T+auyRm387bDHY5h1X+vQAB1Wd987DZ/XpEgUIlqWAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzRpqzdg1POmS8F8VA5lb1AMCJVsHEojV9CTkC5wskrb5QPINQoEcrFzt9cuDpil6
-	 alfvWT/FpUYk2F4rtiY+KUvOa5Tva+2kcuL/y7WO+7OMNMg+pe/Q8ZkEx6Jo3jYxmH
-	 WUeDcX0JLvNzBmBP/+yH9QXjnqjj1IoY/1XudFBY=
+	b=cHmzP1LL7ywwHsGYLCUgfWxX66Za+MKKXNOEoUK7asezP2tQTSbMKe/dZZt6l5/vh
+	 qq/ygCiPZzEF4ehWmoHTvFbk56snI5hCN1MmEthzVAuxBtjyPpM8bf9svsoDpl603m
+	 ZLC15n2MPE0V9s6ILz9xdcVbuqfwXCN4HuA4PpXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgEHM6V (ORCPT
+        id S1730179AbgEHM6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:58:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbgEHMyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:38 -0400
+        id S1728391AbgEHMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B95E24958;
-        Fri,  8 May 2020 12:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6DB224958;
+        Fri,  8 May 2020 12:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942478;
-        bh=osGwwFtM7e5rMfw3M0DmRZxNr6qfcTUhOtTET+KOvqk=;
+        s=default; t=1588942468;
+        bh=T+auyRm387bDHY5h1X+vQAB1Wd987DZ/XpEgUIlqWAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwKVz43R4PPAq9ja+04ELMgPuFCMzFtIYAkjgmdEDH3Y9IRV0YRyUKpJvntgTG3N+
-         w2a5VSrQ8rrbh3nsjt33Nj4BntTYIJdS2laIaZYhBj17upG4VOGqtvPQaYZ6aPn4y+
-         qY+EDp5n8WtSAflIb2Bs1Pi+yB/Qq19eklGI1+t8=
+        b=oX29nqRJTXQIJROhaj9OcrdI8FMSZfdhaJd0z0XEzbK5ByywKNw+j3vRcHU7E+aai
+         MjO819aV6tOHFol+hNln/7c+zExO8I/oN5Y5TEfggjva8Ys2XV4MeecRFdjBXxHJyL
+         6UMOSC+V8hkTYeYdOq2uGO8hliDVt+8X6+Hn/vx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 11/49] selftests: vm: Fix 64-bit test builds for powerpc64le
-Date:   Fri,  8 May 2020 14:35:28 +0200
-Message-Id: <20200508123044.571041956@linuxfoundation.org>
+Subject: [PATCH 5.4 34/50] lib: devres: add a helper function for ioremap_uc
+Date:   Fri,  8 May 2020 14:35:40 +0200
+Message-Id: <20200508123048.118049262@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
-References: <20200508123042.775047422@linuxfoundation.org>
+In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
+References: <20200508123043.085296641@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,51 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Tuowen Zhao <ztuowen@gmail.com>
 
-[ Upstream commit 963e3e9c9a127013eb4d3c82eb997068b1adbb89 ]
+[ Upstream commit e537654b7039aacfe8ae629d49655c0e5692ad44 ]
 
-Some tests are built only for 64-bit systems. This makes
-sure that these tests are built for both big and little
-endian variants of powerpc64.
+Implement a resource managed strongly uncachable ioremap function.
 
-Fixes: 7549b3364201 ("selftests: vm: Build/Run 64bit tests only on 64bit arch")
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Cc: <stable@vger.kernel.org> # v4.19+
+Tested-by: AceLan Kao <acelan.kao@canonical.com>
+Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/vm/Makefile    | 2 +-
- tools/testing/selftests/vm/run_vmtests | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/io.h |  2 ++
+ lib/devres.c       | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-index 3f2e2f0ccbc9a..8074340c6b3ab 100644
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@ -19,7 +19,7 @@ TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += userfaultfd
+diff --git a/include/linux/io.h b/include/linux/io.h
+index accac822336aa..a59834bc0a114 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -64,6 +64,8 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
  
--ifneq (,$(filter $(MACHINE),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
-+ifneq (,$(filter $(MACHINE),arm64 ia64 mips64 parisc64 ppc64 ppc64le riscv64 s390x sh64 sparc64 x86_64))
- TEST_GEN_FILES += va_128TBswitch
- TEST_GEN_FILES += virtual_address_range
- endif
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftests/vm/run_vmtests
-index f337148431980..6e137c9baa1e0 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -59,7 +59,7 @@ else
- fi
+ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ 			   resource_size_t size);
++void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
++				   resource_size_t size);
+ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+ 				   resource_size_t size);
+ void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
+diff --git a/lib/devres.c b/lib/devres.c
+index 6a0e9bd6524ae..17624d35e82d4 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -9,6 +9,7 @@
+ enum devm_ioremap_type {
+ 	DEVM_IOREMAP = 0,
+ 	DEVM_IOREMAP_NC,
++	DEVM_IOREMAP_UC,
+ 	DEVM_IOREMAP_WC,
+ };
  
- #filter 64bit architectures
--ARCH64STR="arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64"
-+ARCH64STR="arm64 ia64 mips64 parisc64 ppc64 ppc64le riscv64 s390x sh64 sparc64 x86_64"
- if [ -z $ARCH ]; then
-   ARCH=`uname -m 2>/dev/null | sed -e 's/aarch64.*/arm64/'`
- fi
+@@ -39,6 +40,9 @@ static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+ 	case DEVM_IOREMAP_NC:
+ 		addr = ioremap_nocache(offset, size);
+ 		break;
++	case DEVM_IOREMAP_UC:
++		addr = ioremap_uc(offset, size);
++		break;
+ 	case DEVM_IOREMAP_WC:
+ 		addr = ioremap_wc(offset, size);
+ 		break;
+@@ -68,6 +72,21 @@ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ }
+ EXPORT_SYMBOL(devm_ioremap);
+ 
++/**
++ * devm_ioremap_uc - Managed ioremap_uc()
++ * @dev: Generic device to remap IO address for
++ * @offset: Resource address to map
++ * @size: Size of map
++ *
++ * Managed ioremap_uc().  Map is automatically unmapped on driver detach.
++ */
++void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
++			      resource_size_t size)
++{
++	return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_UC);
++}
++EXPORT_SYMBOL_GPL(devm_ioremap_uc);
++
+ /**
+  * devm_ioremap_nocache - Managed ioremap_nocache()
+  * @dev: Generic device to remap IO address for
 -- 
 2.20.1
 
