@@ -2,102 +2,78 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B84C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE53208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4652B208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgEHLlz (ORCPT
+        id S1726873AbgEHLmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:41:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:13975 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHLlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:41:55 -0400
-IronPort-SDR: GWIdDZpYotfAyhLXAZ/vF4xmmW7kpozpBVAbes897bMNR67Nrzw4HVjdyabgGCLoQCeaouNuap
- uWS5ATtAyOIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:41:54 -0700
-IronPort-SDR: pqg9ea5sq3gBLSKmJxZ9towtF/mCW6bdxqTrsGht2U1AuNh9Tf7N59C7x/gjEhg9hQJQqbAM46
- C59FwBIt5bNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="339694730"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 08 May 2020 04:41:50 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX1O5-005POV-Nl; Fri, 08 May 2020 14:41:53 +0300
-Date:   Fri, 8 May 2020 14:41:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200508114153.GK185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 07:42:53 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4390 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEHLmx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:42:53 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25eb545a8f18-5941c; Fri, 08 May 2020 19:42:32 +0800 (CST)
+X-RM-TRANSID: 2ee25eb545a8f18-5941c
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65eb545a4a75-390f4;
+        Fri, 08 May 2020 19:42:32 +0800 (CST)
+X-RM-TRANSID: 2ee65eb545a4a75-390f4
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] USB: EHCI: ehci-mv: fix error handling in mv_ehci_probe()
+Date:   Fri,  8 May 2020 19:43:05 +0800
+Message-Id: <20200508114305.15740-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> IP core of the DW DMA controller may be synthesized with different
-> max burst length of the transfers per each channel. According to Synopsis
-> having the fixed maximum burst transactions length may provide some
-> performance gain. At the same time setting up the source and destination
-> multi size exceeding the max burst length limitation may cause a serious
-> problems. In our case the system just hangs up. In order to fix this
-> lets introduce the max burst length platform config of the DW DMA
-> controller device and don't let the DMA channels configuration code
-> exceed the burst length hardware limitation. Depending on the IP core
-> configuration the maximum value can vary from channel to channel.
-> It can be detected either in runtime from the DWC parameter registers
-> or from the dedicated dts property.
+If the function platform_get_irq() failed, the negative value
+returned will not be detected here. So fix error handling in
+mv_ehci_probe(). And when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant
+message here.
 
-I'm wondering what can be the scenario when your peripheral will ask something
-which is not supported by DMA controller?
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ drivers/usb/host/ehci-mv.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Peripheral needs to supply a lot of configuration parameters specific to the
-DMA controller in use (that's why we have struct dw_dma_slave).
-So, seems to me the feasible approach is supply correct data in the first place.
-
-If you have specific channels to acquire then you probably need to provide a
-custom xlate / filter functions. Because above seems a bit hackish workaround
-of dynamic channel allocation mechanism.
-
-But let's see what we can do better. Since maximum is defined on the slave side
-device, it probably needs to define minimum as well, otherwise it's possible
-that some hardware can't cope underrun bursts.
-
-Vinod, what do you think?
-
+diff --git a/drivers/usb/host/ehci-mv.c b/drivers/usb/host/ehci-mv.c
+index 1c079953e..b2da62bfd 100644
+--- a/drivers/usb/host/ehci-mv.c
++++ b/drivers/usb/host/ehci-mv.c
+@@ -166,9 +166,8 @@ static int mv_ehci_probe(struct platform_device *pdev)
+ 	hcd->regs = ehci_mv->op_regs;
+ 
+ 	hcd->irq = platform_get_irq(pdev, 0);
+-	if (!hcd->irq) {
+-		dev_err(&pdev->dev, "Cannot get irq.");
+-		retval = -ENODEV;
++	if (hcd->irq < 0) {
++		retval = hcd->irq;
+ 		goto err_disable_clk;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1.windows.1
+
 
 
