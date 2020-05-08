@@ -2,80 +2,74 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD589C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B2C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC9620A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5522495B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgEHNtX (ORCPT
+        id S1728027AbgEHNtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:49:23 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45823 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726904AbgEHNtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:49:22 -0400
-Received: (qmail 20457 invoked by uid 500); 8 May 2020 09:49:19 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 May 2020 09:49:19 -0400
-Date:   Fri, 8 May 2020 09:49:19 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-cc:     gregkh@linuxfoundation.org, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] USB: EHCI: ehci-mv: Fix unused assignment in mv_ehci_probe()
-In-Reply-To: <20200508114409.12704-1-tangbin@cmss.chinamobile.com>
-Message-ID: <Pine.LNX.4.44L0.2005080948560.19653-100000@netrider.rowland.org>
+        Fri, 8 May 2020 09:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726904AbgEHNtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:49:49 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F38320A8B;
+        Fri,  8 May 2020 13:49:46 +0000 (UTC)
+Date:   Fri, 8 May 2020 09:49:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, mingo@redhat.com,
+        aquini@redhat.com, cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] taint: add module firmware crash taint support
+Message-ID: <20200508094923.2ab9014a@gandalf.local.home>
+In-Reply-To: <20200508101604.GF185537@smile.fi.intel.com>
+References: <20200508021438.4373-1-mcgrof@kernel.org>
+        <20200508101604.GF185537@smile.fi.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020, Tang Bin wrote:
+On Fri, 8 May 2020 13:16:04 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> Delete unused initialized value, because 'retval' will be assigined
-> by the function mv_ehci_enable().
-
-This should also mention the extra blank line that the patch removes.
-
-Alan Stern
-
-> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  drivers/usb/host/ehci-mv.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> > +++ b/include/trace/events/module.h
+> > @@ -26,7 +26,8 @@ struct module;
+> >  	{ (1UL << TAINT_OOT_MODULE),		"O" },		\
+> >  	{ (1UL << TAINT_FORCED_MODULE),		"F" },		\
+> >  	{ (1UL << TAINT_CRAP),			"C" },		\
+> > -	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" })
+> > +	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" },		\
+> > +	{ (1UL << TAINT_FIRMWARE_CRASH),	"Q" })  
 > 
-> diff --git a/drivers/usb/host/ehci-mv.c b/drivers/usb/host/ehci-mv.c
-> index bd4f6ef53..1c079953e 100644
-> --- a/drivers/usb/host/ehci-mv.c
-> +++ b/drivers/usb/host/ehci-mv.c
-> @@ -108,7 +108,7 @@ static int mv_ehci_probe(struct platform_device *pdev)
->  	struct ehci_hcd *ehci;
->  	struct ehci_hcd_mv *ehci_mv;
->  	struct resource *r;
-> -	int retval = -ENODEV;
-> +	int retval;
->  	u32 offset;
->  
->  	if (usb_disabled())
-> @@ -142,8 +142,6 @@ static int mv_ehci_probe(struct platform_device *pdev)
->  		goto err_put_hcd;
->  	}
->  
-> -
-> -
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	ehci_mv->base = devm_ioremap_resource(&pdev->dev, r);
->  	if (IS_ERR(ehci_mv->base)) {
+> Perhaps split out the closing parenthesis to avoid changing additional line in
+> the future?
+
+I don't think that will make a difference, as the last line must not
+contain a comma. New updates will still add additional line changes just to
+insert a comma before adding a new flag.
+
+-- Steve
+
 > 
+> >  TRACE_EVENT(module_load,  
 
