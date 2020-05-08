@@ -2,53 +2,51 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E535C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EFBC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1212054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93622054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942736;
-	bh=YNOc2verFZCxdF+PEr0mt3qsZBXxUQ4tOaOWm46Gf7k=;
+	s=default; t=1588942739;
+	bh=7iN2FQF+Ed1iKKEZKKAl6raBAdxVzHmDVQBjaLOBjgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOjVEmD5Yl5V4tBkdEFzUr4OB+8kfDEn9hpH39ZW9U4pIS4V4BVcNy+MbNyDAhOi5
-	 GUAohhbcGQWN9kfBQd1BZXlzgDJmT7Jc7UuDKBGjf1Hv04ZOhBZMW/07ZIG4XbRZMt
-	 TA0S4wLuLkRwkdkS7bptso9yzDwS6sOuZtY4/1sY=
+	b=eobcEiz3t9y09S39tTmxmAXxZ6eqOgSP3BIYKWILyJdZz56DtlgZXCIBYzv6kKA3f
+	 /YQQiSNfPwCHkHA94FC39aHjPxb2L4+ncr94VyHruRzyX4oPSmQaWZ3vlRW9LSjEbh
+	 R67nocErwcNLnSr6q+TIN2BCxPJz5/1Ckm1nxAYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbgEHM6z (ORCPT
+        id S1728318AbgEHMxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:58:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730100AbgEHMx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:56 -0400
+        id S1730115AbgEHMxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18EC2495C;
-        Fri,  8 May 2020 12:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CFAF24964;
+        Fri,  8 May 2020 12:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942436;
-        bh=YNOc2verFZCxdF+PEr0mt3qsZBXxUQ4tOaOWm46Gf7k=;
+        s=default; t=1588942428;
+        bh=7iN2FQF+Ed1iKKEZKKAl6raBAdxVzHmDVQBjaLOBjgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXS8w68KkXCGNV2QAxioXkFRcHMnK14ZextSKa/2lfEJDomI/A9gmnouTLClRbXvw
-         6JqPwZMnMBeSzjUiRB/S5qQsC9yO3ctuuHuwdNlRCm3q34b5dwNUinK0sPp11A38Sf
-         94m7i2WSFdJbeiByoBq2Ji55NEGRtyKxBy6h6rjs=
+        b=ThcszKYFnnqPavdriDEuDvn32cVZvED7ZL3IFtKefwCAJCTbC74o9gYutgIrI34fc
+         zMpcOUUPn6/L4nUNYNJV5jp+XT6dSSc9l5UJfTzIkAh0IoPq7aB8q2WUzubYgF7cJK
+         46UZU3k9eX08ZhN5HkCBV/WFsAm3vhECLLw6o9Dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 27/50] mac80211: sta_info: Add lockdep condition for RCU list usage
-Date:   Fri,  8 May 2020 14:35:33 +0200
-Message-Id: <20200508123047.119009426@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 42/50] ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
+Date:   Fri,  8 May 2020 14:35:48 +0200
+Message-Id: <20200508123048.932531154@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -61,38 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 8ca47eb9f9e4e10e7e7fa695731a88941732c38d ]
+commit 243a98894dc525ad2fbeb608722fcb682be3186d upstream.
 
-The function sta_info_get_by_idx() uses RCU list primitive.
-It is called with  local->sta_mtx held from mac80211/cfg.c.
-Add lockdep expression to avoid any false positive RCU list warnings.
+Fix a comment in acpi_s2idle_prepare_late() that has become outdated
+after commit f0ac20c3f613 ("ACPI: EC: Fix flushing of pending work").
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200409082906.27427-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f0ac20c3f613 ("ACPI: EC: Fix flushing of pending work")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/sta_info.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/sleep.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
-index 21b1422b1b1c3..b1669f0244706 100644
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -217,7 +217,8 @@ struct sta_info *sta_info_get_by_idx(struct ieee80211_sub_if_data *sdata,
- 	struct sta_info *sta;
- 	int i = 0;
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -979,10 +979,7 @@ static int acpi_s2idle_prepare_late(void
  
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry_rcu(sta, &local->sta_list, list,
-+				lockdep_is_held(&local->sta_mtx)) {
- 		if (sdata != sta->sdata)
- 			continue;
- 		if (i < idx) {
--- 
-2.20.1
-
+ static void acpi_s2idle_sync(void)
+ {
+-	/*
+-	 * The EC driver uses the system workqueue and an additional special
+-	 * one, so those need to be flushed too.
+-	 */
++	/* The EC driver uses special workqueues that need to be flushed. */
+ 	acpi_ec_flush_work();
+ 	acpi_os_wait_events_complete(); /* synchronize Notify handling */
+ }
 
 
