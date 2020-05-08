@@ -2,97 +2,140 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C4AC47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889C52051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588973614;
-	bh=ls4wVLtCuwHy+Ipjb7HA8vnN9MIN6Wmha+TzdYWtvKc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wfiL0deesiLVyaOGLqEO3T2Ax1lZZzZnXLIK05yPdnDa6iqqi27N7J80T9gqLGc0c
-	 fFkFx21Xd4x1zhgqDCN46lZMLrSalLqYP31Y/N0wy2uL3nJUGH9zY/VBjNjiYL/Cba
-	 fcCV4omhYy/D9RednBmh7oE2a5myRouvKBg+Thfs=
+	by mail.kernel.org (Postfix) with ESMTP id F0B252051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlkgfK2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEHVdd (ORCPT
+        id S1728109AbgEHVdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:33:33 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2A0218AC
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 21:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588973612;
-        bh=ls4wVLtCuwHy+Ipjb7HA8vnN9MIN6Wmha+TzdYWtvKc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gBVpLpwXRca7BENelAhzKtHTP/0ltdA9cJoheMTx1P4GyW0YBcsAYsIu5/ptrBmE/
-         5ZYCqjdqz9W1h6SF0WHOpZ51JTE8WS5DAWl1OLoHkkSP4X4Q2k49GHJFDuzASlXEU1
-         dxGoIwGC35mqkkAFmxmQekt9VysyPL8x4IUAaMek=
-Received: by mail-wr1-f48.google.com with SMTP id z8so3589456wrw.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:33:32 -0700 (PDT)
-X-Gm-Message-State: AGi0PubB/dZfVri1VwirwQkVaVg6TuaYGXqs45NehphvwH5x0JWlVW/y
-        Gop1hC9mQUXQ6QdyulOYrt9mwMqNP0SDU7M5peb3Qw==
-X-Google-Smtp-Source: APiQypKkfKc8nwfTQ52CA43jPndN8sjJe/HJmtfTKVOm8iPpMCUmgdfl9U9gxXEGBQZwhTi1KHad8bdjblEo8vujjkg=
-X-Received: by 2002:adf:e586:: with SMTP id l6mr5031852wrm.184.1588973611034;
- Fri, 08 May 2020 14:33:31 -0700 (PDT)
+        Fri, 8 May 2020 17:33:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHVdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:33:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89351C061A0C;
+        Fri,  8 May 2020 14:33:35 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so1291409plk.10;
+        Fri, 08 May 2020 14:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HTjYvoIr0VRTkbUVK5wIvw526WiJMzE3devmJ1k0iIs=;
+        b=dlkgfK2rUSLu+rLwa9eqCemtHoL60cMQhPZ/Elr9UFbtaaYnSgItjwpEPEiVxAJiAs
+         clH+/DUCOrfcCn7c84j1Q4IWkcJQ8uWbIeVh/wWKHYy0ixWDrcgIF/HecOnn+U7h+9MG
+         ANsYOAk8Mzzck+106L5P4LfroojRb3lSiGyvVcxOu30Q8EZBt0EK3TTOw9Jl+0HeWNLV
+         Kc3p5WDO22/Al/DbODvnop3JdMvHmKmQ8CtaZbw2b91D2au43dV9Xxc7EuLvXPODBv0a
+         SP7IJOZhemvfBA1h9p+7hOs2L7oQjUlz44iCbvd6maUcjHI+uTjheFgcgyfxUbXAiGxz
+         AabA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HTjYvoIr0VRTkbUVK5wIvw526WiJMzE3devmJ1k0iIs=;
+        b=H0mUBRYcbdffShzMpAfVPSgCPnuP7FaDMTL83AQBfEGiGcYkwD0QvoK+2uhk4yKKMC
+         ManbjQyhVTsDf+KA33kpegR055qGrFrGj3+8rEGuAr2KW0tLSOEqIi36Ich+rjd9i6MO
+         AgTzFu4bdOxyDKbCTJ9Luru2A4XCeFVo2sXobRMaXbw0sbWazXmNeCDt7NReo8nYiX7e
+         7yg1/Imzyi0GeYCwksLLg9j28MH6zv7FMxn3ejIUcVgN9vEjnVdcTdG1+Kgf4ww9FhIJ
+         lLv2W/Jrr86HF5AAc1nf9WhP81FvuuF/YuSh/ZAd4N8BKJ8coxkVB9uDRsxP6ck7f8MO
+         JzXA==
+X-Gm-Message-State: AGi0PuauRigJVXs/F8K9zrMcIIfctHM8ABEpGjJ3n3A6PfdyyAuKcZyA
+        RGoAE82ZTxlbd7Cm27qJmYw+ztC0
+X-Google-Smtp-Source: APiQypJhpIT7RJIpZe4Vq1z7W11DiZZHphvYX4T7wlpZgVv4QC5Cwc237EuCeIH9YRaCz1IGhscEPg==
+X-Received: by 2002:a17:90a:d78e:: with SMTP id z14mr8342281pju.125.1588973614857;
+        Fri, 08 May 2020 14:33:34 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 4sm2760857pff.18.2020.05.08.14.33.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 14:33:34 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/18] 4.9.223-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200508123030.497793118@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <5b129ee3-7043-60be-954e-b1891e5e3d8a@roeck-us.net>
+Date:   Fri, 8 May 2020 14:33:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200508144043.13893-1-joro@8bytes.org>
-In-Reply-To: <20200508144043.13893-1-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 8 May 2020 14:33:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
-Message-ID: <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 7:40 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> Hi,
->
-> after the recent issue with vmalloc and tracing code[1] on x86 and a
-> long history of previous issues related to the vmalloc_sync_mappings()
-> interface, I thought the time has come to remove it. Please
-> see [2], [3], and [4] for some other issues in the past.
->
-> The patches are based on v5.7-rc4 and add tracking of page-table
-> directory changes to the vmalloc and ioremap code. Depending on which
-> page-table levels changes have been made, a new per-arch function is
-> called: arch_sync_kernel_mappings().
->
-> On x86-64 with 4-level paging, this function will not be called more
-> than 64 times in a systems runtime (because vmalloc-space takes 64 PGD
-> entries which are only populated, but never cleared).
+On 5/8/20 5:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.223 release.
+> There are 18 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
 
-What's the maximum on other system types?  It might make more sense to
-take the memory hit and pre-populate all the tables at boot so we
-never have to sync them.
+Build results:
+	total: 171 pass: 171 fail: 0
+Qemu test results:
+	total: 385 pass: 385 fail: 0
+
+Guenter
