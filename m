@@ -2,268 +2,156 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D52C54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F73BC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB4E21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jvPyzxVG"
+	by mail.kernel.org (Postfix) with ESMTP id 669E22184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgEHUm7 (ORCPT
+        id S1727827AbgEHUrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727912AbgEHUm5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:42:57 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8DBDC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:42:55 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b6so1236133plz.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DBvISRtpj6ZqDP4JNGI7EM2+JDDMjKa0Ql2Nl6B4K8c=;
-        b=jvPyzxVGco9HTkHQkxsTY3p+qIGeyEvgudaaAcCJFYldGgN96fd6jlMbM+k3MIO6sP
-         GTDlp98gYKOoOkFPYRyoOPG+cZduT4/VcGbvP6/oRRnh78tssG8N0uqPdhOCF0a0TBMq
-         xLs9F1CqmUh15ju+uyC4griAqlcVk6bns23fk/6Hr15MYzdNJpLtmz6kz2t95lEXU4d/
-         lwKjN7pMYujqMl/hg0Wsn4+ZtfeaHvc8Qz4AXckC6sT+TOAJILMg6ATBWr+4T/VtDiud
-         gYu0yx8sSQqlMrITsgpKoeJyQ8l4BBIUS7A8e+4VwDOlytZQ7ZTETNNZlb9nAWEH7z/w
-         Vm8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DBvISRtpj6ZqDP4JNGI7EM2+JDDMjKa0Ql2Nl6B4K8c=;
-        b=Iq8RrjiaiUV70JYR9wAEy2DBSugSlp8A7WnK5VCw0vIcYmbIn/TkYkCJcNmhTAvfzO
-         FRMGND92AT3h1VZAatlmEymU9+4I0UKDD6xVqWi6cvLCxvRLBZGm/XCIfejBMsSiuKms
-         J4zHPaHeePPTqn2buQUOEhCrvkCy9vbnk4z/VI20HFov9gCA9XG32rLu7MmHp0Te/nIM
-         po2qCD7k2XZukhN9ASg4mH1XrhF+uhj0K5TAobcdRphAP/j6c9ymjcW6W/QcbFHu5oYm
-         1Btc0/07Fjk/7vHbzCm6pj59r2IHfgb447nTtuD6bmbTrJbzxEWeicuXmfTusvBvvNyD
-         uhHg==
-X-Gm-Message-State: AGi0Pua78sOUtYmyX82nZF+ee4IC0/Pw8Kcy9j6zVpprKfwJc2XeyhqG
-        3Vvv8gdccui8D67xuV/gAbgpWw==
-X-Google-Smtp-Source: APiQypLV5wFjcNDBDTnRo4F/SCWSkSNmFNrTDkI8vtbYEwihD8GVHkCxIzqXEOFp/ECNQVc0NaxUnA==
-X-Received: by 2002:a17:90a:d703:: with SMTP id y3mr7955493pju.75.1588970575321;
-        Fri, 08 May 2020 13:42:55 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id h191sm2670720pfe.44.2020.05.08.13.42.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 13:42:54 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
-Date:   Sat,  9 May 2020 02:12:00 +0530
-Message-Id: <20200508204200.13481-5-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508204200.13481-1-sumit.semwal@linaro.org>
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+        Fri, 8 May 2020 16:47:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15188 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbgEHUrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 16:47:12 -0400
+IronPort-SDR: DuKItoW6HSsPJmI6EKlOM9RKO+Kz3gxu7ArplrGslXFAMo/Iqwse1lpMyHjc9Ogy09IVVIB44U
+ BimMnZV9PeWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 13:47:11 -0700
+IronPort-SDR: Ws67Aagq7YgG2snBGVk1C1ZIy3paurbwnrKJK/rpqD2iq5oG5Lx0moxzX7x1HOFOuxtYO7W/k8
+ GGimup1grgVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="296258718"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 13:47:10 -0700
+Date:   Fri, 8 May 2020 13:47:10 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200508204710.GA78778@otc-nc-03>
+References: <20200424124444.GJ13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com>
+ <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com>
+ <20200427071939.06aa300e@x1.home>
+ <20200427132218.GG13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nisha Kumari <nishakumari@codeaurora.org>
+Hi Jason
 
-Add Short circuit interrupt handling and recovery for the lab and
-ibb regulators on qcom platforms.
+In general your idea of moving pure emulation code to user space 
+is a good strategy.
 
-The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
-notification which will be triggered on short circuit. They should
-try to enable the regulator once, and if it doesn't get enabled,
-handle shutting down the panel accordingly.
 
-Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+On Wed, Apr 29, 2020 at 02:42:20AM -0700, Tian, Kevin wrote:
+> > From: Jason Gunthorpe <jgg@mellanox.com>
+> > Sent: Monday, April 27, 2020 9:22 PM
+> > 
+> > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
+> > 
+> > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > > > emulation.
+> > >
+> > > Not sure what you're referring to, I see about 30 lines of code in
+> > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> > > config space and maybe a couple hundred lines of code in total handling
+> > > config space emulation.  Thanks,
+> > 
+> > Look around vidxd_do_command()
+> > 
+> > If I understand this flow properly..
+> > 
+> 
+> Hi, Jason,
+> 
+> I guess the 2000 lines mostly refer to the changes in mdev.c and vdev.c. 
+> We did a break-down among them:
+> 
+> 1) ~150 LOC for vdev initialization
+> 2) ~150 LOC for cfg space emulation
+> 3) ~230 LOC for mmio r/w emulation
+> 4) ~500 LOC for controlling the work queue (vidxd_do_command), 
+> triggered by write emulation of IDXD_CMD_OFFSET register
+> 5) the remaining lines are all about vfio-mdev registration/callbacks,
+> for reporting mmio/irq resource, eventfd, mmap, etc.
+> 
+> 1/2/3) are pure device emulation, which counts for ~500 LOC. 
+> 
+> 4) needs be in the kernel regardless of which uAPI is used, because it
+> talks to the physical work queue (enable, disable, drain, abort, reset, etc.)
+> 
+> Then if just talking about ~500 LOC emulation code left in the kernel, 
+> is it still a big concern to you? 😊
 
---
-v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
-    per-regulator instead of clearing both lab and ibb errors on either irq
-    triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
-    notification to clients.
----
- drivers/regulator/qcom-labibb-regulator.c | 103 +++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 3 deletions(-)
+Even when uaccel was under development, one of the options
+was to use VFIO as the transport, goal was the same i.e to keep
+the user space have one interface. But the needs of generic 
+user space application is significantly different from exporting
+a more functional device model to guest, which isn't full emulated
+device. which is why VFIO didn't make sense for native use.
 
-diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-index a9dc7c060375..3539631c9f96 100644
---- a/drivers/regulator/qcom-labibb-regulator.c
-+++ b/drivers/regulator/qcom-labibb-regulator.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2019, The Linux Foundation. All rights reserved.
- 
-+#include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of_irq.h>
- #include <linux/of.h>
-@@ -18,11 +19,15 @@
- #define REG_LABIBB_ENABLE_CTL		0x46
- #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
- #define LABIBB_CONTROL_ENABLE		BIT(7)
-+#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
- 
- #define LAB_ENABLE_CTL_MASK		BIT(7)
- #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
- 
- #define POWER_DELAY			8000
-+#define POLLING_SCP_DONE_INTERVAL_US	5000
-+#define POLLING_SCP_TIMEOUT		16000
-+
- 
- struct labibb_regulator {
- 	struct regulator_desc		desc;
-@@ -30,6 +35,8 @@ struct labibb_regulator {
- 	struct regmap			*regmap;
- 	struct regulator_dev		*rdev;
- 	u16				base;
-+	int				sc_irq;
-+	int				vreg_enabled;
- 	u8				type;
- };
- 
-@@ -112,9 +119,10 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
- 		return ret;
- 	}
- 
--	if (ret)
-+	if (ret) {
-+		reg->vreg_enabled = 1;
- 		return 0;
--
-+	}
- 
- 	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
- 	return -EINVAL;
-@@ -140,8 +148,10 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
- 		return ret;
- 	}
- 
--	if (!ret)
-+	if (!ret) {
-+		reg->vreg_enabled = 0;
- 		return 0;
-+	}
- 
- 	dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
- 	return -EINVAL;
-@@ -153,6 +163,70 @@ static struct regulator_ops qcom_labibb_ops = {
- 	.is_enabled		= qcom_labibb_regulator_is_enabled,
- };
- 
-+
-+static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-+{
-+	int ret, count;
-+	u16 reg;
-+	u8 sc_err_mask;
-+	unsigned int val;
-+	struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
-+	bool in_sc_err, reg_en, scp_done = false;
-+
-+	if (irq == labibb_reg->sc_irq)
-+		reg = labibb_reg->base + REG_LABIBB_STATUS1;
-+	else
-+		return IRQ_HANDLED;
-+
-+	sc_err_mask = LABIBB_STATUS1_SC_DETECT_BIT;
-+
-+	ret = regmap_bulk_read(labibb_reg->regmap, reg, &val, 1);
-+	if (ret < 0) {
-+		dev_err(labibb_reg->dev, "Read failed, ret=%d\n", ret);
-+		return IRQ_HANDLED;
-+	}
-+	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
-+		labibb_reg->desc.name, val);
-+
-+	in_sc_err = !!(val & sc_err_mask);
-+
-+	/*
-+	 * The SC(short circuit) fault would trigger PBS(Portable Batch
-+	 * System) to disable regulators for protection. This would
-+	 * cause the SC_DETECT status being cleared so that it's not
-+	 * able to get the SC fault status.
-+	 * Check if the regulator is enabled in the driver but
-+	 * disabled in hardware, this means a SC fault had happened
-+	 * and SCP handling is completed by PBS.
-+	 */
-+	if (!in_sc_err) {
-+
-+		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-+
-+		ret = regmap_read_poll_timeout(labibb_reg->regmap,
-+					reg, val,
-+					!(val & LABIBB_CONTROL_ENABLE),
-+					POLLING_SCP_DONE_INTERVAL_US,
-+					POLLING_SCP_TIMEOUT);
-+
-+		if (!ret && labibb_reg->vreg_enabled) {
-+			dev_dbg(labibb_reg->dev,
-+				"%s has been disabled by SCP\n",
-+				labibb_reg->desc.name);
-+			scp_done = true;
-+		}
-+	}
-+
-+	if (in_sc_err || scp_done) {
-+		regulator_lock(labibb_reg->rdev);
-+		regulator_notifier_call_chain(labibb_reg->rdev,
-+						REGULATOR_EVENT_OVER_CURRENT,
-+						NULL);
-+		regulator_unlock(labibb_reg->rdev);
-+	}
-+	return IRQ_HANDLED;
-+}
-+
- static int register_labibb_regulator(struct qcom_labibb *labibb,
- 				const struct labibb_regulator_data *reg_data,
- 				struct device_node *of_node)
-@@ -181,6 +255,29 @@ static int register_labibb_regulator(struct qcom_labibb *labibb,
- 	reg->desc.type = REGULATOR_VOLTAGE;
- 	reg->desc.ops = &qcom_labibb_ops;
- 
-+	reg->sc_irq = -EINVAL;
-+	ret = of_irq_get_byname(of_node, reg_data->irq_name);
-+	if (ret < 0)
-+		dev_dbg(labibb->dev,
-+			"Unable to get %s, ret = %d\n",
-+			reg_data->irq_name, ret);
-+	else
-+		reg->sc_irq = ret;
-+
-+	if (reg->sc_irq > 0) {
-+		ret = devm_request_threaded_irq(labibb->dev,
-+						reg->sc_irq,
-+						NULL, labibb_sc_err_handler,
-+						IRQF_ONESHOT |
-+						IRQF_TRIGGER_RISING,
-+						reg_data->irq_name, labibb);
-+		if (ret) {
-+			dev_err(labibb->dev, "Failed to register '%s' irq ret=%d\n",
-+				reg_data->irq_name, ret);
-+			return ret;
-+		}
-+	}
-+
- 	cfg.dev = labibb->dev;
- 	cfg.driver_data = reg;
- 	cfg.regmap = labibb->regmap;
--- 
-2.26.2
+And when we move things from VFIO which is already established
+as a general device model and accepted by multiple VMM's it gives
+instant footing without a whole redesign. When we move things from 
+VFIO to uaccel to bolt on the functionality like VFIO, I suspect we 
+would be moving code/functionality from VFIO to Uaccel. I don't know
+what the net gain would be.
 
+IMS is being reworked based on your feedback. And for mdev
+since the code is minimal for emulation, and rest are control paths
+that need kernel code to deal with.
+
+For mdev, would you agree we can keep the current architecture,
+and investigate moving some emulation code to user space (say even for
+standard vfio_pci) and then expand scope later.
+
+Cheers
+Ashok
