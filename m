@@ -2,134 +2,121 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F55C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD60C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D393208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CEhHuPS/"
+	by mail.kernel.org (Postfix) with ESMTP id C4A0C208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgEHHIn (ORCPT
+        id S1726922AbgEHHJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725991AbgEHHIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:08:43 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07D1C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 00:08:41 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s8so585726wrt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 00:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DmTzp+J4aS4CxYYhCILNVwYfVehwX/dqCJCx5jKGlEM=;
-        b=CEhHuPS/Sdlv7SlOF1Hc4wrg/jxQ0bfVMANuWCZjoRc8dNc/HsdgEoZO7HGBHXwoaf
-         ruEIoF3gHK5AY6lSz66A+ROgs5JDNmxQyX5jJA9tVa0h0eLsOpexhZTVa8lNea46FiWB
-         /GPsBiQ9zAcTAkVD8gFbnjr8OjE1EkxiL9eto=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=DmTzp+J4aS4CxYYhCILNVwYfVehwX/dqCJCx5jKGlEM=;
-        b=kvQXzwLegRSpDpp906OQRMW9fu5LhRtV09RdpCD7UCi/+b7wyZEavT9EoDrt8y2SQb
-         fh39S5wf6BgbgyjS7RfIcG2pDkUyrAnfNp0/1lVmBpvQ0JV9IVE4AkNbaQ73qrSS1Zop
-         tG9lPCZQwVYzXRuWX5g4Kot/HlY+GZJvGvNWqOH+TW38+VGO76OhTXiSGY6mL5Pd63Gs
-         kodi1TjcvXzXHUpjzcV+QZil96ekTNzDerfZEqnpofI9eYiJgZ91tO1GDB9Cu11OVMpu
-         8XVTB/u+UShqVIjw4VhflMAEpcha6Eq/P8LXWfjjn/d6XGwRaH/jyjU1v4iaywR8AnYr
-         h0Kw==
-X-Gm-Message-State: AGi0PublbzuIRYRkKccOWo8GBIBdyNZbu4ZnEWB4NMpC7laicHLMScxL
-        rOiJdR8Q8pBhMk8ou0WYVq2CLQ==
-X-Google-Smtp-Source: APiQypIdXHZDbCY1mjOHI7A02KN/NFXcXdx0OSG3FPCPhGoilD6eSlbRaDrFn+uMA+JdV38nVB2Qsw==
-X-Received: by 2002:adf:e791:: with SMTP id n17mr1265834wrm.217.1588921720359;
-        Fri, 08 May 2020 00:08:40 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id s24sm12302509wmj.28.2020.05.08.00.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 00:08:39 -0700 (PDT)
-Date:   Fri, 8 May 2020 09:08:37 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/exynos: remove redundant initialization to variable
- 'start'
-Message-ID: <20200508070837.GF1383626@phenom.ffwll.local>
-Mail-Followup-To: Colin King <colin.king@canonical.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200507202237.64350-1-colin.king@canonical.com>
+        Fri, 8 May 2020 03:09:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4293 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725991AbgEHHJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:09:15 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5FCB6F3B03B25BE65E27;
+        Fri,  8 May 2020 15:09:10 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 8 May 2020
+ 15:09:07 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: remove race condition in releasing
+ cblocks
+To:     Daeho Jeong <daeho43@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <kernel-team@android.com>, Daeho Jeong <daehojeong@google.com>
+References: <20200508042506.143395-1-daeho43@gmail.com>
+ <4dfb73d9-03a0-bb2f-a112-1dd42db4d7bb@huawei.com>
+ <CACOAw_z0BU3t7V+BN7TvaO96GckwNh2SRLreGxO60EDbMb_epw@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cd08c824-c5d3-9603-7a81-a48cb191ac99@huawei.com>
+Date:   Fri, 8 May 2020 15:09:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507202237.64350-1-colin.king@canonical.com>
-X-Operating-System: Linux phenom 5.4.0-4-amd64 
+In-Reply-To: <CACOAw_z0BU3t7V+BN7TvaO96GckwNh2SRLreGxO60EDbMb_epw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 09:22:37PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 2020/5/8 14:58, Daeho Jeong wrote:
+> I moved checking i_compr_blocks phrase after calling inode_lock()
+> already, because we should check this after writing pages.
 > 
-> The variable 'start' is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
+> So, if it fails to check i_compr_blocks, we need to call inode_unlock().
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Am I missing something?
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+After applying this patch, I get this:
 
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 902938d2568f..b0b9cb1ec18f 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -1150,7 +1150,7 @@ static bool exynos_dsi_transfer_finish(struct exynos_dsi *dsi)
->  {
->  	struct exynos_dsi_transfer *xfer;
->  	unsigned long flags;
-> -	bool start = true;
-> +	bool start;
->  
->  	spin_lock_irqsave(&dsi->transfer_lock, flags);
->  
-> -- 
-> 2.25.1
-> 
+	ret = mnt_want_write_file(filp);
+	if (ret)
+		return ret;
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+	if (!F2FS_I(inode)->i_compr_blocks)
+		goto out;
+
+	f2fs_balance_fs(F2FS_I_SB(inode), true);
+
+	inode_lock(inode);
+
+> 
+> 2020년 5월 8일 (금) 오후 3:50, Chao Yu <yuchao0@huawei.com>님이 작성:
+>>
+>> On 2020/5/8 12:25, Daeho Jeong wrote:
+>>> From: Daeho Jeong <daehojeong@google.com>
+>>>
+>>> Now, if writing pages and releasing compress blocks occur
+>>> simultaneously, and releasing cblocks is executed more than one time
+>>> to a file, then total block count of filesystem and block count of the
+>>> file could be incorrect and damaged.
+>>>
+>>> We have to execute releasing compress blocks only one time for a file
+>>> without being interfered by writepages path.
+>>>
+>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>> ---
+>>>  fs/f2fs/file.c | 31 ++++++++++++++++++++++++-------
+>>>  1 file changed, 24 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index 4aab4b42d8ba..a92bc51b9b28 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -3488,6 +3488,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>>>       pgoff_t page_idx = 0, last_idx;
+>>>       unsigned int released_blocks = 0;
+>>>       int ret;
+>>> +     int writecount;
+>>>
+>>>       if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+>>>               return -EOPNOTSUPP;
+>>
+>> Before inode_lock(), there is one case we may jump to out label, in
+>> this case, we may unlock inode incorrectly.
+>>
+>>         if (!F2FS_I(inode)->i_compr_blocks)
+>>                 goto out;
+>>
+>>> -
+>>> -     inode_unlock(inode);
+>>>  out:
+>>> +     inode_unlock(inode);
+>>> +
+>>>       mnt_drop_write_file(filp);
+>>
+>> Thanks,
+> .
+> 
