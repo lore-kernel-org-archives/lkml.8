@@ -2,287 +2,161 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F86FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FE0C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC27224958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3FA206D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKnrsQXE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M4fDR/T4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgEHRWS (ORCPT
+        id S1727819AbgEHRXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEHRWR (ORCPT
+        Fri, 8 May 2020 13:23:45 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18081 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726843AbgEHRXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:22:17 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C50CC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 10:22:17 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id c2so1301390ybi.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 10:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3BZcZCzohuOP+8Cj8iVBVdevp4JbY7gWgDz8TOl6KdQ=;
-        b=fKnrsQXE3DCx0wx6qh99OwgoCRBlTvUiGV4qz0NQRWVpgWapYPb7Mu8R414CKmYEoN
-         /yGyYtPv8NcmU6WA66L+G8ra0WXK39Jg2iK+FZoHKjoqOujUsNKFLadAn0pjYrroJEJ1
-         HjJk7Bd4IeLUrzO3HRcotI2PQkuoAQnUyX3s4LKm/5U2x0koMBzoqU+YYX2++bYtEjLj
-         8g/DVfqqfMQtBV5TvIN57EhHG2dwDWDFE/M+mB4XPT7467IrKjKJ63JuDWLfDfJecWLb
-         DxPOhWHr6c71UYGqQs7gtzdhRu9GXJo++6+x+hxsri+ydDAzjhUho6E3Qs9rqBEW0eAv
-         Qfxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3BZcZCzohuOP+8Cj8iVBVdevp4JbY7gWgDz8TOl6KdQ=;
-        b=kztOUs2MrKoHTQfMY3oeRUQUsfriiu4Nc9UChfmnh9rioWF+4lNCYUtACAucUGeP8Z
-         lFvBDJx8Vc+ICz1uaZbL345ymDPLcrjlFQX2/xxErvHfa61fKBBEGrSQdItM8382rtSf
-         vooKQsKSJKykk7RfBYi60Oa/L5b4IXK6dNrBVDxrQ5886U5bW3ZAUH0QZmFaIWOwFr9u
-         S2kcIncBLw+CTCjEbqh1ylrCAfbSe1IITay2ja/ddNEZTRbG+pYPdq3Qg6YMymo9Um2D
-         f8lV2FIvQAvhTUKBWrFla7hMIyYufo4PTRvBgk5+K3ZpRjYupSt5DW9OPBKo2eESEWGY
-         Gt0A==
-X-Gm-Message-State: AGi0PubZRJ/u1gULebWuyMKIzCbzg+p2buCaTxj8imBmmdve9KZeJjsi
-        KjlTO/kMZz1aD+A/v6Aimgc5hSqupSG16BXmcOsNeQ==
-X-Google-Smtp-Source: APiQypK2WyCYY6uWTsBnOv6jWEG9LVq4N7h+sv7xX9CwD7WpR+HpUUlIZAnEWtp6mVPRDbPJWEbxq5YHgMUk0bJEpgw=
-X-Received: by 2002:a25:d688:: with SMTP id n130mr6132388ybg.324.1588958535241;
- Fri, 08 May 2020 10:22:15 -0700 (PDT)
+        Fri, 8 May 2020 13:23:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588958623; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=/ShlGgt8pBZ07QCqgaBqW3lEITDpUemdyZJbqV+iVnw=; b=M4fDR/T4tk3EnrFE1Fqh+oQiNTnH7ORlgmWHj0iJZcyKSoZ48T7jp/IWU+ohNYcxXIlYfIcz
+ dJobgf6zj76v/WMnafbhKCWBlMqmhIou0z6eM3477HVQ1B1J6JHVIXGfUPke0bt31Kmj5RbP
+ gvuoYDHaTmJ3PgY2aAd7kBlxe7w=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb5958a.7f8bef7dcf48-smtp-out-n05;
+ Fri, 08 May 2020 17:23:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E48E7C43636; Fri,  8 May 2020 17:23:20 +0000 (UTC)
+Received: from [10.79.43.230] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F3C0C433F2;
+        Fri,  8 May 2020 17:23:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F3C0C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v5] iommu/arm-smmu-qcom: Request direct mapping for modem
+ device
+To:     Stephen Boyd <swboyd@chromium.org>, joro@8bytes.org,
+        robin.murphy@arm.com, will@kernel.org
+Cc:     bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, dianders@chromium.org,
+        evgreen@chromium.org, mka@chromium.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+References: <20200507192157.6831-1-sibis@codeaurora.org>
+ <158888607765.26370.18078298627976225073@swboyd.mtv.corp.google.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <f22f0988-a965-d07b-1830-3f5eae42f299@codeaurora.org>
+Date:   Fri, 8 May 2020 22:53:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200422173615.59436-1-irogers@google.com> <20200508162944.GA20581@kernel.org>
-In-Reply-To: <20200508162944.GA20581@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 8 May 2020 10:22:03 -0700
-Message-ID: <CAP-5=fVPheBUbngHu_2GZhxYgoqomFoG3dijkRF_+9JKEza+ng@mail.gmail.com>
-Subject: Re: [PATCH v3] perf record: add dummy event during system wide synthesis
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <158888607765.26370.18078298627976225073@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 9:29 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Apr 22, 2020 at 10:36:15AM -0700, Ian Rogers escreveu:
-> > During the processing of /proc during event synthesis new processes may
-> > start. Add a dummy event if /proc is to be processed, to capture mmaps
-> > for starting processes. This reuses the existing logic for
-> > initial-delay.
-> >
-> > v3 fixes the attr test of test-record-C0
-> > v2 fixes the dummy event configuration and a branch stack issue.
->
-> Thanks, applied after splitting it up into two patches, one for this
-> part:
->
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
-> >       }
-> >
-> >       /*
-> > +      * A dummy event never triggers any actual counter and therefore
-> > +      * cannot be used with branch_stack.
-> > +      *
-> >        * For initial_delay, a dummy event is added implicitly.
-> >        * The software event will trigger -EOPNOTSUPP error out,
-> >        * if BRANCH_STACK bit is set.
-> >        */
-> > -     if (opts->initial_delay && is_dummy_event(evsel))
-> > +     if (is_dummy_event(evsel))
-> >               perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
-> >  }
->
-> Which isn't related to what is in the subject line for this patch, ok?
->
-> We don't need to get more patches, but we need to have patches that do
-> one thing and just that, to ease with bisecting, reverting things
-> sometimes, etc.
+Hey Stephen,
+Thanks for taking time to review the patch.
 
-Thanks for merging! Won't that separation break system wide mode? I
-guess you can do the evsel change first and then the system wide
-change, but the effect of 1 change won't be felt without the other.
-I'm looking to keep patches separate but when one patch can only be
-tested with another in place the separation is hard to work with for
-testing. There is also the issue of trying to understand the context a
-change was made, which is broken by separation. Anyway, I want to
-minimize your work in merging changes so I'll try to fit your needs
-with future patches.
+On 5/8/20 2:44 AM, Stephen Boyd wrote:
+> Quoting Sibi Sankar (2020-05-07 12:21:57)
+>> The modem remote processor has two modes of access to the DDR, a direct
+>> mode and through a SMMU which requires direct mapping. The configuration
+>> of the modem SIDs is handled in TrustZone.
+> 
+> Is it "The configuration of the modem SIDs is typically handled by
+> code running in the ARM CPU's secure mode, i.e. secure EL1"? And is that
+> even true? I though it was programmed by EL2.
+What I meant to say was qcom implementation of TZ or qcom
+proprietary bootloaders. I should have been more specific
+and mentioned that the configuration is done at EL2 by QHEE
+(Qualcomm's Hypervisor Execution Environment) before we enter
+the kernel.
 
-Thanks,
-Ian
+> 
+>> On platforms where TrustZone
+> 
+> TrustZone is always there.
+> 
+>> is absent this needs to be explicitly done from kernel. Add compatibles
+>> for modem to opt in for direct mapping on such platforms.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
+> Is Sai the author? Or does this need a co-developed-by tag?
 
-> And thanks for the extra comments :-)
->
-> - Arnaldo
->
-> > Suggested-by: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c             | 19 +++++++---
-> >  tools/perf/tests/attr/system-wide-dummy | 50 +++++++++++++++++++++++++
-> >  tools/perf/tests/attr/test-record-C0    | 12 +++++-
-> >  tools/perf/util/evsel.c                 |  5 ++-
-> >  4 files changed, 78 insertions(+), 8 deletions(-)
-> >  create mode 100644 tools/perf/tests/attr/system-wide-dummy
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 1ab349abe904..8d1e93351298 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -805,19 +805,28 @@ static int record__open(struct record *rec)
-> >       int rc = 0;
-> >
-> >       /*
-> > -      * For initial_delay we need to add a dummy event so that we can track
-> > -      * PERF_RECORD_MMAP while we wait for the initial delay to enable the
-> > -      * real events, the ones asked by the user.
-> > +      * For initial_delay or system wide, we need to add a dummy event so
-> > +      * that we can track PERF_RECORD_MMAP to cover the delay of waiting or
-> > +      * event synthesis.
-> >        */
-> > -     if (opts->initial_delay) {
-> > +     if (opts->initial_delay || target__has_cpu(&opts->target)) {
-> >               if (perf_evlist__add_dummy(evlist))
-> >                       return -ENOMEM;
-> >
-> > +             /* Disable tracking of mmaps on lead event. */
-> >               pos = evlist__first(evlist);
-> >               pos->tracking = 0;
-> > +             /* Set up dummy event. */
-> >               pos = evlist__last(evlist);
-> >               pos->tracking = 1;
-> > -             pos->core.attr.enable_on_exec = 1;
-> > +             /*
-> > +              * Enable the dummy event when the process is forked for
-> > +              * initial_delay, immediately for system wide.
-> > +              */
-> > +             if (opts->initial_delay)
-> > +                     pos->core.attr.enable_on_exec = 1;
-> > +             else
-> > +                     pos->immediate = 1;
-> >       }
-> >
-> >       perf_evlist__config(evlist, opts, &callchain_param);
-> > diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-> > new file mode 100644
-> > index 000000000000..eba723cc0d38
-> > --- /dev/null
-> > +++ b/tools/perf/tests/attr/system-wide-dummy
-> > @@ -0,0 +1,50 @@
-> > +# Event added by system-wide or CPU perf-record to handle the race of
-> > +# processes starting while /proc is processed.
-> > +[event]
-> > +fd=1
-> > +group_fd=-1
-> > +cpu=*
-> > +pid=-1
-> > +flags=8
-> > +type=1
-> > +size=120
-> > +config=9
-> > +sample_period=4000
-> > +sample_type=455
-> > +read_format=4
-> > +# Event will be enabled right away.
-> > +disabled=0
-> > +inherit=1
-> > +pinned=0
-> > +exclusive=0
-> > +exclude_user=0
-> > +exclude_kernel=0
-> > +exclude_hv=0
-> > +exclude_idle=0
-> > +mmap=1
-> > +comm=1
-> > +freq=1
-> > +inherit_stat=0
-> > +enable_on_exec=0
-> > +task=1
-> > +watermark=0
-> > +precise_ip=0
-> > +mmap_data=0
-> > +sample_id_all=1
-> > +exclude_host=0
-> > +exclude_guest=0
-> > +exclude_callchain_kernel=0
-> > +exclude_callchain_user=0
-> > +mmap2=1
-> > +comm_exec=1
-> > +context_switch=0
-> > +write_backward=0
-> > +namespaces=0
-> > +use_clockid=0
-> > +wakeup_events=0
-> > +bp_type=0
-> > +config1=0
-> > +config2=0
-> > +branch_sample_type=0
-> > +sample_regs_user=0
-> > +sample_stack_user=0
-> > diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
-> > index 93818054ae20..317730b906dd 100644
-> > --- a/tools/perf/tests/attr/test-record-C0
-> > +++ b/tools/perf/tests/attr/test-record-C0
-> > @@ -9,6 +9,14 @@ cpu=0
-> >  # no enable on exec for CPU attached
-> >  enable_on_exec=0
-> >
-> > -# PERF_SAMPLE_IP | PERF_SAMPLE_TID PERF_SAMPLE_TIME | # PERF_SAMPLE_PERIOD
-> > +# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-> > +# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
-> >  # + PERF_SAMPLE_CPU added by -C 0
-> > -sample_type=391
-> > +sample_type=455
-> > +
-> > +# Dummy event handles mmaps, comm and task.
-> > +mmap=0
-> > +comm=0
-> > +task=0
-> > +
-> > +[event:system-wide-dummy]
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 6a571d322bb2..ca8f9533d8f9 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
-> >       }
-> >
-> >       /*
-> > +      * A dummy event never triggers any actual counter and therefore
-> > +      * cannot be used with branch_stack.
-> > +      *
-> >        * For initial_delay, a dummy event is added implicitly.
-> >        * The software event will trigger -EOPNOTSUPP error out,
-> >        * if BRANCH_STACK bit is set.
-> >        */
-> > -     if (opts->initial_delay && is_dummy_event(evsel))
-> > +     if (is_dummy_event(evsel))
-> >               perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
-> >  }
-> >
-> > --
-> > 2.26.2.303.gf8c07b1a785-goog
-> >
->
-> --
->
-> - Arnaldo
+I decided to include Sai's S-b just to show I took back
+ownership of the patch from his patch series. I'll drop
+it in the next re-spin.
+
+> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>
+>> V5
+>>   * Reword commit message and drop unnecessary details
+> 
+> I don't see any improvement! Probably because I don't understand _why_
+> the modem needs a direct mapping. The commit text basically says "we
+> need to do it because it isn't done in secure world sometimes". This is
+> probably wrong what I wrote below, but I'd like to clarify to confirm my
+> understanding. Maybe the commit text should say:
+
+Thanks for taking time to reword the commit message will use
+the same with a few corrections.
+
+> 
+> The modem remote processor has two access paths to DDR. One path is
+> directly connected to DDR and another path goes through an SMMU. The
+> SMMU path is configured to be a direct mapping because it's used by
+> various peripherals in the modem subsystem. 
+
+I'll use ^^ as is.
+
+> Typically this direct
+> mapping is configured by programming modem SIDs into the SMMU when EL2
+> responds to a hyp call from the code that loads the modem binary in the
+> secure world.
+
+Typically this direct mapping is configured statically at EL2
+by QHEE (Qualcomm's Hypervisor Execution Environment) before
+the kernel is entered.
+
+> 
+> In certain firmware configurations, especially when the kernel is
+> entered at EL2, we don't want secure mode to make hyp calls to program
+> the SMMU because the kernel is in full control of the SMMU. Let's add
+> compatibles here so that we can have the kernel program the SIDs for the
+> modem in these cases.
+
+In certain firmware configuration, especially when the kernel is already 
+in full control of the SMMU, defer programming the modem SIDs to the
+kernel. Let's add compatibles here so that we can have the kernel
+program the SIDs for the modem in these cases.
+
+Will/Stephen,
+Let me know if the above changes are okay? I'll re-spin the patch
+based on your feedback.
+
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
