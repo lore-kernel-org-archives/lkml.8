@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ECAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E82C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337152145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBD62145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942043;
-	bh=bYaOZUiO2/sAycHFzPVmFuEsY1cLjI1j9bTLA27NKW0=;
+	s=default; t=1588942047;
+	bh=Xy4yHPdUlO1KmUpRIYwDSXjdAQg1LSIBa3HsDu8owrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKpGDa0FKjHtMXYBGaqbTypJgSLACstjzkiL7etyrbEqN9zUl4fAJ3M9HwY1eAw5m
-	 ZsVfsoxgGYgrl4h3d4TXYDolj2AWylL+QZka7bmaN2eibLzrd3XHe85pLOk6ehzQ24
-	 Zef2AVvJL7pZwpXM8r42a93gEoiE8mJBWm5LXCVY=
+	b=Q+q14/0xrxQFZLeQVX4nsL1M9pGWx2Wc+uz6GlDT/DBiYP6cXkTmBz8lPLls7kEux
+	 eppI03mWtaysfBkVxCMewlFv8s8swh2KleWI/9DorDXH/ChN9Du/uc6q17BV9FWQ91
+	 LxuhGWP2edsPCmca6m7HhrutEegEOrMYWO+2nnYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgEHMrV (ORCPT
+        id S1729181AbgEHMrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49284 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbgEHMrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:09 -0400
+        id S1729518AbgEHMrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EDE824974;
-        Fri,  8 May 2020 12:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA2C2145D;
+        Fri,  8 May 2020 12:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942028;
-        bh=bYaOZUiO2/sAycHFzPVmFuEsY1cLjI1j9bTLA27NKW0=;
+        s=default; t=1588942031;
+        bh=Xy4yHPdUlO1KmUpRIYwDSXjdAQg1LSIBa3HsDu8owrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quyrOeoUX3auJ8EkjbPxO/nOfFFmPH8e/l4aiAe90AEN7SAepbDd3Hn01MgVX53hJ
-         N6yfuSYCYxKtw1skOUPcHYMxZbH8UbvGdMABaIobUgfNfvPUaCJw7gc6DC4096/3Cs
-         c/Y/EM5aR3n8YxiaW8Y5c/nW4LM6jZc2PUGq0+6s=
+        b=2D34b7Xmviho9F1K+uwquJJDSTwY6IUuY2ddWduk1/NFSEVrjB1gAVZ5SVp4W4GzE
+         7qrEAsZyZM3CkjEwrRNjlvW9a4e8CvZQPfiDPIYjwD3L8ZudWrccKPWdVnbWN/VC+K
+         CgY4Ty7wWyAUZbinMQv74O+cXPWnIKWx36kM11t4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Greg Rose <gregory.v.rose@intel.com>,
-        Mathias Krause <minipli@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 267/312] rtnl: reset calcit fptr in rtnl_unregister()
-Date:   Fri,  8 May 2020 14:34:18 +0200
-Message-Id: <20200508123143.214629119@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marcin Niestroj <m.niestroj@grinn-global.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 4.4 232/312] power_supply: tps65217-charger: Fix NULL deref during property export
+Date:   Fri,  8 May 2020 14:33:43 +0200
+Message-Id: <20200508123140.750024620@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,37 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Krause <minipli@googlemail.com>
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
 
-commit f567e950bf51290755a2539ff2aaef4c26f735d3 upstream.
+commit 362761299eea7dfc3a4870551de36e08758b9254 upstream.
 
-To avoid having dangling function pointers left behind, reset calcit in
-rtnl_unregister(), too.
+This bug leads to:
 
-This is no issue so far, as only the rtnl core registers a netlink
-handler with a calcit hook which won't be unregistered, but may become
-one if new code makes use of the calcit hook.
+[    1.906411] Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+[    1.914878] pgd = c0004000
+[    1.917786] [0000000c] *pgd=00000000
+[    1.921536] Internal error: Oops: 5 [#1] SMP ARM
+[    1.926357] Modules linked in:
+[    1.929556] CPU: 0 PID: 14 Comm: kworker/0:1 Not tainted 4.4.5 #18
+[    1.936006] Hardware name: Generic AM33XX (Flattened Device Tree)
+[    1.942383] Workqueue: events power_supply_changed_work
+[    1.947842] task: de2c41c0 ti: de2c8000 task.ti: de2c8000
+[    1.953483] PC is at tps65217_ac_get_property+0x14/0x28
+[    1.958937] LR is at tps65217_ac_get_property+0x10/0x28
 
-Fixes: c7ac8679bec9 ("rtnetlink: Compute and store minimum ifinfo...")
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: Greg Rose <gregory.v.rose@intel.com>
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Driver was trying to use drv_data in property get handler. However drv_data
+was not set, so it caused NULL pointer dereference. This patch properly
+sets drv_data during probe by power_supply_config parameter, so the
+property get handler works as desired.
+
+Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+Fixes: 3636859b280c ("power_supply: Add support for tps65217-charger")
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/rtnetlink.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/power/tps65217_charger.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -253,6 +253,7 @@ int rtnl_unregister(int protocol, int ms
+--- a/drivers/power/tps65217_charger.c
++++ b/drivers/power/tps65217_charger.c
+@@ -197,6 +197,7 @@ static int tps65217_charger_probe(struct
+ {
+ 	struct tps65217 *tps = dev_get_drvdata(pdev->dev.parent);
+ 	struct tps65217_charger *charger;
++	struct power_supply_config cfg = {};
+ 	int ret;
  
- 	rtnl_msg_handlers[protocol][msgindex].doit = NULL;
- 	rtnl_msg_handlers[protocol][msgindex].dumpit = NULL;
-+	rtnl_msg_handlers[protocol][msgindex].calcit = NULL;
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+@@ -209,9 +210,12 @@ static int tps65217_charger_probe(struct
+ 	charger->tps = tps;
+ 	charger->dev = &pdev->dev;
  
- 	return 0;
- }
++	cfg.of_node = pdev->dev.of_node;
++	cfg.drv_data = charger;
++
+ 	charger->ac = devm_power_supply_register(&pdev->dev,
+ 						 &tps65217_charger_desc,
+-						 NULL);
++						 &cfg);
+ 	if (IS_ERR(charger->ac)) {
+ 		dev_err(&pdev->dev, "failed: power supply register\n");
+ 		return PTR_ERR(charger->ac);
 
 
