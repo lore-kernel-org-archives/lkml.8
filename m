@@ -2,116 +2,84 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4E9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A78208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2BD2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEHSTE (ORCPT
+        id S1727859AbgEHSTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:19:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49234 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgEHSTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:19:03 -0400
-IronPort-SDR: 4gap54/c3/wJ2YMABrGV5VFMhjJPubJCXmSCLa77noz3fRhPMLuDN179NcycSKokBYMnTZLI5P
- oz+38AVacMBw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 11:19:02 -0700
-IronPort-SDR: xlG+pLTjJtooALYiHtqcjda0K1mogzg/hqYZSjlOPN4zE8NGrkTayHKqmNGQq3VnJFUXwHxF64
- dDrDtRvAHXzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="297033545"
-Received: from rhweight-wrk1.ra.intel.com ([137.102.106.140])
-  by orsmga008.jf.intel.com with ESMTP; 08 May 2020 11:19:02 -0700
-Date:   Fri, 8 May 2020 11:20:50 -0700 (PDT)
-From:   matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@rhweight-WRK1
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-cc:     Wu Hao <hao.wu@intel.com>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fpga: dfl: Replace zero-length array with
- flexible-array
-In-Reply-To: <20200507185256.GA14313@embeddedor>
-Message-ID: <alpine.DEB.2.21.2005081119420.7209@rhweight-WRK1>
-References: <20200507185256.GA14313@embeddedor>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 8 May 2020 14:19:16 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:46613 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726817AbgEHSTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:19:16 -0400
+Received: (qmail 9470 invoked by uid 500); 8 May 2020 14:19:15 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 May 2020 14:19:15 -0400
+Date:   Fri, 8 May 2020 14:19:15 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+cc:     gregkh@linuxfoundation.org, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: Re: [PATCH v2] USB: EHCI: ehci-mv: Fix unused assignment in
+ mv_ehci_probe()
+In-Reply-To: <20200508142136.4232-1-tangbin@cmss.chinamobile.com>
+Message-ID: <Pine.LNX.4.44L0.2005081419010.7856-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 8 May 2020, Tang Bin wrote:
 
-
-This looks like a a good change to me.
-
-Tested-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-
-On Thu, 7 May 2020, Gustavo A. R. Silva wrote:
-
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->        int stuff;
->        struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Delete unused initialized value, because 'retval' will be assigined
+> by the function mv_ehci_enable(). And delete the extra blank lines.
+> 
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 > ---
-> drivers/fpga/dfl.h |    2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index 9f0e656de720..1cd51ea52ce1 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -235,7 +235,7 @@ struct dfl_feature_platform_data {
-> 	unsigned long dev_status;
-> 	void *private;
-> 	int num;
-> -	struct dfl_feature features[0];
-> +	struct dfl_feature features[];
-> };
->
-> static inline
->
->
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+
+> Changes from v1
+>  - fix the commit message.
+> ---
+>  drivers/usb/host/ehci-mv.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-mv.c b/drivers/usb/host/ehci-mv.c
+> index bd4f6ef53..1c079953e 100644
+> --- a/drivers/usb/host/ehci-mv.c
+> +++ b/drivers/usb/host/ehci-mv.c
+> @@ -108,7 +108,7 @@ static int mv_ehci_probe(struct platform_device *pdev)
+>  	struct ehci_hcd *ehci;
+>  	struct ehci_hcd_mv *ehci_mv;
+>  	struct resource *r;
+> -	int retval = -ENODEV;
+> +	int retval;
+>  	u32 offset;
+>  
+>  	if (usb_disabled())
+> @@ -142,8 +142,6 @@ static int mv_ehci_probe(struct platform_device *pdev)
+>  		goto err_put_hcd;
+>  	}
+>  
+> -
+> -
+>  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	ehci_mv->base = devm_ioremap_resource(&pdev->dev, r);
+>  	if (IS_ERR(ehci_mv->base)) {
+> 
+
