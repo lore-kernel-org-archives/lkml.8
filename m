@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A3DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB69AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B96A621473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB7C21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hg0J6vPc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p0ElUfR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgEHQPu (ORCPT
+        id S1728494AbgEHQP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36332 "EHLO
+        Fri, 8 May 2020 12:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgEHQPh (ORCPT
+        with ESMTP id S1727113AbgEHQPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:15:37 -0400
+        Fri, 8 May 2020 12:15:54 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDC4C05BD43;
-        Fri,  8 May 2020 09:15:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724C0C061A0C;
+        Fri,  8 May 2020 09:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=StWP0crF+8pSNFux4pjsqh9CnHUPvltK4WN7YgDzDwo=; b=hg0J6vPc1CAtRbBcIKiIwGZj1R
-        U/NYXsltRCgUXRtF02xAh6x/dQQt7bD8PzPhXtSQ7xtfClVpUVDRELn7ixFyZ4B2pCgOFCooBv00b
-        Kb3UuE2iupMli5UVx0Ld3aKZ1QZcPq28l06UGMLW5DFIhlEjEpmVKcxKOP5Z6+5Ul64aYiy4wQLjf
-        XUU256tNa+A9CfSiuzAX8CUPPPYrqDPrd5en8kVJ2NLMaRiEdIyuo4wfyA6bowpdUqeN6bgwNuwZy
-        ZWQbvwwkYO4D0ebTcT0ciGUghRQlVk/s8oLF8DDRZGiij+odbfRZdhIEZqowwh8vFKNKZjPynC6hV
-        xkR17kBw==;
+        bh=v95R0zjTgUANy896rAxmeWpttbECsK32wQlrntDvB9M=; b=p0ElUfR3gK1Rk5PmAzNROj0KqY
+        c74p4QSvm4KdW68E1PC0gFs+KF+EO5SGozWG9ESk4gFf2HbF9XfXdh77qoEi3XzLs0Q43Xy9f26fv
+        BAaig/pdUtmrY/BtkXTGeCDNxZjhpZcXPrh52CtE57IcvP5DedivWBwD/tMewiCvxZ50AfXIR2HP6
+        o7+ZJ1BiHyG6xf1CJfZP9+pZgfbtfB1+M9Ku/h/9GLXId/E1gM7ns2sEo65YxszlshCiIe+YNWoCD
+        sKmSj/N22isoShI/24frjlLR2xgBEGCSYuD1u8yApU/BWCbrigPs9wWHe777HKrqy8m6Z1TP9tMUg
+        QyuKblsg==;
 Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX5er-0004Wm-9C; Fri, 08 May 2020 16:15:30 +0000
+        id 1jX5f6-0004i4-Ek; Fri, 08 May 2020 16:15:45 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
@@ -52,9 +52,9 @@ Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
         linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-nvdimm@lists.01.org
-Subject: [PATCH 03/15] drbd: stop using ->queuedata
-Date:   Fri,  8 May 2020 18:15:05 +0200
-Message-Id: <20200508161517.252308-4-hch@lst.de>
+Subject: [PATCH 08/15] zram: stop using ->queuedata
+Date:   Fri,  8 May 2020 18:15:10 +0200
+Message-Id: <20200508161517.252308-9-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508161517.252308-1-hch@lst.de>
 References: <20200508161517.252308-1-hch@lst.de>
@@ -68,35 +68,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/drbd/drbd_main.c | 1 -
- drivers/block/drbd/drbd_req.c  | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/zram/zram_drv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index c094c3c2c5d4d..be787b268f044 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2805,7 +2805,6 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 	if (!q)
- 		goto out_no_q;
- 	device->rq_queue = q;
--	q->queuedata   = device;
- 
- 	disk = alloc_disk(1);
- 	if (!disk)
-diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
-index 840c3aef3c5c9..02c104a0c45e0 100644
---- a/drivers/block/drbd/drbd_req.c
-+++ b/drivers/block/drbd/drbd_req.c
-@@ -1614,7 +1614,7 @@ void do_submit(struct work_struct *ws)
- 
- blk_qc_t drbd_make_request(struct request_queue *q, struct bio *bio)
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index ebb234f36909c..e1a6c74c7a4ba 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1593,7 +1593,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+  */
+ static blk_qc_t zram_make_request(struct request_queue *queue, struct bio *bio)
  {
--	struct drbd_device *device = (struct drbd_device *) q->queuedata;
-+	struct drbd_device *device = bio->bi_disk->private_data;
- 	unsigned long start_jif;
+-	struct zram *zram = queue->queuedata;
++	struct zram *zram = bio->bi_disk->private_data;
  
- 	blk_queue_split(q, &bio);
+ 	if (!valid_io_request(zram, bio->bi_iter.bi_sector,
+ 					bio->bi_iter.bi_size)) {
+@@ -1916,7 +1916,6 @@ static int zram_add(void)
+ 	zram->disk->first_minor = device_id;
+ 	zram->disk->fops = &zram_devops;
+ 	zram->disk->queue = queue;
+-	zram->disk->queue->queuedata = zram;
+ 	zram->disk->private_data = zram;
+ 	snprintf(zram->disk->disk_name, 16, "zram%d", device_id);
+ 
 -- 
 2.26.2
 
