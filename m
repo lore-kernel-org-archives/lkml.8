@@ -2,117 +2,139 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A90C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BFAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3EA20746
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338092184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiGw8gA/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ByzzoK3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEHSM0 (ORCPT
+        id S1727840AbgEHSMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726756AbgEHSMZ (ORCPT
+        Fri, 8 May 2020 14:12:33 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32187 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726756AbgEHSMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:12:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31749C061A0C;
-        Fri,  8 May 2020 11:12:25 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so2965061wrx.4;
-        Fri, 08 May 2020 11:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wEg6363KALMCBQBSLOKuoUfGPXNIfqB9uH8JLDVOLn8=;
-        b=jiGw8gA/+KtDlxEler0Ln+sRm7LZ0ILtePjxlryhRiAgy+Hn1zPTOXFwwA455LXmq5
-         thSrJhUKnJQBcAYl3wzWZn+6B8ok+d37y+CZbsV47VN3uzanc+KEwvaz9So+sDWrYyPJ
-         z+FfYIzGvDOOQxGCx0O8u5hV1g/S7u0/kWQy/+m4wiGKcECubtCEdnHyzS947HDf+PYh
-         URXcx5SCg1ypxIfGnKD0wHDvo60V6ks30VsZ1JExOfmMrd+nBzyt7lGTFgDLzUwfzfEm
-         e8nkEJr1NgWM/VFqatr4n4e++zyDatXKOIRvVqIyvHCW5rUjWs9raS+lxg4TQm4b4O0G
-         PqGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wEg6363KALMCBQBSLOKuoUfGPXNIfqB9uH8JLDVOLn8=;
-        b=tY8lEYGaTZKJ9jdUnkmWGKmS2uYzex9OQEfPceh+w7PlkLGuSD2L7GT1xN1LwQhZBH
-         ZVytWxokukBC5VxVNvnc9SGoIeKIcfUx5475GxEBzcE59Fkj2h1ZmMeizkpUyGFSFVPG
-         DcQDbHEbR22BQbCjE86kULIlp+jnMNADn2Hsbf42xmONxKG0D5pLssqZWWwoRnLZGhVU
-         3wcLV/iGVih60e+aNlnuWdFDojd/D2uz+1NLmSgMpBpsrJtNiCI5PtppJjNqFO07GvEh
-         Kzm5aFnfnreyV0jBkj95iX54Pn4lURHtU+E7S8aJK0A2hWlkb5k1j67hloR2u4xSeUCw
-         qmrg==
-X-Gm-Message-State: AGi0PubCZyd37fdGBBSIZZzdS7bgPhbk2jCCr953uiTltG+l0nO4RP8D
-        Ow5CSbuDylUNjXtG9XXPambyVD1BOSv/jsGsAI8=
-X-Google-Smtp-Source: APiQypJ1418d0usqdIDaEoMJ9S+Dht8dlCaR0LS0UZ1UTm9QxdH2D6YM5JrcYaXtjH+tKEvB0V0bS+J5tYCvdGie2SI=
-X-Received: by 2002:adf:8401:: with SMTP id 1mr4356440wrf.241.1588961543855;
- Fri, 08 May 2020 11:12:23 -0700 (PDT)
+        Fri, 8 May 2020 14:12:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588961552; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=wPiyQjSJF8vUdRxJrjwFgYJTIXhq+dC/nAsEoueYbiA=; b=ByzzoK3uHnF5tVMm/9/8A1ghO+1K49QTXMakvpFFexqgEKinOejfzzNv3GT/RBMkRna0Q/SF
+ ydB56rSUGTiczHcub+jptEb9z3Ch6xVWqfQGtKiOZpqbQy4J/xBN58rb9CEfeXnpxD+R8A0E
+ pd3UcmE9f7cm6oju1heaubVXhnU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb5a10a.7fc7670df298-smtp-out-n03;
+ Fri, 08 May 2020 18:12:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18B03C4478C; Fri,  8 May 2020 18:12:26 +0000 (UTC)
+Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B44CC433D2;
+        Fri,  8 May 2020 18:12:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B44CC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 3/5] scsi: ufs: customize flush threshold for
+ WriteBooster
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200508171513.14665-1-stanley.chu@mediatek.com>
+ <20200508171513.14665-4-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <4196ff98-093e-3708-d166-a7a7c6046c57@codeaurora.org>
+Date:   Fri, 8 May 2020 11:12:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200507010504.26352-1-luke.r.nels@gmail.com> <20200507010504.26352-2-luke.r.nels@gmail.com>
- <20200507082934.GA28215@willie-the-truck> <20200507101224.33a44d71@why>
- <CAB-e3NRCJ_4+vkFPkMN67DwBBtO=sJwR-oL4-AozVw2bBJHOzg@mail.gmail.com> <20200508114709.GB16247@willie-the-truck>
-In-Reply-To: <20200508114709.GB16247@willie-the-truck>
-From:   Luke Nelson <luke.r.nels@gmail.com>
-Date:   Fri, 8 May 2020 11:12:12 -0700
-Message-ID: <CAB-e3NQLuaHLxNB3Zpgy8EqyiZBqEYGzh1TSzXQe++nqPu2oLg@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 1/3] arm64: insn: Fix two bugs in encoding
- 32-bit logical immediates
-To:     Will Deacon <will@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Luke Nelson <lukenels@cs.washington.edu>,
-        bpf <bpf@vger.kernel.org>, Xi Wang <xi.wang@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200508171513.14665-4-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On 5/8/2020 10:15 AM, Stanley Chu wrote:
+> Allow flush threshold for WriteBooster to be customizable by
+> vendors. To achieve this, make the value as a variable in struct
+> ufs_hba first.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>   drivers/scsi/ufs/ufshcd.c | 6 ++++--
+>   drivers/scsi/ufs/ufshcd.h | 1 +
+>   2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index cdacbe6378a1..9a0ce6550c2f 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5301,8 +5301,8 @@ static bool ufshcd_wb_presrv_usrspc_keep_vcc_on(struct ufs_hba *hba,
+>   			 cur_buf);
+>   		return false;
+>   	}
+> -	/* Let it continue to flush when >60% full */
+> -	if (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN)
+> +	/* Let it continue to flush when available buffer exceeds threshold */
+> +	if (avail_buf < hba->vps->wb_flush_threshold)
+>   		return true;
+>   
+>   	return false;
+> @@ -6839,6 +6839,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>   		if (!d_lu_wb_buf_alloc)
+>   			goto wb_disabled;
+>   	}
+> +
+Is this newline needed?
 
-On Fri, May 8, 2020 at 4:47 AM Will Deacon <will@kernel.org> wrote:
->
-> Yes, please! And please include Daniel's acks on the BPF changes too. It's a
-> public holiday here in the UK today, but I can pick this up next week.
+>   	return;
+>   
+>   wb_disabled:
+> @@ -7462,6 +7463,7 @@ static const struct attribute_group *ufshcd_driver_groups[] = {
+>   
+>   static struct ufs_hba_variant_params ufs_hba_vps = {
+>   	.hba_enable_delay_us		= 1000,
+> +	.wb_flush_threshold		= UFS_WB_40_PERCENT_BUF_REMAIN,
+>   	.devfreq_profile.polling_ms	= 100,
+>   	.devfreq_profile.target		= ufshcd_devfreq_target,
+>   	.devfreq_profile.get_dev_status	= ufshcd_devfreq_get_dev_status,
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index f7bdf52ba8b0..e3dfb48e669e 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -570,6 +570,7 @@ struct ufs_hba_variant_params {
+>   	struct devfreq_dev_profile devfreq_profile;
+>   	struct devfreq_simple_ondemand_data ondemand_data;
+>   	u16 hba_enable_delay_us;
+> +	u32 wb_flush_threshold;
+>   };
+>   
+>   /**
+> 
 
-Thanks!
+Patch[3] & [4] may be combined into a single patch perhaps?
+Patch[4] just redoes what [3] did in a different way, so might as well 
+just do what patch[4] does right away.
 
-> Nice! Two things:
->
-> (1) I really think you should give a talk on this at a Linux conference
 
-That would be great, I'd be happy to give a talk on our verification
-work some time in the future :)
-
-> (2) Did you look at any instruction generation functions other than the
->     logical immediate encoding function?
-
-Other instruction generation functions are on our todo list, but we
-haven't got a chance to spend more time on them yet.
-
-Thanks again,
-
-- Luke
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
