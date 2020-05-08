@@ -2,86 +2,219 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE63C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC79C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6409E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588966739;
-	bh=TVF1tf6NxsU/ettA9htZ19+xz7qF2EXHonAMXoKKwVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zL7I2c0AG08sO0HeclV0f2P30dG9/DMKTw2E6wTVGsknmyqGj779innMTsZwxEq3r
-	 LofCrg+bloVQpEX/i5F//0iQ7NFcN5745Knf3EIRAOAu+mGAVdWGEskFg/MBKurXGv
-	 WQuR1RHGILR3Bb5S4tWQ4gyfb8JHuCJJRqUWkN7k=
+	by mail.kernel.org (Postfix) with ESMTP id 19012218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwJoDALi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgEHTi6 (ORCPT
+        id S1727801AbgEHTjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHTi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:38:58 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 15:39:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48752 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727786AbgEHTjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:39:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588966743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WvM/+trhO6AMazPvr+ThgaIhqSMkk3F1gyxpsCTl3qk=;
+        b=cwJoDALiYltfoe278W6HxjwVmvqH1OLwtrhkRyNpoITRqofrJ1VT4yn9mZPA+kOsm49wDq
+        QPcEDd1FVWOu/kcW78n6gXxf1TRnCNho7QGs5drSTDIw75IUdbZ6Hro3ZfiKQunajCE3+c
+        q6VDxo2RzOh0Suiapx5t9gxIdUFm254=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-Sx3SF5doMVms-by8Lqcfpg-1; Fri, 08 May 2020 15:39:02 -0400
+X-MC-Unique: Sx3SF5doMVms-by8Lqcfpg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A4DC20725;
-        Fri,  8 May 2020 19:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588966737;
-        bh=TVF1tf6NxsU/ettA9htZ19+xz7qF2EXHonAMXoKKwVE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fEUa2hpQEVZ/5oNp1fr5qsCBw8GHgtMEJvhk+5/bCZYLMkOiF7tcXsTfELHccv7bK
-         gaBqJ8v8aRf2VzYARtx9NSsWuSkEQtr52uc4DiUh/tLlhaQaM4jx9XCFmRcC867Uvh
-         P8onb0BGagZbzRt//WbMxOJknZofArfkbeEQOkaw=
-Date:   Fri, 8 May 2020 14:43:25 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] PCI: Replace zero-length array with flexible-array
-Message-ID: <20200508194325.GD23375@embeddedor>
-References: <20200507190544.GA15633@embeddedor>
- <20200507201544.GA23633@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D74AA464;
+        Fri,  8 May 2020 19:39:00 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-83.rdu2.redhat.com [10.10.117.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB7001C9;
+        Fri,  8 May 2020 19:38:59 +0000 (UTC)
+Subject: Re: [PATCH RFC 3/8] dcache: sweep cached negative dentries to the end
+ of list of siblings
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
+References: <158893941613.200862.4094521350329937435.stgit@buzz>
+ <158894060021.200862.15936671684100629802.stgit@buzz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <9b5d75d0-d627-2b53-10eb-a850bace091b@redhat.com>
+Date:   Fri, 8 May 2020 15:38:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507201544.GA23633@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <158894060021.200862.15936671684100629802.stgit@buzz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:15:44PM -0500, Bjorn Helgaas wrote:
-> On Thu, May 07, 2020 at 02:05:44PM -0500, Gustavo A. R. Silva wrote:
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99:
-> > 
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Applied to pci/misc for v5.8, thanks!
-> 
-> I assume this takes care of everything in drivers/pci/, right?  I'd
-> like to do them all at once, so if there are others, send another
-> patch and I'll squash them.  I took a quick look but didn't see any.
-> 
+On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
+> For disk filesystems result of every negative lookup is cached, content of
+> directories is usually cached too. Production of negative dentries isn't
+> limited with disk speed. It's really easy to generate millions of them if
+> system has enough memory. Negative dentries are linked into siblings list
+> along with normal positive dentries. Some operations walks dcache tree but
+> looks only for positive dentries: most important is fsnotify/inotify.
+>
+> This patch moves negative dentries to the end of list at final dput() and
+> marks with flag which tells that all following dentries are negative too.
+> Reverse operation is required before instantiating negative dentry.
+>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>   fs/dcache.c            |   63 ++++++++++++++++++++++++++++++++++++++++++++++--
+>   include/linux/dcache.h |    6 +++++
+>   2 files changed, 66 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index 386f97eaf2ff..743255773cc7 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -632,6 +632,48 @@ static inline struct dentry *lock_parent(struct dentry *dentry)
+>   	return __lock_parent(dentry);
+>   }
+>   
+> +/*
+> + * Move cached negative dentry to the tail of parent->d_subdirs.
+> + * This lets walkers skip them all together at first sight.
+> + * Must be called at dput of negative dentry.
+> + */
+> +static void sweep_negative(struct dentry *dentry)
+> +{
+> +	struct dentry *parent;
+> +
+> +	if (!d_is_tail_negative(dentry)) {
+> +		parent = lock_parent(dentry);
+> +		if (!parent)
+> +			return;
+> +
+> +		if (!d_count(dentry) && d_is_negative(dentry) &&
+> +		    !d_is_tail_negative(dentry)) {
+> +			dentry->d_flags |= DCACHE_TAIL_NEGATIVE;
+> +			list_move_tail(&dentry->d_child, &parent->d_subdirs);
+> +		}
+> +
+> +		spin_unlock(&parent->d_lock);
+> +	}
+> +}
+> +
+> +/*
+> + * Undo sweep_negative() and move to the head of parent->d_subdirs.
+> + * Must be called before converting negative dentry into positive.
+> + */
+> +static void recycle_negative(struct dentry *dentry)
+> +{
+> +	struct dentry *parent;
+> +
+> +	spin_lock(&dentry->d_lock);
+> +	parent = lock_parent(dentry);
+> +	if (parent) {
+> +		list_move(&dentry->d_child, &parent->d_subdirs);
+> +		spin_unlock(&parent->d_lock);
+> +	}
+> +	dentry->d_flags &= ~DCACHE_TAIL_NEGATIVE;
+> +	spin_unlock(&dentry->d_lock);
+> +}
+> +
 
-Yep. I can confirm that these are the last zero-length arrays in
-drivers/pci/ :)
+The name sweep_negative and recycle_negative are not very descriptive of 
+what the function is doing (especially the later one). I am not good at 
+naming, but some kind of naming scheme that can clearly show one is 
+opposite of another will be better.
 
-Thanks
---
-Gustavo
+
+>   static inline bool retain_dentry(struct dentry *dentry)
+>   {
+>   	WARN_ON(d_in_lookup(dentry));
+> @@ -703,6 +745,8 @@ static struct dentry *dentry_kill(struct dentry *dentry)
+>   		spin_unlock(&inode->i_lock);
+>   	if (parent)
+>   		spin_unlock(&parent->d_lock);
+> +	if (d_is_negative(dentry))
+> +		sweep_negative(dentry);
+We can potentially save an unneeded lock/unlock pair by moving it up 
+before "if (parent)" and pass in a flag to indicate if the parent lock 
+is being held.
+>   	spin_unlock(&dentry->d_lock);
+>   	return NULL;
+>   }
+> @@ -718,7 +762,7 @@ static struct dentry *dentry_kill(struct dentry *dentry)
+>   static inline bool fast_dput(struct dentry *dentry)
+>   {
+>   	int ret;
+> -	unsigned int d_flags;
+> +	unsigned int d_flags, required;
+>   
+>   	/*
+>   	 * If we have a d_op->d_delete() operation, we sould not
+> @@ -766,6 +810,8 @@ static inline bool fast_dput(struct dentry *dentry)
+>   	 * a 'delete' op, and it's referenced and already on
+>   	 * the LRU list.
+>   	 *
+> +	 * Cached negative dentry must be swept to the tail.
+> +	 *
+>   	 * NOTE! Since we aren't locked, these values are
+>   	 * not "stable". However, it is sufficient that at
+>   	 * some point after we dropped the reference the
+> @@ -777,10 +823,15 @@ static inline bool fast_dput(struct dentry *dentry)
+>   	 */
+>   	smp_rmb();
+>   	d_flags = READ_ONCE(dentry->d_flags);
+> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
+> +
+> +	required = DCACHE_REFERENCED | DCACHE_LRU_LIST |
+> +		   (d_flags_negative(d_flags) ? DCACHE_TAIL_NEGATIVE : 0);
+> +
+> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST |
+> +		   DCACHE_DISCONNECTED | DCACHE_TAIL_NEGATIVE;
+>   
+>   	/* Nothing to do? Dropping the reference was all we needed? */
+> -	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
+> +	if (d_flags == required && !d_unhashed(dentry))
+>   		return true;
+>   
+>   	/*
+> @@ -852,6 +903,8 @@ void dput(struct dentry *dentry)
+>   		rcu_read_unlock();
+>   
+>   		if (likely(retain_dentry(dentry))) {
+> +			if (d_is_negative(dentry))
+> +				sweep_negative(dentry);
+>   			spin_unlock(&dentry->d_lock);
+>   			return;
+>   		}
+> @@ -1951,6 +2004,8 @@ void d_instantiate(struct dentry *entry, struct inode * inode)
+>   {
+>   	BUG_ON(!hlist_unhashed(&entry->d_u.d_alias));
+>   	if (inode) {
+> +		if (d_is_tail_negative(entry))
+> +			recycle_negative(entry);
+
+Will it better to recycle_negative() inside __d_instantiate() under the 
+d_lock. That reduces the number of lock/unlock you need to do and 
+eliminate the need to change d_instantiate_new().
+
+Cheers,
+Longman
+
