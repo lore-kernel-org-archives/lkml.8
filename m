@@ -2,157 +2,125 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABEC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0350EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE77221841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA14920746
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rz/6BM5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEHGoc (ORCPT
+        id S1726942AbgEHGo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:44:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42646 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgEHGob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:44:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3108EAD80;
-        Fri,  8 May 2020 06:44:32 +0000 (UTC)
-Subject: Re: [PATCH -next] drm/ast: Make
- ast_primary_plane_helper_atomic_update static
-To:     Samuel Zou <zou_wei@huawei.com>, airlied@redhat.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <6fab133b-9f94-fff5-8c87-1d7c6d3e9043@suse.de>
-Date:   Fri, 8 May 2020 08:44:25 +0200
+        Fri, 8 May 2020 02:44:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40496 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725971AbgEHGo6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 02:44:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588920297;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ldgRmfrU61jak98QbW+ZRtHuHZaSuicPr557G5QWVUo=;
+        b=Rz/6BM5o9Wn/WJ4WOgogGGeaUBae39WvJalA+rCCvU9VhtTl6joZ8nHU4tOiFWpytwZfRw
+        Nz0+gRopweNAmJUTQxat7Vv6Ajs0ZJhfbf3pyQXNWGRisGafSU9018VvqO3g7AZwMdysvz
+        fwlSvE7X0YjYZnhBiYARFWWSGvED0cA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-xbTrrzdBMpeHOn8_IOa8PA-1; Fri, 08 May 2020 02:44:55 -0400
+X-MC-Unique: xbTrrzdBMpeHOn8_IOa8PA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C698D1B18BC6;
+        Fri,  8 May 2020 06:44:53 +0000 (UTC)
+Received: from [10.72.13.98] (ovpn-13-98.pek2.redhat.com [10.72.13.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96B2810429AF;
+        Fri,  8 May 2020 06:44:46 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] vfio-pci: Fault mmaps to enable vma tracking
+To:     Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871569380.15589.16950418949340311053.stgit@gimli.home>
+ <20200507214744.GP228260@xz-x1> <20200507160334.4c029518@x1.home>
+ <20200507222223.GR228260@xz-x1> <20200507235633.GL26002@ziepe.ca>
+ <20200508021656.GS228260@xz-x1>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0ee2fd04-d544-d03b-0a7c-90c22275aac9@redhat.com>
+Date:   Fri, 8 May 2020 14:44:44 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1"
+In-Reply-To: <20200508021656.GS228260@xz-x1>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1
-Content-Type: multipart/mixed; boundary="9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Samuel Zou <zou_wei@huawei.com>, airlied@redhat.com, airlied@linux.ie,
- daniel@ffwll.ch
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Message-ID: <6fab133b-9f94-fff5-8c87-1d7c6d3e9043@suse.de>
-Subject: Re: [PATCH -next] drm/ast: Make
- ast_primary_plane_helper_atomic_update static
-References: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
 
---9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-
-I'll add your patch to drm-misc-next. Thanks!
-
-Am 07.05.20 um 04:40 schrieb Samuel Zou:
-> Fix the following sparse warning:
->=20
-> drivers/gpu/drm/ast/ast_mode.c:564:6: warning:
-> symbol 'ast_primary_plane_helper_atomic_update'
-> was not declared. Should it be static?
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->  drivers/gpu/drm/ast/ast_mode.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_m=
-ode.c
-> index 7062bcd..4ddf770 100644
-> --- a/drivers/gpu/drm/ast/ast_mode.c
-> +++ b/drivers/gpu/drm/ast/ast_mode.c
-> @@ -561,8 +561,9 @@ static int ast_primary_plane_helper_atomic_check(st=
-ruct drm_plane *plane,
->  	return 0;
->  }
-> =20
-> -void ast_primary_plane_helper_atomic_update(struct drm_plane *plane,
-> -					    struct drm_plane_state *old_state)
-> +static void
-> +ast_primary_plane_helper_atomic_update(struct drm_plane *plane,
-> +				       struct drm_plane_state *old_state)
->  {
->  	struct ast_private *ast =3D plane->dev->dev_private;
->  	struct drm_plane_state *state =3D plane->state;
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+On 2020/5/8 上午10:16, Peter Xu wrote:
+> On Thu, May 07, 2020 at 08:56:33PM -0300, Jason Gunthorpe wrote:
+>> On Thu, May 07, 2020 at 06:22:23PM -0400, Peter Xu wrote:
+>>> On Thu, May 07, 2020 at 04:03:34PM -0600, Alex Williamson wrote:
+>>>> On Thu, 7 May 2020 17:47:44 -0400
+>>>> Peter Xu <peterx@redhat.com> wrote:
+>>>>
+>>>>> Hi, Alex,
+>>>>>
+>>>>> On Tue, May 05, 2020 at 03:54:53PM -0600, Alex Williamson wrote:
+>>>>>> +/*
+>>>>>> + * Zap mmaps on open so that we can fault them in on access and therefore
+>>>>>> + * our vma_list only tracks mappings accessed since last zap.
+>>>>>> + */
+>>>>>> +static void vfio_pci_mmap_open(struct vm_area_struct *vma)
+>>>>>> +{
+>>>>>> +	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
+>>>>> A pure question: is this only a safety-belt or it is required in some known
+>>>>> scenarios?
+>>>> It's not required.  I originally did this so that I'm not allocating a
+>>>> vma_list entry in a path where I can't return error, but as Jason
+>>>> suggested I could zap here only in the case that I do encounter that
+>>>> allocation fault.  However I still like consolidating the vma_list
+>>>> handling to the vm_ops .fault and .close callbacks and potentially we
+>>>> reduce the zap latency by keeping the vma_list to actual users, which
+>>>> we'll get to eventually anyway in the VM case as memory BARs are sized
+>>>> and assigned addresses.
+>>> Yes, I don't see much problem either on doing the vma_list maintainance only in
+>>> .fault() and .close().  My understandingg is that the worst case is the perf
+>>> critical applications (e.g. DPDK) could pre-fault these MMIO region easily
+>>> during setup if they want.  My question was majorly about whether the vma
+>>> should be guaranteed to have no mapping at all when .open() is called.  But I
+>>> agree with you that it's always good to have that as safety-belt anyways.
+>> If the VMA has a mapping then that specific VMA has to be in the
+>> linked list.
+>>
+>> So if the zap is skipped then the you have to allocate something and
+>> add to the linked list to track the VMA with mapping.
+>>
+>> It is not a 'safety belt'
+> But shouldn't open() only be called when the VMA is created for a memory range?
+> If so, does it also mean that the address range must have not been mapped yet?
 
 
---9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv--
+Probably not, e.g when VMA is being split.
 
---GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Thanks
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl60/8kACgkQaA3BHVML
-eiMhngf/X8nGRb0GfvKmxWPZ/TOQXNxEnOhisWFtUna+M4nCB+ZeW+t+d4gTk9xV
-JG9aLgCPlZngs8ZTvnVj614Df8kZ8j8TrGp333d6gSWEJvh0IHrMnL8eOkR2C5iJ
-y/uBC9KLE2/jIVNleFVANBGLkUNdf11RzPggGVCv4sKin8RyX91iT5THmfEFHTTs
-vZcqsGM1axYGML+f/KjVw2m+w8ivicqQasuwPb991xAg/S96Jw1CFDqVc6FDd4lF
-qGElPvFyTGyGvlEs8VCg8KSAGV/bOBbkYvmOpycsFLIfRVpNeb4m/QJOPjq+1EUo
-n7pifydfUQIaPDXXEhUF+U0KZAjRpg==
-=+xqQ
------END PGP SIGNATURE-----
+>
+> Thanks,
+>
 
---GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1--
