@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927EEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03167C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72132218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AC12498A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944083;
-	bh=vwci9RWDmnCqqO27ReEHvvAjO3atjmtDijjFMQmolW4=;
+	s=default; t=1588944089;
+	bh=UP2Bv7dw35R4X6LSQRa4HJ+u34hOteqbu6GSF2rZSOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPh3Fn/M6QGivw2cv+BnfR4VWcZOw2PM5UwpwGsu0EzXEGJ0rf0RqdBcSzGzvYgFi
-	 jLUSmQe2kp/NkhH/ez8zTQIcGKLbFkQ7vqZdGqyGF2xiNZ8nYWh+A6ireekEJtmTJX
-	 GpKId1zpgpnpJHT/EtS+L527pjhC6KY/fW/s2Pms=
+	b=KYRHCsD7EqE9XpZ8uVY5C1Y1h2LquNxRXdVKuMjiyxVwYUBKoKCzh7UQCW3kUJWu7
+	 WPOv0TNuesixAZPlOjP0wyHtHVZNymwBEeLYUlM2O6YYC3lQlHLeFlZTyvtjZz8OdG
+	 dSwyKTE2JjjFhL2wUU2qbImOTxRtdrbp5fhI/CmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgEHNVW (ORCPT
+        id S1729643AbgEHNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33934 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgEHMk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:26 -0400
+        id S1728104AbgEHMkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E882495C;
-        Fri,  8 May 2020 12:40:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48E5C2495F;
+        Fri,  8 May 2020 12:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941625;
-        bh=vwci9RWDmnCqqO27ReEHvvAjO3atjmtDijjFMQmolW4=;
+        s=default; t=1588941620;
+        bh=UP2Bv7dw35R4X6LSQRa4HJ+u34hOteqbu6GSF2rZSOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZjJpqavKiQYH6MGKuAzHfABqVT/grDRODJhnXSTt8PzSsT9zaTRdeHL2kzZLMAd2
-         yw3BaJV6g0Z/kEiDASWI6QRt6BDeiZX9OZFWhyLmNf1N+P4Axxbd8aReuH9qM9oJBw
-         f+cmU4Nt+i2A7awbvh+OCMpVGRWic6bPWMPDkQoQ=
+        b=E8m5Nvy1JLFdVR05fyD2Oq94oj/JrFhubjXNw/Pb3TskNtRQmr5Cri2j5AHh9FyXC
+         wZ1loi1936WzEUHpkmIt2jadcIzeK7FozRBlhlGZam/d5fX30tBBGgimHXuqHMoTzh
+         +3YjSJuhlgRvrLQHyQQgFutEbiEd78DyTugAHNU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Wragg <david@weave.works>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 067/312] ovs/gre,geneve: fix error path when creating an iface
-Date:   Fri,  8 May 2020 14:30:58 +0200
-Message-Id: <20200508123129.264117885@linuxfoundation.org>
+Subject: [PATCH 4.4 065/312] mlxsw: Treat local port 64 as valid
+Date:   Fri,  8 May 2020 14:30:56 +0200
+Message-Id: <20200508123129.126274302@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,88 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit 106da663ff495e0aea3ac15b8317aa410754fcac upstream.
+commit 1e5ad30c649a82a062ce79a87c1296e6c6f328c2 upstream.
 
-After ipgre_newlink()/geneve_configure() call, the netdev is registered.
+MLXSW_PORT_MAX_PORTS represents the maximum number of local ports, which
+is 65 for both ASICs (SwitchX-2 and Spectrum) supported by this driver.
 
-Fixes: 7e059158d57b ("vxlan, gre, geneve: Set a large MTU on ovs-created tunnel devices")
-CC: David Wragg <david@weave.works>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/geneve.c |   10 +++++++---
- net/ipv4/ip_gre.c    |   10 +++++++---
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/port.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1340,6 +1340,7 @@ struct net_device *geneve_dev_create_fb(
- {
- 	struct nlattr *tb[IFLA_MAX + 1];
- 	struct net_device *dev;
-+	LIST_HEAD(list_kill);
- 	int err;
+--- a/drivers/net/ethernet/mellanox/mlxsw/port.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/port.h
+@@ -49,7 +49,7 @@
+ #define MLXSW_PORT_MID			0xd000
  
- 	memset(tb, 0, sizeof(tb));
-@@ -1350,8 +1351,10 @@ struct net_device *geneve_dev_create_fb(
+ #define MLXSW_PORT_MAX_PHY_PORTS	0x40
+-#define MLXSW_PORT_MAX_PORTS		MLXSW_PORT_MAX_PHY_PORTS
++#define MLXSW_PORT_MAX_PORTS		(MLXSW_PORT_MAX_PHY_PORTS + 1)
  
- 	err = geneve_configure(net, dev, &geneve_remote_unspec,
- 			       0, 0, 0, htons(dst_port), true);
--	if (err)
--		goto err;
-+	if (err) {
-+		free_netdev(dev);
-+		return ERR_PTR(err);
-+	}
- 
- 	/* openvswitch users expect packet sizes to be unrestricted,
- 	 * so set the largest MTU we can.
-@@ -1363,7 +1366,8 @@ struct net_device *geneve_dev_create_fb(
- 	return dev;
- 
-  err:
--	free_netdev(dev);
-+	geneve_dellink(dev, &list_kill);
-+	unregister_netdevice_many(&list_kill);
- 	return ERR_PTR(err);
- }
- EXPORT_SYMBOL_GPL(geneve_dev_create_fb);
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -1230,6 +1230,7 @@ struct net_device *gretap_fb_dev_create(
- {
- 	struct nlattr *tb[IFLA_MAX + 1];
- 	struct net_device *dev;
-+	LIST_HEAD(list_kill);
- 	struct ip_tunnel *t;
- 	int err;
- 
-@@ -1245,8 +1246,10 @@ struct net_device *gretap_fb_dev_create(
- 	t->collect_md = true;
- 
- 	err = ipgre_newlink(net, dev, tb, NULL);
--	if (err < 0)
--		goto out;
-+	if (err < 0) {
-+		free_netdev(dev);
-+		return ERR_PTR(err);
-+	}
- 
- 	/* openvswitch users expect packet sizes to be unrestricted,
- 	 * so set the largest MTU we can.
-@@ -1257,7 +1260,8 @@ struct net_device *gretap_fb_dev_create(
- 
- 	return dev;
- out:
--	free_netdev(dev);
-+	ip_tunnel_dellink(dev, &list_kill);
-+	unregister_netdevice_many(&list_kill);
- 	return ERR_PTR(err);
- }
- EXPORT_SYMBOL_GPL(gretap_fb_dev_create);
+ #define MLXSW_PORT_DEVID_BITS_OFFSET	10
+ #define MLXSW_PORT_PHY_BITS_OFFSET	4
 
 
