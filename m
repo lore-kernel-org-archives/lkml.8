@@ -2,109 +2,109 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC73C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20783C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D16208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvTMdDAF"
+	by mail.kernel.org (Postfix) with ESMTP id 08AC4208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgEHKPh (ORCPT
+        id S1727117AbgEHKPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:15:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgEHKPg (ORCPT
+        Fri, 8 May 2020 06:15:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41496 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgEHKPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:15:36 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809EBC05BD43;
-        Fri,  8 May 2020 03:15:36 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id v12so1193800wrp.12;
-        Fri, 08 May 2020 03:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZUm2suw4OY2BIRy5wpJmf520J8k3gbc0vjFtMWtuxfs=;
-        b=MvTMdDAFxbDyvYVx5VRjIBxreQb8aX397RtlFK9VBWhc3dsdf4M5VtfX0zwqByeibt
-         LhlYoRPrZohURqJM2+pS3Pdw35ZJVbvBxeceJ+CsoQevMU2k18DKhElK8YQhQT37A/2O
-         AyEve/6VXlVyTbJ2OP3KIU6+KY0xeXg6pAQStisPhvFMVozbrJOCCgIrZGUoVbydvWc1
-         3wHy/0JTmUo1Kdjr5nwTQZqLTpS3HkbWrBWQnOmSF3mKKqxtPKEH5Hz5l+6rKKMPAeta
-         BPWgXvhCze/sa3PZDUXC0udj1ji7JH2oNxmLYiSiEhS6cv+rk48DyNOP9flwtzNXR3jJ
-         nKXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZUm2suw4OY2BIRy5wpJmf520J8k3gbc0vjFtMWtuxfs=;
-        b=oKPG6YogITUJTXrP7jbxnjqeykc/68Az9bEBWKQ/PykXLg75tmjL2436zAtNDEbWSV
-         pD7XPiOebm6vDNkl4WyguxNiT0V+hEhKNesThWsEKeCaVAe6acw8Yvg0ntDbNKrVQuS0
-         wD5LdyKMZqM++wC2NnpA1T9dmaIOs4HDxy/6+j6ktOBbx6DdGI3b/vOI5Ao0XZviDMuW
-         VfGCYgxzOpfW/pRf+yZlCYM8pjWWlVQVVTlOk0hdmDjMLXzoZ2ntnmpMXgYCyyZYK8WO
-         v5ydZb2aTuXS2KwlWPwG8/etubb19zB6p4c7dzN2E2SnBmIkHfpLd4VOQRJ1REz22aG9
-         5sng==
-X-Gm-Message-State: AGi0PubuwGYvRNjC6jc+2O+3qAFEqvXLpT3DTDeL+ag2EiSviVBinmMb
-        jir8IlJ7kajcrQE+ICizXMo=
-X-Google-Smtp-Source: APiQypLaFxeiGjZFDeGwF7zlFiRtmbyR5wOSfmGz+AEv3j4l9MdebP48En0A4n4KApYgOOgG7H/gPw==
-X-Received: by 2002:adf:f102:: with SMTP id r2mr2029018wro.376.1588932935318;
-        Fri, 08 May 2020 03:15:35 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id q8sm12179922wmg.22.2020.05.08.03.15.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 03:15:34 -0700 (PDT)
-Message-ID: <464f674a9a439bbfd563b5360e3a8fbbf6c41de1.camel@gmail.com>
-Subject: Re: [RESENT PATCH RFC v3 4/5] scsi: ufs: add unit and geometry
- parameters for HPB
-From:   Bean Huo <huobean@gmail.com>
-To:     Bart Van Assche <bvanassche@acm.org>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org,
-        rdunlap@infradead.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org
-Date:   Fri, 08 May 2020 12:15:33 +0200
-In-Reply-To: <c398bc0c-c87c-3260-471d-85f0d10cf917@acm.org>
-References: <20200504142032.16619-1-beanhuo@micron.com>
-         <20200504142032.16619-5-beanhuo@micron.com>
-         <c398bc0c-c87c-3260-471d-85f0d10cf917@acm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 8 May 2020 06:15:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1A11D80307C7;
+        Fri,  8 May 2020 10:15:44 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wxdbd-7H0-MF; Fri,  8 May 2020 13:15:43 +0300 (MSK)
+Date:   Fri, 8 May 2020 13:15:41 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+Message-ID: <20200508101541.e3yxaocuilaiyutg@mobilestation>
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 18:04 -0700, Bart Van Assche wrote:
-> > +     GEOMETRY_DESC_PARAM_HPB_REGION_SIZE     = 0x48,
-> > +     GEOMETRY_DESC_PARAM_HPB_NUMBER_LU       = 0x49,
-> > +     GEOMETRY_DESC_PARAM_HPB_SUBREGION_SIZE  = 0x4A,
-> > +     GEOMETRY_DESC_PARAM_HPB_MAX_ACTIVE_REGIONS = 0x4B,
-> >   };
+On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
+> On Fri, May 8, 2020 at 12:37 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > This SPI-controller is a part of the Baikal-T1 System Controller and
+> > is based on the DW APB SSI IP-core, but with very limited resources:
+> > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
+> > FIFO available. In order to provide a transparent initial boot code
+> > execution this controller is also utilized by an vendor-specific block,
+> > which provides an CS0 SPI flash direct mapping interface. Since both
+> > direct mapping and SPI controller normal utilization are mutual exclusive
+> > only a one of these interfaces can be used to access an external SPI
+> > slave device. Taking into account the peculiarities of the controller
+> > registers and physically mapped SPI flash access, very limited resources
+> > and seeing the normal usecase of the controller is to access an external
+> > SPI-nor flash, we decided to create a dedicated SPI driver for it.
 > 
-> How about adding the names from the spec as a comment above the new
-> constants, e.g. as follows?
+> It seems a lot of code.
+> Why can't you use spi-dw-mmio.c et al.?
+
+I said above why. Even though the registers set is similar It's too specific
+to be integrated into the generic DW SSI driver.
+
+-Sergey
+
 > 
->         /* wHPBPinnedRegionStartIdx */
->         UNIT_DESC_PARAM_HPB_PIN_REGION_START_OFFSET = 0x25,
+> > The driver provides callbacks for native messages-based SPI interface,
+> > SPI-memory and direct mapping read operations. Due to not having any
+> > asynchronous signaling interface provided by the core we have no choice
+> > but to implement a polling-based data transmission/reception algorithm.
+> > In addition to that in order to bypass the automatic native chip-select
+> > toggle the driver disables the local interrupts during the memory-based
+> > transfers if no complementary GPIO-based chip-select detected in the
+> > platform.
 > 
-> Thanks,
 > 
-> Bart.
-
-Bart
-I will add in the next version.
-
-thanks,
-
-Bean
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
