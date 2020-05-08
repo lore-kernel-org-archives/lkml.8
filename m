@@ -2,95 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B32CC47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE3C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223232173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZFIdwDhl"
+	by mail.kernel.org (Postfix) with ESMTP id C2E3B20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgEHTLP (ORCPT
+        id S1727051AbgEHTQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgEHTLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:11:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C5AC061A0C;
-        Fri,  8 May 2020 12:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tUWbBKI5h7qcIWqn7V5B9OOroJpHaOkMQ99gt8+paWg=; b=ZFIdwDhlPQCBP+06Xc6FGc6o8R
-        j4DJhPCH38rngf1Il0cTp/VUfH9Np0uLsnYfo0MGHwHFjmQyAvch8XUco4wEhUDgfDrulWKfm7+Y8
-        xOyo+9JvgR/pioiJwmMKz6uTB92VX0IPpurv9wUvNpcHWJ0YXO9AOqYdWkGgm0G/K8QQvqdigrrSX
-        c6eQ0hynD5RgDcm832/SyKns3BR3ugOKv9sbjDy13tg7Vr/hc8rAd8LrsD5WWUIEPsUhOXmLwZuAL
-        vfoywGZ8lH8pQY55bkkXAQI3eCvfk5jVYrJ/CbTotVTJtQvLk9bb9NhVMlWBrpLuonmfu3eZEk0zP
-        TI82M9Ng==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX8OZ-0001Qe-1C; Fri, 08 May 2020 19:10:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FB2F301DFC;
-        Fri,  8 May 2020 21:10:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6AECD203CB697; Fri,  8 May 2020 21:10:48 +0200 (CEST)
-Date:   Fri, 8 May 2020 21:10:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Fri, 8 May 2020 15:16:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2802 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgEHTQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:16:20 -0400
+IronPort-SDR: yDSqlp6oXUxNhHNWAE/5VjSYVho4VIdqG05nyQixLuAodwzrsg/7clu6E8lwAl1/kdRHlEDLEk
+ JUvFZoVvaesg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:16:19 -0700
+IronPort-SDR: 8G2zCsDqKGaOduzD/IjbrrS6blG/2s5vQ0UKKYK15vyTo+SBvKQ0E7rECdq/GyzxSeDFZIb2wL
+ x/lFs9aLEeeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="264485636"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 08 May 2020 12:16:15 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8Tp-005T1w-MM; Fri, 08 May 2020 22:16:17 +0300
+Date:   Fri, 8 May 2020 22:16:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 2/7] mm/vmalloc: Track which page-table levels were
- modified
-Message-ID: <20200508191048.GA2957@hirez.programming.kicks-ass.net>
-References: <20200508144043.13893-1-joro@8bytes.org>
- <20200508144043.13893-3-joro@8bytes.org>
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200508191617.GR185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508173609.GQ4820@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508144043.13893-3-joro@8bytes.org>
+In-Reply-To: <20200508173609.GQ4820@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:40:38PM +0200, Joerg Roedel wrote:
+On Fri, May 08, 2020 at 06:36:09PM +0100, Mark Brown wrote:
+> On Fri, May 08, 2020 at 04:29:25PM +0300, Serge Semin wrote:
+> > Baikal-T1 SoC provides DW DMA controller to perform low-speed peripherals
+> > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> > APB SSI devices embedded into the SoC. Currently this type DMA device is
+> 
+> This basically all looks good to me (without any hardware specific
+> knowledge), I had a few comments but they were mostly procedural ones -
+> mainly getting these bug fixes you've done merged as such.  Nice work.
 
-> +/*
-> + * Architectures can set this mask to a combination of PGTBL_P?D_MODIFIED values
-> + * and let generic vmalloc and ioremap code know when arch_sync_kernel_mappings()
-> + * needs to be called.
-> + */
-> +#ifndef ARCH_PAGE_TABLE_SYNC_MASK
-> +#define ARCH_PAGE_TABLE_SYNC_MASK 0
-> +#endif
-> +
-> +void arch_sync_kernel_mappings(unsigned long start, unsigned long end);
+Agree that is nice work!
+Though, can you please give us chance to review next version of the series and test on our hardware?
+
+Serge, I think you should base it on spi/for-next rather than vanilla.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-> +		arch_sync_kernel_mappings(start, end);
-
-So you're relying on the compiler DCE'ing the call in the 'normal' case.
-
-Works I suppose, but I went over the patches twice to look for a default
-implementation of it before I figured that out ...
