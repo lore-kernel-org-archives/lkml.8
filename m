@@ -2,176 +2,82 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903D9C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C3A21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMlHVCrY"
+	by mail.kernel.org (Postfix) with ESMTP id 648F421974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgEHTl7 (ORCPT
+        id S1727116AbgEHTn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726797AbgEHTl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:41:58 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5C4C061A0C;
-        Fri,  8 May 2020 12:41:58 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id t3so2431743otp.3;
-        Fri, 08 May 2020 12:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SF7w4IVLXKR2MN5g9z0w/WoW8pEbm4v0BnCRIDC/Omw=;
-        b=MMlHVCrYNt8/FKkH14O8Mb8KKWNzpOvTnGtPi/pg2/d55abXEK6K4BXYx+JWYaZIKn
-         21dr3qgLJVft+JV0agpkwz7lZ6dIFf3J9LpBh6eIoBX3pHizf3mhCyCbXDIO+Sgftyfm
-         NfKv5YPTThpuZepy1mg0MHUaZcwfZ9wodBmM0aOCi7Lmyw3xsLUAmdvblehzjAcSv73O
-         oXndWT72ezLE3WpSSFnaIn2kLAm0dlMnnVgV2NhpRIHBE0deEVE9C7nJKqKZJjN9JyPg
-         tPFTLsXGbEkRln1K8htoYEDJZafzmCBwlU3NvVWnd87CW65C5cq4yQxP8PD338+8GM4e
-         /8wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SF7w4IVLXKR2MN5g9z0w/WoW8pEbm4v0BnCRIDC/Omw=;
-        b=o2kmuaNCqIh8qU/E86CiMmc+m++pbqMcc0k4pjqRY7+X3PKwfvgyO9PEEqj3r+8H4V
-         iyqwjHX/sK8U370xYMD8Cb7IEhZSVKWzXPcrvMs/+LWj+kOOoVuX55KnuOCbcEslQzvz
-         Rj5zmUfCdhf5Mer71UA9UpzLExoXOumxOdiV036qEL3cz9IQSY9JDmVkkVheDDQtDajZ
-         yZZ1ACbXmfusYlTYoUbsQSmbvxCYW/Sc9GepJKyokaIcbC2df353YSu0g6wfyehLaf45
-         mNpb7hr5mk2LSoY8/UhbkvUR8ueaLVkxa3evhibYL50N9J5lnMAOaHPTn3V23Q4dS3eB
-         zC1g==
-X-Gm-Message-State: AGi0PubC3X48M10STs14mnKmx9XBL7QdudxYWZZ+b6ynwBkVp5reLi6f
-        vj1Q8H47qc7vBotynxj2YSE=
-X-Google-Smtp-Source: APiQypI+yZ/q+n9vOWzjkzHKWX+cCC3fC1eMEiyn/b8lAySJ9BQDFG+p68lSw7hsK1v+oIE3KSoncQ==
-X-Received: by 2002:a9d:a55:: with SMTP id 79mr3629382otg.295.1588966917698;
-        Fri, 08 May 2020 12:41:57 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id q3sm715371oom.12.2020.05.08.12.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 12:41:57 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alex Elder <elder@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH net-next] net: ipa: Remove ipa_endpoint_stop{,_rx_dma} again
-Date:   Fri,  8 May 2020 12:41:33 -0700
-Message-Id: <20200508194132.3412384-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 8 May 2020 15:43:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11955 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgEHTn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:43:26 -0400
+IronPort-SDR: W2hh3Yk7D5BgXCGZVL1zh17r148hyZGVl3hm0oU38vMu+VoRB1GRUOwJVdB7ku0oRZo9xSCufm
+ b7KGMU5UrrqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:43:26 -0700
+IronPort-SDR: Gyxa3URZkGtu3corhomGSoSrRhznemd4bWjlTNSCz2v4cAZBDgsDGn2PKkS7Fvxo58vl9BLehG
+ IB45HsrJmG+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="249846692"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 08 May 2020 12:43:21 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8u4-005TFh-DJ; Fri, 08 May 2020 22:43:24 +0300
+Date:   Fri, 8 May 2020 22:43:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/17] spi: dw: Cleanup generic DW DMA code namings
+Message-ID: <20200508194324.GA185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508132943.9826-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building arm64 allyesconfig:
+On Fri, May 08, 2020 at 04:29:29PM +0300, Serge Semin wrote:
+> Since from now the former Intel MID platform layer will be used
+> as a generic DW SPI DMA module, lets alter the internal methods
+> naming to be DMA-related instead of having the "mid_" prefix. In
+> addition the DW PCI-DMA specific methods and structures should
+> be named with pci-suffexes, since we'll implement the DW MMIO DMA
+> specific functions and objects soon.
 
-drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop_rx_dma':
-drivers/net/ipa/ipa_endpoint.c:1274:13: error: 'IPA_ENDPOINT_STOP_RX_SIZE' undeclared (first use in this function)
-drivers/net/ipa/ipa_endpoint.c:1274:13: note: each undeclared identifier is reported only once for each function it appears in
-drivers/net/ipa/ipa_endpoint.c:1289:2: error: implicit declaration of function 'ipa_cmd_dma_task_32b_addr_add' [-Werror=implicit-function-declaration]
-drivers/net/ipa/ipa_endpoint.c:1291:45: error: 'ENDPOINT_STOP_DMA_TIMEOUT' undeclared (first use in this function)
-drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop':
-drivers/net/ipa/ipa_endpoint.c:1309:16: error: 'IPA_ENDPOINT_STOP_RX_RETRIES' undeclared (first use in this function)
+I think we rather leave Intel Medfield things alone.  And I think I did this already in spi/for-next in less invasive way.
 
-These functions were removed in a series, merged in as
-commit 33395f4a5c1b ("Merge branch 'net-ipa-kill-endpoint-stop-workaround'").
-
-Remove them again so that the build works properly.
-
-Fixes: 3793faad7b5b ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ipa/ipa_endpoint.c | 61 ----------------------------------
- 1 file changed, 61 deletions(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 5fec30e542cb..82066a223a67 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -1269,67 +1269,6 @@ static void ipa_endpoint_reset(struct ipa_endpoint *endpoint)
- 			ret, endpoint->channel_id, endpoint->endpoint_id);
- }
- 
--static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
--{
--	u16 size = IPA_ENDPOINT_STOP_RX_SIZE;
--	struct gsi_trans *trans;
--	dma_addr_t addr;
--	int ret;
--
--	trans = ipa_cmd_trans_alloc(ipa, 1);
--	if (!trans) {
--		dev_err(&ipa->pdev->dev,
--			"no transaction for RX endpoint STOP workaround\n");
--		return -EBUSY;
--	}
--
--	/* Read into the highest part of the zero memory area */
--	addr = ipa->zero_addr + ipa->zero_size - size;
--
--	ipa_cmd_dma_task_32b_addr_add(trans, size, addr, false);
--
--	ret = gsi_trans_commit_wait_timeout(trans, ENDPOINT_STOP_DMA_TIMEOUT);
--	if (ret)
--		gsi_trans_free(trans);
--
--	return ret;
--}
--
--/**
-- * ipa_endpoint_stop() - Stops a GSI channel in IPA
-- * @client:	Client whose endpoint should be stopped
-- *
-- * This function implements the sequence to stop a GSI channel
-- * in IPA. This function returns when the channel is is STOP state.
-- *
-- * Return value: 0 on success, negative otherwise
-- */
--int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
--{
--	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
--	int ret;
--
--	do {
--		struct ipa *ipa = endpoint->ipa;
--		struct gsi *gsi = &ipa->gsi;
--
--		ret = gsi_channel_stop(gsi, endpoint->channel_id);
--		if (ret != -EAGAIN || endpoint->toward_ipa)
--			break;
--
--		/* For IPA v3.5.1, send a DMA read task and check again */
--		if (ipa->version == IPA_VERSION_3_5_1) {
--			ret = ipa_endpoint_stop_rx_dma(ipa);
--			if (ret)
--				break;
--		}
--
--		msleep(1);
--	} while (retries--);
--
--	return retries ? ret : -EIO;
--}
--
- static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
- {
- 	if (endpoint->toward_ipa) {
-
-base-commit: 30e2206e11ce27ae910cc0dab21472429e400a87
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
