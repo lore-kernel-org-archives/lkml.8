@@ -2,95 +2,108 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D85BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800CEC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425AC208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F92208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgEHJrU (ORCPT
+        id S1726771AbgEHJua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:47:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4351 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgEHJrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:47:20 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5F697D520C64F886C4E0;
-        Fri,  8 May 2020 17:47:18 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 17:47:11 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: compress: allow lz4 to compress data partially
-Date:   Fri, 8 May 2020 17:47:09 +0800
-Message-ID: <20200508094709.40048-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 8 May 2020 05:50:30 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34149 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgEHJua (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 05:50:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 72so1021262otu.1;
+        Fri, 08 May 2020 02:50:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b5uVoI0n1KNv3+qMlrWZ83amX0u3Zd89agbuvXvX3BQ=;
+        b=qbPvHki/Wv18tvrl8EQOd1ZRDvlHWTq4ZDp+fUml6O95rT7/UaAiNlj7ZQzgLx8JoM
+         y/90zprZl8FcPHEPvgC/1p+C49XjWmWqBfq8VwIcpNH6BBAYqU7lYxg6z513WEbl2JwV
+         sJStmpQyVxCxHKl3JT9c34snsMNR+7peb8if8T0pazVFDEZAp5Ju/UhptyYqelBGSkOt
+         SJudahLfv7aELCYLTYpg9A5BK3kY8HweEuo4Rd7xexc4TOk39uFBrEGFw/6Gtzkn2m9z
+         fTA06fSO1uVrIpAd4klzfBqcRSOgE2tg1Ijnk1+Ia7OFuL5JZFqiGxlSqlwO3hPAvr+/
+         KX0A==
+X-Gm-Message-State: AGi0PuYrDlyaOPJEhk5+EqdepZFIsDIYYXE/FFgdKYXfB5dZDjUdPfJa
+        uJFhXncywZKHpX8iwcfsBCXG/5GUXqWuqH9NIOc=
+X-Google-Smtp-Source: APiQypJDV1otoOypylweOFXXW3dlZCPcQtNptWZUNfsC5d7jBL5atkxkLBTRUMF45BNs9jbOlY8aKBznw/nCmv1aAFM=
+X-Received: by 2002:a9d:63da:: with SMTP id e26mr1325383otl.107.1588931429037;
+ Fri, 08 May 2020 02:50:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <20200507112955.23520-1-geert+renesas@glider.be> <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
+In-Reply-To: <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 8 May 2020 11:50:17 +0200
+Message-ID: <CAMuHMdXvHwZ88hhLzKcEW-tFCFiGdWBaABrirG3k1a9Y1=M_2w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] qoriq: Add platform dependencies
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For lz4 worst compress case, caller should allocate buffer with size
-of LZ4_compressBound(inputsize) for target compressed data storing.
+Hi Li,
 
-However lz4 supports partial data compression, so we can get rid of
-output buffer size limitation now, then we can avoid 2 * 4KB size
-intermediate buffer allocation when log_cluster_size is 2, and avoid
-unnecessary compressing work of compressor if we can not save at
-least 4KB space.
+On Thu, May 7, 2020 at 11:58 PM Li Yang <leoyang.li@nxp.com> wrote:
+> On Thu, May 7, 2020 at 6:31 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > Several QorIQ blocks are only present on Freescale or NXP SoCs.
+> > This series adds platform dependencies to the corresponding config
+> > ymbols, to avoid asking the user about them when configuring a kernel
+> > without support for these SoCs.
+> >
+> > Most patches in this series are independent, but the third patch may
+> > cause some Kconfig warnings when applied before the second patch, and
+> > enabling the QorIQ CPU frequency scaling driver in a non-Layerscape
+> > kernel.
+> >
+> > Thanks for your comments!
+>
+> Thanks.  The series looks good to me.
+>
+> Are we trying to merge them through the various driver subsystems or I
+> can also pull them in through the fsl-soc tree.  If we want to go
+> through driver subsystems:
 
-Suggested-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+"fsl-soc" is safest, if maintainers agree, due to the weak dependency the
+randconfig people may notice.
+Note that Viresh already applied the 2nd patch to the cpufreq tree.
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 5e4947250262..23825f559bcf 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -228,7 +228,12 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
- 	if (!cc->private)
- 		return -ENOMEM;
- 
--	cc->clen = LZ4_compressBound(PAGE_SIZE << cc->log_cluster_size);
-+	/*
-+	 * we do not change cc->clen to LZ4_compressBound(inputsize) to
-+	 * adapt worst compress case, because lz4 algorithm supports partial
-+	 * compression.
-+	 */
-+	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
- 	return 0;
- }
- 
-@@ -244,11 +249,9 @@ static int lz4_compress_pages(struct compress_ctx *cc)
- 
- 	len = LZ4_compress_default(cc->rbuf, cc->cbuf->cdata, cc->rlen,
- 						cc->clen, cc->private);
--	if (!len) {
--		printk_ratelimited("%sF2FS-fs (%s): lz4 compress failed\n",
--				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id);
--		return -EIO;
--	}
-+	if (!len)
-+		return -EAGAIN;
-+
- 	cc->clen = len;
- 	return 0;
- }
+> Acked-by: Li Yang <leoyang.li@nxp.com>
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.18.0.rc1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
