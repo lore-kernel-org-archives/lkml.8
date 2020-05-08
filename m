@@ -6,71 +6,43 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DCAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 524C621473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F952214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgEHPTX (ORCPT
+        id S1726913AbgEHPW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:19:23 -0400
-Received: from muru.com ([72.249.23.125]:53598 "EHLO muru.com"
+        Fri, 8 May 2020 11:22:58 -0400
+Received: from muru.com ([72.249.23.125]:53614 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgEHPTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:19:23 -0400
+        id S1726636AbgEHPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:22:57 -0400
 Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 0CA3C806C;
-        Fri,  8 May 2020 15:20:11 +0000 (UTC)
-Date:   Fri, 8 May 2020 08:19:20 -0700
+        by muru.com (Postfix) with ESMTPS id 9DDEB806C;
+        Fri,  8 May 2020 15:23:46 +0000 (UTC)
+Date:   Fri, 8 May 2020 08:22:54 -0700
 From:   Tony Lindgren <tony@atomide.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: linux-next: Fixes tags need some work in the omap tree
-Message-ID: <20200508151920.GY37466@atomide.com>
-References: <20200508085320.58da9ffa@canb.auug.org.au>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     kishon@ti.com, vkoul@kernel.org, pavel@ucw.cz,
+        sebastian.reichel@collabora.com, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] phy: cpcap-usb: Remove some useless code
+Message-ID: <20200508152254.GZ37466@atomide.com>
+References: <20200507203127.202197-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508085320.58da9ffa@canb.auug.org.au>
+In-Reply-To: <20200507203127.202197-1-christophe.jaillet@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Stephen Rothwell <sfr@canb.auug.org.au> [200507 22:54]:
-> Hi all,
-> 
-> In commit
-> 
->   0f84d0247722 ("ARM: dts: am437x: fix networking on boards with ksz9031 phy")
-> 
-> Fixes tag
-> 
->   Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-> 
-> has these problem(s):
-> 
->   - leading word 'commit' unexpected
-> 
-> In commit
-> 
->   3a78c16f67a0 ("ARM: dts: am57xx: fix networking on boards with ksz9031 phy")
-> 
-> Fixes tag
-> 
->   Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-> 
-> has these problem(s):
-> 
->   - leading word 'commit' unexpected
+* Christophe JAILLET <christophe.jaillet@wanadoo.fr> [200507 20:32]:
+> Axe a clk that is unused in the driver.
 
-Thanks for catching these, I'll fix them.
+Thanks for fixing it:
 
-Regards,
-
-Tony
-
-
+Acked-by: Tony Lindgren <tony@atomide.com>
