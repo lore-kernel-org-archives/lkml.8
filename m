@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13064C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D305C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE19021974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2123A21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941400;
-	bh=W0lQNYYjtpUY/fE/X6ebU13m7wtSSSmfGcgqNuv+JP0=;
+	s=default; t=1588941403;
+	bh=EDRl+eMzqpjL0jkRlYQA21XcOBULQNQFLz9OmSOdT6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WIS1cUO7lObmheeKLFt7PC5iE1ldlMk4AQ+djO6n0Jgq89MOrayQp1Dyn1c3GbvCi
-	 2StjWuJKKd9OudMKAyDJ0A7TnaB4KjPsVEpCleo86caQObYPkyl4JaJHMm1A/oWfQz
-	 uHurt/DNiVk25+T8p9Bz+kC4xSLlbJfvaLYSXCUE=
+	b=o+M5qu+ni/+5xK+/8h4zwL5rDTsCGJO7Qe/EOle6e0Mx7wyk6Ys3uTmVx273CoP5Z
+	 tvg2TVFjZeQgqEDV+5feEHKo+NMPwO9Qv57D7vQw9LL4C0EUapTvjQdJz4UAx09CR4
+	 6qWpswFLIVjIj+iGjdZbI5HJa8xOZTn970xQK0FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEHMgj (ORCPT
+        id S1727857AbgEHMgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgEHMgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:36:36 -0400
+        id S1727834AbgEHMgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:36:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49F2721835;
-        Fri,  8 May 2020 12:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6DF215A4;
+        Fri,  8 May 2020 12:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941394;
-        bh=W0lQNYYjtpUY/fE/X6ebU13m7wtSSSmfGcgqNuv+JP0=;
+        s=default; t=1588941397;
+        bh=EDRl+eMzqpjL0jkRlYQA21XcOBULQNQFLz9OmSOdT6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5D6dHgdXZ4OpMphLoqpHfQVgP4NhHWYpTaSnv8mhsrQDY6DH+/oPfCEYitk4veL2
-         sS6E7npdBwRdneurSTzqZhQSEprE0QW0Pgis/0tp8dmYpoCDh4hUq5sc1zuUlH1fQY
-         RcfrM4EaRF+VAfVDpFQWNO0Bz1MZwbzTSubDuzr8=
+        b=ISdcB044OKQp8NPSjV+ndid18q8P2El7Gd+aQNgJW+u++liFGRCH0vMAgQ+brMdGp
+         oShR9kbRYlzYdnQmZXDgCD7opM4t5FJavS5J+FKhvbRmLb05Si4exlCJq2JBgRW3h0
+         W4trWX5iZDQnBBKFfNalAqdFy2B0C4doJMGd2dKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 015/312] MIPS: BMIPS: Clear MIPS_CACHE_ALIASES earlier
-Date:   Fri,  8 May 2020 14:30:06 +0200
-Message-Id: <20200508123125.570385401@linuxfoundation.org>
+Subject: [PATCH 4.4 016/312] MIPS: BMIPS: local_r4k___flush_cache_all needs to blast S-cache
+Date:   Fri,  8 May 2020 14:30:07 +0200
+Message-Id: <20200508123125.637749585@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,52 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 73c4ca047f440c79f545bc6133e3033f754cd239 upstream.
+commit f675843ddfdfdf467d08cc922201614a149e439e upstream.
 
-BMIPS5000 and BMIPS5200 processor have no D cache aliases, and this is
-properly handled by the per-CPU override added at the end of
-r4k_cache_init(), the problem is that the output of probe_pcache()
-disagrees with that, since this is too late:
-
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
-
-With the change moved earlier, we now have a consistent output with the
-settings we are intending to have:
-
-Primary instruction cache 32kB, VIPT, 4-way, linesize 64 bytes.
-Primary data cache 32kB, 4-way, VIPT, no aliases, linesize 32 bytes
+local_r4k___flush_cache_all() is missing a special check for BMIPS5000
+processors, we need to blast the S-cache, just like other MTI processors
+since we have an inclusive cache. We also need an additional __sync() to
+make sure this is completed.
 
 Fixes: d74b0172e4e2c ("MIPS: BMIPS: Add special cache handling in c-r4k.c")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/13011/
+Patchwork: https://patchwork.linux-mips.org/patch/13012/
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/c-r4k.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/mm/c-r4k.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 --- a/arch/mips/mm/c-r4k.c
 +++ b/arch/mips/mm/c-r4k.c
-@@ -1310,6 +1310,8 @@ static void probe_pcache(void)
- 
- 	case CPU_BMIPS5000:
- 		c->icache.flags |= MIPS_CACHE_IC_F_DC;
-+		/* Cache aliases are handled in hardware; allow HIGHMEM */
-+		c->dcache.flags &= ~MIPS_CACHE_ALIASES;
+@@ -447,6 +447,11 @@ static inline void local_r4k___flush_cac
+ 		r4k_blast_scache();
  		break;
  
- 	case CPU_LOONGSON2:
-@@ -1749,8 +1751,6 @@ void r4k_cache_init(void)
- 		flush_icache_range = (void *)b5k_instruction_hazard;
- 		local_flush_icache_range = (void *)b5k_instruction_hazard;
- 
--		/* Cache aliases are handled in hardware; allow HIGHMEM */
--		current_cpu_data.dcache.flags &= ~MIPS_CACHE_ALIASES;
- 
- 		/* Optimization: an L2 flush implicitly flushes the L1 */
- 		current_cpu_data.options |= MIPS_CPU_INCLUSIVE_CACHES;
++	case CPU_BMIPS5000:
++		r4k_blast_scache();
++		__sync();
++		break;
++
+ 	default:
+ 		r4k_blast_dcache();
+ 		r4k_blast_icache();
 
 
