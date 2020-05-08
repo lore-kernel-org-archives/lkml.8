@@ -2,116 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37061C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C223EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CE02173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6F621655
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="te8jMgHy"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LNKjAwB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgEHO7g (ORCPT
+        id S1727973AbgEHPAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgEHO7g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:59:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B832FC061A0C;
-        Fri,  8 May 2020 07:59:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g14so1324646wme.1;
-        Fri, 08 May 2020 07:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=omQwxYvN2PhlFDy4u3NMyWqkH9xoUSaMTqHy0o+Dg6E=;
-        b=te8jMgHyHjutcwR0nqBmfBCAlv+oIqBu6mqcyCWkdAHZgPF0c+pKA5rvJDc4FYAvwL
-         d4vKusWgiKMLhVI2b11kgrV5n8liiWS1qU5bjwUd9KxUU3Fkdh3NFlYUybHvnrSpC6nw
-         QfIJSejye9uT7wWG0EsOwWXy8pWYkl6aQX1/txUQNRJfWCs23BHjWS4pRpI2Ba5Q59kq
-         OM9sBBpzOy4LPe3A864fOuvrhzoF5GunNLZJta74bZitvh2hBxUqzyuEsorglqwl72Ww
-         F48c/ZWMZVK7VyLM9przlpQcclP6/GdZVrsDiYxVP/xFAR+l/60itOJQuu0YhBYmerxb
-         Wh+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=omQwxYvN2PhlFDy4u3NMyWqkH9xoUSaMTqHy0o+Dg6E=;
-        b=l9N/pQQ8iO5yiQ07NhLJpt8NKBPt1kidZxGAISuL6/0b3gaQF1M5uAZMq5o2BJue28
-         /vcHtBwI31ao4DBL9S6CRVPklACxQeAPDscDnWfTVp+iGotqtV9pvf1s3jY1zBuPEgEz
-         od/0OoyVoPekH/WjNP266KkEA6rfojLAGwhHATuhz7t07ikMI3cRXNcKp0t/cMVgXXcz
-         q774ZuAYROdniuJE4BbOWGkA9ZA81auJ/5fFs9RMlYcHemiGLEn2/AJD/+5nc780k+cY
-         hEIZbd29vPelPak/LvvoHxapsWaADmByZyvI19ppYcCQPSnxKeol1oEtGpkdpYOGR8Xg
-         TjLA==
-X-Gm-Message-State: AGi0PuYh67HTax0nYYfnWkd/FJGiqTJbzKsa/bV6GCQ+ZjBQx4KwpgNU
-        kSlJBTz0LA+HV5/wPYNjbQQ=
-X-Google-Smtp-Source: APiQypLUYC24urSp23MfHJ5ukFDPaT+L4BGIZ2RhVIbOhstpCwEOPcUPo9rYl/7ZI0b3qvraFyBeDA==
-X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr17578215wmn.154.1588949974527;
-        Fri, 08 May 2020 07:59:34 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id e17sm3204111wrr.32.2020.05.08.07.59.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 07:59:34 -0700 (PDT)
-Message-ID: <94072fa2af155d69333b28331bf73073bddf856b.camel@gmail.com>
-Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
- Booster(HPB) driver
-From:   Bean Huo <huobean@gmail.com>
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        'Avri Altman' <Avri.Altman@wdc.com>, asutoshd@codeaurora.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        stanley.chu@mediatek.com, beanhuo@micron.com, bvanassche@acm.org,
-        tomas.winkler@intel.com, cang@codeaurora.org,
-        rdunlap@infradead.org, seunguk.shin@samsung.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org
-Date:   Fri, 08 May 2020 16:59:32 +0200
-In-Reply-To: <000401d62544$ab93ead0$02bbc070$@samsung.com>
-References: <20200504142032.16619-1-beanhuo@micron.com>
-         <20200504142032.16619-6-beanhuo@micron.com>
-         <CGME20200508113840epcas5p1cee545219dd59b64eeea287f17d34cde@epcas5p1.samsung.com>
-         <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
-         <000401d62544$ab93ead0$02bbc070$@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 8 May 2020 11:00:49 -0400
+Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:19938
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726690AbgEHPAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:00:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CzO04pnsBir+nkWCKTeXKJpiXUvaeJ5KJhMv3YpmzZ2GtXihnp2qaZgl2C6Xxnb16k20U6MpQWU/xgKE7d4Xrj5L+lAPbSL0WtXhWmx4mzRxJK9rc4shL2x3peVnQ4vwmJdv7oMLr7tb9e9ZwMpcLXl7BmSImVyk1EzRR63JZPK+nOtd1hHtKItxlm6ITTElZ8hizQQ6zwacbq7V2Q/MQrx/dTvmq7pFCzpcuFKatH43Y09xseGHlGqa73jkSB5hXsvs7jeavg8Z9Lzcp6Us71ZRFxqpUHI9jn+UsnFaqkgdJA6QMgakj/nKL+cNJQLEMNFfTvZZbPcmHxVJ6kPlGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8V7ASgBS5PqV98Cmy3Z8v4zNMw4FzKVwyVNKHCdwFHg=;
+ b=fLGoIZwXn+OFZjlGFW1MiFqBevknTkD+cOLpe5ngnd4t/L5tDceb8ejYNpgpbRI9Fle1EJIDm1hfdAWxMTijkSLxQ+S4997IN/YCo0RBechSanYXdaTassADCx7ucx62aEA+ySoQvFwV4SByQYIm52NkGur5y+gcFsQ5dHxSHzdZ/jsXr6MMF6lUr3ZbJiJ05lQ84Dc2DHfdYZm7NhWlAbQuwhpyMwV/6WIvW+xOLlCcRN+xxnNaFrqsAs15wJMyHtC4A16OSnfQYaPKr/OyhM9ZLqfNteB6lJ9mohAnPnsipD0KP2oCaKOrQ5KR9qs+tXgmzYoCZ0/BvIG44R4t/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8V7ASgBS5PqV98Cmy3Z8v4zNMw4FzKVwyVNKHCdwFHg=;
+ b=LNKjAwB7A4hx6kdEmnqEQr+JI/Z2AvjA4iT7JcyEktGzZXx/3P/YDX9XnjN3tSc55Hd5leFMEMCYf7GZMynzR9xpbqBZmzmOANVtxB6lDDAsAR8Rojf5Ve0cKzQ5hXMYL7h1AKsyvXK0nArz0Y3EVsw5PS57ViQUrHFqGd0M5Bc=
+Authentication-Results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5231.eurprd05.prod.outlook.com (2603:10a6:803:b2::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.21; Fri, 8 May
+ 2020 15:00:45 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2979.030; Fri, 8 May 2020
+ 15:00:45 +0000
+Date:   Fri, 8 May 2020 12:00:41 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] nouveau: fix dependencies for DEVICE_PRIVATE
+Message-ID: <20200508150041.GI19158@mellanox.com>
+References: <20200508144017.3501418-1-arnd@arndb.de>
+ <20200508144017.3501418-2-arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508144017.3501418-2-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR05CA0017.namprd05.prod.outlook.com
+ (2603:10b6:208:91::27) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR05CA0017.namprd05.prod.outlook.com (2603:10b6:208:91::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.12 via Frontend Transport; Fri, 8 May 2020 15:00:45 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jX4UT-0006Tx-1D; Fri, 08 May 2020 12:00:41 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e16ac852-5a19-4c22-6372-08d7f36095bd
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5231:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5231B3A04D48419600D6480BCFA20@VI1PR05MB5231.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ojWfEiXVqN8qK903SX4vXCpNEUgJ3E9BOl81pW79Fp5j/h1olNTbg6QG9QYRkW1mjQbu/hc0i2xGtK9D8caC41KowowY1oXx5f6mS/bFKN8hPMumqYHTArqlny9riPmN8sAlMu7S8kYqZ+idNwyrbCpCoDAFbr6OOjtVe5uWvFymKJWsQfa4UTFb3sAyw1lnrWvH2k1rEmsYf+wn+OL31e774dcJyxqDhKvZeIOO/7+AUz6b0hQzdSJ/nysgFmq1oLuOixUmvwkQ8wotsLCpqzqXAee9N2eRB2iE/rFx8SBEOvr4sL+Cwz8agAGGKbyBG5pF3Rth9SFeqmhfrILKL+t/sPExvzADE1WWRO5Gz6B2dL/JY3dxORA4/zTOHYv5JLXWPuXRnRItQyVb8cMUidY/BxkLEXm4ZdhQA4gG06/ePTo/M2P9Is0gIZvV8CK0nORQdqF1kVK3Amy0tp/Ny6dB5mwBvnFruwnfEwNcmsjSH35a1aICTkgyi7zkOjfgPiOhar6WwPxmJBYesfsgWCaYuEVcwm59KRhiGN2siP8z9yACeQoQKZ7zNod/f4Aw
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(33430700001)(52116002)(66556008)(26005)(36756003)(33440700001)(8676002)(5660300002)(9786002)(9746002)(83290400001)(83300400001)(4744005)(8936002)(1076003)(83280400001)(83310400001)(83320400001)(86362001)(4326008)(186003)(7416002)(66476007)(66946007)(478600001)(6916009)(33656002)(54906003)(316002)(2616005)(2906002)(24400500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: QhqeP9xDLq8FRJQE/YQ1PYroDXY3FJ0UzoqV3YxGuB1C5rjoWZTQQW/qVfDyPzTZehBYtoejbMMAgRjPnUEtg8z/uROqlw2u/XpTfT6Xf48tN5fEEqnhj3Njq2qIAse+RtzcFdUqLMlZsfIwZRYwLZ0vQ4wZjPth4tPfOB5fEH4S58n2yZ6dFe5ZhvR4yP+baNMGTUwv/nqdTOjJ6KWDYoqDEWZmbn5IZisDzf7ddErnpvreO0KDZ00DmMVAihRCcu7cck2mptMMKgYRzN3W3uceGBnCYtTlKTFHfChzaMCp8NMlPKqy3BqOerada12JVoxQnckmYa4ac/WPGZJQkqN4dEi2t1shE+i7QD0VPhY/L9+a9LlxlEqeT3Xgr9ul3AzwPN6yDkUPRA4NKjwnU1Whbkh1YXKYi9yr2GSd2vBEmKqjNFPSRNpEkwrfcnT4vgGIYhyjhPQg2NBxDPALE28M+fRfuzW83APauKNrx9km9On10BHuKz87Q1SX8NuQ
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e16ac852-5a19-4c22-6372-08d7f36095bd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 15:00:45.3220
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lHUZNrY9tbacLK0JliFLoz48G0VU/VsGTeHW7tsxu4n126F51y5Fd0BWjxfiwoHSVQUuGh9m1vUe6Rav5zB0Og==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5231
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-08 at 19:56 +0530, Alim Akhtar wrote:
-> + seunguk.shin (who is one of the original author of the HPB, in case
-> he has some more improvement inputs)
-> 
-> Hi Bean,
-> I second Avri input on splitting this patch series into logical
-> smaller patches, that will helps reviewers.
-> Also if you can add support to build HPB as kernel module that will
-> be useful. 
-> I am looking into the HPB 1.0 spec, will review your patches soon.
-> 
-> Regards,
-> Alim
+On Fri, May 08, 2020 at 04:40:09PM +0200, Arnd Bergmann wrote:
+> CONFIG_DEVICE_PRIVATE cannot be selected in configurations
+> without ZONE_DEVICE:
 
-Hi, Alim
-that is great you added him, if he can give us more inputs,
+It is kind of unfortunate to lift dependencies from DEVICE_PRIVATE
+into the users, is this really how kconfig is supposed to work or is
+something else wrong here?
 
-For the HPB modulization, I did, also prefer it.
-but I don't know how others think about it, since HPB is not a device
-.also, I should export some properties from UFSHCD. let's see if there
-are more supporters, let me try.
-
-
-thanks,
-
-Bean
- 
-
+Jason
