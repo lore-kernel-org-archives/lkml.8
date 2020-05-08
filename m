@@ -2,119 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DAFC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F381C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3415208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588921919;
-	bh=9u7QMul5gOL/AJOhTxAS3eOVQSRsWi7aj+x7KYa+78E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wXZFAE8CA0H6MjaxS3ywVYZV4R1FU75BpCz2PTvKH3KhGs54thNZIMxAHav19hnSC
-	 PoGc/x4AQBChTAJcn94c2Bmi9PegFUvZK7JUvPV73N+q56OZKfj/a71UzyK44Amnyl
-	 O1FvVJiRRqMhUUti7YWvW2HN1OgWVA7OTGuPeM/w=
+	by mail.kernel.org (Postfix) with ESMTP id 3171C208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcNavMyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgEHHL6 (ORCPT
+        id S1726930AbgEHHMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgEHHL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:11:57 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141F7208CA;
-        Fri,  8 May 2020 07:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588921917;
-        bh=9u7QMul5gOL/AJOhTxAS3eOVQSRsWi7aj+x7KYa+78E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iCoMlMdFTC+hksEq/bKLRlv4rxfq6R9oxeIqx/9Ksb+5YEOK603n9N0isFEIQmp4t
-         g0X8oY2nTyMPnG/BOlJaIkmMjqhFhpC7HinXjSWBCf1UkeAhC+ti/KP1lZ02QIEEMc
-         CzGbj6Ir5zGKOeKx5eo4hkViqpY2lrPcaLr5sHIM=
-Date:   Fri, 8 May 2020 16:11:52 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-Message-Id: <20200508161152.5815fd2fac26c300d836f0f1@kernel.org>
-In-Reply-To: <f575eead-c021-c830-b9d5-41437964db32@linux.intel.com>
-References: <158834025077.28357.15141584656220094821.stgit@devnote2>
-        <158834028054.28357.398159034694277189.stgit@devnote2>
-        <20200501101942.5c0da986@gandalf.local.home>
-        <20200502120842.9d93352083fb854295150235@kernel.org>
-        <20200507091207.5c3b1a92@gandalf.local.home>
-        <20200508005028.a825d53373721a13d6cc80fc@kernel.org>
-        <20200507132539.7e081980@gandalf.local.home>
-        <f575eead-c021-c830-b9d5-41437964db32@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 8 May 2020 03:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726009AbgEHHMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:12:10 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8483C05BD43;
+        Fri,  8 May 2020 00:12:09 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g16so489188qtp.11;
+        Fri, 08 May 2020 00:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WT8dz7lOh/SMir2tdDotI3JRi9SKgaJFh8CCLOK2p14=;
+        b=WcNavMyxO3Mk9BoeN2PBmT3sie1iK9pvecFYWrBWDGJsOnmAIIVREK8+HLk/y+6/Mz
+         9QyqwRruohhAlsmXSwILe7LpKvI6tZaeU8KRfEutWhqw1l1AA3WSCAmRj2aWAMZIc7BO
+         eyVwB2FkCpRp3m85Oh0JeKVX89XeR4u8CxKcBkHAQghk5D7SjMpAVxiDFM0h03snhSfb
+         P6KLRsbO+ludyu3zxYS0t0LAqfO4urxX9MswrxMJyBe887fQik40irwbBzYNgcCD7EPN
+         i1nB06F5oN/2ULXBKAGTZq2bY8kP/tI3lZT5wGVO5Ci3QYYL71rmWLquK1GDJEelL/9i
+         xEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WT8dz7lOh/SMir2tdDotI3JRi9SKgaJFh8CCLOK2p14=;
+        b=UxZy9DA6kp0HWIFrvZWTV30ICEQ0UWyNYbbp0UBvL7s1S5K6U0xzChhE20bn3Wt6sg
+         pDRfET9gzVVjel5NfRH7PQkmXgwjt/uyPpMlrTkEkHGOS10lrTOj4vtAnCcYW1P2SLK3
+         5Y7YtrBut9Gs7lQrNOajfR1d2MEdCep14bcmaM+VBJ7CZBBwktwjTZcSNgOsm8u8oVMf
+         bqmhfmisswhB3hXhiY6RGEcS+Fqq2uWTlMty6OSh17FN1nuWjHkyGcxp1mfCy1lqmbnr
+         cMLjzhCH/vbQLbqMuKC8PEZbKe7KsxKruG9UuWJ8d+jNQsspbBZoqhveeOcjWxYtFTHL
+         2T7Q==
+X-Gm-Message-State: AGi0PuZhYxQQhVg7F5sn31dh7HR85h9dLu/KR+sFFuA8i4T0PVLBsB3u
+        5t/eqtn+1FPEHpMP3unGRtmdQzsTGSt1R4EE1YU=
+X-Google-Smtp-Source: APiQypIfu9u/Lc+W4qYjRKAPm2hXU/HeHXuHYx++wXVUFF8CTwwgiS9VfwTOSCshvz9lOhItnpEjrfpsibom5FWpqVU=
+X-Received: by 2002:aed:2e24:: with SMTP id j33mr1456847qtd.117.1588921929065;
+ Fri, 08 May 2020 00:12:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508063954.256593-1-irogers@google.com>
+In-Reply-To: <20200508063954.256593-1-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 8 May 2020 00:11:58 -0700
+Message-ID: <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
+Subject: Re: [PATCH] libbpf hashmap: fix undefined behavior in hash_bits
+To:     Ian Rogers <irogers@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 15:32:46 -0500
-"Zanussi, Tom" <tom.zanussi@linux.intel.com> wrote:
+On Thu, May 7, 2020 at 11:40 PM Ian Rogers <irogers@google.com> wrote:
+>
+> If bits is 0, the case when the map is empty, then the >> is the size of
+> the register which is undefined behavior - on x86 it is the same as a
+> shift by 0. Fix by handling the 0 case explicitly.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
 
-> Hi,
-> 
-> On 5/7/2020 12:25 PM, Steven Rostedt wrote:
-> > On Fri, 8 May 2020 00:50:28 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> >>>> Yes, I need Tom's review for this change. As far as I can test, this
-> >>>> fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
-> >>>> for this test case.
-> >>>>    
-> >>>
-> >>> I still don't see how changing "keys=common_pid" to "keys=ip" has anything
-> >>> to do with the echo patch. If that is a problem, it should be a different
-> >>> patch with explanation to why "keys=common_pid" is broken.
-> >>
-> >> This test case uses a trace_marker event to make a histogram with
-> >> the common_pid key, and it expects the "echo" command is built-in command
-> >> so that the pid is same while writing several events to trace_marker.
-> >> I changed it to "ip" which is always same if trace_marker interface is
-> >> used.
-> > 
-> > Can you explicitly state that in your change log? It wasn't obvious from
-> > what you meant with:
-> > 
-> > "This also fixes some test cases which expects built-in echo command."
+No need. The only case when bits can be 0 is when hashmap is
+completely empty (no elements have ever been added yet). In that case,
+it doesn't matter what value hash_bits() returns,
+hashmap__for_each_key_entry/hashmap__for_each_key_entry_safe will
+behave correctly, because map->buckets will be NULL.
 
-OK, will add the description.
-
-> > 
-> 
-> With that change,
-> 
-> Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
-Thanks Tom!
-
-> 
-> Thanks,
-> 
-> Tom
-> 
-> > Thanks!
-> > 
-> > -- Steve
-> > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>  tools/lib/bpf/hashmap.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+> index d5ef212a55ba..781db653d16c 100644
+> --- a/tools/lib/bpf/hashmap.h
+> +++ b/tools/lib/bpf/hashmap.h
+> @@ -19,6 +19,8 @@
+>  static inline size_t hash_bits(size_t h, int bits)
+>  {
+>         /* shuffle bits and return requested number of upper bits */
+> +       if (bits == 0)
+> +               return 0;
+>         return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
+>  }
+>
+> --
+> 2.26.2.645.ge9eca65c58-goog
+>
