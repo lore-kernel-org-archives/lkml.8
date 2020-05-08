@@ -2,97 +2,147 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C132C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F0EC47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548C6217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588972259;
-	bh=qqkVr4kTP0XXZVP5xFbn1niXGfNe06721rm6KoYrYkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vHtAC1g6lJQXYCxUDEzu5bvzo2BDOKarIl+adMC4DcYf38f/0u+rFwcU63+t6ugak
-	 9/ov+Xju/Uepgh8yR256VMHzoelq4hs5oNHeZd2H7afKe4a4SGz+GGqli6eX8CNI5i
-	 jn8ANG6hQsKfHybpdKTlITFxy5u/J1TUbp5VNvow=
+	by mail.kernel.org (Postfix) with ESMTP id 4BC59216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgEHVK6 (ORCPT
+        id S1727834AbgEHVOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgEHVK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:10:58 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DCB2173E;
-        Fri,  8 May 2020 21:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588972257;
-        bh=qqkVr4kTP0XXZVP5xFbn1niXGfNe06721rm6KoYrYkE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qOzEFrdYz4YFcUHf49CJNi5f+sr73JPUOQI3aOAdobR3CsvYuEjo+/oWD/KiOaP8z
-         IuVw3ckU8nlAcMVQNCd4/X77zD3VtuOZzCvnHHTbk6C96q6/E3yH/6rD3Mxwm42C2B
-         tHqidnAS9xxjOGCQAVjSPsEha1GnutMIYT5rtV1k=
-Date:   Fri, 8 May 2020 16:15:25 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] audit: mark expected switch fall-through
-Message-ID: <20200508211525.GE23375@embeddedor>
-References: <20190212204600.GA24049@embeddedor>
- <CAHC9VhQfru298ZbEDwEqj0+YRAYoAGhAVHEtSo3KBW1kKLputw@mail.gmail.com>
+        Fri, 8 May 2020 17:14:54 -0400
+Received: from mail-bn8nam12olkn2109.outbound.protection.outlook.com ([40.92.21.109]:27518
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726883AbgEHVOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:14:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RZbPx/KaXttFIodfVyelUcoJ3/CpuMF+UaNLHU9h8rahhln3RBlIPhdNJdZ+B2P4/k1KKbPnwwcU4/oKV6mz6rdBP+ykci0QpZNyOx5GYwtRWg+y52vppzDJlQ085vbsa9zPKcAzEnv5JBkadoZ6c4NCvxjAiyW16qI2zxyFidxdh90Fu6UFa3o9xypfKnVO5apuvk1knpa/wn9b8cZNE4lOcXb2zuBlwGOtU1d/RJfLRHH8k2hygiuvg2C1wQX1qLEoWwG49CBI6T22d5e/fiBF4zJKHnQahfSauItsAUTyGsd3ZPFFHIT3bD9tURNNn4GRs5CpTv467KTYI6bwbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QaJ8Zvg8tpP+6moRgpB94Nh4d/XWf7CQ/9uwfJ1/qdo=;
+ b=bwrXFwKyNCxC2cQPpcljySwl3lpM2YOX+R6j6/VpLav283Jybh0hbYSv90TMNqmIS7jTI46iC6jdtq+msoXrMEHxU+r5pTZfyCrCNkoqoD7kYTT36vWe32KihXTg5g+b0blk76x/xeM3QniFqQZDLHR0Ok+v7zIhhoqUBEx54IGMLuGDwz39qFypQ2S77Neb/MO2l3Z9yqnRawLPThHWi67oVpHfT38KBak0MGA3c67hR0Cp/GvewqGtUNGV0xi61OZsq6DPR/jNppNTVZPQrA5mdmdRXT9UnxgJ3krnuaDosZ9xDV6Upf9aINXhJNWesp0YW0vj8Vwj0UvU9vcVWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM12FT021.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc66::45) by
+ BN8NAM12HT050.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::386)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Fri, 8 May
+ 2020 21:14:51 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc66::50) by BN8NAM12FT021.mail.protection.outlook.com
+ (2a01:111:e400:fc66::391) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
+ Transport; Fri, 8 May 2020 21:14:51 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:06776E2FF24144209A2E0CFDE5529DD976ACD0226A571A4F9737159889DD865E;UpperCasedChecksum:6E73B9349D8014CDD5809BB51FBF3EF60F3141EC88BFBC2FAD0D8602A36CF634;SizeAsReceived:7927;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Fri, 8 May 2020
+ 21:14:51 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, kgene@kernel.org, krzk@kernel.org
+Cc:     cw00.choi@samsung.com, kstewart@linuxfoundation.org,
+        mpe@ellerman.id.au, m.szyprowski@samsung.com, swboyd@chromium.org,
+        tglx@linutronix.de, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] iio: adc: Add scaling support to exynos adc driver
+Date:   Fri,  8 May 2020 14:14:00 -0700
+Message-ID: <BN6PR04MB066058A68D6471E7F6AFCFF7A3A20@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR11CA0007.namprd11.prod.outlook.com
+ (2603:10b6:301:1::17) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200508211400.13529-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhQfru298ZbEDwEqj0+YRAYoAGhAVHEtSo3KBW1kKLputw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR11CA0007.namprd11.prod.outlook.com (2603:10b6:301:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 21:14:49 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200508211400.13529-1-xc-racer2@live.ca>
+X-TMN:  [D0Lq3ThbWiHpFKsiIZ2c9S5/TxRcltNPkVoqalZ8/AC7xtCR6s0yTYXgeC+C+4AT]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 1ca81421-2e72-46f5-4651-08d7f394d871
+X-MS-TrafficTypeDiagnostic: BN8NAM12HT050:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hHV94a6LDtYwf7UWI/VkBBkvG75ICpP/7DHtTeo9ioeHHpnCQi0baPQVxfVI0j0deY42hTt4apCc2eDznGdeLxbuXiBJy7IHLQ26vFhYmeTQFfF0gBXKJfPmjp8E0iBs7yTNddw9L8gfmJAwXbZWo0TudhqfxUiJ1zFIIxBI5zASIOBn09tb9z5LsGKAy6CbistGHifvT4pA8ZPgzpIuMQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: aCfHowuZ0+YX50DGnPFmf4cJs1eoati7OQ5GX8+Ai32DToG+ZJvJGumMUUEm3qa6Z3OD63xOFP072rHTmmPRrgg0Vqv94YYpaPp+hMilzWhQ5ajTd/6bRVpsP22sE6rgyoH/SHXLC4SqpKzdoiIKsMB1lFHKfZKnyuX9nySBzc4N1LrxGG7JNScQvgfBCpzdBGxA6SlPJuNPQHeGUI8blw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ca81421-2e72-46f5-4651-08d7f394d871
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 21:14:51.3423
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 08:19:44PM -0500, Paul Moore wrote:
-> On Tue, Feb 12, 2019 at 3:46 PM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
-> > In preparation to enabling -Wimplicit-fallthrough, mark switch
-> > cases where we are expecting to fall through.
-> >
-> > This patch fixes the following warning:
-> >
-> > kernel/auditfilter.c: In function ‘audit_krule_to_data’:
-> > kernel/auditfilter.c:668:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >     if (krule->pflags & AUDIT_LOGINUID_LEGACY && !f->val) {
-> >        ^
-> > kernel/auditfilter.c:674:3: note: here
-> >    default:
-> >    ^~~~~~~
-> >
-> > Warning level 3 was used: -Wimplicit-fallthrough=3
-> >
-> > Notice that, in this particular case, the code comment is modified
-> > in accordance with what GCC is expecting to find.
-> >
-> > This patch is part of the ongoing efforts to enable
-> > -Wimplicit-fallthrough.
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > ---
-> >  kernel/auditfilter.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Merged into audit/next, thanks.
-> 
+Currently the driver only exposes the raw counts.  As we
+have the regulator voltage and the maximum value (stored in
+the data mask), we can trivially produce a scaling fraction
+of voltage / max value.
 
-Thanks, Paul.
+This assumes that the regulator voltage is in fact the max
+voltage, which appears to be the case for all mainline dts
+and cross referenced with the public Exynos4412 and S5PV210
+datasheets.
 
---
-Gustavo
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/iio/adc/exynos_adc.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index 22131a677445..9d29b56805cd 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -531,8 +531,19 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
+ 	unsigned long timeout;
+ 	int ret;
+ 
+-	if (mask != IIO_CHAN_INFO_RAW)
++	if (mask == IIO_CHAN_INFO_SCALE) {
++		ret = regulator_get_voltage(info->vdd);
++		if (ret < 0)
++			return ret;
++
++		/* Regulator voltage is in uV, but need mV */
++		*val = ret / 1000;
++		*val2 = info->data->mask;
++
++		return IIO_VAL_FRACTIONAL;
++	} else if (mask != IIO_CHAN_INFO_RAW) {
+ 		return -EINVAL;
++	}
+ 
+ 	mutex_lock(&indio_dev->mlock);
+ 	reinit_completion(&info->completion);
+@@ -683,6 +694,7 @@ static const struct iio_info exynos_adc_iio_info = {
+ 	.channel = _index,				\
+ 	.address = _index,				\
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
++	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
+ 	.datasheet_name = _id,				\
+ }
+ 
+-- 
+2.20.1
+
