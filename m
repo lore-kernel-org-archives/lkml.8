@@ -2,175 +2,98 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7547CC54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E476C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476F52496C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6238C21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588958254;
-	bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=xsmTV+Zjl1Co6FUe2zWpDQ/CD+8iRrjQyA7FxNl3YYyRVLp0mNOtkIBJRQieNMvNn
-	 92+WW8S+vfwGSMXe6K/dIYKYc86vbf/LO4luPRZ3WrRm59TLZ84myrZ27U0pDhKAR8
-	 m6rM+2E8UOxOrMElF22hLJEZLfR1gvAuLeZhvGCg=
+	s=default; t=1588958275;
+	bh=lq+hciLkQOEXzR19lHNCP9/llUqPt28NPxqL6V+Mcfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1a5CdZ6vUX/lIu9c8+IEmC2vmtnOejC8Ka9li0WPQz550BbVQLlo2djDWfcHZ5K3J
+	 GtiOIZx1f8uGew2Zr+dW+hvY1FCOOsgyt8KpYDzkwQN0B3ppmixwOu6HZhB/IfxkRw
+	 AwUbrUS4deejKIY0eKHgmU0qiMT4kr3hvMjpqExg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgEHRRd (ORCPT
+        id S1727831AbgEHRRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 13:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEHRRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:17:33 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        id S1726756AbgEHRRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:17:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253BE21775;
-        Fri,  8 May 2020 17:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ACA721775;
+        Fri,  8 May 2020 17:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588958252;
-        bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UJRtPzmVwMWVnflrX3KDmQSe9RghPB6FFqzryHss0CmhasZffpCJ6w7TrGX91nj0t
-         h1Px988c9VKfcx2bSGVHdGHjXSco6eahi9hxaDwfTOjjfnksyMZYJfddu7O5c0vD9p
-         nI3RS0gDNSuAXsGv8bG79vY/AsMZ2P8uFEfJeuJA=
-Date:   Fri, 8 May 2020 12:17:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     maz@kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200508171730.GA77036@bjorn-Precision-5520>
+        s=default; t=1588958274;
+        bh=lq+hciLkQOEXzR19lHNCP9/llUqPt28NPxqL6V+Mcfk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2QVgicUlkn7SVE8LGZRa4qr6We0w4yt+xQ33GESPaZVQ5hc4vmYEpFd+TJD5C3f0I
+         alhXtrjE96VsPM094OdaHAxi0twP1bHFMzW6QoRYSa12PBbojtDH01uED5eoFcr9iS
+         Xt7eVLk6qWAQv6+eXD9GZKHt5TP+biMPQnuT8yN0=
+Date:   Fri, 8 May 2020 18:17:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, lgirdwood@gmail.com, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 02/11] lib/test_linear_ranges: add a test for the
+ 'linear_ranges'
+Message-ID: <20200508171751.GM4820@sirena.org.uk>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+ <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iKKZt69u2Wx/rspf"
 Content-Disposition: inline
-In-Reply-To: <20200508113414.3091532-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Give him an evasive answer.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 07:34:02PM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
-> 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	u16 tmp;
-> +
-> +	/* 
-> +	 * System buses on Loongson system contain garbage in BARs
-> +	 * but their decoding need to be enabled to ensure devices
-> +	 * under system buses are reachable. In most cases it should
-> +	 * be done by the firmware.
+--iKKZt69u2Wx/rspf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This isn't a very satisfying explanation because devices that have
-decoding enabled can interfere with other devices in the system, and I
-can't tell whether that's a problem here.
+On Fri, May 08, 2020 at 06:40:43PM +0300, Matti Vaittinen wrote:
+>     Add a KUnit test for the linear_ranges helper.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-What happens when you turn on MEM/IO decoding below?  Does the device
-decode any address space?  How do we know what it is?  Is it related
-to the BAR contents?
+This now generates:
 
-I'm a little dubious about the need for the PCI_COMMAND write because
-the previous version didn't do it (since it incorrectly wrote to
-PCI_STATUS), and I assume that version worked.
+WARNING: modpost: missing MODULE_LICENSE() in lib/linear_ranges.o
+see include/linux/module.h for more information
 
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +	/* Enable MEM & IO Decoding */
-> +	pci_read_config_word(pdev, PCI_COMMAND, &tmp);
-> +	tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
-> +	pci_write_config_word(pdev, PCI_COMMAND, tmp);
+when the tests are built as a module and select the library.
 
+--iKKZt69u2Wx/rspf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +}
-> +
+-----BEGIN PGP SIGNATURE-----
 
-Omit this blank line.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61lD4ACgkQJNaLcl1U
+h9C4Lgf6AvdLJ8FQbtRP9+zEn6eqGAFhqIsuHJQMSO3Rfo4qyuCka5btjjUo24P8
+AZgvCw0fu23Ci2MURx/9ZWaI86NnBibPBYqSkpJrv4xiA4+hL14zILqUkuwwEzkt
+IcBwT9je+SM9rTnInZ+LhU3CKckEKXL+5GLPwwYEtBRkdwn1yS6IRTVIcZV71sgD
+6hqpVk9oI7J8y5phD0R7W5oIXHumr7sXVQT4PEuwEYFLm4PSdsOjno/GC9OE7BdK
+Tr9fMkMUVEOb/rCxVaOCqOw1TmEVDqTq+hY+r1GueiFLm4kH4NRfiCrkOd1GAIqO
+fU9BUK5FXn+1K9KTiaQACd3xRUn0XA==
+=XB6r
+-----END PGP SIGNATURE-----
 
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS2K_APB, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_CONF, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_LPC, system_bus_quirk);
-> +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct pci_dev *bridge;
-> +	static const struct pci_device_id bridge_devids[] = {
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> +		{ 0, },
-> +	};
-> +
-> +
-
-Remove one of these blank lines.
-
-> +	/* look for the matching bridge */
-> +	while (!pci_is_root_bus(bus)) {
-> +		bridge = bus->self;
-> +		bus = bus->parent;
-> +		/*
-> +		 * Some Loongson PCIe ports have a h/w limitation of
-> +		 * 256 bytes maximum read request size. They can't handle
-> +		 * anything larger than this. So force this limit on
-> +		 * any devices attached under these ports.
-> +		 */
-> +		if (pci_match_id(bridge_devids, bridge)) {
-> +			if (pcie_get_readrq(dev) > 256) {
-> +				pci_info(dev, "limiting MRRS to 256\n");
-> +				pcie_set_readrq(dev, 256);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
-> +{
-> +	unsigned char busnum = bus->number;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
-> +	/*
-> +	 * Do not read more than one device on the bus other than
-> +	 * the host bridge.
-
-s/host bridge/root bus/ ?
-
-IIUC, the test below assumes the root bus is bus 0, which is not
-necessarily the case.  Many other .*_map_bus() implementations have
-similar tests for devices on the root bus:
-
-  al_pcie_map_bus(...)
-  {
-    if (bus->number == cfg->busr.start) {
-
-> +	if (priv->flags & FLAG_DEV_FIX && bus->primary != 0 &&
-> +		PCI_SLOT(devfn) > 0)
-> +		return NULL;
+--iKKZt69u2Wx/rspf--
