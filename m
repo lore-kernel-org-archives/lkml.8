@@ -2,132 +2,157 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33104C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABEC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12FAE206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="L5qd+7Ep"
+	by mail.kernel.org (Postfix) with ESMTP id BE77221841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEHGns (ORCPT
+        id S1726906AbgEHGoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725971AbgEHGnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:43:47 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9123FC05BD43;
-        Thu,  7 May 2020 23:43:47 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id k8so453153ejv.3;
-        Thu, 07 May 2020 23:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r9Xoapspv8vGV7nEwvWW2+N5IsDixtdSReSbwJRE2/c=;
-        b=L5qd+7EpMZZs5/wx0CljAG9CckY6MhQ9+1CFG0tQg39HJAPSo2muPvlxbE6Ylbl1va
-         vzoDtc8vqIp24kIKz3+MVYoz8Jty74c3gNxXSqgeYxWozlRVc7p4MlJbsvT6wET7kut8
-         jTkB6gMZIO0CxyiHv1gRWm7bz+lEvAyvmXcOs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r9Xoapspv8vGV7nEwvWW2+N5IsDixtdSReSbwJRE2/c=;
-        b=heFj+s0IJhOIZAwluCz0doIIS214izn6W5/ni9DY6L7K/X2sV1jIAMMUIN8/9+D3b4
-         vSL1aLfj5Ep1W9xTKzYdiO0Bh6spdUv+x52C6n43kZ4oqkjKnPHQSJ4E2D/2yrzjKtJv
-         Aq6mkRIGGUcS8fMNvY3Ocr/PkSk+iRvINYv0Kr6qGZa9N4EVmPvxmqRTEAFNISRNyrzu
-         BEufuOWgSzpRolxlxis2H0mV8nWBEu7c13wJ4mgHYZi+hAUiYg31h/dWNE5WdEPP7LrD
-         OHUz8ZisHxrPNnISGBLrX2Ob5QSTHZk51wyFGUmF4iu3MJlOVON4gp6sWx31LJh2zLPl
-         3S1Q==
-X-Gm-Message-State: AGi0PuahXYoelyrwXYaRwpfIcJWoU7xOLXWfehL2zHy9cViYWEKR8qwe
-        PwmmM8W4b847Ft31f1yCMqN6RHxlLnFlVB9LI4g=
-X-Google-Smtp-Source: APiQypIfqJJksuAv8txSnGre3V121iR923e+Y2QhA6G7HWWF52f7u5PXJ9qldpQXGV//lwdBurqHJ/wMPJc22gMcsxA=
-X-Received: by 2002:a17:906:3607:: with SMTP id q7mr580759ejb.313.1588920226192;
- Thu, 07 May 2020 23:43:46 -0700 (PDT)
+        Fri, 8 May 2020 02:44:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42646 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbgEHGob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 02:44:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3108EAD80;
+        Fri,  8 May 2020 06:44:32 +0000 (UTC)
+Subject: Re: [PATCH -next] drm/ast: Make
+ ast_primary_plane_helper_atomic_update static
+To:     Samuel Zou <zou_wei@huawei.com>, airlied@redhat.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <6fab133b-9f94-fff5-8c87-1d7c6d3e9043@suse.de>
+Date:   Fri, 8 May 2020 08:44:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200508063904.60162-1-joel@jms.id.au>
-In-Reply-To: <20200508063904.60162-1-joel@jms.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 8 May 2020 06:43:34 +0000
-Message-ID: <CACPK8XdSzNOHs1o59jEy66fUW4n=7cFvwpROF+Nys_jaaZ83sA@mail.gmail.com>
-Subject: Re: [PATCH] dtc: Remove warning for I2C_OWN_SLAVE_ADDRESS
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 06:39, Joel Stanley <joel@jms.id.au> wrote:
->
-> dtc does a sanity check on reg properties that they are within the 10
-> bit address range for i2c slave addresses. In the case of multi-master
-> buses the binding may describe an address that the bus will listen on as
-> a device. Do not warn when this flag is set.
->
-> This fixes the following build warnings reported by Stephen:
->
-> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4:
->   Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:
->     I2C bus unit address format error, expected "40000010"
-> arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30:
->   Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg:
->     I2C address must be less than 10-bits, got "0x40000010"
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1
+Content-Type: multipart/mixed; boundary="9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Samuel Zou <zou_wei@huawei.com>, airlied@redhat.com, airlied@linux.ie,
+ daniel@ffwll.ch
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-ID: <6fab133b-9f94-fff5-8c87-1d7c6d3e9043@suse.de>
+Subject: Re: [PATCH -next] drm/ast: Make
+ ast_primary_plane_helper_atomic_update static
+References: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1588819206-11406-1-git-send-email-zou_wei@huawei.com>
+
+--9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+I'll add your patch to drm-misc-next. Thanks!
+
+Am 07.05.20 um 04:40 schrieb Samuel Zou:
+> Fix the following sparse warning:
+>=20
+> drivers/gpu/drm/ast/ast_mode.c:564:6: warning:
+> symbol 'ast_primary_plane_helper_atomic_update'
+> was not declared. Should it be static?
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  scripts/dtc/checks.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> index 4b3c486f1399..986754f858cf 100644
-> --- a/scripts/dtc/checks.c
-> +++ b/scripts/dtc/checks.c
-> @@ -1022,6 +1022,8 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
+>  drivers/gpu/drm/ast/ast_mode.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_m=
+ode.c
+> index 7062bcd..4ddf770 100644
+> --- a/drivers/gpu/drm/ast/ast_mode.c
+> +++ b/drivers/gpu/drm/ast/ast_mode.c
+> @@ -561,8 +561,9 @@ static int ast_primary_plane_helper_atomic_check(st=
+ruct drm_plane *plane,
+>  	return 0;
 >  }
->  WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
->
-> +#define I2C_OWN_SLAVE_ADDRESS  (1 << 30)
-> +
->  static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
+> =20
+> -void ast_primary_plane_helper_atomic_update(struct drm_plane *plane,
+> -					    struct drm_plane_state *old_state)
+> +static void
+> +ast_primary_plane_helper_atomic_update(struct drm_plane *plane,
+> +				       struct drm_plane_state *old_state)
 >  {
->         struct property *prop;
-> @@ -1044,6 +1046,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
->         }
->
->         reg = fdt32_to_cpu(*cells);
-> +       /* Ingore I2C_OWN_SLAVE_ADDRESS */
+>  	struct ast_private *ast =3D plane->dev->dev_private;
+>  	struct drm_plane_state *state =3D plane->state;
+>=20
 
-Obviously that should say "Ignore", and similarly below. The wonders
-of Friday afternoon patches.
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
-> +       reg &= ~I2C_OWN_SLAVE_ADDRESS;
->         snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
->         if (!streq(unitname, unit_addr))
->                 FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
-> @@ -1051,6 +1055,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
->
->         for (len = prop->val.len; len > 0; len -= 4) {
->                 reg = fdt32_to_cpu(*(cells++));
-> +               /* Ingore I2C_OWN_SLAVE_ADDRESS */
-> +               reg &= ~I2C_OWN_SLAVE_ADDRESS;
->                 if (reg > 0x3ff)
->                         FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
->                                   reg);
-> --
-> 2.26.2
->
+
+--9fVXXgiiOXDi9nrlmZbmnDfEj3AyQFBJv--
+
+--GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl60/8kACgkQaA3BHVML
+eiMhngf/X8nGRb0GfvKmxWPZ/TOQXNxEnOhisWFtUna+M4nCB+ZeW+t+d4gTk9xV
+JG9aLgCPlZngs8ZTvnVj614Df8kZ8j8TrGp333d6gSWEJvh0IHrMnL8eOkR2C5iJ
+y/uBC9KLE2/jIVNleFVANBGLkUNdf11RzPggGVCv4sKin8RyX91iT5THmfEFHTTs
+vZcqsGM1axYGML+f/KjVw2m+w8ivicqQasuwPb991xAg/S96Jw1CFDqVc6FDd4lF
+qGElPvFyTGyGvlEs8VCg8KSAGV/bOBbkYvmOpycsFLIfRVpNeb4m/QJOPjq+1EUo
+n7pifydfUQIaPDXXEhUF+U0KZAjRpg==
+=+xqQ
+-----END PGP SIGNATURE-----
+
+--GP1fBK66YqPm2jQR5el3FNevgUmX2CWs1--
