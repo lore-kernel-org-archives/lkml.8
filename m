@@ -2,59 +2,56 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77899C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C4DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56BCF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF77B206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942940;
-	bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
+	s=default; t=1588942947;
+	bh=MVj9UZhM0DjTLdw9ouaGd2g02wNy/NokxdpMwsfgbjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IeM9ZrvjZM2t6/rr2ylHnXlN2kWZ1x4NFrgIC4WmLIfJNGQHdnOpV36aL5Uf29ZKE
-	 CrQQNf0Go/fX6eBUI81kYMXOzP+q5MMhRMYPRDTHMGwFVvH+6lPyO3KlxEQcjCd5x/
-	 NkB3pTxjDgM8AQ2ksbsNXZcnt8c2RCH89iRvl1qQ=
+	b=NmbKyUVi5a1Lgd1Ivqw5h+p8nNUNtcr6XUpx5GqcR8J59A82zj3uoSQ9J9HhPLCvd
+	 5VQRblDklphZ2cu/KY7+EVRrSWr44a6/2ST09stujLg6UPfNR0TWpRlmpka+0vh/+e
+	 3dvfdrrLfAEA+SbxsgN7JIPdGlOwBIG91oJqmA7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgEHNCT (ORCPT
+        id S1730009AbgEHNC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:02:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729014AbgEHMvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:05 -0400
+        id S1729853AbgEHMuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC6024964;
-        Fri,  8 May 2020 12:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B656C24964;
+        Fri,  8 May 2020 12:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942265;
-        bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
+        s=default; t=1588942255;
+        bh=MVj9UZhM0DjTLdw9ouaGd2g02wNy/NokxdpMwsfgbjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rfwt70VbamXErIoLiAdGG8XN1zJ3YuJQ4PXzQ2l7HIUiTpHpO0uDigad6+ESdoOZA
-         9D4KYeFMxQlENddr7+hRXK2N5YZDfNIq0M4vZQgL+kdFeGivFixig8i9iSov9BsGPA
-         VpBTpwdbRq+inyQyCmFby8u7sJXOJcKYkvYXwujE=
+        b=jVII4CR6GlCEPip65jyCTROh6N6MwauJJozGDqEUV2aZMm4xNUWxu+G+kWnJKgBOf
+         xLqztfdDqfpGZMd31Ahv+wD6U1kC1/kZbOGaqdsUzWTKB7s8R0TT6Hn3w2voYK3kIG
+         837DF3RCV5j3iJQCVvslorXIq/ZOEiZ89DtgVt10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jia He <justin.he@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH 4.19 01/32] vhost: vsock: kick send_pkt worker once device is started
-Date:   Fri,  8 May 2020 14:35:14 +0200
-Message-Id: <20200508123035.056580682@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Beraud <julien.beraud@orolia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 09/22] net: stmmac: fix enabling socfpgas ptp_ref_clock
+Date:   Fri,  8 May 2020 14:35:21 +0200
+Message-Id: <20200508123035.066280486@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
-References: <20200508123034.886699170@linuxfoundation.org>
+In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
+References: <20200508123033.915895060@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,72 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia He <justin.he@arm.com>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
+[ Upstream commit 15ce30609d1e88d42fb1cd948f453e6d5f188249 ]
 
-Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
-The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
-connecting from the client side. The vhost vsock client tries to connect
-an initializing virtio vsock server.
+There are 2 registers to write to enable a ptp ref clock coming from the
+fpga.
+One that enables the usage of the clock from the fpga for emac0 and emac1
+as a ptp ref clock, and the other to allow signals from the fpga to reach
+emac0 and emac1.
+Currently, if the dwmac-socfpga has phymode set to PHY_INTERFACE_MODE_MII,
+PHY_INTERFACE_MODE_GMII, or PHY_INTERFACE_MODE_SGMII, both registers will
+be written and the ptp ref clock will be set as coming from the fpga.
+Separate the 2 register writes to only enable signals from the fpga to
+reach emac0 or emac1 when ptp ref clock is not coming from the fpga.
 
-The abnormal flow looks like:
-host-userspace           vhost vsock                       guest vsock
-==============           ===========                       ============
-connect()     -------->  vhost_transport_send_pkt_work()   initializing
-   |                     vq->private_data==NULL
-   |                     will not be queued
-   V
-schedule_timeout(2s)
-                         vhost_vsock_start()  <---------   device ready
-                         set vq->private_data
-
-wait for 2s and failed
-connect() again          vq->private_data!=NULL         recv connecting pkt
-
-Details:
-1. Host userspace sends a connect pkt, at that time, guest vsock is under
-   initializing, hence the vhost_vsock_start has not been called. So
-   vq->private_data==NULL, and the pkt is not been queued to send to guest
-2. Then it sleeps for 2s
-3. After guest vsock finishes initializing, vq->private_data is set
-4. When host userspace wakes up after 2s, send connecting pkt again,
-   everything is fine.
-
-As suggested by Stefano Garzarella, this fixes it by additional kicking the
-send_pkt worker in vhost_vsock_start once the virtio device is started. This
-makes the pending pkt sent again.
-
-After this patch, kata-runtime (with vsock enabled) boot time is reduced
-from 3s to 1s on a ThunderX2 arm64 server.
-
-[1] https://github.com/kata-containers/runtime/issues/1917
-
-Reported-by: Ning Bo <n.b@live.com>
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jia He <justin.he@arm.com>
-Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -499,6 +499,11 @@ static int vhost_vsock_start(struct vhos
- 		mutex_unlock(&vq->mutex);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index 5b3b06a0a3bf5..33407df6bea69 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -274,16 +274,19 @@ static int socfpga_dwmac_set_phy_mode(struct socfpga_dwmac *dwmac)
+ 	    phymode == PHY_INTERFACE_MODE_MII ||
+ 	    phymode == PHY_INTERFACE_MODE_GMII ||
+ 	    phymode == PHY_INTERFACE_MODE_SGMII) {
+-		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
+ 		regmap_read(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
+ 			    &module);
+ 		module |= (SYSMGR_FPGAGRP_MODULE_EMAC << (reg_shift / 2));
+ 		regmap_write(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
+ 			     module);
+-	} else {
+-		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2));
  	}
  
-+	/* Some packets may have been queued before the device was started,
-+	 * let's kick the send worker to send them.
-+	 */
-+	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++	if (dwmac->f2h_ptp_ref_clk)
++		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
++	else
++		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK <<
++			  (reg_shift / 2));
 +
- 	mutex_unlock(&vsock->dev.mutex);
- 	return 0;
+ 	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
  
+ 	/* Deassert reset for the phy configuration to be sampled by
+-- 
+2.20.1
+
 
 
