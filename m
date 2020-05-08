@@ -2,169 +2,69 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9676AC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC6C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F53E20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761262145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:22:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="BYccWULQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEHLVz (ORCPT
+        id S1727088AbgEHLWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:21:55 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64781 "EHLO mga05.intel.com"
+        Fri, 8 May 2020 07:22:02 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:34923 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHLVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:21:54 -0400
-IronPort-SDR: eZ8BD4v1hrMhJzG2YO3dTlTNvmoDzwvQB8tlU6Nw6bfc+dL+bYvhBY55u1oje5rFu4gZ1zQ09U
- +ZFh0ZxzWFmA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:21:53 -0700
-IronPort-SDR: AWn4JlKcN8+Kxi8TzKAw9JjRTfavnoOzEW0AiPwbQHRL5c+GX//59m/RxVdjoQmAf6vZ6Z3I1w
- haHJ31QpjNnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="462202399"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2020 04:21:49 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX14i-005PEb-LK; Fri, 08 May 2020 14:21:52 +0300
-Date:   Fri, 8 May 2020 14:21:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vineet Gupta <vgupta@synopsys.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200508112152.GI185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+        id S1726776AbgEHLWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:22:02 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 40b22dac
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 8 May 2020 11:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=0MY6Mw/EZHF53e5MH48vmSaxiAw=; b=BYccWU
+        LQHIoCLTRYzmvjHLB6n2DoWH9m8GvfoWb1avPFbL8RF8TZ20xMkYB2OCDkgSgt8N
+        c8ys6j6kIQuswHBjuIfgviHOntMuRPuG9UzU1n2p+FR6rs210hgWn78kfMkSJRf9
+        gxk6ZPQyY1yvIK1yCYoQC6IG08T0JPle5yeewsCj6KricGVdXRjH2E6oK1CA3gE1
+        aAYT/BhyxOOS0Soor2sx1zs1rJa1/NP2j7B1h6fkHaZKrGpotIWhF+YqVl5IvfaQ
+        lRapNbZecBKtaP5Sj+Tl3xVGrJdc/XfpPIYfw8+uXpuHODP3LyiCXQ6BTF8BzTs6
+        bOeYPZdqMgUhbbpA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 91458a76 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 8 May 2020 11:09:04 +0000 (UTC)
+Received: by mail-il1-f173.google.com with SMTP id s10so1040595iln.11
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 04:21:59 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZnuXQZ/ooRGw/Ivwet+Xq+50vY79FfWD73zXHTUr3TO9z65jX/
+        XTyjGrTypR7cf8zuU2LJ/aYu8bf2gknlxIB1itw=
+X-Google-Smtp-Source: APiQypLFnQSgFDdjLZRMfEaCRugPXSsE6tPis6ZXTH794HynfB81S+yf3+o9C6+jWPwK45mIitGlseqB81EGVOqAoCw=
+X-Received: by 2002:a92:5f46:: with SMTP id t67mr2135081ilb.64.1588936918705;
+ Fri, 08 May 2020 04:21:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200507224530.2993316-1-Jason@zx2c4.com> <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
+In-Reply-To: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 8 May 2020 05:21:47 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
+Message-ID: <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
+Subject: Re: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
+ gcc >= 10
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc (Vineet, for information you probably know)
+On Fri, May 8, 2020 at 3:08 AM Oleksandr Natalenko <oleksandr@redhat.com> wrote:
+>
+> Should we untangle -O3 from depending on ARC first maybe?
 
-On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> Maximum block size DW DMAC configuration corresponds to the max segment
-> size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> value specific to the probed DW DMA controller. It shall help the DMA
-> clients to create size-optimized SG-list items for the controller. This in
-> turn will cause less dw_desc allocations, less LLP reinitializations,
-> better DMA device performance.
+Oh, hah, good point. Yes, I'll do that for a v2, but will wait another
+day for feedback first.
 
-Thank you for the patch.
-My comments below.
-
-...
-
-> +		/*
-> +		 * Find maximum block size to be set as the DMA device maximum
-> +		 * segment size. By doing so we'll have size optimized SG-list
-> +		 * items for the channels with biggest block size. This won't
-> +		 * be a problem for the rest of the channels, since they will
-> +		 * still be able to split the requests up by allocating
-> +		 * multiple DW DMA LLP descriptors, which they would have done
-> +		 * anyway.
-> +		 */
-> +		if (dwc->block_size > block_size)
-> +			block_size = dwc->block_size;
->  	}
->  
->  	/* Clear all interrupts on all channels. */
-> @@ -1220,6 +1233,10 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  			     BIT(DMA_MEM_TO_MEM);
->  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->  
-> +	/* Block size corresponds to the maximum sg size */
-> +	dw->dma.dev->dma_parms = &dw->dma_parms;
-> +	dma_set_max_seg_size(dw->dma.dev, block_size);
-> +
->  	err = dma_async_device_register(&dw->dma);
->  	if (err)
->  		goto err_dma_register;
-
-Yeah, I have locally something like this and I didn't dare to upstream because
-there is an issue. We have this information per DMA controller, while we
-actually need this on per DMA channel basis.
-
-Above will work only for synthesized DMA with all channels having same block
-size. That's why above conditional is not needed anyway.
-
-OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-that Intel Medfield has interesting settings, but I don't remember if DMA
-channels are different inside the same controller).
-
-Vineet, do you have any information that Synopsys customers synthesized DMA
-controllers with different channel characteristics inside one DMA IP?
-
-...
-
->  #include <linux/bitops.h>
-
-> +#include <linux/device.h>
-
-Isn't enough to supply
-
-struct device;
-
-?
-
->  #include <linux/interrupt.h>
->  #include <linux/dmaengine.h>
-
-Also this change needs a separate patch I suppose.
-
-...
-
-> -	struct dma_device	dma;
-> -	char			name[20];
-> -	void __iomem		*regs;
-> -	struct dma_pool		*desc_pool;
-> -	struct tasklet_struct	tasklet;
-> +	struct dma_device		dma;
-> +	struct device_dma_parameters	dma_parms;
-> +	char				name[20];
-> +	void __iomem			*regs;
-> +	struct dma_pool			*desc_pool;
-> +	struct tasklet_struct		tasklet;
->  
->  	/* channels */
-> -	struct dw_dma_chan	*chan;
-> -	u8			all_chan_mask;
-> -	u8			in_use;
-> +	struct dw_dma_chan		*chan;
-> +	u8				all_chan_mask;
-> +	u8				in_use;
-
-Please split formatting fixes into a separate patch.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jason
