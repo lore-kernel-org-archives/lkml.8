@@ -2,164 +2,256 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A48C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55041C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED58820870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334F420870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEHKtm (ORCPT
+        id S1727111AbgEHKuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:49:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46585 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHKtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:49:41 -0400
-IronPort-SDR: DqQfIDuiEI7hI9n8ws33gCh9361LrdYlP+hCvr86/EgN0aNMUVIH+E0HsVRZyVSsAuowuTFSqh
- nqDXKtklVrwg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 03:49:40 -0700
-IronPort-SDR: DG2uUcyYbivI3/ur59WOuEwyesHwFyUueOt4+4kDh5fS+4NdA2n0V9T46NDjGcoEFHMncqsLlJ
- vm5jEYAstpxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="407991258"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 03:49:40 -0700
-Received: from [10.249.224.104] (abudanko-mobl.ccr.corp.intel.com [10.249.224.104])
-        by linux.intel.com (Postfix) with ESMTP id AE3E65805B4;
-        Fri,  8 May 2020 03:49:38 -0700 (PDT)
-Subject: [PATCH v3 4/9] perf stat: extend -D,--delay option with -1 value
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f65acf7a-70fd-4bd4-13f9-b60a3e103151@linux.intel.com>
-Date:   Fri, 8 May 2020 13:49:37 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 06:50:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6272 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726751AbgEHKuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:50:15 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048AWqmD137280;
+        Fri, 8 May 2020 06:49:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtsxgpsf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 06:49:35 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048Ae4Hi151854;
+        Fri, 8 May 2020 06:49:34 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtsxgpre-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 06:49:33 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048AjTPY008355;
+        Fri, 8 May 2020 10:49:31 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma05fra.de.ibm.com with ESMTP id 30s0g5nc15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 10:49:31 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048AnS8W63439074
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 May 2020 10:49:28 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7FD2AE045;
+        Fri,  8 May 2020 10:49:28 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C43DAE05A;
+        Fri,  8 May 2020 10:49:25 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.93.12])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri,  8 May 2020 10:49:25 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 08 May 2020 16:19:24 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v7 0/5] powerpc/papr_scm: Add support for reporting nvdimm health
+Date:   Fri,  8 May 2020 16:19:17 +0530
+Message-Id: <20200508104922.72565-1-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-08_08:2020-05-07,2020-05-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 suspectscore=0
+ phishscore=0 impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The PAPR standard[1][3] provides mechanisms to query the health and
+performance stats of an NVDIMM via various hcalls as described in
+Ref[2].  Until now these stats were never available nor exposed to the
+user-space tools like 'ndctl'. This is partly due to PAPR platform not
+having support for ACPI and NFIT. Hence 'ndctl' is unable to query and
+report the dimm health status and a user had no way to determine the
+current health status of a NDVIMM.
 
-Extend -D,--delay option with -1 value to start monitoring with
-events disabled to be enabled later by enable command provided
-via control file descriptor.
+To overcome this limitation, this patch-set updates papr_scm kernel
+module to query and fetch NVDIMM health stats using hcalls described
+in Ref[2].  This health and performance stats are then exposed to
+userspace via sysfs and PAPR-NVDIMM-Specific-Methods(PDSM) issued by
+libndctl.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt |  5 +++--
- tools/perf/builtin-stat.c              | 18 ++++++++++++++----
- tools/perf/util/evlist.h               |  4 ++++
- tools/perf/util/stat.h                 |  2 +-
- 4 files changed, 22 insertions(+), 7 deletions(-)
+These changes coupled with proposed ndtcl changes located at Ref[4]
+should provide a way for the user to retrieve NVDIMM health status
+using ndtcl.
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 3fb5028aef08..3b91b30d7672 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -226,8 +226,9 @@ mode, use --per-node in addition to -a. (system-wide).
- 
- -D msecs::
- --delay msecs::
--After starting the program, wait msecs before measuring. This is useful to
--filter out the startup phase of the program, which is often very different.
-+After starting the program, wait msecs before measuring (-1: start with events
-+disabled"). This is useful to filter out the startup phase of the program,
-+which is often very different.
- 
- -T::
- --transaction::
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 9775b0905146..73404b723592 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -383,16 +383,26 @@ static bool print_interval_and_stop(struct perf_stat_config *config, int *times)
- 
- static void enable_counters(void)
- {
--	if (stat_config.initial_delay)
-+	if (stat_config.initial_delay < 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
-+		return;
-+	}
-+
-+	if (stat_config.initial_delay > 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
- 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-+	}
- 
- 	/*
- 	 * We need to enable counters only if:
- 	 * - we don't have tracee (attaching to task or cpu)
- 	 * - we have initial delay configured
- 	 */
--	if (!target__none(&target) || stat_config.initial_delay)
-+	if (!target__none(&target) || stat_config.initial_delay) {
- 		evlist__enable(evsel_list);
-+		if (stat_config.initial_delay > 0)
-+			pr_info(EVLIST_ENABLED_MSG);
-+	}
- }
- 
- static void disable_counters(void)
-@@ -929,8 +939,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per thread", AGGR_THREAD),
- 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
- 		     "aggregate counts per numa node", AGGR_NODE),
--	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
--		     "ms to wait before starting measurement after program start"),
-+	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
-+		    "ms to wait before starting measurement after program start (-1: start with events disabled"),
- 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
- 			"Only print computed metrics. No raw values", enable_metric_only),
- 	OPT_BOOLEAN(0, "topdown", &topdown_run,
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 0554f8d2a65b..8a72612b8b3e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -375,4 +375,8 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
- int evlist__finalize_ctlfd(struct evlist *evlist);
- int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
- 
-+#define EVLIST_ENABLED_MSG "Events enabled\n"
-+#define EVLIST_DISABLED_MSG "Events disabled\n"
-+
-+
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..027b9dcd902f 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -113,7 +113,7 @@ struct perf_stat_config {
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--	unsigned int		 initial_delay;
-+	int			 initial_delay;
- 	unsigned int		 unit_width;
- 	unsigned int		 metric_only_len;
- 	int			 times;
+Below is a sample output using proposed kernel + ndctl for PAPR NVDIMM
+in a emulation environment:
+
+ # ndctl list -DH
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"fatal",
+      "shutdown_state":"dirty"
+    }
+  }
+]
+
+Dimm health report output on a pseries guest lpar with vPMEM or HMS
+based NVDIMMs that are in perfectly healthy conditions:
+
+ # ndctl list -d nmem0 -H
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"ok",
+      "shutdown_state":"clean"
+    }
+  }
+]
+
+PAPR NVDIMM-Specific-Methods(PDSM)
+==================================
+
+PDSM requests are issued by vendor specific code in libndctl to
+execute certain operations or fetch information from NVDIMMS. PDSMs
+requests can be sent to papr_scm module via libndctl(userspace) and
+libnvdimm (kernel) using the ND_CMD_CALL ioctl command which can be
+handled in the dimm control function papr_scm_ndctl(). Current
+patchset proposes a single PDSM to retrieve NVDIMM health, defined in
+the newly introduced uapi header named 'papr_scm_pdsm.h'. Support for
+more PDSMs will be added in future.
+
+Structure of the patch-set
+==========================
+
+The patch-set starts with a doc patch documenting details of hcall
+H_SCM_HEALTH. Second patch exports kernel symbol seq_buf_printf()
+thats used in subsequent patches to generate sysfs attribute content.
+
+Third patch implements support for fetching NVDIMM health information
+from PHYP and partially exposing it to user-space via a NVDIMM sysfs
+flag.
+
+Fourth patches deal with implementing support for servicing PDSM
+commands in papr_scm module.
+
+Finally the last patch implements support for servicing PDSM
+'PAPR_SCM_PDSM_HEALTH' that returns the NVDIMM health information to
+libndctl.
+
+Changelog:
+==========
+
+v6..v7:
+
+* Incorporate various review comments from Mpe.  Removed papr_scm.h
+* Added a patch to export seq_buf_printf() [Mpe, Steven Rostedt]
+* header file and moved its contents to papr_scm.c.
+* Split function drc_pmem_query_health() into two functions, one that takes
+  care of caching and concurrency and other one that doesn't.
+* Fixed a possible incorrect way to make local copy of nvdimm health data.
+* Some variable renames changed as suggested in previous review.
+* Removed unused macros/defines from papr_scm_pdsm.h
+* Updated papr_scm_pdsm.h to remove usage of __KERNEL__ define.
+* Updated papr_scm_pdsm.h to remove redefinition of __packed macro.
+
+v5..v6:
+
+* Incorporate review comments from Mpe and Dan Williams.
+* Changed the usage of term DSM to PDSM as former conflicted with
+  usage in ACPI context.
+* UAPI updates to remove usage of bool and marking the structs 
+  defined as 'packed'.
+* Simplified the health-bitmap handling in papr_scm to use u64
+  instead of __be64 integers.
+* Caching of the health information so reading the dimm-flag file
+  doesn't result in costly hcalls everytime.
+* Changed dimm-flag 'save_fail' to 'flush_fail'
+* Moved the dimm flag file from 'papr_flags' to 'papr/flags'.
+* Added a patch to document H_SCM_HEALTH hcall return values.
+* Added sysfs ABI documentation for newly introduce dimm-flag
+  sysfs file 'papr/flags'
+
+v4..v5:
+
+* Fixed a bug in new implementation of papr_scm_ndctl() that was triggering
+  a false error condition.
+
+v3..v4:
+
+* Restructured papr_scm_ndctl() to dispatch ND_CMD_CALL commands to a new
+  function named papr_scm_service_dsm() to serivice DSM requests. [Aneesh]
+
+v2..v3:
+
+* Updated the papr_scm_dsm.h header to be more confimant general kernel
+  guidelines for UAPI headers. [Aneesh]
+
+* Changed the definition of macro PAPR_SCM_DIMM_UNARMED_MASK to not
+  include case when the NVDIMM is unarmed because its a vPMEM
+  NVDIMM. [Aneesh]
+
+v1..v2:
+
+* Restructured the patch-set based on review comments on V1 patch-set to
+simplify the patch review. Multiple small patches have been combined into
+single patches to reduce cross referencing that was needed in earlier
+patch-set. Hence most of the patches in this patch-set as now new. [Aneesh]
+
+* Removed the initial work done for fetch NVDIMM performance statistics.
+These changes will be re-proposed in a separate patch-set. [Aneesh]
+
+* Simplified handling of versioning of 'struct
+nd_papr_scm_dimm_health_stat_v1' as only one version of the structure is
+currently in existence.
+
+References:
+[1] "Power Architecture Platform Reference"
+      https://en.wikipedia.org/wiki/Power_Architecture_Platform_Reference
+[2] commit 58b278f568f0
+     ("powerpc: Provide initial documentation for PAPR hcalls")
+[3] "Linux on Power Architecture Platform Reference"
+     https://members.openpowerfoundation.org/document/dl/469
+[4] https://github.com/vaibhav92/ndctl/tree/papr_scm_health_v7
+
+Vaibhav Jain (5):
+  powerpc: Document details on H_SCM_HEALTH hcall
+  seq_buf: Export seq_buf_printf() to external modules
+  powerpc/papr_scm: Fetch nvdimm health information from PHYP
+  ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+  powerpc/papr_scm: Implement support for PAPR_SCM_PDSM_HEALTH
+
+ Documentation/ABI/testing/sysfs-bus-papr-scm  |  27 ++
+ Documentation/powerpc/papr_hcalls.rst         |  43 ++-
+ arch/powerpc/include/uapi/asm/papr_scm_pdsm.h | 173 +++++++++
+ arch/powerpc/platforms/pseries/papr_scm.c     | 363 +++++++++++++++++-
+ include/uapi/linux/ndctl.h                    |   1 +
+ lib/seq_buf.c                                 |   1 +
+ 6 files changed, 595 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-scm
+ create mode 100644 arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+
 -- 
-2.24.1
+2.26.2
 
