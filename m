@@ -2,139 +2,137 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BFAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7313CC47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 338092184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553CC20746
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ByzzoK3u"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cnTTDe7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEHSMd (ORCPT
+        id S1727886AbgEHSNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:12:33 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32187 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726756AbgEHSMc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:12:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588961552; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=wPiyQjSJF8vUdRxJrjwFgYJTIXhq+dC/nAsEoueYbiA=; b=ByzzoK3uHnF5tVMm/9/8A1ghO+1K49QTXMakvpFFexqgEKinOejfzzNv3GT/RBMkRna0Q/SF
- ydB56rSUGTiczHcub+jptEb9z3Ch6xVWqfQGtKiOZpqbQy4J/xBN58rb9CEfeXnpxD+R8A0E
- pd3UcmE9f7cm6oju1heaubVXhnU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb5a10a.7fc7670df298-smtp-out-n03;
- Fri, 08 May 2020 18:12:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 18B03C4478C; Fri,  8 May 2020 18:12:26 +0000 (UTC)
-Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B44CC433D2;
-        Fri,  8 May 2020 18:12:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B44CC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 3/5] scsi: ufs: customize flush threshold for
- WriteBooster
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com
-Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
-        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <20200508171513.14665-1-stanley.chu@mediatek.com>
- <20200508171513.14665-4-stanley.chu@mediatek.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <4196ff98-093e-3708-d166-a7a7c6046c57@codeaurora.org>
-Date:   Fri, 8 May 2020 11:12:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 14:13:13 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49760 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgEHSNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:13:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=wWNCGA+EwqVktP3Bvv8WPRuSGI2htUTB8ahmxkxy++o=; b=cnTTDe7IEMZQkOtb+qm05miDls
+        qWpgdgwqMbp0QDQSa8AkoBwo0d0VM5xkLtPW4k6zxwQi6z8HB0tr28cuy0ZDKjRHX9EAa0FbYWmHj
+        QWynS9sMpHL3874vkA6Ctk6HUGYbaoReKgS6pAqdqplDkHSybpgFsPJDClHsAzkBWUb0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jX7Ub-001P3h-KM; Fri, 08 May 2020 20:13:01 +0200
+Date:   Fri, 8 May 2020 20:13:01 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+Message-ID: <20200508181301.GF298574@lunn.ch>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+ <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+ <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508171513.14665-4-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/2020 10:15 AM, Stanley Chu wrote:
-> Allow flush threshold for WriteBooster to be customizable by
-> vendors. To achieve this, make the value as a variable in struct
-> ufs_hba first.
+> > It does have a numeric version defined for EISA types. OTOH I suspect that
+> > your right. If there were a "PHY\VEN_IDvvvv&ID_DDDD" definition, it may not
+> > be ideal to parse it. Instead the normal ACPI model of exactly matching the
+> > complete string in the phy driver might be more appropriate.
 > 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->   drivers/scsi/ufs/ufshcd.c | 6 ++++--
->   drivers/scsi/ufs/ufshcd.h | 1 +
->   2 files changed, 5 insertions(+), 2 deletions(-)
+> IMO, it should be fine to parse the string to extract the phy_id. Is there any
+> reason why we cannot do this?
+
+Some background here, about what the PHY core does.
+
+PHYs have two ID registers. This contains vendor, device, and often
+revision of the PHY. Only the vendor part is standardised, vendors can
+decide how to use the device part, but it is common for the lowest
+nibble to be revision. The core will read these ID registers, and then
+go through all the PHY drivers registered and ask them if they support
+this ID. The drivers provide a table of IDs and masks. The mask is
+applied, and then if the ID matches, the driver is used. The mask
+allows the revision to be ignored, etc.
+
+There is a very small number of devices where the vendor messed up,
+and did not put valid contents in the ID registers. In such cases, we
+can read the IDs from device tree. These are then used in exactly the
+same way as if they were read from the device.
+
+If you want the ACPI model to be used, an exact match on the string,
+you are going to have to modify the core and the drivers. They
+currently don't have any string, and have no idea about different
+revisions which are out in the wild.
+
+> > Similarly to how I suspect the next patch's use of "compatible" isn't ideal
+> > either, because whether a device is c45 or not, should tend to be fixed to a
+> > particular vendor/device implementation and not a firmware provided
+> > property.
+
+Not exactly true. It is the combination of can the bus master do C45
+and can the device do C45. Unfortunately, we have no knowledge of the
+bus masters capabilities, if it can do C45. And many MDIO drivers will
+do a C22 transaction when asked to perform a C45 transaction. All new
+submissions for MDIO drivers i ask for EOPNOTSUPP to be returned if
+C45 is not supported. But we cannot rely on that. Too much history.
+
 > 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index cdacbe6378a1..9a0ce6550c2f 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -5301,8 +5301,8 @@ static bool ufshcd_wb_presrv_usrspc_keep_vcc_on(struct ufs_hba *hba,
->   			 cur_buf);
->   		return false;
->   	}
-> -	/* Let it continue to flush when >60% full */
-> -	if (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN)
-> +	/* Let it continue to flush when available buffer exceeds threshold */
-> +	if (avail_buf < hba->vps->wb_flush_threshold)
->   		return true;
->   
->   	return false;
-> @@ -6839,6 +6839,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
->   		if (!d_lu_wb_buf_alloc)
->   			goto wb_disabled;
->   	}
-> +
-Is this newline needed?
-
->   	return;
->   
->   wb_disabled:
-> @@ -7462,6 +7463,7 @@ static const struct attribute_group *ufshcd_driver_groups[] = {
->   
->   static struct ufs_hba_variant_params ufs_hba_vps = {
->   	.hba_enable_delay_us		= 1000,
-> +	.wb_flush_threshold		= UFS_WB_40_PERCENT_BUF_REMAIN,
->   	.devfreq_profile.polling_ms	= 100,
->   	.devfreq_profile.target		= ufshcd_devfreq_target,
->   	.devfreq_profile.get_dev_status	= ufshcd_devfreq_get_dev_status,
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index f7bdf52ba8b0..e3dfb48e669e 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -570,6 +570,7 @@ struct ufs_hba_variant_params {
->   	struct devfreq_dev_profile devfreq_profile;
->   	struct devfreq_simple_ondemand_data ondemand_data;
->   	u16 hba_enable_delay_us;
-> +	u32 wb_flush_threshold;
->   };
->   
->   /**
+> I tend to agree with you on this. Even for DT, ideal case, IMO should be:
 > 
+> 1) mdiobus_scan scans the mdiobus for c22 devices by reading phy id from
+> registers 2 and 3
+> 2) if not found scan for c45 devices <= looks like this is missing in Linux
+> 3) look for phy_id from compatible string.
 
-Patch[3] & [4] may be combined into a single patch perhaps?
-Patch[4] just redoes what [3] did in a different way, so might as well 
-just do what patch[4] does right away.
+It is somewhat more complex, in that there are a small number of
+devices which will respond to both C22 and C45. Generally, you want to
+use C45 if supported. So you would want to do the C45 scan first. But
+then the earlier problem comes to play, you have no idea if the bus
+master actually correctly supports C45.
 
+Given the issues, we assume all bus masters and PHY devices are C22
+unless DT says the bus master and PHY combination is compatible with
+C45.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+	   Andrew
