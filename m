@@ -2,188 +2,144 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D7C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3198C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 904F22083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF73C2083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vkE5/F26"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMNrmzwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgEHSz2 (ORCPT
+        id S1727893AbgEHSzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:55:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56330 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgEHSz2 (ORCPT
+        Fri, 8 May 2020 14:55:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726885AbgEHSzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:55:28 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048Isok9041770;
-        Fri, 8 May 2020 13:54:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588964090;
-        bh=5+AXR5SrX42+acbZCSDv1ai6NbQTlDljtTfawPkCDCs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vkE5/F26rfmlS1cg/GH+baBHHaCOxfMa2hkB25bNA3KCHpS1JPMBXFh/cfWcd/2t/
-         T9dB0cyVjHCERe2f6iKx+vAshUlnCB1+OXzZw/8H3ce9isq2uznYSdyjwh/qi2zGMG
-         gnGUjde9LNuKCUWHKVq3Upf2EfnB38CPApA+toE0=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 048Iso5A013748
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 May 2020 13:54:50 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 13:54:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 13:54:50 -0500
-Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048IsGpY077355;
-        Fri, 8 May 2020 13:54:46 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-Subject: [PATCH 6/6] spi: Move cadence-quadspi driver to drivers/spi/
-Date:   Sat, 9 May 2020 00:24:11 +0530
-Message-ID: <20200508185411.487-7-vigneshr@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508185411.487-1-vigneshr@ti.com>
-References: <20200508185411.487-1-vigneshr@ti.com>
+        Fri, 8 May 2020 14:55:33 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEB7C061A0C;
+        Fri,  8 May 2020 11:55:32 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t9so4730895pjw.0;
+        Fri, 08 May 2020 11:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BSq9+/3mGM/3LB1aceg6MkCumrRKFpPuJIbC/+QNixI=;
+        b=hMNrmzwvFi6RL3SRNytpvWLFMW/gruKF4dkVqp1C6WBcMvA6Pzxu07h/LIf8Uhl973
+         l1j0FgWmZQCK303UtBWwVj8DBqYecre5217mUuvxMbffOMnTnMp+XkCvH3lCJ4vK+79Q
+         T8koJ0iD1m/P88JZpl3yWH+RcenD0vepCj4y6afGA0SOEIaFIY13j96bprLKEGpewTqA
+         tIWhssSuqSXx/YmO4eEIUHv6oPRYKdgzr+HhP0Fo/ko3gM9JaOFacpwb7rSysw8y6pf7
+         DjK8zt4KriA0ExAPm6qEoFrv+lBDSmjPsoW547ZQEMiCGiAknAHPfLsQtDWCQSP3ygNW
+         k18Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BSq9+/3mGM/3LB1aceg6MkCumrRKFpPuJIbC/+QNixI=;
+        b=CCXpzq+yWt3IfjwDALw08wiuyKqCYz2G88ouOxnMh9mjDA3CNfdArCAnP3TGRS4mUY
+         6Rx1PfFNnGj9oxuLW5DVecJZ7bGsbz5O/IYPZuYEAD74KqEF0EiGoMXGrelnN37ooH+i
+         MCNFjhxefUWLTKaBes/6JBBk6zjZVEu4FtsQeM4NWwopyPzr6ed6cq7zXngByfO5EKIq
+         jwnSkxXBNoExE/ZLKyiE6LHgGSqz0fzHv6ri5MPnWbMvQCYxkn9xjJCM/zItAA14JhEs
+         rFsCbtjVCvA5WMPKM/n5k72z6PZH7W9ZG+cReeQHNMm2mzCFcaoIbNkHvJcbTBNLkieE
+         iBrA==
+X-Gm-Message-State: AGi0PuYBcmGF6SzXHvndmv3lRzuDFKrqcAz0DuYBe3m4hLoN55SHbPOW
+        u2w6EJeo6dDEy8pAjwWZ7+boRg0o
+X-Google-Smtp-Source: APiQypKgNQTHKAFC/AdIYmHNqcNi7e/Uw3dxyVJaL8ftIN38LzCO2JO2ToesMKeRtQS5Yv5vduD38Q==
+X-Received: by 2002:a17:902:968a:: with SMTP id n10mr3944435plp.259.1588964132241;
+        Fri, 08 May 2020 11:55:32 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y3sm2465451pfb.132.2020.05.08.11.55.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 11:55:31 -0700 (PDT)
+Subject: Re: [PATCH 4.4 000/308] 4.4.223-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200508142854.087405740@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <0dab3189-b576-d564-352e-f5e23484dc16@roeck-us.net>
+Date:   Fri, 8 May 2020 11:55:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200508142854.087405740@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 5/8/20 7:32 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.223 release.
+> There are 308 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 10 May 2020 14:26:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-Now that cadence-quadspi has been converted to use spi-mem framework,
-move it under drivers/spi/
+Building mips:defconfig ... failed
+--------------
+Error log:
+arch/mips/math-emu/sp_msubf.c: In function 'ieee754sp_msubf':
+arch/mips/math-emu/sp_msubf.c:217:3: error: implicit declaration of function 'SPXSRSYn'; did you mean 'SPXSRSY1'?
 
-Update license header to match SPI subsystem style
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/mtd/spi-nor/controllers/Kconfig            | 11 -----------
- drivers/mtd/spi-nor/controllers/Makefile           |  1 -
- drivers/spi/Kconfig                                | 11 +++++++++++
- drivers/spi/Makefile                               |  1 +
- .../spi-cadence-quadspi.c}                         | 14 +++++++-------
- 5 files changed, 19 insertions(+), 19 deletions(-)
- rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (99%)
-
-diff --git a/drivers/mtd/spi-nor/controllers/Kconfig b/drivers/mtd/spi-nor/controllers/Kconfig
-index 10b86660b821..95fcd4b435be 100644
---- a/drivers/mtd/spi-nor/controllers/Kconfig
-+++ b/drivers/mtd/spi-nor/controllers/Kconfig
-@@ -9,17 +9,6 @@ config SPI_ASPEED_SMC
- 	  and support for the SPI flash memory controller (SPI) for
- 	  the host firmware. The implementation only supports SPI NOR.
- 
--config SPI_CADENCE_QUADSPI
--	tristate "Cadence Quad SPI controller"
--	depends on OF && (ARM || ARM64 || COMPILE_TEST)
--	help
--	  Enable support for the Cadence Quad SPI Flash controller.
--
--	  Cadence QSPI is a specialized controller for connecting an SPI
--	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
--	  device with a Cadence QSPI controller and want to access the
--	  Flash as an MTD device.
--
- config SPI_HISI_SFC
- 	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/mtd/spi-nor/controllers/Makefile b/drivers/mtd/spi-nor/controllers/Makefile
-index 46e6fbe586e3..e7abba491d98 100644
---- a/drivers/mtd/spi-nor/controllers/Makefile
-+++ b/drivers/mtd/spi-nor/controllers/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
--obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
- obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 17e7e4afc0fc..15f308571163 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -200,6 +200,17 @@ config SPI_CADENCE
- 	  This selects the Cadence SPI controller master driver
- 	  used by Xilinx Zynq and ZynqMP.
- 
-+config SPI_CADENCE_QUADSPI
-+	tristate "Cadence Quad SPI controller"
-+	depends on OF && (ARM || ARM64 || COMPILE_TEST)
-+	help
-+	  Enable support for the Cadence Quad SPI Flash controller.
-+
-+	  Cadence QSPI is a specialized controller for connecting an SPI
-+	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
-+	  device with a Cadence QSPI controller and want to access the
-+	  Flash as an MTD device.
-+
- config SPI_CLPS711X
- 	tristate "CLPS711X host SPI controller"
- 	depends on ARCH_CLPS711X || COMPILE_TEST
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 889368f4ad53..f03834d1d312 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_SPI_BCM_QSPI)		+= spi-iproc-qspi.o spi-brcmstb-qspi.o spi-bcm-qspi.
- obj-$(CONFIG_SPI_BITBANG)		+= spi-bitbang.o
- obj-$(CONFIG_SPI_BUTTERFLY)		+= spi-butterfly.o
- obj-$(CONFIG_SPI_CADENCE)		+= spi-cadence.o
-+obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= spi-cadence-quadspi.o
- obj-$(CONFIG_SPI_CLPS711X)		+= spi-clps711x.o
- obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
- obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
-diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-similarity index 99%
-rename from drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-rename to drivers/spi/spi-cadence-quadspi.c
-index d788692efc55..de009e44f2aa 100644
---- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Driver for Cadence QSPI Controller
-- *
-- * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-- * Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-- * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-- */
-+//
-+// Driver for Cadence QSPI Controller
-+//
-+// Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-+// Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-+// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-+
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
--- 
-2.26.2
-
+Guenter
