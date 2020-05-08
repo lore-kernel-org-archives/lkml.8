@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91557C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0B9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA4920736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C5B20736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgEHHUs (ORCPT
+        id S1727105AbgEHHUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:20:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59166 "EHLO inva021.nxp.com"
+        Fri, 8 May 2020 03:20:54 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59230 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgEHHUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:46 -0400
+        id S1726809AbgEHHUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:20:48 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 469232012D3;
-        Fri,  8 May 2020 09:20:45 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8AA212012D8;
+        Fri,  8 May 2020 09:20:46 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3A87320096A;
-        Fri,  8 May 2020 09:20:45 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E8182012D6;
+        Fri,  8 May 2020 09:20:46 +0200 (CEST)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A53FD204BD;
-        Fri,  8 May 2020 09:20:44 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F1514204BD;
+        Fri,  8 May 2020 09:20:45 +0200 (CEST)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     alex.williamson@redhat.com, kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
         bharatb.linux@gmail.com, Diana Craciun <diana.craciun@oss.nxp.com>,
         Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v2 3/9] vfio/fsl-mc: Implement VFIO_DEVICE_GET_INFO ioctl
-Date:   Fri,  8 May 2020 10:20:33 +0300
-Message-Id: <20200508072039.18146-4-diana.craciun@oss.nxp.com>
+Subject: [PATCH v2 5/9] vfio/fsl-mc: Allow userspace to MMAP fsl-mc device MMIO regions
+Date:   Fri,  8 May 2020 10:20:35 +0300
+Message-Id: <20200508072039.18146-6-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
 References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
@@ -45,50 +45,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow userspace to get fsl-mc device info (number of regions
-and irqs).
+Allow userspace to mmap device regions for direct access of
+fsl-mc devices.
 
 Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
 Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 60 ++++++++++++++++++++++-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  2 +
+ 2 files changed, 60 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index ea301ba81225..8a4d3203b176 100644
+index c162fa27c02c..a92c6c97c29a 100644
 --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
 +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -33,10 +33,29 @@ static void vfio_fsl_mc_release(void *device_data)
- static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
- 			      unsigned long arg)
+@@ -33,7 +33,11 @@ static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+ 
+ 		vdev->regions[i].addr = res->start;
+ 		vdev->regions[i].size = PAGE_ALIGN((resource_size(res)));
+-		vdev->regions[i].flags = 0;
++		vdev->regions[i].flags = VFIO_REGION_INFO_FLAG_MMAP;
++		vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_READ;
++		if (!(mc_dev->regions[i].flags & IORESOURCE_READONLY))
++			vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_WRITE;
++		vdev->regions[i].type = mc_dev->regions[i].flags & IORESOURCE_BITS;
+ 	}
+ 
+ 	vdev->num_regions = mc_dev->obj_desc.region_count;
+@@ -164,9 +168,61 @@ static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
+ 	return -EINVAL;
+ }
+ 
++static int vfio_fsl_mc_mmap_mmio(struct vfio_fsl_mc_region region,
++				 struct vm_area_struct *vma)
++{
++	u64 size = vma->vm_end - vma->vm_start;
++	u64 pgoff, base;
++
++	pgoff = vma->vm_pgoff &
++		((1U << (VFIO_FSL_MC_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
++	base = pgoff << PAGE_SHIFT;
++
++	if (region.size < PAGE_SIZE || base + size > region.size)
++		return -EINVAL;
++
++	if (!(region.type & VFIO_DPRC_REGION_CACHEABLE))
++		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
++
++	vma->vm_pgoff = (region.addr >> PAGE_SHIFT) + pgoff;
++
++	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
++			       size, vma->vm_page_prot);
++}
++
+ static int vfio_fsl_mc_mmap(void *device_data, struct vm_area_struct *vma)
  {
-+	unsigned long minsz;
+-	return -EINVAL;
 +	struct vfio_fsl_mc_device *vdev = device_data;
 +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++	int index;
 +
- 	switch (cmd) {
- 	case VFIO_DEVICE_GET_INFO:
- 	{
--		return -ENOTTY;
-+		struct vfio_device_info info;
++	index = vma->vm_pgoff >> (VFIO_FSL_MC_OFFSET_SHIFT - PAGE_SHIFT);
 +
-+		minsz = offsetofend(struct vfio_device_info, num_irqs);
++	if (vma->vm_end < vma->vm_start)
++		return -EINVAL;
++	if (vma->vm_start & ~PAGE_MASK)
++		return -EINVAL;
++	if (vma->vm_end & ~PAGE_MASK)
++		return -EINVAL;
++	if (!(vma->vm_flags & VM_SHARED))
++		return -EINVAL;
++	if (index >= vdev->num_regions)
++		return -EINVAL;
 +
-+		if (copy_from_user(&info, (void __user *)arg, minsz))
-+			return -EFAULT;
++	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_MMAP))
++		return -EINVAL;
 +
-+		if (info.argsz < minsz)
-+			return -EINVAL;
++	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_READ)
++			&& (vma->vm_flags & VM_READ))
++		return -EINVAL;
 +
-+		info.flags = VFIO_DEVICE_FLAGS_FSL_MC;
-+		info.num_regions = mc_dev->obj_desc.region_count;
-+		info.num_irqs = mc_dev->obj_desc.irq_count;
++	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_WRITE)
++			&& (vma->vm_flags & VM_WRITE))
++		return -EINVAL;
 +
-+		return copy_to_user((void __user *)arg, &info, minsz) ?
-+			-EFAULT : 0;
- 	}
- 	case VFIO_DEVICE_GET_REGION_INFO:
- 	{
++	vma->vm_private_data = mc_dev;
++
++	return vfio_fsl_mc_mmap_mmio(vdev->regions[index], vma);
+ }
+ 
+ static const struct vfio_device_ops vfio_fsl_mc_ops = {
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+index 818dfd3df4db..89d2e2a602d8 100644
+--- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+@@ -15,6 +15,8 @@
+ #define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
+ 	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
+ 
++#define VFIO_DPRC_REGION_CACHEABLE	0x00000001
++
+ struct vfio_fsl_mc_region {
+ 	u32			flags;
+ 	u32			type;
 -- 
 2.17.1
 
