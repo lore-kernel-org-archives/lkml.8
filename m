@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B30C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B3FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F9F20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49973206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943666;
-	bh=ZivkGTBaGUqhzvYxAvU+KLi5kFmeSjgp3JYHkZDZZOA=;
+	s=default; t=1588943669;
+	bh=gVOuxZt4Sck/KrozpjIzTyUjv84dPeWtgnH6bd5twlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeVqDLQ3BqSOzYC012o8/8+rJ7/ID4r5vjEEyay7H8w4UGLlc+12ubXQH1+cRTtzI
-	 VpGgtwLBlMZRRxStK85zsVfXwUmbWRQBMcl7yF95c0OSes67aNasmZfl51G7d3wAHU
-	 Tlfvxf7YP+hSQyqA6gnLo8RJSpG1UP5qOzLiPKZE=
+	b=VLir4nEKarC61zPWwZQ+7SWRa+jBhsTlHTuquJiWZeMEBQjatatlz+xeAf/oAfF1j
+	 7ELzsWmzTM3izy+fZ9FY/LJuTNd3O9zz535tMbuwyOWJpXWQcdsq3M5lUO2Bje6+QK
+	 v7awKPs3KWKjti1eVtz9T3apNARacJ3r+oOLky6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgEHMrJ (ORCPT
+        id S1730027AbgEHNO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:14:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgEHMqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:51 -0400
+        id S1728853AbgEHMrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3FAD2145D;
-        Fri,  8 May 2020 12:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6C662495E;
+        Fri,  8 May 2020 12:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942011;
-        bh=ZivkGTBaGUqhzvYxAvU+KLi5kFmeSjgp3JYHkZDZZOA=;
+        s=default; t=1588942026;
+        bh=gVOuxZt4Sck/KrozpjIzTyUjv84dPeWtgnH6bd5twlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPntf+yKxi2sMxsSQid/zQkMNvcupj6jSVqij4wg2mPHr/uO6dSbmnWINhngbJcgD
-         slQv5VttvedhTtmQDfUHbYyepQkut6v7eBi6UEelRf1z9lOH5Ak0+qIY/9OvBHU0/S
-         G9NHJYa3NkAJXR2kif0I4eR+fRZPzgeZbAYtLJzg=
+        b=hmR+WC8nl3vbPuAwJEHQsrKzAcFYIj83/C+h5aqVLxkwfy356v/Lsq72WZnVbyYzM
+         h2ewRBNcMxGZKBPo3qSx+gXDg8R74v1SYHOsGWgBxgx+ECoXgQBMq/BpMXI4yj0Suf
+         eEGyqLgnQU7r5Wg08KlRutbb2TySRGeN/fv5o5Tw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 260/312] cxgbi: fix uninitialized flowi6
-Date:   Fri,  8 May 2020 14:34:11 +0200
-Message-Id: <20200508123142.709119387@linuxfoundation.org>
+Subject: [PATCH 4.4 266/312] net: ethernet: stmmac: dwmac-sti: fix probe error path
+Date:   Fri,  8 May 2020 14:34:17 +0200
+Message-Id: <20200508123143.145521242@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,32 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 3d6d30d60abb19ba9a20e53ce65b18a9c148fcd1 upstream.
+commit 0a9e22715ee384cf2a714c28f24ce8881b9fd815 upstream.
 
-ip6_route_output looks into different fields in the passed flowi6 structure,
-yet cxgbi passes garbage in nearly all those fields. Zero the structure out
-first.
+Make sure to disable clocks before returning on late probe errors.
 
-Fixes: fc8d0590d9142 ("libcxgbi: Add ipv6 api to driver")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Fixes: 8387ee21f972 ("stmmac: dwmac-sti: turn setup callback into a
+probe function")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/cxgbi/libcxgbi.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -692,6 +692,7 @@ static struct rt6_info *find_route_ipv6(
- {
- 	struct flowi6 fl;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
+@@ -365,7 +365,16 @@ static int sti_dwmac_probe(struct platfo
+ 	if (ret)
+ 		return ret;
  
-+	memset(&fl, 0, sizeof(fl));
- 	if (saddr)
- 		memcpy(&fl.saddr, saddr, sizeof(struct in6_addr));
- 	if (daddr)
+-	return stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
++	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
++	if (ret)
++		goto err_dwmac_exit;
++
++	return 0;
++
++err_dwmac_exit:
++	sti_dwmac_exit(pdev, plat_dat->bsp_priv);
++
++	return ret;
+ }
+ 
+ static const struct sti_dwmac_of_data stih4xx_dwmac_data = {
 
 
