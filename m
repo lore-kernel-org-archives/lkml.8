@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19C2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA587C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB1A20736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4ED20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgEHHUw (ORCPT
+        id S1727771AbgEHHU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:20:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56714 "EHLO inva020.nxp.com"
+        Fri, 8 May 2020 03:20:59 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59292 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgEHHUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:47 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9658D1A1416;
-        Fri,  8 May 2020 09:20:44 +0200 (CEST)
+        id S1727051AbgEHHUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:20:51 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6785D2012CB;
+        Fri,  8 May 2020 09:20:48 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A0111A1286;
-        Fri,  8 May 2020 09:20:44 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A67C2012CD;
+        Fri,  8 May 2020 09:20:48 +0200 (CEST)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 09CBB204BD;
-        Fri,  8 May 2020 09:20:43 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CE7FD204BD;
+        Fri,  8 May 2020 09:20:47 +0200 (CEST)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     alex.williamson@redhat.com, kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
         bharatb.linux@gmail.com, Diana Craciun <diana.craciun@oss.nxp.com>,
         Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v2 2/9] vfio/fsl-mc: Scan DPRC objects on vfio-fsl-mc driver bind
-Date:   Fri,  8 May 2020 10:20:32 +0300
-Message-Id: <20200508072039.18146-3-diana.craciun@oss.nxp.com>
+Subject: [PATCH v2 8/9] vfio/fsl-mc: trigger an interrupt via eventfd
+Date:   Fri,  8 May 2020 10:20:38 +0300
+Message-Id: <20200508072039.18146-9-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
 References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
@@ -45,169 +45,276 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DPRC (Data Path Resource Container) device is a bus device and has
-child devices attached to it. When the vfio-fsl-mc driver is probed
-the DPRC is scanned and the child devices discovered and initialized.
+This patch allows to set an eventfd for fsl-mc device interrupts
+and also to trigger the interrupt eventfd from userspace for testing.
+
+All fsl-mc device interrupts are MSIs. The MSIs are allocated from
+the MSI domain only once per DPRC and used by all the DPAA2 objects.
+The interrupts are managed by the DPRC in a pool of interrupts. Each
+device requests interrupts from this pool. The pool is allocated
+when the first virtual device is setting the interrupts.
+The pool of interrupts is protected by a lock.
+
+The DPRC has an interrupt of its own which indicates if the DPRC
+contents have changed. However, currently, the contents of a DPRC
+assigned to the guest cannot be changed at runtime, so this interrupt
+is not configured.
 
 Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
 Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 106 ++++++++++++++++++++++
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
- 2 files changed, 107 insertions(+)
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c         |  18 ++-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 160 +++++++++++++++++++++-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  11 +-
+ 3 files changed, 186 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index 8b53c2a25b32..ea301ba81225 100644
+index 68b206f6db6f..ec8ab85d54d6 100644
 --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
 +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -15,6 +15,8 @@
- 
- #include "vfio_fsl_mc_private.h"
- 
-+static struct fsl_mc_driver vfio_fsl_mc_driver;
-+
- static int vfio_fsl_mc_open(void *device_data)
+@@ -149,12 +149,28 @@ static int vfio_fsl_mc_open(void *device_data)
+ static void vfio_fsl_mc_release(void *device_data)
  {
- 	if (!try_module_get(THIS_MODULE))
-@@ -84,6 +86,69 @@ static const struct vfio_device_ops vfio_fsl_mc_ops = {
- 	.mmap		= vfio_fsl_mc_mmap,
- };
+ 	struct vfio_fsl_mc_device *vdev = device_data;
++	int ret;
  
-+static int vfio_fsl_mc_bus_notifier(struct notifier_block *nb,
-+				    unsigned long action, void *data)
-+{
-+	struct vfio_fsl_mc_device *vdev = container_of(nb,
-+					struct vfio_fsl_mc_device, nb);
-+	struct device *dev = data;
-+	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-+	struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
-+
-+	if (action == BUS_NOTIFY_ADD_DEVICE &&
-+	    vdev->mc_dev == mc_cont) {
-+		mc_dev->driver_override = kasprintf(GFP_KERNEL, "%s",
-+						    vfio_fsl_mc_ops.name);
-+		dev_info(dev, "Setting driver override for device in dprc %s\n",
-+			 dev_name(&mc_cont->dev));
-+	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
-+		vdev->mc_dev == mc_cont) {
-+		struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(dev->driver);
-+
-+		if (mc_drv && mc_drv != &vfio_fsl_mc_driver)
-+			dev_warn(dev, "Object %s bound to driver %s while DPRC bound to vfio-fsl-mc\n",
-+				 dev_name(dev), mc_drv->driver.name);
-+		}
-+
-+	return 0;
-+}
-+
-+static int vfio_fsl_mc_init_device(struct vfio_fsl_mc_device *vdev)
-+{
-+	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+	int ret = 0;
-+
-+	/* Non-dprc devices share mc_io from parent */
-+	if (!is_fsl_mc_bus_dprc(mc_dev)) {
-+		struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
-+
-+		mc_dev->mc_io = mc_cont->mc_io;
-+		return 0;
-+	}
-+
-+	vdev->nb.notifier_call = vfio_fsl_mc_bus_notifier;
-+	ret = bus_register_notifier(&fsl_mc_bus_type, &vdev->nb);
-+	if (ret)
-+		return ret;
-+
-+	/* open DPRC, allocate a MC portal */
-+	ret = dprc_setup(mc_dev);
-+	if (ret < 0) {
-+		dev_err(&mc_dev->dev, "Failed to setup DPRC (error = %d)\n", ret);
-+		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-+		return ret;
-+	}
-+
-+	ret = dprc_scan_container(mc_dev, false);
-+	if (ret < 0) {
-+		dev_err(&mc_dev->dev, "Container scanning failed: %d\n", ret);
-+		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-+		dprc_cleanup(mc_dev);
-+	}
-+
-+	return 0;
-+}
-+
- static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
- {
- 	struct iommu_group *group;
-@@ -112,9 +177,42 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
- 		return ret;
- 	}
+ 	mutex_lock(&vdev->reflck->lock);
  
-+	ret = vfio_fsl_mc_init_device(vdev);
-+	if (ret) {
-+		vfio_iommu_group_put(group, dev);
-+		return ret;
+-	if (!(--vdev->refcnt))
++	if (!(--vdev->refcnt)) {
++		struct fsl_mc_device *mc_dev = vdev->mc_dev;
++		struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
++		struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
++
+ 		vfio_fsl_mc_regions_cleanup(vdev);
+ 
++		/* reset the device before cleaning up the interrupts */
++		ret = dprc_reset_container(mc_cont->mc_io, 0,
++		      mc_cont->mc_handle,
++			  mc_cont->obj_desc.id,
++			  DPRC_RESET_OPTION_NON_RECURSIVE);
++
++		vfio_fsl_mc_irqs_cleanup(vdev);
++
++		fsl_mc_cleanup_irq_pool(mc_cont);
 +	}
 +
- 	return ret;
+ 	mutex_unlock(&vdev->reflck->lock);
+ 
+ 	module_put(THIS_MODULE);
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+index 058aa97aa54a..409f3507fcf3 100644
+--- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+@@ -29,12 +29,149 @@ static int vfio_fsl_mc_irq_unmask(struct vfio_fsl_mc_device *vdev,
+ 	return -EINVAL;
  }
  
-+static int vfio_fsl_mc_device_remove(struct device *dev, void *data)
++int vfio_fsl_mc_irqs_allocate(struct vfio_fsl_mc_device *vdev)
 +{
-+	struct fsl_mc_device *mc_dev;
++	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++	struct vfio_fsl_mc_irq *mc_irq;
++	int irq_count;
++	int ret, i;
 +
-+	WARN_ON(!dev);
-+	mc_dev = to_fsl_mc_device(dev);
-+	if (WARN_ON(!mc_dev))
-+		return -ENODEV;
++    /* Device does not support any interrupt */
++	if (mc_dev->obj_desc.irq_count == 0)
++		return 0;
 +
-+	kfree(mc_dev->driver_override);
-+	mc_dev->driver_override = NULL;
++	/* interrupts were already allocated for this device */
++	if (vdev->mc_irqs)
++		return 0;
 +
-+	/*
-+	 * The device-specific remove callback will get invoked by device_del()
-+	 */
-+	device_del(&mc_dev->dev);
-+	put_device(&mc_dev->dev);
++	irq_count = mc_dev->obj_desc.irq_count;
++
++	mc_irq = kcalloc(irq_count, sizeof(*mc_irq), GFP_KERNEL);
++	if (!mc_irq)
++		return -ENOMEM;
++
++	/* Allocate IRQs */
++	ret = fsl_mc_allocate_irqs(mc_dev);
++	if (ret) {
++		kfree(mc_irq);
++		return ret;
++	}
++
++	for (i = 0; i < irq_count; i++) {
++		mc_irq[i].count = 1;
++		mc_irq[i].flags = VFIO_IRQ_INFO_EVENTFD;
++	}
++
++	vdev->mc_irqs = mc_irq;
 +
 +	return 0;
 +}
 +
-+static void vfio_fsl_mc_cleanup_dprc(struct fsl_mc_device *mc_dev)
++static irqreturn_t vfio_fsl_mc_irq_handler(int irq_num, void *arg)
 +{
-+	device_for_each_child(&mc_dev->dev, NULL, vfio_fsl_mc_device_remove);
-+	dprc_cleanup(mc_dev);
++	struct vfio_fsl_mc_irq *mc_irq = (struct vfio_fsl_mc_irq *)arg;
++
++	eventfd_signal(mc_irq->trigger, 1);
++	return IRQ_HANDLED;
 +}
 +
- static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
++static int vfio_set_trigger(struct vfio_fsl_mc_device *vdev,
++						   int index, int fd)
++{
++	struct vfio_fsl_mc_irq *irq = &vdev->mc_irqs[index];
++	struct eventfd_ctx *trigger;
++	int hwirq;
++	int ret;
++
++	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
++	if (irq->trigger) {
++		free_irq(hwirq, irq);
++		kfree(irq->name);
++		eventfd_ctx_put(irq->trigger);
++		irq->trigger = NULL;
++	}
++
++	if (fd < 0) /* Disable only */
++		return 0;
++
++	irq->name = kasprintf(GFP_KERNEL, "vfio-irq[%d](%s)",
++			    hwirq, dev_name(&vdev->mc_dev->dev));
++	if (!irq->name)
++		return -ENOMEM;
++
++	trigger = eventfd_ctx_fdget(fd);
++	if (IS_ERR(trigger)) {
++		kfree(irq->name);
++		return PTR_ERR(trigger);
++	}
++
++	irq->trigger = trigger;
++
++	ret = request_irq(hwirq, vfio_fsl_mc_irq_handler, 0,
++		  irq->name, irq);
++	if (ret) {
++		kfree(irq->name);
++		eventfd_ctx_put(trigger);
++		irq->trigger = NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
+ 				       unsigned int index, unsigned int start,
+ 				       unsigned int count, u32 flags,
+ 				       void *data)
  {
- 	struct vfio_fsl_mc_device *vdev;
-@@ -124,6 +222,14 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
- 	if (!vdev)
- 		return -EINVAL;
+-	return -EINVAL;
++	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++	int ret, hwirq;
++	struct vfio_fsl_mc_irq *irq;
++	struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
++	struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
++
++	if (start != 0 || count != 1)
++		return -EINVAL;
++
++	mutex_lock(&vdev->reflck->lock);
++	ret = fsl_mc_populate_irq_pool(mc_cont,
++			FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
++	if (ret)
++		goto unlock;
++
++	ret = vfio_fsl_mc_irqs_allocate(vdev);
++	if (ret)
++		goto unlock;
++	mutex_unlock(&vdev->reflck->lock);
++
++	if (!count && (flags & VFIO_IRQ_SET_DATA_NONE))
++		return vfio_set_trigger(vdev, index, -1);
++
++	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
++		s32 fd = *(s32 *)data;
++
++		return vfio_set_trigger(vdev, index, fd);
++	}
++
++	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
++
++	irq = &vdev->mc_irqs[index];
++
++	if (flags & VFIO_IRQ_SET_DATA_NONE) {
++		vfio_fsl_mc_irq_handler(hwirq, irq);
++
++	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
++		u8 trigger = *(u8 *)data;
++
++		if (trigger)
++			vfio_fsl_mc_irq_handler(hwirq, irq);
++	}
++
++	return 0;
++
++unlock:
++	mutex_unlock(&vdev->reflck->lock);
++	return ret;
+ }
  
-+	if (vdev->nb.notifier_call)
-+		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
-+
-+	if (is_fsl_mc_bus_dprc(mc_dev))
-+		vfio_fsl_mc_cleanup_dprc(vdev->mc_dev);
-+
-+	mc_dev->mc_io = NULL;
-+
- 	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
+ int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+@@ -61,3 +198,24 @@ int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
  
- 	return 0;
+ 	return ret;
+ }
++
++/* Free All IRQs for the given MC object */
++void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev)
++{
++	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++	int irq_count = mc_dev->obj_desc.irq_count;
++	int i;
++
++	/* Device does not support any interrupt or the interrupts
++	 * were not configured
++	 */
++	if (mc_dev->obj_desc.irq_count == 0 || !vdev->mc_irqs)
++		return;
++
++	for (i = 0; i < irq_count; i++)
++		vfio_set_trigger(vdev, i, -1);
++
++	fsl_mc_free_irqs(mc_dev);
++	kfree(vdev->mc_irqs);
++	vdev->mc_irqs = NULL;
++}
 diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-index e79cc116f6b8..37d61eaa58c8 100644
+index 40e8cc8d32de..be0cdc35b40c 100644
 --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
 +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -9,6 +9,7 @@
+@@ -17,6 +17,13 @@
  
- struct vfio_fsl_mc_device {
- 	struct fsl_mc_device		*mc_dev;
-+	struct notifier_block        nb;
+ #define VFIO_DPRC_REGION_CACHEABLE	0x00000001
+ 
++struct vfio_fsl_mc_irq {
++	u32         flags;
++	u32         count;
++	struct eventfd_ctx  *trigger;
++	char            *name;
++};
++
+ struct vfio_fsl_mc_reflck {
+ 	struct kref		kref;
+ 	struct mutex		lock;
+@@ -36,7 +43,7 @@ struct vfio_fsl_mc_device {
+ 	u32				num_regions;
+ 	struct vfio_fsl_mc_region	*regions;
+ 	struct vfio_fsl_mc_reflck   *reflck;
+-
++	struct vfio_fsl_mc_irq      *mc_irqs;
  };
  
+ extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+@@ -44,4 +51,6 @@ extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+ 			       unsigned int start, unsigned int count,
+ 			       void *data);
+ 
++void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev);
++
  #endif /* VFIO_FSL_MC_PRIVATE_H */
 -- 
 2.17.1
