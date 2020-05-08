@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A265C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79115C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC802070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDDD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgEHGAK (ORCPT
+        id S1728306AbgEHGAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:00:10 -0400
+        Fri, 8 May 2020 02:00:03 -0400
 Received: from esa1.mentor.iphmx.com ([68.232.129.153]:38783 "EHLO
         esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgEHGAH (ORCPT
+        with ESMTP id S1728288AbgEHGAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:00:07 -0400
-IronPort-SDR: wsVfL+JnYvAfl2qW0+bU5+1GcnnkQwfWKg/SJc0DbqfdlC1JOJu6uvSW1oWaXGtY7CIIa+liiv
- cmOHdzSm0+Ut2sV8Mf37+1/tDrEJ+68yjoOolf46JRRq8hKWi1a3pFnYzMzCdf8ps4j03MbOry
- I9wI66iaboRu5yTILUGTmh6qyHhuFf5/iN2+D1cUjNi38WNPzJNyAHC0nu/vVEHIe5E1AcZg8t
- d8m7SY5tNtsrfJFnMS4/Rx3J+K0T1aGRJ52wsYf9DuSzXaNe7VkIJZW/6Jn+6B9vDMuC8/U1Ad
- jGk=
+        Fri, 8 May 2020 02:00:00 -0400
+IronPort-SDR: LKH6uv88PjcuLwEAWUmiveyRI0K/+QZsDOZX4SyLno19vJh86R6nDqaUaAnhrfvQWiTNi996im
+ iPc2i+QxCNHC2Kjo+XnddvIOu+vs8DgR3H4DU739dARU8B2ZoARV2aeR9JKNZ8WEONO7ZCIM76
+ aczV+9UAfMdrUFk7SvwWl7W16Nec8KZL4etbmQJBLgEkaCp0t07JNaRhvy2YzarrQpvMjRi4di
+ DZV71mIyEDCvZ16YOpGmbsCG6NYBqX9+lL/Pplsy/lIqt2gz5q9XCMHBouAbhH9Vqm8z289aIc
+ jbE=
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="50670162"
+   d="scan'208";a="50670145"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 07 May 2020 22:00:05 -0800
-IronPort-SDR: pN5JCXnsKNku0Kd1SHp203+hkKpRUdwysAHuZpEcV5W8OZldcta3DBfZZUTJfuWjB54KoEKlwp
- RNr6Gt0Ot2BISO3vlhvW3o3tCYTdqRjW40vd4KR3IjP7X2D3J2ZqeSgpx3xX+EyDjFBDwJZ2Gp
- UA5YJenPPW8bMtCrOzP0UvqMpRhKPYXrqTUh4nmB6up1tQouQJ2JI3zkH5AIbEN3vs4EDORmfM
- 6AUI+99w3befZ5e55IpFaA2TzbzJCxOd70jZFlOgLM4GlId5bxiuO9/XQc7pue06tSXSiiSekg
- yJQ=
+  by esa1.mentor.iphmx.com with ESMTP; 07 May 2020 21:59:58 -0800
+IronPort-SDR: ZY1bo96TTNeDvMJvp82DgkEVsM1WLUZ+48EKGl7SnldCKCIpJ1S3FIfOGk/c2X9BclM4Hlax4q
+ cEAqbx80+OCtEZ2jb/ldypRj1SV+aadKTCSgO7cSqQK+5er+5kvRxMywUePBBo7D6HXErj/R2x
+ wrG4wwDUbee1nmwldKfFXNkVmgofFWqXRUDoTLNixNSxDOgiLUo065wiIVl/TRBj6Y50HZjOYk
+ e5NttOFnCoOqsAEuVhq0Jx505vE85yMqqwiP9x3QzaSyAuLNH3CghAqWoShi/rfvrnhESphLBx
+ O0w=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +41,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v11 49/56] Input: Atmel: Improve error handling in mxt_initialize_input_device()
-Date:   Thu, 7 May 2020 22:56:49 -0700
-Message-ID: <20200508055656.96389-50-jiada_wang@mentor.com>
+Subject: [PATCH v11 47/56] Input: Atmel: improve error handling in mxt_initialize()
+Date:   Thu, 7 May 2020 22:56:47 -0700
+Message-ID: <20200508055656.96389-48-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508055656.96389-1-jiada_wang@mentor.com>
 References: <20200508055656.96389-1-jiada_wang@mentor.com>
@@ -56,53 +56,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Deepak Das <deepak_das@mentor.com>
 
-Currently Driver probe continues with a warning message when it
-fails to get the proper multitouch object configurations like
-TouchScreen resolution.
+Currently mxt_initialize() tries to probe bootloader mode
+even if valid bootloader address is not specified.
 
-But Driver probe should fail in case of above scneario because it
-will not behave as expected without the proper touchscreen
-configurations.
+This commit modifies mxt_initialize() to return error
+if Device is not in appmode and bootloader address is
+not specified.
 
-This commit modifies mxt_initialize_input_device() to return error
-when it fails to get the proper touch screen configurations.
+This commit also returns error code from mxt_send_bootloader_cmd()
+in mxt_initialize().
 
 Signed-off-by: Deepak Das <deepak_das@mentor.com>
-Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 58 +++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 83fa2caddeab..92701bf5291f 100644
+index 906da438d5e8..c779cac565a8 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2748,15 +2748,19 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 	case MXT_TOUCH_MULTI_T9:
- 		num_mt_slots = data->T9_reportid_max - data->T9_reportid_min + 1;
- 		error = mxt_read_t9_resolution(data);
--		if (error)
--			dev_warn(dev, "Failed to initialize T9 resolution\n");
+@@ -716,17 +716,13 @@ static int mxt_lookup_bootloader_address(struct mxt_data *data, bool retry)
+ 	return 0;
+ }
+ 
+-static int mxt_probe_bootloader(struct mxt_data *data, bool alt_address)
++static int mxt_probe_bootloader(struct mxt_data *data)
+ {
+ 	struct device *dev = &data->client->dev;
+ 	int error;
+ 	u8 buf[3];
+ 	bool crc_failure, extended_id;
+ 
+-	error = mxt_lookup_bootloader_address(data, alt_address);
+-	if (error)
+-		return error;
+-
+ 	/* Check bootloader status and version information */
+ 	error = mxt_bootloader_read(data, buf, sizeof(buf));
+ 	if (error)
+@@ -2909,6 +2905,32 @@ static void mxt_config_cb(const struct firmware *cfg, void *ctx)
+ 	release_firmware(cfg);
+ }
+ 
++static int mxt_bootloader_status(struct mxt_data *data)
++{
++	struct i2c_client *client = data->client;
++	int error;
++
++	error = mxt_lookup_bootloader_address(data, false);
++	if (error) {
++		dev_info(&client->dev,
++			 "Bootloader address is not specified\n");
++		return error;
++	}
++	/* Check bootloader state */
++	error = mxt_probe_bootloader(data);
++	if (error) {
++		dev_info(&client->dev, "Trying alternate bootloader address\n");
++		mxt_lookup_bootloader_address(data, true);
++		error = mxt_probe_bootloader(data);
 +		if (error) {
-+			dev_err(dev, "Failed to initialize T9 resolution\n");
++			dev_err(&client->dev,
++				"Chip is not in appmode or bootloader mode\n");
 +			return error;
 +		}
- 		break;
++	}
++	return 0;
++}
++
+ static int mxt_initialize(struct mxt_data *data)
+ {
+ 	struct i2c_client *client = data->client;
+@@ -2920,16 +2942,13 @@ static int mxt_initialize(struct mxt_data *data)
+ 		if (!error)
+ 			break;
  
- 	case MXT_TOUCH_MULTITOUCHSCREEN_T100:
- 		num_mt_slots = data->num_touchids;
- 		error = mxt_read_t100_config(data);
--		if (error)
--			dev_warn(dev, "Failed to read T100 config\n");
-+		if (error) {
-+			dev_err(dev, "Failed to read T100 config\n");
+-		/* Check bootloader state */
+-		error = mxt_probe_bootloader(data, false);
+-		if (error) {
+-			dev_info(&client->dev, "Trying alternate bootloader address\n");
+-			error = mxt_probe_bootloader(data, true);
+-			if (error) {
+-				/* Chip is not in appmode or bootloader mode */
+-				return error;
+-			}
+-		}
++		dev_info(&client->dev,
++			 "info block read failed (%d), so try bootloader method\n",
++			 error);
++
++		error = mxt_bootloader_status(data);
++		if (error)
 +			return error;
-+		}
- 		break;
  
- 	default:
+ 		/* OK, we are in bootloader, see if we can recover */
+ 		if (++recovery_attempts > 1) {
+@@ -2943,7 +2962,9 @@ static int mxt_initialize(struct mxt_data *data)
+ 		}
+ 
+ 		/* Attempt to exit bootloader into app mode */
+-		mxt_send_bootloader_cmd(data, false);
++		error = mxt_send_bootloader_cmd(data, false);
++		if (error)
++			return error;
+ 		msleep(MXT_FW_RESET_TIME);
+ 	}
+ 
+@@ -3630,8 +3651,11 @@ static int mxt_enter_bootloader(struct mxt_data *data)
+ 
+ 		msleep(MXT_RESET_TIME);
+ 
++		ret = mxt_lookup_bootloader_address(data, false);
++		if (ret)
++			return ret;
+ 		/* Do not need to scan since we know family ID */
+-		ret = mxt_probe_bootloader(data, 0);
++		ret = mxt_probe_bootloader(data);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
 2.17.1
 
