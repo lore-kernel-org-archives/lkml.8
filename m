@@ -2,89 +2,78 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CDEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3730A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA2020661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdKPI5hc"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="myzmSBT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgEHNmw (ORCPT
+        id S1727952AbgEHNnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:42:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726736AbgEHNmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:42:51 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFBFC05BD43;
-        Fri,  8 May 2020 06:42:51 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id a8so954968ybs.3;
-        Fri, 08 May 2020 06:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pBzNAF/rm7qf9JD/mlsQ0iA9eh+VbbrEwR4tF97TGU0=;
-        b=BdKPI5hcsGYeVJ2qAcgoxudFb/SH8PYr5sEVthDkxf5m2TDBAz2c0Q2KnFBcs9vAye
-         KgE0EKzHjCXC6wRWMk6S/U/UHJXgz7Za12YEeGR7FXT5T6kJYFbWLnK80VeUg+6c/7yb
-         VK4Wd6O2kVyvPLz1Z11l2e7CtJWaVXrKJ8Icu4pbptqGD71IqTu/m/nS/5l/pGmCz87B
-         L/6EFRMpVUfAkUMPOM5ZRt1AZjfSopnzh6aXTDK23EhWaM2e6RRsISDF1GoHOpvx4iON
-         UbaiWxelgTSYwLNqty6k+rNaj7eA1fztdFYvfOORBjgF4dzGzs/MtVcbkOPy99H+19jO
-         b9Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pBzNAF/rm7qf9JD/mlsQ0iA9eh+VbbrEwR4tF97TGU0=;
-        b=iuUSYI+Lzey6Jm69wzBGo4DCUWf/6fKHWKPelKlA1KLvaQc00vXf+a9E2ZA9M1lSx1
-         EsyOze9JUrNK1qm/ZI2o/pe65xBG6cYTY2fmQy/E4sHRmqUNAboMKgRYJbbUUqTNCg5A
-         Eii0ycbMLrNgzOyd0/iNFVC5pKYmmiPXG5pUGwBWAZHgktKV3/2CQ6mP9my6DXglQi+N
-         yfGbotVXk07+x8rsJ6yBiLZlp/plxgzAE0E2MhTOWLLPO5pxz6irKVTQp6MtAUPkXhRQ
-         ZzIm7B6fg3HIftclveVVB7e9dO9Ym6Qo+00jU5SggSodYKWfQ3DevH/io6fURdjvuABB
-         Z1Ug==
-X-Gm-Message-State: AGi0Pua7lQy9golfdHjIGddrL8EoPGuOtyORehwNWaFlAQoRwFw8b7NA
-        y2dEdcWAbJ/em0p3TexpbobGK4ai5V9U3HstyC0=
-X-Google-Smtp-Source: APiQypIX5kfqFGCBsLkvNmM3MXcMOc1ZzFCbC1vb3bZA4gU/cyEFJAiTo63nwaUf5Ac11beleDD7UJGrQ7Oe237J/X8=
-X-Received: by 2002:a25:487:: with SMTP id 129mr4557690ybe.1.1588945370813;
- Fri, 08 May 2020 06:42:50 -0700 (PDT)
+        Fri, 8 May 2020 09:43:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40931 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHNnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:43:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JWkk2BXVz9sT2;
+        Fri,  8 May 2020 23:43:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588945424;
+        bh=p+YBkyP2GHp01pThlHZu2zNE3/neu24osdVU16EmOus=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=myzmSBT/czcoOa5b0uNfJvnSn0EcensBRxDGTXSXsFZHz7Ctw4cmolttivclZzczn
+         TlU4xQX1sFeEGOftI9Vt/Yg7n9poabHDRrJD9dFFlDt9HOZEqTv21AH+l6TCSACJ+G
+         LzS3HI2pTjb4HspWPolQxP9uBnlTFgDZQ6ylB+dBKG4qPpkcOlxszBgodBCGGUmAFz
+         Q93GiXrPMyhMZQGgNOXOYLEcRd+vvVE96ReVfh9QW0MP4ysX2iPOSugJKl/xbhnJGC
+         +t49vCyjdXj2x+CfQrmiPjxrxBDghm8z3dEzePmFlSG9Pl3oO4Ea39uGSlgu+ZudGZ
+         ayiGjaAF21wwA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Borislav Petkov <bp@alien8.de>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Re: [PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external modules
+In-Reply-To: <20200508113100.GA19436@zn.tnic>
+References: <20200508104922.72565-1-vaibhav@linux.ibm.com> <20200508104922.72565-3-vaibhav@linux.ibm.com> <20200508113100.GA19436@zn.tnic>
+Date:   Fri, 08 May 2020 23:44:00 +1000
+Message-ID: <875zd6czj3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200508083729.5560-1-chris.ruehl@gtsys.com.hk>
- <20200508083729.5560-2-chris.ruehl@gtsys.com.hk> <CANBLGcwA+=OB-_nOYUijWrDBSkLYhR7_PNG1ewO7LZ-zRVGoxg@mail.gmail.com>
-In-Reply-To: <CANBLGcwA+=OB-_nOYUijWrDBSkLYhR7_PNG1ewO7LZ-zRVGoxg@mail.gmail.com>
-From:   Emil Renner Berthing <emil.renner.berthing@gmail.com>
-Date:   Fri, 8 May 2020 15:42:39 +0200
-Message-ID: <CANBLGcwAhOHVBUrwLat_60D=wwKkXP2==fazQEeJNuB-CizZLQ@mail.gmail.com>
-Subject: Re: [PATCH v0 1/1] spi: spi-rockchip: add support for spi slave_mode
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
-
-On Fri, 8 May 2020 at 15:13, Emil Renner Berthing
-<emil.renner.berthing@gmail.com> wrote:
-> If you do something like this you won't need the temporary num_cs variable:
+Borislav Petkov <bp@alien8.de> writes:
+> On Fri, May 08, 2020 at 04:19:19PM +0530, Vaibhav Jain wrote:
+>> 'seq_buf' provides a very useful abstraction for writing to a string
+>> buffer without needing to worry about it over-flowing. However even
+>> though the API has been stable for couple of years now its stills not
+>> exported to external modules limiting its usage.
+>> 
+>> Hence this patch proposes update to 'seq_buf.c' to mark
+>> seq_buf_printf() which is part of the seq_buf API to be exported to
+>> external GPL modules. This symbol will be used in later parts of this
 >
-> if (of_property_read_u32(np, "num-cs", &master->num_chipselect))
->     master->num_chipselect = 1;
+> What is "external GPL modules"?
 
-Sorry, that should be of_property_read_u16, since num_chipselect is a u16.
+A module that has MODULE_LICENSE("GPL") ?
 
-/Emil
+cheers
