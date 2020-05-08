@@ -2,150 +2,121 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98240C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA72C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6756F21655
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dV7pThsF"
+	by mail.kernel.org (Postfix) with ESMTP id 87082208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgEHE5I (ORCPT
+        id S1726036AbgEHFAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 00:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgEHE5H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 00:57:07 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECBAC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 21:57:07 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id x8so779514qkf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 21:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=x68VNmAINfXid1iNJuaPcuSDsx8kamsfOgqkBmYYLqA=;
-        b=dV7pThsFMm+cFN1gBiT8ezbUUuQVYKGqyrqVQrYkfY7dMTmx7pxxfKk0q07XMZ/Aui
-         M8NQ6FePm12ujIC+Eq3mMKiIkL166CdottUpGDDRQxTMB++3R3LnNbMuRosM2HOC86vS
-         nMj/1Ynz2w8Boix8gTEgtfENTwXX5tWhI0pqbmFGB4re52urwyInSTxV/mqV5IJe8gSv
-         eypQMSJnhKRLor9LmHKO8hdkf0VCcoQx5RM/vwdVvM7CKW65e1sy6LuSgSSzTFPoJ9hG
-         pUXumO1UR3+HR7jjZjwLhszQbmq4NKo+uMl7xWXTw7MacCVUKvyqwbHXpZAB2UAcu71j
-         Dsfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=x68VNmAINfXid1iNJuaPcuSDsx8kamsfOgqkBmYYLqA=;
-        b=jS9XwVyBp/xmudUSZ7+oGBGDmEiy2yaVR0uXvrhHz5F1rtJNFcyRAPmfbs8l2o/Yxk
-         PwPYaTpAaYJU4ms9ggW/KdF7Yg8u+rCxlREem93ZwYm7HNgs+itOGZhjPv/Sedt7MRZD
-         DYGARvSIELDGrMbKC4Etz5G3KHlwDcbJpWP0F0P//zcFN1nDQqj+KvLP+EqnA4Ov1zsK
-         55sQVjDsFruAX+6hckvQ0fu+1nqkBOdrSy0sq4b/wOCks4IpXgtLM+TqUj4LKL/rVBBb
-         psnCOOIjnR/etw8zVitLYUGtENKmmex1LRlImkxa1nd7cqTgwj3aFXqwTzONyyYfwPdB
-         M1QQ==
-X-Gm-Message-State: AGi0PuZaCS8+FHcTxa9TEJ28sQA1DtvccCt36GxcrMwHVSUVpPEIcSMt
-        EiM3lpFYTHsbnOzJ8BGi/Z/VGLTpK/cc
-X-Google-Smtp-Source: APiQypJV+qJuszA8TOzxTGzEn9UtjeKCUmoqpXTv9uF6luzI0zRmyuw8cqOsyFVOPyjJ2Qnoleqr6aV3n7Yb
-X-Received: by 2002:a0c:eb50:: with SMTP id c16mr891878qvq.151.1588913826901;
- Thu, 07 May 2020 21:57:06 -0700 (PDT)
-Date:   Fri,  8 May 2020 14:56:43 +1000
-Message-Id: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH] perf record: Use an eventfd to wakeup when done
-From:   Anand K Mistry <amistry@google.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Anand K Mistry <amistry@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Fri, 8 May 2020 01:00:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:43442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbgEHFAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 01:00:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B83F530E;
+        Thu,  7 May 2020 22:00:11 -0700 (PDT)
+Received: from [10.163.73.155] (unknown [10.163.73.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 946313F71F;
+        Thu,  7 May 2020 22:00:09 -0700 (PDT)
+Subject: Re: [PATCH V3 03/16] arm64/cpufeature: Make doublelock a signed
+ feature in ID_AA64DFR0
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-4-git-send-email-anshuman.khandual@arm.com>
+ <20200505111045.GE19710@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5cfe374b-d4fa-e17a-9fce-4334356caa19@arm.com>
+Date:   Fri, 8 May 2020 10:29:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200505111045.GE19710@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The setting and checking of 'done' contains a rare race where the signal
-handler setting 'done' is run after checking to break the loop, but
-before waiting in evlist__poll(). In this case, the main loop won't wake
-up until either another signal is sent, or the perf data fd causes a
-wake up.
 
-The following simple script can trigger this condition (but you might
-need to run it for several hours):
-for ((i = 0; i >= 0; i++)) ; do
-  echo "Loop $i"
-  delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
-  ./perf record -- sleep 30000000 >/dev/null&
-  pid=$!
-  sleep $delay
-  kill -TERM $pid
-  echo "PID $pid"
-  wait $pid
-done
 
-At some point, the loop will stall. Adding logging, even though perf has
-received the SIGTERM and set 'done = 1', perf will remain sleeping until
-a second signal is sent.
+On 05/05/2020 04:40 PM, Will Deacon wrote:
+> On Sat, May 02, 2020 at 07:03:52PM +0530, Anshuman Khandual wrote:
+>> Double lock feature can have the following possible values.
+>>
+>> 0b0000 - Double lock implemented
+>> 0b1111 - Double lock not implemented
+>>
+>> But in case of a conflict the safe value should be 0b1111. Hence this must
+>> be a signed feature instead. Also change FTR_EXACT to FTR_LOWER_SAFE.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/kernel/cpufeature.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 51386dade423..cba43e4a5c79 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -338,7 +338,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>>  };
+>>  
+>>  static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+>> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_EXACT, 36, 28, 0),
+>> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 36, 28, 0),
+> 
+> Wait, isn't this buggered today? Shouldn't that 28 be a 4? I think we really
 
-Signed-off-by: Anand K Mistry <amistry@google.com>
+Ahh, right. Will fix it.
 
----
+> need to:
+> 
+> 	1. Make it impossible to describe overlapping fields, incomplete
+> 	   registers etc (ideally at build-time)
 
- tools/perf/builtin-record.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+AFICS the _SHIFT defines for a given register must be placed sequentially
+with dummy place holders (4 bit wide) for any missing fields. In that case
+we could just call BUILD_BUG_ON() for any possible breakage or overlap. But
+wondering how and where to loop over these SHIFT values for these registers.
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1ab349abe90469..ce5fc3860131d2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -53,6 +53,7 @@
- #include <unistd.h>
- #include <sched.h>
- #include <signal.h>
-+#include <sys/eventfd.h>
- #include <sys/mman.h>
- #include <sys/wait.h>
- #include <sys/types.h>
-@@ -518,15 +519,19 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
- 
- static volatile int signr = -1;
- static volatile int child_finished;
-+static int done_fd = -1;
- 
- static void sig_handler(int sig)
- {
-+	u64 tmp = 1;
- 	if (sig == SIGCHLD)
- 		child_finished = 1;
- 	else
- 		signr = sig;
- 
- 	done = 1;
-+	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
-+		pr_err("failed to signal wakeup fd\n");
- }
- 
- static void sigsegv_handler(int sig)
-@@ -1424,6 +1429,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	int fd;
- 	float ratio = 0;
- 
-+	done_fd = eventfd(0, EFD_NONBLOCK);
-+	evlist__add_pollfd(rec->evlist, done_fd);
-+
- 	atexit(record__sig_exit);
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGINT, sig_handler);
--- 
-2.26.2.645.ge9eca65c58-goog
+Another way (not build time though) will be to scan through ftr_id_xxx[],
+fetch individual arm64_ftr_bits (assuming there are dummy entries for non
+existing fields) and assert that arm6r_ftr_bits[shift, width] validates
+against the previous arm6r_ftr_bits[shift, width] in an increasing manner.
 
+Either of these methods will require some more thoughts.
+
+> 
+> 	2. Have a macro that for 4-bit fields so you don't have to type '4'
+> 	   all the time
+
+Except for ftr_single32[], all other arm64_ftr_bits entries have the exact
+same shift value (i.e 4). ARM64_FTR_WIDTH sounds good ?
+
+> 
+> Suzuki, any ideas how we can make this a bit more robust?
+> 
+> Will
+>
