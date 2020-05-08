@@ -2,177 +2,129 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF56C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5259DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 561BD208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281CA24958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nc9GrC+d"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tbu/3oWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgEHDsF (ORCPT
+        id S1726825AbgEHDur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 23:48:05 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:44785 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEHDsF (ORCPT
+        Thu, 7 May 2020 23:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEHDur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 23:48:05 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200508034801epoutp0469fd62f2a52b2598e056502c9e6989a0~M8O-hStLj2555625556epoutp04K
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:48:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200508034801epoutp0469fd62f2a52b2598e056502c9e6989a0~M8O-hStLj2555625556epoutp04K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588909681;
-        bh=H3dky0BejFaiWB40srhii5TqB3bg1Vcn1f7mHVdMoX4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Nc9GrC+dMNRy18z4gqUW9HlsMm9HvD2GjBjVOo/l9yNG6rwkPFRvlC5Oyr8ySETqY
-         rufR30SbG+cMJrCf/oTgkLdM+DQvdxtBEOriWsXc6MS/xLKK8pNBbhJr9AhgF3xU7J
-         y5fqLf5w2smzPcMlfeRY1dW+x3eMR6Ns/pKbiJqY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200508034800epcas1p1520d538908c47140a0292440575b1093~M8O_0bBZO2517225172epcas1p16;
-        Fri,  8 May 2020 03:48:00 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49JGWL6pGwzMqYlp; Fri,  8 May
-        2020 03:47:58 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F4.B5.04648.E66D4BE5; Fri,  8 May 2020 12:47:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200508034758epcas1p3f3d5d33ba201ffc9927c9e4e91309bd2~M8O8kjItc3050130501epcas1p37;
-        Fri,  8 May 2020 03:47:58 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200508034758epsmtrp20fd869c5728f67c0757aec4dab885ba8~M8O8jqsiK2028120281epsmtrp2N;
-        Fri,  8 May 2020 03:47:58 +0000 (GMT)
-X-AuditID: b6c32a37-1dbff70000001228-9d-5eb4d66e5681
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.E9.25866.E66D4BE5; Fri,  8 May 2020 12:47:58 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200508034758epsmtip18c3331dd21c34d82042ca6612c31d6d5~M8O8S5fv61798317983epsmtip1R;
-        Fri,  8 May 2020 03:47:58 +0000 (GMT)
-Subject: Re: [PATCH] PM / devfreq: imx: Fix inconsistent IS_ERR and PTR_ERR
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Organization: Samsung Electronics
-Message-ID: <7dc02882-3317-20cc-450c-23abc23d5cb5@samsung.com>
-Date:   Fri, 8 May 2020 12:57:55 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 7 May 2020 23:50:47 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80529C05BD43;
+        Thu,  7 May 2020 20:50:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JGZS6pgTz9sRf;
+        Fri,  8 May 2020 13:50:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588909844;
+        bh=Cmc1FVhoEKlY9s9LgXvIPNjxGWl3kjq2kdUKA+rElg0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Tbu/3oWlfZR1mjXnv3YcFtn8fPEOluy8oRvmFWgRtwSfXDQeR+qA4+NiccqOhIPOY
+         qx29zz3YOITLmF1Q2fUN6mbBMv9Dw01bbh68z+f2G5tZQGpbciSx5EhZKesyZXCvtB
+         fF17nmHg9uu2BJpGS9KcmFjbcfhtPU5X9mK2Du234PEEqkqPInnyM7JcGZ6aWGSx55
+         DXHJstkSYGHbK3lVEbZlcydQ4U6uKc0cbiMT+TegfsQ9dXy/+iq3kVl7snZzr/ArMv
+         3pG0u5BVFMyDoh6GMwZskeO1AaG4BAvLLKIjQzguDAJq0F6lu8/hZo3KXX1yYl0JPQ
+         LHNM5DlBG+DCg==
+Date:   Fri, 8 May 2020 13:50:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
+ tree
+Message-ID: <20200508135038.7b6547bd@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <82fc7219-b9c7-c5fa-10b1-692f6a5ed411@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLJsWRmVeSWpSXmKPExsWy7bCmvm7etS1xBnv/mVg8vOpvsXWPqsWv
-        i9NYLVZN3clicbbpDbvFirsfWS02Pb7GatH1ayWzxeVdc9gsPvceYbS43biCzeLv9k0sFi+2
-        iDvweqw7qOqxc9Zddo9NqzrZPDYvqffY+G4Hk0f/XwOPvi2rGD0+b5IL4IjKtslITUxJLVJI
-        zUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wBulZJoSwxpxQoFJBYXKyk
-        b2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBkClSYkJ3x/dQ+loJF3BW7
-        t91hbWCcwNnFyMkhIWAicWBiG1sXIxeHkMAORonDczaygiSEBD4xSsy56QBhf2aU+H85AKbh
-        /80fjBANuxglmve2skM47xkl1h/YzwxSJSzgLfFgyXYwm01AS2L/ixtgK0QEfjNJvJq7Fayd
-        WWASo8Tm3fvB9vELKEpc/fGYEcTmFbCTWDzvM1g3i4CKxOmrTWC2qECYxMltLVA1ghInZz5h
-        AbE5BewlPi16ywZiMwuIS9x6Mp8JwpaX2P52DjPIMgmBKxwSa1ecZoN4wkXiQ+cqVghbWOLV
-        8S3sELaUxOd3e6FqqiVWnjzCBtHcwSixZf8FqAZjif1LJwNt4ADaoCmxfpc+RFhRYufvuYwQ
-        i/kk3n3tYQUpkRDglehoE4IoUZa4/OAuE4QtKbG4vZNtAqPSLCTvzELywiwkL8xCWLaAkWUV
-        o1hqQXFuemqxYYExcnRvYgQnZS3zHYwbzvkcYhTgYFTi4bX4uDlOiDWxrLgy9xCjBAezkgjv
-        xIotcUK8KYmVValF+fFFpTmpxYcYTYGhPZFZSjQ5H5gx8kriDU2NjI2NLUwMzUwNDZXEeade
-        z4kTEkhPLEnNTk0tSC2C6WPi4JRqYAysVK4tmDPf9eG13devvnPgM5y9xsQ3/45vglF835Gv
-        kxTseIw8yvY9zvhgKF+71Orbs7xlv1JMnnt7Wzu4zjWWbpzjoMed3sUsbHVn8akEfXHTid8D
-        eFhf375x6eCHbbbSHy817L2zY2u7/V6r/+5/tgaJngu6pJ9ssO8nx6elbKEXpZ67NCuxFGck
-        GmoxFxUnAgA6ul2q4AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsWy7bCSnG7etS1xBn0XRC0eXvW32LpH1eLX
-        xWmsFqum7mSxONv0ht1ixd2PrBabHl9jtej6tZLZ4vKuOWwWn3uPMFrcblzBZvF3+yYWixdb
-        xB14PdYdVPXYOesuu8emVZ1sHpuX1HtsfLeDyaP/r4FH35ZVjB6fN8kFcERx2aSk5mSWpRbp
-        2yVwZXw/tY+lYBF3xe5td1gbGCdwdjFyckgImEj8v/mDEcQWEtjBKNH+JwsiLikx7eJR5i5G
-        DiBbWOLw4eIuRi6gkreMEt9/zGUGqREW8JZ4sGQ7mM0moCWx/8UNNpAiEYG/TBItdxexgSSY
-        BSYxSnxenQ/RvY1R4u3jiWAJfgFFias/HoNt5hWwk1g87zPYJBYBFYnTV5vAbFGBMImdSx4z
-        QdQISpyc+YQFxOYUsJf4tOgt1AJ1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYh
-        aZmFpGUBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg6NTS2sG4Z9UHvUOMTByM
-        hxglOJiVRHgnVmyJE+JNSaysSi3Kjy8qzUktPsQozcGiJM77ddbCOCGB9MSS1OzU1ILUIpgs
-        EwenVAPTxVPzZK7UPNGt4xE3u2z+cKZSRfaGEoc3i75dnpnmKFr8xO/E+aVJ9VxVp+ZU/nWt
-        +sEzJURh4dHHFxTO/GJ/lbj6pfz2HCfpnInHJj/8I7nkfsGSZNcptz0m3NexCj8ak2O9cEvL
-        t9vuve7cqf8irsRNnW3NERpoPOdL7Robh+IQDz2/WS/edPu3MvsfORNwi1lUdlGVZlyOtV7R
-        5WJ7Rr+8vLOJNv1B9nK/Xz5Tq6jZnSqnmXy66Azb5ke15+rLpopnPEgTSTs5d46TllvxhX8a
-        m/sq9Ob52u2V2bCg/eq/rWZOgmaqC1yjHrzrPiR97+RXQevX5VeENsstZxcNevuYSXxmLLtP
-        oOGciTeVWIozEg21mIuKEwFWYtzTPQMAAA==
-X-CMS-MailID: 20200508034758epcas1p3f3d5d33ba201ffc9927c9e4e91309bd2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200507130824epcas1p287961e0a2f5019a55ecd1c94772fdfff
-References: <CGME20200507130824epcas1p287961e0a2f5019a55ecd1c94772fdfff@epcas1p2.samsung.com>
-        <20200507131245.GA709@embeddedor>
-        <82fc7219-b9c7-c5fa-10b1-692f6a5ed411@samsung.com>
+Content-Type: multipart/signed; boundary="Sig_/1K3goufP+ySveH8YfPl.3wn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 12:55 PM, Chanwoo Choi wrote:
-> On 5/7/20 10:12 PM, Gustavo A. R. Silva wrote:
->> Fix inconsistent IS_ERR and PTR_ERR in imx_bus_init_icc().
->>
->> The proper pointer to be passed as argument to PTR_ERR() is
->> priv->icc_pdev.
->>
->> This bug was detected with the help of Coccinelle.
->>
->> Fixes: 16c1d2f1b0bd ("PM / devfreq: imx: Register interconnect device")
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  drivers/devfreq/imx-bus.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/devfreq/imx-bus.c b/drivers/devfreq/imx-bus.c
->> index 532e7954032f..4f38455ad742 100644
->> --- a/drivers/devfreq/imx-bus.c
->> +++ b/drivers/devfreq/imx-bus.c
->> @@ -88,8 +88,8 @@ static int imx_bus_init_icc(struct device *dev)
->>  			dev, icc_driver_name, -1, NULL, 0);
->>  	if (IS_ERR(priv->icc_pdev)) {
->>  		dev_err(dev, "failed to register icc provider %s: %ld\n",
->> -				icc_driver_name, PTR_ERR(priv->devfreq));
->> -		return PTR_ERR(priv->devfreq);
->> +				icc_driver_name, PTR_ERR(priv->icc_pdev));
->> +		return PTR_ERR(priv->icc_pdev);
->>  	}
->>  
->>  	return 0;
->>
-> 
-> Applied it. Thanks.
-> 
+--Sig_/1K3goufP+ySveH8YfPl.3wn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I edit the patch title as following:
-- before : PM / devfreq: imx: Fix inconsistent IS_ERR and PTR_ERR
-- after  : PM / devfreq: imx-bus: Fix inconsistent IS_ERR and PTR_ERR
+Hi all,
 
-Thanks.
+Today's linux-next merge of the drm tree got a conflict in:
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+  drivers/gpu/drm/i915/gem/i915_gem_domain.c
+
+between commit:
+
+  47bf7b7a7151 ("drm/i915/gem: Remove object_is_locked assertion from unpin=
+_from_display_plane")
+
+from the drm-intel-fixes tree and commit:
+
+  9da0ea09639f ("drm/i915/gem: Drop cached obj->bind_count")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/gem/i915_gem_domain.c
+index 4f96c8788a2e,af43e82f45c7..000000000000
+--- a/drivers/gpu/drm/i915/gem/i915_gem_domain.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_domain.c
+@@@ -368,7 -368,8 +368,7 @@@ static void i915_gem_object_bump_inacti
+  	struct drm_i915_private *i915 =3D to_i915(obj->base.dev);
+  	struct i915_vma *vma;
+ =20
+- 	if (!atomic_read(&obj->bind_count))
+ -	GEM_BUG_ON(!i915_gem_object_has_pinned_pages(obj));
++ 	if (list_empty(&obj->vma.list))
+  		return;
+ =20
+  	mutex_lock(&i915->ggtt.vm.mutex);
+
+--Sig_/1K3goufP+ySveH8YfPl.3wn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl601w4ACgkQAVBC80lX
+0GwdVAgAmeyPSkyP3akZ3WA4t5E5ZXWpjmKjiUEI39WPVfg7hkbtiilDlJhl4h0L
+y9F2/mGtpCnITUIvX77XJaNLXc//+oTNxbr8k+MzDNbWzf4Gc9ILTbNMh+TuNFCI
+/vgVvGEn/B6GHPCMlZb7fxG+talqbCSz7iDaKzZXVPymuJNO8RhMZ9zzenoRUzNK
+CInTggZTP+D2N71QxZ1qj5VRA/n5yfbxhQiWXap7rgV39ZEtfE6Z/wGTWU4+Y4m6
+B0f8lLTbj8KjFnlkxrWRxQW8nJy0pot2U/1mjHe9zmCP0hRPc8/pKvu6BSb7aqq9
+2Y8tM9yinStAbQb/cNMcyXyraQzHjg==
+=xa1Z
+-----END PGP SIGNATURE-----
+
+--Sig_/1K3goufP+ySveH8YfPl.3wn--
