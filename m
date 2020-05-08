@@ -2,100 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D8BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8069C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6812184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C89524954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588960342;
-	bh=EDs/lYMTR6duIghKPZbNYHj/6gUoXDqvRRCEyYxbEkI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=UKLZ9n2/fDMUY/5DUDZrF4p7Gp5ndqeU1bj01rkmwDllm7A3ldwqY4Vxmj6RvvBaV
-	 B+0mupuO5THH0ONG88HnnVpwUh2ug0Tb4MvEWb3/qHXjKgNOwpCjbPyMRGidsLSIU+
-	 ZblknDiTXaXOAX7pma+hS0G6lPpACprw1au8NmK4=
+	s=default; t=1588960941;
+	bh=yLLUpJk0Z9ZGaLhcLvyYZ1XcJddjocCtFyTjuRCXOrg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XHXRP3mo3YeJ86r31w+x2XdTQDeBNnl+5p02RumhkXFf1F95CymlsJHHinqiim/AD
+	 cDEEf1bQZnHAEfgdIBV1NFaVppVKY1VXwgJ6pS/qb7mOwBBWsa4htCEbGDrzxbDv0i
+	 Iu+fR9Fxs4aIoM3gfSiRXgFVzD0WMxzmmM6ofSHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgEHRwW (ORCPT
+        id S1727770AbgEHSCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 14:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgEHRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:52:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726746AbgEHSCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:02:20 -0400
+Received: from e123331-lin.nice.arm.com (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01225214D8;
-        Fri,  8 May 2020 17:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C054D2184D;
+        Fri,  8 May 2020 18:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588960341;
-        bh=EDs/lYMTR6duIghKPZbNYHj/6gUoXDqvRRCEyYxbEkI=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=xtFHQ65M8//3Kdj9pvdEYPBRc65XqqD98KyVRpHIl5iSz5KGl1sXzJuONIQKV7kCh
-         xaPdSp4CQ5M6gseF88Y8cuya23MlgOMfVkFjj9tlpVWh5/Q1wo+SNF4KLhkTdk5fsR
-         JoMPvJrGnsLwtGyBYtp3OkLUkmK9ZBUaYWA1aDgc=
-Date:   Fri, 08 May 2020 18:52:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <20200507213405.1869430-1-arnd@arndb.de>
-References: <20200507213405.1869430-1-arnd@arndb.de>
-Subject: Re: [PATCH] ASoC: cros_ec_codec: allocate shash_desc dynamically
-Message-Id: <158896033901.2700.3513138380933416589.b4-ty@kernel.org>
+        s=default; t=1588960939;
+        bh=yLLUpJk0Z9ZGaLhcLvyYZ1XcJddjocCtFyTjuRCXOrg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B2UutJ1vKPy8QwuUbmRuzDSjQGb2LrPYMfDoRmxWT57KhFwWx0spsdH6QH0U+yUhd
+         akuMRObfbelrINVrZQNqwGPkT0cOGDxPAfLhwmT1JWUviCPGZVTOHSrAIdLqJypNm4
+         8lednG3x90cJEfXivEqC8BmnUWCTRhsKLfqOPOvk=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joe Perches <joe@perches.com>
+Subject: [GIT PULL 00/15] More EFI changes for v5.8
+Date:   Fri,  8 May 2020 20:01:42 +0200
+Message-Id: <20200508180157.1816-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 23:33:51 +0200, Arnd Bergmann wrote:
-> The wov_hotword_model_put() function has multiple large variables on
-> its stack, the largest of which is the result of SHASH_DESC_ON_STACK().
-> In total, this exceeds the warning limit for 32-bit architectures:
-> 
-> sound/soc/codecs/cros_ec_codec.c:776:12: error: stack frame size of 1152 bytes in function 'wov_hotword_model_put' [-Werror,-Wframe-larger-than=]
-> 
-> The function already has a dynamic crypto_alloc_shash() allocation, so
-> using kmalloc() for the descriptor is correct as well and does not
-> introduce any additional failure scenarios. With this, the stack usage
-> of wov_hotword_model_put() gets reduced to 480 bytes in my test
-> configuration.
+The following changes since commit 4da0b2b7e67524cc206067865666899bc02e1cb0:
 
-Applied to
+  efi/libstub: Re-enable command line initrd loading for x86 (2020-04-25 12:26:32 +0200)
 
-   local tree asoc/for-5.7
+are available in the Git repository at:
 
-Thanks!
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git efi-next
 
-[1/1] ASoC: cros_ec_codec: allocate shash_desc dynamically
-      (no commit info)
+for you to fetch changes up to 4026229934f6ca0cb44af7b9df00e647b2f1f787:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+  efi/libstub: Correct comment typos (2020-05-06 11:27:55 +0200)
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+----------------------------------------------------------------
+More EFI changes for v5.8:
+- Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
+- Simplify and unify initrd loading
+- Parse the builtin command line on x86 (if provided)
+- Some fixes for issues introduced by the first batch of v5.8 changes
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+----------------------------------------------------------------
+Ard Biesheuvel (2):
+      efi/libstub/x86: Work around LLVM ELF quirk build regression
+      efi/libstub: Make efi_printk() input argument const char*
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Arvind Sankar (12):
+      efi/x86: Use correct size for boot_params
+      efi/libstub: Add a helper function to split 64-bit values
+      efi/libstub: Move pr_efi/pr_efi_err into efi namespace
+      efi/x86: Use efi_err for error messages
+      efi/gop: Use efi_err for error messages
+      efi/tpm: Use efi_err for error messages
+      efi/libstub: Upgrade ignored dtb= argument message to error
+      efi/x86: Move command-line initrd loading to efi_main
+      efi/libstub: Unify initrd loading across architectures
+      efi/x86: Support builtin command line
+      efi/libstub: Check return value of efi_parse_options
+      efi/libstub: Fix mixed mode boot issue after macro refactor
 
-Thanks,
-Mark
+Joe Perches (1):
+      efi/libstub: Correct comment typos
+
+ arch/x86/include/asm/efi.h                     |  19 +++-
+ drivers/firmware/efi/libstub/Makefile          |   1 +
+ drivers/firmware/efi/libstub/arm32-stub.c      |  12 +--
+ drivers/firmware/efi/libstub/arm64-stub.c      |  14 +--
+ drivers/firmware/efi/libstub/efi-stub-helper.c |  65 ++++++++++---
+ drivers/firmware/efi/libstub/efi-stub.c        |  63 +++++++------
+ drivers/firmware/efi/libstub/efistub.h         |  48 ++++------
+ drivers/firmware/efi/libstub/fdt.c             |  16 ++--
+ drivers/firmware/efi/libstub/file.c            |  12 +--
+ drivers/firmware/efi/libstub/gop.c             |  16 ++--
+ drivers/firmware/efi/libstub/pci.c             |  10 +-
+ drivers/firmware/efi/libstub/relocate.c        |   4 +-
+ drivers/firmware/efi/libstub/secureboot.c      |   4 +-
+ drivers/firmware/efi/libstub/tpm.c             |   2 +-
+ drivers/firmware/efi/libstub/x86-stub.c        | 122 +++++++++++--------------
+ 15 files changed, 216 insertions(+), 192 deletions(-)
