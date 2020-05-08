@@ -2,86 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2E2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33669C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F00206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0233E2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="dAECvcdK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cG6SbF5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgEHQQv (ORCPT
+        id S1727917AbgEHQRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:16:51 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:50852 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728174AbgEHQQq (ORCPT
+        Fri, 8 May 2020 12:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgEHQPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:16:46 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 1DA522E14C4;
-        Fri,  8 May 2020 19:16:43 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id FUmgX13TVC-GeAWkgPx;
-        Fri, 08 May 2020 19:16:43 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588954603; bh=fBUtwXBek4NM+L2c+v6a5Q30Xgg4O7DzdNaSB/H01/M=;
-        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
-        b=dAECvcdKmUWk2CVnMXeTHO8Vk04t0GhdKk6GVVazxHMmEd4vqdRBdWvIWqkI271c7
-         CSAWWDV/ZA13LhBGUZXu96IhmqX7dtLDQOdPEN9crnTRzNnC73pXVD2TgYv1vXjxGT
-         5ykQhY615zHDuCC3cU53VoEyWgY+W+NlFyLvCwzM=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7008::1:4])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id qhpQEsyI8M-GeWCH2g5;
-        Fri, 08 May 2020 19:16:40 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC 1/8] dcache: show count of hash buckets in sysctl
- fs.dentry-state
-To:     Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894059427.200862.341530589978120554.stgit@buzz>
- <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
-Date:   Fri, 8 May 2020 19:16:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 12:15:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96760C061A0C;
+        Fri,  8 May 2020 09:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=z+5kJZZyByJU3IJf1jfbVMQe+NBGne9Opxw8kiFryiE=; b=cG6SbF5PQ7oinj68xTV0bxGkzU
+        sSFsFa44SLrYmDofMrNmW8/LDzdnOfreAd34wq44I/1C58olU5fTmwxxvc2B3BLkoYp24cMIakjwn
+        DaECxZsQupFliUoUpSvJgMyluftD2dNLF34WVal/3hfin8pJeMaS00hYZT0pweKml+djpcE8eMEX1
+        VemE6evj0iMC5TESsIOKRLOOyJYG5I7PnVDdIt9FC27a9d5Qua4My20QC83rXzH7Zfm/+r1oJlXeU
+        4oxyUY2LxQKfpZN1tlAi/NjGwh64ftFg2BXDbO0lSq8bR+qqkurXuUJryI+ffIUyDPbDDZfLND+9T
+        k2rxQMVw==;
+Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX5f0-0004fd-7i; Fri, 08 May 2020 16:15:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Subject: [PATCH 06/15] rsxx: stop using ->queuedata
+Date:   Fri,  8 May 2020 18:15:08 +0200
+Message-Id: <20200508161517.252308-7-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508161517.252308-1-hch@lst.de>
+References: <20200508161517.252308-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/2020 17.49, Waiman Long wrote:
-> On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
->> Count of buckets is required for estimating average length of hash chains.
->> Size of hash table depends on memory size and printed once at boot.
->>
->> Let's expose nr_buckets as sixth number in sysctl fs.dentry-state
-> 
-> The hash bucket count is a constant determined at boot time. Is there a need to use up one dentry_stat entry for that? Besides one can get 
-> it by looking up the kernel dmesg log like:
-> 
-> [    0.055212] Dentry cache hash table entries: 8388608 (order: 14, 67108864 bytes)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/rsxx/dev.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Grepping logs since boot time is a worst API ever.
+diff --git a/drivers/block/rsxx/dev.c b/drivers/block/rsxx/dev.c
+index 8ffa8260dcafe..6dde80b096c62 100644
+--- a/drivers/block/rsxx/dev.c
++++ b/drivers/block/rsxx/dev.c
+@@ -133,7 +133,7 @@ static void bio_dma_done_cb(struct rsxx_cardinfo *card,
+ 
+ static blk_qc_t rsxx_make_request(struct request_queue *q, struct bio *bio)
+ {
+-	struct rsxx_cardinfo *card = q->queuedata;
++	struct rsxx_cardinfo *card = bio->bi_disk->private_data;
+ 	struct rsxx_bio_meta *bio_meta;
+ 	blk_status_t st = BLK_STS_IOERR;
+ 
+@@ -282,8 +282,6 @@ int rsxx_setup_dev(struct rsxx_cardinfo *card)
+ 		card->queue->limits.discard_alignment   = RSXX_HW_BLK_SIZE;
+ 	}
+ 
+-	card->queue->queuedata = card;
+-
+ 	snprintf(card->gendisk->disk_name, sizeof(card->gendisk->disk_name),
+ 		 "rsxx%d", card->disk_id);
+ 	card->gendisk->major = card->major;
+@@ -304,7 +302,6 @@ void rsxx_destroy_dev(struct rsxx_cardinfo *card)
+ 	card->gendisk = NULL;
+ 
+ 	blk_cleanup_queue(card->queue);
+-	card->queue->queuedata = NULL;
+ 	unregister_blkdev(card->major, DRIVER_NAME);
+ }
+ 
+-- 
+2.26.2
 
-dentry-state shows count of dentries in various states.
-It's very convenient to show count of buckets next to it,
-because this number defines overall scale.
-
-> 
-> Cheers,
-> Longman
-> 
