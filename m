@@ -2,182 +2,442 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB251C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69DC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9169C24955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKFEz8+T"
+	by mail.kernel.org (Postfix) with ESMTP id 9B7F121841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgEHPkZ (ORCPT
+        id S1728311AbgEHPk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgEHPkZ (ORCPT
+        Fri, 8 May 2020 11:40:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42799 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbgEHPk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:40:25 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B1EC061A0C;
-        Fri,  8 May 2020 08:40:24 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l3so1545121edq.13;
-        Fri, 08 May 2020 08:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vTGeP2mp0atDffBVvlfE/CUFeNMcpq4/+i7t1uiSUiI=;
-        b=IKFEz8+THuTorI7NlDH5c3C3yFpz7Wp3L7N5cVUbojS9576edfURlOf6OM+yy+QuQT
-         mVA5Vdgba14Ry91YmN6JwLM1gn0w1pu0rrfpbR4qP21ndJ/XNa+8ena97TLS2i0vfqsX
-         Kd2ROKOcq5rpb7QacY25zzFb3hxAFnk4jBVDL0Mkv8+qk7v46TMWCvLSKbbV98ir/UYf
-         nbF/U88u4HhwzDS5rwVtpY1oxN5e2R/XuMx9R75jFea2kN2B4aeU2PpmsNoeMsF//vRD
-         /KMJCk7J++sWzHapIKMCgt6oR06Nn7Axr+7q6sDY5vNlTSo7+iXaGc+fy0Jt4lNEEhnj
-         B2Ug==
+        Fri, 8 May 2020 11:40:27 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a21so2126834ljb.9;
+        Fri, 08 May 2020 08:40:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vTGeP2mp0atDffBVvlfE/CUFeNMcpq4/+i7t1uiSUiI=;
-        b=dvn7NrdhxnjAORujMXXH/vlO87vmqo4g2wRjRjr5DWuL4c7cFiugoKEwclsgQ5N3Ld
-         xkdciO2yTag16ypJZE9n5+z8x77ynhkWi0Y+/Xc0dk2r1FAa+2C9fGnaspwlMhvWE/A9
-         RZfMGK9iucB5M8oIP4lu2p4C4DzwdS0ep03cQkBodQCiMRH5uxSYnf3whxSYq0u0IFd6
-         oQ3FF1cBZ9li4aY6hONDxGCxzllBRZoe77RJOuykLsckZRuhLMZOespyHCkTta2yW/3o
-         YjmfiLyZPtOoXg2bqVV9fgb+0JbknbnMNOfEL4+GlpJuuWaHENhG8hT3knt9Esy1+zG6
-         I1tg==
-X-Gm-Message-State: AGi0Pua5LqV3gmfPRgls4semBSYkfs5E9bMpvjYFJ9JOm5KshGDlcrXZ
-        ioZXi2+rjNj4eka8KryRYE/pdH0CXMbfLvTzOhY=
-X-Google-Smtp-Source: APiQypJgh+CSGsfjzbXUm6WLw6LglrPUjAcB8Mgfr8b/68JEMJuXWKPusr9zT3nPNaofdDHN9sNzFo+HI6KN9O5ICtk=
-X-Received: by 2002:a50:ef18:: with SMTP id m24mr2577526eds.281.1588952423627;
- Fri, 08 May 2020 08:40:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yWqsXtAkbRWzoX8zzDCQub6cwES0BihqkfsNsJB7ojo=;
+        b=umxmvtv4xFG7LqyXn72DcvTyM/FwaltXwwvPasm6WaiggAcIeFkQHi7r5kXo+M0Pvo
+         YpkkQuG374bYTO9vC1EfBU1+nx05CmfigQZYaXZqG7deMuIDmNgs9rt8GUXXdPegjMOm
+         nYkXaM/1SrfnMFBgF0hu14O2k1YE5bbofwEPce/TyePFJAMGj+D1T0Jqod1xSblluLEf
+         bWl5qdjNstQ5ClDSLPAiAyeiD59FUIn0CJClW2MMPpY8DTIiI0D+aF/L0PBN/O8f5G8j
+         56P13EA1VeeJ1WrrIkY4d0Rz6Q84i6zhoxzQGmi5U+vb0xe2daqFQFokuk5o+VT4G9I7
+         JEQA==
+X-Gm-Message-State: AOAM531/7iBU6krkWXDmtvCCd++9URET0WVBmrtZ0ToUyStC/dB3Rdr3
+        qqZk+9aUFi5ZGZOMpDXAtjw=
+X-Google-Smtp-Source: ABdhPJxsZeD4tRw6TkuHYKqupis7+Nl/mWR+Sj6aQNzI7UdZ7UULLNiDcdr/0YmTSbD+zbuy/HEDVw==
+X-Received: by 2002:a2e:a37b:: with SMTP id i27mr2027590ljn.36.1588952422472;
+        Fri, 08 May 2020 08:40:22 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id t3sm1430140ljo.51.2020.05.08.08.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:40:21 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:39:35 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 01/11] lib: add linear ranges helpers
+Message-ID: <59259bc475e0c800eb4bb163f02528c7c01f7b3a.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org> <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
- <20200507125357.GA31783@willie-the-truck> <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
-In-Reply-To: <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 8 May 2020 08:40:40 -0700
-Message-ID: <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-To:     Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
-> > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
-> > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
-> > > > > Add stall implementation hook to enable stalling
-> > > > > faults on QCOM platforms which supports it without
-> > > > > causing any kind of hardware mishaps. Without this
-> > > > > on QCOM platforms, GPU faults can cause unrelated
-> > > > > GPU memory accesses to return zeroes. This has the
-> > > > > unfortunate result of command-stream reads from CP
-> > > > > getting invalid data, causing a cascade of fail.
-> > >
-> > > I think this came up before, but something about this rationale doesn't add
-> > > up - we're not *using* stalls at all, we're still terminating faulting
-> > > transactions unconditionally; we're just using CFCFG to terminate them with
-> > > a slight delay, rather than immediately. It's really not clear how or why
-> > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
-> > > (or even a documented workaround for something), or might things start
-> > > blowing up again if any other behaviour subtly changes? I'm not dead set
-> > > against adding this, but I'd *really* like to have a lot more confidence in
-> > > it.
-> >
-> > Rob mentioned something about the "bus returning zeroes" before, but I agree
-> > that we need more information so that we can reason about this and maintain
-> > the code as the driver continues to change. That needs to be a comment in
-> > the driver, and I don't think "but android seems to work" is a good enough
-> > justification. There was some interaction with HUPCF as well.
->
-> The issue is that there are multiple parallel memory accesses
-> happening at the same time, for example CP (the cmdstream processor)
-> will be reading ahead and setting things up for the next draw or
-> compute grid, in parallel with some memory accesses from the shader
-> which could trigger a fault.  (And with faults triggered by something
-> in the shader, there are *many* shader threads running in parallel so
-> those tend to generate a big number of faults at the same time.)
->
-> We need either CFCFG or HUPCF, otherwise what I have observed is that
-> while the fault happens, CP's memory access will start returning
-> zero's instead of valid cmdstream data, which triggers a GPU hang.  I
-> can't say whether this is something unique to qcom's implementation of
-> the smmu spec or not.
->
-> *Often* a fault is the result of the usermode gl/vk/cl driver bug,
-> although I don't think that is an argument against fixing this in the
-> smmu driver.. I've been carrying around a local patch to set HUPCF for
-> *years* because debugging usermode driver issues is so much harder
-> without.  But there are some APIs where faults can be caused by the
-> user's app on top of the usermode driver.
->
+Many devices have control registers which control some measurable
+property. Often a register contains control field so that change in
+this field causes linear change in the controlled property. It is not
+a rare case that user wants to give 'meaningful' control values and
+driver needs to convert them to register field values. Even more
+often user wants to 'see' the currently set value - again in
+meaningful units - and driver needs to convert the values it reads
+from register to these meaningful units. Examples of this include:
 
-Also, I'll add to that, a big wish of mine is to have stall with the
-ability to resume later from a wq context.  That would enable me to
-hook in the gpu crash dump handling for faults, which would make
-debugging these sorts of issues much easier.  I think I posted a
-prototype of this quite some time back, which would schedule a worker
-on the first fault (since there are cases where you see 1000's of
-faults at once), which grabbed some information about the currently
-executing submit and some gpu registers to indicate *where* in the
-submit (a single submit could have 100's or 1000's of draws), and then
-resumed the iommu cb.
+- regulators, voltage/current configurations
+- power, voltage/current configurations
+- clk(?) NCOs
 
-(This would ofc eventually be useful for svm type things.. I expect
-we'll eventually care about that too.)
+and maybe others I can't think of right now.
 
-BR,
--R
+Provide a linear_range helper which can do conversion from user value
+to register value 'selector'.
 
->
-> BR,
-> -R
->
-> >
-> > As a template, I'd suggest:
-> >
-> > > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > > > > index 8d1cd54d82a6..d5134e0d5cce 100644
-> > > > > --- a/drivers/iommu/arm-smmu.h
-> > > > > +++ b/drivers/iommu/arm-smmu.h
-> > > > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
-> > > > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
-> > > > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
-> > > > >               int status);
-> >
-> > /*
-> >  * Stall transactions on a context fault, where they will be terminated
-> >  * in response to the resulting IRQ rather than immediately. This should
-> >  * pretty much always be set to "false" as stalling can introduce the
-> >  * potential for deadlock in most SoCs, however it is needed on Qualcomm
-> >  * XXXX because YYYY.
-> >  */
-> >
-> > > > > +    bool stall;
-> >
-> > Hmm, the more I think about this, the more I think this is an erratum
-> > workaround in disguise, in which case this could be better named...
-> >
-> > Will
+The idea here is stolen from regulator framework and patches refactoring
+the regulator helpers to use this are following.
+
+Current implementation does not support inversely proportional ranges
+but it might be useful if we could support also inversely proportional
+ranges?
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/linear_range.h |  48 +++++++
+ lib/Kconfig                  |   3 +
+ lib/Makefile                 |   1 +
+ lib/linear_ranges.c          | 241 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 293 insertions(+)
+ create mode 100644 include/linux/linear_range.h
+ create mode 100644 lib/linear_ranges.c
+
+diff --git a/include/linux/linear_range.h b/include/linux/linear_range.h
+new file mode 100644
+index 000000000000..17b5943727d5
+--- /dev/null
++++ b/include/linux/linear_range.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2020 ROHM Semiconductors */
++
++#ifndef LINEAR_RANGE_H
++#define LINEAR_RANGE_H
++
++#include <linux/types.h>
++
++/**
++ * struct linear_range - table of selector - value pairs
++ *
++ * Define a lookup-table for range of values. Intended to help when looking
++ * for a register value matching certaing physical measure (like voltage).
++ * Usable when increment of one in register always results a constant increment
++ * of the physical measure (like voltage).
++ *
++ * @min:  Lowest value in range
++ * @min_sel: Lowest selector for range
++ * @max_sel: Highest selector for range
++ * @step: Value step size
++ */
++struct linear_range {
++	unsigned int min;
++	unsigned int min_sel;
++	unsigned int max_sel;
++	unsigned int step;
++};
++
++unsigned int linear_range_values_in_range(const struct linear_range *r);
++unsigned int linear_range_values_in_range_array(const struct linear_range *r,
++						int ranges);
++unsigned int linear_range_get_max_value(const struct linear_range *r);
++
++int linear_range_get_value(const struct linear_range *r, unsigned int selector,
++			   unsigned int *val);
++int linear_range_get_value_array(const struct linear_range *r, int ranges,
++				 unsigned int selector, unsigned int *val);
++int linear_range_get_selector_low(const struct linear_range *r,
++				  unsigned int val, unsigned int *selector,
++				  bool *found);
++int linear_range_get_selector_high(const struct linear_range *r,
++				   unsigned int val, unsigned int *selector,
++				   bool *found);
++int linear_range_get_selector_low_array(const struct linear_range *r,
++					int ranges, unsigned int val,
++					unsigned int *selector, bool *found);
++
++#endif
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 5d53f9609c25..8ec05335426c 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -19,6 +19,9 @@ config RAID6_PQ_BENCHMARK
+ 	  Benchmark all available RAID6 PQ functions on init and choose the
+ 	  fastest one.
+ 
++config LINEAR_RANGES
++	tristate
++
+ config PACKING
+ 	bool "Generic bitfield packing and unpacking"
+ 	default n
+diff --git a/lib/Makefile b/lib/Makefile
+index 685aee60de1d..20b9cfdcad69 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -125,6 +125,7 @@ obj-$(CONFIG_DEBUG_LIST) += list_debug.o
+ obj-$(CONFIG_DEBUG_OBJECTS) += debugobjects.o
+ 
+ obj-$(CONFIG_BITREVERSE) += bitrev.o
++obj-$(CONFIG_LINEAR_RANGES) += linear_ranges.o
+ obj-$(CONFIG_PACKING)	+= packing.o
+ obj-$(CONFIG_CRC_CCITT)	+= crc-ccitt.o
+ obj-$(CONFIG_CRC16)	+= crc16.o
+diff --git a/lib/linear_ranges.c b/lib/linear_ranges.c
+new file mode 100644
+index 000000000000..d1336c75ccd7
+--- /dev/null
++++ b/lib/linear_ranges.c
+@@ -0,0 +1,241 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * helpers to map values in a linear range to range index
++ *
++ * Original idea borrowed from regulator framework
++ *
++ * It might be useful if we could support also inversely proportional ranges?
++ * Copyright 2020 ROHM Semiconductors
++ */
++
++#include <linux/errno.h>
++#include <linux/export.h>
++#include <linux/kernel.h>
++#include <linux/linear_range.h>
++
++/**
++ * linear_range_values_in_range - return the amount of values in a range
++ * @r:		pointer to linear range where values are counted
++ *
++ * Compute the amount of values in range pointed by @r. Note, values can
++ * be all equal - range with selectors 0,...,2 with step 0 still contains
++ * 3 values even though they are all equal.
++ *
++ * Return: the amount of values in range pointed by @r
++ */
++unsigned int linear_range_values_in_range(const struct linear_range *r)
++{
++	if (!r)
++		return 0;
++	return r->max_sel - r->min_sel + 1;
++}
++EXPORT_SYMBOL_GPL(linear_range_values_in_range);
++
++/**
++ * linear_range_values_in_range_array - return the amount of values in ranges
++ * @r:		pointer to array of linear ranges where values are counted
++ * @ranges:	amount of ranges we include in computation.
++ *
++ * Compute the amount of values in ranges pointed by @r. Note, values can
++ * be all equal - range with selectors 0,...,2 with step 0 still contains
++ * 3 values even though they are all equal.
++ *
++ * Return: the amount of values in first @ranges ranges pointed by @r
++ */
++unsigned int linear_range_values_in_range_array(const struct linear_range *r,
++						int ranges)
++{
++	int i, values_in_range = 0;
++
++	for (i = 0; i < ranges; i++) {
++		int values;
++
++		values = linear_range_values_in_range(&r[i]);
++		if (!values)
++			return values;
++
++		values_in_range += values;
++	}
++	return values_in_range;
++}
++EXPORT_SYMBOL_GPL(linear_range_values_in_range_array);
++
++/**
++ * linear_range_get_max_value - return the largest value in a range
++ * @r:		pointer to linear range where value is looked from
++ *
++ * Return: the largest value in the given range
++ */
++unsigned int linear_range_get_max_value(const struct linear_range *r)
++{
++	return r->min + (r->max_sel - r->min_sel) * r->step;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_max_value);
++
++/**
++ * linear_range_get_value - fetch a value from given range
++ * @r:		pointer to linear range where value is looked from
++ * @selector:	selector for which the value is searched
++ * @val:	address where found value is updated
++ *
++ * Search given ranges for value which matches given selector.
++ *
++ * Return: 0 on success, -EINVAL given selector is not found from any of the
++ * ranges.
++ */
++int linear_range_get_value(const struct linear_range *r, unsigned int selector,
++			   unsigned int *val)
++{
++	if (r->min_sel > selector || r->max_sel < selector)
++		return -EINVAL;
++
++	*val = r->min + (selector - r->min_sel) * r->step;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_value);
++
++/**
++ * linear_range_get_value_array - fetch a value from array of ranges
++ * @r:		pointer to array of linear ranges where value is looked from
++ * @ranges:	amount of ranges in an array
++ * @selector:	selector for which the value is searched
++ * @val:	address where found value is updated
++ *
++ * Search through an array of ranges for value which matches given selector.
++ *
++ * Return: 0 on success, -EINVAL given selector is not found from any of the
++ * ranges.
++ */
++int linear_range_get_value_array(const struct linear_range *r, int ranges,
++				 unsigned int selector, unsigned int *val)
++{
++	int i;
++
++	for (i = 0; i < ranges; i++)
++		if (r[i].min_sel <= selector && r[i].max_sel >= selector)
++			return linear_range_get_value(&r[i], selector, val);
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_value_array);
++
++/**
++ * linear_range_get_selector_low - return linear range selector for value
++ * @r:		pointer to linear range where selector is looked from
++ * @val:	value for which the selector is searched
++ * @selector:	address where found selector value is updated
++ * @found:	flag to indicate that given value was in the range
++ *
++ * Return selector which which range value is closest match for given
++ * input value. Value is matching if it is equal or smaller than given
++ * value. If given value is in the range, then @found is set true.
++ *
++ * Return: 0 on success, -EINVAL if range is invalid or does not contain
++ * value smaller or equal to given value
++ */
++int linear_range_get_selector_low(const struct linear_range *r,
++				  unsigned int val, unsigned int *selector,
++				  bool *found)
++{
++	*found = false;
++
++	if (r->min > val)
++		return -EINVAL;
++
++	if (linear_range_get_max_value(r) < val) {
++		*selector = r->max_sel;
++		return 0;
++	}
++
++	*found = true;
++
++	if (r->step == 0)
++		*selector = r->min_sel;
++	else
++		*selector = (val - r->min) / r->step + r->min_sel;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_selector_low);
++
++/**
++ * linear_range_get_selector_low_array - return linear range selector for value
++ * @r:		pointer to array of linear ranges where selector is looked from
++ * @ranges:	amount of ranges to scan from array
++ * @val:	value for which the selector is searched
++ * @selector:	address where found selector value is updated
++ * @found:	flag to indicate that given value was in the range
++ *
++ * Scan array of ranges for selector which which range value matches given
++ * input value. Value is matching if it is equal or smaller than given
++ * value. If given value is found to be in a range scanning is stopped and
++ * @found is set true. If a range with values smaller than given value is found
++ * but the range max is being smaller than given value, then the ranges
++ * biggest selector is updated to @selector but scanning ranges is continued
++ * and @found is set to false.
++ *
++ * Return: 0 on success, -EINVAL if range array is invalid or does not contain
++ * range with a value smaller or equal to given value
++ */
++int linear_range_get_selector_low_array(const struct linear_range *r,
++					int ranges, unsigned int val,
++					unsigned int *selector, bool *found)
++{
++	int i;
++	int ret = -EINVAL;
++
++	for (i = 0; i < ranges; i++) {
++		int tmpret;
++
++		tmpret = linear_range_get_selector_low(&r[i], val, selector,
++						       found);
++		if (!tmpret)
++			ret = 0;
++
++		if (*found)
++			break;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_selector_low_array);
++
++/**
++ * linear_range_get_selector_high - return linear range selector for value
++ * @r:		pointer to linear range where selector is looked from
++ * @val:	value for which the selector is searched
++ * @selector:	address where found selector value is updated
++ * @found:	flag to indicate that given value was in the range
++ *
++ * Return selector which which range value is closest match for given
++ * input value. Value is matching if it is equal or higher than given
++ * value. If given value is in the range, then @found is set true.
++ *
++ * Return: 0 on success, -EINVAL if range is invalid or does not contain
++ * value greater or equal to given value
++ */
++int linear_range_get_selector_high(const struct linear_range *r,
++				   unsigned int val, unsigned int *selector,
++				   bool *found)
++{
++	*found = false;
++
++	if (linear_range_get_max_value(r) < val)
++		return -EINVAL;
++
++	if (r->min > val) {
++		*selector = r->min_sel;
++		return 0;
++	}
++
++	*found = true;
++
++	if (r->step == 0)
++		*selector = r->max_sel;
++	else
++		*selector = DIV_ROUND_UP(val - r->min, r->step) + r->min_sel;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(linear_range_get_selector_high);
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
