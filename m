@@ -2,116 +2,222 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF6C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12DFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0BA208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82471208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ow1M+5cp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHTx8S84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgEHKEc (ORCPT
+        id S1726873AbgEHKIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
+        Fri, 8 May 2020 06:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHKEb (ORCPT
+        with ESMTP id S1726083AbgEHKIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:04:31 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D61BC05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:04:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so1168605wra.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 03:04:31 -0700 (PDT)
+        Fri, 8 May 2020 06:08:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A16C05BD43;
+        Fri,  8 May 2020 03:08:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l18so1184099wrn.6;
+        Fri, 08 May 2020 03:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3ahmjo7zWj9jAF2hUJ67B2bDxaSBhv7Y9eLaU0WOfHs=;
-        b=Ow1M+5cpGoKhWIgArtKKdDwzijj4tPOSBLNMT4uEWbCCdOY+v3p+h51Tuyq/2uxqdO
-         qwYA6XIh2oBLvDb5IYdxEienwVhPwBQ6WPyyHW4iy3BTjThXhZRLOqg7rcb2dc3Q4qSM
-         zd+XliY65XMylQmL3UkGsQqEYt+rNjKCcDT8WOPaCNtA/+WxGOHgUy7Q+MZeXre3FEJB
-         Uvz1guxee4h+GfdY5rM5IDKy/68yXPskbFLb7PpMUEwOZTcxRB7nODkAkJGSRhyn/KwL
-         Qu+AxulP295egIYe3FFgQDt+ZxGhz/S4aGq68urvQbL3qqNCvDcYy0Mnqb2ld+Wx+6ei
-         a01g==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cMrXUnaCQ6nb0TNeDE3z+xWlmBXzCBLLvf7b5TeC00M=;
+        b=YHTx8S84AjkknLST+QQrfc6FW2ngA/ciHZ2fjnf3DmCskDVE/lrfqCyF8og4Cj129z
+         KsC822zLkQiWHFgK801nGelUuDMSOqH2WP8FHS6Fn/NtwGd34/ynSNDAlQXxJ1OZa29o
+         hUpTZY7Djkyo/v9PAwLPWGJhm10Q608NpkiM1gsve2ObdiBRUdges4bi9p0aC2LDwCOn
+         d3ersJJnNF/NeuL6lvR/GPlVtVxlIpfhQjHQv85bJsuypdFve/9CCnA1vdtxmm8hLX1G
+         ymuexHRslUdJPEb1vbdjVVtpQMtanNyFyIu8AvfR0PhY4WgSw/mnWGniNlEPXyRFCWe5
+         jadA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3ahmjo7zWj9jAF2hUJ67B2bDxaSBhv7Y9eLaU0WOfHs=;
-        b=kAn9IT7kJldFz0TqXbzMJ+CViZmOPlxJNNtevX88DRkYJRjF1T+87CM/YERnMyIgqe
-         t+88UTm7X6cLl6dWPs/1oggrS2k1JugGiDkOMNhmBvRO4i8whxmG503IyyhftBFFdZV7
-         zh/R7mkDEduvlqzltfsYEh6nH9aFYbaHUKI/cl14yh1Pj+9q/FTuDeUXRd7/Hsg1XhpV
-         gvnB6ekWCfPVuFkdmjOQ+hu0gW9gTg4LKgt5tX7crMae0Tl8r7eihcofXSwgNhSFjYlM
-         SUTzMIzbLDJuU4E0U4EMebfRQLZdbnyWYAzQTGGtE/JWlYwEZ9JKj0kWfGwVk1QqRXLd
-         d4HA==
-X-Gm-Message-State: AGi0PubR2lGaa7gZUmp0N7QGYYE1gsZiVzA2VxF/8bTut0vMLPimgbv1
-        /balpoownsqKmmLjoOi6wNA9DQd9XhY=
-X-Google-Smtp-Source: APiQypLKry7qhaWWoWsKrrbZvd9kXc6HTKRQxi4oXWoq/OWFOW1Rb0C+lIlByPLfibQJKGURGtJt7w==
-X-Received: by 2002:adf:fa92:: with SMTP id h18mr2098339wrr.260.1588932269512;
-        Fri, 08 May 2020 03:04:29 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id c25sm12210763wmb.44.2020.05.08.03.04.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 03:04:28 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:04:25 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        fweisbec@gmail.com, tkjos@google.com, kernel-team@android.com
-Subject: Re: [PATCH 08/14] sched/core: Export runqueues per-cpu array
-Message-ID: <20200508100425.GA239353@google.com>
-References: <20200507181012.29791-1-qperret@google.com>
- <20200507181012.29791-9-qperret@google.com>
- <20200508080759.GL5298@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508080759.GL5298@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cMrXUnaCQ6nb0TNeDE3z+xWlmBXzCBLLvf7b5TeC00M=;
+        b=jHeAvhswyAIZHeTJ/2MfmK+SgHnfcuoaG18Bp0qC4ZdjAXGYKjLqBpyGGI3vgQpyNi
+         td7lFpBbWUyrPBvqu6f6xDbJAI1sGLmcl4fufKJBr0zywjNy3z5i2G/Ep0bSjXwh+GcD
+         TryTSLu7BVTv6h5ZM+RI27IXNdjo713oDEJ5DUtoS1Dlr4aMQrGKnveoeC0zx2GkSMa1
+         TfJ5kOTAJMymi+9v4BT4zOSF5UxjTUtw3m5hwufLdX+5ReHzWcPHjDx5+eePsaRLH86J
+         +dDHQQFiOyabj2DxvOFpMHCdUZK4DLpV6Hvh6fZxQFXZuzWwPFX17/Sg0Y/7MnVgyU/D
+         r6yA==
+X-Gm-Message-State: AGi0PubMBNlygdLIdMj8wlMZ/uGGg6EF+2ecr0tzrWBHgfm0lklfWed7
+        LHlLYlVelvg4zwAksr3aeME/EkuLfU4=
+X-Google-Smtp-Source: APiQypLEt17JB/X+Fw/Poq8HAZrU3IhnvWhHS2sDpGd7T4Csm9vGWOiTN9ucEdO21bX1g+xV1ENvhw==
+X-Received: by 2002:a5d:54c4:: with SMTP id x4mr2175403wrv.73.1588932485577;
+        Fri, 08 May 2020 03:08:05 -0700 (PDT)
+Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.googlemail.com with ESMTPSA id e21sm2178418wrc.1.2020.05.08.03.08.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 03:08:05 -0700 (PDT)
+Message-ID: <201b31e72f545ef46a74c7aa8e9cad8a9a81727e.camel@gmail.com>
+Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
+ Booster(HPB) driver
+From:   Bean Huo <huobean@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        hch@infradead.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cang@codeaurora.org
+Date:   Fri, 08 May 2020 12:08:03 +0200
+In-Reply-To: <38db2ee7-18ff-9263-1cc7-1b9c6f085632@infradead.org>
+References: <20200504142032.16619-1-beanhuo@micron.com>
+         <20200504142032.16619-6-beanhuo@micron.com>
+         <38db2ee7-18ff-9263-1cc7-1b9c6f085632@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 May 2020 at 10:07:59 (+0200), Peter Zijlstra wrote:
-> On Thu, May 07, 2020 at 07:10:06PM +0100, Quentin Perret wrote:
-> > It will be needed by schedutil once modularized, export it.
-> > 
-> > Signed-off-by: Quentin Perret <qperret@google.com>
-> > ---
-> > This is only needed for cpu_rq() -> cpu_bw_dl() in schedutil, so there is
-> > probably an alternative if exporting this isn't desirable.
-> > ---
-> >  kernel/sched/core.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index dbaf3f63df22..537eb45b4274 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -36,6 +36,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
-> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
-> >  
-> >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-> > +EXPORT_SYMBOL_GPL(runqueues);
+On Thu, 2020-05-07 at 18:34 -0700, Randy Dunlap wrote:
+> Hi,
 > 
-> NAK, never going to happen.
+> On 5/4/20 7:20 AM, huobean@gmail.com wrote:
+> > diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+> > index e2005aeddc2d..0224f224a641 100644
+> > --- a/drivers/scsi/ufs/Kconfig
+> > +++ b/drivers/scsi/ufs/Kconfig
+> > @@ -160,3 +160,65 @@ config SCSI_UFS_BSG
+> >  
+> >  	  Select this if you need a bsg device node for your UFS
+> > controller.
+> >  	  If unsure, say N.
+> > +
+> > +config SCSI_UFSHPB
+> > +	bool "UFS Host Performance Booster (EXPERIMENTAL)"
+> > +	depends on SCSI_UFSHCD
+> > +	help
+> > +	  NAND flash-based storage devices, including UFS, have
+> > mechanisms to
+> > +	  translate logical addresses of the IO requests to the
+> > corresponding
+> > +	  physical addresses of the flash storage. Traditionally, this
+> > L2P
+> > +	  mapping data is loaded to the internal SRAM in the storage
+> > controller.
+> > +	  When the capacity of storage is larger, a larger size of SRAM
+> > for the
+> > +	  L2P map data is required. Since increased SRAM size affects
+> > the
+> > +	  manufacturing cost significantly, it is not cost-effective to
+> > allocate
+> > +	  all the amount of SRAM needed to keep all the Logical-address 
+> > to
+> > +	  Physical-address (L2P) map data. Therefore, L2P map data,
+> > which is
+> > +	  required to identify the physical address for the requested
+> > IOs, can
+> > +	  only be partially stored in SRAM from NAND flash. Due to this
+> > partial
+> > +	  loading, accessing the flash address area where the L2P
+> > information
+> > +	  for that address is not loaded in the SRAM can result in
+> > serious
+> > +	  performance degradation.
+> > +
+> > +	  UFS Host Performance Booster (HPB) is a software solution for
+> > the
+> > +	  above problem, which uses the host side system memory as a
+> > cache for
+> > +	  the FTL L2P mapping table. It does not need additional
+> > hardware
+> > +	  support from the host side. By using HPB, the L2P mapping
+> > table can be
+> > +	  read from host memory and stored in host-side memory. when
+> > performing
+> 
+> Should that be: from device memory and stored in host-side memory.
+> ?
+> 
+> Also, s/when/When/
+> 
+> 
+> > +	  the read operation, the corresponding L2P information will be
+> > sent to
+> > +	  the UFS device along with the reading request. Since the L2P
+> > entry is
+> 
+> s/reading/read/
+> 
+> > +	  provided in the read request, UFS device does not have to
+> > load L2P
+> > +	  entry from flash memory to UFS internal SRAM. This will
+> > significantly
+> > +	  improve the read performance.
+> > +
+> > +	  When selected, this feature will be built in the UFS driver.
+> > +
+> > +	  If in doubt, say N.
+> > +
+> > +config UFSHPB_MAX_MEM_SIZE
+> > +	int "UFS HPB maximum memory size per controller (in MiB)"
+> > +	depends on SCSI_UFSHPB
+> > +	default 128
+> > +	range 0 65536
+> > +	help
+> > +	  This parameter defines the maximum UFS HPB memory/cache size
+> > in the
+> > +	  host system. The recommended HPB cache size by the UFS device
+> > can be
+> > +	  calculated from bHPBRegionSize and
+> > wDeviceMaxActiveHPBRegions. The
+> > +	  reference formula can be
+> 
+> s/can be/is/
+> 
+> > +
+> > +		(bHPBRegionSize(in KB) / 4KB) * 8 *
+> > wDeviceMaxActiveHPBRegions.
+> > +
+> > +	  The HPB cache in the host system is used to contain L2P
+> > mapping
+> > +	  entries. If the allocated HPB cache size is lower than what
+> > calculated
+> 
+> 	                                                    than that
+> 
+> > +	  by the above formula, the use of HPB feature may provide
+> > lower
+> > +	  performance advantage. But the system memory resource has the
+> > +	  limitation, we can not let HPB driver allocate its cache at
+> > will
+> > +	  according to the UFS device recommendation, so an appropriate
+> > size of
+> > +	  the cache for HPB should be specified before you choose to
+> > use HPB,
+> > +	  then please enter a non-zero positive integer value.
+> > +
+> > +	  Nevertheless, if you want to leave this to the HPB driver,
+> > and let the
+> > +	  HPB driver allocate the HPB cache based on the recommendation
+> > of the
+> > +	  UFS device. Just give 0 value to this parameter.
+> > +
+> > +	  Leave the default value if unsure.
+> 
+> thanks.
 
-Well, I should have seen that one coming :-)
 
-As mentioned in the commit message, we might be able to work around.
-I'll cook something for v2.
+Hi Randy
+Thanks for your review. I will change them based on your
+comments.
 
-Thanks,
-Quentin
+thanks,
+
+Bean
+
