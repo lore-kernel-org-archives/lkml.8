@@ -2,52 +2,52 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D97C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03C1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA58C2495C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69BF218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942191;
-	bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+	s=default; t=1588942204;
+	bh=UzReRgLYrOCz4QY5J47Nyd/72nCte4Uo27PFRBxICmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFF5/ha+AL0tX/lTbWEnYQ9KFGatsqN+MyfYK59N2NHYeuPzUJLIBRmuOKpB4CQ3L
-	 ZQ4dwSEMY0/QxZFcVlXRKNj9iDeIeDQ583MQmfuAh4WWemj5G0RZiQeo6SsViaWid/
-	 +85kHocHZRMNpuqVc6a87ybgA2lg8vlKQss9lCJg=
+	b=kAcg8uBs0vQeM9nfqU6UC/f6K9P1ZzyyIyzqFh0A0ksPSuzycoMqK4VhHY3CLohHa
+	 CCzmHKILDj/nhgVJZi9k6V1o/PitWOFv2ErLQ1mFBaZ1Uf3iewqPOvVrKBdOTvfGRk
+	 xRQy3nSI/eRfj+Gbgea7HxkhZdXdsZATs7EVknIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgEHMtu (ORCPT
+        id S1729812AbgEHMuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:50:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgEHMtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:46 -0400
+        id S1729797AbgEHMt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55143218AC;
-        Fri,  8 May 2020 12:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CB62495C;
+        Fri,  8 May 2020 12:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942185;
-        bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+        s=default; t=1588942198;
+        bh=UzReRgLYrOCz4QY5J47Nyd/72nCte4Uo27PFRBxICmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzSJak2mYpwEXs4QDgS+dCQ+lvVS9eknm4El9VcYTJKvo8EahMBhgVwitzck2ACqs
-         vNgkF/H3r1hqApTz0Xh68qHCgC89WnV2JEaTv0FgUrciQAWphfh2zM6SgZ6iyeIbDX
-         BtLagHRga8jlnl3ScEICWHutG22EFBCI71QSYZ9I=
+        b=Ws86IIdjT+00inhnr59rC+cIca7itrqHNYjFHqXQvFzzJNOFe5JTnkF1IxFOwfITA
+         hpcxpV63Cx2R2nifXhMsoAYfNfCDLYvzNdfc3HOQarAJFF0aMffH0L3ixjVGUkU1XN
+         1UznCipjBGTezIMFc9q4y8o87cqdGAtVd5/EgogI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 02/18] powerpc/pci/of: Parse unassigned resources
-Date:   Fri,  8 May 2020 14:35:05 +0200
-Message-Id: <20200508123031.588689946@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Beraud <julien.beraud@orolia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 07/18] net: stmmac: Fix sub-second increment
+Date:   Fri,  8 May 2020 14:35:10 +0200
+Message-Id: <20200508123032.596241386@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
@@ -60,64 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-commit dead1c845dbe97e0061dae2017eaf3bd8f8f06ee upstream.
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-The pseries platform uses the PCI_PROBE_DEVTREE method of PCI probing
-which reads "assigned-addresses" of every PCI device and initializes
-the device resources. However if the property is missing or zero sized,
-then there is no fallback of any kind and the PCI resources remain
-undiscovered, i.e. pdev->resource[] array remains empty.
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
 
-This adds a fallback which parses the "reg" property in pretty much same
-way except it marks resources as "unset" which later make Linux assign
-those resources proper addresses.
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
 
-This has an effect when:
-1. a hypervisor failed to assign any resource for a device;
-2. /chosen/linux,pci-probe-only=0 is in the DT so the system may try
-assigning a resource.
-Neither is likely to happen under PowerVM.
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_of_scan.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -82,10 +82,16 @@ static void of_pci_parse_addrs(struct de
- 	const __be32 *addrs;
- 	u32 i;
- 	int proplen;
-+	bool mark_unset = false;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 25136941a9648..5b91a95476de2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -40,12 +40,16 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
  
- 	addrs = of_get_property(node, "assigned-addresses", &proplen);
--	if (!addrs)
--		return;
-+	if (!addrs || !proplen) {
-+		addrs = of_get_property(node, "reg", &proplen);
-+		if (!addrs || !proplen)
-+			return;
-+		mark_unset = true;
-+	}
-+
- 	pr_debug("    parse addresses (%d bytes) @ %p\n", proplen, addrs);
- 	for (; proplen >= 20; proplen -= 20, addrs += 5) {
- 		flags = pci_parse_of_flags(of_read_number(addrs, 1), 0);
-@@ -110,6 +116,8 @@ static void of_pci_parse_addrs(struct de
- 			continue;
- 		}
- 		res->flags = flags;
-+		if (mark_unset)
-+			res->flags |= IORESOURCE_UNSET;
- 		res->name = pci_name(dev);
- 		region.start = base;
- 		region.end = base + size - 1;
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
+ 
+-- 
+2.20.1
+
 
 
