@@ -2,51 +2,141 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A458C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC662C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBD12173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9316A21841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgEHPrB (ORCPT
+        id S1728201AbgEHPrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:47:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:53307 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgEHPrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:47:01 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A988C68C7B; Fri,  8 May 2020 17:46:58 +0200 (CEST)
-Date:   Fri, 8 May 2020 17:46:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 10/11] fs: remove __vfs_read
-Message-ID: <20200508154658.GA4200@lst.de>
-References: <20200508092222.2097-1-hch@lst.de> <20200508092222.2097-11-hch@lst.de> <20200508154552.GB1431382@iweiny-DESK2.sc.intel.com>
+        Fri, 8 May 2020 11:47:11 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35070 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgEHPrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:47:09 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x73so1791408lfa.2;
+        Fri, 08 May 2020 08:47:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KprKeb/h9kjW27OoSf2ZZ4Ya0v6rQT0g3k0Y7DumGOM=;
+        b=W8JBZwKyvLMp+6zKoGup3yCa2Rn+91vUGmkVfdLrAtu7xhv0/CJhCPVYOR05at8pT7
+         4KN5kCjl8CSWAJeOBN/HoFMIOXzVtJJvf1MpUt7Du+SmpRpUAEIuB1A1QXC8p+Ru70o8
+         zH4XB1mqGr6Rf0rZoviQaabQDRsWlVIUjtYMaKXmxwfRsoa6WX1ojt8TWIMUH/7Ol3Ev
+         AiT3hfSH7b7e0nt3E8bVUU7CD2KmKmtpAjA5LCT+2MDdI9i7XsVr1xALwnR+ixaMSkJE
+         Ufl/R7DVuYdo134JxkRc9QNrsNiImR/64HPvBUZqcEW/h1jbYKwV2Cd/MYkSAct2pMV+
+         jpUg==
+X-Gm-Message-State: AOAM532dOb4EN4AabgnOZow190MxVMStvYaymbhDVad6gnxM/VBJih6g
+        /cKXYzrdR2zXwMpDFQDUIao=
+X-Google-Smtp-Source: ABdhPJyw3eaAIaBHlqv5KOfFTa+kblr0g4XntOwjG+KOrla1cyRAtkv99AWHwllLf1nfkqQPzKk6lQ==
+X-Received: by 2002:a19:7d02:: with SMTP id y2mr2274606lfc.146.1588952825594;
+        Fri, 08 May 2020 08:47:05 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id p13sm1447163ljg.103.2020.05.08.08.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:47:04 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:46:17 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 06/11] dt-bindings: battery: add new battery parameters
+Message-ID: <6cfb1a37acc763143927b9541744b7bb66fbd2d8.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508154552.GB1431382@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:45:53AM -0700, Ira Weiny wrote:
-> On Fri, May 08, 2020 at 11:22:21AM +0200, Christoph Hellwig wrote:
-> > Fold it into the two callers.
-> 
-> In 5.7-rc4, it looks like __vfs_read() is called from
-> security/integrity/iint.c
-> 
-> Was that removed somewhere prior to this patch?
+Add:
 
-[PATCH 08/11] integrity/ima: switch to using __kernel_read
+ - trickle-charge-current-microamp:
+
+Some chargers have 3 charging stages. First one when battery is almost
+empty is often called as trickle-charge. Last state when battery has been
+"woken up" is usually called as fast-charge. In addition to this some
+chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+pre-charge. Some batteries can benefit from this 3-phase charging
+[citation needed].
+
+Introduce trickle-charge-current-microamp so that batteries can give
+charging current limit for all three states.
+
+ - precharge-upper-limit-microvolt:
+
+When battery voltage has reached certain limit we change from
+trickle-charge to next charging state (pre-charge for BD99954). Allow
+battery to specify this limit.
+
+ - re-charge-voltage-microvolt:
+
+Allow giving a battery specific voltage limit for chargers which can
+automatically re-start charging when battery has discharghed down to
+this limit.
+
+- over-voltage-threshold-microvolt
+
+Allow specifying voltage threshold after which the battery is assumed to
+be faulty.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index 3049cf88bdcf..5e29595edd74 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
+ behavior should a replacement that changes the battery type occur
+ without a corresponding update to the dtb.
+ 
++Please note that not all charger drivers respect all of the properties.
++
+ Required Properties:
+  - compatible: Must be "simple-battery"
+ 
+ Optional Properties:
++ - over-voltage-threshold-microvolt: battery over-voltage limit
++ - re-charge-voltage-microvolt: limit to automatically start charging again
+  - voltage-min-design-microvolt: drained battery voltage
+  - voltage-max-design-microvolt: fully charged battery voltage
+  - energy-full-design-microwatt-hours: battery design energy
+  - charge-full-design-microamp-hours: battery design capacity
++ - trickle-charge-current-microamp: current for trickle-charge phase
+  - precharge-current-microamp: current for pre-charge phase
++ - precharge-upper-limit-microvolt: limit when to change to constant charging
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
