@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B48BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49877C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1485A218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AE5206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942712;
-	bh=T+auyRm387bDHY5h1X+vQAB1Wd987DZ/XpEgUIlqWAg=;
+	s=default; t=1588942714;
+	bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHmzP1LL7ywwHsGYLCUgfWxX66Za+MKKXNOEoUK7asezP2tQTSbMKe/dZZt6l5/vh
-	 qq/ygCiPZzEF4ehWmoHTvFbk56snI5hCN1MmEthzVAuxBtjyPpM8bf9svsoDpl603m
-	 ZLC15n2MPE0V9s6ILz9xdcVbuqfwXCN4HuA4PpXo=
+	b=plDi8K/Hm+C1Wmik/9YBO+tygqIlApJ5Rdv1EsYQ0bCz/D8WxKBkCRf6ajimho4Tx
+	 69/ddgvffjpaoycdoV96W2ehMVB4gcd25WiyDgslMZxa3DzyjUKa9XJkT9SxsxpwO7
+	 Whw3NdM2mRLHlJ/eNY0/uUEF2teglrpMtIwzWGzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgEHM6a (ORCPT
+        id S1730194AbgEHMyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbgEHMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:29 -0400
+        id S1730176AbgEHMyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6DB224958;
-        Fri,  8 May 2020 12:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF54724958;
+        Fri,  8 May 2020 12:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942468;
-        bh=T+auyRm387bDHY5h1X+vQAB1Wd987DZ/XpEgUIlqWAg=;
+        s=default; t=1588942453;
+        bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oX29nqRJTXQIJROhaj9OcrdI8FMSZfdhaJd0z0XEzbK5ByywKNw+j3vRcHU7E+aai
-         MjO819aV6tOHFol+hNln/7c+zExO8I/oN5Y5TEfggjva8Ys2XV4MeecRFdjBXxHJyL
-         6UMOSC+V8hkTYeYdOq2uGO8hliDVt+8X6+Hn/vx8=
+        b=fZzGWQtx0iIfIDw1DkhTSKhqFTU8YLI1BylnjLz/Yu5YjNumO5+8cXrxap4I+2fy/
+         OGSKbiq3eXZxCMLdMzEpfAn3ewK8K2RLXuE8s98CQqUGyKUPQFkHbzUlBGEIoQ0Z8M
+         PVZc04HjnJvmUF16I7CVEUcKYFyRl1GP5thB5zJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 34/50] lib: devres: add a helper function for ioremap_uc
-Date:   Fri,  8 May 2020 14:35:40 +0200
-Message-Id: <20200508123048.118049262@linuxfoundation.org>
+Subject: [PATCH 5.4 28/50] net: bcmgenet: suppress warnings on failed Rx SKB allocations
+Date:   Fri,  8 May 2020 14:35:34 +0200
+Message-Id: <20200508123047.225761600@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -64,82 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuowen Zhao <ztuowen@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit e537654b7039aacfe8ae629d49655c0e5692ad44 ]
+[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
 
-Implement a resource managed strongly uncachable ioremap function.
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Tested-by: AceLan Kao <acelan.kao@canonical.com>
-Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
+
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
+
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/io.h |  2 ++
- lib/devres.c       | 19 +++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/io.h b/include/linux/io.h
-index accac822336aa..a59834bc0a114 100644
---- a/include/linux/io.h
-+++ b/include/linux/io.h
-@@ -64,6 +64,8 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index ff09ee777b2bf..6f01f4e03cef1 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1697,7 +1697,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
+ 	dma_addr_t mapping;
  
- void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
- 			   resource_size_t size);
-+void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
-+				   resource_size_t size);
- void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
- 				   resource_size_t size);
- void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
-diff --git a/lib/devres.c b/lib/devres.c
-index 6a0e9bd6524ae..17624d35e82d4 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -9,6 +9,7 @@
- enum devm_ioremap_type {
- 	DEVM_IOREMAP = 0,
- 	DEVM_IOREMAP_NC,
-+	DEVM_IOREMAP_UC,
- 	DEVM_IOREMAP_WC,
- };
- 
-@@ -39,6 +40,9 @@ static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
- 	case DEVM_IOREMAP_NC:
- 		addr = ioremap_nocache(offset, size);
- 		break;
-+	case DEVM_IOREMAP_UC:
-+		addr = ioremap_uc(offset, size);
-+		break;
- 	case DEVM_IOREMAP_WC:
- 		addr = ioremap_wc(offset, size);
- 		break;
-@@ -68,6 +72,21 @@ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
- }
- EXPORT_SYMBOL(devm_ioremap);
- 
-+/**
-+ * devm_ioremap_uc - Managed ioremap_uc()
-+ * @dev: Generic device to remap IO address for
-+ * @offset: Resource address to map
-+ * @size: Size of map
-+ *
-+ * Managed ioremap_uc().  Map is automatically unmapped on driver detach.
-+ */
-+void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
-+			      resource_size_t size)
-+{
-+	return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_UC);
-+}
-+EXPORT_SYMBOL_GPL(devm_ioremap_uc);
-+
- /**
-  * devm_ioremap_nocache - Managed ioremap_nocache()
-  * @dev: Generic device to remap IO address for
+ 	/* Allocate a new Rx skb */
+-	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
++	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, priv->dev,
 -- 
 2.20.1
 
