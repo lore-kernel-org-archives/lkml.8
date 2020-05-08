@@ -2,113 +2,43 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACAEC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64587C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D32A2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4731D206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgEHPxe (ORCPT
+        id S1727874AbgEHPxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:53:34 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34027 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgEHPxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:53:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f11so2201725ljp.1;
-        Fri, 08 May 2020 08:53:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8nkzaJ/iCAYbYLaQ1Jp7RPwOzPpYlnqGXh5SHsicXIw=;
-        b=LUkcLwWidk6sCHwjSNN4smSJQ5VDtsgdIg0XQkbWD5jqPQmG0AN4jemuXzM1tscwAB
-         YxaCVyjG1jvCwDRBwgPD3kSzi1XjWxZVcEFMaxod1SHbT2Hy67o7rSk5KSwICA1Vjx4T
-         cOWAm67rNBEerlTVKv5KIDAjXRldY5LcxN8bh6EvdY6u3uYcC+DOyaU47QCq1Wd12zT0
-         8NG/1YzxeU50nMD76vIrunxPqA+X5Q+d9E/T45Gy3JjjqJKLc9bgCFf2ARFChsc1XKjK
-         Kd4XRA1bssxAsOQTrV337xCrcb34vNSVBdihgTyQ3mGM8nc6UtY3T3/YpYtxHnLSlUNF
-         wWrQ==
-X-Gm-Message-State: AOAM531I2Fr0A/4lU6zvBb1QNjxCyLtFSxIre4EA3hI0aD7YdV0pDXs6
-        rWmc9wRLJegkvTMJ3TIKVrc=
-X-Google-Smtp-Source: ABdhPJykawVthKA++HuKwY93ddj1Vp0zwGwnkvtvioVOTa8ECsfDKqpcDtlk0+UxUMHl794x+DEWzw==
-X-Received: by 2002:a2e:992:: with SMTP id 140mr2177645ljj.188.1588953211899;
-        Fri, 08 May 2020 08:53:31 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id g11sm1480975ljg.24.2020.05.08.08.53.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:53:31 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:52:45 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 11/11] power: supply: KConfig cleanup default n
-Message-ID: <499fc4aaac216c92fb43e51f688d072e937faf8c.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:53:45 -0400
+Received: from verein.lst.de ([213.95.11.211]:53340 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgEHPxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:53:45 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 374DB68C7B; Fri,  8 May 2020 17:53:43 +0200 (CEST)
+Date:   Fri, 8 May 2020 17:53:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     hch@lst.de, axboe@kernel.dk, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com
+Subject: Re: [PATCH v3 3/3] s390/dasd: remove ioctl_by_bdev calls
+Message-ID: <20200508155342.GC4200@lst.de>
+References: <20200508131455.55407-1-sth@linux.ibm.com> <20200508131455.55407-4-sth@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200508131455.55407-4-sth@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "default n" is not needed as it is, well, default. Clean
-the KConfig by removing "default n".
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
----
-
-This was pointed to me first by Randy Dunlap during v4 review.
-Also Andy Shevchenko mentioned this to me. So as I was
-changing the file anyways... Please just drop this patch out
-of the series if you're not Ok with this.
----
- drivers/power/supply/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index ec028e47c3c2..04821d8c9e43 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -660,7 +660,6 @@ config CHARGER_RT9455
- config CHARGER_CROS_USBPD
- 	tristate "ChromeOS EC based USBPD charger"
- 	depends on CROS_USBPD_NOTIFY
--	default n
- 	help
- 	  Say Y here to enable ChromeOS EC based USBPD charger
- 	  driver. This driver gets various bits of information about
-@@ -696,7 +695,6 @@ config CHARGER_BD70528
- 	tristate "ROHM bd70528 charger driver"
- 	depends on MFD_ROHM_BD70528
- 	select LINEAR_RANGES
--	default n
- 	help
- 	  Say Y here to enable support for getting battery status
- 	  information and altering charger configurations from charger
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+I think this should use symbol_get instead.
