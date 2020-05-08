@@ -2,63 +2,65 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D884CC54E4B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B67208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D43208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKd8CfHj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WsuS/KY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgEHImh (ORCPT
+        id S1727780AbgEHImg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:42:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43163 "EHLO
+        Fri, 8 May 2020 04:42:36 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29089 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726598AbgEHImg (ORCPT
+        by vger.kernel.org with ESMTP id S1726690AbgEHImg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 04:42:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1588927354;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HDqdz7vUW07g8cOkfmGPIO8ov0KvSWCkjJFS1FzKfW0=;
-        b=PKd8CfHjInkPQDlzTXLjoPHpLLRReMA407Bb7KAxFLKQbm7rB5oiHahykWYdbOxaHNrhW0
-        1fP0jLAlk1+w0tPa2FcHCHYti4MpvBycR7ACx87bbRdThjpv/WkNpuCb0jllaRp8v0sJaU
-        hzeJuR+4wUezllvIoUtt+fALWbssR6A=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ouBt4BfusFaa/lv0LTRbmOSgoxSr9cZTrvcQPivP5Jg=;
+        b=WsuS/KY5MMKBiOajQSSbkj9bRrxJbryD/IUVamXAAM1FW9GRjkt6zwdHytSI6393QsmMZ7
+        dOvROlUlWGq/6vhN6K82AKq+i2rMUd7RUQsZd0093B8Au+4j2pkEb5Shs4f9RteYqqxNAF
+        pICuz/HQ3oaSnfgn+rOhRR02eNpR7z0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-tly-VFRPOxOjTHrhhsV3FQ-1; Fri, 08 May 2020 04:42:32 -0400
-X-MC-Unique: tly-VFRPOxOjTHrhhsV3FQ-1
+ us-mta-340-l6nWo52fN4uNSj25Te985g-1; Fri, 08 May 2020 04:42:30 -0400
+X-MC-Unique: l6nWo52fN4uNSj25Te985g-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41EEE8018AB;
-        Fri,  8 May 2020 08:42:31 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-181.ams2.redhat.com [10.36.113.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F93E5C1B0;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3D84461;
         Fri,  8 May 2020 08:42:28 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-181.ams2.redhat.com [10.36.113.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8F425C1B0;
+        Fri,  8 May 2020 08:42:22 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linux-nvdimm@lists.01.org,
         kexec@lists.infradead.org, Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        David Hildenbrand <david@redhat.com>, stable@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user space after unloading kmem
-Date:   Fri,  8 May 2020 10:42:14 +0200
-Message-Id: <20200508084217.9160-2-david@redhat.com>
-In-Reply-To: <20200508084217.9160-1-david@redhat.com>
-References: <20200508084217.9160-1-david@redhat.com>
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v4 0/4] mm/memory_hotplug: Interface to add driver-managed system ram
+Date:   Fri,  8 May 2020 10:42:13 +0200
+Message-Id: <20200508084217.9160-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -68,115 +70,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assume we have kmem configured and loaded:
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory$
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : dax0.0
-      150000000-33fffffff : System RAM
+I did some more testing to v3 and found issues with unloading the kmem
+module, followed by reconfiguring the namespace.
 
-Assume we try to unload kmem. This force-unloading will work, even if
-memory cannot get removed from the system.
-  [root@localhost ~]# rmmod kmem
-  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
-  ...
-  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
+kexec (via kexec_load()) can currently not properly handle memory added via
+dax/kmem, and will have similar issues with virtio-mem. kexec-tools will
+currently add all memory to the fixed-up initial firmware memmap. In case
+of dax/kmem, this means that - in contrast to a proper reboot - how that
+persistent memory will be used can no longer be configured by the kexec'd
+kernel. In case of virtio-mem it will be harmful, because that memory
+might contain inaccessible pieces that require coordination with hypervisor
+first.
 
-Now, we can reconfigure the namespace:
-  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
-  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
-  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
-  ...
+In both cases, we want to let the driver in the kexec'd kernel handle
+detecting and adding the memory, like during an ordinary reboot.
+Introduce add_memory_driver_managed(). More on the samentics are in patch
+#1.
 
-This fails as expected due to the busy memory resource, and the memory
-cannot be used. However, the dax0.0 device is removed, and along its name.
+In the future, we might want to make this behavior configurable for
+dax/kmem- either by configuring it in the kernel (which would then also
+allow to configure kexec_file_load()) or in kexec-tools by also adding
+"System RAM (kmem)" memory from /proc/iomem to the fixed-up initial
+firmware memmap.
 
-The name of the memory resource now points at freed memory (name of the
-device).
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
-    150000000-33fffffff : System RAM
+More on the motivation can be found in [1] and [2].
 
-We have to make sure to duplicate the string. While at it, remove the
-superfluous setting of the name and fixup a stale comment.
+v3 -> v4:
+- "device-dax: Don't leak kernel memory to user space after unloading kmem"
+-- Added
+- "device-dax: Add memory via add_memory_driver_managed()"
+-- kstrdup_const() the resource name to be used for added memory
+-- Remember if any hotremove failed / we still have memory added to the
+   system and conditionally kfree_const().
 
-Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
-Cc: stable@vger.kernel.org # v5.3
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/dax/kmem.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+v2 -> v3:
+- Don't use flags for add_memory() and friends, provide
+  add_memory_driver_managed() instead.
+- Flag memory resources via IORESOURCE_MEM_DRIVER_MANAGED and handle them
+  in kexec.
+- Name memory resources "System RAM ($DRIVER)", visible via /proc/iomem
+- Added more details to the patch descriptions, especially regarding the
+  history of /sys/firmware/memmap
+- Add a comment to the device-dax change. Dropped Dave's Ack as the
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 3d0a7e702c94..1e678bdf5aed 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *dev)
- 	resource_size_t kmem_size;
- 	resource_size_t kmem_end;
- 	struct resource *new_res;
-+	const char *new_res_name;
- 	int numa_node;
- 	int rc;
- 
-@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *dev)
- 	kmem_size &= ~(memory_block_size_bytes() - 1);
- 	kmem_end = kmem_start + kmem_size;
- 
--	/* Region is permanently reserved.  Hot-remove not yet implemented. */
--	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
-+	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
-+	if (!new_res_name)
-+		return -ENOMEM;
-+
-+	/* Region is permanently reserved if hotremove fails. */
-+	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
- 	if (!new_res) {
- 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
- 			 &kmem_start, &kmem_end);
-+		kfree(new_res_name);
- 		return -EBUSY;
- 	}
- 
-@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *dev)
- 	 * unknown to us that will break add_memory() below.
- 	 */
- 	new_res->flags = IORESOURCE_SYSTEM_RAM;
--	new_res->name = dev_name(dev);
- 
- 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
- 	if (rc) {
- 		release_resource(new_res);
- 		kfree(new_res);
-+		kfree(new_res_name);
- 		return rc;
- 	}
- 	dev_dax->dax_kmem_res = new_res;
-@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	struct resource *res = dev_dax->dax_kmem_res;
- 	resource_size_t kmem_start = res->start;
- 	resource_size_t kmem_size = resource_size(res);
-+	const char *res_name = res->name;
- 	int rc;
- 
- 	/*
-@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	/* Release and free dax resources */
- 	release_resource(res);
- 	kfree(res);
-+	kfree(res_name);
- 	dev_dax->dax_kmem_res = NULL;
- 
- 	return 0;
+v1 -> v2:
+- Don't change the resource name
+- Rename the flag to MHP_NO_FIRMWARE_MEMMAP to reflect what it is doing
+- Rephrase subjects/descriptions
+- Use the flag for dax/kmem
+
+[1] https://lkml.kernel.org/r/20200429160803.109056-1-david@redhat.com
+[2] https://lkml.kernel.org/r/20200430102908.10107-1-david@redhat.com
+
+
+David Hildenbrand (4):
+  device-dax: Don't leak kernel memory to user space after unloading
+    kmem
+  mm/memory_hotplug: Introduce add_memory_driver_managed()
+  kexec_file: Don't place kexec images on IORESOURCE_MEM_DRIVER_MANAGED
+  device-dax: Add memory via add_memory_driver_managed()
+
+ drivers/dax/dax-private.h      |  1 +
+ drivers/dax/kmem.c             | 42 ++++++++++++++++++++---
+ include/linux/ioport.h         |  1 +
+ include/linux/memory_hotplug.h |  2 ++
+ kernel/kexec_file.c            |  5 +++
+ mm/memory_hotplug.c            | 62 +++++++++++++++++++++++++++++++---
+ 6 files changed, 104 insertions(+), 9 deletions(-)
+
 -- 
 2.25.4
 
