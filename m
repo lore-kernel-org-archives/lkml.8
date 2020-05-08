@@ -2,146 +2,158 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68723C54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D950C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC4B218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DEF21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="4GzEIB/7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRjxfmZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgEHVKN (ORCPT
+        id S1728093AbgEHVKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:10:13 -0400
-Received: from mail-bn7nam10on2050.outbound.protection.outlook.com ([40.107.92.50]:6195
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728079AbgEHVKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:10:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jVUSBfBMcMX4UAkaxGG5+kfDLH2N72f1okjYAydHU7XhM0mjOkDG+TgsG8vqbCeL065Gf9CK30O8XH2qQTKDMJwIlbjZ0PXrJB/J4pGDPt6+CW9Tg6tT2A2nHZ8MIvOaru5RSg9gd6Er7QPua/Dgin9sDWKTTnlM1dovT2XOTdRgfnHeWohOSTBJq8aqcViC0qMUbSByfLAxqFFGecARIXaelgDK9J9hOoDVMvF2e7V00N2ih83LW4DpGbRgNIe1c56oi33p7L+NlK2VdHtxseafs/2gSDOp6NxDjP+afb5yLQRVl5XGqYSCXRvzijJLgpHpOmCrdkBV27icxD8wew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K7cQjBBEUu3wYAe3qFF+Q4q+ikFV3K8/pZksdsSFtik=;
- b=d+iwfMZEKp0UtzxfbkZL5iikg267opEdWi0rRiyYrQgwGF+tteIBm+S7lvA5k7e4XmSeHvNo33k7oQR7Jr5qXCKy3FG8hjT6jp0N+7MXaevGr28nE9EvaKbwzyPgJdkU2ueWal/HTvR327s5DyKSxMeQOvlLWK2r+oHFHG56xBEv4/pD8nfL8KKzaW9FiTyu16qSG0BwxISvMwSsgI1KIa0UKIMLuRRUR1c8e0bksvcWkGUISKvwND/ITDLqJwzf0DSd/RX/Ex/KzS5+tuAylb3dMwForvxoVOXeQGSyoaJsIu81iHIdX3onvh7u4gqU7tJ1AKNNtc2wDl0BG7APZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 8 May 2020 17:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgEHVKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:10:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4F1C061A0C;
+        Fri,  8 May 2020 14:10:43 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a5so4858832pjh.2;
+        Fri, 08 May 2020 14:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K7cQjBBEUu3wYAe3qFF+Q4q+ikFV3K8/pZksdsSFtik=;
- b=4GzEIB/7GN4SSXjlfd4SFeDRF41GQ3l7ZmvVz0XakgJahi+ZOEiL47rI8y9lHbU+bQbOm7bq833Z1cJ0er2PLMZsIUkVvdx+CXO+e3fbb/tse0Pc0ivHf0/HfJVLLycZHeyN4xjXOuhvSuZr13UoRyU3IRr9CwohOgI1wke5GFI=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2591.namprd12.prod.outlook.com (2603:10b6:802:30::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.33; Fri, 8 May
- 2020 21:10:06 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.028; Fri, 8 May 2020
- 21:10:06 +0000
-Subject: [PATCH v2 3/3] KVM: SVM: Add support for MPK feature on AMD
-From:   Babu Moger <babu.moger@amd.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
-        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
-        asteinhauser@google.com, anshuman.khandual@arm.com,
-        jan.kiszka@siemens.com, akpm@linux-foundation.org,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date:   Fri, 08 May 2020 16:10:03 -0500
-Message-ID: <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
-In-Reply-To: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
-References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
-User-Agent: StGit/unknown-version
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0066.namprd12.prod.outlook.com
- (2603:10b6:802:20::37) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i526L9szJtNPgWaUy9PbrhKFBUtftq3gPNzk/WhdMPo=;
+        b=tRjxfmZXEgKltxumbRotfh9GzHfRCeEX0E3N7b2gja1iPMloLceUG3a7eyh+DbHpQH
+         Cb8wfigBPgh0vvycE26hdVEgiGMBjI1UT9gIODTW5+FLq04oMzLGnnqLqYjfDUAHcJBX
+         7JoX3VG+0fnr07zd2oOVBQ0EIzH8JfKUExMilGm9BHU7cLvCYk/6TiXrH6ztjC6tdcEC
+         /XcwpTx5i00n6KBKb95Kkjgm1962UKw/jJHXB43Ol7rlfaa0u3X+I0MBGuMqfS83lRX5
+         DzhRlw4oSsS5AEoUneVtroy4DQCXTTJ70jdMT7DEdsZAxqVdenvhumKlq0xfVIH59gn5
+         VEvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=i526L9szJtNPgWaUy9PbrhKFBUtftq3gPNzk/WhdMPo=;
+        b=Xth0VR363CsDQmy7Fj2+9oN8Ms+w7DQZacb0uAixBD2/9ceSWW3f4ykTzol6SS/hm9
+         bk07tOF+P9iirHQqo6jvkjpEs7WYuxgupkwfbdrx0LHshEYXdWWZ4zbSLBlLjvpj38FC
+         nYpD+VgboO/o0DX0ncWMrNcnGppWihSt8ev7BoQnlPmHsEuJqC11F+MNDeO+ezFyRKBr
+         qG4xOQnprhbSE4dbHS+aYLkgIzGNSPkNmPPVqMUDv6ah4LWso5HlU5+4Ht9RAtUMbnAK
+         9Awv/UIqELezu4W3IDiEpL0Sqy/qCNieisE+epFqxoosduOf25ahstvAtiqKmw+4WLgD
+         L3fw==
+X-Gm-Message-State: AGi0PuaHH7GAPKWzfzOP8fmPMd1h9rt6aRgxLB9ZGAbdTNjbe/Aww1hE
+        tTOZG/svEevRoCRCMLrV610Rn8iR
+X-Google-Smtp-Source: APiQypIm7aSLJcYyNIRSPehvYhkHbHbDJkl6hl2E2HrMkL/hmeW+XR6+k+Sw0YHWQRvfO+bwEZImAw==
+X-Received: by 2002:a17:902:9a41:: with SMTP id x1mr4035748plv.4.1588972242723;
+        Fri, 08 May 2020 14:10:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f26sm2692220pfn.183.2020.05.08.14.10.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 14:10:42 -0700 (PDT)
+Subject: Re: [PATCH 4.4 000/308] 4.4.223-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200508142854.087405740@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <ada628d9-fd10-acd4-94fe-cdcf1caf43fc@roeck-us.net>
+Date:   Fri, 8 May 2020 14:10:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from naples-babu.amd.com (165.204.78.2) by SN1PR12CA0066.namprd12.prod.outlook.com (2603:10b6:802:20::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 21:10:04 +0000
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5da47f9b-0196-4820-ff14-08d7f3942e76
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2591:|SN1PR12MB2591:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2591550799E8FDD5ABFA899495A20@SN1PR12MB2591.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 039735BC4E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h2fpKlxMPB0WtA9WcGaSKnvhp9iAbhSNX/RlQKo7ZO0H73fN3YUvw46/NvXYX62ziuYY8J21wHeIvrEkGMVJqB3RpAikL/Rw8aE4U3HRI/97AmkCoseiL3phMCibZNG0RV2b5GW/VV1nu/FwFJQWg0A0iAyAQ1Mpz0ScDsEx4s6leG6XVpO9+yC4mEKnzHpTCqfxtaE2pRLtlxZZNn0M5QWBYI9imIrb8TGlGSPH2xx1ACTTu9VA3OTXeM3aBXr5zgoZMZZVR8cmogMBoVbkTCWO+MzI3dsNgVric0dzsu3OVlqKWgrsj4Q5BlMDC+kAddWuyQQztRr43qhFoeJxP2CMW2nDNHF6s0isRHphYJYuEh7SrWedvYa3JfQlOnQ6CwiNhITzfEH++rILLY81VzdxULKyWnbhO5I3wPrOElTwn66UWqhbptBynuyPTr4Z7/gtnSpX87ewYBjeb7G6YoqSqTV7ZFHvubfaXkIjMOzRH2YDzKxyvdH3Ai9QMJ7Mfx0hm9n2G47G/Jud5lRIDWMd0oxBFRa2aiipYLmu51njBMaDv2uuYjMzUMUMBV0bfJwXL6ItccpGNX03eK1AcN3s4kndXjX12LrrpKxC4XA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(33430700001)(7406005)(16526019)(4326008)(7696005)(7416002)(186003)(26005)(66556008)(8936002)(52116002)(316002)(66946007)(66476007)(33440700001)(2906002)(44832011)(956004)(478600001)(55016002)(966005)(5660300002)(8676002)(103116003)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: vDIc+C8A82sK+GCKYtnrjZxq/WY6WKPUeUS522oecI9QItXHy1qlksaLGLXGOzOJgNP1sTrWqB545b42xz04Fr8FOGDr3hFf3/y8Wt6DWjYerN1j7FeRq7IEDthe3YE0SqgroHH5q1cOU2KiwPicAPTUcBCUDOxWhkC833vZ6l0+CPjXT30+ksJUNxB34HDAYVElLiFb7qadUMkRl7AR4C6Ozp8cdg4RD1oJguZZ79EumJf3J9lunKfjw4HOVHHnWuMV/VB6wlU+kTF6LgdstP+sGGcXL8+66YHmM3SiH2VEaGAIPYFOXfjMYVdpb37wOf/YE9ztrL9AIGEkA2DDZzUqGC9GuXchEh5Ij3nKgF+OqPohuJ3UbUhspz1LclYp67ZC7uFjG6TFacP+NsTVDmEg2WBZ5Y6c3Bqcv2XZGy3+BQywEvWb09Z4LL5OKN0BQJGeWwAmvUABTn6KjKyVUQcijjJbSHIqgzSiv99mTe8=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5da47f9b-0196-4820-ff14-08d7f3942e76
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 21:10:05.9332
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Avf/LB+qAqwgRCC6OQN+2sfUUsb0H7tXWZop8lJwdf6Y7paRQUsp7kQlZQYVHoEJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2591
+In-Reply-To: <20200508142854.087405740@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Memory Protection Key (MPK) feature provides a way for applications
-to impose page-based data access protections (read/write, read-only or
-no access), without requiring modification of page tables and subsequent
-TLB invalidations when the application changes protection domains.
+On 5/8/20 7:32 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.223 release.
+> There are 308 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 10 May 2020 14:26:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-This feature is already available in Intel platforms. Now enable the
-feature on AMD platforms.
+Build results:
+	total: 169 pass: 156 fail: 13
+Failed builds:
+	<all mips>
+Qemu test results:
+	total: 332 pass: 272 fail: 60
+Failed tests:
+	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:mem256:imx6ul-14x14-evk:initrd
+	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:sd:mem256:imx6ul-14x14-evk:rootfs
+	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:usb1:mem256:imx6ul-14x14-evk:rootfs
+	<all mips>
 
-AMD documentation for MPK feature is available at "AMD64 Architecture
-Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
-Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
-obtained at the link below.
+Bisecting the arm boot failure points to commit 9b86858f37d682 ("regulator:
+Try to resolve regulators supplies on registration"). Reverting this commit fixes
+the problem.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Signed-off-by: Babu Moger <babu.moger@amd.com>
----
- arch/x86/kvm/svm/svm.c |    4 ++++
- 1 file changed, 4 insertions(+)
+The mips build failure is caused by commit d0e89dd815b712 ("MIPS: math-emu:
+Fix m{add,sub}.s shifts"). It removes the define of SPXSRSXn, but that define
+is still used in v4.4.y. Reverting the offending patch fixes the problem.
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 2f379bacbb26..37fb41ad9149 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -818,6 +818,10 @@ static __init void svm_set_cpu_caps(void)
- 	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
- 	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
-+	/* PKU is not yet implemented for shadow paging. */
-+	if (npt_enabled && boot_cpu_has(X86_FEATURE_OSPKE))
-+		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
- }
- 
- static __init int svm_hardware_setup(void)
-
+Guenter
