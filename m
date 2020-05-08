@@ -2,119 +2,96 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F37C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C90C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD5920735
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943928;
-	bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gETotX9nOyukqY+hATZJa2HtgPEsAaRWdxvRoBHGODkYawy/5xe2gGVBhQE49q48r
-	 JI/a/A9fl59fTy8hbNeUI64CI6NGaELdojK9hfnE9qgUOhE1oaaX1eIGEqos1jzddn
-	 CQVykd/NK7/rLzdMKvJwMyYl/XOP5CeomJ2Mfphs=
+	by mail.kernel.org (Postfix) with ESMTP id 427DD20735
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ove31f7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgEHNSr (ORCPT
+        id S1729437AbgEHNSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728984AbgEHMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 896E320731;
-        Fri,  8 May 2020 12:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941761;
-        bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+dSlhWhKAHf7kJ2eAdthM/hrgUBxrH2cQtCsvksMD4GkQSz9/X6ReOcxvyiyvYCY
-         hJkd7j/ryxkaOzU9LQ7kVZNLjjO/qoZkekWDpN11gvKDmgBoAOKRSwjxA1Ts4KTppe
-         IyOb72TZWF2sGieZnD3fZx8ULMjzM3zQTwpE5KE4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 162/312] selftests/ipc: Fix test failure seen after initial test run
-Date:   Fri,  8 May 2020 14:32:33 +0200
-Message-Id: <20200508123135.845917934@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
-References: <20200508123124.574959822@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 May 2020 09:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728689AbgEHNSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:18:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CCBC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:18:44 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m12so5230381wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4KMLQ4EJCkyzbgYa2IJD+khf7hToXVbXh2lcQiHZtv0=;
+        b=ove31f7pciE4Fbhm6NDLjUI9JBlFL/PA3cUZfCszFLpIChGlte7eSbOLZymdajQ9kK
+         gvPBvpGJZMgMzeDA1EWhE0mUt1GnwHlyuFs+gm9exfx6IXGGNHzVY4W50lYSmpTxaCsr
+         60fGF+UTCK5hnkhDKeZlzt0pslaA7Y4MwXdN6ESNWcuWEQBFvqVx6K1UAb/+sraNF90l
+         xMAMizHB0CVXKviA38ftlh3FUyyE1yDtVKxWT6kZls3slkOAl0Q435rKgLdXkdtvuOtf
+         FVitAidX3tCzTkx6dJUJxHvvAArCb6NPH2LSG4Egd+Ea7/031fRzmYTwHdvZh+FaQx0J
+         x81Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4KMLQ4EJCkyzbgYa2IJD+khf7hToXVbXh2lcQiHZtv0=;
+        b=tOcSO3lXmyCTANxLnCcKd4fL97pXnBe+ibFiruG7BSNTgkZHLpAhoFV+pNyny5YBdB
+         xBzYhXw6Ikm5VFsxy62zkwNL1keWWc/fyPkcC8WfwSWouaXBX/Tnb7DMpCu4qxCQkfhe
+         Ecfuy02o6KLtQZ4V/0SBq7b2bekExD/P4r89ufYlzNGv+ydlEMFZ2eaRB0ElcNv9rbjb
+         5tMfY639lgtP2zhpRzXR1LnRp3do2aXHU3QOW7jNIjZjCpL6A4MFwy/YKa+GKEItLMJt
+         Gm50PAs7Ri7M2+oUG/tgh4gCWYxr2rVyid26Mg/K9cFg098Le/mopJz6kcEV07Qs1xll
+         n+5Q==
+X-Gm-Message-State: AGi0PuaycTSH51JOJcml6Jch/Z0mOLldHatot/l5lnQM7cznMa2fYQhX
+        Gfekj35p6o25oMsP5oBD6ZjfTg==
+X-Google-Smtp-Source: APiQypJdRU9stBd3NG3JUQJliF1xwamMgT+gqtFcU/P7BSs1kniXBB4NJN4eJrTemJwu3kbPfB9g1Q==
+X-Received: by 2002:a1c:c345:: with SMTP id t66mr17057953wmf.189.1588943923328;
+        Fri, 08 May 2020 06:18:43 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id m82sm988007wmf.3.2020.05.08.06.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 06:18:42 -0700 (PDT)
+Date:   Fri, 8 May 2020 14:18:39 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH 04/14] sched: cpufreq: Move
+ sched_cpufreq_governor_change()
+Message-ID: <20200508131839.GD10541@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200507181012.29791-5-qperret@google.com>
+ <20200508053523.GH19464@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508053523.GH19464@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+On Friday 08 May 2020 at 11:05:23 (+0530), Pavan Kondeti wrote:
+> In the previous patch, you removed reference to schedutil and replaced it with
+> " an EAS-compatible CPUfreq governor (schedutil)". May be you could do the
+> same here.
 
-[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+Good point, I add it to the todo list for v2 ;)
 
-After successfully running the IPC msgque test once, subsequent runs
-result in a test failure:
-
-  $ sudo ./run_kselftest.sh
-  TAP version 13
-  1..1
-  # selftests: ipc: msgque
-  # Failed to get stats for IPC queue with id 0
-  # Failed to dump queue: -22
-  # Bail out!
-  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-  not ok 1 selftests: ipc: msgque # exit=1
-
-The dump_queue() function loops through the possible message queue index
-values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
-represents the index value. The first time the test is ran, the initial
-index value of 0 is valid and the test is able to complete. The index
-value of 0 is not valid in subsequent test runs and the loop attempts to
-try index values of 1, 2, 3, and so on until a valid index value is
-found that corresponds to the message queue created earlier in the test.
-
-The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
-index values are used. The test failure is caused by incorrectly
-comparing errno to -EINVAL when cycling through possible index values.
-
-Fix invalid test failures on subsequent runs of the msgque test by
-correctly comparing errno values to a non-negated EINVAL.
-
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/ipc/msgque.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 1b2ce334bb3f0..47c074d73e610 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -135,7 +135,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
--- 
-2.20.1
-
-
-
+Thanks,
+Quentin
