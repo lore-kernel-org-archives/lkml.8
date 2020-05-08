@@ -7,44 +7,54 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FB5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D76C54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4CE2496C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D198249CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgEHNFC (ORCPT
+        id S1730030AbgEHNFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
+        Fri, 8 May 2020 09:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729403AbgEHNEx (ORCPT
+        by vger.kernel.org with ESMTP id S1730357AbgEHNE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:04:53 -0400
+        Fri, 8 May 2020 09:04:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0FCC05BD43;
-        Fri,  8 May 2020 06:04:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA08C05BD0E;
+        Fri,  8 May 2020 06:04:55 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gK-0007Cd-HM; Fri, 08 May 2020 15:04:48 +0200
+        id 1jX2gB-00073r-On; Fri, 08 May 2020 15:04:39 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 850891C04D0;
-        Fri,  8 May 2020 15:04:45 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:45 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5A9991C03AB;
+        Fri,  8 May 2020 15:04:39 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:39 -0000
+From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evsel: Rename perf_evsel__group_idx() to
- evsel__group_idx()
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf cs-etm: Move definition of 'traceid_list'
+ global variable from header file
+Cc:     Thomas Backlund <tmb@mageia.org>, Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Tor Jeremiassen <tor@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200505133642.4756-1-leo.yan@linaro.org>
+References: <20200505133642.4756-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158894308549.8414.5570374305019564878.tip-bot2@tip-bot2>
+Message-ID: <158894307932.8414.9902120023400744910.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,362 +70,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     2bb72dbb826c40e2503949ea5d104c3af976d02c
-Gitweb:        https://git.kernel.org/tip/2bb72dbb826c40e2503949ea5d104c3af976d02c
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 04 May 2020 13:43:03 -03:00
+Commit-ID:     168200b6d6ea0cb5765943ec5da5b8149701f36a
+Gitweb:        https://git.kernel.org/tip/168200b6d6ea0cb5765943ec5da5b8149701f36a
+Author:        Leo Yan <leo.yan@linaro.org>
+AuthorDate:    Tue, 05 May 2020 21:36:42 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:32 -03:00
 
-perf evsel: Rename perf_evsel__group_idx() to evsel__group_idx()
+perf cs-etm: Move definition of 'traceid_list' global variable from header file
 
-As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
-libperf, to whom the perf_ prefix belongs.
+The variable 'traceid_list' is defined in the header file cs-etm.h,
+if multiple C files include cs-etm.h the compiler might complaint for
+multiple definition of 'traceid_list'.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+To fix multiple definition error, move the definition of 'traceid_list'
+into cs-etm.c.
+
+Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+Reported-by: Thomas Backlund <tmb@mageia.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Tested-by: Mike Leach <mike.leach@linaro.org>
+Tested-by: Thomas Backlund <tmb@mageia.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Tor Jeremiassen <tor@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200505133642.4756-1-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c     |  3 +--
- tools/perf/builtin-stat.c       |  3 +--
- tools/perf/builtin-top.c        |  3 +--
- tools/perf/tests/parse-events.c | 44 ++++++++++++++++----------------
- tools/perf/ui/hist.c            | 10 +++----
- tools/perf/util/evsel.c         |  7 ++---
- tools/perf/util/evsel.h         |  6 ++--
- 7 files changed, 36 insertions(+), 40 deletions(-)
+ tools/perf/util/cs-etm.c | 3 +++
+ tools/perf/util/cs-etm.h | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 46aaa6b..e4efdbf 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -857,8 +857,7 @@ try_again:
- 				goto try_again;
- 			}
- 			rc = -errno;
--			perf_evsel__open_strerror(pos, &opts->target,
--						  errno, msg, sizeof(msg));
-+			evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
- 			ui__error("%s\n", msg);
- 			goto out;
- 		}
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 92a59f0..188b2f9 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -484,8 +484,7 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 		}
- 	}
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 3c802fd..c283223 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -94,6 +94,9 @@ struct cs_etm_queue {
+ 	struct cs_etm_traceid_queue **traceid_queues;
+ };
  
--	perf_evsel__open_strerror(counter, &target,
--				  errno, msg, sizeof(msg));
-+	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
- 	ui__error("%s\n", msg);
++/* RB tree for quick conversion between traceID and metadata pointers */
++static struct intlist *traceid_list;
++
+ static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+ static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+index 650ecc2..4ad925d 100644
+--- a/tools/perf/util/cs-etm.h
++++ b/tools/perf/util/cs-etm.h
+@@ -114,9 +114,6 @@ enum cs_etm_isa {
+ 	CS_ETM_ISA_T32,
+ };
  
- 	if (child_pid != -1)
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index d5bfffe..372c382 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1051,8 +1051,7 @@ try_again:
- 				goto try_again;
- 			}
+-/* RB tree for quick conversion between traceID and metadata pointers */
+-struct intlist *traceid_list;
+-
+ struct cs_etm_queue;
  
--			perf_evsel__open_strerror(counter, &opts->target,
--						  errno, msg, sizeof(msg));
-+			evsel__open_strerror(counter, &opts->target, errno, msg, sizeof(msg));
- 			ui__error("%s\n", msg);
- 			goto out_err;
- 		}
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 5b90ee3..895188b 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -654,7 +654,7 @@ static int test__group1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* cycles:upp */
-@@ -670,7 +670,7 @@ static int test__group1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip == 2);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	return 0;
-@@ -696,7 +696,7 @@ static int test__group2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* cache-references + :u modifier */
-@@ -711,7 +711,7 @@ static int test__group2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* cycles:k */
-@@ -754,7 +754,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group name",
- 		!strcmp(leader->group_name, "group1"));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* group1 cycles:kppp */
-@@ -771,7 +771,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip == 3);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* group2 cycles + G modifier */
-@@ -789,7 +789,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group name",
- 		!strcmp(leader->group_name, "group2"));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* group2 1:3 + G modifier */
-@@ -803,7 +803,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong exclude host", evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* instructions:u */
-@@ -845,7 +845,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* instructions:kp + p */
-@@ -861,7 +861,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip == 2);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	return 0;
-@@ -888,7 +888,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* instructions + G */
-@@ -903,7 +903,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong exclude host", evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* cycles:G */
-@@ -920,7 +920,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
- 	/* instructions:G */
-@@ -935,7 +935,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong exclude host", evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
- 	/* cycles */
- 	evsel = evsel__next(evsel);
-@@ -974,7 +974,7 @@ static int test__group_gh1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:G + :H group modifier */
- 	evsel = evsel__next(evsel);
-@@ -988,7 +988,7 @@ static int test__group_gh1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
- 	return 0;
- }
-@@ -1014,7 +1014,7 @@ static int test__group_gh2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :G group modifier */
- 	evsel = evsel__next(evsel);
-@@ -1028,7 +1028,7 @@ static int test__group_gh2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
- 	return 0;
- }
-@@ -1054,7 +1054,7 @@ static int test__group_gh3(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :u group modifier */
- 	evsel = evsel__next(evsel);
-@@ -1068,7 +1068,7 @@ static int test__group_gh3(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
- 	return 0;
- }
-@@ -1094,7 +1094,7 @@ static int test__group_gh4(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :uG group modifier */
- 	evsel = evsel__next(evsel);
-@@ -1108,7 +1108,7 @@ static int test__group_gh4(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel->leader == leader);
--	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 1);
-+	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
- 	return 0;
- }
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 1a83614..c1f24d0 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -48,7 +48,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 		struct hist_entry *pair;
- 		int nr_members = evsel->core.nr_members;
- 
--		prev_idx = perf_evsel__group_idx(evsel);
-+		prev_idx = evsel__group_idx(evsel);
- 
- 		list_for_each_entry(pair, &he->pairs.head, pairs.node) {
- 			u64 period = get_field(pair);
-@@ -58,7 +58,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 				continue;
- 
- 			evsel = hists_to_evsel(pair->hists);
--			idx_delta = perf_evsel__group_idx(evsel) - prev_idx - 1;
-+			idx_delta = evsel__group_idx(evsel) - prev_idx - 1;
- 
- 			while (idx_delta--) {
- 				/*
-@@ -82,7 +82,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 							  len, period);
- 			}
- 
--			prev_idx = perf_evsel__group_idx(evsel);
-+			prev_idx = evsel__group_idx(evsel);
- 		}
- 
- 		idx_delta = nr_members - prev_idx - 1;
-@@ -164,12 +164,12 @@ static int hist_entry__new_pair(struct hist_entry *a, struct hist_entry *b,
- 
- 	list_for_each_entry(pair, &a->pairs.head, pairs.node) {
- 		struct evsel *evsel = hists_to_evsel(pair->hists);
--		fa[perf_evsel__group_idx(evsel)] = get_field(pair);
-+		fa[evsel__group_idx(evsel)] = get_field(pair);
- 	}
- 
- 	list_for_each_entry(pair, &b->pairs.head, pairs.node) {
- 		struct evsel *evsel = hists_to_evsel(pair->hists);
--		fb[perf_evsel__group_idx(evsel)] = get_field(pair);
-+		fb[evsel__group_idx(evsel)] = get_field(pair);
- 	}
- 
- 	*fields_a = fa;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a75bcb9..5908cd8 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1721,8 +1721,7 @@ retry_open:
- 
- 			/*
- 			 * If we succeeded but had to kill clockid, fail and
--			 * have perf_evsel__open_strerror() print us a nice
--			 * error.
-+			 * have evsel__open_strerror() print us a nice error.
- 			 */
- 			if (perf_missing_features.clockid ||
- 			    perf_missing_features.clockid_wrong) {
-@@ -2474,8 +2473,8 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
- 
--int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
--			      int err, char *msg, size_t size)
-+int evsel__open_strerror(struct evsel *evsel, struct target *target,
-+			 int err, char *msg, size_t size)
- {
- 	char sbuf[STRERR_BUFSIZE];
- 	int printed = 0;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 783246b..9de7efb 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -351,10 +351,10 @@ static inline bool evsel__is_clock(struct evsel *evsel)
- }
- 
- bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize);
--int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
--			      int err, char *msg, size_t size);
-+int evsel__open_strerror(struct evsel *evsel, struct target *target,
-+			 int err, char *msg, size_t size);
- 
--static inline int perf_evsel__group_idx(struct evsel *evsel)
-+static inline int evsel__group_idx(struct evsel *evsel)
- {
- 	return evsel->idx - evsel->leader->idx;
- }
+ struct cs_etm_packet {
