@@ -2,132 +2,127 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7D1C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56BDC54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A675B2495B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C091221835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/NCyVG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgEHKCP (ORCPT
+        id S1727104AbgEHKDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:02:15 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39366 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgEHKCO (ORCPT
+        Fri, 8 May 2020 06:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgEHKDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:02:14 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id B78641C0257; Fri,  8 May 2020 12:02:12 +0200 (CEST)
-Date:   Fri, 8 May 2020 12:02:12 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
-Subject: ofono for d4: less hcked and more working version was Re: USB
- networking news, ofono for d4: less hacked version
-Message-ID: <20200508100211.GA19646@amd>
-References: <20200506101125.GA7490@amd>
- <20200506144338.GT37466@atomide.com>
- <20200506230525.GA22354@amd>
- <20200507140732.GU37466@atomide.com>
+        Fri, 8 May 2020 06:03:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89582C05BD43;
+        Fri,  8 May 2020 03:03:18 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a7so4043473pju.2;
+        Fri, 08 May 2020 03:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
+        b=u/NCyVG6CzWS7pw0cVQAQnsq+Lf6SFeLH7drFG01yY59AfQ7lMhouQ3Pg2ToMqbJQL
+         2POW+E2A5sROd3nUY8fmotQr5FoH2M/JlcIIkysWB8eO8ogi6JXo+H56/wpD4EfUJ5n0
+         994SFeBIX7AJ1nG1Rz3CwPP4hoUHla1nDCpFo5RAE0ekzm6MAYZJjxK+jSvng+sF9HIt
+         6KNmn+2qIDY410kZd7xhCIb0cmC+ipwD+fjNCWAnw2dujVHotaxpAsxRwA9IEcOHukpk
+         Rn/FzsDrK+46oQqBtt24AOFdR1meEYkGeqetdSO0HNrJ15VPF76HEodrshyYicE1r7o5
+         nEHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Fg0tqQ7YdDHVvpo6cAydXlG7VoLZVAf5Pe+YX8RF1U=;
+        b=T6gt70RpdDsVNPB6O4FYQ5/iIhlaaAnkiay+/BqubM/Guxtx6S+k7J4YJ/IlMznogY
+         2iOWZTj9Qbllq1PSOXLyrkzq8SNE6BrnMZCWUXlI22iEDhul58bJOcRu+mQ6hZQwFQcq
+         eeLhBIkaN36NgCJ2MMaYj4DcjGp3Nl8z9Qcm9+rvYcSfAiMDhN1h3GcniBoXs1mwIQV6
+         lXv8wXGxo/7Ci1N/zVP+UfVqLOhjuZ4ZuIVXhbTKXos2MdOL3iSiJjQSiTRAG966Crbx
+         jqL9VigZvBmN7iG6Nyol7ACB8SP/N+S4+d7oMq9IO1v77NFLUDlFBht/qSv9FOI/TYQ1
+         YqDw==
+X-Gm-Message-State: AGi0PuZ4eswVW4llvECyxkmHKW+X7cuThYPTi/yQa0b6kyW1N8rzlbGI
+        nDJy5ibOMZIFsedyZeXAEI49Nf3dlY6vebqd7Uk=
+X-Google-Smtp-Source: APiQypIYSY85bDmuNcTHocu/ewpdNMG8j/aKGbo5ccq1Q5fhJ062xJSYj+xkopkvK/UvMdGwbYVbRLif6bs3S8dCqrc=
+X-Received: by 2002:a17:902:6901:: with SMTP id j1mr1688511plk.255.1588932198001;
+ Fri, 08 May 2020 03:03:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20200507140732.GU37466@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru> <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 May 2020 13:03:11 +0300
+Message-ID: <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 8, 2020 at 12:37 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> This SPI-controller is a part of the Baikal-T1 System Controller and
+> is based on the DW APB SSI IP-core, but with very limited resources:
+> no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
+> FIFO available. In order to provide a transparent initial boot code
+> execution this controller is also utilized by an vendor-specific block,
+> which provides an CS0 SPI flash direct mapping interface. Since both
+> direct mapping and SPI controller normal utilization are mutual exclusive
+> only a one of these interfaces can be used to access an external SPI
+> slave device. Taking into account the peculiarities of the controller
+> registers and physically mapped SPI flash access, very limited resources
+> and seeing the normal usecase of the controller is to access an external
+> SPI-nor flash, we decided to create a dedicated SPI driver for it.
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It seems a lot of code.
+Why can't you use spi-dw-mmio.c et al.?
 
-Hi!
-
-> > But I might be confused. I recall some audio patches were needed for
-> > basic phone calls (setting up mixers to connect gsm<->audio), but
-> > those worked before gsmux support was enabled. (Maybe some hardcoded
-> > commands were needed to be sent to gsmmux somewhere).
->=20
-> We're currently reconfiguring the TDM transport that based on the
-> unsolicited messages on dlci1. I still need to figure out how to add
-> that back while keeping the serdev-ngsm driver generic.
-
-Is it really neccessary? I believe I was simply configuring codecs for
-voice call and left them like that.
-
-> > I assume neither gsmmux audio parts nor mixer parts are available in
-> > -next at the moment?
->=20
-> Sorry not yet, will post as soon as I have the audio notifiers part
-> working, so it will be some days away still with time permitting.
-
-Thanks... feel free to cc me.
-
-I pushed new version of ofono: I'm still not sure about those incoming
-sms (but _some_ sms are received). Rest should be better.
-
-Best regards,
-								Pavel
-
-user@devuan:/my/ofono$ git push
-Counting objects: 5, done.
-Delta compression using up to 2 threads.
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 479 bytes | 0 bytes/s, done.
-Total 5 (delta 4), reused 0 (delta 0)
-remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
-To github.com:pavelmachek/ofono.git
-   606faf92..f6f43041  mux-v1.29-3 -> mux-v1.29-3
+> The driver provides callbacks for native messages-based SPI interface,
+> SPI-memory and direct mapping read operations. Due to not having any
+> asynchronous signaling interface provided by the core we have no choice
+> but to implement a polling-based data transmission/reception algorithm.
+> In addition to that in order to bypass the automatic native chip-select
+> toggle the driver disables the local interrupts during the memory-based
+> transfers if no complementary GPIO-based chip-select detected in the
+> platform.
 
 
-commit f6f43041ab33e2b811b73d4009ecfa0692d192aa
-Author: Pavel <pavel@ucw.cz>
-Date:   Fri May 8 11:57:04 2020 +0200
 
-    Trivial fix for incoming calls. Now basic functionality should
-    work.
-
-commit 606faf92c289166a5577963f1f987bc321edd226
-Author: Pavel <pavel@ucw.cz>
-Date:   Fri May 8 11:45:32 2020 +0200
-
-    Got enough of netreg to work for ofone to talk to us.
-
-    Incoming calls do NOT seem to work.
-
-    Outgoing calls seem ok.
-
-    Incoming SMS seem ok.
-
-    Outgoing SMS seem ok.
-   =20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl61LiMACgkQMOfwapXb+vLIZQCfTkdEtzhMK9+vPZc7yt/nH1EU
-WJkAoKMnCPPHidDjAa969bgYAVkr7rSo
-=qz9P
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
+-- 
+With Best Regards,
+Andy Shevchenko
