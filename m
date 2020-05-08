@@ -6,120 +6,78 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8AFC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27451C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740742173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDC32173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgEHTGY (ORCPT
+        id S1727768AbgEHTHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:06:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1210 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbgEHTGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:06:24 -0400
-IronPort-SDR: v2gjK4RKVJ1v/sdovzL2O+wNylxbADOvG7CwVQ2mYCdz9xLJxz/HixotXkwpwCZ+kmPH0d16Cx
- 1FbYJHrKB4gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:06:23 -0700
-IronPort-SDR: nTJv2Ub7B7vBvOk28P4x1cVdUZbPUuOksDDQNy7s9MtBirBS8RvT9K4KcLsZoqahFtSTTuVdmk
- 9Xl7ImcTOcnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="462687274"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:06:19 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX8KE-005Sw7-9j; Fri, 08 May 2020 22:06:22 +0300
-Date:   Fri, 8 May 2020 22:06:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200508190622.GQ185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
+        Fri, 8 May 2020 15:07:45 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58201 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbgEHTHo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:07:44 -0400
+X-Originating-IP: 157.36.216.22
+Received: from localhost (unknown [157.36.216.22])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9F7331C0006;
+        Fri,  8 May 2020 19:07:38 +0000 (UTC)
+Date:   Sat, 9 May 2020 00:37:35 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     "Daniel Walker (danielwa)" <danielwa@cisco.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [RFC-PATCH] mtd: spi-nor: add conditional 4B opcodes
+Message-ID: <20200508190735.tpgeuirsnyjexfz4@yadavpratyush.com>
+References: <20200507162047.30788-1-danielwa@cisco.com>
+ <20200507180346.gwni4hf6kb6gd2e5@yadavpratyush.com>
+ <20200507181356.GZ9016@zorba>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200507181356.GZ9016@zorba>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
-> 
-> > > Multi-block support provides a way to map the kernel-specific SG-table so
-> > > the DW DMA device would handle it as a whole instead of handling the
-> > > SG-list items or so called LLP block items one by one. So if true LLP
-> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > > utilized to load and execute each LLP-block one by one. A problem may
-> > > happen for multi-block DMA slave transfers, when the slave device buffers
-> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > > than the block size. In this case writing data to the DMA slave Tx buffer
-> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > > We've discovered this problem in the framework of the DW APB SPI device
-> 
-> > Mark, do we have any adjustment knobs in SPI core to cope with this?
-> 
-> Frankly I'm not sure I follow what the issue is - is an LLP block item
-> different from a SG list entry?  As far as I can tell the problem is
-> that the DMA controller does not support chaining transactions together
-> and possibly also has a limit on the transfer size?  Or possibly some
-> issue with the DMA controller locking the CPU out of the I/O bus for
-> noticable periods?  I can't really think what we could do about that if
-> the issue is transfer sizes, that just seems like hardware which is
-> never going to work reliably.  If the issue is not being able to chain
-> transfers then possibly an option to linearize messages into a single
-> transfer as suggested to cope with PIO devices with ill considered
-> automated chip select handling, though at some point you have to worry
-> about the cost of the memcpy() vs the cost of just doing PIO.
+Hi Daniel,
 
-My understanding that the programmed transfers (as separate items in SG list)
-can be desynchronized due to LLP emulation in DMA driver. And suggestion
-probably is to use only single entry (block) SG lists will do the trick (I
-guess that we can configure SPI core do or do not change CS between them).
+On 07/05/20 06:13PM, Daniel Walker (danielwa) wrote:
+> On Thu, May 07, 2020 at 11:33:46PM +0530, Pratyush Yadav wrote:
+> > On 07/05/20 09:20AM, Daniel Walker wrote:
+> > > Some chips have 4B opcodes, but there is no way to know if they have
+> > > them. This device tree option allows platform owners to force enable 4b
+> > > opcodes when they know their chips support it even when it can be
+> > > automatically identified.
+> > 
+> > Do you mean that two chips might have the same ID but one of them can 
+> > support 4B opcodes and the other can not? Is it possible to detect this 
+> > in a fixup hook? I think it would be better to do something like this in 
+> > a fixup hook instead of via device tree.
+>   
+> Yes. The chip I added the option for is an example of this, it's n25q256a. I'm not familiar with the
+> fixup hook mechanism, but I would assume you need some way to tell between the 4B
+> opcode chips and the non-4B opcode chips. For n25q256a, we have not found a way
+> to do that.
 
-> > > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > > fix it right now lets at least print a warning for the first found
-> > > multi-blockless DW DMAC channel. This shall point a developer to the
-> > > possible cause of the problem if one would experience a sudden data loss.
-> 
-> I thought from the description of the SPI driver I just reviewed that
-> this hardware didn't have DMA?  Or are there separate blocks in the
-> hardware that have a more standard instantiation of the DesignWare SPI
-> controller with DMA attached?
+I'm assuming this patch is related to [0]. If all you want is to address 
+memory above 16M, why not switch to 4-byte addressing mode instead? 
+Taking a quick look at the datasheet tells me this can be done via the 
+"Enter 4-byte address mode" command (0xB7). Then just use the regular 
+read/program commands with 4-byte addresses. Does that work for you? Is 
+there any reason you _have_ to use dedicated 4B opcodes?
 
-I speculate that the right words there should be 'we don't enable DMA right now
-due to some issues' (see above).
+[0] https://lore.kernel.org/linux-mtd/20200417174620.16420-1-danielwa@cisco.com/ 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Pratyush Yadav
