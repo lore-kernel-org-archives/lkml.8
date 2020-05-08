@@ -2,151 +2,125 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A49C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5F3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAAD7218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1167624958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944462;
-	bh=WoFe3YzSoDBlR/QxiETEMCC62eGbgcNbl+XND+75qcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=awNMeZqvzDXH8TFPx39Y+/bAPzWjBGxUsAmEE4w/eVueAUwmp63hquZovXGKLH51B
-	 9lC+Ed2K2m/lVKQe0M0SmCb0w6P5m3qNHa5VvLv+xZ0KQ8zcNozc0M7p0rSL182RWq
-	 yjCyc+QtVR0HiOkRxH0cnSLtQXbYlmMYB70OSDJg=
+	s=default; t=1588944479;
+	bh=XmKr+actPKIyBSF7+MJNsc70eQDYMdbsWtd71MQ4z8o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=T+PwP4q8fFb5VYUaTPWWqCpyym9tKZfEJ2W3CQ+wHngTUrFonoHeKWwvcHW4P1AvC
+	 hfRgH4E6NnmmKzw9P4XSFfEuBf66kwPNSaNGdCz7fKjmlLmkJC3NpjX4Ckq9SgwK2i
+	 uxAwjbPrbWMKAbFzNRtBH/xKN9XCapIAQPpEcrGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgEHN1l (ORCPT
+        id S1727964AbgEHN16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgEHN1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:27:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726736AbgEHN15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:27:57 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600D4208DB;
-        Fri,  8 May 2020 13:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC57024953;
+        Fri,  8 May 2020 13:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588944459;
-        bh=WoFe3YzSoDBlR/QxiETEMCC62eGbgcNbl+XND+75qcg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dEKKjcQHeJrZW2rlfo9zA+ChG/wQhnuQRVCbxZdnl1dea2zKgtVo/AeMzC0349xbn
-         9FzfI9IrCWLUKPg8GEOYQug/cup1XRe2nPhrqqJLAQLCRAmIDwXgkmX77e4ne6HHtE
-         3IsxaiLfNUOFDGr9x9CZT9FgqrWKIHhUsVP8pGFE=
-Date:   Fri, 8 May 2020 15:27:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>, m.szyprowski@samsung.com,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 5.4 40/50] dma-direct: exclude dma_direct_map_resource
- from the min_low_pfn check
-Message-ID: <20200508132737.GA173507@kroah.com>
-References: <20200508123043.085296641@linuxfoundation.org>
- <20200508123048.730720753@linuxfoundation.org>
- <CA+G9fYvdD3dhMhGL5=nfT+7xTEdD36zUtceF2fROPF4OQQZbLQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYvdD3dhMhGL5=nfT+7xTEdD36zUtceF2fROPF4OQQZbLQ@mail.gmail.com>
+        s=default; t=1588944477;
+        bh=XmKr+actPKIyBSF7+MJNsc70eQDYMdbsWtd71MQ4z8o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OYg5EcUy5J7fNhWiDvM5ZKpmTJRL9DKvTrTcXTEdc6xz2hCkG0mdPoNVFHZ7r1uRH
+         fNBfP+EGrEG7ysIj/kfXDidRX6YkYZNZPo4XQyFVdOmysrCJxjyuYPzNCClroTi/+w
+         0mjbsYbVE85F3wPCuxZTkDZ8XFCRP8952LksoUO8=
+Date:   Fri, 8 May 2020 22:27:50 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
+Message-Id: <20200508222750.a7aca9f898b7637d402e8726@kernel.org>
+In-Reply-To: <20200505135313.517429268@linutronix.de>
+References: <20200505134926.578885807@linutronix.de>
+        <20200505135313.517429268@linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:50:02PM +0530, Naresh Kamboju wrote:
-> On Fri, 8 May 2020 at 18:23, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > From: Christoph Hellwig <hch@lst.de>
-> >
-> > commit 68a33b1794665ba8a1d1ef1d3bfcc7c587d380a6 upstream.
-> >
-> > The valid memory address check in dma_capable only makes sense when mapping
-> > normal memory, not when using dma_map_resource to map a device resource.
-> > Add a new boolean argument to dma_capable to exclude that check for the
-> > dma_map_resource case.
-> >
-> > Fixes: b12d66278dd6 ("dma-direct: check for overflows on 32 bit DMA addresses")
-> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> <trim>
-> >
-> > --- a/kernel/dma/direct.c
-> > +++ b/kernel/dma/direct.c
-> > @@ -327,7 +327,7 @@ static inline bool dma_direct_possible(s
-> >                 size_t size)
-> >  {
-> >         return swiotlb_force != SWIOTLB_FORCE &&
-> > -               dma_capable(dev, dma_addr, size);
-> > +               dma_capable(dev, dma_addr, size, true);
-> 
-> While building kernel Image for arm architecture the following error noticed
-> on stale-rc 5.4 kernel branch.
-> 
->  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
-> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> arm-linux-gnueabihf-gcc" O=build zImage
->  #
->  ../kernel/dma/direct.c: In function ‘dma_direct_possible’:
->  ../kernel/dma/direct.c:330:3: error: too many arguments to function
-> ‘dma_capable’
->    330 |   dma_capable(dev, dma_addr, size, true);
->        |   ^~~~~~~~~~~
->  In file included from ../include/linux/dma-direct.h:12,
->                   from ../kernel/dma/direct.c:10:
->  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
->     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-> addr, size_t size)
->        |                    ^~~~~~~~~~~
->  In file included from ../include/linux/init.h:5,
->                   from ../include/linux/memblock.h:12,
->                   from ../kernel/dma/direct.c:7:
->  ../kernel/dma/direct.c: In function ‘dma_direct_map_resource’:
->  ../kernel/dma/direct.c:379:16: error: too many arguments to function
-> ‘dma_capable’
->    379 |  if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
->        |                ^~~~~~~~~~~
->  ../include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
->     78 | # define unlikely(x) __builtin_expect(!!(x), 0)
->        |                                          ^
->  In file included from ../include/linux/dma-direct.h:12,
->                   from ../kernel/dma/direct.c:10:
->  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
->     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-> addr, size_t size)
->        |                    ^~~~~~~~~~~
->  make[3]: *** [../scripts/Makefile.build:266: kernel/dma/direct.o] Error 1
->  In file included from ../include/linux/string.h:6,
->                   from ../include/linux/dma-mapping.h:6,
->                   from ../include/linux/dma-direct.h:5,
->                   from ../kernel/dma/swiotlb.c:24:
->  ../kernel/dma/swiotlb.c: In function ‘swiotlb_map’:
->  ../kernel/dma/swiotlb.c:681:16: error: too many arguments to function
-> ‘dma_capable’
->    681 |  if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
->        |                ^~~~~~~~~~~
->  ../include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
->     78 | # define unlikely(x) __builtin_expect(!!(x), 0)
->        |                                          ^
->  In file included from ../include/linux/dma-direct.h:12,
->                   from ../kernel/dma/swiotlb.c:24:
->  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
->     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-> addr, size_t size)
->        |                    ^~~~~~~~~~
+On Tue, 05 May 2020 15:49:28 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Ah crap, I think I remember trying to apply this in the past and running
-into these issues.  I'll go drop it now and push out a -rc2, thanks!
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
+> creeps in and ruins things.
+> 
+> That is; this is the INT3 text poke handler, strictly limit the code
+> that runs in it, lest it inadvertenly hits yet another INT3.
+> 
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-greg k-h
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+> ---
+>  arch/x86/kernel/alternative.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -960,9 +960,9 @@ static struct bp_patching_desc *bp_desc;
+>  static __always_inline
+>  struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
+>  {
+> -	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
+> +	struct bp_patching_desc *desc = READ_ONCE_NOCHECK(*descp); /* rcu_dereference */
+>  
+> -	if (!desc || !atomic_inc_not_zero(&desc->refs))
+> +	if (!desc || !arch_atomic_inc_not_zero(&desc->refs))
+>  		return NULL;
+>  
+>  	return desc;
+> @@ -971,7 +971,7 @@ struct bp_patching_desc *try_get_desc(st
+>  static __always_inline void put_desc(struct bp_patching_desc *desc)
+>  {
+>  	smp_mb__before_atomic();
+> -	atomic_dec(&desc->refs);
+> +	arch_atomic_dec(&desc->refs);
+>  }
+>  
+>  static __always_inline void *text_poke_addr(struct text_poke_loc *tp)
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
