@@ -2,88 +2,89 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F098C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBBAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EA321974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588981037;
-	bh=TTmQy61+zMJ0ALWgDCPYoVDJHD0JlRbB+Qz6kqRgTT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RBlDZgW4cth7XWXNAX5PjEOIUZhJCH91EgjGtiOKB6tVaZCI6j5YaVN89/BCiE+L6
-	 NKDQVakHB6NXlWnVOd3X10dr5Sb+C5LODSusQKfMHZGpHQsPNzFGUzhVAXS/dpDHTy
-	 32vHyK9lyQLJcyJsMvrF6ZNcSaTTTrh5WUIrZbqU=
+	by mail.kernel.org (Postfix) with ESMTP id 333C021974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgEHXhP (ORCPT
+        id S1728361AbgEHXh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 19:37:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:18506 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgEHXhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:37:14 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3242621974;
-        Fri,  8 May 2020 23:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588981034;
-        bh=TTmQy61+zMJ0ALWgDCPYoVDJHD0JlRbB+Qz6kqRgTT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J7LKO1YUXULcfyT7oCMVxpJm4O43hQ5MepZs+5JNDLT0UoYdHOJO/0YBOi0ajI8F8
-         kzSFFvVY6WVPPt9hvhYBYL6tJXPEImQaIdTxPqFzrofjdAEic9WB3Slxj6TRrXCBcm
-         THk1XoB/eUnT1lnJb/Tz24SWWPKq37jGCdPq6J3A=
-Date:   Fri, 8 May 2020 18:41:42 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] efi: Replace zero-length array with flexible-array
-Message-ID: <20200508234142.GA27139@embeddedor>
-References: <20200507192712.GA16805@embeddedor>
- <CAHk-=wh-Ym=onfkMyMmOZUr6cFGQUD8kMowX6OcE-A-H2efkMg@mail.gmail.com>
+        id S1727934AbgEHXh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 19:37:56 -0400
+IronPort-SDR: G5QTfzukAK/xxcAVOFUpuQODtBlWQmp+H4pyWS/9qRXKNpgvjz555j4Y/ATYLHZmVKCKhuPgkB
+ arynb8vK8VuQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 16:37:55 -0700
+IronPort-SDR: nskYbpXcg3aL2xjCO5ZbZPqNER0UOODRipa26VvaWqS/3iYCRsu89UzDueaSj+1jFAmhzvCK+c
+ T3Mkc/R1YfDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="279184846"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga002.jf.intel.com with ESMTP; 08 May 2020 16:37:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH] KVM: x86: Restore update of required xstate size in guest's CPUID
+Date:   Fri,  8 May 2020 16:37:49 -0700
+Message-Id: <20200508233749.3417-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh-Ym=onfkMyMmOZUr6cFGQUD8kMowX6OcE-A-H2efkMg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 10:26:40AM -0700, Linus Torvalds wrote:
-> On Thu, May 7, 2020 at 12:22 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99 [...]
-> 
-> Why is this called an "efi" patch, when it doesn't appear to be so at all:
-> 
-> >  include/linux/dma/ti-cppi5.h                   |    4 ++--
-> >  include/linux/efi.h                            |    2 +-
-> >  include/linux/mailbox/zynqmp-ipi-message.h     |    2 +-
-> >  include/linux/platform_data/cros_ec_commands.h |    4 ++--
-> >  include/linux/platform_data/cros_ec_proto.h    |    2 +-
-> >  kernel/params.c                                |    2 +-
-> >  kernel/tracepoint.c                            |    2 +-
-> >  scripts/kallsyms.c                             |    2 +-
-> >  8 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> Yes, one line of the patch is EFI code. The rest are not.
-> 
+Restore a guest CPUID update that was unintentional collateral damage
+when the per-vCPU guest_xstate_size field was removed.
 
-Yeah. It seems the script needs some improvement. I'll split this
-patch up into multiple patches.
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Fixes: d87277414b851 ("kvm: x86: Cleanup vcpu->arch.guest_xstate_size")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-Thanks
---
-Gustavo
+There's nothing more thrilling than watching bisect home in on your own
+commits, only to land on someone else's on the very last step.
+
+ arch/x86/kvm/cpuid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 35845704cf57a..cd708b0b460a0 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -84,11 +84,13 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
+ 
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+-	if (!best)
++	if (!best) {
+ 		vcpu->arch.guest_supported_xcr0 = 0;
+-	else
++	} else {
+ 		vcpu->arch.guest_supported_xcr0 =
+ 			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
++		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
++	}
+ 
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+ 	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+-- 
+2.26.0
+
