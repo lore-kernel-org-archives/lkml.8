@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62849C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B60C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36234206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421EE206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943979;
-	bh=yShE1avA9kFy3YW+Z3J90wWk1PSiq10EV6ZLta9UE6Q=;
+	s=default; t=1588943984;
+	bh=kZSpbwMjiUsLOnPRALjdPtfQYqyoa/8Jo8EJQKpLap0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PYHBAWqvSPSeqOMJAO4SUJghTApXoO5FzRPBmUx9HF5EHwpn6i/vHEaCLsk8AuG8h
-	 vWXfwBuvybrd8+Ljfc4M8a7cALpwUmVlhSH2C0iBB3t8oOQwHMzUaoEYEnzj0F2eAW
-	 7goWHiWQIsKh6UcPy214LwWNt/GgtHex4qY+Ef5Q=
+	b=k1FYTfzQs/PoUdOHV11K7FplomFzZOMQ/80NwvYv75evxwNjEnOq34aZRIc9+OLIQ
+	 3patl9zznTWH1RHyfk5h2K+phy9V8v1h+9LGPAPYrwE16isOvHc/udOjzGRxVWdQ1j
+	 IdSAP1eMXYAid3O4PavYCmsH9m1AlKmhAAZSnDc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgEHNTi (ORCPT
+        id S1730103AbgEHNTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37602 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbgEHMlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:50 -0400
+        id S1728847AbgEHMlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD7124970;
-        Fri,  8 May 2020 12:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD9FE2495F;
+        Fri,  8 May 2020 12:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941709;
-        bh=yShE1avA9kFy3YW+Z3J90wWk1PSiq10EV6ZLta9UE6Q=;
+        s=default; t=1588941700;
+        bh=kZSpbwMjiUsLOnPRALjdPtfQYqyoa/8Jo8EJQKpLap0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HaI9vS1EUFYgQ2CEJy6R/gu281eC7PGMNc3LkiX8MiQdqy5hUDTCN31Wkb9vx9y4I
-         /2dmzzgdzHN9dK9nlSzBsH/E4oZlkP4jUzf+zwMlaGSZl15hB7QQkoEbpbG8DPNGlN
-         tw/8SKtATJWto4sLXhpJgSr4y65Gd9GNte6PLmyE=
+        b=ZIL7MULCl5RUEMymy42okYpVXuCkLb2IcPy64LaIBIQvR87rhFZHID0DuyNiMw0lg
+         aQP3R3j33Zdwl++lrFbyW92IOs3bKXaZP0wrAtF6EzhspAQ+QLmCtZCFLdIJMl0gu/
+         RUsUHELnvuUVQ8rJvHkeRfbBt3EOwGdDndMPr+fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanxiao Dong <chuanxiao.dong@intel.com>,
-        Pawel Wodkowski <pawelx.wodkowski@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.4 140/312] mmc: debugfs: correct wrong voltage value
-Date:   Fri,  8 May 2020 14:32:11 +0200
-Message-Id: <20200508123134.331025180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 136/312] ASoC: fsl_ssi: mark SACNT register volatile
+Date:   Fri,  8 May 2020 14:32:07 +0200
+Message-Id: <20200508123134.063717277@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,32 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanxiao Dong <chuanxiao.dong@intel.com>
+From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-commit 0036e74686344f1051afc3107740140abfd03616 upstream.
+commit 3f1c241f0f5f90046258e6b8d4aeb6463ffdc08e upstream.
 
-Correct the wrong voltage value shown in debugfs for mmc/sd/sdio.
+SACNT register should be marked volatile since
+its WR and RD bits are cleared by SSI after
+completing the relevant operation.
+This unbreaks AC'97 register access.
 
-Signed-off-by: Chuanxiao Dong <chuanxiao.dong@intel.com>
-Signed-off-by: Pawel Wodkowski <pawelx.wodkowski@intel.com>
-Fixes: 42cd95a0603e ("mmc: core: debugfs: Add signal_voltage to ios dump")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 05cf237972fe ("ASoC: fsl_ssi: Add driver suspend and resume to support MEGA Fast")
+
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/debugfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_ssi.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/core/debugfs.c
-+++ b/drivers/mmc/core/debugfs.c
-@@ -170,7 +170,7 @@ static int mmc_ios_show(struct seq_file
- 		str = "invalid";
- 		break;
- 	}
--	seq_printf(s, "signal voltage:\t%u (%s)\n", ios->chip_select, str);
-+	seq_printf(s, "signal voltage:\t%u (%s)\n", ios->signal_voltage, str);
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -146,6 +146,7 @@ static bool fsl_ssi_volatile_reg(struct
+ 	case CCSR_SSI_SRX1:
+ 	case CCSR_SSI_SISR:
+ 	case CCSR_SSI_SFCSR:
++	case CCSR_SSI_SACNT:
+ 	case CCSR_SSI_SACADD:
+ 	case CCSR_SSI_SACDAT:
+ 	case CCSR_SSI_SATAG:
+@@ -239,8 +240,9 @@ struct fsl_ssi_private {
+ 	unsigned int baudclk_streams;
+ 	unsigned int bitclk_freq;
  
- 	switch (ios->drv_type) {
- 	case MMC_SET_DRIVER_TYPE_A:
+-	/*regcache for SFCSR*/
++	/* regcache for volatile regs */
+ 	u32 regcache_sfcsr;
++	u32 regcache_sacnt;
+ 
+ 	/* DMA params */
+ 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+@@ -1597,6 +1599,8 @@ static int fsl_ssi_suspend(struct device
+ 
+ 	regmap_read(regs, CCSR_SSI_SFCSR,
+ 			&ssi_private->regcache_sfcsr);
++	regmap_read(regs, CCSR_SSI_SACNT,
++			&ssi_private->regcache_sacnt);
+ 
+ 	regcache_cache_only(regs, true);
+ 	regcache_mark_dirty(regs);
+@@ -1615,6 +1619,8 @@ static int fsl_ssi_resume(struct device
+ 			CCSR_SSI_SFCSR_RFWM1_MASK | CCSR_SSI_SFCSR_TFWM1_MASK |
+ 			CCSR_SSI_SFCSR_RFWM0_MASK | CCSR_SSI_SFCSR_TFWM0_MASK,
+ 			ssi_private->regcache_sfcsr);
++	regmap_write(regs, CCSR_SSI_SACNT,
++			ssi_private->regcache_sacnt);
+ 
+ 	return regcache_sync(regs);
+ }
 
 
