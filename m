@@ -2,101 +2,127 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2C5C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83DAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C247B2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA762070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GtAP3h/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgEHJdQ (ORCPT
+        id S1727076AbgEHJd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:33:16 -0400
-Received: from elvis.franken.de ([193.175.24.41]:44684 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgEHJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:33:14 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jWzNV-0001bD-01; Fri, 08 May 2020 11:33:09 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id DB100C0418; Fri,  8 May 2020 11:32:59 +0200 (CEST)
-Date:   Fri, 8 May 2020 11:32:59 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Huacai Chen <chenhc@lemote.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/20] mips: Add MIPS Warrior P5600 support
-Message-ID: <20200508093259.GB9085@alpha.franken.de>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-8-Sergey.Semin@baikalelectronics.ru>
- <20200507111735.GF11616@alpha.franken.de>
- <20200507211923.kfu2ly3ncqms4c2u@mobilestation>
+        Fri, 8 May 2020 05:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgEHJdZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 05:33:25 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB7CC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 02:33:25 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w29so285613qtv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 02:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GqXEjDaG+YGx0nXjgZ4W5HNVqJo925K86iqD302veHY=;
+        b=GtAP3h/Z3PPH676mNtyFuDUd4QaE5wVZcq8hFWKATjr8OQA3NHM4mBIm5tr/e/Wfle
+         tZKpzU4KBXvnm6U0NS6/6xvZh7Fgx0c6DwIGy5767Jz/8WsGfIW5qkCS1hyfJ1ZbadCw
+         GersB2jGOkAqejndKmS66DV6IbmaK92JxrTFROGWp2iqaQkag9RKnVcmL59NzCQV92sO
+         WAM893lT9sOa5/5sMWDdkHv8gY9ior9kh9wFL1hUBe8Sgn6Oni3wAdkBHHOHBXV5q9aR
+         qd8OGJHs/s7fPbDOwxw6lZAh4fSrlSA3Q9+8rK5BMSjvJIX5l55A/Q/+oe8st5oXQFY5
+         frBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GqXEjDaG+YGx0nXjgZ4W5HNVqJo925K86iqD302veHY=;
+        b=NrSYsBFhDtd2snLeXsrhD+i6tku1STd8Sf0geOGtHdoC8R/arW12NuTVe0t4NldmF+
+         vd7PKiuiLvXkGq/VTNWx+VO0v+OzLRTObUjUEw14JrstB72fxB364TTj8dMQc+aGeBhz
+         NGWHL8qLZCWgeqeaMmyAB+pu1K/JOGpiN2OZr/NqgBFWl70jfH1m0jXqrkVuNMr2FT4i
+         uku164myv3LC/T6UXj+0hUdrjXPq+FTRR+zGlN/XjmdpZjcDA3KycCnqHA8KIcqDJZx1
+         xc3Lh6Gvzf7xjPEOenHzSRDReDUF326lZu4Di/JEepVRoBYiDw3ZSHShlNvhZLUHDRt/
+         9Cgw==
+X-Gm-Message-State: AGi0Pub1Z6ygHA6xZJ6nRdkG39WLJmSSddnu5DWw5P+DrfQCnTbV75K9
+        SL4BoyZVHEeJTrzqvYKUFb0iQTUNlbB6DRe9wrEoTw==
+X-Google-Smtp-Source: APiQypJBReLlNI1lkKoH4ewz6Q2tA9L1d0ig5UwPjkpDV+PBKuDen+TP7tDZu/7zCfjlmMaE4Q+aq6NmYCbIFlSp4NM=
+X-Received: by 2002:aed:3668:: with SMTP id e95mr2108070qtb.50.1588930403993;
+ Fri, 08 May 2020 02:33:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507211923.kfu2ly3ncqms4c2u@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <00000000000039420505a14e4951@google.com> <1588755226.13662.17.camel@suse.com>
+ <CAAeHK+zOdghTAu647iKBEU+0LqkYYOk0f7gPk_4T6BjNi=2sAQ@mail.gmail.com> <CAAeHK+xu_0BrnM5SKo5zNFvwunMDQWa+foD-y7MpnqjkP8tcbg@mail.gmail.com>
+In-Reply-To: <CAAeHK+xu_0BrnM5SKo5zNFvwunMDQWa+foD-y7MpnqjkP8tcbg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 8 May 2020 11:33:12 +0200
+Message-ID: <CACT4Y+b3q4C-1+L6Sa3fgOYEa3+XGuzfrfauaH_v9KXS7xH9Yw@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hfa384x_usbin_callback
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot <syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, nishkadg.linux@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:19:23AM +0300, Serge Semin wrote:
-> On Thu, May 07, 2020 at 01:17:35PM +0200, Thomas Bogendoerfer wrote:
-> > P5600 is CPU_MIPS_R5 so can't you select it here and drop all the || CPU_5600
-> > above/below ?
-> 
-> Alas, We can't do this so easy. CONFIG_CPU_MIPS32_{R2,R5,R6} and any other
-> CONFIG_CPU_* configs is something that kernel config-file is supposed to select.
-> Their availability is enabled by the CONFIG_SYS_HAS_CPU_* configs. CONFIG_CPU_*
-> is supposed to activate CPU-specific features and there is only one
-> CONFIG_CPU_x can be enabled at a time seeing it's a part of the "CPU type"
-> choice kconfig menu. In addition the CPU config also tunes a compiler to activate
-> the arch-specific ISA and optimizations in the arch/mips/Makefile by setting
-> -march=cpu-name (where cpu-name can be p5600, mips32r5, etc).
-> 
-> Yes, P5600 is based on the MIPS32r5, but it also has got some specific features
-> (see config CPU_P5600 and config MIPS32_R5), which makes it to be different from
-> the ancestor. So In addition to the difficulties described above IMHO converting
-> CPU_P5600 to a set of features activated on top of the CPU_MIPS32_R5 config
-> would contradict the design of the CPU-support configs implemented in the MIPS
-> arch subsystem.
+On Thu, May 7, 2020 at 5:56 PM 'Andrey Konovalov' via syzkaller-bugs
+<syzkaller-bugs@googlegroups.com> wrote:
+>
+> On Wed, May 6, 2020 at 1:50 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > On Wed, May 6, 2020 at 10:54 AM Oliver Neukum <oneukum@suse.com> wrote:
+> > >
+> > > Am Freitag, den 20.03.2020, 12:28 -0700 schrieb syzbot:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
+> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=11d74573e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7d42d68643a35f71ac8a
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fa561de00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d74573e00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+> > > >
+> > >
+> > > Hi,
+> > >
+> > > is this bug still active and can a test be run on it? I requested one
+> > > yesterday. If my analysis is correct this bug has security
+> > > implications, so it is kind of important.
+> >
+> > I see your request in the queue and it's been registered and
+> > completed, but for some reason syzbot didn't send an email with a
+> > response.
+> >
+> > Let me try this once again:
+> >
+> > #syz test: https://github.com/google/kasan.git e17994d1
+>
+> Still no response. Dmitry, any idea what could be wrong here?
 
-maybe I wasn't clear enough, my suggestion is
+I suspect it has something to do with the fact that the bug is already
+fixed (has a fixing commit).
 
-use 
-
-config CPU_P5600
-	bool "MIPS Warrior P5600"
-	depends on SYS_HAS_CPU_P5600
-	select CPU_MIPS32_R5
-	select CPU_SUPPORTS_UNCACHED_ACCELERATED
-	select CPU_SUPPORTS_CPUFREQ
-	select CPU_MIPSR2_IRQ_VI
-	select CPU_MIPSR2_IRQ_EI
-
-That way you don't need to any "|| CPU_P5600" where CPU_MIPS32_R5 is
-already there. Or are there cases, where this would be wrong ?
-
-Thomas.
-
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+...right, it was broken by:
+https://github.com/google/syzkaller/commit/f8368f999a1964df6d39a225cd3f5ab3942dd755
+and we lack a test for this scenario. It was supposed to only disable
+mailing of bisection jobs.
