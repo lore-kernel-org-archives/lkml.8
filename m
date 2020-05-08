@@ -2,52 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE707C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E535C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A788E20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1212054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942730;
-	bh=zFkS2/g/Apr0wc4izu9ZFX09jKuGiQjn4auE0yk/aQM=;
+	s=default; t=1588942736;
+	bh=YNOc2verFZCxdF+PEr0mt3qsZBXxUQ4tOaOWm46Gf7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkZc9qhfiGpfzv+W9gqJJD2mLhaQDFkN7+3IjtGxsxutWXWn1yQw1ZMDpeUjA3IlN
-	 1a4B69LVkViWIKGU61n20PjBOgzURnHj1Ef7dvCyGfvvTg1lyCzP5IVl2lOHBtf67T
-	 9aHnY0gLzTfA9CzD2kK1zocDUYctTI+2IUTRY3WI=
+	b=eOjVEmD5Yl5V4tBkdEFzUr4OB+8kfDEn9hpH39ZW9U4pIS4V4BVcNy+MbNyDAhOi5
+	 GUAohhbcGQWN9kfBQd1BZXlzgDJmT7Jc7UuDKBGjf1Hv04ZOhBZMW/07ZIG4XbRZMt
+	 TA0S4wLuLkRwkdkS7bptso9yzDwS6sOuZtY4/1sY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgEHMyL (ORCPT
+        id S1728700AbgEHM6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbgEHMyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:03 -0400
+        id S1730100AbgEHMx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24ACA2496A;
-        Fri,  8 May 2020 12:54:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C18EC2495C;
+        Fri,  8 May 2020 12:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942443;
-        bh=zFkS2/g/Apr0wc4izu9ZFX09jKuGiQjn4auE0yk/aQM=;
+        s=default; t=1588942436;
+        bh=YNOc2verFZCxdF+PEr0mt3qsZBXxUQ4tOaOWm46Gf7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaVNFmDD3c3W0Hlzy+pNT6YDKg46Z1F5ngYJEujFBuZ46KY6kJl5/P4nMsrfF1wJk
-         0is3RM96IItgXgcBPlgAhgXIaSaIIatp4IyEihxOHwTt7+qLzT5n9J4VtMB0Uy344o
-         1zyiNDq3oZCzTzqDD5kaScUZ4DK5urTwyJYsZ8bg=
+        b=kXS8w68KkXCGNV2QAxioXkFRcHMnK14ZextSKa/2lfEJDomI/A9gmnouTLClRbXvw
+         6JqPwZMnMBeSzjUiRB/S5qQsC9yO3ctuuHuwdNlRCm3q34b5dwNUinK0sPp11A38Sf
+         94m7i2WSFdJbeiByoBq2Ji55NEGRtyKxBy6h6rjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhan Liu <zhan.liu@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 47/50] Revert "drm/amd/display: setting the DIG_MODE to the correct value."
-Date:   Fri,  8 May 2020 14:35:53 +0200
-Message-Id: <20200508123049.498428983@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 27/50] mac80211: sta_info: Add lockdep condition for RCU list usage
+Date:   Fri,  8 May 2020 14:35:33 +0200
+Message-Id: <20200508123047.119009426@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -60,40 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhan Liu <Zhan.Liu@amd.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-commit b73b7f48895a6a944a76a2d8cdd7feee72bb1f0b upstream.
+[ Upstream commit 8ca47eb9f9e4e10e7e7fa695731a88941732c38d ]
 
-This reverts commit 967a3b85bac91c55eff740e61bf270c2732f48b2.
+The function sta_info_get_by_idx() uses RCU list primitive.
+It is called with  local->sta_mtx held from mac80211/cfg.c.
+Add lockdep expression to avoid any false positive RCU list warnings.
 
-Reason for revert: Root cause of this issue is found. The workaround is not needed anymore.
-
-Signed-off-by: Zhan Liu <zhan.liu@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200409082906.27427-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c |    9 ---------
- 1 file changed, 9 deletions(-)
+ net/mac80211/sta_info.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2768,15 +2768,6 @@ void core_link_enable_stream(
- 					CONTROLLER_DP_TEST_PATTERN_VIDEOMODE,
- 					COLOR_DEPTH_UNDEFINED);
+diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
+index 21b1422b1b1c3..b1669f0244706 100644
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -217,7 +217,8 @@ struct sta_info *sta_info_get_by_idx(struct ieee80211_sub_if_data *sdata,
+ 	struct sta_info *sta;
+ 	int i = 0;
  
--		/* This second call is needed to reconfigure the DIG
--		 * as a workaround for the incorrect value being applied
--		 * from transmitter control.
--		 */
--		if (!dc_is_virtual_signal(pipe_ctx->stream->signal))
--			stream->link->link_enc->funcs->setup(
--				stream->link->link_enc,
--				pipe_ctx->stream->signal);
--
- #ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
- 		if (pipe_ctx->stream->timing.flags.DSC) {
- 			if (dc_is_dp_signal(pipe_ctx->stream->signal) ||
+-	list_for_each_entry_rcu(sta, &local->sta_list, list) {
++	list_for_each_entry_rcu(sta, &local->sta_list, list,
++				lockdep_is_held(&local->sta_mtx)) {
+ 		if (sdata != sta->sdata)
+ 			continue;
+ 		if (i < idx) {
+-- 
+2.20.1
+
 
 
