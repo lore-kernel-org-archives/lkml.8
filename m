@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3DCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B64EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDB024955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E312724955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgEHOJ1 (ORCPT
+        id S1727863AbgEHOKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:09:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43014 "EHLO huawei.com"
+        Fri, 8 May 2020 10:10:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4356 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726817AbgEHOJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:09:26 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5CB18DFBFAE8AAA0CC89;
-        Fri,  8 May 2020 22:09:24 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 22:09:15 +0800
+        id S1726792AbgEHOKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:10:10 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EC0DB1A56182C8F5F6C2;
+        Fri,  8 May 2020 22:10:00 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 22:09:53 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <leoyang.li@nxp.com>, <roy.pledge@nxp.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>,
+To:     <Roy.Pledge@nxp.com>, <leoyang.li@nxp.com>,
+        <youri.querry_1@nxp.com>
+CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] soc: fsl: qbman: Remove unused inline function qm_eqcr_get_ci_stashing
-Date:   Fri, 8 May 2020 22:08:46 +0800
-Message-ID: <20200508140846.47608-1-yuehaibing@huawei.com>
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register
+Date:   Fri, 8 May 2020 22:09:47 +0800
+Message-ID: <20200508140947.28712-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -43,29 +44,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree anymore.
+There's no callers in-tree anymore since commit
+3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/soc/fsl/qbman/qman.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/soc/fsl/dpio/qbman-portal.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
-index 1e164e03410a..9888a7061873 100644
---- a/drivers/soc/fsl/qbman/qman.c
-+++ b/drivers/soc/fsl/qbman/qman.c
-@@ -449,11 +449,6 @@ static inline int qm_eqcr_init(struct qm_portal *portal,
- 	return 0;
- }
+diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
+index 804b8ba9bf5c..e2e9fbb58a72 100644
+--- a/drivers/soc/fsl/dpio/qbman-portal.c
++++ b/drivers/soc/fsl/dpio/qbman-portal.c
+@@ -572,18 +572,6 @@ void qbman_eq_desc_set_qd(struct qbman_eq_desc *d, u32 qdid,
+ #define EQAR_VB(eqar)      ((eqar) & 0x80)
+ #define EQAR_SUCCESS(eqar) ((eqar) & 0x100)
  
--static inline unsigned int qm_eqcr_get_ci_stashing(struct qm_portal *portal)
+-static inline void qbman_write_eqcr_am_rt_register(struct qbman_swp *p,
+-						   u8 idx)
 -{
--	return (qm_in(portal, QM_REG_CFG) >> 28) & 0x7;
+-	if (idx < 16)
+-		qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT + idx * 4,
+-				     QMAN_RT_MODE);
+-	else
+-		qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT2 +
+-				     (idx - 16) * 4,
+-				     QMAN_RT_MODE);
 -}
 -
- static inline void qm_eqcr_finish(struct qm_portal *portal)
- {
- 	struct qm_eqcr *eqcr = &portal->eqcr;
+ #define QB_RT_BIT ((u32)0x100)
+ /**
+  * qbman_swp_enqueue_direct() - Issue an enqueue command
 -- 
 2.17.1
 
