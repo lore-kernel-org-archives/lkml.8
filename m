@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B575C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C647FC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9D4208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5656208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943580;
-	bh=QF5IDSTZsGg8+KtyRcK9yV+Y7rlVcpSFWAYA2ll7Ufo=;
+	s=default; t=1588943584;
+	bh=ZyHE1W+JZxQ0Y1vRKWpYFiUEuY+PkXT/CYY1jZimems=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BtlFttwIV2wP5IwwKTnz5u0/14WaOqU7nXctc0b0T1zGIAgRfCquwBScRm/dsr5tq
-	 UETbf01K3zynygGXPOz6Pvx8+ZZ7zey4Nh95KtjHGcMDz3+Uhldj4/hTW4kV9J+HMo
-	 jRIqsDndNHXP36SmRuB4BIqu+MXrtMOM1eIN93r8=
+	b=WjBmI0qM/Z8URr9ukdEl7EKtaiDUOlp3Xb2g4kMbrY0J0w9h45RgX+4TJgbLX2mRz
+	 ARJo0f8hGjpS9vNIY+/PmIZFkM9R9ggibM1sLDuRYUU78L32D42t/CLVz9mvlXY/Gs
+	 DYItnS34DF7cFbNZ1blSRREhfi4AUmRSfpTtNUrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgEHNM7 (ORCPT
+        id S1729924AbgEHNND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52216 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgEHMs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:26 -0400
+        id S1729652AbgEHMsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C168721473;
-        Fri,  8 May 2020 12:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0F721473;
+        Fri,  8 May 2020 12:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942106;
-        bh=QF5IDSTZsGg8+KtyRcK9yV+Y7rlVcpSFWAYA2ll7Ufo=;
+        s=default; t=1588942096;
+        bh=ZyHE1W+JZxQ0Y1vRKWpYFiUEuY+PkXT/CYY1jZimems=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwfm3rqVREDPtCMoxnRxN9y/oFG8Y/NsDkRFJAwX2HO5l5r+fF3ztVD03Iyi2dfIv
-         eFc4Mc29J4XLRYvxI/rJB6uuM6jgXiYXu5c/rHu3jOOIt0rv5+KOJzRMTVM5G4Da20
-         NilZch0r6HFAPsJ9egsddKLLX6ZvSUKyCotkLooM=
+        b=K4iXUb90Gq26Ny2+krgr8UBhcpzXGmGaFkQF4uwowj48CmFIV3DE8o0wkS77xH3fp
+         Td1WZeYWt99bNWtgFWWaqEQfMrJIhyMfI6YTlnv6pT1e5yQDR8lsOF22aV9D+hS9Ph
+         SfjXfMmnVzzhzHTwm19F/eNSGYmr2mzOYWcuRXFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Ian Munsie <imunsie@au1.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 299/312] cxl: Fix DAR check & use REGION_ID instead of opencoding
-Date:   Fri,  8 May 2020 14:34:50 +0200
-Message-Id: <20200508123145.425312028@linuxfoundation.org>
+        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 295/312] regulator: core: Rely on regulator_dev_release to free constraints
+Date:   Fri,  8 May 2020 14:34:46 +0200
+Message-Id: <20200508123145.117282276@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,46 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
-commit 3b1dbfa14f97188ec33fdfc7acb66bea59a3bb21 upstream.
+commit 6333ef46bbe514a8ece6c432aab6bcf8637b2d7c upstream.
 
-The current code will set _PAGE_USER to the access flags for any
-fault address, because the ~ operation will be true for all address we
-take a fault on. But setting _PAGE_USER also means that the fault will
-be handled only if the page table have _PAGE_USER set. Hence there is
-no security hole with the current code.
+As we now free the constraints in regulator_dev_release we will still
+call free on the constraints pointer even if we went down an error
+path in regulator_register, because it is only allocated after the
+device_register. As such we no longer need to free rdev->constraints
+on the error paths, so this patch removes said frees.
 
-Now if it is an user space access, then the change in this patch really
-don't have an impact because we have (!ctx->kernel) set true
-and we take the if condition true.
-
-Now kernel context created fault on an address in the kernel range
-will result in a fault loop because we will not insert the
-hash pte due to access and pte permission mismatch. This patch fix
-the above issue.
-
-Fixes: f204e0b8cedd ("cxl: Driver code for powernv PCIe based cards for userspace access")
-Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Acked-by: Ian Munsie <imunsie@au1.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 29f5f4860a8e ("regulator: core: Move more deallocation into class unregister")
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/cxl/fault.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/core.c |   29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
---- a/drivers/misc/cxl/fault.c
-+++ b/drivers/misc/cxl/fault.c
-@@ -152,7 +152,7 @@ static void cxl_handle_page_fault(struct
- 	access = _PAGE_PRESENT;
- 	if (dsisr & CXL_PSL_DSISR_An_S)
- 		access |= _PAGE_RW;
--	if ((!ctx->kernel) || ~(dar & (1ULL << 63)))
-+	if ((!ctx->kernel) || (REGION_ID(dar) == USER_REGION_ID))
- 		access |= _PAGE_USER;
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1057,18 +1057,18 @@ static int set_machine_constraints(struc
  
- 	if (dsisr & DSISR_NOHPTE)
+ 	ret = machine_constraints_voltage(rdev, rdev->constraints);
+ 	if (ret != 0)
+-		goto out;
++		return ret;
+ 
+ 	ret = machine_constraints_current(rdev, rdev->constraints);
+ 	if (ret != 0)
+-		goto out;
++		return ret;
+ 
+ 	if (rdev->constraints->ilim_uA && ops->set_input_current_limit) {
+ 		ret = ops->set_input_current_limit(rdev,
+ 						   rdev->constraints->ilim_uA);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set input limit\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1077,21 +1077,20 @@ static int set_machine_constraints(struc
+ 		ret = suspend_prepare(rdev, rdev->constraints->initial_state);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set suspend state\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+ 	if (rdev->constraints->initial_mode) {
+ 		if (!ops->set_mode) {
+ 			rdev_err(rdev, "no set_mode operation\n");
+-			ret = -EINVAL;
+-			goto out;
++			return -EINVAL;
+ 		}
+ 
+ 		ret = ops->set_mode(rdev, rdev->constraints->initial_mode);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set initial mode: %d\n", ret);
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1102,7 +1101,7 @@ static int set_machine_constraints(struc
+ 		ret = _regulator_do_enable(rdev);
+ 		if (ret < 0 && ret != -EINVAL) {
+ 			rdev_err(rdev, "failed to enable\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1111,7 +1110,7 @@ static int set_machine_constraints(struc
+ 		ret = ops->set_ramp_delay(rdev, rdev->constraints->ramp_delay);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set ramp_delay\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1119,7 +1118,7 @@ static int set_machine_constraints(struc
+ 		ret = ops->set_pull_down(rdev);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set pull down\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1127,7 +1126,7 @@ static int set_machine_constraints(struc
+ 		ret = ops->set_soft_start(rdev);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set soft start\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -1136,16 +1135,12 @@ static int set_machine_constraints(struc
+ 		ret = ops->set_over_current_protection(rdev);
+ 		if (ret < 0) {
+ 			rdev_err(rdev, "failed to set over current protection\n");
+-			goto out;
++			return ret;
+ 		}
+ 	}
+ 
+ 	print_constraints(rdev);
+ 	return 0;
+-out:
+-	kfree(rdev->constraints);
+-	rdev->constraints = NULL;
+-	return ret;
+ }
+ 
+ /**
+@@ -3983,7 +3978,7 @@ unset_supplies:
+ 
+ scrub:
+ 	regulator_ena_gpio_free(rdev);
+-	kfree(rdev->constraints);
++
+ wash:
+ 	device_unregister(&rdev->dev);
+ 	/* device core frees rdev */
 
 
