@@ -2,96 +2,79 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8CEC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43647C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063C321835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IrIVDbgC"
+	by mail.kernel.org (Postfix) with ESMTP id 2770F208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgEHBPX (ORCPT
+        id S1726712AbgEHBQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:15:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53109 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgEHBPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:15:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JC7D1Hryz9sSm;
-        Fri,  8 May 2020 11:15:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588900520;
-        bh=fYEX5NyTNYeHcsPw1wDJewWpAjGzrt1vBb05SZWzgbI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IrIVDbgCIcMMMM2DIgco5ga/IcgcGrCWG+tuoEsem8x344k82I9PrYByaPbldzSKl
-         S3Y7DxiBJiYxbRDu+NDe83lURPl2ac4zz7VcGP2bQs696zfboqR/M7j7J3jKt4FA0v
-         7Ou781EZij2lQJayhqFNfbyLAJ5hyDZmB8FjJ86mw2UGKbOL798JnCZ4Aq88BR4MsW
-         zIToY6bSig7WNKEhFTnKtifDWETVmDEtMMaP+DGsrR6rkIZemD9HGbamruOuoovVZ9
-         EaFwIT5MjAVeIgJxeF4ZUgVq22BWJEXpOWtrXpKJvgw2y9QnWkC3dBhWb5Gwp5sKC3
-         gyC8XBwMBkOJQ==
-Date:   Fri, 8 May 2020 11:15:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>
-Subject: linux-next: build warning after merge of the xfs tree
-Message-ID: <20200508111518.27b22640@canb.auug.org.au>
+        Thu, 7 May 2020 21:16:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33408 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726495AbgEHBQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:16:19 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8C19EA0F301D32FD195F;
+        Fri,  8 May 2020 09:16:16 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 8 May 2020 09:16:07 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>,
+        Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: compress: fix zstd data corruption
+Date:   Fri, 8 May 2020 09:16:03 +0800
+Message-ID: <20200508011603.54553-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JuNqr14l__hu6up0y4v5+l/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JuNqr14l__hu6up0y4v5+l/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+During zstd compression, ZSTD_endStream() may return non-zero value
+because distination buffer is full, but there is still compressed data
+remained in intermediate buffer, it means that zstd algorithm can not
+save at last one block space, let's just writeback raw data instead of
+compressed one, this can fix data corruption when decompressing
+incomplete stored compression data.
 
-Hi all,
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/compress.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-After merging the xfs tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index c22cc0d37369..5e4947250262 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -358,6 +358,13 @@ static int zstd_compress_pages(struct compress_ctx *cc)
+ 		return -EIO;
+ 	}
+ 
++	/*
++	 * there is compressed data remained in intermediate buffer due to
++	 * no more space in cbuf.cdata
++	 */
++	if (ret)
++		return -EAGAIN;
++
+ 	cc->clen = outbuf.pos;
+ 	return 0;
+ }
+-- 
+2.18.0.rc1
 
-fs/xfs/xfs_buf.c: In function 'xfs_buf_bio_end_io':
-fs/xfs/xfs_buf.c:1292:20: warning: unused variable 'mp' [-Wunused-variable]
- 1292 |  struct xfs_mount *mp =3D bp->b_mount;
-      |                    ^~
-
-Introduced by commit
-
-  7376d7454734 ("xfs: random buffer write failure errortag")
-
-DEBUG is not defined.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/JuNqr14l__hu6up0y4v5+l/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl60sqYACgkQAVBC80lX
-0GwV6wgAhEy/mBgmMwF5v3uDI5dR86qgPS8Sks8IKj4BS6Ec7I5R4c0mulwztpAW
-2alPk7MijktAvSZ1Po7RfYv0iNnrgLH7F9S9jC+gkpj281Mb0iE1y3gD6/SWglGv
-M6JXOyyFRu1Lq9wJkQTpa+LIFXoPVW5wJhrrhJQgwzI98YeJLwuiCiR07xl5r7I5
-dY7LcjeSrCZJdT3uo2L6qKcN+YOdTeU/ND06fwZYb8slTYsDSOwhBRDqz7Ry92Ww
-/B3HdcY4jm631u4hz7B5+yEdgnroZwBU0ZBd+yBgs/jyYWIx2frxJFwxmzIfZ7gZ
-9P6t1nWNojv9PCphyvBhgmn7gCib5A==
-=u0J0
------END PGP SIGNATURE-----
-
---Sig_/JuNqr14l__hu6up0y4v5+l/--
