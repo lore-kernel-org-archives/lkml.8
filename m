@@ -2,73 +2,66 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57DEC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A80C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8517207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6750E207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHBGQ (ORCPT
+        id S1726922AbgEHBIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:06:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3903 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbgEHBGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:06:15 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6BF86FCECC25D483787D;
-        Fri,  8 May 2020 09:06:13 +0800 (CST)
-Received: from [127.0.0.1] (10.166.212.180) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 09:06:09 +0800
-Subject: Re: [PATCH -next] dm mpath: Remove unused variable ret
-To:     Mike Snitzer <snitzer@redhat.com>
-CC:     <agk@redhat.com>, <dm-devel@redhat.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1588854412-19301-1-git-send-email-zou_wei@huawei.com>
- <20200507142958.GA12032@redhat.com>
-From:   Samuel Zou <zou_wei@huawei.com>
-Message-ID: <d945a16d-5a9d-252f-2dec-1d654c4f7e77@huawei.com>
-Date:   Fri, 8 May 2020 09:06:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507142958.GA12032@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Thu, 7 May 2020 21:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726638AbgEHBIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:08:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF55C05BD43;
+        Thu,  7 May 2020 18:08:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4D9B9119376D4;
+        Thu,  7 May 2020 18:07:59 -0700 (PDT)
+Date:   Thu, 07 May 2020 18:07:58 -0700 (PDT)
+Message-Id: <20200507.180758.1608657964463079833.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux@rempel-privat.de,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: phy: fix less than zero comparison with
+ unsigned variable val
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200507143430.50507-1-colin.king@canonical.com>
+References: <20200507143430.50507-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.212.180]
-X-CFilter-Loop: Reflected
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 18:07:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+From: Colin King <colin.king@canonical.com>
+Date: Thu,  7 May 2020 15:34:30 +0100
 
-You are right.
-I did not notice that the macro DMEMIT uses the sz variable.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The unsigned variable val is being checked for an error by checking
+> if it is less than zero. This can never occur because val is unsigned.
+> Fix this by making val a plain int.
+> 
+> Addresses-Coverity: ("Unsigned compared against zero")
+> Fixes: bdbdac7649fa ("ethtool: provide UAPI for PHY master/slave configuration.")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Thanks.
-
-On 2020/5/7 22:29, Mike Snitzer wrote:
-> On Thu, May 07 2020 at  8:26am -0400,
-> Samuel Zou <zou_wei@huawei.com> wrote:
-> 
->> This patch fixes below warning reported by coccicheck:
->>
->> drivers/md/dm-historical-service-time.c:240:14-16: Unneeded variable: "sz". Return "0" on line 261
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-> 
-> Nack.
-> 
-> DMEMIT() uses the local sz variable.
-> 
-> 
-
+Applied, thanks Colin.
