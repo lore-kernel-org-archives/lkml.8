@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29C0C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CC7C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9B1424968
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B872495F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941563;
-	bh=NducT023nwiNoUlVzfNfhqduldpolUNeS4mDLwt4BWg=;
+	s=default; t=1588941568;
+	bh=nhgI8sQHAkUUqcnjnsYm15g+i/k1tdlkH1b4JEBHZdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5e145GKP4KKwl/0BUyLwY0laQaLGIhWGn9DZV8wf/U043EH22DniYuJKbWAqyWSJ
-	 v/gasJSyovcXIcfz9WxCT6yGnSx0uNNqYJcMTPjOntOX6BXyp0VTZnGoS/XUOKOyT1
-	 uNTUI2Chh5/OUawq9QHavtnl78Kk4FIKXvjqazVg=
+	b=Ly7Gk0Bj40SpGmssoQBFLKrsWJWJOUOw02N85PegF6QL5kB3vtzOqrN/bYaA2A8bh
+	 HNqFq1IWgZUBgcsxTrqvrSJUF9aqEP303YMTxXFq3ByQVH2ygdqPxZHUQlK/Xbwo8z
+	 g4o1x34kufSMzTfAaEjAFj5Nohd7UAc2NNOiiOwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgEHMjV (ORCPT
+        id S1727922AbgEHMj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57546 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgEHMjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:10 -0400
+        id S1728556AbgEHMjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4653A2495F;
-        Fri,  8 May 2020 12:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E2F21835;
+        Fri,  8 May 2020 12:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941548;
-        bh=NducT023nwiNoUlVzfNfhqduldpolUNeS4mDLwt4BWg=;
+        s=default; t=1588941551;
+        bh=nhgI8sQHAkUUqcnjnsYm15g+i/k1tdlkH1b4JEBHZdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8QH/JJ4UemFGebGg07mvPrpIo9XFSllLYXXNaDNQk8atYNE9jEOaQRbHSqAmHPZP
-         02oBMNfjVAhSO3RaTasU9O6X95WjUHxuSQWcpZsqzHhYsglZXT4o2Fc4MPHbK+250Z
-         qtL9cpFWrhpCoBp329TI6/PpzHjuXI282MYYelAs=
+        b=l6vxOoXEYfsHZZJI/V7Gt3lO0bsjwht7yv8qduShmWoP08yrF+Z/i+J/bqHdqxbAq
+         dxPiAXb/hI+wv7+eDBxu9wNoxsRIzuUnnGXnU3KW2mJWGDQpvMk5amh1hiTCw9l7DB
+         4XptfQl4c5689Gf0uSaWBiwkUq5oOKe2kkHl8xDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Majd Dibbiny <majd@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 077/312] net/mlx5: Fix the size of modify QP mailbox
-Date:   Fri,  8 May 2020 14:31:08 +0200
-Message-Id: <20200508123129.938048967@linuxfoundation.org>
+Subject: [PATCH 4.4 078/312] net/mlx5: Fix masking of reserved bits in XRCD number
+Date:   Fri,  8 May 2020 14:31:09 +0200
+Message-Id: <20200508123130.004639586@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,10 +62,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Majd Dibbiny <majd@mellanox.com>
 
-commit 418f8399a8bedf376ec13eb01088f04a76ebdd6f upstream.
+commit 9cd3411c42c5d5ba55d6e745edfe7df53c1ffa41 upstream.
 
-Add 16 reserved bytes at the end of mlx5_modify_qp_mbox_in to
-match the hardware spec definition.
+Mask the reserved bits when reading the number of newly
+created XRCD.
 
 Fixes: e126ba97dba9 ('mlx5: Add driver for Mellanox Connect-IB adapters')
 Signed-off-by: Majd Dibbiny <majd@mellanox.com>
@@ -74,18 +74,19 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mlx5/qp.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/qp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/mlx5/qp.h
-+++ b/include/linux/mlx5/qp.h
-@@ -539,6 +539,7 @@ struct mlx5_modify_qp_mbox_in {
- 	__be32			optparam;
- 	u8			rsvd1[4];
- 	struct mlx5_qp_context	ctx;
-+	u8			rsvd2[16];
- };
+--- a/drivers/net/ethernet/mellanox/mlx5/core/qp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
+@@ -393,7 +393,7 @@ int mlx5_core_xrcd_alloc(struct mlx5_cor
+ 	if (out.hdr.status)
+ 		err = mlx5_cmd_status_to_err(&out.hdr);
+ 	else
+-		*xrcdn = be32_to_cpu(out.xrcdn);
++		*xrcdn = be32_to_cpu(out.xrcdn) & 0xffffff;
  
- struct mlx5_modify_qp_mbox_out {
+ 	return err;
+ }
 
 
