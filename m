@@ -2,91 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15610C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3787C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 002E7208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8EF2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:14:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kqccxOzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgEHLMn (ORCPT
+        id S1727051AbgEHLOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:12:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42358 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgEHLMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:12:42 -0400
-IronPort-SDR: 0apcZ8snRwAlAt3zRBLYnEWgMaoPFwZmJpbZiEs/AhgU8VTJM+djXDrAb60Mjvl7ljbBwge0Yh
- lCwfz3NAt2ug==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:12:42 -0700
-IronPort-SDR: tPHsjctFLhnpEdjqGPIIIxGggrO9E26MnEi9onjtxKSOg4ih5enAwxq/IZzB8OmVioRf/5Bojm
- +O89XXil6fuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="305411701"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2020 04:12:39 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX0vq-005P9x-6B; Fri, 08 May 2020 14:12:42 +0300
-Date:   Fri, 8 May 2020 14:12:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200508111242.GH185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 07:14:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35348 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEHLOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:14:40 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048BEQpR077154;
+        Fri, 8 May 2020 06:14:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588936466;
+        bh=ZoYcMIj00piv51ZsPhg0qvcGYShGcn7KMqwUuvC0zPI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kqccxOzrqjmb95R4BiFMjrYc+xbny9z3EQ+mjqc8tFQ6jS2nVE8bL/zvVunKt/CZm
+         ViJLmldxvmPOAjv9VxuHrNpRQZjNaDRA8gRJIvG3vLld1l2xbq9bly9Nx1p0yMmrpu
+         OhnK59wLR2UuhE2mBSLvq0K7l1DUOuzv0a1Xo4LM=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 048BEQo7115039
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 May 2020 06:14:26 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 06:14:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 06:14:26 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048BEMOE130802;
+        Fri, 8 May 2020 06:14:23 -0500
+Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
+ TI_CPTS_MOD workaround
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Networking <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+References: <20200508095914.20509-1-grygorii.strashko@ti.com>
+ <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com>
+Date:   Fri, 8 May 2020 14:14:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
 
-> +  snps,max-burst-len:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      Maximum length of burst transactions supported by hardware.
-> +      It's an array property with one cell per channel in units of
-> +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-> +    items:
-> +      maxItems: 8
-> +      items:
 
-> +        enum: [4, 8, 16, 32, 64, 128, 256]
+On 08/05/2020 13:10, Arnd Bergmann wrote:
+> On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>>
+>> From: Clay McClure <clay@daemons.net>
+>>
+>> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+>> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
+>> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
+>> form:
+>>
+>> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+>> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+>>   ...
+>>
+>> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+>> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+>> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+>> functions) _is_ enabled. So we end up compiling calls to functions that
+>> don't exist, resulting in the linker errors.
+>>
+>> This patch fixes build errors and restores previous behavior by:
+>>   - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+>>   - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
+> 
+> I don't understand what IS_REACHABLE() is needed for once all the other
+> changes are in place. I'd hope we can avoid that. Do you still see
+> failures without
+> that or is it just a precaution. I can do some randconfig testing on your patch
+> to see what else might be needed to avoid IS_REACHABLE().
 
-Isn't 1 allowed?
+I've not changed this part of original patch, but seems you're right.
 
-> +        default: 256
+I can drop it and resend, but, unfortunately, i do not have time today for full build testing.
+Sorry.
+
+By the way in ptp_clock_kernel.h
+#if IS_REACHABLE(CONFIG_PTP_1588_CLOCK)
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+grygorii
