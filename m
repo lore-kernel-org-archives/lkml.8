@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8BCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47ADC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A5B221F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFBB2145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942008;
-	bh=/edro/A+J2bMGGxVR6fLVLDN4sc4mxIDHGqvWM8I/S8=;
+	s=default; t=1588942015;
+	bh=zQEITwS3Tb1sOo6M0wkESRrjv9nok4D8igd06GWXhRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqMLUGOK13yrXVUJq2yM06deb1KrLn/hAg23gf4hSYlv3K8BU316ValV4NjilTfTt
-	 RWgU1oJDFNXm4XGIGE5oiJv5YAi+6bBZB7ytM+8gPiduv/9/sdgjo79DEVb9fvdpZB
-	 lfAwUU6hcRgP/VTOzA1Dq++MerctVd70LIC0yhhU=
+	b=S59dksArdLRnsPZ1MgnzNPkwOOdiU03rCQpI/5Q89JPPGlLgU3sT2ltOiQvyRf4gK
+	 a4yu5koRauJF/S+myTdQfAYqZBMmqNVOPLf7pTXAAZYBQUSIP9EEeyXpurX1AqczW9
+	 1o2paHSpY901lH4Zc/gpIfdKzPNdoxHWEqteNZJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgEHMqr (ORCPT
+        id S1729491AbgEHMqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48072 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbgEHMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:36 -0400
+        id S1729458AbgEHMql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864FB2145D;
-        Fri,  8 May 2020 12:46:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 888D52145D;
+        Fri,  8 May 2020 12:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941996;
-        bh=/edro/A+J2bMGGxVR6fLVLDN4sc4mxIDHGqvWM8I/S8=;
+        s=default; t=1588942001;
+        bh=zQEITwS3Tb1sOo6M0wkESRrjv9nok4D8igd06GWXhRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ez8iCmy4CytBzCoZG2+9NkRh4LlzcRYTApuPieH4LFuJ7NBbt3K2qFaMvns7njjGo
-         8n76hHgvkrgxbtmQpDRh8JYEj+6I9wJnLkpnZu3tc16Iq8FIOtRWYbQJDtqK9vK5JH
-         ZrLEIcLlQzVrEahX92S+rXQnyYCP3iXT/ptaTNTY=
+        b=jUj14SyP8W7Cg1Pb8vCW215/y/iuJerW8nP1B/V1rqv16pwj6kWCvrTxOEN5xYGjb
+         auDIcUAAmwS29ed7cFcbzQkJXsfRWdgue2V4tBKxL6xwuTfg6lcVoQlktebH6rgQDk
+         474SLE6uagsCmkBR9fymES2MCfuFzm/w/CtuIj90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 255/312] gre: build header correctly for collect metadata tunnels
-Date:   Fri,  8 May 2020 14:34:06 +0200
-Message-Id: <20200508123142.335957456@linuxfoundation.org>
+Subject: [PATCH 4.4 257/312] sfc: fix potential stack corruption from running past stat bitmask
+Date:   Fri,  8 May 2020 14:34:08 +0200
+Message-Id: <20200508123142.471062638@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,64 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Andrew Rybchenko <Andrew.Rybchenko@oktetlabs.ru>
 
-commit 2090714e1d6e80979dd6926be22b0de9ca432273 upstream.
+commit e70c70c38d7a5ced76fc8b1c4a7ccee76e9c2911 upstream.
 
-In ipgre (i.e. not gretap) + collect metadata mode, the skb was assumed to
-contain Ethernet header and was encapsulated as ETH_P_TEB. This is not the
-case, the interface is ARPHRD_IPGRE and the protocol to be used for
-encapsulation is skb->protocol.
+On 32-bit systems, mask is only an array of 3 longs, not 4, so don't try
+to write to mask[3].
+Also include build-time checks in case the size of the bitmask changes.
 
-Fixes: 2e15ea390e6f4 ("ip_gre: Add support to collect tunnel metadata.")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 3c36a2aded8c ("sfc: display vadaptor statistics for all interfaces")
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/ip_gre.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/sfc/ef10.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -520,7 +520,8 @@ static struct rtable *gre_get_rt(struct
- 	return ip_route_output_key(net, fl);
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -1304,13 +1304,14 @@ static void efx_ef10_get_stat_mask(struc
+ 	}
+ 
+ #if BITS_PER_LONG == 64
++	BUILD_BUG_ON(BITS_TO_LONGS(EF10_STAT_COUNT) != 2);
+ 	mask[0] = raw_mask[0];
+ 	mask[1] = raw_mask[1];
+ #else
++	BUILD_BUG_ON(BITS_TO_LONGS(EF10_STAT_COUNT) != 3);
+ 	mask[0] = raw_mask[0] & 0xffffffff;
+ 	mask[1] = raw_mask[0] >> 32;
+ 	mask[2] = raw_mask[1] & 0xffffffff;
+-	mask[3] = raw_mask[1] >> 32;
+ #endif
  }
- 
--static void gre_fb_xmit(struct sk_buff *skb, struct net_device *dev)
-+static void gre_fb_xmit(struct sk_buff *skb, struct net_device *dev,
-+			__be16 proto)
- {
- 	struct ip_tunnel_info *tun_info;
- 	const struct ip_tunnel_key *key;
-@@ -563,7 +564,7 @@ static void gre_fb_xmit(struct sk_buff *
- 	}
- 
- 	flags = tun_info->key.tun_flags & (TUNNEL_CSUM | TUNNEL_KEY);
--	build_header(skb, tunnel_hlen, flags, htons(ETH_P_TEB),
-+	build_header(skb, tunnel_hlen, flags, proto,
- 		     tunnel_id_to_key(tun_info->key.tun_id), 0);
- 
- 	df = key->tun_flags & TUNNEL_DONT_FRAGMENT ?  htons(IP_DF) : 0;
-@@ -605,7 +606,7 @@ static netdev_tx_t ipgre_xmit(struct sk_
- 	const struct iphdr *tnl_params;
- 
- 	if (tunnel->collect_md) {
--		gre_fb_xmit(skb, dev);
-+		gre_fb_xmit(skb, dev, skb->protocol);
- 		return NETDEV_TX_OK;
- 	}
- 
-@@ -649,7 +650,7 @@ static netdev_tx_t gre_tap_xmit(struct s
- 	struct ip_tunnel *tunnel = netdev_priv(dev);
- 
- 	if (tunnel->collect_md) {
--		gre_fb_xmit(skb, dev);
-+		gre_fb_xmit(skb, dev, htons(ETH_P_TEB));
- 		return NETDEV_TX_OK;
- 	}
  
 
 
