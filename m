@@ -2,66 +2,127 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D886EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFFCC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9B4D214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF45214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:14:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WnCSkm3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgEHPOv (ORCPT
+        id S1727100AbgEHPOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbgEHPOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:14:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCA620736;
-        Fri,  8 May 2020 15:14:50 +0000 (UTC)
-Date:   Fri, 8 May 2020 11:14:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
-Message-ID: <20200508111449.575d176c@gandalf.local.home>
-In-Reply-To: <20200508144527.GR1992@kadam>
-References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
-        <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
-        <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
-        <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
-        <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
-        <20200508090053.430d28d7@gandalf.local.home>
-        <20200508144527.GR1992@kadam>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 8 May 2020 11:14:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52760 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgEHPOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:14:54 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048FEo4F114216;
+        Fri, 8 May 2020 10:14:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588950890;
+        bh=rKmlXWmyFsM/5tTm4tFFE4pzJpscNr6OeWzY3I/tejw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=WnCSkm3oTKxkjSERgCosIB5kumTRNtce8VqX6wl2CZA9nkMakCvLDAPz0C79rLaU7
+         gDud5oXeI9TMkduv6S+slk3I7cfD5gRSLikv/ejs2JwipT76OBj0t28PmGCXLGmPW3
+         aH6aLQ3aVAJEp0X1Gb2zLXQL4SMd/RfUO6R4vIeY=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048FEoJ2011113;
+        Fri, 8 May 2020 10:14:50 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 10:14:50 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 10:14:50 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048FEnKo088215;
+        Fri, 8 May 2020 10:14:49 -0500
+Subject: Re: [PATCH v3 0/2] Misc. rproc fixes around fixed memory region
+ support
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200420160600.10467-1-s-anna@ti.com>
+ <181b6c56-420c-f306-f2cf-53380ad1f37b@ti.com>
+Message-ID: <0a2aa179-9a97-003d-d682-283a8c354ea7@ti.com>
+Date:   Fri, 8 May 2020 10:14:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <181b6c56-420c-f306-f2cf-53380ad1f37b@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 17:45:27 +0300
-Dan Carpenter <dan.carpenter@oracle.com> wrote:
+Hi Bjorn,
 
-> > Yunfeng, your v2 was fine and has already landed in Linus's tree. Feel free
-> > to ignore Markus's suggestions in the future.  
+On 5/2/20 1:29 PM, Suman Anna wrote:
+> Hi Bjorn,
 > 
-> There was actually a bug in v2.  It exits with a non-zero instead of
-> zero on success so it will mess up people's scripts.
+> On 4/20/20 11:05 AM, Suman Anna wrote:
+>> Hi Bjorn,
+>>
+>> This is another minor revision of the fixes around fixed memory region
+>> support [1] series. Patch 1 is revised to go back to the logic used in v1
+>> after a long discussion on the v2 version [2]. The other suggestions can
+>> be future improvments as they would require corresponding platform driver
+>> changes. Please look through the discussion there and let us know your
+>> preference. Patches are based on v5.7-rc1.
+>>
+>> I really appreciate it if you can target the series for the current 
+>> 5.7 -rc's.
+>> The fixes would apply for all 5.1+ kernels.
+> 
+> Ping on these.
 
-Thanks, I just fixed it. And because of the distraction of Markus's
-bikesheding, it was missed :-(
+The patches have been reviewed and/or acked by both Mathieu and Arnaud.
+Can you please get these into the current -rc's?
 
--- Steve
+Thanks,
+Suman
+
+> 
+> regards
+> Suman
+> 
+>>
+>> Please see the v1 cover-letter [1] for the details on the issues.
+>>
+>> regards
+>> Suman
+>>
+>> [1] https://patchwork.kernel.org/cover/11422723/
+>> [2] https://patchwork.kernel.org/comment/23274389/
+>>
+>> Suman Anna (1):
+>>    remoteproc: Fix and restore the parenting hierarchy for vdev
+>>
+>> Tero Kristo (1):
+>>    remoteproc: Fall back to using parent memory pool if no dedicated
+>>      available
+>>
+>>   drivers/remoteproc/remoteproc_core.c   |  2 +-
+>>   drivers/remoteproc/remoteproc_virtio.c | 12 ++++++++++++
+>>   2 files changed, 13 insertions(+), 1 deletion(-)
+>>
+> 
+
