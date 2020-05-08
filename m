@@ -2,81 +2,93 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A27C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B84A21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2C32173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgEHOwf (ORCPT
+        id S1727114AbgEHO4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:52:35 -0400
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:41870 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726751AbgEHOwf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:52:35 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id D2C28100E7B40;
-        Fri,  8 May 2020 14:52:33 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fuel50_505bb413ac133
-X-Filterd-Recvd-Size: 2104
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  8 May 2020 14:52:32 +0000 (UTC)
-Message-ID: <ff1fcc5b32a9ad209660c7cfe7e212c1a16ba10d.camel@perches.com>
-Subject: Re: [PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external
- modules
-From:   Joe Perches <joe@perches.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Date:   Fri, 08 May 2020 07:52:30 -0700
-In-Reply-To: <87blmy8wm8.fsf@linux.ibm.com>
-References: <20200508104922.72565-1-vaibhav@linux.ibm.com>
-         <20200508104922.72565-3-vaibhav@linux.ibm.com>
-         <20200508113100.GA19436@zn.tnic> <87blmy8wm8.fsf@linux.ibm.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Fri, 8 May 2020 10:56:38 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726690AbgEHO4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:56:38 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 5C856535883A350AC80C;
+        Fri,  8 May 2020 15:56:36 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:56:35 +0100
+Date:   Fri, 8 May 2020 15:56:13 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Gwendal Grignou <gwendal@chromium.org>
+CC:     <enric.balletbo@collabora.com>, <jic23@kernel.org>,
+        <bleung@chromium.org>, <groeck@chromium.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v3 0/3] iio: cros_ec: Add support for RGB light sensor
+Message-ID: <20200508155613.00005c95@Huawei.com>
+In-Reply-To: <20200506230324.139241-1-gwendal@chromium.org>
+References: <20200506230324.139241-1-gwendal@chromium.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-08 at 17:30 +0530, Vaibhav Jain wrote:
-> Hi Boris,
-> 
-> Borislav Petkov <bp@alien8.de> writes:
-> 
-> > On Fri, May 08, 2020 at 04:19:19PM +0530, Vaibhav Jain wrote:
-> > > 'seq_buf' provides a very useful abstraction for writing to a string
-> > > buffer without needing to worry about it over-flowing. However even
-> > > though the API has been stable for couple of years now its stills not
-> > > exported to external modules limiting its usage.
-> > > 
-> > > Hence this patch proposes update to 'seq_buf.c' to mark
-> > > seq_buf_printf() which is part of the seq_buf API to be exported to
-> > > external GPL modules. This symbol will be used in later parts of this
-> > 
-> > What is "external GPL modules"?
-> I am referring to Kernel Loadable Modules with MODULE_LICENSE("GPL")
-> here.
+On Wed, 6 May 2020 16:03:21 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-Any reason why these Kernel Loadable Modules with MODULE_LICENSE("GPL")
-are not in the kernel tree?
+> Add support for color light sensor presented by the Chromebook Embedded
+> Controller (EC).
+> Instead of just presenting lux measurement (clear channel), a color light
+> sensor is able to report color temperature measurement.
+> 
+> The EC, using factory settings, can transform the raw measurement into
+> the CIE 1931 XYZ color space (XYZ) and take adavantage of color sensor
+> autocalibration to provide the most accurate measurements.
+
+v3 of series with v2 patches?
+
+Also my earlier comment about colour channels cannot be illuminance
+still stands. It is a term that "only" applies to light measurements with
+a particular frequency / sensitivity curve.
+
+The colour channels should all be in_intensity_xxx_raw.
+
+If you want to do the computation in driver to derive the illuminance
+that would be great, otherwise we shouldn't have any illuminance channels.
+
+Jonathan
+
+
+> 
+> Gwendal Grignou (3):
+>   iio: Add in_illumincance vectors in different color spaces
+>   iio: cros_ec: Allow enabling/disabling calibration mode
+>   iio: cros_ec_light: Add support for RGB sensor
+> 
+>  Documentation/ABI/testing/sysfs-bus-iio       |  27 +
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
+>  drivers/iio/light/cros_ec_light_prox.c        | 469 +++++++++++++++---
+>  drivers/platform/chrome/cros_ec_sensorhub.c   |   3 +
+>  .../linux/iio/common/cros_ec_sensors_core.h   |   1 -
+>  .../linux/platform_data/cros_ec_commands.h    |  14 +-
+>  6 files changed, 441 insertions(+), 76 deletions(-)
+> 
 
 
