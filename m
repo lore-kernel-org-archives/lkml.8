@@ -2,129 +2,171 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C453C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC6C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAEA2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40AD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="bdGbD2A/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRSUpAQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgEHNix (ORCPT
+        id S1727954AbgEHNjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:38:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgEHNiv (ORCPT
+        Fri, 8 May 2020 09:39:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45835 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726736AbgEHNjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:38:51 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7099C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:38:50 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id r3so724177qvm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=s3c/kHKjv4oi4xRI+SDdDjgcOJfA2m3GEd8rwNL8FJM=;
-        b=bdGbD2A/K34eENIxrCE2mZH62IdbA4NbgUCDWNqpn8XBZAxW2jontvXRjCqJdK6uVp
-         tLCQGN6n1BbZtWtCAdliAh80NpRzCgOR0R3DxFXitpehOva/RVp/LVCtLcQd2slTZXM6
-         7YN4ubLyjwbRL9qsv13akCcwa6UtQH8gdRTF5dA2KRAc7uI9B6eVzMF5PvMHlXmybtV2
-         XI0enlpf/OIKfjrQTh0C6FENh2YXYkAEK8nYAATeZeZTHJILEFpQVseDBCA4vz1D0YRs
-         0P3ehoSHiSOukGW9R/MiEdevBux0MRyrsZJOLqlp6RdRMmH5fhFJcnGsvLYJesv+KOtv
-         ohWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s3c/kHKjv4oi4xRI+SDdDjgcOJfA2m3GEd8rwNL8FJM=;
-        b=rO5zGChh0RSFCiEmZRPaflmtOP9xipZ1TmhtpfdB68bvfklzv8daXrrscQt2LQJtd1
-         nQFqQOdX3b7aVeBwx6F92QR/qj/0XtrP0kW0CTbZgpbidMttwbEt96RKv01cNM67R3hi
-         tLGQdtbox3aXUPZkNiSejYtjj51viTIyN865ndG0w/q70/LTEeHofJPxUsWGLVwtjNSC
-         nz8ZRGiI99j9vu2wUlubX9tZ0YfetisXAbaGYVSD7iQ6SGmbuTTSASMAP4vAaaddXsJA
-         Bd/GkTeDDoQv6NPmI4igZgX2HB8iDXB7PJrATyr5GjdTGnDVbInFU3JggjKSR3GwLP9J
-         vbZQ==
-X-Gm-Message-State: AGi0PuYpJ4Qdkdk1sR2xkf7ID6a5ez7nReHb/pB8XmRAFIv3v4jCba9U
-        ZPAw/Nng2xRaiCzkS76X5gSYgXoK/YM=
-X-Google-Smtp-Source: APiQypLjm7g5uyaNxmKnnhh0sSGk189fzCge53i7i5N/MovX8Gq7Ym3S3ZqrB5FalA/lrRUaYyZKQg==
-X-Received: by 2002:ad4:4b6b:: with SMTP id m11mr2814178qvx.130.1588945129920;
-        Fri, 08 May 2020 06:38:49 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id q17sm1162686qkq.111.2020.05.08.06.38.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 06:38:49 -0700 (PDT)
-Date:   Fri, 8 May 2020 09:38:33 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, Mel Gorman <mgorman@suse.de>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
-Message-ID: <20200508133833.GA181181@cmpxchg.org>
-References: <20200507204913.18661-1-shakeelb@google.com>
- <CALOAHbAHK4b2p0oWXY6oHG+WQzK3+TEa46=dPabhYT8ab=65zA@mail.gmail.com>
- <CALvZod7VujYgU=6XfgjSZnzLqDpbHwEYsp2Xbq9MK7w_z=LphA@mail.gmail.com>
+        Fri, 8 May 2020 09:39:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588945161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=p7KhySJ0jzv6YRdqnETGsXM/TbepKNNRApcPPvHsI6g=;
+        b=CRSUpAQYqXwodTeISiIJQ7ZQGdoxU6aNDhhqJTtqGLnUiNfk3nHJ5z/+yXuuSdKWUrUMgS
+        ovo3DPIVMYkgBiyansVCtEx6UFXfkJ1e/FmWimC0F7sspGYKkXjuLb1iKt1mY1dq5ieMFB
+        rXlpu0/RAK6A+sI8X1gpNRwu3/6AE7I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-LoI2GZxiN82avemS_skmmw-1; Fri, 08 May 2020 09:39:17 -0400
+X-MC-Unique: LoI2GZxiN82avemS_skmmw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB57B100A8E7;
+        Fri,  8 May 2020 13:39:14 +0000 (UTC)
+Received: from [10.36.113.181] (ovpn-113-181.ams2.redhat.com [10.36.113.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C404B6F43B;
+        Fri,  8 May 2020 13:39:11 +0000 (UTC)
+Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
+ <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
+ <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
+ <20200429014145.GD19958@linux.vnet.ibm.com>
+ <20200429122211.GD28637@dhcp22.suse.cz>
+ <20200430071820.GF19958@linux.vnet.ibm.com>
+ <20200504093712.GL22838@dhcp22.suse.cz>
+ <20200508130304.GA1961@linux.vnet.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <3bfe7469-1d8c-baa4-6d9d-f4786492eaa8@redhat.com>
+Date:   Fri, 8 May 2020 15:39:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod7VujYgU=6XfgjSZnzLqDpbHwEYsp2Xbq9MK7w_z=LphA@mail.gmail.com>
+In-Reply-To: <20200508130304.GA1961@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:25:14AM -0700, Shakeel Butt wrote:
-> On Fri, May 8, 2020 at 3:34 AM Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > On Fri, May 8, 2020 at 4:49 AM Shakeel Butt <shakeelb@google.com> wrote:
-> > >
-> > > One way to measure the efficiency of memory reclaim is to look at the
-> > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > > not updated consistently at the system level and the ratio of these are
-> > > not very meaningful. The pgsteal and pgscan are updated for only global
-> > > reclaim while pgrefill gets updated for global as well as cgroup
-> > > reclaim.
-> > >
-> >
-> > Hi Shakeel,
-> >
-> > We always use pgscan and pgsteal for monitoring the system level
-> > memory pressure, for example, by using sysstat(sar) or some other
-> > monitor tools.
-
-I'm in the same boat. It's useful to have activity that happens purely
-due to machine capacity rather than localized activity that happens
-due to the limits throughout the cgroup tree.
-
-> Don't you need pgrefill in addition to pgscan and pgsteal to get the
-> full picture of the reclaim activity?
-
-I actually almost never look at pgrefill.
-
-> > But with this change, these two counters include the memcg pressure as
-> > well. It is not easy to know whether the pgscan and pgsteal are caused
-> > by system level pressure or only some specific memcgs reaching their
-> > memory limit.
-> >
-> > How about adding  cgroup_reclaim() to pgrefill as well ?
-> >
+On 08.05.20 15:03, Srikar Dronamraju wrote:
+> * Michal Hocko <mhocko@kernel.org> [2020-05-04 11:37:12]:
 > 
-> I am looking for all the reclaim activity on the system. Adding
-> !cgroup_reclaim to pgrefill will skip the cgroup reclaim activity.
-> Maybe adding pgsteal_cgroup and pgscan_cgroup would be better.
+>>>>
+>>>> Have you tested on something else than ppc? Each arch does the NUMA
+>>>> setup separately and this is a big mess. E.g. x86 marks even memory less
+>>>> nodes (see init_memory_less_node) as online.
+>>>>
+>>>
+>>> while I have predominantly tested on ppc, I did test on X86 with CONFIG_NUMA
+>>> enabled/disabled on both single node and multi node machines.
+>>> However, I dont have a cpuless/memoryless x86 system.
+>>
+>> This should be able to emulate inside kvm, I believe.
+>>
+> 
+> I did try but somehow not able to get cpuless / memoryless node in a x86 kvm
+> guest.
 
-How would you feel about adding memory.stat at the root cgroup level?
+I use the following
 
-There are subtle differences between /proc/vmstat and memory.stat, and
-cgroup-aware code that wants to watch the full hierarchy currently has
-to know about these intricacies and translate semantics back and forth.
+#! /bin/bash
+sudo x86_64-softmmu/qemu-system-x86_64 \
+    --enable-kvm \
+    -m 4G,maxmem=20G,slots=2 \
+    -smp sockets=2,cores=2 \
+    -numa node,nodeid=0,cpus=0-1,mem=4G -numa node,nodeid=1,cpus=2-3,mem=0G \
+    -kernel /home/dhildenb/git/linux/arch/x86_64/boot/bzImage \
+    -append "console=ttyS0 rd.shell rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0" \
+    -initrd /boot/initramfs-5.2.8-200.fc30.x86_64.img \
+    -machine pc,nvdimm \
+    -nographic \
+    -nodefaults \
+    -chardev stdio,id=serial \
+    -device isa-serial,chardev=serial \
+    -chardev socket,id=monitor,path=/var/tmp/monitor,server,nowait \
+    -mon chardev=monitor,mode=readline
 
-Generally having the fully recursive memory.stat at the root level
-could help a broader range of usecases.
+to get a cpu-less and memory-less node 1. Never tried with node 0.
+
+-- 
+Thanks,
+
+David / dhildenb
+
