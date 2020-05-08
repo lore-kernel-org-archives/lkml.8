@@ -4,440 +4,239 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69DC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A226C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7F121841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E60721974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgEHPk3 (ORCPT
+        id S1728353AbgEHPkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:40:29 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42799 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgEHPk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:40:27 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a21so2126834ljb.9;
-        Fri, 08 May 2020 08:40:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yWqsXtAkbRWzoX8zzDCQub6cwES0BihqkfsNsJB7ojo=;
-        b=umxmvtv4xFG7LqyXn72DcvTyM/FwaltXwwvPasm6WaiggAcIeFkQHi7r5kXo+M0Pvo
-         YpkkQuG374bYTO9vC1EfBU1+nx05CmfigQZYaXZqG7deMuIDmNgs9rt8GUXXdPegjMOm
-         nYkXaM/1SrfnMFBgF0hu14O2k1YE5bbofwEPce/TyePFJAMGj+D1T0Jqod1xSblluLEf
-         bWl5qdjNstQ5ClDSLPAiAyeiD59FUIn0CJClW2MMPpY8DTIiI0D+aF/L0PBN/O8f5G8j
-         56P13EA1VeeJ1WrrIkY4d0Rz6Q84i6zhoxzQGmi5U+vb0xe2daqFQFokuk5o+VT4G9I7
-         JEQA==
-X-Gm-Message-State: AOAM531/7iBU6krkWXDmtvCCd++9URET0WVBmrtZ0ToUyStC/dB3Rdr3
-        qqZk+9aUFi5ZGZOMpDXAtjw=
-X-Google-Smtp-Source: ABdhPJxsZeD4tRw6TkuHYKqupis7+Nl/mWR+Sj6aQNzI7UdZ7UULLNiDcdr/0YmTSbD+zbuy/HEDVw==
-X-Received: by 2002:a2e:a37b:: with SMTP id i27mr2027590ljn.36.1588952422472;
-        Fri, 08 May 2020 08:40:22 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id t3sm1430140ljo.51.2020.05.08.08.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:40:21 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:39:35 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 01/11] lib: add linear ranges helpers
-Message-ID: <59259bc475e0c800eb4bb163f02528c7c01f7b3a.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:40:40 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727911AbgEHPkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:40:39 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id CD46C5E8A0A3A8D41663;
+        Fri,  8 May 2020 16:40:37 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 16:40:37 +0100
+Date:   Fri, 8 May 2020 16:40:15 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
+ object
+Message-ID: <20200508164015.0000223f@Huawei.com>
+In-Reply-To: <20200508141306.17222-1-alexandru.ardelean@analog.com>
+References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many devices have control registers which control some measurable
-property. Often a register contains control field so that change in
-this field causes linear change in the controlled property. It is not
-a rare case that user wants to give 'meaningful' control values and
-driver needs to convert them to register field values. Even more
-often user wants to 'see' the currently set value - again in
-meaningful units - and driver needs to convert the values it reads
-from register to these meaningful units. Examples of this include:
+On Fri, 8 May 2020 17:13:04 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-- regulators, voltage/current configurations
-- power, voltage/current configurations
-- clk(?) NCOs
+> There are plenty of bad designs we want to discourage or not have to review
+> manually usually about accessing private (marked as [INTERN]) fields of
+> 'struct iio_dev'.
 
-and maybe others I can't think of right now.
-
-Provide a linear_range helper which can do conversion from user value
-to register value 'selector'.
-
-The idea here is stolen from regulator framework and patches refactoring
-the regulator helpers to use this are following.
-
-Current implementation does not support inversely proportional ranges
-but it might be useful if we could support also inversely proportional
-ranges?
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/linear_range.h |  48 +++++++
- lib/Kconfig                  |   3 +
- lib/Makefile                 |   1 +
- lib/linear_ranges.c          | 241 +++++++++++++++++++++++++++++++++++
- 4 files changed, 293 insertions(+)
- create mode 100644 include/linux/linear_range.h
- create mode 100644 lib/linear_ranges.c
-
-diff --git a/include/linux/linear_range.h b/include/linux/linear_range.h
-new file mode 100644
-index 000000000000..17b5943727d5
---- /dev/null
-+++ b/include/linux/linear_range.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2020 ROHM Semiconductors */
-+
-+#ifndef LINEAR_RANGE_H
-+#define LINEAR_RANGE_H
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct linear_range - table of selector - value pairs
-+ *
-+ * Define a lookup-table for range of values. Intended to help when looking
-+ * for a register value matching certaing physical measure (like voltage).
-+ * Usable when increment of one in register always results a constant increment
-+ * of the physical measure (like voltage).
-+ *
-+ * @min:  Lowest value in range
-+ * @min_sel: Lowest selector for range
-+ * @max_sel: Highest selector for range
-+ * @step: Value step size
-+ */
-+struct linear_range {
-+	unsigned int min;
-+	unsigned int min_sel;
-+	unsigned int max_sel;
-+	unsigned int step;
-+};
-+
-+unsigned int linear_range_values_in_range(const struct linear_range *r);
-+unsigned int linear_range_values_in_range_array(const struct linear_range *r,
-+						int ranges);
-+unsigned int linear_range_get_max_value(const struct linear_range *r);
-+
-+int linear_range_get_value(const struct linear_range *r, unsigned int selector,
-+			   unsigned int *val);
-+int linear_range_get_value_array(const struct linear_range *r, int ranges,
-+				 unsigned int selector, unsigned int *val);
-+int linear_range_get_selector_low(const struct linear_range *r,
-+				  unsigned int val, unsigned int *selector,
-+				  bool *found);
-+int linear_range_get_selector_high(const struct linear_range *r,
-+				   unsigned int val, unsigned int *selector,
-+				   bool *found);
-+int linear_range_get_selector_low_array(const struct linear_range *r,
-+					int ranges, unsigned int val,
-+					unsigned int *selector, bool *found);
-+
-+#endif
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 5d53f9609c25..8ec05335426c 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -19,6 +19,9 @@ config RAID6_PQ_BENCHMARK
- 	  Benchmark all available RAID6 PQ functions on init and choose the
- 	  fastest one.
+This has been on the todo list for many years so great you are having a go.
  
-+config LINEAR_RANGES
-+	tristate
-+
- config PACKING
- 	bool "Generic bitfield packing and unpacking"
- 	default n
-diff --git a/lib/Makefile b/lib/Makefile
-index 685aee60de1d..20b9cfdcad69 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -125,6 +125,7 @@ obj-$(CONFIG_DEBUG_LIST) += list_debug.o
- obj-$(CONFIG_DEBUG_OBJECTS) += debugobjects.o
- 
- obj-$(CONFIG_BITREVERSE) += bitrev.o
-+obj-$(CONFIG_LINEAR_RANGES) += linear_ranges.o
- obj-$(CONFIG_PACKING)	+= packing.o
- obj-$(CONFIG_CRC_CCITT)	+= crc-ccitt.o
- obj-$(CONFIG_CRC16)	+= crc16.o
-diff --git a/lib/linear_ranges.c b/lib/linear_ranges.c
-new file mode 100644
-index 000000000000..d1336c75ccd7
---- /dev/null
-+++ b/lib/linear_ranges.c
-@@ -0,0 +1,241 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * helpers to map values in a linear range to range index
-+ *
-+ * Original idea borrowed from regulator framework
-+ *
-+ * It might be useful if we could support also inversely proportional ranges?
-+ * Copyright 2020 ROHM Semiconductors
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/linear_range.h>
-+
-+/**
-+ * linear_range_values_in_range - return the amount of values in a range
-+ * @r:		pointer to linear range where values are counted
-+ *
-+ * Compute the amount of values in range pointed by @r. Note, values can
-+ * be all equal - range with selectors 0,...,2 with step 0 still contains
-+ * 3 values even though they are all equal.
-+ *
-+ * Return: the amount of values in range pointed by @r
-+ */
-+unsigned int linear_range_values_in_range(const struct linear_range *r)
-+{
-+	if (!r)
-+		return 0;
-+	return r->max_sel - r->min_sel + 1;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_values_in_range);
-+
-+/**
-+ * linear_range_values_in_range_array - return the amount of values in ranges
-+ * @r:		pointer to array of linear ranges where values are counted
-+ * @ranges:	amount of ranges we include in computation.
-+ *
-+ * Compute the amount of values in ranges pointed by @r. Note, values can
-+ * be all equal - range with selectors 0,...,2 with step 0 still contains
-+ * 3 values even though they are all equal.
-+ *
-+ * Return: the amount of values in first @ranges ranges pointed by @r
-+ */
-+unsigned int linear_range_values_in_range_array(const struct linear_range *r,
-+						int ranges)
-+{
-+	int i, values_in_range = 0;
-+
-+	for (i = 0; i < ranges; i++) {
-+		int values;
-+
-+		values = linear_range_values_in_range(&r[i]);
-+		if (!values)
-+			return values;
-+
-+		values_in_range += values;
-+	}
-+	return values_in_range;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_values_in_range_array);
-+
-+/**
-+ * linear_range_get_max_value - return the largest value in a range
-+ * @r:		pointer to linear range where value is looked from
-+ *
-+ * Return: the largest value in the given range
-+ */
-+unsigned int linear_range_get_max_value(const struct linear_range *r)
-+{
-+	return r->min + (r->max_sel - r->min_sel) * r->step;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_max_value);
-+
-+/**
-+ * linear_range_get_value - fetch a value from given range
-+ * @r:		pointer to linear range where value is looked from
-+ * @selector:	selector for which the value is searched
-+ * @val:	address where found value is updated
-+ *
-+ * Search given ranges for value which matches given selector.
-+ *
-+ * Return: 0 on success, -EINVAL given selector is not found from any of the
-+ * ranges.
-+ */
-+int linear_range_get_value(const struct linear_range *r, unsigned int selector,
-+			   unsigned int *val)
-+{
-+	if (r->min_sel > selector || r->max_sel < selector)
-+		return -EINVAL;
-+
-+	*val = r->min + (selector - r->min_sel) * r->step;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_value);
-+
-+/**
-+ * linear_range_get_value_array - fetch a value from array of ranges
-+ * @r:		pointer to array of linear ranges where value is looked from
-+ * @ranges:	amount of ranges in an array
-+ * @selector:	selector for which the value is searched
-+ * @val:	address where found value is updated
-+ *
-+ * Search through an array of ranges for value which matches given selector.
-+ *
-+ * Return: 0 on success, -EINVAL given selector is not found from any of the
-+ * ranges.
-+ */
-+int linear_range_get_value_array(const struct linear_range *r, int ranges,
-+				 unsigned int selector, unsigned int *val)
-+{
-+	int i;
-+
-+	for (i = 0; i < ranges; i++)
-+		if (r[i].min_sel <= selector && r[i].max_sel >= selector)
-+			return linear_range_get_value(&r[i], selector, val);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_value_array);
-+
-+/**
-+ * linear_range_get_selector_low - return linear range selector for value
-+ * @r:		pointer to linear range where selector is looked from
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Return selector which which range value is closest match for given
-+ * input value. Value is matching if it is equal or smaller than given
-+ * value. If given value is in the range, then @found is set true.
-+ *
-+ * Return: 0 on success, -EINVAL if range is invalid or does not contain
-+ * value smaller or equal to given value
-+ */
-+int linear_range_get_selector_low(const struct linear_range *r,
-+				  unsigned int val, unsigned int *selector,
-+				  bool *found)
-+{
-+	*found = false;
-+
-+	if (r->min > val)
-+		return -EINVAL;
-+
-+	if (linear_range_get_max_value(r) < val) {
-+		*selector = r->max_sel;
-+		return 0;
-+	}
-+
-+	*found = true;
-+
-+	if (r->step == 0)
-+		*selector = r->min_sel;
-+	else
-+		*selector = (val - r->min) / r->step + r->min_sel;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_selector_low);
-+
-+/**
-+ * linear_range_get_selector_low_array - return linear range selector for value
-+ * @r:		pointer to array of linear ranges where selector is looked from
-+ * @ranges:	amount of ranges to scan from array
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Scan array of ranges for selector which which range value matches given
-+ * input value. Value is matching if it is equal or smaller than given
-+ * value. If given value is found to be in a range scanning is stopped and
-+ * @found is set true. If a range with values smaller than given value is found
-+ * but the range max is being smaller than given value, then the ranges
-+ * biggest selector is updated to @selector but scanning ranges is continued
-+ * and @found is set to false.
-+ *
-+ * Return: 0 on success, -EINVAL if range array is invalid or does not contain
-+ * range with a value smaller or equal to given value
-+ */
-+int linear_range_get_selector_low_array(const struct linear_range *r,
-+					int ranges, unsigned int val,
-+					unsigned int *selector, bool *found)
-+{
-+	int i;
-+	int ret = -EINVAL;
-+
-+	for (i = 0; i < ranges; i++) {
-+		int tmpret;
-+
-+		tmpret = linear_range_get_selector_low(&r[i], val, selector,
-+						       found);
-+		if (!tmpret)
-+			ret = 0;
-+
-+		if (*found)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_selector_low_array);
-+
-+/**
-+ * linear_range_get_selector_high - return linear range selector for value
-+ * @r:		pointer to linear range where selector is looked from
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Return selector which which range value is closest match for given
-+ * input value. Value is matching if it is equal or higher than given
-+ * value. If given value is in the range, then @found is set true.
-+ *
-+ * Return: 0 on success, -EINVAL if range is invalid or does not contain
-+ * value greater or equal to given value
-+ */
-+int linear_range_get_selector_high(const struct linear_range *r,
-+				   unsigned int val, unsigned int *selector,
-+				   bool *found)
-+{
-+	*found = false;
-+
-+	if (linear_range_get_max_value(r) < val)
-+		return -EINVAL;
-+
-+	if (r->min > val) {
-+		*selector = r->min_sel;
-+		return 0;
-+	}
-+
-+	*found = true;
-+
-+	if (r->step == 0)
-+		*selector = r->max_sel;
-+	else
-+		*selector = DIV_ROUND_UP(val - r->min, r->step) + r->min_sel;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(linear_range_get_selector_high);
--- 
-2.21.0
+> 
+> This is difficult, as a lot of users copy drivers, and not always the best
+> examples.
+> 
+> A better idea is to hide those fields into the framework.
+> For 'struct iio_dev' this is a 'struct iio_dev_priv' which wraps a public
+> 'struct iio_dev' object.
+> 
+> In the next patches, some fields will be moved to this new struct, each
+> with it's own rework.
+> 
+> This rework will not be complete[-able] for a while, as many fields need
+> some drivers to be reworked in order to finalize them
+> (e.g. 'indio_dev->mlock').
+> 
+> But some fields can already be moved, and in time, all of them may get
+> there (in the 'struct iio_dev_priv' object).
+> 
+> We also need to hide the implementations for 'iio_priv()' &
+> 'iio_priv_to_dev()', as the pointer arithmetic will not match once things
+> are moved.
+
+This last bit has the disadvantage of potentially putting a function
+call in some fast paths where there wasn't one before.
+
+We may not need to 'forcefully' hide the internal parts.  May be
+enough to just make their use really obvious.  If you have to cast
+to an iio_dev_priv then you are doing something very wrong.
+The old stick __ in front of it may make that even more obvious.
+
+Naming is a bit confusing though.  iio_dev_priv sounds like private
+to the device... iio_dev_opaque maybe?
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+> 
+> Just as a note here, I've been running this patchset without a problem
+> for 2 weeks now in a work branch.
+> But it's only been a setup, so no idea if some other thing may cause
+> bigger issues.
+> 
+> This small patchset is meant to kickstart this, for GSoC people or for
+> people wanting to start contributing to IIO.
+> 
+>  drivers/iio/iio_core.h          | 11 +++++++++++
+>  drivers/iio/industrialio-core.c | 32 +++++++++++++++++++++++++++-----
+>  include/linux/iio/iio.h         | 12 ++----------
+>  3 files changed, 40 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> index fd9a5f1d5e51..84f3b4590c05 100644
+> --- a/drivers/iio/iio_core.h
+> +++ b/drivers/iio/iio_core.h
+> @@ -17,6 +17,17 @@ struct iio_dev;
+>  
+>  extern struct device_type iio_device_type;
+>  
+> +/**
+> + * struct iio_dev_priv - industrial I/O device private information
+> + * @indio_dev:			public IIO device object
+> + */
+> +struct iio_dev_priv {
+> +	struct iio_dev			indio_dev;
+> +};
+> +
+> +#define to_iio_dev_priv(indio_dev)	\
+> +	container_of(indio_dev, struct iio_dev_priv, indio_dev)
+> +
+>  int __iio_add_chan_devattr(const char *postfix,
+>  			   struct iio_chan_spec const *chan,
+>  			   ssize_t (*func)(struct device *dev,
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 462d3e810013..f0888dd84d3d 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -164,6 +164,23 @@ static const char * const iio_chan_info_postfix[] = {
+>  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
+>  };
+>  
+> +
+> +void *iio_priv(const struct iio_dev *indio_dev)
+> +{
+> +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
+> +	return (char *)iio_dev_priv + ALIGN(sizeof(struct iio_dev_priv), IIO_ALIGN);
+> +}
+> +EXPORT_SYMBOL_GPL(iio_priv);
+> +
+> +struct iio_dev *iio_priv_to_dev(void *priv)
+> +{
+> +	struct iio_dev_priv *iio_dev_priv =
+> +		(struct iio_dev_priv *)((char *)priv -
+> +				  ALIGN(sizeof(struct iio_dev_priv), IIO_ALIGN));
+> +	return &iio_dev_priv->indio_dev;
+> +}
+> +EXPORT_SYMBOL_GPL(iio_priv_to_dev);
+> +
+>  /**
+>   * iio_find_channel_from_si() - get channel from its scan index
+>   * @indio_dev:		device
+> @@ -1476,6 +1493,8 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
+>  static void iio_dev_release(struct device *device)
+>  {
+>  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
+> +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
+> +
+>  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
+>  		iio_device_unregister_trigger_consumer(indio_dev);
+>  	iio_device_unregister_eventset(indio_dev);
+> @@ -1484,7 +1503,7 @@ static void iio_dev_release(struct device *device)
+>  	iio_buffer_put(indio_dev->buffer);
+>  
+>  	ida_simple_remove(&iio_ida, indio_dev->id);
+> -	kfree(indio_dev);
+> +	kfree(iio_dev_priv);
+>  }
+>  
+>  struct device_type iio_device_type = {
+> @@ -1498,10 +1517,11 @@ struct device_type iio_device_type = {
+>   **/
+>  struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  {
+> +	struct iio_dev_priv *iio_dev_priv;
+>  	struct iio_dev *dev;
+>  	size_t alloc_size;
+>  
+> -	alloc_size = sizeof(struct iio_dev);
+> +	alloc_size = sizeof(struct iio_dev_priv);
+>  	if (sizeof_priv) {
+>  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+>  		alloc_size += sizeof_priv;
+> @@ -1509,10 +1529,12 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  	/* ensure 32-byte alignment of whole construct ? */
+>  	alloc_size += IIO_ALIGN - 1;
+>  
+> -	dev = kzalloc(alloc_size, GFP_KERNEL);
+> -	if (!dev)
+> +	iio_dev_priv = kzalloc(alloc_size, GFP_KERNEL);
+> +	if (!iio_dev_priv)
+>  		return NULL;
+>  
+> +	dev = &iio_dev_priv->indio_dev;
+> +
+>  	dev->dev.groups = dev->groups;
+>  	dev->dev.type = &iio_device_type;
+>  	dev->dev.bus = &iio_bus_type;
+> @@ -1526,7 +1548,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  	if (dev->id < 0) {
+>  		/* cannot use a dev_err as the name isn't available */
+>  		pr_err("failed to get device id\n");
+> -		kfree(dev);
+> +		kfree(iio_dev_priv);
+>  		return NULL;
+>  	}
+>  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 5f9f439a4f01..38c4ea505394 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -678,16 +678,8 @@ static inline void *iio_device_get_drvdata(struct iio_dev *indio_dev)
+>  #define IIO_ALIGN L1_CACHE_BYTES
+>  struct iio_dev *iio_device_alloc(int sizeof_priv);
+>  
+> -static inline void *iio_priv(const struct iio_dev *indio_dev)
+> -{
+> -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
+> -}
+> -
+> -static inline struct iio_dev *iio_priv_to_dev(void *priv)
+> -{
+> -	return (struct iio_dev *)((char *)priv -
+> -				  ALIGN(sizeof(struct iio_dev), IIO_ALIGN));
+> -}
+> +void *iio_priv(const struct iio_dev *indio_dev);
+> +struct iio_dev *iio_priv_to_dev(void *priv);
+>  
+>  void iio_device_free(struct iio_dev *indio_dev);
+>  struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+
