@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F353FC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAE80218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FD9218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944155;
-	bh=xKYlgra1bjz4M+bEPOOEvT6lJyexDCQK/RPwfLRVI/s=;
+	s=default; t=1588944160;
+	bh=l1C9s7CPMjwj1RAowoPqQFLmKe6QrHwZ7hsFWx6YITg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/3P0rW9D311g+xTbtHnZWU5abXs94fhufqp6npWGaVQZtOKLTLGsM3XiSgIPgqbr
-	 gK5sLGvP8lokcOZ+W2bNVanlZ7ZG8NMUezMT2j35MlCJxB8PcO60BTq8oZ6u8VDeib
-	 RS8en4j3vKLcTh5yzj3jA3jVtxSrbskWui3A7Rxw=
+	b=1aVV2VyEcFWouqWSmSqkiRVBfXBm92PHVV+W+8wX3sT6XTwZdUtPBzz9R5rUba3mn
+	 aHXbpYeSpjMMz+7rnbGcZ9xheop93xVJ0QV/e/xENidOBvf8sW+0MHEzG+evQQTryn
+	 dACu6n1NDXfNzbm5YYzLaiTfg1zKmSUKAcquV1Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgEHMi7 (ORCPT
+        id S1728851AbgEHNWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgEHMiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:55 -0400
+        id S1727819AbgEHMjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71393215A4;
-        Fri,  8 May 2020 12:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DBE24980;
+        Fri,  8 May 2020 12:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941533;
-        bh=xKYlgra1bjz4M+bEPOOEvT6lJyexDCQK/RPwfLRVI/s=;
+        s=default; t=1588941541;
+        bh=l1C9s7CPMjwj1RAowoPqQFLmKe6QrHwZ7hsFWx6YITg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=he4J6LqiZB9wzP+Nesa1v8zPvADzboLSxXCT9fat51fC048KRzahru3Y3pC+PN+wt
-         HjsqsOhSBn+uVbVEapY/4bnQnaFOyEVTlnW4iA905uVbIZUaR3m98HNAgr1lVG/cjc
-         8FlidofO7Xkiu7dv4J5qmIsIS3s2V5MZ3E7amn+U=
+        b=Zc+Q8ZbCf6kWtgXTGBXK/wnvN6VQDq/hBFBhsHMWdp1IlrQgUUUGA1wh2knfsHJOA
+         zm+M+ty1UrAbwA0mVhoOBuWdoQlnW+huVGycgAky+OeEfKYXy4BuhpkzmF7HWLg7wP
+         qs8MQSwm6nbRWo3JpKxRALRelLm3vMN4i/KopSzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: [PATCH 4.4 071/312] [media] c8sectpfe: Rework firmware loading mechanism
-Date:   Fri,  8 May 2020 14:31:02 +0200
-Message-Id: <20200508123129.537219276@linuxfoundation.org>
+        stable@vger.kernel.org, Or Gerlitz <ogerlitz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 074/312] net/mlx5: Make command timeout way shorter
+Date:   Fri,  8 May 2020 14:31:05 +0200
+Message-Id: <20200508123129.739466614@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,174 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Griffin <peter.griffin@linaro.org>
+From: Or Gerlitz <ogerlitz@mellanox.com>
 
-commit c23ac90f78aa9190643c82c1975a0cfe480d7c60 upstream.
+commit 6b6c07bdcdc97ccac2596063bfc32a5faddfe884 upstream.
 
-c8sectpfe driver relied on CONFIG_FW_LOADER_USER_HELPER_FALLBACK option
-for loading its xp70 firmware. A previous commit removed this Kconfig
-option, as it is apparently harmful, but did not update the driver
-code which relied on it.
+The command timeout is terribly long, whole two hours. Make it 60s so if
+things do go wrong, the user gets feedback in relatively short time, so
+they can take corrective actions and/or investigate using tools and such.
 
-This patch reworks the firmware loading into the start_feed callback.
-At this point we can be sure the rootfs is present, thereby removing
-the depedency on CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
-
-Fixes: 79f5b6ae960d ('[media] c8sectpfe: Remove select on CONFIG_FW_LOADER_USER_HELPER_FALLBACK')
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Fixes: e126ba97dba9 ('mlx5: Add driver for Mellanox Connect-IB adapters')
+Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c |   65 ++++++------------
- 1 file changed, 22 insertions(+), 43 deletions(-)
+ include/linux/mlx5/driver.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-@@ -49,7 +49,7 @@ MODULE_FIRMWARE(FIRMWARE_MEMDMA);
- #define PID_TABLE_SIZE 1024
- #define POLL_MSECS 50
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -54,7 +54,7 @@ enum {
+ 	/* one minute for the sake of bringup. Generally, commands must always
+ 	 * complete and we may need to increase this timeout value
+ 	 */
+-	MLX5_CMD_TIMEOUT_MSEC	= 7200 * 1000,
++	MLX5_CMD_TIMEOUT_MSEC	= 60 * 1000,
+ 	MLX5_CMD_WQ_MAX_NAME	= 32,
+ };
  
--static int load_c8sectpfe_fw_step1(struct c8sectpfei *fei);
-+static int load_c8sectpfe_fw(struct c8sectpfei *fei);
- 
- #define TS_PKT_SIZE 188
- #define HEADER_SIZE (4)
-@@ -143,6 +143,7 @@ static int c8sectpfe_start_feed(struct d
- 	struct channel_info *channel;
- 	u32 tmp;
- 	unsigned long *bitmap;
-+	int ret;
- 
- 	switch (dvbdmxfeed->type) {
- 	case DMX_TYPE_TS:
-@@ -171,8 +172,9 @@ static int c8sectpfe_start_feed(struct d
- 	}
- 
- 	if (!atomic_read(&fei->fw_loaded)) {
--		dev_err(fei->dev, "%s: c8sectpfe fw not loaded\n", __func__);
--		return -EINVAL;
-+		ret = load_c8sectpfe_fw(fei);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	mutex_lock(&fei->lock);
-@@ -267,8 +269,9 @@ static int c8sectpfe_stop_feed(struct dv
- 	unsigned long *bitmap;
- 
- 	if (!atomic_read(&fei->fw_loaded)) {
--		dev_err(fei->dev, "%s: c8sectpfe fw not loaded\n", __func__);
--		return -EINVAL;
-+		ret = load_c8sectpfe_fw(fei);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	mutex_lock(&fei->lock);
-@@ -882,13 +885,6 @@ static int c8sectpfe_probe(struct platfo
- 		goto err_clk_disable;
- 	}
- 
--	/* ensure all other init has been done before requesting firmware */
--	ret = load_c8sectpfe_fw_step1(fei);
--	if (ret) {
--		dev_err(dev, "Couldn't load slim core firmware\n");
--		goto err_clk_disable;
--	}
--
- 	c8sectpfe_debugfs_init(fei);
- 
- 	return 0;
-@@ -1093,15 +1089,14 @@ static void load_dmem_segment(struct c8s
- 		phdr->p_memsz - phdr->p_filesz);
- }
- 
--static int load_slim_core_fw(const struct firmware *fw, void *context)
-+static int load_slim_core_fw(const struct firmware *fw, struct c8sectpfei *fei)
- {
--	struct c8sectpfei *fei = context;
- 	Elf32_Ehdr *ehdr;
- 	Elf32_Phdr *phdr;
- 	u8 __iomem *dst;
- 	int err = 0, i;
- 
--	if (!fw || !context)
-+	if (!fw || !fei)
- 		return -EINVAL;
- 
- 	ehdr = (Elf32_Ehdr *)fw->data;
-@@ -1153,29 +1148,35 @@ static int load_slim_core_fw(const struc
- 	return err;
- }
- 
--static void load_c8sectpfe_fw_cb(const struct firmware *fw, void *context)
-+static int load_c8sectpfe_fw(struct c8sectpfei *fei)
- {
--	struct c8sectpfei *fei = context;
-+	const struct firmware *fw;
- 	int err;
- 
-+	dev_info(fei->dev, "Loading firmware: %s\n", FIRMWARE_MEMDMA);
-+
-+	err = request_firmware(&fw, FIRMWARE_MEMDMA, fei->dev);
-+	if (err)
-+		return err;
-+
- 	err = c8sectpfe_elf_sanity_check(fei, fw);
- 	if (err) {
- 		dev_err(fei->dev, "c8sectpfe_elf_sanity_check failed err=(%d)\n"
- 			, err);
--		goto err;
-+		return err;
- 	}
- 
--	err = load_slim_core_fw(fw, context);
-+	err = load_slim_core_fw(fw, fei);
- 	if (err) {
- 		dev_err(fei->dev, "load_slim_core_fw failed err=(%d)\n", err);
--		goto err;
-+		return err;
- 	}
- 
- 	/* now the firmware is loaded configure the input blocks */
- 	err = configure_channels(fei);
- 	if (err) {
- 		dev_err(fei->dev, "configure_channels failed err=(%d)\n", err);
--		goto err;
-+		return err;
- 	}
- 
- 	/*
-@@ -1188,28 +1189,6 @@ static void load_c8sectpfe_fw_cb(const s
- 	writel(0x1,  fei->io + DMA_CPU_RUN);
- 
- 	atomic_set(&fei->fw_loaded, 1);
--err:
--	complete_all(&fei->fw_ack);
--}
--
--static int load_c8sectpfe_fw_step1(struct c8sectpfei *fei)
--{
--	int err;
--
--	dev_info(fei->dev, "Loading firmware: %s\n", FIRMWARE_MEMDMA);
--
--	init_completion(&fei->fw_ack);
--	atomic_set(&fei->fw_loaded, 0);
--
--	err = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
--				FIRMWARE_MEMDMA, fei->dev, GFP_KERNEL, fei,
--				load_c8sectpfe_fw_cb);
--
--	if (err) {
--		dev_err(fei->dev, "request_firmware_nowait err: %d.\n", err);
--		complete_all(&fei->fw_ack);
--		return err;
--	}
- 
- 	return 0;
- }
 
 
