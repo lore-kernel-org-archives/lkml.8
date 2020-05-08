@@ -2,143 +2,183 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9489FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27279C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F83021473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05FF20708
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IB+Tw4YA"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TCUXp1kA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgEHKel (ORCPT
+        id S1727071AbgEHKez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725825AbgEHKel (ORCPT
+        Fri, 8 May 2020 06:34:55 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:44591 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726618AbgEHKey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:34:41 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E7EC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:34:40 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i19so1292041ioh.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 03:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z4Bt4bjxehMk3gJfl5cWg7LmoeINB3VH5yh3MCR/E2Q=;
-        b=IB+Tw4YAIP5htJFb4/RhOt9cQtCj/gsj2H9De6ZNAWkRyFbjtd6Vs8RePxxykMGA8L
-         JRS0WPL4MGlNK0Gb8kgVF6VgTkbUOC+71977cB3oeolZfa65/5G/9lUerxqT96nYElHo
-         OmET902itAyloMrhsJCpPFDXFZIx2/4zHmpRfMEcFVBt8Z0gKaxbBoQOtKIAWvG8To7a
-         FB6SOgxUIQhYEoheTiXlKQPHWZHtx3cIYqtvd2JWxpu82TF0Gh+/sq/sxkYiPc+Rne4z
-         ScKlCcw7xInfTJJCeotQF1HuaSoerJrRewLKrBYIJNSf1C7fnGIl0DrtxWbbI9Zkffvx
-         Py1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z4Bt4bjxehMk3gJfl5cWg7LmoeINB3VH5yh3MCR/E2Q=;
-        b=LPqQUnuPrJ9AWAyTRP2dIoHYAxoZPb311iCPVpexWCgCBEjXT60xsy/SfrAhC3KxUb
-         QDm+5QxisuBPp7U6d//Vx6lktvhoAKptN00O4qwdO/oQiygdWZoAsE2mipV2l7Wd4Rkc
-         YNI4nxLnGPQuiuaGheg32nOPaqDQkV6/khmJ68zNlTm9YP9C1rzmsmmJdnm9wcTHQXzz
-         Ofuus4mkKT6kjERrk6owf2ZcKgMKWysQzoH1jHGT9eYzzd2q+T3uNyLXrP1tzQK9aYEt
-         jYDbtkGfw/emO7jRr1eVNOoNUISVSL7Uzlgm8LQtaUxKFPrgpqsPdyKRIrXrKI32enFE
-         c+MA==
-X-Gm-Message-State: AGi0PuZfGPWIwQPiLO/AGOv8nnsigit/3XeD59vcJilgDEj5XOoWr341
-        mbFKJg38hKjZL+Fyge3KEoEhWcSZ5tljeLGSPSc=
-X-Google-Smtp-Source: APiQypKzpPamnAO06g21CAM18FQuJ4zAyl/GSvUXDhfKWGcUema4h82c62k8ni/2vZN2j8k1/CR6Kw6QcXZRuPodTaA=
-X-Received: by 2002:a02:a90e:: with SMTP id n14mr1835735jam.97.1588934080300;
- Fri, 08 May 2020 03:34:40 -0700 (PDT)
+        Fri, 8 May 2020 06:34:54 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id X0LAjdgdgtKAsX0LDje0Ij; Fri, 08 May 2020 12:34:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1588934091; bh=rTaj2j7yLA0szwh23jYmBUjOXAbRc2/au8nmnpb2Zdc=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=TCUXp1kABX/YT/L2UPmdaQiapw6XKAogo5Qn9QcezED3EJ6LQcxgAGkGDXj48wg+h
+         ISJM6cWbdq1LJiu4zI79sJWLiqJhllggifF4B66OuGq0vYPJ86VitjflsvUmLE4CjP
+         4URbsIG5F7RLTZYNoxp9OfJZiGbgV8ZQkSBA1d3CJcJ+pT1YJzv2jt3oPY5M1dcR94
+         +2yAjWUahqciijGwXtTLsMZqkM7TuNmhQvpl9lHjTO65v6WMtz3F8M+zxdoEtEgQbU
+         i80NF+uY0cPNKw7O2tRYLrlKP/N1/AjHF3Kl9X2QbkaOTYGEdEktWA80oCl5cckTwL
+         z9qCfIXPPZpyQ==
+Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Boris Brezillon <boris.brezillon@collabora.com>
+References: <20200505134110.3435-1-ezequiel@collabora.com>
+ <20200505134110.3435-4-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
+Date:   Fri, 8 May 2020 12:34:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200507204913.18661-1-shakeelb@google.com>
-In-Reply-To: <20200507204913.18661-1-shakeelb@google.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 8 May 2020 18:34:04 +0800
-Message-ID: <CALOAHbAHK4b2p0oWXY6oHG+WQzK3+TEa46=dPabhYT8ab=65zA@mail.gmail.com>
-Subject: Re: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200505134110.3435-4-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJ86TdI1pvKHRfu5hsHU8t8yFvBoKIzTCou3UH+Ra77tQTuI8FHFV23LFzHAgOqdGDIsnh9RfGNX7FSWeTCCyL/4BXYSMlrWDgdW2oZMRNF2euitDKf1
+ Rs9FPZLQq+MrczrwiFI+zibyA5tu9RYM0hjZiTsldfC2CCwH6Z3ncQ4PGQU+hA4Vqe7r1Fu74BzzgId+svluSpK9jsXxLTv60GZ2XCwiqn7ELZSViaABQkcO
+ gr7T+SOVtsW7Lq8IKCaRk56Fk/0ivc/6Lq4np9ok9RbS4Z7sBd2K9HlFtoWw10EavuBLeRcL8xOAI3H1JcGx9XIC5NUSPAF6/Rs3J3O5XFqufn7h818F8QBk
+ cYBdveq5iVcUwfOsuwxA8NAF3OvhIcy+YEhFOGMskV0R1iY+9Psp1LPlxs3GhyyVIRHAyjXtHC84EyyBhN08gcy2PGGLFcqVgg8guPVKxgy2BMs/jHW47Vrw
+ EqYQUhGFjLaYpF0v6ZMFckaOYSd8dIcWGWv2zb1I40Ld5rM5MsFLGOTUS+XBEQh1FfRvCZbig7P1o3VZyAmfGoG7GzWE7i+PigerLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 4:49 AM Shakeel Butt <shakeelb@google.com> wrote:
->
-> One way to measure the efficiency of memory reclaim is to look at the
-> ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> not updated consistently at the system level and the ratio of these are
-> not very meaningful. The pgsteal and pgscan are updated for only global
-> reclaim while pgrefill gets updated for global as well as cgroup
-> reclaim.
->
-
-Hi Shakeel,
-
-We always use pgscan and pgsteal for monitoring the system level
-memory pressure, for example, by using sysstat(sar) or some other
-monitor tools.
-But with this change, these two counters include the memcg pressure as
-well. It is not easy to know whether the pgscan and pgsteal are caused
-by system level pressure or only some specific memcgs reaching their
-memory limit.
-
-How about adding  cgroup_reclaim() to pgrefill as well ?
-
-> Please note that this difference is only for system level vmstats. The
-> cgroup stats returned by memory.stat are actually consistent. The
-> cgroup's pgsteal contains number of reclaimed pages for global as well
-> as cgroup reclaim. So, one way to get the system level stats is to get
-> these stats from root's memory.stat but root does not expose that
-> interface. Also for !CONFIG_MEMCG machines /proc/vmstat is the only way
-> to get these stats. So, make these stats consistent.
->
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+On 05/05/2020 15:41, Ezequiel Garcia wrote:
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> 
+> The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
+> a backend for this new format.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  mm/vmscan.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index cc555903a332..51f7d1efc912 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1943,8 +1943,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->         reclaim_stat->recent_scanned[file] += nr_taken;
->
->         item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
-> -       if (!cgroup_reclaim(sc))
-> -               __count_vm_events(item, nr_scanned);
-> +       __count_vm_events(item, nr_scanned);
->         __count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
->         spin_unlock_irq(&pgdat->lru_lock);
->
-> @@ -1957,8 +1956,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->         spin_lock_irq(&pgdat->lru_lock);
->
->         item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
-> -       if (!cgroup_reclaim(sc))
-> -               __count_vm_events(item, nr_reclaimed);
-> +       __count_vm_events(item, nr_reclaimed);
->         __count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
->         reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
->         reclaim_stat->recent_rotated[1] += stat.nr_activate[1];
-> --
-> 2.26.2.526.g744177e7f7-goog
->
->
+>  drivers/staging/media/rkvdec/Makefile     |    2 +-
+>  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
+>  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
+>  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
+>  4 files changed, 1637 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
+> 
+> diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
+> index c08fed0a39f9..cb86b429cfaa 100644
+> --- a/drivers/staging/media/rkvdec/Makefile
+> +++ b/drivers/staging/media/rkvdec/Makefile
+> @@ -1,3 +1,3 @@
+>  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
+>  
+> -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
+> +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
+> diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
+> new file mode 100644
+> index 000000000000..37d0ea4e3570
+> --- /dev/null
+> +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
+> @@ -0,0 +1,1577 @@
 
+<snip>
 
--- 
-Thanks
-Yafang
+> +static void init_inter_probs(struct rkvdec_ctx *ctx,
+> +			     const struct rkvdec_vp9_run *run)
+> +{
+> +	const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
+> +	struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
+> +	struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
+> +	struct rkvdec_vp9_inter_frame_probs *rkprobs;
+> +	const struct v4l2_vp9_probabilities *probs;
+> +	unsigned int i, j, k;
+> +
+> +	rkprobs = &tbl->probs.inter;
+> +	dec_params = run->decode_params;
+> +	probs = &dec_params->probs;
+> +
+> +	/*
+> +	 * inter probs
+> +	 * 151 x 128 bits, aligned to 152 x 128 bits
+> +	 * inter only
+> +	 * intra_y_mode & inter_block info 6 x 128 bits
+> +	 */
+> +
+> +	memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
+> +	memcpy(rkprobs->comp_mode, probs->comp_mode,
+> +	       sizeof(rkprobs->comp_mode));
+> +	memcpy(rkprobs->comp_ref, probs->comp_ref,
+> +	       sizeof(rkprobs->comp_ref));
+> +	memcpy(rkprobs->single_ref, probs->single_ref,
+> +	       sizeof(rkprobs->single_ref));
+> +	memcpy(rkprobs->inter_mode, probs->inter_mode,
+> +	       sizeof(rkprobs->inter_mode));
+> +	memcpy(rkprobs->interp_filter, probs->interp_filter,
+> +	       sizeof(rkprobs->interp_filter));
+> +
+> +	/* 128 x 128 bits coeff related */
+> +	for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
+> +		for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
+> +			for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
+> +				write_coeff_plane(probs->coef[i][j][k],
+> +						  rkprobs->coef[k][i][j]);
+> +		}
+> +	}
+> +
+> +	/* intra uv mode 6 x 128 */
+> +	memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
+> +	       sizeof(rkprobs->uv_mode_0_2));
+> +	memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
+> +	       sizeof(rkprobs->uv_mode_3_5));
+> +	memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
+> +	       sizeof(rkprobs->uv_mode_6_8));
+> +	memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
+> +	       sizeof(rkprobs->uv_mode_9));
+> +
+> +	/* mv related 6 x 128 */
+> +	memcpy(rkprobs->mv.joint, probs->mv.joint,
+> +	       sizeof(rkprobs->mv.joint));
+> +	memcpy(rkprobs->mv.sign, probs->mv.sign,
+> +	       sizeof(rkprobs->mv.sign));
+> +	memcpy(rkprobs->mv.class, probs->mv.class,
+> +	       sizeof(rkprobs->mv.class));
+> +	memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
+> +	       sizeof(rkprobs->mv.class0_bit));
+> +	memcpy(rkprobs->mv.bits, probs->mv.bits,
+> +	       sizeof(rkprobs->mv.bits));
+> +	memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
+> +	       sizeof(rkprobs->mv.class0_fr));
+> +	memcpy(rkprobs->mv.fr, probs->mv.fr,
+> +	       sizeof(rkprobs->mv.fr));
+> +	memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
+> +	       sizeof(rkprobs->mv.class0_hp));
+> +	memcpy(rkprobs->mv.hp, probs->mv.hp,
+> +	       sizeof(rkprobs->mv.hp));
+
+Can't you just do: 'rkprobs->mv = probs->mv'?
+
+> +}
+
+Regards,
+
+	Hans
