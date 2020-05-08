@@ -2,252 +2,108 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C3FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CB924955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4631D24956
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:16:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Dj8/u6gZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgEHONR (ORCPT
+        id S1727123AbgEHOQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:13:17 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:24876 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727116AbgEHONM (ORCPT
+        Fri, 8 May 2020 10:16:34 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:56418 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726636AbgEHOQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:13:12 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048E6vWr012108;
-        Fri, 8 May 2020 10:13:11 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30vtek2j7n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 10:13:11 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 048EDATb044959
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 8 May 2020 10:13:10 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 8 May 2020
- 10:13:08 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 8 May 2020 10:13:08 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 048ED5Ja031800;
-        Fri, 8 May 2020 10:13:07 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3] iio: core: move debugfs data on the private iio dev info
-Date:   Fri, 8 May 2020 17:13:06 +0300
-Message-ID: <20200508141306.17222-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
+        Fri, 8 May 2020 10:16:34 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 9C6732E0997;
+        Fri,  8 May 2020 17:16:31 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id DzB0dpFFbi-GTXSjfvG;
+        Fri, 08 May 2020 17:16:31 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1588947391; bh=Kz8084Qd+ukMFtBduY70Wrn/hOXrye0GrRmcB96gXCQ=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=Dj8/u6gZYmMA/f3gA/Gqiy6C2yfCTKO//L+zyCsxYhibDXK2RnLGgmSAlaRXqqzlw
+         Tq4x4ndeaEZyJGVAZxWLr/JJnElxICKB49ARgoON0n79PGht6cp9Htyk3J3iszXQle
+         cbNDkAqPk/3XuNtXYZDXX5+C1gTBipR7wPmNTtdg=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7008::1:4])
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id tvHw4hmnaj-GTWWnWM4;
+        Fri, 08 May 2020 17:16:29 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: [PATCH] doc: cgroup: update note about conditions when oom killer is
+ invoked
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@suse.com>
+Date:   Fri, 08 May 2020 17:16:29 +0300
+Message-ID: <158894738928.208854.5244393925922074518.stgit@buzz>
+User-Agent: StGit/0.22-32-g6a05
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_13:2020-05-08,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 clxscore=1015 mlxscore=0
- bulkscore=0 malwarescore=0 suspectscore=0 adultscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005080126
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change moves all iio_dev debugfs fields to the iio_dev_priv object.
-It's not the biggest advantage yet (to the whole thing of abstractization)
-but it's a start.
+Starting from v4.19 commit 29ef680ae7c2 ("memcg, oom: move out_of_memory
+back to the charge path") cgroup oom killer is no longer invoked only from
+page faults. Now it implements the same semantics as global OOM killer:
+allocation context invokes OOM killer and keeps retrying until success.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- drivers/iio/iio_core.h          | 10 +++++++++
- drivers/iio/industrialio-core.c | 40 ++++++++++++++++++++++-----------
- include/linux/iio/iio.h         | 13 +----------
- 3 files changed, 38 insertions(+), 25 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-index 84f3b4590c05..bc9f580d2bdd 100644
---- a/drivers/iio/iio_core.h
-+++ b/drivers/iio/iio_core.h
-@@ -20,9 +20,19 @@ extern struct device_type iio_device_type;
- /**
-  * struct iio_dev_priv - industrial I/O device private information
-  * @indio_dev:			public IIO device object
-+ * @debugfs_dentry:		device specific debugfs dentry
-+ * @cached_reg_addr:		cached register address for debugfs reads
-+ * @read_buf:			read buffer to be used for the initial reg read
-+ * @read_buf_len:		data length in @read_buf
-  */
- struct iio_dev_priv {
- 	struct iio_dev			indio_dev;
-+#if defined(CONFIG_DEBUG_FS)
-+	struct dentry			*debugfs_dentry;
-+	unsigned			cached_reg_addr;
-+	char				read_buf[20];
-+	unsigned int			read_buf_len;
-+#endif
- };
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index bcc80269bb6a..1bb9a8f6ebe1 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1172,6 +1172,13 @@ PAGE_SIZE multiple when read back.
+ 	Under certain circumstances, the usage may go over the limit
+ 	temporarily.
  
- #define to_iio_dev_priv(indio_dev)	\
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index b924197b5984..091ae79de751 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -181,6 +181,13 @@ struct iio_dev *iio_priv_to_dev(void *priv)
- }
- EXPORT_SYMBOL_GPL(iio_priv_to_dev);
- 
-+struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
-+{
-+	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-+	return iio_dev_priv->debugfs_dentry;
-+}
-+EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
++	In default configuration regular 0-order allocation always
++	succeed unless OOM killer choose current task as a victim.
 +
- /**
-  * iio_find_channel_from_si() - get channel from its scan index
-  * @indio_dev:		device
-@@ -324,35 +331,37 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
- 			      size_t count, loff_t *ppos)
- {
- 	struct iio_dev *indio_dev = file->private_data;
-+	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
- 	unsigned val = 0;
- 	int ret;
- 
- 	if (*ppos > 0)
- 		return simple_read_from_buffer(userbuf, count, ppos,
--					       indio_dev->read_buf,
--					       indio_dev->read_buf_len);
-+					       iio_dev_priv->read_buf,
-+					       iio_dev_priv->read_buf_len);
- 
- 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
--						  indio_dev->cached_reg_addr,
-+						  iio_dev_priv->cached_reg_addr,
- 						  0, &val);
- 	if (ret) {
- 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
- 		return ret;
- 	}
- 
--	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
--					   sizeof(indio_dev->read_buf),
--					   "0x%X\n", val);
-+	iio_dev_priv->read_buf_len = snprintf(iio_dev_priv->read_buf,
-+					      sizeof(iio_dev_priv->read_buf),
-+					      "0x%X\n", val);
- 
- 	return simple_read_from_buffer(userbuf, count, ppos,
--				       indio_dev->read_buf,
--				       indio_dev->read_buf_len);
-+				       iio_dev_priv->read_buf,
-+				       iio_dev_priv->read_buf_len);
- }
- 
- static ssize_t iio_debugfs_write_reg(struct file *file,
- 		     const char __user *userbuf, size_t count, loff_t *ppos)
- {
- 	struct iio_dev *indio_dev = file->private_data;
-+	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
- 	unsigned reg, val;
- 	char buf[80];
- 	int ret;
-@@ -367,10 +376,10 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
- 
- 	switch (ret) {
- 	case 1:
--		indio_dev->cached_reg_addr = reg;
-+		iio_dev_priv->cached_reg_addr = reg;
- 		break;
- 	case 2:
--		indio_dev->cached_reg_addr = reg;
-+		iio_dev_priv->cached_reg_addr = reg;
- 		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
- 							  val, NULL);
- 		if (ret) {
-@@ -394,23 +403,28 @@ static const struct file_operations iio_debugfs_reg_fops = {
- 
- static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
- {
--	debugfs_remove_recursive(indio_dev->debugfs_dentry);
-+	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-+	debugfs_remove_recursive(iio_dev_priv->debugfs_dentry);
- }
- 
- static void iio_device_register_debugfs(struct iio_dev *indio_dev)
- {
-+	struct iio_dev_priv *iio_dev_priv;
++	Some kinds of allocations don't invoke the OOM killer.
++	Caller could retry them differently, return into userspace
++	as -ENOMEM or silently ignore in cases like disk readahead.
 +
- 	if (indio_dev->info->debugfs_reg_access == NULL)
- 		return;
+ 	This is the ultimate protection mechanism.  As long as the
+ 	high limit is used and monitored properly, this limit's
+ 	utility is limited to providing the final safety net.
+@@ -1228,17 +1235,9 @@ PAGE_SIZE multiple when read back.
+ 		The number of time the cgroup's memory usage was
+ 		reached the limit and allocation was about to fail.
  
- 	if (!iio_debugfs_dentry)
- 		return;
+-		Depending on context result could be invocation of OOM
+-		killer and retrying allocation or failing allocation.
+-
+-		Failed allocation in its turn could be returned into
+-		userspace as -ENOMEM or silently ignored in cases like
+-		disk readahead.  For now OOM in memory cgroup kills
+-		tasks iff shortage has happened inside page fault.
+-
+ 		This event is not raised if the OOM killer is not
+ 		considered as an option, e.g. for failed high-order
+-		allocations.
++		allocations or if caller asked to not retry attempts.
  
--	indio_dev->debugfs_dentry =
-+	iio_dev_priv = to_iio_dev_priv(indio_dev);
-+
-+	iio_dev_priv->debugfs_dentry =
- 		debugfs_create_dir(dev_name(&indio_dev->dev),
- 				   iio_debugfs_dentry);
- 
- 	debugfs_create_file("direct_reg_access", 0644,
--			    indio_dev->debugfs_dentry, indio_dev,
-+			    iio_dev_priv->debugfs_dentry, indio_dev,
- 			    &iio_debugfs_reg_fops);
- }
- #else
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 38c4ea505394..6155e7aec60c 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
-  * @groups:		[INTERN] attribute groups
-  * @groupcounter:	[INTERN] index of next attribute group
-  * @flags:		[INTERN] file ops related flags including busy flag.
-- * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
-- * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
-  */
- struct iio_dev {
- 	int				id;
-@@ -565,12 +563,6 @@ struct iio_dev {
- 	int				groupcounter;
- 
- 	unsigned long			flags;
--#if defined(CONFIG_DEBUG_FS)
--	struct dentry			*debugfs_dentry;
--	unsigned			cached_reg_addr;
--	char				read_buf[20];
--	unsigned int			read_buf_len;
--#endif
- };
- 
- const struct iio_chan_spec
-@@ -701,10 +693,7 @@ static inline bool iio_buffer_enabled(struct iio_dev *indio_dev)
-  * @indio_dev:		IIO device structure for device
-  **/
- #if defined(CONFIG_DEBUG_FS)
--static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
--{
--	return indio_dev->debugfs_dentry;
--}
-+struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
- #else
- static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
- {
--- 
-2.17.1
+ 	  oom_kill
+ 		The number of processes belonging to this cgroup
 
