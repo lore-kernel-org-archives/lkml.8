@@ -2,289 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C626C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B093DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019BE2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D27E24958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m6+WB7dk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgEHNrA (ORCPT
+        id S1728495AbgEHNrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41218 "EHLO
+        Fri, 8 May 2020 09:47:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728336AbgEHNqq (ORCPT
+        by vger.kernel.org with ESMTP id S1728389AbgEHNrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:46:46 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E73C05BD09;
-        Fri,  8 May 2020 06:46:46 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX3Kt-0001ow-Lb; Fri, 08 May 2020 15:46:43 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C9DD31C0080;
-        Fri,  8 May 2020 15:46:37 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:46:37 -0000
-From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Add option for verbose reporting
-Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <158894559776.8414.15532990140090704974.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 8 May 2020 09:47:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02A3C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:47:01 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so1929542wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
+        b=m6+WB7dkD5OY5SUi5lv4lAQ0mBcKHk146e1QwqFyiJLMV7m2seti2PPWrL7Mtg7jPO
+         fXjmH/Vnwq/PvdNM4rnRQR2Tdqjfrj3LFUvE//ja5RmUll82j+lwt5OjJNUex+3tSuvB
+         vdD4nx5w3ghYDD5wcoyKT9xS1a8iGCzZbYjXujuK8CbZnH5rGkqLhUfHhQC2/gQThxjY
+         noNtQ/LLD6fvKiZkWu0yqgqC2AfhxNQmPFSnGMZNEjjDAEFNrPpG9xyYEcjTe4HXV4OU
+         iv5bKD2VV9yDVTDx2E3g6Hze2Njrn0R7oUPj520tNshk0RmsY+buEld6wKdQOZL7oXfA
+         vJbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
+        b=dcz5gsAk9qNPJbNCnNIIeXpYRthX2POUzs/kb4WVYfMhiPTQPbZWBmLXLQg5BlpgVN
+         UdRM3mnvbCzLQRC/CbfndQE6Suuwqxt+9mKUe1DHot5X8nBBf01JBWQz0hEZtZHnxFoq
+         uxv2cg8jYzuw+i/jJsQhu8EGjvZcA9TU9haqMbxEeXL5/p4YQg35P7CUt4kIhzFyGh90
+         /RXIqwFMmEtLTQkvx9ytBxsjkImpbg1RhCFU9re59/xHPVHo748virAXNlUsmPzJCrp3
+         69REFeVTBlla7FA9pUxv/9d6N27JhbYVkdg/3XupQq2AD4W7XYLB7d8F2vILfm2L7YP3
+         toPQ==
+X-Gm-Message-State: AGi0Pua9L1syEKnDqBtvhXKqlXpANqL/b3psQ2+uYrX3s8JzzrWV6J5f
+        IIHqZTxdG+ZW0V9uK7VdwsOmkoLeJQCti2zR
+X-Google-Smtp-Source: APiQypIPzHLCqcPpkTXMRiOcVbMkzFJd/j8pltNsJ1oUqIBWiQl4ZEevMtSVlfhwuPrcT/Rvkqk3Xg==
+X-Received: by 2002:a5d:6b86:: with SMTP id n6mr3018508wrx.113.1588945620266;
+        Fri, 08 May 2020 06:47:00 -0700 (PDT)
+Received: from lmecxl0524.home (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
+        by smtp.gmail.com with ESMTPSA id p7sm3189464wrf.31.2020.05.08.06.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 06:46:59 -0700 (PDT)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org, fabrice.gasnier@st.com,
+        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
+        robh+dt@kernel.org, srinivas.kandagatla@linaro.org,
+        Etienne Carriere <etienne.carriere@st.com>
+Subject: [PATCH] dt-bindings: nvmem: stm32: new property for data access
+Date:   Fri,  8 May 2020 15:45:27 +0200
+Message-Id: <20200508134527.26555-1-etienne.carriere@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/kcsan branch of tip:
+From: Etienne Carriere <etienne.carriere@st.com>
 
-Commit-ID:     2402d0eae589a31ee7b1774cb220d84d0f5605b4
-Gitweb:        https://git.kernel.org/tip/2402d0eae589a31ee7b1774cb220d84d0f5605b4
-Author:        Marco Elver <elver@google.com>
-AuthorDate:    Sat, 22 Feb 2020 00:10:27 +01:00
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Wed, 25 Mar 2020 09:56:00 -07:00
+Introduce boolean property st,non-secure-otp for OTP data located
+in a factory programmed area that only secure firmware can access
+by default and that shall be reachable from the non-secure world.
 
-kcsan: Add option for verbose reporting
-
-Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-Currently information about the reporting task's held locks and IRQ
-trace events are shown, if they are enabled.
-
-Signed-off-by: Marco Elver <elver@google.com>
-Suggested-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
 ---
- kernel/kcsan/core.c   |   4 +-
- kernel/kcsan/kcsan.h  |   3 +-
- kernel/kcsan/report.c | 103 ++++++++++++++++++++++++++++++++++++++++-
- lib/Kconfig.kcsan     |  13 +++++-
- 4 files changed, 120 insertions(+), 3 deletions(-)
+ .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index e7387fe..065615d 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -18,8 +18,8 @@
- #include "kcsan.h"
+diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+index d84deb4774a4..c11c99f085d7 100644
+--- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
++++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+@@ -24,6 +24,18 @@ properties:
+       - st,stm32f4-otp
+       - st,stm32mp15-bsec
  
- static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
--static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
--static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
-+unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
-+unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
- static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
- static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
- 
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 892de51..e282f8b 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -13,6 +13,9 @@
- /* The number of adjacent watchpoints to check. */
- #define KCSAN_CHECK_ADJACENT 1
- 
-+extern unsigned int kcsan_udelay_task;
-+extern unsigned int kcsan_udelay_interrupt;
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
 +
- /*
-  * Globally enable and disable KCSAN.
-  */
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 11c791b..18f9d3b 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/debug_locks.h>
-+#include <linux/delay.h>
- #include <linux/jiffies.h>
- #include <linux/kernel.h>
- #include <linux/lockdep.h>
-@@ -31,7 +33,26 @@ static struct {
- 	int			cpu_id;
- 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
- 	int			num_stack_entries;
--} other_info = { .ptr = NULL };
++    properties:
++      st,non-secure-otp:
++        description: |
++          This property explicits a factory programmed area that both secure
++          and non-secure worlds can access. It is needed when, by default, the
++          related area can only be reached by the secure world.
++        type: boolean
 +
-+	/*
-+	 * Optionally pass @current. Typically we do not need to pass @current
-+	 * via @other_info since just @task_pid is sufficient. Passing @current
-+	 * has additional overhead.
-+	 *
-+	 * To safely pass @current, we must either use get_task_struct/
-+	 * put_task_struct, or stall the thread that populated @other_info.
-+	 *
-+	 * We cannot rely on get_task_struct/put_task_struct in case
-+	 * release_report() races with a task being released, and would have to
-+	 * free it in release_report(). This may result in deadlock if we want
-+	 * to use KCSAN on the allocators.
-+	 *
-+	 * Since we also want to reliably print held locks for
-+	 * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
-+	 * that populated @other_info until it has been consumed.
-+	 */
-+	struct task_struct	*task;
-+} other_info;
- 
- /*
-  * Information about reported races; used to rate limit reporting.
-@@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
- 	return strncmp(buf1, buf2, sizeof(buf1));
- }
- 
-+static void print_verbose_info(struct task_struct *task)
-+{
-+	if (!task)
-+		return;
+ required:
+   - "#address-cells"
+   - "#size-cells"
+@@ -41,6 +53,11 @@ examples:
+       calib@22c {
+         reg = <0x22c 0x2>;
+       };
 +
-+	pr_err("\n");
-+	debug_show_held_locks(task);
-+	print_irqtrace_events(task);
-+}
-+
- /*
-  * Returns true if a report was generated, false otherwise.
-  */
-@@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 				  other_info.num_stack_entries - other_skipnr,
- 				  0);
++      mac_addr@e4 {
++        reg = <0xe4 0x8>;
++        st,non-secure-otp;
++      };
+     };
  
-+		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-+			print_verbose_info(other_info.task);
-+
- 		pr_err("\n");
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
- 		       get_access_type(access_type), ptr, size,
-@@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
- 			  0);
- 
-+	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-+		print_verbose_info(current);
-+
- 	/* Print report footer. */
- 	pr_err("\n");
- 	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-@@ -358,6 +395,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
- }
- 
- /*
-+ * Sets @other_info.task and awaits consumption of @other_info.
-+ *
-+ * Precondition: report_lock is held.
-+ * Postcondition: report_lock is held.
-+ */
-+static void
-+set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
-+{
-+	/*
-+	 * We may be instrumenting a code-path where current->state is already
-+	 * something other than TASK_RUNNING.
-+	 */
-+	const bool is_running = current->state == TASK_RUNNING;
-+	/*
-+	 * To avoid deadlock in case we are in an interrupt here and this is a
-+	 * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
-+	 * timeout to ensure this works in all contexts.
-+	 *
-+	 * Await approximately the worst case delay of the reporting thread (if
-+	 * we are not interrupted).
-+	 */
-+	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
-+
-+	other_info.task = current;
-+	do {
-+		if (is_running) {
-+			/*
-+			 * Let lockdep know the real task is sleeping, to print
-+			 * the held locks (recall we turned lockdep off, so
-+			 * locking/unlocking @report_lock won't be recorded).
-+			 */
-+			set_current_state(TASK_UNINTERRUPTIBLE);
-+		}
-+		spin_unlock_irqrestore(&report_lock, *flags);
-+		/*
-+		 * We cannot call schedule() since we also cannot reliably
-+		 * determine if sleeping here is permitted -- see in_atomic().
-+		 */
-+
-+		udelay(1);
-+		spin_lock_irqsave(&report_lock, *flags);
-+		if (timeout-- < 0) {
-+			/*
-+			 * Abort. Reset other_info.task to NULL, since it
-+			 * appears the other thread is still going to consume
-+			 * it. It will result in no verbose info printed for
-+			 * this task.
-+			 */
-+			other_info.task = NULL;
-+			break;
-+		}
-+		/*
-+		 * If @ptr nor @current matches, then our information has been
-+		 * consumed and we may continue. If not, retry.
-+		 */
-+	} while (other_info.ptr == ptr && other_info.task == current);
-+	if (is_running)
-+		set_current_state(TASK_RUNNING);
-+}
-+
-+/*
-  * Depending on the report type either sets other_info and returns false, or
-  * acquires the matching other_info and returns true. If other_info is not
-  * required for the report type, simply acquires report_lock and returns true.
-@@ -388,6 +486,9 @@ retry:
- 		other_info.cpu_id		= cpu_id;
- 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
- 
-+		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-+			set_other_info_task_blocking(flags, ptr);
-+
- 		spin_unlock_irqrestore(&report_lock, *flags);
- 
- 		/*
-diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index 081ed2e..0f1447f 100644
---- a/lib/Kconfig.kcsan
-+++ b/lib/Kconfig.kcsan
-@@ -20,6 +20,19 @@ menuconfig KCSAN
- 
- if KCSAN
- 
-+config KCSAN_VERBOSE
-+	bool "Show verbose reports with more information about system state"
-+	depends on PROVE_LOCKING
-+	help
-+	  If enabled, reports show more information about the system state that
-+	  may help better analyze and debug races. This includes held locks and
-+	  IRQ trace events.
-+
-+	  While this option should generally be benign, we call into more
-+	  external functions on report generation; if a race report is
-+	  generated from any one of them, system stability may suffer due to
-+	  deadlocks or recursion.  If in doubt, say N.
-+
- config KCSAN_DEBUG
- 	bool "Debugging of KCSAN internals"
- 
+ ...
+-- 
+2.17.1
+
