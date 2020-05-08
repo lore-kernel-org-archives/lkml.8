@@ -2,107 +2,254 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76022C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E2BC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540EF2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:48:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nKgQQLul"
+	by mail.kernel.org (Postfix) with ESMTP id A723F207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgEHPsV (ORCPT
+        id S1728034AbgEHPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgEHPsU (ORCPT
+        Fri, 8 May 2020 11:49:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39649 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgEHPtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:48:20 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82211C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 08:48:20 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k18so2260992ion.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3Yj/VWnxuwVscg+Ow0r6vDZvPUhARSnW2zWYKwQkrpg=;
-        b=nKgQQLullofD+pnK7JXZAiS3ATo+bky/bI583PXN4MSy5nR/lcFS/WE9d4TqceYGSQ
-         vwbmFJK1RFdd+ZyTeBd6sDd8iRLQIMqly96rE/eg/e0dpib+xK5gonq1nzfqsGGTi3cj
-         tkpSJL2Z2PLhFzmZFFpNEgCVbrhFAnGTyzU51KrzqgTiPDnLY7+kQfakiJmiXrUfDgTS
-         +5Xs4mbMOrqTnCVycdLFSHSw4zJYElSY/m9hFi5B6bNn5zguLK55+PmXSC5cAvGgyv4A
-         vzNQjvyo6QKDzwEOLYd0PoaDqP64eIZScGIGoC7O1djDtAgyqpfCAPzcQyCfQeY/7Cgp
-         Ap7w==
+        Fri, 8 May 2020 11:49:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u6so2169553ljl.6;
+        Fri, 08 May 2020 08:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3Yj/VWnxuwVscg+Ow0r6vDZvPUhARSnW2zWYKwQkrpg=;
-        b=irzS4dupvdOrYbySnZxVno6DcNaInvKWqc+6684hnieiNrmSot3poJXrR5YqaWMMxZ
-         72FthsT+qYHmvBhXMFHqUvsD/xlNA5td2BJwVU6sOXIONwy+oYwdaHHKtNznUDqYycDN
-         Esc19XqFpiXFUXJi0D30rcKr7qDHE4HwvBGBsfzH0CgF+Jgi6kCm1dqz6xWNqJ9SyFNj
-         wQSa7tckDSNehc5INCbQgfDsJSW0wk4nMwkzz8ysnmYrTg2qQCMS2dmNvKgjsN7qcWFL
-         XN82nG06zM21JXeRyidMXLKWRJYKPgolsKa41vLIEpZ8JrvnSvuYBlKKnyGMyAuIQ5b1
-         RcXw==
-X-Gm-Message-State: AGi0PuY/egYFXJlZhxyqp2R1ErhLmJjynbG2/JyDNcWPdipH8YQkFOjg
-        Y4HsKxpauNZscfleuGMn3KoxApdD6d4=
-X-Google-Smtp-Source: APiQypIwoCayfrJ+5VgfQJCl3htbKpqdhZ706qrKsseh3LXYReBHJ75Lu/8AozesVU13tEq/sC961A==
-X-Received: by 2002:a05:6602:2e0b:: with SMTP id o11mr3143321iow.94.1588952899835;
-        Fri, 08 May 2020 08:48:19 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y15sm942871ilg.21.2020.05.08.08.48.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 08:48:19 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yufen Yu <yuyufen@huawei.com>
-References: <20200508152833.7e840076@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c2c822b9-c5d9-d145-9a05-25ed02f14ad0@kernel.dk>
-Date:   Fri, 8 May 2020 09:48:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dqDX7b2iqbZDIpWTEutcYFF8HbnjuiI5rNqLj6XolHE=;
+        b=TB/sZsjZOD2yqJKN69Ny4ADekaJuo0K+XKi01LUequSbis2vx3rOhl9EwdfctqLd3e
+         HC+jsgqo6K4iIXPmnuQa5qOKnML/ng0smZICmg0sSQh0JdUq7rNbGbKQ4vETS4KMuCpu
+         04uyGP404tQRLCcGYR2FvJAx7Dt2hY8evdW4yCqLaw2fZOJwxGpH0WJGwTMrHkHY1EFF
+         ueUuPq0Rm5uZRQ8EVP7otsuS0RYmy3s2VHgEplIOFOyla4o+16xr24kLluqWncaoq2RT
+         ceLnG8gQB2Xzp1FeKQ6hvh3mg7jJkqGJAljzLxSX5pVbp4mEP8XRHvKOVe9twc9T4c4U
+         jtMA==
+X-Gm-Message-State: AOAM533Odz6HR5qCDzorCDo9B2jCJz6CDWm0mBgP3zMEqin98M2FSs6f
+        2yTrh6x1mJ65/K9kZlupxXU=
+X-Google-Smtp-Source: ABdhPJytCIY0xss6TLHasCH3iCoke1j3WNOeNLHoSaEYV/1HmXuYNPkHmdO/QQ/THdgDGPoyaE/bJA==
+X-Received: by 2002:a2e:3813:: with SMTP id f19mr2134339lja.216.1588952951832;
+        Fri, 08 May 2020 08:49:11 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id t16sm1624002lff.72.2020.05.08.08.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 08:49:11 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:48:24 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+        brendanhiggins@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 08/11] dt_bindings: ROHM BD99954 Charger
+Message-ID: <a913ae810c4762a97f483ab9d90eb9a8f194dbeb.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508152833.7e840076@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 11:28 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the block tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> In file included from include/linux/kernel.h:15,
->                  from include/linux/list.h:9,
->                  from include/linux/module.h:12,
->                  from block/bfq-iosched.c:116:
-> block/bfq-iosched.c: In function 'bfq_set_next_ioprio_data':
-> block/bfq-iosched.c:4980:5: error: implicit declaration of function 'bdi_dev_name'; did you mean 'blkg_dev_name'? [-Werror=implicit-function-declaration]
->  4980 |     bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
->       |     ^~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   0f6438fca125 ("bdi: use bdi_dev_name() to get device name")
-> 
-> I have applied the following patch for today.
+The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+secondary battery. Intended to be used in space-constraint equipment such
+as Low profile Notebook PC, Tablets and other applications. BD99954
+provides a Dual-source Battery Charger, two port BC1.2 detection and a
+Battery Monitor.
 
-Thanks Stephen, I have added it.
+Document the DT bindings for BD99954
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ .../bindings/power/supply/rohm,bd99954.yaml   | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+new file mode 100644
+index 000000000000..7e0f73a898c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/rohm,bd99954.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD99954 Battery charger
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++  - Markus Laine <markus.laine@fi.rohmeurope.com>
++  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
++
++description: |
++  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
++  secondary battery intended to be used in space-constraint equipment such
++  as Low profile Notebook PC, Tablets and other applications. BD99954
++  provides a Dual-source Battery Charger, two port BC1.2 detection and a
++  Battery Monitor.
++
++
++properties:
++  compatible:
++    const: rohm,bd99954
++#
++#    The battery charging profile of BD99954.
++#
++#    Curve (1) represents charging current.
++#    Curve (2) represents battery voltage.
++#
++#    The BD99954 data sheet divides charging to three phases.
++#    a) Trickle-charge with constant current (8).
++#    b) pre-charge with constant current (6)
++#    c) fast-charge with:
++#       First a constant current (5) phase (CC)
++#       Then constant voltage (CV) phase (after the battery voltage has reached
++#       target level - until charging current has dropped to termination
++#       level (7)
++#
++#     V ^                                                        ^ I
++#       .                                                        .
++#       .                                                        .
++# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
++#       .                            /                           .
++#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
++#       .                     +    /  +                          .
++#       .                     +   -   --                         .
++#       .                     +  -     +                         .
++#       .                     +.-      -:                        .
++#       .                    .+         +`                       .
++#       .                  .- +       | `/                       .
++#       .               .."   +          .:                      .
++#       .             -"      +           --                     .
++#       .    (2)  ..."        +       |    :-                    .
++#       .    ...""            +             -:                   .
++# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
++#       .             +                       `:.                .
++#       .             +               |         -:               .
++#       .             +                           -:             .
++#       .             +                             ..           .
++#       .   (1)       +               |               "+++- - - -.- - (7)
++#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
++#       .                                                +       -
++#       -------------------------------------------------+++++++++-->
++#       |             |       |   CC   |      CV         |
++#       | --trickle-- | -pre- | ---------fast----------- |
++#
++#   The charger uses the following battery properties
++# - trickle-charge-current-microamp:
++#     Current used at trickle-charge phase (8 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - precharge-current-microamp:
++#     Current used at pre-charge phase (6 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-current-max-microamp
++#     Current used at fast charge constant current phase (5 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-voltage-max-microvolt
++#     The constant voltage used in fast charging phase (4 in above chart)
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - precharge-upper-limit-microvolt
++#     charging mode is changed from trickle charging to pre-charging
++#     when battery voltage exceeds this limit voltage (3 in above chart)
++#     minimum: 2048000
++#     maximum: 19200000
++#     multipleOf: 64000
++# - re-charge-voltage-microvolt
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++#     re-charging is automatically started when battry has been discharging
++#     to the point where the battery voltage drops below this limit
++# - over-voltage-threshold-microvolt
++#     battery is expected to be faulty if battery voltage exceeds this limit.
++#     Charger will then enter to a "battery faulty" -state
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - charge-term-current-microamp
++#     minimum: 0
++#     maximum: 1024000
++#     multipleOf: 64000
++#     a charge cycle terminates when the battery voltage is above recharge
++#     threshold, and the current is below this setting (7 in above chart)
++#   See also Documentation/devicetree/bindings/power/supply/battery.txt
++
++  monitored-battery:
++    description:
++      phandle of battery characteristics devicetree node
++
++  rohm,vsys-regulation-microvolt:
++    description: system specific lower limit for system voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 64000
++
++  rohm,vbus-input-current-limit-microamp:
++    description: system specific VBUS input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++  rohm,vcc-input-current-limit-microamp:
++    description: system specific VCC/VACP input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++required:
++  - compatible
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        charger@9 {
++            compatible = "rohm,bd99954";
++            monitored-battery = <&battery>;
++            reg = <0x9>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 8>;
++            rohm,vsys-regulation-microvolt = <8960000>;
++            rohm,vbus-input-current-limit-microamp = <1472000>;
++            rohm,vcc-input-current-limit-microamp = <1472000>;
++        };
++    };
+-- 
+2.21.0
+
 
 -- 
-Jens Axboe
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
