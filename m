@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8270C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F2C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0382495F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C2F24971
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941744;
-	bh=Esc86zY99rb4tSwkuVMshuFgUhwa3CRmyeRGvkVGdrU=;
+	s=default; t=1588941748;
+	bh=8foEsAd8ZvHE4lrTzJO6XC2ENSyWkAlDrCd0/G3I4Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gp1nla4M6YEcXv+6haSVQ53n33MEui+4eukQrB2HqrPZyPKVOapWtjNTmX0Cq/KIv
-	 f7KY3BLkMF84y1ewacsS1RYQ4gBkasmtqYvk1e8CRc2K+O7hY7ms+hdQxtkniwG3s/
-	 chyHX7J/CqAVBFIGkjDSHvNW6Fai18d8RP6kCR/A=
+	b=Q3P9k1OaVKurDQV+Fn2W4bvNZusUgZtCYnxmY/c4Iunfsw3RMxLnxTmnr0CLhCQqi
+	 f1cxCV2yo79MxWimnNwcguCbzGumWBNr0r+BW2sX0uf8gr/BPAErFSjXSOmPGktEqX
+	 KN8o3letjl1K3rF37MUJos9WRufAEksW7cZ9Q+Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgEHMmX (ORCPT
+        id S1728532AbgEHMm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38764 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgEHMmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:11 -0400
+        id S1727832AbgEHMmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18CF21835;
-        Fri,  8 May 2020 12:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BBFE21835;
+        Fri,  8 May 2020 12:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941731;
-        bh=Esc86zY99rb4tSwkuVMshuFgUhwa3CRmyeRGvkVGdrU=;
+        s=default; t=1588941736;
+        bh=8foEsAd8ZvHE4lrTzJO6XC2ENSyWkAlDrCd0/G3I4Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PnjCCbuQUoPKNYZFzoqi+N+kWQ+6bHE8IuQO9IsriumVYXe36X/1Ub4zWJYQ+cfPF
-         Dcn5xopk1zYUfw/fKEXHT14kYUkJdlgsfMbyDvw+ZVmXxHN3USFnAUQIRKk6QUwUvC
-         Nz/Uyk5Q4yTPYZl9Ljpcxwv658SaXmClybqzlEDg=
+        b=d8OsKsf/HQ3DB2XmrR10+L3Mz70+xqfUj4x1c/zwe+ecn8cihgBOYN2LH5QKPFaRt
+         Qw7ZEP9sOCXQSK6EMpttTJj3OZFC4LXAtbyq5+TOyHjQSy16yJVoNpmvR3dnMfanVs
+         G00SSIJmp19YroXYvyYARWQ2FrgufqmadlsKCH3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 111/312] tcp: do not set rtt_min to 1
-Date:   Fri,  8 May 2020 14:31:42 +0200
-Message-Id: <20200508123132.294652218@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 144/312] mmc: moxart: fix wait_for_completion_interruptible_timeout return variable type
+Date:   Fri,  8 May 2020 14:32:15 +0200
+Message-Id: <20200508123134.596227100@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,43 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-commit 372022830b06d9980c7e8b41fa0a4081cff883b0 upstream.
+commit 41f469cac2663a41a7b0c84cb94e8f7024385ae4 upstream.
 
-There are some cases where rtt_us derives from deltas of jiffies,
-instead of using usec timestamps.
+wait_for_completion_timeout_interruptible returns long not unsigned long
+so dma_time, which is used exclusively here, is changed to long.
 
-Since we want to track minimal rtt, better to assume a delta of 0 jiffie
-might be in fact be very close to 1 jiffie.
-
-It is kind of sad jiffies_to_usecs(1) calls a function instead of simply
-using a constant.
-
-Fixes: f672258391b42 ("tcp: track min RTT using windowed min-filter")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1b66e94e6b99 ("mmc: moxart: Add MOXA ART SD/MMC driver")
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/tcp_input.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/mmc/host/moxart-mmc.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -2926,7 +2926,10 @@ static void tcp_update_rtt_min(struct so
+--- a/drivers/mmc/host/moxart-mmc.c
++++ b/drivers/mmc/host/moxart-mmc.c
+@@ -257,7 +257,7 @@ static void moxart_dma_complete(void *pa
+ static void moxart_transfer_dma(struct mmc_data *data, struct moxart_host *host)
  {
- 	const u32 now = tcp_time_stamp, wlen = sysctl_tcp_min_rtt_wlen * HZ;
- 	struct rtt_meas *m = tcp_sk(sk)->rtt_min;
--	struct rtt_meas rttm = { .rtt = (rtt_us ? : 1), .ts = now };
-+	struct rtt_meas rttm = {
-+		.rtt = likely(rtt_us) ? rtt_us : jiffies_to_usecs(1),
-+		.ts = now,
-+	};
- 	u32 elapsed;
+ 	u32 len, dir_data, dir_slave;
+-	unsigned long dma_time;
++	long dma_time;
+ 	struct dma_async_tx_descriptor *desc = NULL;
+ 	struct dma_chan *dma_chan;
  
- 	/* Check if the new measurement updates the 1st, 2nd, or 3rd choices */
+@@ -397,7 +397,8 @@ static void moxart_prepare_data(struct m
+ static void moxart_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ {
+ 	struct moxart_host *host = mmc_priv(mmc);
+-	unsigned long pio_time, flags;
++	long pio_time;
++	unsigned long flags;
+ 	u32 status;
+ 
+ 	spin_lock_irqsave(&host->lock, flags);
 
 
