@@ -2,168 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65213C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A54C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 495002070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCBC21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgEHB27 (ORCPT
+        id S1726891AbgEHBaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:28:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58101 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgEHB27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:28:59 -0400
-IronPort-SDR: FR7lfG3yhFTt5jytAwFdTFkeV8u18BjaNXdGrgGZw849xh+kZBClC/plU2klc/f4Ro0amm7m35
- eLKvdbtzZNJw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 18:28:58 -0700
-IronPort-SDR: t3aqRvbHVrJum/0K2G73Y3CG0cVFOCgFiaGRVpOV+/rodiIhvigg/BaiuCh76PbdOGsAk4Zu9N
- ZHwTRbXUQGrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="462351050"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 07 May 2020 18:28:57 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jWrou-000DvP-El; Fri, 08 May 2020 09:28:56 +0800
-Date:   Fri, 08 May 2020 09:28:14 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:for-mingo] BUILD SUCCESS
- f736e0f1a55a88cb258b73da77463573739e9ac9
-Message-ID: <5eb4b5ae.LDJpLdinchZnWLHd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 7 May 2020 21:30:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3905 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726518AbgEHBaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:30:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4002391465909247DBE8;
+        Fri,  8 May 2020 09:29:33 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.237) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 09:29:25 +0800
+Subject: Re: [PATCH] arm64: stacktrace: Factor out some common code info
+ on_stack()
+To:     Will Deacon <will@kernel.org>
+CC:     <catalin.marinas@arm.com>, <Dave.Martin@arm.com>,
+        <mark.rutland@arm.com>, <james.morse@arm.com>,
+        <0x7f454c46@gmail.com>, <tglx@linutronix.de>,
+        <lorenzo.pieralisi@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
+        <hewenliang4@huawei.com>
+References: <10b188af-a03b-3acc-8a06-cf31a46f735a@huawei.com>
+ <20200507135213.GA32706@willie-the-truck>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <15e31e59-3429-53f8-bb61-5f60c90fa856@huawei.com>
+Date:   Fri, 8 May 2020 09:29:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200507135213.GA32706@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  for-mingo
-branch HEAD: f736e0f1a55a88cb258b73da77463573739e9ac9  Merge branches 'fixes.2020.04.27a', 'kfree_rcu.2020.04.27a', 'rcu-tasks.2020.04.27a', 'stall.2020.04.27a' and 'torture.2020.05.07a' into HEAD
 
-elapsed time: 484m
 
-configs tested: 101
-configs skipped: 1
+On 2020/5/7 21:52, Will Deacon wrote:
+> On Thu, May 07, 2020 at 05:28:19PM +0800, Yunfeng Ye wrote:
+>> diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
+>> index fdb913cc0bcb..b92bef2fb6cd 100644
+>> --- a/arch/arm64/include/asm/stacktrace.h
+>> +++ b/arch/arm64/include/asm/stacktrace.h
+>> @@ -69,27 +69,40 @@ extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+>>
+>>  DECLARE_PER_CPU(unsigned long *, irq_stack_ptr);
+>>
+>> -static inline bool on_irq_stack(unsigned long sp,
+>> +static inline bool on_stack(unsigned long sp, unsigned long low,
+>> +				unsigned long high, enum stack_type type,
+>>  				struct stack_info *info)
+>>  {
+>> -	unsigned long low = (unsigned long)raw_cpu_read(irq_stack_ptr);
+>> -	unsigned long high = low + IRQ_STACK_SIZE;
+>> -
+>> -	if (!low)
+>> -		return false;
+>> -
+>>  	if (sp < low || sp >= high)
+>>  		return false;
+>>
+>>  	if (info) {
+>>  		info->low = low;
+>>  		info->high = high;
+>> -		info->type = STACK_TYPE_IRQ;
+>> +		info->type = type;
+>>  	}
+>> -
+>>  	return true;
+>>  }
+>>
+>> +static inline bool on_valid_stack(unsigned long sp, unsigned long low,
+>> +				unsigned long high, enum stack_type type,
+>> +				struct stack_info *info)
+>> +{
+>> +	if (!low)
+>> +		return false;
+>> +
+>> +	return on_stack(sp, low, high, type, info);
+>> +}
+> 
+> Do we need this as distinct from on_stack()? Afaict, 'low' is never
+> going to be NULL for the on_stack() callers, so I suggest just having
+> on_stack() check 'low' and getting everybody to call that instead.
+> 
+> Make sense?
+> 
+ok, I will modify and send the patch v2, thanks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Will
+> 
+> .
+> 
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-mips                             allmodconfig
-m68k                             allmodconfig
-i386                             allyesconfig
-alpha                               defconfig
-nds32                               defconfig
-m68k                                defconfig
-sh                               allmodconfig
-openrisc                            defconfig
-parisc                           allyesconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                       allyesconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200507
-i386                 randconfig-a004-20200507
-i386                 randconfig-a001-20200507
-i386                 randconfig-a002-20200507
-i386                 randconfig-a003-20200507
-i386                 randconfig-a006-20200507
-x86_64               randconfig-a015-20200507
-x86_64               randconfig-a014-20200507
-x86_64               randconfig-a012-20200507
-x86_64               randconfig-a013-20200507
-x86_64               randconfig-a011-20200507
-x86_64               randconfig-a016-20200507
-i386                 randconfig-a012-20200507
-i386                 randconfig-a016-20200507
-i386                 randconfig-a014-20200507
-i386                 randconfig-a011-20200507
-i386                 randconfig-a015-20200507
-i386                 randconfig-a013-20200507
-x86_64               randconfig-a004-20200507
-x86_64               randconfig-a006-20200507
-x86_64               randconfig-a002-20200507
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
