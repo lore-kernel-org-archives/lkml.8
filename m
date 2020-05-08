@@ -2,87 +2,126 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57893C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A310C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402EB20725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6342173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qn0FXo6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEHP7W (ORCPT
+        id S1727845AbgEHQAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:59:22 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:48196 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgEHP7U (ORCPT
+        Fri, 8 May 2020 12:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgEHQAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:59:20 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-49-5eb581d7fa7e
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 58.35.17433.7D185BE5; Fri,  8 May 2020 17:59:19 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Fri, 8 May 2020 17:59:19 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v12 09/11] power: supply: Support ROHM bd99954 charger
-Thread-Topic: [PATCH v12 09/11] power: supply: Support ROHM bd99954 charger
-Thread-Index: AQHWJVBjC/LXJEv7ik2ClbqzFKaKX6ieNxAA
-Date:   Fri, 8 May 2020 15:59:18 +0000
-Message-ID: <7a6c4afc9caf5437567c520d5f50ecf540d1c303.camel@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-         <6d2f82459c5331fa7d27f41e6645a55cc1e44837.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <6d2f82459c5331fa7d27f41e6645a55cc1e44837.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0B2676C9C931EF41969BE989B42DDD39@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 8 May 2020 12:00:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C860C061A0C;
+        Fri,  8 May 2020 09:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=NVwFrpHFPc9V5kgayHjz15+SJTwzcU4hIq0qYBGnEGI=; b=qn0FXo6oswTaaIEy2dd0+OzYvd
+        7+HkxgrTXQYH1jzmT6+IPqnXdMztANHC1nrHEO9RbIXLm4qLtj+Qnww2uFJJQdURM7RlkD3KXQrX7
+        5dsdpupZgcvw4wFckC1iiwHP4MVaokpmBGoRP8infNnM9m9otmSkN5+anv/pJd3AQ7n3/YMguzUeA
+        3I98i7edKgBwsVzprm0t1+R/gtDSKXdIhZCQce3Fw54j2NS088BEx4nghYD/I+QHzqhJVURpiWmuJ
+        PedXdMfK/oJF6Qd502GLxkoJXH/fNsm0WNsblQGOv4GWd+7NcLhzap2hvoZnvD5lowztzo8sUbpK2
+        DjFcBNiQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX5Q8-0002vu-RN; Fri, 08 May 2020 16:00:16 +0000
+Subject: Re: [PATCH] doc: cgroup: update note about conditions when oom killer
+ is invoked
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@suse.com>
+References: <158894738928.208854.5244393925922074518.stgit@buzz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b0242e17-c436-747a-8403-d263a16553d0@infradead.org>
+Date:   Fri, 8 May 2020 09:00:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOzPj7qzrxLiu7dEscgnSIE0LmkrC/oSWmlgQBWpjTo7pXpqd
-        NQ2sjS7omqZdDBcVr2RKhYti2ma2mFZSIqXWD6MtkVRUaCVLIZtx8vLnnJfv+573PXA+HFVZ
-        ZP54up5nOD2dqZV5Yl0NC/Ydw1dak3b2fNVQA5/uoNQ916iM+vUxD6E+dJTLKHdhN6DK619j
-        VN8zPlIe1W4bkUdV2c1R9sZ8WZTbvjkeO6WMSKH5rGPpafrQA6eVbH5zEWK8rciuHvzjYQGz
-        uBUocEjuhi5HqVzUKnIIwLJezgo8Bd0LYL77JmIFOC4jI6D1s1yUanIvbB7wFkdQsgWB1e5q
-        VGR9yMOwyOZApJkj8HreQbGsJsPhN1vdkj1GboUt7U1A1AQZByeKp+RSVC2AfZPzS6yCZGFe
-        v7c4A8hNMN8yjYgaJTXQPjbnIT2ZhHWOflTSvnD8+9//9UDYNvcYE21QMhg+6QiV0EhouTGH
-        SjoQ3i1wyaUneMM3ZaNYMdhgW5NgW6Vta2jbGtq2hq4CHo0A6uj0zDSaZ8JCOMYcwhlYnXCd
-        MejsQPrL2adg0RntBAgOnMAPR7S+xJYTrUmq9SmG1ByWNrHJnDmTMTkBxFGtmijJbklSEal0
-        zkWGMyy3NuKYVkNsc5UkqkgxK4NhjAy33A3AcS0kXlwWTL05Jo3JPpueya+2EVwhmnv6q02M
-        PpXhaDPPJovLkWwStkNseQm5rEXACZOR1glVCX0LwvDi8YoaFO+uqBfO4Znn9agK0xv0jL+G
-        iFkvAKQIsGb9StwE0OBA60OkCPur8hLWesVtQghChCD3T7sYxNOrLX8LyGB+85ap0FKiK7fu
-        /oOX7ExHza2xmoePoudT2s2GBNMuD2w80Bhr7XE5XMqKpjbefXxdDJU101mrzA6aaY1WxCvD
-        LzX8WOgPrr42JDuKJkwHnDd2HrranWtNdL67sK9Aq6NGXu0ZlMdVquf9Ws99mXy/GBh7Mrxw
-        f1uQo3i2UouZWDpsO8qZ6H9YqkInkwMAAA==
+In-Reply-To: <158894738928.208854.5244393925922074518.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBGcmksIDIwMjAtMDUtMDggYXQgMTg6NTAgKzAzMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
-ZToNCj4gVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRlcnkgTWFuYWdlbWVudCBMU0kgZm9yIDEt
-NCBjZWxsIExpdGhpdW0tSW9uDQo+IHNlY29uZGFyeSBiYXR0ZXJ5IGludGVuZGVkIHRvIGJlIHVz
-ZWQgaW4gc3BhY2UtY29uc3RyYWludCBlcXVpcG1lbnQNCj4gc3VjaA0KPiBhcyBMb3cgcHJvZmls
-ZSBOb3RlYm9vayBQQywgVGFibGV0cyBhbmQgb3RoZXIgYXBwbGljYXRpb25zLiBCRDk5OTU0DQo+
-IHByb3ZpZGVzIGEgRHVhbC1zb3VyY2UgQmF0dGVyeSBDaGFyZ2VyLCB0d28gcG9ydCBCQzEuMiBk
-ZXRlY3Rpb24gYW5kDQo+IGENCj4gQmF0dGVyeSBNb25pdG9yLg0KPiANCj4gU3VwcG9ydCBST0hN
-IEJEOTk5NTQgQ2hhcmdlciBJQy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5l
-biA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiBSZXZpZXdlZC1ieTogQW5k
-eSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQoNCkh1aC4g
-SSBzaG91bGRuJ3QgZG8gd29yayBhdCB0aGUgRnJpZGF5IGV2ZW5pbmdzLi4uIEl0IHNlZW1zIEkg
-ZGlkDQphY2NpZGVudGFsbHkgc2VuZCB0aGlzIHBhdGNoIHR3aWNlLiBIb3BlZnVsbHkgaXQgZG9l
-cyBub3QgbWVzcyB1cCB0aGUNCnNlcmllcyBmb3IgeW91IC0gSSdkIHJhdGhlciBub3QgcmVzZW5k
-IHRoaXMgYW55bW9yZS4uLiBQbGVhc2UgbGV0IG1lDQprbm93IGlmIEkgc2hvdWxkIGRvIHNvbWUg
-Y29ycmVjdGl2ZSBhY3Rpb25zLg0KDQpTb3JyeSENCg0KQmVzdCBSZWdhcmRzDQotLU1hdHRpDQo=
+Hi,
+
+On 5/8/20 7:16 AM, Konstantin Khlebnikov wrote:
+> Starting from v4.19 commit 29ef680ae7c2 ("memcg, oom: move out_of_memory
+> back to the charge path") cgroup oom killer is no longer invoked only from
+> page faults. Now it implements the same semantics as global OOM killer:
+> allocation context invokes OOM killer and keeps retrying until success.
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst |   17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index bcc80269bb6a..1bb9a8f6ebe1 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1172,6 +1172,13 @@ PAGE_SIZE multiple when read back.
+>  	Under certain circumstances, the usage may go over the limit
+>  	temporarily.
+>  
+> +	In default configuration regular 0-order allocation always
+
+	                                         allocations
+
+> +	succeed unless OOM killer choose current task as a victim.
+
+	                          chooses
+
+> +
+> +	Some kinds of allocations don't invoke the OOM killer.
+> +	Caller could retry them differently, return into userspace
+> +	as -ENOMEM or silently ignore in cases like disk readahead.
+> +
+>  	This is the ultimate protection mechanism.  As long as the
+>  	high limit is used and monitored properly, this limit's
+>  	utility is limited to providing the final safety net.
+> @@ -1228,17 +1235,9 @@ PAGE_SIZE multiple when read back.
+>  		The number of time the cgroup's memory usage was
+>  		reached the limit and allocation was about to fail.
+>  
+> -		Depending on context result could be invocation of OOM
+> -		killer and retrying allocation or failing allocation.
+> -
+> -		Failed allocation in its turn could be returned into
+> -		userspace as -ENOMEM or silently ignored in cases like
+> -		disk readahead.  For now OOM in memory cgroup kills
+> -		tasks iff shortage has happened inside page fault.
+> -
+>  		This event is not raised if the OOM killer is not
+>  		considered as an option, e.g. for failed high-order
+> -		allocations.
+> +		allocations or if caller asked to not retry attempts.
+>  
+>  	  oom_kill
+>  		The number of processes belonging to this cgroup
+> 
+
+
+thanks for updating the docs.
+-- 
+~Randy
+
