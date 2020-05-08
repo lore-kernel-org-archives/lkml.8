@@ -2,101 +2,117 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB185C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DABC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C51218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C607D24964
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z07+lJBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgEHNPQ (ORCPT
+        id S1728410AbgEHNPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:15:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728557AbgEHNPJ (ORCPT
+        Fri, 8 May 2020 09:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730437AbgEHNPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:15:09 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048D3oZl007616;
-        Fri, 8 May 2020 09:15:01 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vts7kde4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 09:15:01 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048DCh9P006189;
-        Fri, 8 May 2020 13:14:59 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5newr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 13:14:59 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048DEuan56754200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 13:14:56 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52E3EA405F;
-        Fri,  8 May 2020 13:14:56 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41563A4054;
-        Fri,  8 May 2020 13:14:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  8 May 2020 13:14:56 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id D2C43E026B; Fri,  8 May 2020 15:14:55 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     hch@lst.de
-Cc:     axboe@kernel.dk, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com
-Subject: [PATCH v3 0/3] s390/dasd: remove ioctl_by_bdev from DASD driver
-Date:   Fri,  8 May 2020 15:14:52 +0200
-Message-Id: <20200508131455.55407-1-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_12:2020-05-08,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxscore=0 mlxlogscore=336 lowpriorityscore=0 malwarescore=0
- suspectscore=1 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080111
+        Fri, 8 May 2020 09:15:14 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F811C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:15:14 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l18so1789311wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EzHI5Xuq83xJbZHgwiOOt3hcMqs9I4sZnbPBM/oFcog=;
+        b=Z07+lJBTwEM4bGY+C2ZRpCkZ3QKIXTnBan62CpCJWSEOHTqvZzUUAt//mNP9uZPftp
+         sQeXNAaPYEa6cZEAlZGZc5DqdAnJ/z+l6NM0pdSs1N9LGxjy2xMfXlCoRi63lJ0EHv9V
+         pE1Pfd2pMSp4yr5gs5x6HArujjnLW8svw4Dd9z1F0owqqg1VBdc4sDITw1ARI8r8rEzk
+         0XFzY/t+NB9SFaln00id3Bsa1hskpTKKnI+0INn0hWTKqgITQkfNDoxZGXG3F4sh5b4k
+         +brqbhpCGl0e2MjLTLVVontyQ4ZdJK5SDTLZhVPvlQ9ZlgEc0Tm254JpPB3NnV0+nyk5
+         KKpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EzHI5Xuq83xJbZHgwiOOt3hcMqs9I4sZnbPBM/oFcog=;
+        b=Aj9N3FMkHZ625iMnvh5P2gfJ7urzBAoPSyD2TSiB0L6r4e3hrQDfQpzExIeX9EQFf8
+         Mqguz/KM7In2ydh14hWkOy0rwf/GiKhYUUMI3+tpkeRc0P3v5QwPiAYD5bX7A4jBW9Wg
+         GjdhJbKnuTv39MMx2TEoRmLAzBaOHtgDkbvkuEJpU8bEjaTiD9ChofBqHb9V5jnlwem7
+         BN8e1oqXccZSB7xVEGvOXcM023KwiMffGaB3diI7DeGFPk9VTbPW34KvmlU6bTpNyGbp
+         i0scefvd19dj1qeovPaPQPi3dUT61/5mISoOtDNJuBWFhLXynhBhgRI3Xc1+OzSIujlC
+         lQAA==
+X-Gm-Message-State: AGi0PuYl5zSGNXiBKGLndZMxPXlvQrT3biE0jbu5+SqBxlz+dXAZI9fd
+        2XpnNL0dnJa3OKrG+8BATIz3Bg==
+X-Google-Smtp-Source: APiQypI9F7N2h90hD9nJL9PvGxhA6vVv5J1pErloGxpY7jK8feMGi5s195iTAy1p44wUJq0ITF+Pug==
+X-Received: by 2002:a05:6000:1ca:: with SMTP id t10mr2937315wrx.230.1588943712773;
+        Fri, 08 May 2020 06:15:12 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id w10sm2921808wrg.52.2020.05.08.06.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 06:15:12 -0700 (PDT)
+Date:   Fri, 8 May 2020 14:15:08 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com, Ionela Voinescu <ionela.voinescu@arm.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200508131508.GB10541@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <jhjftcbtoo6.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhjftcbtoo6.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hey Valentin,
 
-as discussed yesterday I have picked your first patch, adopted the second
-one and created a new third patch to remove the ioctl_by_bdev calls.
-I export the symbol for the dasd_biodasdinfo function and obtain the
-pointer with a kallsyms_lookup_name.
-The checking if the gendisk is owned by a DASD is done by comparing the
-fops pointer as you suggested. Looks like the most suitable method here.
+On Thursday 07 May 2020 at 22:34:17 (+0100), Valentin Schneider wrote:
+> I'm curious; why would some Android device not want to roll with schedutil?
+> 
+> When it comes to dynamic policies (i.e. forget performance / powersave, and
+> put userspace in a corner), I'd be willing to take a stand and say you
+> should only really be using schedutil nowadays - alignment with the
+> scheduler, uclamp, yadda yadda.
+> 
+> AFAIA the only schedutil-related quirk we oughta fix for arm/arm64 is that
+> arch_scale_freq_invariant() thingie, and FWIW I'm hoping to get something
+> regarding this out sometime soonish. After that, I'd actually want to make
+> schedutil the default governor for arm/arm64.
 
-Please note that this patch is not ready for inclusion and only basic
-function tested. It is just for discussion.
+As in setting CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL=y in the arm64
+defconfig? If so, you have my Acked-by already :)
 
-Christoph Hellwig (2):
-  dasd: refactor dasd_ioctl_information
-  block: add a s390-only biodasdinfo method
+> I'm not opiniated on the modularization, but if you can, could you please
+> share some more details as to why schedutil cannot fulfill its role of holy
+> messiah of governors for GKI?
 
-Stefan Haberland (1):
-  s390/dasd: remove ioctl_by_bdev calls
+I guess I answered some of that in the other thread with Peter, but all
+in all I'm definitely not trying to make an argument that schedutil
+isn't good enough here. I'm trying to say that mandating it in *GKI* is
+just likely to cause unnecessary friction, and trust me there is already
+enough of that with other topics. Giving the option of having sugov as a
+module doesn't prevent us from making it a default for a few arches, so
+I think there is ground for an agreement!
 
- block/partitions/ibm.c          | 15 +++++++--
- drivers/s390/block/dasd_int.h   |  1 +
- drivers/s390/block/dasd_ioctl.c | 59 ++++++++++++++++++++++++---------
- include/linux/blkdev.h          |  1 +
- 4 files changed, 57 insertions(+), 19 deletions(-)
-
--- 
-2.17.1
-
+Cheers,
+Quentin
