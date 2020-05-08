@@ -2,182 +2,102 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEBCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DA5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6F12070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FB82192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rjvUB1eL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PkJiY+3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgEHS24 (ORCPT
+        id S1726951AbgEHSbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        Fri, 8 May 2020 14:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbgEHS24 (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgEHSbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:28:56 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22074C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:28:56 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id g14so2905533qts.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:28:56 -0700 (PDT)
+        Fri, 8 May 2020 14:31:14 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1155C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:31:14 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l25so1245107pgc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=gHn/2PDn6yjgb3WH2Lc+VyVXY4H0phF5Pi1gV5PCjZk=;
-        b=rjvUB1eL7MzUUYdWtuJAUwfONXpWbiaW5x98GWLZRBmtGsh7aH3Bt/OtGn2CkgI4jt
-         Y8Y2B2rLSZh4ueT/jkcCsS/uWV2wpJm+rBPnbrh23K+Co3EwfSrm0JK1picj8efKaQNs
-         eLhZaMbm23NU/p+Vli/n+G7qrVeYJ+0lI1Za8fBB6gZKPKyNgdIG+BvqOUIdK9eYc0Ct
-         wU3bc/WOzLbYjAimo3amzE8XAXkmYLFjz2kGQ3pSgwtuFKkG43c32ThK6zTLajBgPJTF
-         tqzZfu0sqGuKRbcP8T0aWYPn34hLcEJ2dzLxVne8M7l2HPRSIdnKxVCqOgGqdpRz46Bw
-         /BRg==
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=pY+mOo2Ik3rWYLJPySMCfrE7K/NG/f57s6xPPFkwDCg=;
+        b=PkJiY+3yDvfK1RMaphrVSJxAZpHPlVI96LEh2eF2DJK/y+VeUnFxraKDe7pkx2MuAA
+         +cUITO2x/tJ7OBopd14bySnct6EKLJ3S0kFLbGGBTTtIos4FeYvFuzsNhG6LywDUEijZ
+         MHedNbeyfE6eQ7j566t3oabeyBFhxHBGzyVUHnpMPdWonR03zIenUbDZj6QKdyKKMRDl
+         xMIgEN1Cgv0PeI1K3qh50jsX5jkm5nkvUY9tRFUhN4UCCwxYLlDPhZ22/7pJRqk2K7cT
+         c2CmPEWmMskfAjI6jWPYfQyl6ATM3UYK3zt28fKbe9omD0Su07J+GsklQlpC52qEvxjK
+         xxfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=gHn/2PDn6yjgb3WH2Lc+VyVXY4H0phF5Pi1gV5PCjZk=;
-        b=R2RHWdSowS0QD3bpOtP85KyUD7TuPbh/edP+n4v0UGYGg+cjO0+OL4hBKJeHWB5fyw
-         JlnP7YyLR6DJlnGH/81sVVRyXqZkFXbrHYtz3LzndtvuBdf9sWhhe9lYU6X3wVV7rdXs
-         SigNtL29eV8oZtwquS/GIn5mn+DPXnO1U4QHIvTv0G2CIG3RWv9lxjTb+gquETKpm1Tk
-         gkSixfgHwArziImNTqaoIY1lBZtifXarhRLNSf4k92RCA65QqH46Uh1cOD01sd2R7QYr
-         NfAFc6E2zd5F+uwdNHJ/uAXk+eLelaMN9SBM5tY56dMcU+9+9tL7eOTcvmqnEOMcfEdf
-         SssQ==
-X-Gm-Message-State: AGi0PuaVbpENwocpMLNl/IPMfB6tsVsK/W8FT/wjuVElZ0PKARzR0iqW
-        jUSYqgmbLCzBa5akWU1iokkzaCeRd/gymS7znIQ=
-X-Google-Smtp-Source: APiQypIf3RpQQwqofMB63kChBe8hFGukiFuVZx9kg9C6iB4OleN/nHALl2EXggCM0j0aLsJC25suSlWfRl74K6AD6wI=
-X-Received: by 2002:a0c:f1d1:: with SMTP id u17mr4080224qvl.146.1588962535235;
- Fri, 08 May 2020 11:28:55 -0700 (PDT)
-Date:   Fri,  8 May 2020 11:28:35 -0700
-In-Reply-To: <CAMzpN2ix+Ltu2_4ORaeqD0_6VmDUxTRDVbvaJ+Q9D8s-5p7Bhw@mail.gmail.com>
-Message-Id: <20200508182835.228107-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAMzpN2ix+Ltu2_4ORaeqD0_6VmDUxTRDVbvaJ+Q9D8s-5p7Bhw@mail.gmail.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH v4] x86: bitops: fix build regression
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=pY+mOo2Ik3rWYLJPySMCfrE7K/NG/f57s6xPPFkwDCg=;
+        b=t5ij8q4XMebCFOqA/CfItFjAWYpajSjYyTm7sBzNMXqKA0anfgkemqlC89UM9zKuAA
+         iVaXyFN6oe/VYtOafLvSvIOLS7PglLuzoDnQBMoW5Hy+GtFyHwyZIjU/qsT1hwaJ5t41
+         D5JAJRl+xGVHuwMUb4uvbiAwFP/dKaUplGTT0FaDcrpm84PRzJq620a2HmwTKnSh0E7D
+         l17O2LQ/GdbO1E5v6s+E4sSsDibvzpB7lnHWXQgBIII0AOiLuHteL+1CrDzhxgmMHlCz
+         9AdJnTZnsL5BNg8OZylb21H8M2gjOorkaQ2HQcQAsmJP5Z3UntbkV+SBMKCRKZuyyhkX
+         cvzw==
+X-Gm-Message-State: AGi0PubDxmQ/RmzadxBWMAP9Ihh5ZqXp6wAkYHkIOGIq0HLwjRVbh1Cj
+        PgTCI1WJFxakZvn5bgf+bENibg==
+X-Google-Smtp-Source: APiQypJ1g8NDV78SKY142EWfkEa8+kvMzzernl5mLgqHih9spEDfMFhunr2OUyji/1PmP4qP5WrvNw==
+X-Received: by 2002:a62:7656:: with SMTP id r83mr4109824pfc.71.1588962673869;
+        Fri, 08 May 2020 11:31:13 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id j7sm2407521pfi.160.2020.05.08.11.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 11:31:13 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:31:12 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Gavin Guo <gavin.guo@canonical.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
+ triggered by sysctl
+In-Reply-To: <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
+References: <20200507215946.22589-1-gpiccoli@canonical.com> <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org> <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+On Thu, 7 May 2020, Guilherme G. Piccoli wrote:
 
-It turns out that if your config tickles __builtin_constant_p via
-differences in choices to inline or not, these statements produce
-invalid assembly:
+> Well...you can think that the problem we are trying to solve was more
+> like...admin forgot if they triggered or not the compaction hehe
+> So, counting on the user to keep track of it is what I'd like to
+> avoid. And thinking about drop_caches (that have an indication when
+> triggered) makes me think this indeed does make sense for compaction
+> too.
+> Cheers,
+> 
 
-$ cat foo.c
-long a(long b, long c) {
-  asm("orb\t%1, %0" : "+q"(c): "r"(b));
-  return c;
-}
-$ gcc foo.c
-foo.c: Assembler messages:
-foo.c:2: Error: `%rax' not allowed with `orb'
+It doesn't make sense because it's only being done here for the entire 
+system, there are also per-node sysfs triggers so you could do something 
+like iterate over the nodemask of all nodes with memory and trigger 
+compaction manually and then nothing is emitted to the kernel log.
 
-Use the `%b` "x86 Operand Modifier" to instead force register allocation
-to select a lower-8-bit GPR operand.
-
-The "q" constraint only has meaning on -m32 otherwise is treated as
-"r". Not all GPRs have low-8-bit aliases for -m32.
-
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/961
-Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
-Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Brian Gerst <brgerst@gmail.com>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V3 -> V4:
-* drop (u8) cast from arch_change_bit() as well.
-
-Changes V2 -> V3:
-* use `%b` "x86 Operand Modifier" instead of bitwise op then cast.
-* reword commit message.
-* add Brian and HPA suggested by tags
-* drop Nathan & Sedat Tested by/reviewed by tags (new patch is different
-  enough).
-* Take over authorship.
-
-Changes V1 -> V2:
-* change authorship/signed-off-by to Ilie
-* add Nathan's Tested by/reviewed by
-* update commit message slightly with info sent to HPA.
-
- arch/x86/include/asm/bitops.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index b392571c1f1d..8a8b7bb9677b 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -52,9 +52,9 @@ static __always_inline void
- arch_set_bit(long nr, volatile unsigned long *addr)
- {
- 	if (__builtin_constant_p(nr)) {
--		asm volatile(LOCK_PREFIX "orb %1,%0"
-+		asm volatile(LOCK_PREFIX "orb %b1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) & 0xff)
-+			: "iq" (CONST_MASK(nr))
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -72,9 +72,9 @@ static __always_inline void
- arch_clear_bit(long nr, volatile unsigned long *addr)
- {
- 	if (__builtin_constant_p(nr)) {
--		asm volatile(LOCK_PREFIX "andb %1,%0"
-+		asm volatile(LOCK_PREFIX "andb %b1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) ^ 0xff));
-+			: "iq" (~CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-@@ -125,7 +125,7 @@ arch_change_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "xorb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" ((u8)CONST_MASK(nr)));
-+			: "iq" (CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
--- 
-2.26.2.645.ge9eca65c58-goog
-
+There is new statsfs support that Red Hat is proposing that can be used 
+for things like this.  It currently only supports KVM statistics but 
+adding MM statistics is something that would be a natural extension and 
+avoids polluting both the kernel log and /proc/vmstat.
