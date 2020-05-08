@@ -2,151 +2,98 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F9C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D17CC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7D021841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D9521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgEHOvb (ORCPT
+        id S1728117AbgEHOwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:51:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2175 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726751AbgEHOva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:51:30 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id ED18474328E5A4274316;
-        Fri,  8 May 2020 15:51:28 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 15:51:28 +0100
-Date:   Fri, 8 May 2020 15:51:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200508155050.0000008e@Huawei.com>
-In-Reply-To: <20200507132600.8801-2-i.mikhaylov@yadro.com>
-References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
-        <20200507132600.8801-2-i.mikhaylov@yadro.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 10:52:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:49654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbgEHOwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:52:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BF8F1FB;
+        Fri,  8 May 2020 07:52:15 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 048B93F305;
+        Fri,  8 May 2020 07:52:11 -0700 (PDT)
+References: <20200507181012.29791-1-qperret@google.com> <jhjftcbtoo6.mognet@arm.com> <20200508131508.GB10541@google.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
+        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
+        kernel-team@android.com, Ionela Voinescu <ionela.voinescu@arm.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+In-reply-to: <20200508131508.GB10541@google.com>
+Date:   Fri, 08 May 2020 15:52:07 +0100
+Message-ID: <jhjeerutr6w.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 16:25:59 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
-> 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> new file mode 100644
-> index 000000000000..408dee17cdf5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Integrated Proximity Sensor With Infrared Emitter
-> +
-> +maintainers:
-> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> +
-> +description: |
-> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-> +  that the infrared emitter is included in the package. It has 16-bit
-> +  resolution. It includes a signal processing IC and features standard I2C
-> +  communication interface. It features an interrupt function.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,vcnl3020
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-> +  vishay,led-current-microamp:
-> +    description:
-> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-> +      higher than decimal 20. The drive current for the LED used in proximity
-> +      sensing.
+On 08/05/20 14:15, Quentin Perret wrote:
+> Hey Valentin,
+>
+> On Thursday 07 May 2020 at 22:34:17 (+0100), Valentin Schneider wrote:
+>> I'm curious; why would some Android device not want to roll with schedutil?
+>>
+>> When it comes to dynamic policies (i.e. forget performance / powersave, and
+>> put userspace in a corner), I'd be willing to take a stand and say you
+>> should only really be using schedutil nowadays - alignment with the
+>> scheduler, uclamp, yadda yadda.
+>>
+>> AFAIA the only schedutil-related quirk we oughta fix for arm/arm64 is that
+>> arch_scale_freq_invariant() thingie, and FWIW I'm hoping to get something
+>> regarding this out sometime soonish. After that, I'd actually want to make
+>> schedutil the default governor for arm/arm64.
+>
+> As in setting CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL=y in the arm64
+> defconfig? If so, you have my Acked-by already :)
+>
 
-This text is really confusing. Just let the enum speak for itself and leave text as
-something short like
+I'm actually thinking of making it the unconditional default for arm/arm64
+in cpufreq's Kconfig, following what has been recently done for
+intel_pstate.
 
-"The driver current for the LED used in proximity sensing. "
+>> I'm not opiniated on the modularization, but if you can, could you please
+>> share some more details as to why schedutil cannot fulfill its role of holy
+>> messiah of governors for GKI?
+>
+> I guess I answered some of that in the other thread with Peter, but all
+> in all I'm definitely not trying to make an argument that schedutil
+> isn't good enough here. I'm trying to say that mandating it in *GKI* is
+> just likely to cause unnecessary friction, and trust me there is already
+> enough of that with other topics.
 
-Units and values are clear already.
+Right, I appreciate it must be an "interesting" tug of war. My own opinion
+has also already been expanded in the rest of the thread; i.e. we should
+strive to make schedutil good enough that folks don't feel like they still
+need to use ondemand/whatever frankengov. That said, even without GKI, I
+get that making some vendors change their already tested-and-tuned setup is
+an obstacle course in and of itself.
 
-> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-> +          180000, 190000, 200000]
-> +    default: 20000
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        proximity@13 {
-> +              compatible = "vishay,vcnl3020";
-> +              reg = <0x13>;
-> +              vishay,led-current-microamp = <200000>;
-> +        };
-> +    };
-
-
+> Giving the option of having sugov as a
+> module doesn't prevent us from making it a default for a few arches, so
+> I think there is ground for an agreement!
+>
+> Cheers,
+> Quentin
