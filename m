@@ -2,148 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126E1C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D9C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1BE2063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A933820820
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588981990;
+	bh=HhHKaurLAmb7NjsgrxbGjxSSVFmDRRfuuN9UCDjB39o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GEOzERxpYLqynL7LCzsMomYAwwa68ulZv25qs2hYRnnajFmOcLKB5JDy8LmJGEE3S
+	 SfchqTctp/FgagOW5E3p1H2QokjQCveP/7QYq3JW43Zfak5daYSahCf7ZJOlyoOP7O
+	 9115fsfx49ZAOY7pz4lvnlNBXI+M8tsN9U2FMbZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgEHXxB (ORCPT
+        id S1728371AbgEHXxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:53:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:64968 "EHLO mga04.intel.com"
+        Fri, 8 May 2020 19:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHXxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:53:00 -0400
-IronPort-SDR: 7W/WTduQHh4K85ty3T1PLNfWOgf2BLuBED5nvJdgQNBYKcBO9G8s6i+NsBhOZfMxRTm9vquzR0
- SAhNCqSfhiwA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 16:53:00 -0700
-IronPort-SDR: 5FbVbZSaevR+FLoYoAPBrA3ZoAmxaPh6wXWd08J2J9xWoH8Ncth6EK5vtLiKzZ6SJmrFoCzEkv
- NaihJWadQAzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="296299524"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.47.49]) ([10.209.47.49])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 16:52:58 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03> <20200508231610.GO19158@mellanox.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <57296ad1-20fe-caf2-b83f-46d823ca0b5f@intel.com>
-Date:   Fri, 8 May 2020 16:52:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200508231610.GO19158@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1727778AbgEHXxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 19:53:09 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36D12063A;
+        Fri,  8 May 2020 23:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588981987;
+        bh=HhHKaurLAmb7NjsgrxbGjxSSVFmDRRfuuN9UCDjB39o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NlxsLycULu/0pDE5VncKMqsY68TvDzrBX4Z64itAzdFVs23jjGQe08PfomP/NtWT8
+         t+PlAdQE7wuMV/9rpzTnihUcJMRtJqlsdArVibUT/u4A0ZhILXtPYgryyu3m8JvFgO
+         cvEh5TrYedonuRC3JSEcG71eqRoSLBbbgIM2fD/M=
+Date:   Fri, 8 May 2020 16:53:06 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, kexec@lists.infradead.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user
+ space after unloading kmem
+Message-Id: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
+In-Reply-To: <20200508084217.9160-2-david@redhat.com>
+References: <20200508084217.9160-1-david@redhat.com>
+        <20200508084217.9160-2-david@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  8 May 2020 10:42:14 +0200 David Hildenbrand <david@redhat.com> wrote:
+
+> Assume we have kmem configured and loaded:
+>   [root@localhost ~]# cat /proc/iomem
+>   ...
+>   140000000-33fffffff : Persistent Memory$
+>     140000000-1481fffff : namespace0.0
+>     150000000-33fffffff : dax0.0
+>       150000000-33fffffff : System RAM
+> 
+> Assume we try to unload kmem. This force-unloading will work, even if
+> memory cannot get removed from the system.
+>   [root@localhost ~]# rmmod kmem
+>   [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
+>   ...
+>   [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
+> 
+> Now, we can reconfigure the namespace:
+>   [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
+>   [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
+>   [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
+>   ...
+> 
+> This fails as expected due to the busy memory resource, and the memory
+> cannot be used. However, the dax0.0 device is removed, and along its name.
+> 
+> The name of the memory resource now points at freed memory (name of the
+> device).
+>   [root@localhost ~]# cat /proc/iomem
+>   ...
+>   140000000-33fffffff : Persistent Memory
+>     140000000-1481fffff : namespace0.0
+>     150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
+>     150000000-33fffffff : System RAM
+> 
+> We have to make sure to duplicate the string. While at it, remove the
+> superfluous setting of the name and fixup a stale comment.
+> 
+> Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
+> Cc: stable@vger.kernel.org # v5.3
+
+hm.
+
+Is this really -stable material?  These are all privileged operations,
+I expect?
+
+Assuming "yes", I've queued this separately, staged for 5.7-rcX.  I'll
+redo patches 2-4 as a three-patch series for 5.8-rc1.
+
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+
+Reviewers, please ;)
 
 
-On 5/8/2020 4:16 PM, Jason Gunthorpe wrote:
-> On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
-> 
->> Even when uaccel was under development, one of the options
->> was to use VFIO as the transport, goal was the same i.e to keep
->> the user space have one interface.
-> 
-> I feel a bit out of the loop here, uaccel isn't in today's kernel is
-> it? I've heard about it for a while, it sounds very similar to RDMA,
-> so I hope they took some of my advice...
-
-It went into 5.7 kernel. drivers/misc/uacce. It looks char device exported with 
-SVM support.
-
-> 
->> But the needs of generic user space application is significantly
->> different from exporting a more functional device model to guest,
->> which isn't full emulated device. which is why VFIO didn't make
->> sense for native use.
-> 
-> I'm not sure this is true. We've done these kinds of emulated SIOV
-> like things already and there is a huge overlap between what a generic
-> user application needs and what the VMM neds. Actually almost a
-> perfect subset except for interrupt remapping (which is quite
-> trivial).
-> 
-> The things vfio focuses on, like groups and managing a real config
-> space just don't apply here.
-> 
->> And when we move things from VFIO which is already established
->> as a general device model and accepted by multiple VMM's it gives
->> instant footing without a whole redesign.
-> 
-> Yes, I understand, but I think you need to get more people to support
-> this idea. From my standpoint this is taking secure lean VMMs and
-> putting emulation code back into them, except in a more dangerous
-> kernel location. This does not seem like a net win to me.
-> 
-> You'd be much better to have some userspace library scheme instead of
-> being completely tied to a kernel interface for modularity.
-> 
->> When we move things from VFIO to uaccel to bolt on the functionality
->> like VFIO, I suspect we would be moving code/functionality from VFIO
->> to Uaccel. I don't know what the net gain would be.
-> 
-> Most of VFIO functionality is already decomposed inside the kernel,
-> and you need most of it to do secure user access anyhow.
-> 
->> For mdev, would you agree we can keep the current architecture,
->> and investigate moving some emulation code to user space (say even for
->> standard vfio_pci) and then expand scope later.
-> 
-> I won't hard NAK this, but I think you need more people to support
-> this general idea of more emulation code in the kernel to go ahead -
-> particularly since this is one of many future drivers along this
-> design.
-> 
-> It would be good to hear from the VMM teams that this is what they
-> want (and why), for instance.
-> 
-> Jason
-> 
