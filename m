@@ -2,136 +2,106 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640DCC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A019C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44CBA2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOUWFlT9"
+	by mail.kernel.org (Postfix) with ESMTP id 46D8D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588904503;
+	bh=eMa8tLwnSHRxwruBW3dkjHyZBh4W1anjA0G4uo09nLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qP/mcN6TKyQjj7s2CkHo8G6h3dMLin06uwziyH6GTFMlsHNebIdgYZiNEZ1dOKN6+
+	 IQ4L4JMHkoJjdnT3sJTXxey6p0L6SfQ8M+6MDYNI42Zjhv0AZEk5lPpXQTBM7+rw8p
+	 90Ns5LCcBfM/CTRPQRLSl5mQbdKJrjY7L4ktomJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgEHCTq (ORCPT
+        id S1726951AbgEHCVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:19:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20827 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgEHCTp (ORCPT
+        Thu, 7 May 2020 22:21:42 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40539 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgEHCVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588904384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JLgSaSiv4yYvs1EPOLMzvQOEIO76IkdBvqeIXiY7JGM=;
-        b=KOUWFlT9xjBwouWRnTx01ihtTMyn43q5Yyb6WeFfFQFgswZdM2510KQuTBmQJzxrfZApHw
-        NrJLeaqCm5vbxcX7GuKHE20dLhECt5rqP+h/TFZZD1CSYBm0WuyCHtEcfTHiBn2YrCVA43
-        kjYMNq78aS3T485ZTc2I6Y4VaEa9i5U=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-iYG7U1iIMxian9LI29XpNQ-1; Thu, 07 May 2020 22:19:42 -0400
-X-MC-Unique: iYG7U1iIMxian9LI29XpNQ-1
-Received: by mail-qk1-f198.google.com with SMTP id h1so403182qkl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 19:19:42 -0700 (PDT)
+        Thu, 7 May 2020 22:21:42 -0400
+Received: by mail-pj1-f67.google.com with SMTP id fu13so3532196pjb.5;
+        Thu, 07 May 2020 19:21:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JLgSaSiv4yYvs1EPOLMzvQOEIO76IkdBvqeIXiY7JGM=;
-        b=MS6k/6K31VfeY2VXSk2ESI0dGMGNp0qL2XdKIZDVLzYYWmcsm+fVapoI4a371MOFKK
-         +WsIIXg2U1H5gyGJuQRS1h70P/MAGk1SRN03jbuFZQJm28gad68JQ4HTPZt+DJl5Wigp
-         f9Ghl+YLh3jaVEQxmVAfpKzLDEFMKH2dXSTZTUqC3hhVL2l33EWdxJvPucUbAOg+chM4
-         cpOihJ1ysQvkWpUXKhi3WYWf8AtOx4LfIRylNbGjI/F0CsRYYE7eiBVnbijeD1CPQDsy
-         25L2ucE09Tc8CtX1fFaJqfbdo9mXgx+gu/6/ij+cKL7w7rHGU0wcyScTStHu2RV05ja/
-         qvGA==
-X-Gm-Message-State: AGi0Pua/dkzqJZpkf4KdZc7JDGMfP3nNgspcpRbNm04+b/VMCap5KXH8
-        pDDJZqBbrXy3JttTcNGeA93PjXCnbVIYeypu1S/mgAbXet//9AD4TAw4bbY2drDrttTC6AyObDc
-        s6Ogp+USbrhzCYPi7oA56QFEC
-X-Received: by 2002:a37:b244:: with SMTP id b65mr495695qkf.329.1588904381905;
-        Thu, 07 May 2020 19:19:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK5WVcJu8AxnvxH75BqYI7fquWzH90Irnz0KNnKxL7u7e3h154rbjbL3aetQuw1D3Oexo6GEQ==
-X-Received: by 2002:a37:b244:: with SMTP id b65mr495685qkf.329.1588904381668;
-        Thu, 07 May 2020 19:19:41 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id i59sm333207qtb.58.2020.05.07.19.19.40
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sCk5Kz/L26R1qfSoCe3hO4Rdhm8Vcm0AKmqx9EEaRqs=;
+        b=GgrSEpYxmRnwgkfEMzNHaEEGcXonN62oS7LQy87JSRzcfQdgUqNUpqWjSvp0Fi4rpu
+         IGWc5WQE+UaFJsEQCLzNvqBkIxoMlraK4+mv45CRctt77REW3y29/t0OSF00fJpi0Kwy
+         jU8ogrUWcPwO1GsuV7iJGLV1otzYgKV1YWXopii6ueYQeXa8b7J6tl9u/pTelgl46Ngg
+         LWsOiRu9dxlkGfGqlOZNfMxSwGCItvVDKLEufISC0EshLWeNuS3vCKOK4b9APicoBNX6
+         Ee80nLns+YcFiJTqHDrJ17hGjuHE36acW5GVCPUZJ1dIHmlpNSjIHfOhLR6zcWILqzCm
+         fKlw==
+X-Gm-Message-State: AGi0PubStuagHkGFZss0QGBDHY8R1c8IqDDRmJtwvqD0xKjBqV6SAsDC
+        Q5MV3PAzq53sR492kI2I6uI=
+X-Google-Smtp-Source: APiQypLH3bqzMjxBt959/wwSgBKL1pGSXtPpBArl9pMYffCVuSDie8PJG/ipY+C3Q4wfk1BvF3nCEw==
+X-Received: by 2002:a17:902:7c98:: with SMTP id y24mr161013pll.37.1588904500948;
+        Thu, 07 May 2020 19:21:40 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g10sm109531pfk.103.2020.05.07.19.21.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 19:19:41 -0700 (PDT)
-Date:   Thu, 7 May 2020 22:19:39 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com
-Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
-Message-ID: <20200508021939.GT228260@xz-x1>
-References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
- <158871568480.15589.17339878308143043906.stgit@gimli.home>
- <20200507212443.GO228260@xz-x1>
- <20200507235421.GK26002@ziepe.ca>
+        Thu, 07 May 2020 19:21:40 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7425F403EA; Fri,  8 May 2020 02:21:39 +0000 (UTC)
+Date:   Fri, 8 May 2020 02:21:39 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, axboe@kernel.dk,
+        zohar@linux.vnet.ibm.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] fs: avoid fdput() after failed fdget() in
+ ksys_sync_file_range()
+Message-ID: <20200508022139.GD11244@42.do-not-panic.com>
+References: <cover.1588894359.git.skhan@linuxfoundation.org>
+ <31be6e0896eba59c06eb9d3d137b214f7220cc53.1588894359.git.skhan@linuxfoundation.org>
+ <20200508000509.GK23230@ZenIV.linux.org.uk>
+ <20200508002422.GL23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507235421.GK26002@ziepe.ca>
+In-Reply-To: <20200508002422.GL23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 08:54:21PM -0300, Jason Gunthorpe wrote:
-> On Thu, May 07, 2020 at 05:24:43PM -0400, Peter Xu wrote:
-> > On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
-> > > With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
-> > > the range being faulted into the vma.  Add support to manually provide
-> > > that, in the same way as done on KVM with hva_to_pfn_remapped().
+On Fri, May 08, 2020 at 01:24:22AM +0100, Al Viro wrote:
+> On Fri, May 08, 2020 at 01:05:09AM +0100, Al Viro wrote:
+> > On Thu, May 07, 2020 at 05:57:09PM -0600, Shuah Khan wrote:
+> > > Fix ksys_sync_file_range() to avoid fdput() after a failed fdget().
+> > > fdput() doesn't do fput() on this file since FDPUT_FPUT isn't set
+> > > in fd.flags. Fix it anyway since failed fdget() doesn't require
+> > > a fdput().
 > > > 
-> > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > >  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
-> > >  1 file changed, 33 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > > index cc1d64765ce7..4a4cb7cd86b2 100644
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
-> > > +			    unsigned long vaddr, unsigned long *pfn,
-> > > +			    bool write_fault)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = follow_pfn(vma, vaddr, pfn);
-> > > +	if (ret) {
-> > > +		bool unlocked = false;
-> > > +
-> > > +		ret = fixup_user_fault(NULL, mm, vaddr,
-> > > +				       FAULT_FLAG_REMOTE |
-> > > +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
-> > > +				       &unlocked);
-> > > +		if (unlocked)
-> > > +			return -EAGAIN;
+> > > This was introdcued in a commit to add sync_file_range() helper.
 > > 
-> > Hi, Alex,
-> > 
-> > IIUC this retry is not needed too because fixup_user_fault() will guarantee the
-> > fault-in is done correctly with the valid PTE as long as ret==0, even if
-> > unlocked==true.
+> > Er...  What's the point microoptimizing the slow path here?
 > 
-> It is true, and today it is fine, but be careful when reworking this
-> to use notifiers as unlocked also means things like the vma pointer
-> are invalidated.
+> PS: I'm not saying the patch is incorrect, but Fixes: is IMO over the
+> top.  And looking at that thing,
+> {
+>         struct fd f = fdget(fd);
+>         int ret;
+> 
+> 	if (unlikely(!f.file))
+> 		return -EBADF;
+> 
+> 	ret = sync_file_range(f.file, offset, nbytes, flags);
+>         fdput(f);
+>         return ret;
+> }
+> 
+> might be cleaner, but that's a matter of taste...
 
-Oh right, thanks for noticing that.  Then we should probably still keep the
-retry logic... because otherwise the latter follow_pfn() could be referencing
-an invalid vma already...
+This makes it easier to read.
 
-Thanks,
-
--- 
-Peter Xu
-
+  Luis
