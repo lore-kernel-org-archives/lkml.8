@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C6BC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EA2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 042652054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35C8208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942844;
-	bh=W3z8GpEqUg7Gwz4mNu6eXk9h4W8cmjS7GxG53neu7o8=;
+	s=default; t=1588942849;
+	bh=ecwnxAIpDp2gYLaZOYa/8bW7oSyzWdgnsCQup0zBE6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2sVCSsExghDVuWg9t/c+3rd6FbZJWZL8Eu3nzVPU+LtxY8KG1I7g78Zyql0PQqyc
-	 5xJtWy5+CZvEAN+U4dqtdP5+F4JKj9up7T7LTC0EAUo9S7el8Xp7k45bMhtRCQwjFs
-	 ozXYgSvolXlsc9TP8gCc0tA405q27amC2OgTwh4M=
+	b=P8/zcNVRpJU4naKXwvQBDaKe9NfIfrTD8K4ZItQWFsLLh7FRwIIhz3JnNHVx5mIJi
+	 dm1WHsB2pxvdhilD7byNSS0TpmmpjylzV4LGPPaFUSWRgNFbWJNLQvZe2WtGK9TvPj
+	 /W7l4rkSD84HAmXs1SEibChWCrMjc85Dr7twmWaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEHNAm (ORCPT
+        id S1730214AbgEHNAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbgEHMwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:15 -0400
+        id S1729942AbgEHMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D2624966;
-        Fri,  8 May 2020 12:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABF024963;
+        Fri,  8 May 2020 12:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942334;
-        bh=W3z8GpEqUg7Gwz4mNu6eXk9h4W8cmjS7GxG53neu7o8=;
+        s=default; t=1588942332;
+        bh=ecwnxAIpDp2gYLaZOYa/8bW7oSyzWdgnsCQup0zBE6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+AOw3Xjl34z/0z5+m6UmnhHXmlBWWGoVf7PgSQ/Sae2odwNLvJzl/2wWtf3uVLE7
-         sbgoDiivF+walwIyks3v4oG8Q+6AYfsJFyWHSNZNxgT4VoQ4b+w2aI+19Tw1/egiDL
-         gW0d4OJicSkDLaAmfHfzEnXgkF1dXSOhAhB00c7A=
+        b=T/+G5qDBVYevPa3rZuQYrpWl/vpEat39dbO6pNFI5Zh7C8SnJ/yyGBkn2IhEl7LQu
+         em5SZOFfQ1UvBPH6hTy9AZlhCoCVhQ1PIQEgfqeiN5Ww8+z0cXwbxSpPwL2D/WX0uD
+         jhU1CbpPPiQucRTDz88StNy/Cs5YNv7LhReHxGLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 29/32] platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
-Date:   Fri,  8 May 2020 14:35:42 +0200
-Message-Id: <20200508123039.219831478@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 28/32] ALSA: hda: Match both PCI ID and SSID for driver blacklist
+Date:   Fri,  8 May 2020 14:35:41 +0200
+Message-Id: <20200508123039.019764517@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -60,38 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 1d6f8c5bac93cceb2d4ac8e6331050652004d802 upstream.
+commit 977dfef40c8996b69afe23a9094d184049efb7bb upstream.
 
-Commit 1f27dbd8265d ("platform/x86: GPD pocket fan: Allow somewhat
-lower/higher temperature limits") changed the module-param sanity check
-to accept temperature limits between 20 and 90 degrees celcius.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-But the error message printed when the module params are outside this
-range was not updated. This commit updates the error message to match
-the new min and max value for the temp-limits.
+Since the empty codec problem appear on the certain AMD platform (PCI
+ID 1022:1487), this patch changes the blacklist matching to both PCI
+ID and SSID using pci_match_id().  Also, the entry that was removed by
+the previous fix for ASUS ROG Zenigh II is re-added.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/gpd-pocket-fan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -128,7 +128,7 @@ static int gpd_pocket_fan_probe(struct p
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2214,9 +2214,10 @@ static const struct hdac_io_ops pci_hda_
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
  
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
- 		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
--			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
-+			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 20000 and 90000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
- 			temp_limits[1] = TEMP_LIMIT1_DEFAULT;
+@@ -2239,7 +2240,7 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
+ 
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
 
 
