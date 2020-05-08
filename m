@@ -2,118 +2,223 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB7CC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBA1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEF82083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD89520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VC30f4Kw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgEHOff (ORCPT
+        id S1727118AbgEHOjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:35:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25074 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbgEHOfe (ORCPT
+        Fri, 8 May 2020 10:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgEHOjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:35:34 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048EXXkv017242;
-        Fri, 8 May 2020 10:35:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtt3xrya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 10:35:20 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048EZ4fa021283;
-        Fri, 8 May 2020 10:35:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtt3xrxb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 10:35:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048EV34h021377;
-        Fri, 8 May 2020 14:35:02 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5wjdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 May 2020 14:35:02 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048EZ09764159894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 May 2020 14:35:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C2934203F;
-        Fri,  8 May 2020 14:35:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6476F42042;
-        Fri,  8 May 2020 14:34:58 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.79.188.133])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  8 May 2020 14:34:58 +0000 (GMT)
-Subject: Re: [PATCH -next] livepatch: Make klp_apply_object_relocs static
-To:     Samuel Zou <zou_wei@huawei.com>, jpoimboe@redhat.com,
-        jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-        joe.lawrence@redhat.com
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588939594-58255-1-git-send-email-zou_wei@huawei.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Message-ID: <452d206f-4d4f-747f-be34-76fc3c09f780@linux.vnet.ibm.com>
-Date:   Fri, 8 May 2020 20:04:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1588939594-58255-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-08_14:2020-05-08,2020-05-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 clxscore=1011 priorityscore=1501 suspectscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080130
+        Fri, 8 May 2020 10:39:12 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409EFC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:39:12 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id t8so328123qvw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 07:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=Ux8aHSf0tngJTecnYTMuWyV4ISu9ejOIYJzvZliO8BI=;
+        b=VC30f4Kw3ceH5+WduVix2Cb0phPBItfc6wsXqnX9rsfNwftioHKoEmijz2Auh3jw7f
+         ZYNxePAeSluFW5F26pezuFkjhU2K2FBb5BAFFO874juGjdFVsTtg4XS3CfbxThK8bIcg
+         EKYlzJWm5bU15VD+rOL4GEvyJMPc9mPjjzrSFUu/fPEVNOPho7N8z1LGFNaCy8YoNldF
+         1077EvskSJm+ViJoCmMpeK0yzO0SA36V09qV1BVthZ8ivyHfNz6/0Th4lY/yv3IevcIW
+         RAHrJgqvPy+nQk1F/PztjBkKJhdkLVrt3IT1fyMp7XsY4/tXEpexOG4b/ao6uIMFUX9R
+         XQ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=Ux8aHSf0tngJTecnYTMuWyV4ISu9ejOIYJzvZliO8BI=;
+        b=IGAO+ZNxJqrV0xkxUww80QbOdSVSq9o89oTENeBrVBXqqXqGI+NBHdy+8/x5QIxvte
+         FXROJVE75Q59940eC3OuLjktvZdEYeyvMRmtjrKpGiomYTmQF53z4b/+gnkWNPioLaUK
+         i2P0AEaFWPtXi2MFsXyb60xy3d5ppO0rSn/WBr7rin2r0PmcsuvzGpcPeKHqYb1fVu1f
+         AZTEOM8TzL8WF8Y6D6cW3WfKvpcMBdLS0QpKt131Okc3dbYQN1th+GPlxTo5hXl9Pjnr
+         NlwLXqaYdgFOiivz6yBGaMy1v6WMPKA5jkBU7iuqCagcUWzh+KjT4hPwKcMLP56zt3IS
+         6wIQ==
+X-Gm-Message-State: AGi0PuYwkxZ54c+tcWBbAYDJJxonmLPBNlPFWXI2TQsbopvtQz3APo6k
+        VtEyzOymDbaRh/bq9o92ttc/4w==
+X-Google-Smtp-Source: APiQypJQJpWBIqdfFRRzIfw1vkphnfEhls4xjd8VEsFhyf9p2AutpWAn2x7kBc5amu/ixh9Yl0JL8Q==
+X-Received: by 2002:ad4:4566:: with SMTP id o6mr2863473qvu.136.1588948751326;
+        Fri, 08 May 2020 07:39:11 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d4sm1602906qtc.48.2020.05.08.07.39.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 07:39:10 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: ioremap() called early from pnv_pci_init_ioda_phb()
+Message-Id: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
+Date:   Fri, 8 May 2020 10:39:09 -0400
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 5:36 PM, Samuel Zou wrote:
-> Fix the following sparse warning:
-> 
-> kernel/livepatch/core.c:748:5: warning: symbol 'klp_apply_object_relocs'
-> was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+ Booting POWER9 PowerNV has this message,
+   =20
+"ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use =
+early_ioremap() instead=E2=80=9D
 
-LGTM, klp_apply_object_relocs() has only one call site within core.c
+but use the patch below will result in leaks because it will never call =
+early_iounmap() anywhere. However, it looks me it was by design that =
+phb->regs mapping would be there forever where it would be used in =
+pnv_ioda_get_inval_reg(), so is just that check_early_ioremap_leak() =
+initcall too strong?
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -36,6 +36,7 @@
+ #include <asm/firmware.h>
+ #include <asm/pnv-pci.h>
+ #include <asm/mmzone.h>
++#include <asm/early_ioremap.h>
+=20
+ #include <misc/cxl-base.h>
+=20
+@@ -3827,7 +3828,7 @@ static void __init pnv_pci_init_ioda_phb(struct =
+device_node *np,
+        /* Get registers */
+        if (!of_address_to_resource(np, 0, &r)) {
+                phb->regs_phys =3D r.start;
+-               phb->regs =3D ioremap(r.start, resource_size(&r));
++               phb->regs =3D early_ioremap(r.start, resource_size(&r));
+                if (phb->regs =3D=3D NULL)
+                        pr_err("  Failed to map registers !\n=E2=80=9D);
 
-> ---
->  kernel/livepatch/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 96d2da1..f76fdb9 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -745,7 +745,8 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
->  			   func->old_sympos ? func->old_sympos : 1);
->  }
-> 
-> -int klp_apply_object_relocs(struct klp_patch *patch, struct klp_object *obj)
-> +static int klp_apply_object_relocs(struct klp_patch *patch,
-> +				   struct klp_object *obj)
->  {
->  	int i, ret;
->  	struct klp_modinfo *info = patch->mod->klp_info;
-> 
+[   23.080069][    T1] ------------[ cut here ]------------
+[   23.080089][    T1] Debug warning: early ioremap leak of 10 areas =
+detected.
+[   23.080089][    T1] please boot with early_ioremap_debug and report =
+the dmesg.
+[   23.080157][    T1] WARNING: CPU: 4 PID: 1 at mm/early_ioremap.c:99 =
+check_early_ioremap_leak+0xd4/0x108
+[   23.080171][    T1] Modules linked in:
+[   23.080192][    T1] CPU: 4 PID: 1 Comm: swapper/0 Not tainted =
+5.7.0-rc4-next-20200508+ #4
+[   23.080214][    T1] NIP:  c00000000103f2d8 LR: c00000000103f2d4 CTR: =
+0000000000000000
+[   23.080226][    T1] REGS: c00000003df0f860 TRAP: 0700   Not tainted  =
+(5.7.0-rc4-next-20200508+)
+[   23.080259][    T1] MSR:  9000000000029033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
+CR: 48000222  XER: 20040000
+[   23.080296][    T1] CFAR: c00000000010d5a8 IRQMASK: 0=20
+[   23.080296][    T1] GPR00: c00000000103f2d4 c00000003df0faf0 =
+c000000001689400 0000000000000072=20
+[   23.080296][    T1] GPR04: 0000000000000006 0000000000000000 =
+c00000003df0f7e4 0000000000000004=20
+[   23.080296][    T1] GPR08: 0000001ffbb60000 0000000000000000 =
+c00000003dee6680 0000000000000002=20
+[   23.080296][    T1] GPR12: 0000000000000000 c000001fffffae00 =
+c000000001057860 c0000000010578b0=20
+[   23.080296][    T1] GPR16: c000000001002d38 c0000000014f0660 =
+c0000000014f0680 c0000000014f06a0=20
+[   23.080296][    T1] GPR20: c0000000014f06c0 c0000000014f06e0 =
+c0000000014f0700 c0000000014f0720=20
+[   23.080296][    T1] GPR24: c000000000c4bc30 c000000486b82000 =
+c0000000015a0fe0 c0000000015a0fc0=20
+[   23.080296][    T1] GPR28: 0000000000000010 0000000000000010 =
+c000000001061e30 000000000000000a=20
+[   23.080507][    T1] NIP [c00000000103f2d8] =
+check_early_ioremap_leak+0xd4/0x108
+[   23.080530][    T1] LR [c00000000103f2d4] =
+check_early_ioremap_leak+0xd0/0x108
+[   23.080552][    T1] Call Trace:
+[   23.080571][    T1] [c00000003df0faf0] [c00000000103f2d4] =
+check_early_ioremap_leak+0xd0/0x108 (unreliable)
+[   23.080607][    T1] [c00000003df0fb80] [c00000000001130c] =
+do_one_initcall+0xcc/0x660
+[   23.080648][    T1] [c00000003df0fc80] [c000000001004c18] =
+kernel_init_freeable+0x480/0x568
+[   23.080681][    T1] [c00000003df0fdb0] [c000000000012180] =
+kernel_init+0x24/0x194
+[   23.080713][    T1] [c00000003df0fe20] [c00000000000cb28] =
+ret_from_kernel_thread+0x5c/0x74
 
+This is from the early_ioremap_debug dmesg.
+
+[    0.000000][    T0] ------------[ cut here ]------------
+[    0.000000][    T0] __early_ioremap(0x000600c3c0010000, 00010000) [0] =
+=3D> 00000000 + ffffffffffbe0000
+[    0.000000][    T0] WARNING: CPU: 0 PID: 0 at mm/early_ioremap.c:162 =
+__early_ioremap+0x2d8/0x408
+[    0.000000][    T0] Modules linked in:
+[    0.000000][    T0] CPU: 0 PID: 0 Comm: swapper Not tainted =
+5.7.0-rc4-next-20200508+ #4
+[    0.000000][    T0] NIP:  c00000000103f5e4 LR: c00000000103f5e0 CTR: =
+c0000000001e77f0
+[    0.000000][    T0] REGS: c00000000168f980 TRAP: 0700   Not tainted  =
+(5.7.0-rc4-next-20200508+)
+[    0.000000][    T0] MSR:  9000000000021033 <SF,HV,ME,IR,DR,RI,LE>  =
+CR: 28000248  XER: 20040000
+[    0.000000][    T0] CFAR: c00000000010d5a8 IRQMASK: 1=20
+[    0.000000][    T0] GPR00: c00000000103f5e0 c00000000168fc10 =
+c000000001689400 0000000000000050=20
+[    0.000000][    T0] GPR04: c00000000152f6f8 0000000000000000 =
+c00000000168f904 0000000000000000=20
+[    0.000000][    T0] GPR08: 0000000000000000 0000000000000000 =
+c00000000162f600 0000000000000002=20
+[    0.000000][    T0] GPR12: c0000000001e77f0 c000000005b30000 =
+0000000000000000 0000000000000000=20
+[    0.000000][    T0] GPR16: 0000000000000000 0000000000000000 =
+0000000000000000 0000000000001000=20
+[    0.000000][    T0] GPR20: 0000000000000000 80000000000001ae =
+0000000000000000 0000000000000000=20
+[    0.000000][    T0] GPR24: 0000000000010000 c000000001061da8 =
+0000000000000008 0000000000000008=20
+[    0.000000][    T0] GPR28: 0000000000000000 c000000001061db0 =
+0000000000000000 c000000001061eb8=20
+[    0.000000][    T0] NIP [c00000000103f5e4] =
+__early_ioremap+0x2d8/0x408
+[    0.000000][    T0] LR [c00000000103f5e0] __early_ioremap+0x2d4/0x408
+[    0.000000][    T0] Call Trace:
+[    0.000000][    T0] [c00000000168fc10] [c00000000103f5e0] =
+__early_ioremap+0x2d4/0x408 (unreliable)
+[    0.000000][    T0] [c00000000168fcf0] [c00000000101d010] =
+pnv_pci_init_ioda_phb+0x420/0xdfc
+[    0.000000][    T0] [c00000000168fe10] [c00000000101c9b8] =
+pnv_pci_init+0x12c/0x264
+[    0.000000][    T0] [c00000000168fe40] [c000000001016c40] =
+pnv_setup_arch+0x2e4/0x330
+[    0.000000][    T0] [c00000000168fe80] [c000000001009dd0] =
+setup_arch+0x3a0/0x3ec
+[    0.000000][    T0] [c00000000168fef0] [c000000001003ed0] =
+start_kernel+0xb0/0x978
+[    0.000000][    T0] [c00000000168ff90] [c00000000000c790] =
+start_here_common+0x1c/0x8c
+[    0.000000][    T0] Instruction dump:
+[    0.000000][    T0] 7d39ba14 3c82ff3c 3c62ff54 7f06c378 7f88e378 =
+7fc7f378 38a10068 e9290110=20
+[    0.000000][    T0] 38849e90 3863e8f0 4b0cdf65 60000000 <0fe00000> =
+2bbe000f 409d0018 3c62fff1=20
+[    0.000000][    T0] irq event stamp: 0
+[    0.000000][    T0] hardirqs last  enabled at (0): =
+[<0000000000000000>] 0x0
+[    0.000000][    T0] hardirqs last disabled at (0): =
+[<0000000000000000>] 0x0
+[    0.000000][    T0] softirqs last  enabled at (0): =
+[<0000000000000000>] 0x0
+[    0.000000][    T0] softirqs last disabled at (0): =
+[<0000000000000000>] 0x0
 
