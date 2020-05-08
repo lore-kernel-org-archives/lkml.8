@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC8AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4F0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E81C20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E8120870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943767;
-	bh=KwyJlyh8TSrt9jjm908nE7DOnSvlPz4pBNo4ppNNUbU=;
+	s=default; t=1588943770;
+	bh=Hfd/mLI5kpgrtwJPD1FVPGFVF+YLlvb6FT9f59xKZ4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILCJi9/9iUQibX2Isej/AP0YwMOK36sz10Giw66yEmH8PVCB+/a+tJdtmKeWRhgWZ
-	 9P0HcrghW74145Vbm2+4LA5wdcvxAWDawyZqPakVAkWT6qIzRxWLjOVeGpwCYWmA/h
-	 WlAGZ97IDrTkZzUSP35Jcdy+3FmP4vnZe1VDWhNM=
+	b=Fq23m4uV+zF8GN0zUkuMdeEaDLASUGr2BGAa24Wg6rsi5vFNBslqEGzC04FAqVXQq
+	 akGieCACsXqcyqg1zY1xq1nj5tJ+u+uwERylVhhzSNT0l6Qzi0DzuGAu09GzbL+4Oa
+	 KqC/xAT46SqYel2/5Nwe5kZVyLAAIFgVhl8a9fsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgEHMp2 (ORCPT
+        id S1729728AbgEHNQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44898 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbgEHMpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:23 -0400
+        id S1729297AbgEHMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A22208D6;
-        Fri,  8 May 2020 12:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E6B21473;
+        Fri,  8 May 2020 12:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941922;
-        bh=KwyJlyh8TSrt9jjm908nE7DOnSvlPz4pBNo4ppNNUbU=;
+        s=default; t=1588941925;
+        bh=Hfd/mLI5kpgrtwJPD1FVPGFVF+YLlvb6FT9f59xKZ4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6VWqnpA9d3SqcVHVmWsce/OBFuzeaI4O8ceKQ4WqNHDocK0dQ4rGUJrHoV4YifD7
-         qrzDcY4/pxREoHxIrf/Kqg2KcWt9W1RDLUwI7Fxs7euneFbSv5BIfhR8zVQMeLdk2n
-         CXCPww8Hk7nFKsPNUE0xHIFeqRhZMAAu58r4+yyo=
+        b=TFWUEksmEgDMjqN3vyZVCWqK6qRMT4Ce9PyA8N/tFIUYgHDFNNiXcId02Z3vAavQs
+         ppN6BoJSMfIQvKr/vjA/2ZLBJdaNzn23sn4glTtfjghbmSDh8Ql8f1NRC/11HE6qh3
+         PchOPh83uVIUI3Vjipc+ZuUlSw4D2OSrTsZyFeTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hadar Hen Zion <hadarh@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 225/312] net_sched: flower: Avoid dissection of unmasked keys
-Date:   Fri,  8 May 2020 14:33:36 +0200
-Message-Id: <20200508123140.279796079@linuxfoundation.org>
+Subject: [PATCH 4.4 190/312] ipv4: do not abuse GFP_ATOMIC in inet_netconf_notify_devconf()
+Date:   Fri,  8 May 2020 14:33:01 +0200
+Message-Id: <20200508123137.827396603@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,83 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hadar Hen Zion <hadarh@mellanox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 339ba878cfb01b68de3d281ba33fd5e4c9f76546 upstream.
+commit fa17806cde76fb1087532f07e72aa757a30e0500 upstream.
 
-The current flower implementation checks the mask range and set all the
-keys included in that range as "used_keys", even if a specific key in
-the range has a zero mask.
+inet_forward_change() runs with RTNL held.
+We are allowed to sleep if required.
 
-This behavior can cause a false positive return value of
-dissector_uses_key function and unnecessary dissection in
-__skb_flow_dissect.
+If we use __in_dev_get_rtnl() instead of __in_dev_get_rcu(),
+we no longer have to use GFP_ATOMIC allocations in
+inet_netconf_notify_devconf(), meaning we are less likely to miss
+notifications under memory pressure, and wont touch precious memory
+reserves either and risk dropping incoming packets.
 
-This patch checks explicitly the mask of each key and "used_keys" will
-be set accordingly.
+inet_netconf_get_devconf() can also use GFP_KERNEL allocation.
 
-Fixes: 77b9900ef53a ('tc: introduce Flower classifier')
-Signed-off-by: Hadar Hen Zion <hadarh@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: edc9e748934c ("rtnl/ipv4: use netconf msg to advertise forwarding status")
+Fixes: 9e5511106f99 ("rtnl/ipv4: add support of RTM_GETNETCONF")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sched/cls_flower.c |   28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ net/ipv4/devinet.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -351,12 +351,10 @@ static int fl_init_hashtable(struct cls_
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -1814,7 +1814,7 @@ void inet_netconf_notify_devconf(struct
+ 	struct sk_buff *skb;
+ 	int err = -ENOBUFS;
  
- #define FL_KEY_MEMBER_OFFSET(member) offsetof(struct fl_flow_key, member)
- #define FL_KEY_MEMBER_SIZE(member) (sizeof(((struct fl_flow_key *) 0)->member))
--#define FL_KEY_MEMBER_END_OFFSET(member)					\
--	(FL_KEY_MEMBER_OFFSET(member) + FL_KEY_MEMBER_SIZE(member))
+-	skb = nlmsg_new(inet_netconf_msgsize_devconf(type), GFP_ATOMIC);
++	skb = nlmsg_new(inet_netconf_msgsize_devconf(type), GFP_KERNEL);
+ 	if (!skb)
+ 		goto errout;
  
--#define FL_KEY_IN_RANGE(mask, member)						\
--        (FL_KEY_MEMBER_OFFSET(member) <= (mask)->range.end &&			\
--         FL_KEY_MEMBER_END_OFFSET(member) >= (mask)->range.start)
-+#define FL_KEY_IS_MASKED(mask, member)						\
-+	memchr_inv(((char *)mask) + FL_KEY_MEMBER_OFFSET(member),		\
-+		   0, FL_KEY_MEMBER_SIZE(member))				\
+@@ -1826,7 +1826,7 @@ void inet_netconf_notify_devconf(struct
+ 		kfree_skb(skb);
+ 		goto errout;
+ 	}
+-	rtnl_notify(skb, net, 0, RTNLGRP_IPV4_NETCONF, NULL, GFP_ATOMIC);
++	rtnl_notify(skb, net, 0, RTNLGRP_IPV4_NETCONF, NULL, GFP_KERNEL);
+ 	return;
+ errout:
+ 	if (err < 0)
+@@ -1883,7 +1883,7 @@ static int inet_netconf_get_devconf(stru
+ 	}
  
- #define FL_KEY_SET(keys, cnt, id, member)					\
- 	do {									\
-@@ -365,9 +363,9 @@ static int fl_init_hashtable(struct cls_
- 		cnt++;								\
- 	} while(0);
+ 	err = -ENOBUFS;
+-	skb = nlmsg_new(inet_netconf_msgsize_devconf(-1), GFP_ATOMIC);
++	skb = nlmsg_new(inet_netconf_msgsize_devconf(-1), GFP_KERNEL);
+ 	if (!skb)
+ 		goto errout;
  
--#define FL_KEY_SET_IF_IN_RANGE(mask, keys, cnt, id, member)			\
-+#define FL_KEY_SET_IF_MASKED(mask, keys, cnt, id, member)			\
- 	do {									\
--		if (FL_KEY_IN_RANGE(mask, member))				\
-+		if (FL_KEY_IS_MASKED(mask, member))				\
- 			FL_KEY_SET(keys, cnt, id, member);			\
- 	} while(0);
+@@ -2007,16 +2007,16 @@ static void inet_forward_change(struct n
  
-@@ -379,14 +377,14 @@ static void fl_init_dissector(struct cls
- 
- 	FL_KEY_SET(keys, cnt, FLOW_DISSECTOR_KEY_CONTROL, control);
- 	FL_KEY_SET(keys, cnt, FLOW_DISSECTOR_KEY_BASIC, basic);
--	FL_KEY_SET_IF_IN_RANGE(mask, keys, cnt,
--			       FLOW_DISSECTOR_KEY_ETH_ADDRS, eth);
--	FL_KEY_SET_IF_IN_RANGE(mask, keys, cnt,
--			       FLOW_DISSECTOR_KEY_IPV4_ADDRS, ipv4);
--	FL_KEY_SET_IF_IN_RANGE(mask, keys, cnt,
--			       FLOW_DISSECTOR_KEY_IPV6_ADDRS, ipv6);
--	FL_KEY_SET_IF_IN_RANGE(mask, keys, cnt,
--			       FLOW_DISSECTOR_KEY_PORTS, tp);
-+	FL_KEY_SET_IF_MASKED(&mask->key, keys, cnt,
-+			     FLOW_DISSECTOR_KEY_ETH_ADDRS, eth);
-+	FL_KEY_SET_IF_MASKED(&mask->key, keys, cnt,
-+			     FLOW_DISSECTOR_KEY_IPV4_ADDRS, ipv4);
-+	FL_KEY_SET_IF_MASKED(&mask->key, keys, cnt,
-+			     FLOW_DISSECTOR_KEY_IPV6_ADDRS, ipv6);
-+	FL_KEY_SET_IF_MASKED(&mask->key, keys, cnt,
-+			     FLOW_DISSECTOR_KEY_PORTS, tp);
- 
- 	skb_flow_dissector_init(&head->dissector, keys, cnt);
+ 	for_each_netdev(net, dev) {
+ 		struct in_device *in_dev;
++
+ 		if (on)
+ 			dev_disable_lro(dev);
+-		rcu_read_lock();
+-		in_dev = __in_dev_get_rcu(dev);
++
++		in_dev = __in_dev_get_rtnl(dev);
+ 		if (in_dev) {
+ 			IN_DEV_CONF_SET(in_dev, FORWARDING, on);
+ 			inet_netconf_notify_devconf(net, NETCONFA_FORWARDING,
+ 						    dev->ifindex, &in_dev->cnf);
+ 		}
+-		rcu_read_unlock();
+ 	}
  }
+ 
 
 
