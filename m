@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B3FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD80C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49973206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AE5206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943669;
-	bh=gVOuxZt4Sck/KrozpjIzTyUjv84dPeWtgnH6bd5twlU=;
+	s=default; t=1588943675;
+	bh=1wPHcZd42Izy7oPaYRtvpTeCVchX9V3qJyeUrcKZb5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLir4nEKarC61zPWwZQ+7SWRa+jBhsTlHTuquJiWZeMEBQjatatlz+xeAf/oAfF1j
-	 7ELzsWmzTM3izy+fZ9FY/LJuTNd3O9zz535tMbuwyOWJpXWQcdsq3M5lUO2Bje6+QK
-	 v7awKPs3KWKjti1eVtz9T3apNARacJ3r+oOLky6E=
+	b=CJWYFHsijigYAkxBTXqa6z2PT/mdID3aCHsTlEpw2GN1CHTyUdq1TfzJkPiwblZ2Q
+	 hgS8Mx3yh73YmA0orquq/rGALqH6i6c8CEb0gFc9P+8dUUZ2/VX/9/RRgrRS4hla/+
+	 KKbOc96WVDYX2g3H4vSWN9czWNQo3DaWqgKJ4fpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgEHNO2 (ORCPT
+        id S1729948AbgEHNOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:14:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbgEHMrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:06 -0400
+        id S1729498AbgEHMq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C662495E;
-        Fri,  8 May 2020 12:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D4B221F7;
+        Fri,  8 May 2020 12:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942026;
-        bh=gVOuxZt4Sck/KrozpjIzTyUjv84dPeWtgnH6bd5twlU=;
+        s=default; t=1588942019;
+        bh=1wPHcZd42Izy7oPaYRtvpTeCVchX9V3qJyeUrcKZb5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmR+WC8nl3vbPuAwJEHQsrKzAcFYIj83/C+h5aqVLxkwfy356v/Lsq72WZnVbyYzM
-         h2ewRBNcMxGZKBPo3qSx+gXDg8R74v1SYHOsGWgBxgx+ECoXgQBMq/BpMXI4yj0Suf
-         eEGyqLgnQU7r5Wg08KlRutbb2TySRGeN/fv5o5Tw=
+        b=mzpzXF1Tzkj1ZHWN1Nt6FZwhMea51t0ZQY/yBM4+8o0z1M0LX6LOUHqSPh10FU26E
+         NidWLoVHYWLT4JkcwXU8tu+92dC3laFsL0yc7JUym8Ceoib1tOPOO/t3CGP2bmA4OF
+         eshavLEiuGFSXVzz5tT0A9pl5zDe4SkXGFUpppWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 266/312] net: ethernet: stmmac: dwmac-sti: fix probe error path
-Date:   Fri,  8 May 2020 14:34:17 +0200
-Message-Id: <20200508123143.145521242@linuxfoundation.org>
+Subject: [PATCH 4.4 263/312] tipc: fix the error handling in tipc_udp_enable()
+Date:   Fri,  8 May 2020 14:34:14 +0200
+Message-Id: <20200508123142.920990708@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,41 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 0a9e22715ee384cf2a714c28f24ce8881b9fd815 upstream.
+commit a5de125dd46c851fc962806135953c1bd0a0f0df upstream.
 
-Make sure to disable clocks before returning on late probe errors.
+Fix to return a negative error code in enable_mcast() error handling
+case, and release udp socket when necessary.
 
-Fixes: 8387ee21f972 ("stmmac: dwmac-sti: turn setup callback into a
-probe function")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: d0f91938bede ("tipc: add ip/udp media type")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ net/tipc/udp_media.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
-@@ -365,7 +365,16 @@ static int sti_dwmac_probe(struct platfo
- 	if (ret)
- 		return ret;
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -405,10 +405,13 @@ static int tipc_udp_enable(struct net *n
+ 	tuncfg.encap_destroy = NULL;
+ 	setup_udp_tunnel_sock(net, ub->ubsock, &tuncfg);
  
--	return stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-+	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-+	if (ret)
-+		goto err_dwmac_exit;
-+
-+	return 0;
-+
-+err_dwmac_exit:
-+	sti_dwmac_exit(pdev, plat_dat->bsp_priv);
-+
-+	return ret;
+-	if (enable_mcast(ub, remote))
++	err = enable_mcast(ub, remote);
++	if (err)
+ 		goto err;
+ 	return 0;
+ err:
++	if (ub->ubsock)
++		udp_tunnel_sock_release(ub->ubsock);
+ 	kfree(ub);
+ 	return err;
  }
- 
- static const struct sti_dwmac_of_data stih4xx_dwmac_data = {
 
 
