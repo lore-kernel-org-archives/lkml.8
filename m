@@ -2,222 +2,115 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39660C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE65C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23FAD2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC6C2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588945501;
+	bh=N3mwTZU+1PKKy//dq7y0GjSG59F61XSZ+WRkYkyboXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QOgyMwc9h5yB9wm2aZbo/IpbHxUaGlG1LoPmx2uQInTpOLx0+Od8OdClFEg8j4En7
+	 IYT94pcdknT8YPXA7GziL+X/JKQghuwz/SlZj3TV7DhMlA/wkjbUFA8eNImUKD+kD7
+	 cEAzJptM40qPJWEi8GOiRjj4kbR8CxxJI5dBCttE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgEHNob (ORCPT
+        id S1728108AbgEHNpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:44:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2170 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727088AbgEHNob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:44:31 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 384B7706140CDC0BEBAF;
-        Fri,  8 May 2020 14:44:29 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 14:44:28 +0100
-Date:   Fri, 8 May 2020 14:44:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
-        <mchehab+huawei@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/12] iio: imu: inv_icm42600: add I2C driver for
- inv_icm42600 driver
-Message-ID: <20200508144406.00006b8c@Huawei.com>
-In-Reply-To: <20200507144222.20989-3-jmaneyrol@invensense.com>
-References: <20200507144222.20989-1-jmaneyrol@invensense.com>
-        <20200507144222.20989-3-jmaneyrol@invensense.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 09:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHNpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:45:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A29B20708;
+        Fri,  8 May 2020 13:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588945499;
+        bh=N3mwTZU+1PKKy//dq7y0GjSG59F61XSZ+WRkYkyboXc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hRAp0ejembiNIZMB9fLVYP7vbflLBw8XgRJreK+9X3WY4mDGlXSJYjDaTZs0GAu/l
+         pmxd3BdAJEUvjVXa4jGSyHQg9Dnzj7KNIdVQ45gUJia9vCwwgynaE2xy9I92OtqLyX
+         4u/NH+BrdD4UP6fZYvynl4JefYuvT8hoNf32rUO4=
+Date:   Fri, 8 May 2020 15:44:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 4.4 000/312] 4.4.223-rc1 review
+Message-ID: <20200508134457.GB196344@kroah.com>
+References: <20200508123124.574959822@linuxfoundation.org>
+ <CA+G9fYu5XMh+gkA9MBkg+yKAvHUEZBvRww-PbeiTnJYaYsN5ag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYu5XMh+gkA9MBkg+yKAvHUEZBvRww-PbeiTnJYaYsN5ag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 16:42:12 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
-
-> Add I2C driver for InvenSense ICM-426xxx devices.
+On Fri, May 08, 2020 at 07:08:35PM +0530, Naresh Kamboju wrote:
+> On Fri, 8 May 2020 at 18:07, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 4.4.223 release.
+> > There are 312 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.223-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> <trim>
+> > Addy Ke <addy.ke@rock-chips.com>
+> >     spi: rockchip: modify DMA max burst to 1
 > 
-> Configure bus signal slew rates as indicated in the datasheet.
+> While building kernel Image for arm architecture the following error noticed
+> on stable-rc 4.4 kernel branch
 > 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Some incoherent rambling inline. + a few comments
+>  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
+> arm-linux-gnueabihf-gcc" O=build zImage
+>  #
+>  #
+>  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
+> arm-linux-gnueabihf-gcc" O=build modules
+>  #
+>  ../drivers/spi/spi-rockchip.c: In function ‘rockchip_spi_prepare_dma’:
+>  ../drivers/spi/spi-rockchip.c:461:19: error: ‘struct dma_slave_caps’
+> has no member named ‘max_burst’
+>    461 |   if (rs->dma_caps.max_burst > 4)
+>        |                   ^
+>  ../drivers/spi/spi-rockchip.c:481:19: error: ‘struct dma_slave_caps’
+> has no member named ‘max_burst’
+>    481 |   if (rs->dma_caps.max_burst > 4)
+>        |                   ^
 
-Jonathan
+I just dropped the offending patch, Guenter beat you to it :)
 
-> ---
->  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   | 117 ++++++++++++++++++
->  1 file changed, 117 insertions(+)
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> 
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> new file mode 100644
-> index 000000000000..b61f993beacf
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2020 InvenSense, Inc.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_device.h>
-
-Why?  Looks like you need the table and the device property stuff neither
-of which are in that file.
-
-linux/mod_devicetable.h
-linux/property.h
-
-
-> +
-> +#include "inv_icm42600.h"
-> +
-> +static int inv_icm42600_i2c_bus_setup(struct inv_icm42600_state *st)
-> +{
-> +	unsigned int mask, val;
-> +	int ret;
-> +
-> +	/* setup interface registers */
-> +	mask = INV_ICM42600_INTF_CONFIG6_MASK;
-> +	val = INV_ICM42600_INTF_CONFIG6_I3C_EN;
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG6,
-> +				 mask, val);
-
-I'd put the values inline where they are simple like these rather than
-using local variables.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	mask = INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY;
-> +	val = 0;
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,
-> +				 mask, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set slew rates for I2C and SPI */
-> +	mask = INV_ICM42600_DRIVE_CONFIG_I2C_MASK |
-> +	       INV_ICM42600_DRIVE_CONFIG_SPI_MASK;
-> +	val = INV_ICM42600_DRIVE_CONFIG_I2C(INV_ICM42600_SLEW_RATE_12_36NS) |
-> +	      INV_ICM42600_DRIVE_CONFIG_SPI(INV_ICM42600_SLEW_RATE_12_36NS);
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_DRIVE_CONFIG,
-> +				 mask, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* disable SPI bus */
-> +	mask = INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_MASK;
-> +	val = INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_SPI_DIS;
-> +	return regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG0,
-> +				  mask, val);
-> +}
-> +
-> +static int inv_icm42600_probe(struct i2c_client *client,
-> +			      const struct i2c_device_id *id)
-> +{
-> +	const void *match;
-> +	enum inv_icm42600_chip chip;
-> +	struct regmap *regmap;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return -ENOTSUPP;
-> +
-> +	match = device_get_match_data(&client->dev);
-
-Hmm. Annoyingly if one were to call the of specific option
-of i2c_of_match_device it would handle the old style i2c match just fine without
-needing special handling.  However, it would fail to handle PRP0001 ACPI.
-
-Rather feels like there should be something similar for
-device_get_match_data so we could use the probe_new version of i2c device
-probing.
-
-Oh well. I guess thats a separate question for another day ;)
-
-Mind you can we actually probe this driver via the sysfs route?
-If not why do we need to handle the non firmware case at all?
- 
-> +	if (match)
-> +		chip = (enum inv_icm42600_chip)match;
-> +	else if (id)
-> +		chip = (enum inv_icm42600_chip)id->driver_data;
-> +	else
-> +		return -EINVAL;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &inv_icm42600_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return inv_icm42600_core_probe(regmap, chip,
-> +				       inv_icm42600_i2c_bus_setup);
-> +}
-> +
-> +static const struct of_device_id inv_icm42600_of_matches[] = {
-> +	{
-> +		.compatible = "invensense,icm42600",
-> +		.data = (void *)INV_CHIP_ICM42600,
-> +	}, {
-> +		.compatible = "invensense,icm42602",
-> +		.data = (void *)INV_CHIP_ICM42602,
-> +	}, {
-> +		.compatible = "invensense,icm42605",
-> +		.data = (void *)INV_CHIP_ICM42605,
-> +	}, {
-> +		.compatible = "invensense,icm42622",
-> +		.data = (void *)INV_CHIP_ICM42622,
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, inv_icm42600_of_matches);
-> +
-> +static const struct i2c_device_id inv_icm42600_ids[] = {
-> +	{"icm42600", INV_CHIP_ICM42600},
-> +	{"icm42602", INV_CHIP_ICM42602},
-> +	{"icm42605", INV_CHIP_ICM42605},
-> +	{"icm42622", INV_CHIP_ICM42622},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, inv_icm42600_ids);
-> +
-> +static struct i2c_driver inv_icm42600_driver = {
-> +	.probe = inv_icm42600_probe,
-> +	.id_table = inv_icm42600_ids,
-> +	.driver = {
-> +		.of_match_table = inv_icm42600_of_matches,
-> +		.name = "inv-icm42600-i2c",
-> +		.pm = &inv_icm42600_pm_ops,
-> +	},
-> +};
-> +module_i2c_driver(inv_icm42600_driver);
-> +
-> +MODULE_AUTHOR("InvenSense, Inc.");
-> +MODULE_DESCRIPTION("InvenSense ICM-426xx I2C driver");
-> +MODULE_LICENSE("GPL");
-
-
+greg k-h
