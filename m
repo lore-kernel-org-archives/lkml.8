@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DE7C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BCCC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06E224958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E309B208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941890;
-	bh=x/gFrVpT3Ffj+PZBClFJzWrlSI7AG0PbmewHrFiUroo=;
+	s=default; t=1588941894;
+	bh=psonYFf9hU6wFvrc9mKlATNkP3WUjRmyLfDJ49xKdDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UdK6678Vxx+NspyxXAYloVlpSek96nR9LZILNILxhovGzYuhnsq7J1c3ZZ9/03HOn
-	 x6FIZDaMqbgNoBE8HJA6N3C4S8hN7ykAJCcio1i3bAD/ULefBdem7S0ILrG0YBfV+D
-	 8okQME4AW7au8K9bGj1smvyz4HSq48lEId4pt8ss=
+	b=ExgQ33FdltrcZckq8G4ukQQos0SvReF6f4zf+QLNQgB8dUPBl9wT4d+pBK4X5N8mX
+	 4k29H9m6yWct55vRr1LtYrX+DNTauNfrY/FuPqzcq8VZGJUkvGHwoDmV88FOshQ+1d
+	 D42MMj1dLdeROGgTHdrGIPTzwaKGKi7xJ16qHwfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgEHMou (ORCPT
+        id S1729234AbgEHMox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43438 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbgEHMoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:44:46 -0400
+        id S1729202AbgEHMor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E4821974;
-        Fri,  8 May 2020 12:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BB62495D;
+        Fri,  8 May 2020 12:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941885;
-        bh=x/gFrVpT3Ffj+PZBClFJzWrlSI7AG0PbmewHrFiUroo=;
+        s=default; t=1588941887;
+        bh=psonYFf9hU6wFvrc9mKlATNkP3WUjRmyLfDJ49xKdDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNADdHmCWjEKw+kMkX0PX/i9uS1LfaVBck/Rd4Pk6rIGIifjd20CCHlusJP7RTtHi
-         WjerH2C0BPeIEj893Bg9kZB/xVKCoSRWSo+GC8sePswaA066dQZAbPQVArQIrcBZ9T
-         jPk6KGV/SH9CHU9STYCIdaXSQAW0R1/6ev5X2o/g=
+        b=gzBNNSqI1P2mb4FbvfC22JAwqRIXj4Gmd5+WGwhF/8TxkKuEdY1blfLSC2gl2ReVi
+         lWg8wskhAXyoOQOJiZHFeHYQd36kIpPrDkk7Iotf1uywFiWuimM5Vt8YjKqClrHakS
+         Jhr25Sglu5CRSTQuCMGZBwzha0GBmVWsoNpwoUHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 211/312] bpf: fix map not being uncharged during map creation failure
-Date:   Fri,  8 May 2020 14:33:22 +0200
-Message-Id: <20200508123139.247890347@linuxfoundation.org>
+Subject: [PATCH 4.4 212/312] net/mlx4_core: Fix potential corruption in counters database
+Date:   Fri,  8 May 2020 14:33:23 +0200
+Message-Id: <20200508123139.331825370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,48 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-commit 20b2b24f91f70e7d3f0918c077546cb21bd73a87 upstream.
+commit 6b94bab0ee8d5def6a2aac0ef6204ee6e24386b6 upstream.
 
-In map_create(), we first find and create the map, then once that
-suceeded, we charge it to the user's RLIMIT_MEMLOCK, and then fetch
-a new anon fd through anon_inode_getfd(). The problem is, once the
-latter fails f.e. due to RLIMIT_NOFILE limit, then we only destruct
-the map via map->ops->map_free(), but without uncharging the previously
-locked memory first. That means that the user_struct allocation is
-leaked as well as the accounted RLIMIT_MEMLOCK memory not released.
-Make the label names in the fix consistent with bpf_prog_load().
+The error flow in procedure handle_existing_counter() is wrong.
 
-Fixes: aaac3ba95e4c ("bpf: charge user for creation of BPF maps and programs")
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+The procedure should exit after encountering the error, not continue
+as if everything is OK.
+
+Fixes: 68230242cdbc ('net/mlx4_core: Add port attribute when tracking counters')
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/syscall.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -152,7 +152,7 @@ static int map_create(union bpf_attr *at
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -918,11 +918,13 @@ static int handle_existing_counter(struc
  
- 	err = bpf_map_charge_memlock(map);
- 	if (err)
--		goto free_map;
-+		goto free_map_nouncharge;
+ 	spin_lock_irq(mlx4_tlock(dev));
+ 	r = find_res(dev, counter_index, RES_COUNTER);
+-	if (!r || r->owner != slave)
++	if (!r || r->owner != slave) {
+ 		ret = -EINVAL;
+-	counter = container_of(r, struct res_counter, com);
+-	if (!counter->port)
+-		counter->port = port;
++	} else {
++		counter = container_of(r, struct res_counter, com);
++		if (!counter->port)
++			counter->port = port;
++	}
  
- 	err = bpf_map_new_fd(map);
- 	if (err < 0)
-@@ -162,6 +162,8 @@ static int map_create(union bpf_attr *at
- 	return err;
- 
- free_map:
-+	bpf_map_uncharge_memlock(map);
-+free_map_nouncharge:
- 	map->ops->map_free(map);
- 	return err;
- }
+ 	spin_unlock_irq(mlx4_tlock(dev));
+ 	return ret;
 
 
