@@ -2,111 +2,139 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A7AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A031FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85862207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636A5207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=quantenna.com header.i=@quantenna.com header.b="NN31X8lm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEHSvq (ORCPT
+        id S1727099AbgEHSxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:51:46 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:54374 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgEHSvp (ORCPT
+        Fri, 8 May 2020 14:53:05 -0400
+Received: from mx0a-00183b01.pphosted.com ([67.231.149.44]:17570 "EHLO
+        mx0a-00183b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726767AbgEHSxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:51:45 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jX861-0001Zv-3H; Fri, 08 May 2020 12:51:41 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jX860-00051f-83; Fri, 08 May 2020 12:51:40 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-Date:   Fri, 08 May 2020 13:48:13 -0500
-In-Reply-To: <87sgga6ze4.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Fri, 08 May 2020 13:43:31 -0500")
-Message-ID: <87sgga5klu.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 8 May 2020 14:53:05 -0400
+X-Greylist: delayed 5835 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 14:53:04 EDT
+Received: from pps.filterd (m0059812.ppops.net [127.0.0.1])
+        by m0059812.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 048H74K6013329;
+        Fri, 8 May 2020 11:15:48 -0600
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by m0059812.ppops.net with ESMTP id 30vtbytk98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 11:15:48 -0600
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QuZTOOzpR7Um/MnumBN9WJp9kJso4nLtYCKJ0eiTzNbFuwHXLLzwtisIJiDePFTFM734E9TM10O9KOGdAeRe0lc426wD3GfABid9XD0883gvtOWGr9Qcjl0umORkZ9XWmM8JZQzUmttr2dz0i7OBYX9WnCBaJYAUUZpLKTzCXgemuaYch3rs7kBB+HEes6D+40PvfYkB6VoGrslZOfZsDi22tRfcR3GJJK8s+pVlBboq9B9KPfFllmFQSTZAAJiiD+yLtkHjaKx2X1+XBRrVlQDwTQR6mHopjc9CFaX9+by+3sZxzszzeAJJHJPsScQDffMygmfwt5k9WE8R3QwY0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o8iR2CTSnP/Sg7Fkwxhu9Bp2FhDoOEoBcPKK9ruKQVE=;
+ b=h4YFg3U1GZ8asF3tW1NeS5w9ePTcgK4BBeFzICgRXdQJU/p3MOYFPkk8lcikJkGl8imM/JCv0M0TPPU+b5Se9+xMHU63i6YvYornWbuxjCgfovJB/8G656N4obEbmr7KhSG/LDdWIw7V7cbMGfjskrpuMPciD1yzsPWHqBQlzyj/82ao8x9yHGsZ1cLgoK+gvSjSqWpj4aHI6fI/UCdZ+jzOBMJhKZM447tcUNYHG6ESFhhuMmd8CwGKKC8Vt6cVwIcjMuB3vXY4/d+IRq9p7Wpe01g5CCug0u2y266rhI3VA6nMa6703P88vcfjwKIPBwd1doMzYng4Hzocx4TtJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=quantenna.com; dmarc=pass action=none
+ header.from=quantenna.com; dkim=pass header.d=quantenna.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quantenna.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o8iR2CTSnP/Sg7Fkwxhu9Bp2FhDoOEoBcPKK9ruKQVE=;
+ b=NN31X8lmlFkkJWnxAzlg5bKla4nrwFjao3gmDxEK38Z7Bt6Sjaa1P83wXBAY3nelrPDEO7vP247l/veYP7fB85oE6VU14n78+HlbqmJ6cRIVqI6h+a6/VCbC9cTgDkr3k3QDNxYDQsjNIqyHvpp2NNagrZXGaWyKHa3BrHcKtJc=
+Received: from BYAPR05MB6309.namprd05.prod.outlook.com (2603:10b6:a03:cf::22)
+ by BYAPR05MB5655.namprd05.prod.outlook.com (2603:10b6:a03:1d::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Fri, 8 May
+ 2020 17:15:46 +0000
+Received: from BYAPR05MB6309.namprd05.prod.outlook.com
+ ([fe80::d8c0:3fd8:fcf2:2221]) by BYAPR05MB6309.namprd05.prod.outlook.com
+ ([fe80::d8c0:3fd8:fcf2:2221%3]) with mapi id 15.20.2979.027; Fri, 8 May 2020
+ 17:15:46 +0000
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=quantenna.com;
+Received: from CY4PR05MB3558.namprd05.prod.outlook.com (2603:10b6:910:53::39)
+ by CY4PR05MB3157.namprd05.prod.outlook.com (2603:10b6:903:f6::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.22; Fri, 8 May
+ 2020 17:15:08 +0000
+Received: from CY4PR05MB3558.namprd05.prod.outlook.com
+ ([fe80::f5eb:c5ec:8fe4:e048]) by CY4PR05MB3558.namprd05.prod.outlook.com
+ ([fe80::f5eb:c5ec:8fe4:e048%6]) with mapi id 15.20.2979.024; Fri, 8 May 2020
+ 17:15:08 +0000
+Date:   Fri, 8 May 2020 20:15:00 +0300
+From:   Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     Igor Mitsyanko <imitsyanko@quantenna.com>,
+        Avinash Patil <avinashp@quantenna.com>,
+        Sergey Matyukevich <smatyukevich@quantenna.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] qtnfmac: Replace zero-length array with flexible-array
+Message-ID: <20200508171500.tqapwgllo2qeynpv@bars>
+Mail-Followup-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Igor Mitsyanko <imitsyanko@quantenna.com>,
+        Avinash Patil <avinashp@quantenna.com>,
+        Sergey Matyukevich <smatyukevich@quantenna.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200507191926.GA15970@embeddedor>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507191926.GA15970@embeddedor>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: AM0PR10CA0038.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:150::18) To CY4PR05MB3558.namprd05.prod.outlook.com
+ (2603:10b6:910:53::39)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jX860-00051f-83;;;mid=<87sgga5klu.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/r6VtbU/6OvvVnJg0JFfeLOIy36zxgBMI=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 6/6] exec: Set the point of no return sooner
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from bars (195.182.157.78) by AM0PR10CA0038.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 17:15:06 +0000
+X-Originating-IP: [195.182.157.78]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f5225123-9922-482a-fc57-08d7f3735b66
+X-MS-TrafficTypeDiagnostic: CY4PR05MB3157:|BYAPR05MB5655:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR05MB3157F8BD2B173A570694A9A0A3A20@CY4PR05MB3157.namprd05.prod.outlook.com>
+X-Moderation-Data: 5/8/2020 5:15:43 PM
+X-MS-Oob-TLC-OOBClassifiers: OLM:236;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uTDdbhoDIRu2lBkgsRtTeI2k2mfdFibUm7URHYY4AJhsRotT36m2zCD+R6DPo8xVHZIOglGm2g9/+c6pOx/h8bNRN84BPmGcNDqf4k97Xbu3T0DkQHA9jxoxsUFuXfe7STeJZ6ZXcSrhBU6qYUKe+/Y6aCw5AfLIV57hlsKyqSMWlboFm5uO3VTmr3ih74tUVhcdo/2jDfrwjbYMQ7HVqPucci5aRIBTy8FueBhiui+wnZcVys0TqXZ9O2hh4qRfwmH0YKiXb0CV36XxzVteXUmDfgDbyj78FSabejaNKsXUpYsfFP9i28d4QnGHvgSvWkeBWhEtRSnk0IgZZRwk+Q6I1gFXsGtzFEtCtA2tn79Qys/u0NR2cb9wCQLgrBn7ZCwxfEIxji8cLe0qeR0z5mU9RZhf0NtNsK+xX655sVAzmOhKRAQy2f4XQgrdU35y9sQRE4//siQNPD02BpYbvCjjhWYNS/k30XxSYjQgJuO81MtInYTUrES6zKXSO7ctoxTUMgNdEpiK7ED/51lihw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB6309.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39850400004)(396003)(366004)(136003)(33430700001)(26005)(186003)(2906002)(66946007)(16526019)(33440700001)(86362001)(5660300002)(8676002)(4744005)(956004)(33716001)(83290400001)(83280400001)(9686003)(83310400001)(83320400001)(6496006)(55016002)(478600001)(83300400001)(316002)(4326008)(66556008)(1076003)(6666004)(8936002)(52116002)(9576002)(6916009)(54906003)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 3JMXuD2sw/NAwOumvKDxaFHoRqdxFEuIFZSpg9FkrdTc6K5bGbbp6YJjM2VCnvmqcxQzACWOpKxQrLuwpTD3aesH/zAC+ci4a1QQyHWTrZLkkv6BboAtLDyLCUVHiNtcEjCH41cjeRCnzeAvtu/SUZ3XqDUx0Q73a68xVtTdlG/AmTb4Rgre1YtNbPBzpwNhL/0dqGiduGmQpMm2vs4NQs97o1Uz/YJOi7I/zidACUY4jdMMC7IeSqicoNxyqBnhToOxSEpa9PRks3QMtWKm3zgrU0jWykDJpsUbsFt1qRqEqqP2w5DzJlQjbcBM3dLjadKnIQFJS/CgiPZo83hSVGOmNMNpe2Fi1Cvu9v1pz3tBsZMj2oXIqbc0rXCgi6UmriOMhH4Ber4wHLuA6ZMTfHXu5Rb9dUtlZKVwzhpkKAWdDz9fzr+vzCouXL/0+ebdqTAXPnF6VtWUzj6djsXk37XzS9sZfjPMLgv6Td9vNf6NJiM9pO7jykjWZgJczSqu
+X-OriginatorOrg: quantenna.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5225123-9922-482a-fc57-08d7f3735b66
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a355dbce-62b4-4789-9446-c1d5582180ff
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5At4DZn44YpCgMcfoJVwxaAy872Q2i1HqFUf9hE2voR+FotBpB0kYUappgagIO1/0dnNjra1i9yEnTRdI4eLkx2ivlSA+sSbmQ1XNPEe4BpdvsUFOE6ifO5J86qJ8BQq7+g5vT87P2cYkQQutfzf/Ybb9l5MLHrrxeLQY9Cp8Q6avtXIw1zaoBYoiPfzo1S5VNpjgYvnZf+g1hHGcMXQEQWJhEIpDJyZvPEIXgUZ4zc=
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 17:15:46.2558
+ (UTC)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5655
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-08_15:2020-05-08,2020-05-08 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 mlxlogscore=351 mlxscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+...
 
-Make the code more robust by marking the point of no return sooner.
-This ensures that future code changes don't need to worry about how
-they return errors if they are past this point.
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/wireless/quantenna/qtnfmac/bus.h   |    2 
+>  drivers/net/wireless/quantenna/qtnfmac/qlink.h |   54 ++++++++++++-------------
+>  2 files changed, 28 insertions(+), 28 deletions(-)
 
-This results in no actual change in behavior as __do_execve_file does
-not force SIGSEGV when there is a pending fatal signal pending past
-the point of no return.  Further the only error returns from de_thread
-and exec_mmap that can occur result in fatal signals being pending.
+Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 443eb960f9a0..b0620d5ebc66 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1304,6 +1304,11 @@ int begin_new_exec(struct linux_binprm * bprm)
- 	struct task_struct *me = current;
- 	int retval;
- 
-+	/*
-+	 * Ensure all future errors are fatal.
-+	 */
-+	bprm->point_of_no_return = true;
-+
- 	/*
- 	 * Make this the only thread in the thread group.
- 	 */
-@@ -1326,13 +1331,6 @@ int begin_new_exec(struct linux_binprm * bprm)
- 	if (retval)
- 		goto out;
- 
--	/*
--	 * With the new mm installed it is completely impossible to
--	 * fail and return to the original process.  If anything from
--	 * here on returns an error, the check in __do_execve_file()
--	 * will SEGV current.
--	 */
--	bprm->point_of_no_return = true;
- 	bprm->mm = NULL;
- 
- #ifdef CONFIG_POSIX_TIMERS
--- 
-2.20.1
-
+Regards,
+Sergey
