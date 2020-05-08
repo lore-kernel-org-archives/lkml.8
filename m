@@ -4,104 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B72C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B948C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E56218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170DA208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588959374;
-	bh=hRqx7QnwUzVVyfLcYGbbO44yyAmWkryLH6lR1hltF6s=;
+	s=default; t=1588959530;
+	bh=LcXhc6cMcXbwsVbwFfMjNO5c3oOcytqTO2+5PJMjDy4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FJ1Yo/pJ+iAIP1rBsjggTz3WoHR3n5DdLqP28FRje52Xkozv0q+3BchJ6el9wQyP3
-	 /XhutEsLoVsy7tS4cl4jzjaj64xPNi0bzoZsYu8Jij5o5HmINvMu9JRX/x11t+xo74
-	 jqH5cS+M0O2COPlNMKMKC24roIZwVL82Ro5kG8rI=
+	b=ppYPx9lbl00XhD0y0ruu3gCFdNOEEWAJDd4RHQjRwVzREJHBn/cF/JIvxozUOosjb
+	 BA7UH/1+PyAOm33DdGSm8+2SLri9Np0YEvQTYIKC6LG1msHy+OVuZCwbACGdaf3HPX
+	 KWcOJZ47jB0HfRvfN86qZrRXrsGA9C2fdOoBIpHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEHRgN (ORCPT
+        id S1726891AbgEHRit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 13:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgEHRgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:36:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726746AbgEHRit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:38:49 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62162184D;
-        Fri,  8 May 2020 17:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4661D20731;
+        Fri,  8 May 2020 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588959372;
-        bh=hRqx7QnwUzVVyfLcYGbbO44yyAmWkryLH6lR1hltF6s=;
+        s=default; t=1588959528;
+        bh=LcXhc6cMcXbwsVbwFfMjNO5c3oOcytqTO2+5PJMjDy4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mu1u/yVegzhbRrgAnzmV32ElFBUzj2NSItbfkVO2f9Ki1cUZQTMkEUKZZAgWmR+Kg
-         +2eiaX7rpB6B4k3uA03vmodvLsut3XtiiQR9OL3do7l4y6OPW+ce1wJ/G8WNKb2xhA
-         C7uZYhwGSvnY9hPevB4wauPpaO/FRKrZH3sAnTFw=
-Date:   Fri, 8 May 2020 18:36:09 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200508173609.GQ4820@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+        b=zk2H+BDOKKror3XONma5AU4Qvh50cl0TMVdYJF4BClLA2hsYgpnU2UJ9jUUHdgYmf
+         wMKQlePwRsk+Gl200iJcrCtpVCa61VZgMfWPUf/ic6tNGVr4boMaQ0NcT5PWDW2QI6
+         OrL9WHxg9I3TJT7tj9u3UrV7B9jAb1NIqiILy/ww=
+Date:   Fri, 8 May 2020 12:43:16 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
+ flexible-array
+Message-ID: <20200508174315.GC23375@embeddedor>
+References: <20200507185016.GA13883@embeddedor>
+ <1b3cda25-5f3a-5359-4bf7-d16a8364f545@codeaurora.org>
+ <20200508170233.GB23375@embeddedor>
+ <c4f4fc47-6add-1ba1-9f06-978003e47c4f@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cxMSjUqMQBJIqbX5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c4f4fc47-6add-1ba1-9f06-978003e47c4f@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 08, 2020 at 11:20:16AM -0600, Jeffrey Hugo wrote:
+> On 5/8/2020 11:02 AM, Gustavo A. R. Silva wrote:
+> > On Thu, May 07, 2020 at 01:24:57PM -0600, Jeffrey Hugo wrote:
+> > > >    drivers/dma/qcom/bam_dma.c         |    2 +-
+> > > >    drivers/firmware/qcom_scm-legacy.c |    2 +-
+> > > >    2 files changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > 
+> > > Shouldn't these two files be two different patches?
+> > > 
+> > 
+> > I believe so... I'll split this patch up into two patches.
+> > 
+> > Thanks
+> > --
+> > Gustavo
+> > 
+> 
+> Sounds good to me.  When you do, you can add the following if you like
+> 
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> 
 
---cxMSjUqMQBJIqbX5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Awesome. :)
 
-On Fri, May 08, 2020 at 04:29:25PM +0300, Serge Semin wrote:
-> Baikal-T1 SoC provides DW DMA controller to perform low-speed peripherals
-> Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
-> APB SSI devices embedded into the SoC. Currently this type DMA device is
-
-This basically all looks good to me (without any hardware specific
-knowledge), I had a few comments but they were mostly procedural ones -
-mainly getting these bug fixes you've done merged as such.  Nice work.
-
---cxMSjUqMQBJIqbX5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61mIkACgkQJNaLcl1U
-h9A+eQf/aX/eJQKNbtRlg1YQiR0kNEKfYb0h+4IxTWaR0D4O8huNg6Q6+5WvT2Yj
-7mOeCIXspsfBGeaio/QMq7wEfJuA0WixGuipF+a6+fR+g46A4J33V0PlxawdRktx
-IaTWop1c75yO+k2WMmIcKxl2njtyhCDrPqWPan1ZyNs/EdP9Yzjb9xjuj28ZbOB5
-+Too1aZWhzYiRx0UI8wfgC7msBilLvcxmHd0jmSnnBE1nsgPZE1cPme0khU+trXt
-XyNzPrOcMrqTJAKwkeU1ZQuYvvn07DMp+FzhjkYSfzrdC+luQwFLo6W0R0CK0aep
-dv7bvZv/ilTh26Ht3/pAJFJ03kdlww==
-=34XW
------END PGP SIGNATURE-----
-
---cxMSjUqMQBJIqbX5--
+Thanks
+--
+Gustavo
