@@ -2,136 +2,90 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98F2C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26014C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C659920725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:54:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNF8tkfS"
+	by mail.kernel.org (Postfix) with ESMTP id 10A30208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgEHByX (ORCPT
+        id S1726891AbgEHB4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:54:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53971 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHByW (ORCPT
+        Thu, 7 May 2020 21:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726538AbgEHB4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:54:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588902859;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8is+as/IWe32hsvVt9oXkFSeTwtP1mvlBgfZZAeexYQ=;
-        b=YNF8tkfS9yOxP3EwvaD52eCcZ1SwVQruGY5+HSbXtjAXfX3VeKRGIVICPn/wF6QQLStN4X
-        +haheQYEhckquG+qggGwYjoPXZ0OqranK90HblAjDZ0OQq33nU8ivXYvegnJU/r6Zf3GNY
-        JQpr2Gl7F9kdDAAO6yUEIdtSCk8Gslw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-hkaK7xe3NF6q51s7VNlBWg-1; Thu, 07 May 2020 21:54:15 -0400
-X-MC-Unique: hkaK7xe3NF6q51s7VNlBWg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DDF6835BC5;
-        Fri,  8 May 2020 01:54:14 +0000 (UTC)
-Received: from [10.72.13.98] (ovpn-13-98.pek2.redhat.com [10.72.13.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BCD765D9C5;
-        Fri,  8 May 2020 01:54:06 +0000 (UTC)
-Subject: Re: [PATCH net-next 2/2] virtio-net: fix the XDP truesize calculation
- for mergeable buffers
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506061633.16327-2-jasowang@redhat.com>
- <20200506033259-mutt-send-email-mst@kernel.org>
- <789fc6e6-9667-a609-c777-a9b1fed72f41@redhat.com>
- <20200506075807-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0e59287f-8333-c715-da03-91306cef9878@redhat.com>
-Date:   Fri, 8 May 2020 09:54:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200506075807-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Thu, 7 May 2020 21:56:01 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEDDC05BD09;
+        Thu,  7 May 2020 18:55:59 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 898BA1192EEC4;
+        Thu,  7 May 2020 18:55:58 -0700 (PDT)
+Date:   Thu, 07 May 2020 18:55:57 -0700 (PDT)
+Message-Id: <20200507.185557.1362004700682658898.davem@davemloft.net>
+To:     gustavoars@kernel.org
+Cc:     jiri@resnulli.us, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] team: Replace zero-length array with flexible-array
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200507192507.GA16516@embeddedor>
+References: <20200507192507.GA16516@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 18:55:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Thu, 7 May 2020 14:25:07 -0500
 
-On 2020/5/6 下午8:08, Michael S. Tsirkin wrote:
-> On Wed, May 06, 2020 at 04:21:15PM +0800, Jason Wang wrote:
->> On 2020/5/6 下午3:37, Michael S. Tsirkin wrote:
->>> On Wed, May 06, 2020 at 02:16:33PM +0800, Jason Wang wrote:
->>>> We should not exclude headroom and tailroom when XDP is set. So this
->>>> patch fixes this by initializing the truesize from PAGE_SIZE when XDP
->>>> is set.
->>>>
->>>> Cc: Jesper Dangaard Brouer<brouer@redhat.com>
->>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
->>> Seems too aggressive, we do not use up the whole page for the size.
->>>
->>>
->>>
->> For XDP yes, we do:
->>
->> static unsigned int get_mergeable_buf_len(struct receive_queue *rq,
->>                        struct ewma_pkt_len *avg_pkt_len,
->>                        unsigned int room)
->> {
->>      const size_t hdr_len = sizeof(struct virtio_net_hdr_mrg_rxbuf);
->>      unsigned int len;
->>
->>      if (room)
->>          return PAGE_SIZE - room;
->>
->> ...
->>
->> Thanks
-> Hmm. But that's only for new buffers. Buffers that were outstanding
-> before xdp was attached don't use the whole page, do they?
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-
-They don't and in either case, we've encoded truesize in the ctx. Any 
-issue you saw?
-
-
->
->
->
->
-> Also, with TCP smallqueues blocking the queue like that might be a problem.
-> Could you try and check performance impact of this?
-
-
-I'm not sure I get you, TCP small queue is more about TX I guess. And 
-since we've invalidated the vnet header, the performance of XDP_PASS 
-won't be good.
-
-
-> I looked at what other drivers do and I see they tend to copy the skb
-> in XDP_PASS case. ATM we don't normally - but should we?
-
-
-My understanding is XDP runs before skb, so I don't get here. Or maybe 
-you can point me the driver you mentioned here? I've checked i40e and 
-mlx5e, both of them build skb after XDP.
-
-Thanks
-
->
-
+Applied to net-next, thanks.
