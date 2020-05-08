@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E05C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0B5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872A724974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691B12496A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941599;
-	bh=NAMYrY8U/+sMLlPIxI7tyI7KtqvtjCItcWu0XkIZcq0=;
+	s=default; t=1588941604;
+	bh=O9N3m2qQAeS4ZdZmamklYq3Otx1v5shcUcP/2kvOnMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UelHLQX/ETIp4rhhYBKXdODUiYWBMyPFCxWPoW/gqhAVNuoSrK3JPl3YE+Lja3g4o
-	 v1WmBTApHO0itbAdma4XoQ6w6Kxg+ShQPfA4yW8CxOChPi5Uj4cEvq6hRS2J5cSbF9
-	 miV4+RliU1TprCAr4+u7eURw6bsb88ISuki/pTdk=
+	b=UmI32aKc4ot8XDZHR/iRnkYEztupOUdDPZfS5BVG1xESTLUw0aouuptfsiAIdFr9J
+	 2RfowPLymm+UZPq5LBlfFTUugwprgBVikytvMls/4r+6EVgD3MRnoJUBGXODSwuhnX
+	 5b3wpgcLwaZtM+r378rpgfmSQFhySnDYFlj+5dNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgEHMj6 (ORCPT
+        id S1728642AbgEHMkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59124 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbgEHMjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:32 -0400
+        id S1726767AbgEHMje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4ED921835;
-        Fri,  8 May 2020 12:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4072E20731;
+        Fri,  8 May 2020 12:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941571;
-        bh=NAMYrY8U/+sMLlPIxI7tyI7KtqvtjCItcWu0XkIZcq0=;
+        s=default; t=1588941573;
+        bh=O9N3m2qQAeS4ZdZmamklYq3Otx1v5shcUcP/2kvOnMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8MMIOPMIlHRPvwPhMv4cnIPOsg19JPeAmKabe8r5+oVkSraXGej/GPtK0/hsiTiQ
-         YUL9FABr53muNJlNvZUk1QVwLpCKD/+glIvwGLB/ZrmqweXQcdb+2KIaKed7deJuvH
-         VX8HDAobblFbpOFBs5iJYReegEEOnUL6/cFBmpKw=
+        b=LZvWvdV3s1iyx1JuDNsM6AXpfyi+/3TLOnsw0kAw3ufmgf6sED81xmhQJF3MouOmf
+         0WoHohSxwlC6kzPdOZrzryv4evDFisBACUG++smSXKsCqWxsL3LmjqQsmuox9+D+EF
+         H3KYytwPa/6qn5NjP7hUm4PKqRYI/OlPX647zD8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
+        stable@vger.kernel.org, Matthew Finlay <matt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 085/312] net/mlx5: Fix pci error recovery flow
-Date:   Fri,  8 May 2020 14:31:16 +0200
-Message-Id: <20200508123130.527326814@linuxfoundation.org>
+Subject: [PATCH 4.4 086/312] net/mlx5e: Copy all L2 headers into inline segment
+Date:   Fri,  8 May 2020 14:31:17 +0200
+Message-Id: <20200508123130.596236140@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,117 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohamad Haj Yahia <mohamad@mellanox.com>
+From: Matthew Finlay <matt@mellanox.com>
 
-commit 1061c90f524963a0a90e7d2f9a6bfa666458af51 upstream.
+commit e3a19b53cbb0e6738b7a547f262179065b72e3fa upstream.
 
-When PCI error is detected we should save the state of the pci prior to
-disabling it.
+ConnectX4-Lx uses an inline wqe mode that currently defaults to
+requiring the entire L2 header be included in the wqe.
+This patch fixes mlx5e_get_inline_hdr_size() to account for
+all L2 headers (VLAN, QinQ, etc) using skb_network_offset(skb).
 
-Also when receiving pci slot reset call we need to verify that the
-device is responsive.
-
-Fixes: 89d44f0a6c73 ('net/mlx5_core: Add pci error handlers to mlx5_core
-driver')
-Signed-off-by: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e586b3b0baee ("net/mlx5: Ethernet Datapath files")
+Signed-off-by: Matthew Finlay <matt@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c |   59 ++++++++++++-------------
- 1 file changed, 29 insertions(+), 30 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1276,36 +1276,12 @@ static pci_ers_result_t mlx5_pci_err_det
- 	dev_info(&pdev->dev, "%s was called\n", __func__);
- 	mlx5_enter_error_state(dev);
- 	mlx5_unload_one(dev, priv);
-+	pci_save_state(pdev);
- 	mlx5_pci_disable_device(dev);
- 	return state == pci_channel_io_perm_failure ?
- 		PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_NEED_RESET;
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -124,7 +124,7 @@ static inline u16 mlx5e_get_inline_hdr_s
+ 	 * headers and occur before the data gather.
+ 	 * Therefore these headers must be copied into the WQE
+ 	 */
+-#define MLX5E_MIN_INLINE ETH_HLEN
++#define MLX5E_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
  
--static pci_ers_result_t mlx5_pci_slot_reset(struct pci_dev *pdev)
--{
--	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
--	int err = 0;
--
--	dev_info(&pdev->dev, "%s was called\n", __func__);
--
--	err = mlx5_pci_enable_device(dev);
--	if (err) {
--		dev_err(&pdev->dev, "%s: mlx5_pci_enable_device failed with error code: %d\n"
--			, __func__, err);
--		return PCI_ERS_RESULT_DISCONNECT;
--	}
--	pci_set_master(pdev);
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
--	return err ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
--}
--
--void mlx5_disable_device(struct mlx5_core_dev *dev)
--{
--	mlx5_pci_err_detected(dev->pdev, 0);
--}
--
- /* wait for the device to show vital signs by waiting
-  * for the health counter to start counting.
-  */
-@@ -1333,21 +1309,44 @@ static int wait_vital(struct pci_dev *pd
- 	return -ETIMEDOUT;
- }
- 
--static void mlx5_pci_resume(struct pci_dev *pdev)
-+static pci_ers_result_t mlx5_pci_slot_reset(struct pci_dev *pdev)
- {
- 	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
--	struct mlx5_priv *priv = &dev->priv;
- 	int err;
- 
- 	dev_info(&pdev->dev, "%s was called\n", __func__);
- 
--	pci_save_state(pdev);
--	err = wait_vital(pdev);
-+	err = mlx5_pci_enable_device(dev);
- 	if (err) {
-+		dev_err(&pdev->dev, "%s: mlx5_pci_enable_device failed with error code: %d\n"
-+			, __func__, err);
-+		return PCI_ERS_RESULT_DISCONNECT;
-+	}
-+
-+	pci_set_master(pdev);
-+	pci_restore_state(pdev);
-+
-+	if (wait_vital(pdev)) {
- 		dev_err(&pdev->dev, "%s: wait_vital timed out\n", __func__);
--		return;
-+		return PCI_ERS_RESULT_DISCONNECT;
+ 	if (bf) {
+ 		u16 ihs = skb_headlen(skb);
+@@ -136,7 +136,7 @@ static inline u16 mlx5e_get_inline_hdr_s
+ 			return skb_headlen(skb);
  	}
  
-+	return PCI_ERS_RESULT_RECOVERED;
-+}
-+
-+void mlx5_disable_device(struct mlx5_core_dev *dev)
-+{
-+	mlx5_pci_err_detected(dev->pdev, 0);
-+}
-+
-+static void mlx5_pci_resume(struct pci_dev *pdev)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+	struct mlx5_priv *priv = &dev->priv;
-+	int err;
-+
-+	dev_info(&pdev->dev, "%s was called\n", __func__);
-+
- 	err = mlx5_load_one(dev, priv);
- 	if (err)
- 		dev_err(&pdev->dev, "%s: mlx5_load_one failed with error code: %d\n"
+-	return MLX5E_MIN_INLINE;
++	return max(skb_network_offset(skb), MLX5E_MIN_INLINE);
+ }
+ 
+ static inline void mlx5e_insert_vlan(void *start, struct sk_buff *skb, u16 ihs)
 
 
