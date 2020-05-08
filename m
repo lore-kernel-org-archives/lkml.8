@@ -2,96 +2,100 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C90C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081CAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427DD20735
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ove31f7p"
+	by mail.kernel.org (Postfix) with ESMTP id C398024954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588943949;
+	bh=lv69lw1TSPtSSMXYYkRILtjmmpxacXgfv0+K0ZLOOv8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C3zJK1Aah8ZHcoyBmtz06J4B0pkX3Eya2E9Rkunth8SkeX/cV1cytXD8ewh9cpiNF
+	 VqLS3veGEncbcpa4w1o4cdSJj0v+OdbCN0WJCFp/nk4COACuYaPNGlSF6fgI1kCfOZ
+	 pCB/jKBCxnbdnO2PL5HaCyQMtN6FksCAFdh3+z7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgEHNSx (ORCPT
+        id S1729278AbgEHNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:18:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728689AbgEHNSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:18:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CCBC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:18:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m12so5230381wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4KMLQ4EJCkyzbgYa2IJD+khf7hToXVbXh2lcQiHZtv0=;
-        b=ove31f7pciE4Fbhm6NDLjUI9JBlFL/PA3cUZfCszFLpIChGlte7eSbOLZymdajQ9kK
-         gvPBvpGJZMgMzeDA1EWhE0mUt1GnwHlyuFs+gm9exfx6IXGGNHzVY4W50lYSmpTxaCsr
-         60fGF+UTCK5hnkhDKeZlzt0pslaA7Y4MwXdN6ESNWcuWEQBFvqVx6K1UAb/+sraNF90l
-         xMAMizHB0CVXKviA38ftlh3FUyyE1yDtVKxWT6kZls3slkOAl0Q435rKgLdXkdtvuOtf
-         FVitAidX3tCzTkx6dJUJxHvvAArCb6NPH2LSG4Egd+Ea7/031fRzmYTwHdvZh+FaQx0J
-         x81Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4KMLQ4EJCkyzbgYa2IJD+khf7hToXVbXh2lcQiHZtv0=;
-        b=tOcSO3lXmyCTANxLnCcKd4fL97pXnBe+ibFiruG7BSNTgkZHLpAhoFV+pNyny5YBdB
-         xBzYhXw6Ikm5VFsxy62zkwNL1keWWc/fyPkcC8WfwSWouaXBX/Tnb7DMpCu4qxCQkfhe
-         Ecfuy02o6KLtQZ4V/0SBq7b2bekExD/P4r89ufYlzNGv+ydlEMFZ2eaRB0ElcNv9rbjb
-         5tMfY639lgtP2zhpRzXR1LnRp3do2aXHU3QOW7jNIjZjCpL6A4MFwy/YKa+GKEItLMJt
-         Gm50PAs7Ri7M2+oUG/tgh4gCWYxr2rVyid26Mg/K9cFg098Le/mopJz6kcEV07Qs1xll
-         n+5Q==
-X-Gm-Message-State: AGi0PuaycTSH51JOJcml6Jch/Z0mOLldHatot/l5lnQM7cznMa2fYQhX
-        Gfekj35p6o25oMsP5oBD6ZjfTg==
-X-Google-Smtp-Source: APiQypJdRU9stBd3NG3JUQJliF1xwamMgT+gqtFcU/P7BSs1kniXBB4NJN4eJrTemJwu3kbPfB9g1Q==
-X-Received: by 2002:a1c:c345:: with SMTP id t66mr17057953wmf.189.1588943923328;
-        Fri, 08 May 2020 06:18:43 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id m82sm988007wmf.3.2020.05.08.06.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 06:18:42 -0700 (PDT)
-Date:   Fri, 8 May 2020 14:18:39 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH 04/14] sched: cpufreq: Move
- sched_cpufreq_governor_change()
-Message-ID: <20200508131839.GD10541@google.com>
-References: <20200507181012.29791-1-qperret@google.com>
- <20200507181012.29791-5-qperret@google.com>
- <20200508053523.GH19464@codeaurora.org>
+        Fri, 8 May 2020 09:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbgEHMmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A83E62495F;
+        Fri,  8 May 2020 12:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588941756;
+        bh=lv69lw1TSPtSSMXYYkRILtjmmpxacXgfv0+K0ZLOOv8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Udmef3PH1+gPMfLz8mP44rSXhFfHvHnSkpdjAhUvbc2GoRtER6OxBJZAAdkdGfhrL
+         li9fbu+0vdlBH2q9NHBootSIn6d2rSuWVcOELmszKLYSLkGdkRU4aqeKGooBeLsiX1
+         D5rM7RibAKRXGE/QRfqKMskelELTQSkAcBygdp5c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 160/312] mdio-sun4i: oops in error handling in probe
+Date:   Fri,  8 May 2020 14:32:31 +0200
+Message-Id: <20200508123135.704170154@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508053523.GH19464@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 May 2020 at 11:05:23 (+0530), Pavan Kondeti wrote:
-> In the previous patch, you removed reference to schedutil and replaced it with
-> " an EAS-compatible CPUfreq governor (schedutil)". May be you could do the
-> same here.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Good point, I add it to the todo list for v2 ;)
+commit 227f33beab746aeec4ef3305bd17b1d374df09e7 upstream.
 
-Thanks,
-Quentin
+We could end up dereferencing an error pointer when we call
+regulator_disable().
+
+Fixes: 4bdcb1dd9feb ('net: Add MDIO bus driver for the Allwinner EMAC')
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/net/phy/mdio-sun4i.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/phy/mdio-sun4i.c
++++ b/drivers/net/phy/mdio-sun4i.c
+@@ -134,6 +134,7 @@ static int sun4i_mdio_probe(struct platf
+ 		}
+ 
+ 		dev_info(&pdev->dev, "no regulator found\n");
++		data->regulator = NULL;
+ 	} else {
+ 		ret = regulator_enable(data->regulator);
+ 		if (ret)
+@@ -149,7 +150,8 @@ static int sun4i_mdio_probe(struct platf
+ 	return 0;
+ 
+ err_out_disable_regulator:
+-	regulator_disable(data->regulator);
++	if (data->regulator)
++		regulator_disable(data->regulator);
+ err_out_free_mdiobus:
+ 	mdiobus_free(bus);
+ 	return ret;
+
+
