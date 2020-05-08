@@ -2,147 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F0EC47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBEFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC59216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7226F216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEHVOy (ORCPT
+        id S1727830AbgEHVRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:14:54 -0400
-Received: from mail-bn8nam12olkn2109.outbound.protection.outlook.com ([40.92.21.109]:27518
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726883AbgEHVOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:14:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RZbPx/KaXttFIodfVyelUcoJ3/CpuMF+UaNLHU9h8rahhln3RBlIPhdNJdZ+B2P4/k1KKbPnwwcU4/oKV6mz6rdBP+ykci0QpZNyOx5GYwtRWg+y52vppzDJlQ085vbsa9zPKcAzEnv5JBkadoZ6c4NCvxjAiyW16qI2zxyFidxdh90Fu6UFa3o9xypfKnVO5apuvk1knpa/wn9b8cZNE4lOcXb2zuBlwGOtU1d/RJfLRHH8k2hygiuvg2C1wQX1qLEoWwG49CBI6T22d5e/fiBF4zJKHnQahfSauItsAUTyGsd3ZPFFHIT3bD9tURNNn4GRs5CpTv467KTYI6bwbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QaJ8Zvg8tpP+6moRgpB94Nh4d/XWf7CQ/9uwfJ1/qdo=;
- b=bwrXFwKyNCxC2cQPpcljySwl3lpM2YOX+R6j6/VpLav283Jybh0hbYSv90TMNqmIS7jTI46iC6jdtq+msoXrMEHxU+r5pTZfyCrCNkoqoD7kYTT36vWe32KihXTg5g+b0blk76x/xeM3QniFqQZDLHR0Ok+v7zIhhoqUBEx54IGMLuGDwz39qFypQ2S77Neb/MO2l3Z9yqnRawLPThHWi67oVpHfT38KBak0MGA3c67hR0Cp/GvewqGtUNGV0xi61OZsq6DPR/jNppNTVZPQrA5mdmdRXT9UnxgJ3krnuaDosZ9xDV6Upf9aINXhJNWesp0YW0vj8Vwj0UvU9vcVWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM12FT021.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc66::45) by
- BN8NAM12HT050.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::386)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Fri, 8 May
- 2020 21:14:51 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc66::50) by BN8NAM12FT021.mail.protection.outlook.com
- (2a01:111:e400:fc66::391) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
- Transport; Fri, 8 May 2020 21:14:51 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:06776E2FF24144209A2E0CFDE5529DD976ACD0226A571A4F9737159889DD865E;UpperCasedChecksum:6E73B9349D8014CDD5809BB51FBF3EF60F3141EC88BFBC2FAD0D8602A36CF634;SizeAsReceived:7927;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Fri, 8 May 2020
- 21:14:51 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, kgene@kernel.org, krzk@kernel.org
-Cc:     cw00.choi@samsung.com, kstewart@linuxfoundation.org,
-        mpe@ellerman.id.au, m.szyprowski@samsung.com, swboyd@chromium.org,
-        tglx@linutronix.de, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH] iio: adc: Add scaling support to exynos adc driver
-Date:   Fri,  8 May 2020 14:14:00 -0700
-Message-ID: <BN6PR04MB066058A68D6471E7F6AFCFF7A3A20@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR11CA0007.namprd11.prod.outlook.com
- (2603:10b6:301:1::17) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200508211400.13529-1-xc-racer2@live.ca>
+        Fri, 8 May 2020 17:17:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:43117 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHVRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:17:23 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N7zW7-1j2UZ13jt5-014zR7; Fri, 08 May 2020 23:17:21 +0200
+Received: by mail-qt1-f171.google.com with SMTP id i68so2666803qtb.5;
+        Fri, 08 May 2020 14:17:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaeFJIU8XIdfoAHtwvhX2yMwpgymFmBKL0RcoglYQK2Ote8IZYc
+        nxaFxZgUyERiJvpR7ipOwrK9Tsi0xXc387ehLjM=
+X-Google-Smtp-Source: APiQypIvad7aLitn+xmQk8X/JPRvw7lw5m5ERGWfXFfVhFVyjM1R3g6aMc8Zoq+xZMsllg7Bcor/yZaVVRwxCxHOGHU=
+X-Received: by 2002:ac8:4c8d:: with SMTP id j13mr5033840qtv.142.1588972639703;
+ Fri, 08 May 2020 14:17:19 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR11CA0007.namprd11.prod.outlook.com (2603:10b6:301:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 21:14:49 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200508211400.13529-1-xc-racer2@live.ca>
-X-TMN:  [D0Lq3ThbWiHpFKsiIZ2c9S5/TxRcltNPkVoqalZ8/AC7xtCR6s0yTYXgeC+C+4AT]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 1ca81421-2e72-46f5-4651-08d7f394d871
-X-MS-TrafficTypeDiagnostic: BN8NAM12HT050:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hHV94a6LDtYwf7UWI/VkBBkvG75ICpP/7DHtTeo9ioeHHpnCQi0baPQVxfVI0j0deY42hTt4apCc2eDznGdeLxbuXiBJy7IHLQ26vFhYmeTQFfF0gBXKJfPmjp8E0iBs7yTNddw9L8gfmJAwXbZWo0TudhqfxUiJ1zFIIxBI5zASIOBn09tb9z5LsGKAy6CbistGHifvT4pA8ZPgzpIuMQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: aCfHowuZ0+YX50DGnPFmf4cJs1eoati7OQ5GX8+Ai32DToG+ZJvJGumMUUEm3qa6Z3OD63xOFP072rHTmmPRrgg0Vqv94YYpaPp+hMilzWhQ5ajTd/6bRVpsP22sE6rgyoH/SHXLC4SqpKzdoiIKsMB1lFHKfZKnyuX9nySBzc4N1LrxGG7JNScQvgfBCpzdBGxA6SlPJuNPQHeGUI8blw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ca81421-2e72-46f5-4651-08d7f394d871
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 21:14:51.3423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT050
+References: <20200508194132.3412384-1-natechancellor@gmail.com>
+In-Reply-To: <20200508194132.3412384-1-natechancellor@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 8 May 2020 23:17:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2YqJojpS7eDgVzqRPLibXBzWDp5JWSf=U81EbvA81Y6Q@mail.gmail.com>
+Message-ID: <CAK8P3a2YqJojpS7eDgVzqRPLibXBzWDp5JWSf=U81EbvA81Y6Q@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: ipa: Remove ipa_endpoint_stop{,_rx_dma} again
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yVmCAf9a3z5zbArULHCkeKcnA54A/0bIGRvyKkIfMaKwvlO8NIq
+ EqKUDQR4d68LrxzjMvI3mrQJ3Kr3Gh3k12t+xFD5yDawloLNziYvepIuWb/rsrl0HydHyBl
+ HJuwUmmzvXjUEFsbPNGqhb6zsboaHzU4wpfBOHb65eyzLTnarA0xCWV3K76zsDstnMsr/iM
+ QJYkuZ/18TCmuYcBv4Azg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nIxqF1si7OA=:rLD/U0qximF00Y5RH89lG8
+ YzNEP1y7PtiPYe3zlxjSzSQZ/tvmucqppqG83V8CP06E3EcGw0psGhcrgKBQuafj5qdPB9STj
+ e7Ag6DIa5gWV7jqjIqfdYTX3c/vxSj/iIHLGGf3BVlIpBuaJzEGa9bcNRaOGpRebtC3yOOcQS
+ nzJeQUgDGkq5PvYhKMVbeGJz5XzrJCooEb9rGW7fbt3zF3cScWy+po1cVW/YWtRNgxSnj7rxB
+ UtoTrDl3EHjcE8dKmQfJjxvluWsRcQuOaOt+9THRGuA5H6Xg0/wAgYsXbNx0BMbqGEdG9qoh3
+ UOjneAOyHtjsDoODngx5eDzPw3UGPjPeDG6C7BNpGt3Qrr0imXUPgaOx2POYmmVwlEPlFl+Bx
+ Gy+jyMcHjwqdbt4d1wXJOxyJ/HBW1l0k6JwbA7IVquI1uf8H3qBmG1c7d7w7pKbWo1QjfQd4F
+ GaxhZqfwh7LpdZ3oyZu3jhb20wx7vyvacbmRTPqm9Hjf0fMaU0m1jvsJ4nNcPSS9eWW4kmhbm
+ HOw+McR/dJxRFJ/h8lgW4X8ABzdmNkjcFpkCLXTGGSFFil3plUn+hwxf0/7qPkSLXDP0oWhZB
+ OMWw3nhC+01cXVwT65AE+FR83i4FK44vn4nlDQqqVyBICMfobmHofsI0EaD+0VohREjDo/bO9
+ HWEqLumDGMIGDqxTDBUGu/0OeERx6Sxw1saLURwOJiTz+YEWrgUrkFgBVR8VZSuM6ujL43Z5z
+ 0zxnXvS6j24KexLYzvQc5Jk0i/hZ+57eNYDscYZfkxlnQ6Rc4AuBFZ4UmtqPHYmizky2oEjXh
+ 4bimjTuum4CUf6cfF5ZlRBh9Q8rt5IS7OEYgvhfUWISo57uaB8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver only exposes the raw counts.  As we
-have the regulator voltage and the maximum value (stored in
-the data mask), we can trivially produce a scaling fraction
-of voltage / max value.
+On Fri, May 8, 2020 at 9:44 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building arm64 allyesconfig:
+>
+> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop_rx_dma':
+> drivers/net/ipa/ipa_endpoint.c:1274:13: error: 'IPA_ENDPOINT_STOP_RX_SIZE' undeclared (first use in this function)
+> drivers/net/ipa/ipa_endpoint.c:1274:13: note: each undeclared identifier is reported only once for each function it appears in
+> drivers/net/ipa/ipa_endpoint.c:1289:2: error: implicit declaration of function 'ipa_cmd_dma_task_32b_addr_add' [-Werror=implicit-function-declaration]
+> drivers/net/ipa/ipa_endpoint.c:1291:45: error: 'ENDPOINT_STOP_DMA_TIMEOUT' undeclared (first use in this function)
+> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_stop':
+> drivers/net/ipa/ipa_endpoint.c:1309:16: error: 'IPA_ENDPOINT_STOP_RX_RETRIES' undeclared (first use in this function)
+>
+> These functions were removed in a series, merged in as
+> commit 33395f4a5c1b ("Merge branch 'net-ipa-kill-endpoint-stop-workaround'").
+>
+> Remove them again so that the build works properly.
+>
+> Fixes: 3793faad7b5b ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-This assumes that the regulator voltage is in fact the max
-voltage, which appears to be the case for all mainline dts
-and cross referenced with the public Exynos4412 and S5PV210
-datasheets.
+I ran into the same issue but didn't see the solution right away. Your patch
+looks good to me.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/iio/adc/exynos_adc.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 22131a677445..9d29b56805cd 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -531,8 +531,19 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
- 	unsigned long timeout;
- 	int ret;
- 
--	if (mask != IIO_CHAN_INFO_RAW)
-+	if (mask == IIO_CHAN_INFO_SCALE) {
-+		ret = regulator_get_voltage(info->vdd);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* Regulator voltage is in uV, but need mV */
-+		*val = ret / 1000;
-+		*val2 = info->data->mask;
-+
-+		return IIO_VAL_FRACTIONAL;
-+	} else if (mask != IIO_CHAN_INFO_RAW) {
- 		return -EINVAL;
-+	}
- 
- 	mutex_lock(&indio_dev->mlock);
- 	reinit_completion(&info->completion);
-@@ -683,6 +694,7 @@ static const struct iio_info exynos_adc_iio_info = {
- 	.channel = _index,				\
- 	.address = _index,				\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
-+	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
- 	.datasheet_name = _id,				\
- }
- 
--- 
-2.20.1
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
