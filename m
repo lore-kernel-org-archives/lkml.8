@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED00C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221BCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA93421835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36FF2496D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941510;
-	bh=6EpYPvYO1+sINqVASOs6kkWsUXdW4cYycCif/PvmMC4=;
+	s=default; t=1588941514;
+	bh=XC88n2lCSjqDfXenb2OH6ECcKqlTqc7gKZ8QBN0TmCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JnqChOYkTb8jqwJVcx3LwN6NsYw6I3MuF+d77UHEDzJzvhWDscuqspXmOP0t8wPZL
-	 ce3+o1k8UShnImPtmjVIBAs3qn2H7HlpeKLKablsUe18ybfiiCFNp4VZtOPbHvWaiY
-	 wHke1s0JQJHEa9+aCzeivy/+S37Pzu6zGgXKsSMs=
+	b=Ih4BlO3+jqs9gYZVm3d3/OnqK5gW/gwsRolm9mEbiIGQ7eqeIlyPImcxGGfm8t+P+
+	 mh9OgV6+tMnm+UnczPK4JHpjbkIpfooM7y1JiX8M+sQKkAmXDRJrwwDcVBAew8VUSZ
+	 uoWm8GncRJp6T3sItCGyYzEJDjCBLY6DlQO4L+ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgEHMia (ORCPT
+        id S1728408AbgEHMid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgEHMiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:17 -0400
+        id S1726951AbgEHMiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3340824953;
-        Fri,  8 May 2020 12:38:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D412215A4;
+        Fri,  8 May 2020 12:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941496;
-        bh=6EpYPvYO1+sINqVASOs6kkWsUXdW4cYycCif/PvmMC4=;
+        s=default; t=1588941499;
+        bh=XC88n2lCSjqDfXenb2OH6ECcKqlTqc7gKZ8QBN0TmCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSY4dpqiOZdDvI+Livh2zrYMfncfLcIiV5+xnOHXbk6vO4FwQ2M022e2gkFrePcLI
-         nfrCFSR5Gdpo2XgOcb/FwpSRAPVmR+g6O+e3Ui02U5pzQmLM//OzbKYPPSsnORA18N
-         jBj9nSOE7f/raf6XCoBVBL1uvgTZBoMGvYs/yTF8=
+        b=w8uE3rKMK5TupiOZRipY+cg/T8qxJJmmHjKZIPKXYnxo36KmgLFbWpPKtW3vnKA9/
+         AoZ/ww/d9h+U9V/Akf+kAHJon9xqU8r+AtAge3fyjsLM5/JVMBFMukKBB+2dXVXSKe
+         0z6oQQN2cCcCCCqrHsaLWiWtUVcjh50A8wUTxlpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitkumar Karwar <akarwar@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 054/312] mwifiex: add missing check for PCIe8997 chipset
-Date:   Fri,  8 May 2020 14:30:45 +0200
-Message-Id: <20200508123128.355460097@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Subject: [PATCH 4.4 055/312] iwlwifi: set max firmware version of 7265 to 17
+Date:   Fri,  8 May 2020 14:30:46 +0200
+Message-Id: <20200508123128.424635957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,31 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amitkumar Karwar <akarwar@marvell.com>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit f3b35f28096895f2438c10ef719ef67d2951a8c9 upstream.
+commit ed0450cef00d2c76bcb8778721df947ba7ff4147 upstream.
 
-This patch ensures mwifiex_pcie_txbd_empty() does take care
-of 8997 chipset.
+Just like 7260, 7265 will not have firmware releases newer
+than iwlwifi-7265-17.ucode. 7265D is still supported in
+latest firmware releases.
 
-Fixes: 6d85ef00d9dfe ("mwifiex: add support for 8997 chipset")
-Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 628a2918afe4 ("iwlwifi: separate firmware version for 7260 devices")
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mwifiex/pcie.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/iwlwifi/iwl-7000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/mwifiex/pcie.h
-+++ b/drivers/net/wireless/mwifiex/pcie.h
-@@ -342,6 +342,7 @@ mwifiex_pcie_txbd_empty(struct pcie_serv
- 			return 1;
- 		break;
- 	case PCIE_DEVICE_ID_MARVELL_88W8897:
-+	case PCIE_DEVICE_ID_MARVELL_88W8997:
- 		if (((card->txbd_wrptr & reg->tx_mask) ==
- 		     (rdptr & reg->tx_mask)) &&
- 		    ((card->txbd_wrptr & reg->tx_rollover_ind) ==
+--- a/drivers/net/wireless/iwlwifi/iwl-7000.c
++++ b/drivers/net/wireless/iwlwifi/iwl-7000.c
+@@ -70,7 +70,7 @@
+ 
+ /* Highest firmware API version supported */
+ #define IWL7260_UCODE_API_MAX	17
+-#define IWL7265_UCODE_API_MAX	19
++#define IWL7265_UCODE_API_MAX	17
+ #define IWL7265D_UCODE_API_MAX	19
+ 
+ /* Oldest version we won't warn about */
 
 
