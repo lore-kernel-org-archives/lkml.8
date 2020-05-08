@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7DAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875F0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE9624957
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6232A2495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588947515;
-	bh=53LwO8rnv+vb4J1WHGH9CksX2tbljO195oAcSXz+zfg=;
+	s=default; t=1588947546;
+	bh=loYZ0ETfyzFzT1Li0r8PdjuUJW+Y7T3jq5s2CY+tliY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=NU9AWqMDV/ZhOHKHr6u95vYNVhOopRhKEJZC3svOEWzQy+ZgHbGSToGrlaqwkxY4B
-	 lGbek5IZNZU97sfrgy3lJ0BL3wW+m1HGrF4z+sAd1SnR1clP1sVLhMcV19422VFrMp
-	 wf2J4ofUL8QbrvCxIrzpoxauCHPSSYBlMDG2Nlbg=
+	b=ZKO/lJmffKgRSZIreQ4iI5h9obKk980ieU6lMkofWF9XVjLqqhn4TQanAVK9eJUdM
+	 wCAcggrC4Ou5Cgp94KIC4C2hsEQWJZ6rtaiwI79Toql6gJqypS7iQEDDGqZU2nC5cB
+	 IA+qBay86jKo0pFVEVLFrWpOrvHCX+lTJBFcyWyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgEHOSe (ORCPT
+        id S1728097AbgEHOTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 10:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgEHOSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:18:32 -0400
+        id S1727869AbgEHOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:19:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB41E207DD;
-        Fri,  8 May 2020 14:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBBB024957;
+        Fri,  8 May 2020 14:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588947512;
-        bh=53LwO8rnv+vb4J1WHGH9CksX2tbljO195oAcSXz+zfg=;
+        s=default; t=1588947544;
+        bh=loYZ0ETfyzFzT1Li0r8PdjuUJW+Y7T3jq5s2CY+tliY=;
         h=Date:From:To:Cc:Subject:From;
-        b=pUuLUk6gufSxT23nM59YWonLFjs8D5FMFjfV37pt4j1l+KlS/50UuqqBld5K+leUf
-         oz/Lu+6lLdvrU4Rnl7n8n61g2hVoiCKUMGNgMfl0ddRuhZSYNo7dCWoTT/Z/tZC5eY
-         W5LMRNeapFSWBjgTYUspmmajeA+O2+VkX0f5vVzg=
-Date:   Fri, 8 May 2020 16:18:30 +0200
+        b=z/7EL+iv6lkU1ikd4fO20PLfeqIK7Sts29YEcHooTBIaAn+Ppl+cR1fYXDZD9C1kO
+         oFlEcTFMFErJnXVFXlU4mkBZXfNRYz3rCzl6kGavFHlVO9BL3Nc9prITDK9JMWvr5S
+         wHcRjK/W8LKU3RK8aZ+BlYHI3AL9eRZeOHF0nTJU=
+Date:   Fri, 8 May 2020 16:19:02 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [GIT PULL] Driver core fixes for 5.7-rc5
-Message-ID: <20200508141830.GA357188@kroah.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 5.7-rc5
+Message-ID: <20200508141902.GA360776@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,27 +60,23 @@ The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-5.7-rc5
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.7-rc5
 
-for you to fetch changes up to 2a15483b401c0b07e44b43b95414e36f32c02f32:
+for you to fetch changes up to f0e1d3ac2d7c16a5d2c9d67f5a61133db7681af8:
 
-  regulator: Revert "Use driver_deferred_probe_timeout for regulator_init_complete_work" (2020-04-29 19:57:45 +0200)
+  bus: mhi: core: Fix channel device name conflict (2020-05-05 16:59:54 +0200)
 
 ----------------------------------------------------------------
-Driver core fixes for 5.7-rc5
+Char/Misc driver fixes for 5.7-rc5
 
-Here are a number of small driver core fixes for 5.7-rc5 to resolve a
-bunch of reported issues with the current tree.
-
-Biggest here are the reverts and patches from John Stultz to resolve a
-bunch of deferred probe regressions we have been seeing in 5.7-rc right
-now.
-
-Along with those are some other smaller fixes:
-	- coredump crash fix
-	- devlink fix for when permissive mode was enabled
-	- amba and platform device dma_parms fixes
-	- component error silenced for when deferred probe happens
+Here are some small driver fixes for 5.7-rc5 that resolve a number of
+minor reported issues:
+	- mhi bus driver fixes found as people actually use the code
+	- phy driver fixes and compat string additions
+	- most driver fix due to link order changing when the core moved
+	  out of staging
+	- mei driver fix
+	- interconnect build warning fix
 
 All of these have been in linux-next for a while with no reported
 issues.
@@ -89,33 +84,55 @@ issues.
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-James Hilliard (1):
-      component: Silence bind error on -EPROBE_DEFER
+Bjorn Andersson (1):
+      phy: qualcomm: usb-hs-28nm: Prepare clocks in init
 
-John Stultz (4):
-      driver core: Revert default driver_deferred_probe_timeout value to 0
-      driver core: Use dev_warn() instead of dev_WARN() for deferred_probe_timeout warnings
-      driver core: Ensure wait_for_device_probe() waits until the deferred_probe_timeout fires
-      regulator: Revert "Use driver_deferred_probe_timeout for regulator_init_complete_work"
+ChenTao (1):
+      interconnect: qcom: Move the static keyword to the front of declaration
 
-Luis Chamberlain (1):
-      coredump: fix crash when umh is disabled
+Christian Gromm (1):
+      most: core: use function subsys_initcall()
 
-Saravana Kannan (1):
-      driver core: Fix handling of fw_devlink=permissive
+Dan Carpenter (1):
+      bus: mhi: core: Fix a NULL vs IS_ERR check in mhi_create_devices()
 
-Ulf Hansson (2):
-      driver core: platform: Initialize dma_parms for platform devices
-      amba: Initialize dma_parms for amba devices
+Greg Kroah-Hartman (1):
+      Merge tag 'phy-for-5.7-rc' of git://git.kernel.org/.../phy/linux-phy into char-misc-linus
 
- drivers/amba/bus.c              |  1 +
- drivers/base/component.c        |  8 +++++---
- drivers/base/core.c             |  7 ++++++-
- drivers/base/dd.c               | 20 ++++++++------------
- drivers/base/platform.c         |  2 ++
- drivers/regulator/core.c        | 25 +++++++++++--------------
- fs/coredump.c                   |  8 ++++++++
- include/linux/amba/bus.h        |  1 +
- include/linux/platform_device.h |  1 +
- kernel/umh.c                    |  5 +++++
- 10 files changed, 48 insertions(+), 30 deletions(-)
+Jeffrey Hugo (5):
+      bus: mhi: core: Make sure to powerdown if mhi_sync_power_up fails
+      bus: mhi: core: Remove link_status() callback
+      bus: mhi: core: Offload register accesses to the controller
+      bus: mhi: core: Fix typo in comment
+      bus: mhi: core: Fix channel device name conflict
+
+John Stultz (1):
+      phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+
+Kishon Vijay Abraham I (1):
+      MAINTAINERS: Add Vinod Koul as Generic PHY co-maintainer
+
+Manivannan Sadhasivam (1):
+      bus: mhi: Fix parsing of mhi_flags
+
+Thierry Reding (1):
+      phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
+
+Tomas Winkler (1):
+      mei: me: disable mei interface on LBG servers.
+
+ MAINTAINERS                                 |  3 ++-
+ drivers/bus/mhi/core/init.c                 |  7 +++----
+ drivers/bus/mhi/core/internal.h             |  3 ---
+ drivers/bus/mhi/core/main.c                 | 18 +++++-----------
+ drivers/bus/mhi/core/pm.c                   |  6 +++++-
+ drivers/interconnect/qcom/osm-l3.c          |  4 ++--
+ drivers/interconnect/qcom/sdm845.c          | 16 +++++++--------
+ drivers/misc/mei/hw-me.c                    |  8 ++++++++
+ drivers/misc/mei/hw-me.h                    |  4 ++++
+ drivers/misc/mei/pci-me.c                   |  2 +-
+ drivers/most/core.c                         |  2 +-
+ drivers/phy/qualcomm/phy-qcom-qusb2.c       |  7 +++++++
+ drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 32 +++++++++++++++++++----------
+ include/linux/mhi.h                         | 16 +++++++++------
+ 14 files changed, 77 insertions(+), 51 deletions(-)
