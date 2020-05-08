@@ -2,137 +2,117 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1094C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E313C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E78208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZ8/3BzU"
+	by mail.kernel.org (Postfix) with ESMTP id EB0D820708
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588916348;
+	bh=WUNFpbexbBahwuCqiE8urnH1AIAfy6nJTM/BIUStMtY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JLeOlFUSKRElzG68JcNNjCdNVg/58CrocihILPgfRZo4lE2cF02/uwYHiREpfryDU
+	 iUg1KcIKoidVwCLzZDk9XR+akyEqJ8HkUq6Sf1q5At5zQ1iI+7X4PEVLaCQozFhuVp
+	 7ftKBroC4Ay+kgdMr9DphsUYlHvyzbc4CV0VDCZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgEHFh6 (ORCPT
+        id S1726924AbgEHFjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgEHFgl (ORCPT
+        Fri, 8 May 2020 01:39:07 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:44662 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgEHFjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:36:41 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A7CC05BD0B
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:36:41 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id e2so739330ybm.19
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=EMaoPBnsp496f8fnle4PLwTyhTwnaVEb2fZ0BoIlE/s=;
-        b=jZ8/3BzUau6j8ZEvbsjxAuGI7hb6DTIvN/+4pZeSwdomRiSNh85BVtF9D8gUSNVzGW
-         0eWncZr8l/llXRWz7VqOOZykXeBtJ3SKKEDwFOtudoKFQnaFGvJxJmPF2nVefWSW6T1N
-         ujEs8CCMrw76bYxjsNxUwbOVzos4CsPvDRMCd5/PW/oSuWhkpIA3lRzQjco0kInXDbPm
-         8LmrpY+BMC3pKeUMPrR8rm5su1lRDsLumbV0h+zp0IpapZChomkqsjjuZcY5Cf2QXSOm
-         iDcH2pbz97F5r2NX7V3MQ5S2ooUU3tb01J5+66RrtZtTIz6KF+NJhOkHR6wRY5hgklGo
-         l52A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=EMaoPBnsp496f8fnle4PLwTyhTwnaVEb2fZ0BoIlE/s=;
-        b=EyolPbXUU6+GldUeXyeYECzu4l6eJKdw3rv9zzY7Z4Mdc+MnQz/Zcr2WUZLQ5GQQUR
-         IQfbViavJtkSWd06PRfb5aFINKgLUoY6Qg1BWSDGgJn6xBkl/DXuxxPw53aUm2lCbxEa
-         47cHyPxl1jofpRu4aCJ1dfYFYaaUAM1Ig8JepOYZVlSvQwMgMqh3ATJmAkxFkcaRh+8z
-         v3PlliGxMDAfoypzgpp1aCcZhxWGMdIuMf6dGsQnu4HjCyebwkQhc8COoPEGCi68H7cr
-         NwDgNbTVhUx/Z1Sn5M7LXurNQBfd7xb/UeJYzNpSENHqI29nPMhuNrmjpYUlyBPyU9s+
-         Ivtw==
-X-Gm-Message-State: AGi0PuZ1XnQeRqczXzvjW5N0g7ab8dVx8Rd3BzvcZwyXOVfr+jfDh7zy
-        5U43owsyw2x1JkfIcqEJpTt2SSAlUA2A
-X-Google-Smtp-Source: APiQypLQw6jwdcVMaZFQOy5PNutRW9zCylVfFgkKjPKR5hivKEFBHzRJZKkDf50HqYjqdKRWSm4C4Wle3tYc
-X-Received: by 2002:a25:51c1:: with SMTP id f184mr1837043ybb.448.1588916200664;
- Thu, 07 May 2020 22:36:40 -0700 (PDT)
-Date:   Thu,  7 May 2020 22:36:19 -0700
-In-Reply-To: <20200508053629.210324-1-irogers@google.com>
-Message-Id: <20200508053629.210324-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20200508053629.210324-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [RFC PATCH v3 04/14] libbpf: Fix memory leak and possible double-free
- in hashmap__clear
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-kernel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>,
-        Alston Tang <alston64@fb.com>, Ian Rogers <irogers@google.com>
+        Fri, 8 May 2020 01:39:06 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0485cZxi031330;
+        Fri, 8 May 2020 14:38:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0485cZxi031330
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588916316;
+        bh=6uORqD6LGkuneE9UyXFpz3pdT+rI/NDAz27a1vvxrh8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NUwDqeXXELLcOkjKZCwue1/kEnY37m9GUWM+cTPyPaxnBZRcDu1hLVRvCZLOS0RmJ
+         4L3slMUg4i1PWM7d7E+6wbDQVaS3Bg/lCQD9LysZ0wKJb5Zd4kSOzXLu4ZYnYpJzM3
+         lflOZ3cEBWv+HOZbG1/ZFu15JWSVnFl9VoxHPFkwP8AnVuo/bhpGIeXPmHp4qk2KCl
+         /4Tg0eVk6SG69UUrWxm1TAWHWTv1je/zmmezvxpkmH8fZTodwBmHbrBhEqvwAkx89m
+         +uB6RM4J748frMWQ5+egYqcIq6FjEVStRJDgblvsoKPoZakL7iGYQ45x40+vs8F8T8
+         YvOj+anNx+WRg==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id b14so121371vkk.10;
+        Thu, 07 May 2020 22:38:35 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYpnA4OQtpyRealflGhbPL/Wzo56CydWQuMd+9thdOtGE6pkuID
+        2+9JiAu4X8u+ef8SzCqTV9Qu7VnwTC+srUGBnrQ=
+X-Google-Smtp-Source: APiQypK2KtQbOWcXkPz3bng6woQqwWOOLWMJV6Iwtcl08hNJrkuCDHARFryG0giTq8cybfg6KE2ohPiN1TCNuzkRumM=
+X-Received: by 2002:a1f:8fc1:: with SMTP id r184mr496087vkd.12.1588916314505;
+ Thu, 07 May 2020 22:38:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200507185601.GA14759@embeddedor>
+In-Reply-To: <20200507185601.GA14759@embeddedor>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 8 May 2020 14:37:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS1bjKcczLADzP8JQ=CVe4VOFb1L3C4bb+0eS5zfBHubg@mail.gmail.com>
+Message-ID: <CAK7LNAS1bjKcczLADzP8JQ=CVe4VOFb1L3C4bb+0eS5zfBHubg@mail.gmail.com>
+Subject: Re: [PATCH] modpost: Replace zero-length array with flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+On Fri, May 8, 2020 at 3:51 AM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
-of the remaining entries. Also NULL-out bucket list to prevent possible
-double-free between hashmap__clear() and hashmap__free().
 
-Running test_progs-asan flavor clearly showed this problem.
+Applied to linux-kbuild. Thanks.
 
-Reported-by: Alston Tang <alston64@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/bpf/hashmap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index 54c30c802070..cffb96202e0d 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
- 
- void hashmap__clear(struct hashmap *map)
- {
-+	struct hashmap_entry *cur, *tmp;
-+	int bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
-+	}
- 	free(map->buckets);
-+	map->buckets = NULL;
- 	map->cap = map->cap_bits = map->sz = 0;
- }
- 
+
 -- 
-2.26.2.645.ge9eca65c58-goog
-
+Best Regards
+Masahiro Yamada
