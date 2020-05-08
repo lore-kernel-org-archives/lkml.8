@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22FDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B15CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA0A24959
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF3924958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942446;
-	bh=f0xr2TAEkyL4kye8GmlZwNW+yvmgzpgCK7AqH3ydBQA=;
+	s=default; t=1588942457;
+	bh=jwEotNsfUdSyH6WucGJ1xceQfxb4ELYe5N6RD+odaMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sy+m/12tpDPmpOsLINDUbjLa7bt9rDPV9Z5lyOa5XbLyLCWbkGPJLgzFWU1nJu7pU
-	 qgcV3SG81o5RGGAv7lrkyH3VcFiRo/kM7hPgTf07pIubG4kfCQj700/w7l6M+1TLNH
-	 o2VWLyaky1FvlE+2jXXwe3E+7TnFSyLvRXnGO9oA=
+	b=pZivHRxFeT2zdXWG0zTi+sQbCDgzHl8xFdjpddUHj0A+oGNhRl3eHdWTrIoy/vFVH
+	 2/Kbaqz/LX+mHgNeNQDePpC/irKTp9K1Kcet5r17N4dd4JzmMFRdjtSsxqFusT65hg
+	 o0r7oJkAtKMw5Wo5cdcK8CodNw8Dh204Ns0G3DNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgEHMyF (ORCPT
+        id S1730185AbgEHMyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36090 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgEHMyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:01 -0400
+        id S1730160AbgEHMyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A183524967;
-        Fri,  8 May 2020 12:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CBD724958;
+        Fri,  8 May 2020 12:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942441;
-        bh=f0xr2TAEkyL4kye8GmlZwNW+yvmgzpgCK7AqH3ydBQA=;
+        s=default; t=1588942448;
+        bh=jwEotNsfUdSyH6WucGJ1xceQfxb4ELYe5N6RD+odaMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rc0qYP6qoegmrh/wKpNEfeGKdZwm4XHdJhectAjOA6mbucznc1qVowYJBQxfHgYr3
-         AtIj/1PQ1BFdxAuEnDjv6z9CjNlA+cMS7rmhafWi+Vo25zJHI/Kyr69czfTT8Gaao6
-         vd5igqx27cdJki7omZKWVtUlPTfvKy6PclBKrKaw=
+        b=I+xNkfktjJHSxCZRYsd55qzGipLgQ6FscTwh0JxMFOBRwvEsHkP3VSzhDRMDhiC/Z
+         2nT7YzgW5Yeo/jFj+PIHWWvxQ5lsoyTQ06Enids/qjyXLPWT4lUSrCqsBXp0MIwYYN
+         pZEgrX/Q6KHD3sP56WZULYkdzK0t4b+Ypx0I+9Ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.4 46/50] mm/mremap: Add comment explaining the untagging behaviour of mremap()
-Date:   Fri,  8 May 2020 14:35:52 +0200
-Message-Id: <20200508123049.388415423@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 49/50] udp: document udp_rcv_segment special case for looped packets
+Date:   Fri,  8 May 2020 14:35:55 +0200
+Message-Id: <20200508123049.719667187@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -61,47 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Willem de Bruijn <willemb@google.com>
 
-commit b2a84de2a2deb76a6a51609845341f508c518c03 upstream.
+commit d0208bf4da97f76237300afb83c097de25645de6 upstream.
 
-Commit dcde237319e6 ("mm: Avoid creating virtual address aliases in
-brk()/mmap()/mremap()") changed mremap() so that only the 'old' address
-is untagged, leaving the 'new' address in the form it was passed from
-userspace. This prevents the unexpected creation of aliasing virtual
-mappings in userspace, but looks a bit odd when you read the code.
+Commit 6cd021a58c18a ("udp: segment looped gso packets correctly")
+fixes an issue with rare udp gso multicast packets looped onto the
+receive path.
 
-Add a comment justifying the untagging behaviour in mremap().
+The stable backport makes the narrowest change to target only these
+packets, when needed. As opposed to, say, expanding __udp_gso_segment,
+which is harder to reason to be free from unintended side-effects.
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+But the resulting code is hardly self-describing.
+Document its purpose and rationale.
+
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mremap.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/net/udp.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -606,6 +606,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, a
- 	LIST_HEAD(uf_unmap_early);
- 	LIST_HEAD(uf_unmap);
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -476,6 +476,13 @@ static inline struct sk_buff *udp_rcv_se
+ 	if (!inet_get_convert_csum(sk))
+ 		features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
  
-+	/*
-+	 * There is a deliberate asymmetry here: we strip the pointer tag
-+	 * from the old address but leave the new address alone. This is
-+	 * for consistency with mmap(), where we prevent the creation of
-+	 * aliasing mappings in userspace by leaving the tag bits of the
-+	 * mapping address intact. A non-zero tag will cause the subsequent
-+	 * range checks to reject the address as invalid.
-+	 *
-+	 * See Documentation/arm64/tagged-address-abi.rst for more information.
++	/* UDP segmentation expects packets of type CHECKSUM_PARTIAL or
++	 * CHECKSUM_NONE in __udp_gso_segment. UDP GRO indeed builds partial
++	 * packets in udp_gro_complete_segment. As does UDP GSO, verified by
++	 * udp_send_skb. But when those packets are looped in dev_loopback_xmit
++	 * their ip_summed is set to CHECKSUM_UNNECESSARY. Reset in this
++	 * specific case, where PARTIAL is both correct and required.
 +	 */
- 	addr = untagged_addr(addr);
+ 	if (skb->pkt_type == PACKET_LOOPBACK)
+ 		skb->ip_summed = CHECKSUM_PARTIAL;
  
- 	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
 
 
