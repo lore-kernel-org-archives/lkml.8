@@ -2,182 +2,159 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0BFC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2BAC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5431208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BCF208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgEHIin (ORCPT
+        id S1727099AbgEHIjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:38:43 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:47770 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgEHIim (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:38:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 90BD92002599;
-        Fri,  8 May 2020 16:38:39 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sYuJwQqgygTE; Fri,  8 May 2020 16:38:39 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 783632002518;
-        Fri,  8 May 2020 16:38:39 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 74876C019F9;
-        Fri,  8 May 2020 16:38:39 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 70CD8201641; Fri,  8 May 2020 16:38:39 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>,
-        Jack Lo <jack.lo@gtsys.com.hk>
-Cc:     Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v0 1/1] spi: spi-rockchip: add support for spi slave_mode
-Date:   Fri,  8 May 2020 16:37:29 +0800
-Message-Id: <20200508083729.5560-2-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200508083729.5560-1-chris.ruehl@gtsys.com.hk>
-References: <20200508083729.5560-1-chris.ruehl@gtsys.com.hk>
+        Fri, 8 May 2020 04:39:46 -0400
+Received: from mx.socionext.com ([202.248.49.38]:6264 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgEHIjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:39:46 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 May 2020 17:39:44 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 6E0DB60057;
+        Fri,  8 May 2020 17:39:44 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 8 May 2020 17:39:44 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id E913F1A12B9;
+        Fri,  8 May 2020 17:39:43 +0900 (JST)
+Received: from [10.213.29.153] (unknown [10.213.29.153])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 1AB5F120136;
+        Fri,  8 May 2020 17:39:43 +0900 (JST)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
+ controller description
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1584956454-8829-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1584956454-8829-2-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <9af851d6-03a2-1c4f-1749-4ebd2ce0465c@socionext.com>
+Date:   Fri, 8 May 2020 17:39:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1584956454-8829-2-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch aim to add spi slave mode support to the rockchip driver.
-Fix the wrong usage of num_cs set fix to ROCKCHIP_SPI_MAX_CS_NUM,
-instead use max_native_cs flag to set the limit of native chip-select.
-Enable use_gpio_descriptors to have cs_gpiod for gpio based chip-selects.
+On 2020/03/23 18:40, Kunihiko Hayashi wrote:
+> Add DT bindings for PCIe controller implemented in UniPhier SoCs
+> when configured in endpoint mode. This controller is based on
+> the DesignWare PCIe core.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>   .../devicetree/bindings/pci/uniphier-pcie-ep.txt   | 53 ++++++++++++++++++++++
+>   MAINTAINERS                                        |  2 +-
+>   2 files changed, 54 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+> new file mode 100644
+> index 0000000..072dc78
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+> @@ -0,0 +1,53 @@
+> +Socionext UniPhier PCIe endpoint controller bindings
+> +
+> +This describes the devicetree bindings for PCIe endpoint controller
+> +implemented on Socionext UniPhier SoCs.
+> +
+> +UniPhier PCIe endpoint controller is based on the Synopsys DesignWare
+> +PCI core. It shares common functions with the PCIe DesignWare core driver
+> +and inherits common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +
+> +Required properties:
+> +- compatible: Should be
+> +	"socionext,uniphier-pro5-pcie-ep" for Pro5 SoC
+> +- reg: Specifies offset and length of the register set for the device.
+> +	According to the reg-names, appropriate register sets are required.
+> +- reg-names: Must include the following entries:
+> +	"dbi"        - controller configuration registers
+> +	"dbi2"       - controller configuration registers for shadow
+> +	"link"       - SoC-specific glue layer registers
+> +	"addr_space" - PCIe configuration space
+> +- clocks: A phandle to the clock gate for PCIe glue layer including
+> +	the endpoint controller.
+> +- clock-names: Should contain the following:
+> +	"gio", "link" - for Pro5 SoC
+> +- resets: A phandle to the reset line for PCIe glue layer including
+> +	the endpoint controller.
+> +- reset-names: Should contain the following:
+> +	"gio", "link" - for Pro5 SoC
+> +
+> +Optional properties:
+> +- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
+> +	phys are required.
+> +- phy-names: Must be "pcie-phy".
+> +
+> +Example:
+> +
+> +	pcie_ep: pcie-ep@66000000 {
+> +		compatible = "socionext,uniphier-pro5-pcie-ep",
+> +			     "snps,dw-pcie-ep";
+> +		status = "disabled";
+> +		reg-names = "dbi", "dbi2", "link", "addr_space";
+> +		reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
+> +		      <0x66010000 0x10000>, <0x67000000 0x400000>;
+> +		clock-names = "gio", "link";
+> +		clocks = <&sys_clk 12>, <&sys_clk 24>;
+> +		reset-names = "gio", "link";
+> +		clocks = <&sys_rst 12>, <&sys_rst 24>;
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+This example contains a mistake. I'll fix it.
+
+> +		num-ib-windows = <16>;
+> +		num-ob-windows = <16>;
+> +		num-lanes = <4>;
+> +		phy-names = "pcie-phy";
+> +		phys = <&pcie_phy>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 50e8b90..01a4631 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13151,7 +13151,7 @@ PCIE DRIVER FOR SOCIONEXT UNIPHIER
+>   M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>   L:	linux-pci@vger.kernel.org
+>   S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> +F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
+>   F:	drivers/pci/controller/dwc/pcie-uniphier.c
+>   
+>   PCIE DRIVER FOR ST SPEAR13XX
+> 
+
+It is my chance to convert this to dt-schema.
+I'll fix above and send dt-schema version in next.
+
+Thank you,
+  
 ---
- drivers/spi/spi-rockchip.c | 46 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 70ef63e0b6b8..9c1ff52c0f85 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -183,6 +183,9 @@ struct rockchip_spi {
- 	u8 rsd;
- 
- 	bool cs_asserted[ROCKCHIP_SPI_MAX_CS_NUM];
-+
-+	bool slave_mode;
-+	bool slave_abort;
- };
- 
- static inline void spi_enable_chip(struct rockchip_spi *rs, bool enable)
-@@ -359,7 +362,7 @@ static void rockchip_spi_dma_rxcb(void *data)
- 	struct rockchip_spi *rs = spi_master_get_devdata(master);
- 	int state = atomic_fetch_andnot(RXDMA, &rs->state);
- 
--	if (state & TXDMA)
-+	if (state & TXDMA && !rs->slave_abort)
- 		return;
- 
- 	spi_enable_chip(rs, false);
-@@ -372,7 +375,7 @@ static void rockchip_spi_dma_txcb(void *data)
- 	struct rockchip_spi *rs = spi_master_get_devdata(master);
- 	int state = atomic_fetch_andnot(TXDMA, &rs->state);
- 
--	if (state & RXDMA)
-+	if (state & RXDMA && !rs->slave_abort)
- 		return;
- 
- 	/* Wait until the FIFO data completely. */
-@@ -466,6 +469,10 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
- 	u32 cr1;
- 	u32 dmacr = 0;
- 
-+	if (rs->slavemode)
-+		cr0 |= CR0_OPM_SLAVE << CR0_OPM_OFFSET;
-+	rs->slave_abort = false;
-+
- 	cr0 |= rs->rsd << CR0_RSD_OFFSET;
- 	cr0 |= (spi->mode & 0x3U) << CR0_SCPH_OFFSET;
- 	if (spi->mode & SPI_LSB_FIRST)
-@@ -535,6 +542,16 @@ static size_t rockchip_spi_max_transfer_size(struct spi_device *spi)
- 	return ROCKCHIP_SPI_MAX_TRANLEN;
- }
- 
-+static int rockchip_spi_slave_abort(struct spi_master *master)
-+{
-+	struct rockchip_spi *rs = spi_master_get_devdata(master);
-+
-+	rs->slave_abort = true;
-+	complete(master);
-+
-+	return 0;
-+}
-+
- static int rockchip_spi_transfer_one(
- 		struct spi_master *master,
- 		struct spi_device *spi,
-@@ -589,14 +606,25 @@ static int rockchip_spi_probe(struct platform_device *pdev)
- 	struct spi_master *master;
- 	struct resource *mem;
- 	u32 rsd_nsecs;
-+	bool slave_mode;
-+	u32 num_cs = 1;
-+
-+	slave_mode = of_property_read_bool(np, "spi-slave");
-+
-+	if (slave_mode)
-+		master = spi_alloc_slave(&pdev->dev,
-+				sizeof(struct rockchip_spi));
-+	else
-+		master = spi_alloc_master(&pdev->dev,
-+				sizeof(struct rockchip_spi));
- 
--	master = spi_alloc_master(&pdev->dev, sizeof(struct rockchip_spi));
- 	if (!master)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, master);
- 
- 	rs = spi_master_get_devdata(master);
-+	rs->slave_mode = slave_mode;
- 
- 	/* Get basic io resource and map it */
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -676,7 +704,16 @@ static int rockchip_spi_probe(struct platform_device *pdev)
- 	master->auto_runtime_pm = true;
- 	master->bus_num = pdev->id;
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LOOP | SPI_LSB_FIRST;
--	master->num_chipselect = ROCKCHIP_SPI_MAX_CS_NUM;
-+	if (slave_mode) {
-+		master->mode_bits |= SPI_NO_CS;
-+		master->slave_abort = rockchip_spi_slave_abort;
-+	} else {
-+		of_property_read_u32(np, "num-cs", &num_cs);
-+		master->num_chipselect = num_cs;
-+		master->use_gpio_descriptors = true;
-+		master->max_native_cs = ROCKCHIP_SPI_MAX_CS_NUM;
-+		master->flags = SPI_MASTER_GPIO_SS;
-+	}
- 	master->dev.of_node = pdev->dev.of_node;
- 	master->bits_per_word_mask = SPI_BPW_MASK(16) | SPI_BPW_MASK(8) | SPI_BPW_MASK(4);
- 	master->min_speed_hz = rs->freq / BAUDR_SCKDV_MAX;
-@@ -686,7 +723,6 @@ static int rockchip_spi_probe(struct platform_device *pdev)
- 	master->transfer_one = rockchip_spi_transfer_one;
- 	master->max_transfer_size = rockchip_spi_max_transfer_size;
- 	master->handle_err = rockchip_spi_handle_err;
--	master->flags = SPI_MASTER_GPIO_SS;
- 
- 	master->dma_tx = dma_request_chan(rs->dev, "tx");
- 	if (IS_ERR(master->dma_tx)) {
--- 
-2.20.1
-
+Best Regards
+Kunihiko Hayashi
