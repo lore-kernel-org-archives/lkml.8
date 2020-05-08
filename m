@@ -2,156 +2,173 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F73BC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8EBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 669E22184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B922070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A7fUtC8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHUrM (ORCPT
+        id S1727854AbgEHUsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:47:12 -0400
-Received: from mga01.intel.com ([192.55.52.88]:15188 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgEHUrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:47:12 -0400
-IronPort-SDR: DuKItoW6HSsPJmI6EKlOM9RKO+Kz3gxu7ArplrGslXFAMo/Iqwse1lpMyHjc9Ogy09IVVIB44U
- BimMnZV9PeWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 13:47:11 -0700
-IronPort-SDR: Ws67Aagq7YgG2snBGVk1C1ZIy3paurbwnrKJK/rpqD2iq5oG5Lx0moxzX7x1HOFOuxtYO7W/k8
- GGimup1grgVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="296258718"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 13:47:10 -0700
-Date:   Fri, 8 May 2020 13:47:10 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200508204710.GA78778@otc-nc-03>
-References: <20200424124444.GJ13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com>
- <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
+        Fri, 8 May 2020 16:48:32 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45712 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726883AbgEHUsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 16:48:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588970911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PABbYX5l1s1Q7QOkyDr67VfhHwZx5DccKVnVnS2WJ7Q=;
+        b=A7fUtC8hkDfHM+LbvdcB4mOP6Q7psRZqatWsS4Ni5YaXKjAKhcEun7wT7qywzFhtASd+jD
+        F0ZaaBUenMZyHveRFQ7zDBCY/5pqPlDaj3P5JGZrvgVRwyxzGcSO9xIgRTBsqW7h7MUyIb
+        ONkD0+ptBNm63GNdqtGP3/Hjlk7KBXY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-238-unhX4jLNPO2o-MomrFUNfQ-1; Fri, 08 May 2020 16:48:29 -0400
+X-MC-Unique: unhX4jLNPO2o-MomrFUNfQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 664A48018A6;
+        Fri,  8 May 2020 20:48:25 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-118-29.rdu2.redhat.com [10.10.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EE5B5D9CA;
+        Fri,  8 May 2020 20:48:17 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Liang Chen" <cl@rock-chips.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ben Dooks" <ben.dooks@codethink.co.uk>,
+        "Tejun Heo" <tj@kernel.org>, "Petr Mladek" <pmladek@suse.com>,
+        "Suren Baghdasaryan" <surenb@google.com>,
+        "Lyude Paul" <lyude@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "David Airlie" <airlied@linux.ie>,
+        "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        "Thomas Zimmermann" <tzimmermann@suse.de>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        "Ilia Mirkin" <imirkin@alum.mit.edu>,
+        "Peteris Rudzusiks" <peteris.rudzusiks@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Gerd Hoffmann" <kraxel@redhat.com>,
+        "Sam Ravnborg" <sam@ravnborg.org>,
+        "Chris Wilson" <chris@chris-wilson.co.uk>,
+        "Pankaj Bharadiya" <pankaj.laxminarayan.bharadiya@intel.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        "Takashi Iwai" <tiwai@suse.de>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Jani Nikula" <jani.nikula@intel.com>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Subject: [RFC v4 00/12] drm/nouveau: Introduce CRC support for gf119+
+Date:   Fri,  8 May 2020 16:46:50 -0400
+Message-Id: <20200508204751.155488-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason
+Nvidia released some documentation on how CRC support works on their
+GPUs, hooray!
 
-In general your idea of moving pure emulation code to user space 
-is a good strategy.
+So: this patch series implements said CRC support in nouveau, along with
+adding some special debugfs interfaces for some relevant igt-gpu-tools
+tests (already on the ML).
 
+First - we add some new functionality to kthread_work in the kernel, and
+then use this to add a new feature to DRM that Ville Syrjälä came up
+with: vblank workers. Basically, this is just a generic DRM interface
+that allows for scheduling high-priority workers that start on a given
+vblank interrupt. Note that while we're currently only using this in
+nouveau, Intel has plans to use this for i915 as well (hence why they
+came up with it!).
 
-On Wed, Apr 29, 2020 at 02:42:20AM -0700, Tian, Kevin wrote:
-> > From: Jason Gunthorpe <jgg@mellanox.com>
-> > Sent: Monday, April 27, 2020 9:22 PM
-> > 
-> > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
-> > 
-> > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
-> > > > emulation.
-> > >
-> > > Not sure what you're referring to, I see about 30 lines of code in
-> > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
-> > > config space and maybe a couple hundred lines of code in total handling
-> > > config space emulation.  Thanks,
-> > 
-> > Look around vidxd_do_command()
-> > 
-> > If I understand this flow properly..
-> > 
-> 
-> Hi, Jason,
-> 
-> I guess the 2000 lines mostly refer to the changes in mdev.c and vdev.c. 
-> We did a break-down among them:
-> 
-> 1) ~150 LOC for vdev initialization
-> 2) ~150 LOC for cfg space emulation
-> 3) ~230 LOC for mmio r/w emulation
-> 4) ~500 LOC for controlling the work queue (vidxd_do_command), 
-> triggered by write emulation of IDXD_CMD_OFFSET register
-> 5) the remaining lines are all about vfio-mdev registration/callbacks,
-> for reporting mmio/irq resource, eventfd, mmap, etc.
-> 
-> 1/2/3) are pure device emulation, which counts for ~500 LOC. 
-> 
-> 4) needs be in the kernel regardless of which uAPI is used, because it
-> talks to the physical work queue (enable, disable, drain, abort, reset, etc.)
-> 
-> Then if just talking about ~500 LOC emulation code left in the kernel, 
-> is it still a big concern to you? 😊
+And finally: in order to implement the last feature, we expose some new
+functions in the kernel's kthread_worker infrastructure so that we can
+de-complicate our implementation of this.
 
-Even when uaccel was under development, one of the options
-was to use VFIO as the transport, goal was the same i.e to keep
-the user space have one interface. But the needs of generic 
-user space application is significantly different from exporting
-a more functional device model to guest, which isn't full emulated
-device. which is why VFIO didn't make sense for native use.
+Anyway-welcome to the future! :)
 
-And when we move things from VFIO which is already established
-as a general device model and accepted by multiple VMM's it gives
-instant footing without a whole redesign. When we move things from 
-VFIO to uaccel to bolt on the functionality like VFIO, I suspect we 
-would be moving code/functionality from VFIO to Uaccel. I don't know
-what the net gain would be.
+Major changes since v3:
+* Style fixes on nouveau patches from checkpatch, no functional changes
+* Don't integrate so tightly with kthread_work (and use our own lock),
+  instead introduce some new functions for doing simple async flushing
+  and cancelling. I think this interface looks a lot more acceptable
+  then what I was previously trying.
+* Apply some changes requested by danvet
+Major changes since v2:
+* Use kthread_worker instead of kthreadd for vblank workers
+* Don't check debugfs return values
 
-IMS is being reworked based on your feedback. And for mdev
-since the code is minimal for emulation, and rest are control paths
-that need kernel code to deal with.
+Lyude Paul (12):
+  kthread: Add kthread_queue_flush_work()
+  kthread: Add kthread_(un)block_work_queuing() and
+    kthread_work_queuable()
+  drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
+  drm/vblank: Add vblank works
+  drm/nouveau/kms/nv50-: Unroll error cleanup in nv50_head_create()
+  drm/nouveau/kms/nv140-: Don't modify depth in state during atomic
+    commit
+  drm/nouveau/kms/nv50-: Fix disabling dithering
+  drm/nouveau/kms/nv50-: s/harm/armh/g
+  drm/nouveau/kms/nv140-: Track wndw mappings in nv50_head_atom
+  drm/nouveau/kms/nv50-: Expose nv50_outp_atom in disp.h
+  drm/nouveau/kms/nv50-: Move hard-coded object handles into header
+  drm/nouveau/kms/nvd9-: Add CRC support
 
-For mdev, would you agree we can keep the current architecture,
-and investigate moving some emulation code to user space (say even for
-standard vfio_pci) and then expand scope later.
+ drivers/gpu/drm/drm_vblank.c                | 280 +++++++-
+ drivers/gpu/drm/nouveau/dispnv04/crtc.c     |  25 +-
+ drivers/gpu/drm/nouveau/dispnv50/Kbuild     |   4 +
+ drivers/gpu/drm/nouveau/dispnv50/atom.h     |  21 +
+ drivers/gpu/drm/nouveau/dispnv50/core.h     |   4 +
+ drivers/gpu/drm/nouveau/dispnv50/core907d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/core917d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/corec37d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/corec57d.c |   3 +
+ drivers/gpu/drm/nouveau/dispnv50/crc.c      | 715 ++++++++++++++++++++
+ drivers/gpu/drm/nouveau/dispnv50/crc.h      | 125 ++++
+ drivers/gpu/drm/nouveau/dispnv50/crc907d.c  | 139 ++++
+ drivers/gpu/drm/nouveau/dispnv50/crcc37d.c  | 153 +++++
+ drivers/gpu/drm/nouveau/dispnv50/disp.c     |  65 +-
+ drivers/gpu/drm/nouveau/dispnv50/disp.h     |  24 +
+ drivers/gpu/drm/nouveau/dispnv50/handles.h  |  16 +
+ drivers/gpu/drm/nouveau/dispnv50/head.c     | 142 +++-
+ drivers/gpu/drm/nouveau/dispnv50/head.h     |  13 +-
+ drivers/gpu/drm/nouveau/dispnv50/head907d.c |  14 +-
+ drivers/gpu/drm/nouveau/dispnv50/headc37d.c |  27 +-
+ drivers/gpu/drm/nouveau/dispnv50/headc57d.c |  20 +-
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c     |  15 +-
+ drivers/gpu/drm/nouveau/nouveau_display.c   |  60 +-
+ include/drm/drm_vblank.h                    |  35 +
+ include/linux/kthread.h                     |  35 +
+ kernel/kthread.c                            | 133 +++-
+ 26 files changed, 1903 insertions(+), 174 deletions(-)
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc.h
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crc907d.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/crcc37d.c
+ create mode 100644 drivers/gpu/drm/nouveau/dispnv50/handles.h
 
-Cheers
-Ashok
+-- 
+2.25.4
+
