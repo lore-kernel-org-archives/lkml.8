@@ -2,125 +2,111 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90B1C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2C3C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B052C2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588974917;
-	bh=QzBiIELkg1C+qDFWMGUMh1SR3/R1/Yv6WqMqgVBIMw8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=T2I+aOtpGzxLkMfvDqNtVy6obHSoYh0WR/R6yGUPt+pFzCqWrWjkbK0u/h6TA6Oj7
-	 tt7gXxiQ1WvXCVeocbfTy2IMDjgCp61tY+DmSoFDuovzu2Xq/Zqa2/ErYUIBH4ZAxa
-	 YMa9foRI593goF+lsUQIl0ZoY5acEK9KFiwFPmjo=
+	by mail.kernel.org (Postfix) with ESMTP id 1B1D724954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgEHVzR (ORCPT
+        id S1728037AbgEHVzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47804 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 17:55:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:19627 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgEHVzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:55:16 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD4D21655;
-        Fri,  8 May 2020 21:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588974915;
-        bh=QzBiIELkg1C+qDFWMGUMh1SR3/R1/Yv6WqMqgVBIMw8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PMKrUzgFDjtNBU9HrXrsVp617PVUm9orMHSuuq4807RbSfVJg/pP84LUCmF0EDMD/
-         +7mMUjLBgrvqVAsCOCqsJ9II0XPEgNlgIr05Ciuu8qRk9RrwANZ6U6NWe8U5Vj2vgw
-         nM+OzpdZlxvIfaqlJv8unbqoN/vsCDft3UXFgKAY=
-Date:   Fri, 8 May 2020 16:55:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI: Prevent Pericom USB controller OHCI/EHCI PME#
- defect
-Message-ID: <20200508215514.GA93513@bjorn-Precision-5520>
+        id S1726811AbgEHVzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:55:55 -0400
+IronPort-SDR: ddxPC0XhQ8ng1SaWPZeAJR2MaYq0BvirMJu5H4phmP6rNmFAV5p+noA+0SXkhV7LwH9vfI+VnB
+ fCrnwYRy0k6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 14:55:55 -0700
+IronPort-SDR: faDwe0qsW+1ukx6gtqf2FNdfZID/PdXiS9P2RNbqybxyERk/hVALIpsh97hopEwKN2iPWIbwaE
+ Ydz+t3Kon7yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="408247630"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 14:55:54 -0700
+Date:   Fri, 8 May 2020 14:55:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com, x86@kernel.org,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, mchehab+samsung@kernel.org,
+        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
+        akpm@linux-foundation.org, steven.price@arm.com,
+        rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] KVM: SVM: Add support for MPK feature on AMD
+Message-ID: <20200508215554.GT27052@linux.intel.com>
+References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
+ <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200508065343.32751-2-kai.heng.feng@canonical.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:53:41PM +0800, Kai-Heng Feng wrote:
-> Both Pericom OHCI and EHCI devices support PME# from all power states:
-> 06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
-> 	Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
-> 	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Interrupt: pin A routed to IRQ 17
-> 	Region 0: Memory at a5502000 (32-bit, non-prefetchable) [size=4K]
-> 	Capabilities: [80] Power Management version 3
-> 		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-> 		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+On Fri, May 08, 2020 at 04:10:03PM -0500, Babu Moger wrote:
+> The Memory Protection Key (MPK) feature provides a way for applications
+> to impose page-based data access protections (read/write, read-only or
+> no access), without requiring modification of page tables and subsequent
+> TLB invalidations when the application changes protection domains.
 > 
-> 06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
-> 	Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
-> 	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Interrupt: pin C routed to IRQ 19
-> 	Region 0: Memory at a5500000 (32-bit, non-prefetchable) [size=256]
-> 	Capabilities: [80] Power Management version 3
-> 		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-> 		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+> This feature is already available in Intel platforms. Now enable the
+> feature on AMD platforms.
 > 
-> Though my original approach [1] appears to work, further testing shows
-> that there is a 20% chance PME# won't be asserted when USB device is
-> plugged.
+> AMD documentation for MPK feature is available at "AMD64 Architecture
+> Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
+> Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
+> obtained at the link below.
 > 
-> So remove the PME support for both devices to make USB plugging works.
-> 
-> [1] https://lore.kernel.org/lkml/20191227092405.29588-1-kai.heng.feng@canonical.com/
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-Applied both with Greg's ack to pci/pm for v5.8, thanks!
-
-I added stable tags to both; let me know if you don't want that.
-
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
 > ---
->  drivers/pci/quirks.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  arch/x86/kvm/svm/svm.c |    4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ca9ed5774eb1..db2590243f0d 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5568,6 +5568,18 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
->  
-> +/*
-> + * Device [12d8:0x400e] and [12d8:0x400f]
-> + * PME# doesn't always get asserted on all power states claim to support PME#
-> + */
-> +static void pci_fixup_no_pme(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "PME# isn't reliable, disabling it\n");
-> +	dev->pme_support = 0;
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 2f379bacbb26..37fb41ad9149 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -818,6 +818,10 @@ static __init void svm_set_cpu_caps(void)
+>  	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+>  	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+>  		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
 > +
->  static void apex_pci_fixup_class(struct pci_dev *pdev)
->  {
->  	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
-> -- 
-> 2.17.1
+> +	/* PKU is not yet implemented for shadow paging. */
+> +	if (npt_enabled && boot_cpu_has(X86_FEATURE_OSPKE))
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
+
+This can actually be done in common code as well since both VMX and SVM
+call kvm_set_cpu_caps() after kvm_configure_mmu(), i.e. key off of
+tdp_enabled.
+
+>  }
+>  
+>  static __init int svm_hardware_setup(void)
 > 
