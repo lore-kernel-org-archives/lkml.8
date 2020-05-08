@@ -2,399 +2,104 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131D2C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4D1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D6B20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C8D208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgEHKJ2 (ORCPT
+        id S1726913AbgEHKKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:09:28 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41388 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgEHKJ1 (ORCPT
+        Fri, 8 May 2020 06:10:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:56515 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgEHKKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:09:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8A5CF80307C7;
-        Fri,  8 May 2020 10:09:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yZfv1XbDoAXA; Fri,  8 May 2020 13:09:21 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lee Jones <lee.jones@linaro.org>, <linux-mips@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: [PATCH] mtd: physmap: Add Baikal-T1 physically mapped ROMs support
-Date:   Fri, 8 May 2020 13:08:55 +0300
-Message-ID: <20200508100905.5854-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 06:10:52 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MjPYI-1irriC0HE2-00kyVw; Fri, 08 May 2020 12:10:50 +0200
+Received: by mail-qt1-f181.google.com with SMTP id x12so768596qts.9;
+        Fri, 08 May 2020 03:10:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PubM1AJMs2SPzyREk1dNDm+Ef132FiQbX3qxneCk/+n8pwUXM/1B
+        /NCWZJreM5ihguzXpz/DaSDEkiNR55Y10MPCzx8=
+X-Google-Smtp-Source: APiQypIExSSlqA8yisz6W2ZLVMPQ/wADq+SWrAtp8zPZ88mwmRPwDsgp08zt9Fp0MCbGchCGJqbxIfTbLpDmW0GLnAY=
+X-Received: by 2002:ac8:2bce:: with SMTP id n14mr2162626qtn.18.1588932648766;
+ Fri, 08 May 2020 03:10:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200508095914.20509-1-grygorii.strashko@ti.com>
+In-Reply-To: <20200508095914.20509-1-grygorii.strashko@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 8 May 2020 12:10:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
+Message-ID: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
+Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
+ TI_CPTS_MOD workaround
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Networking <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+qrP48GYxWtsysT2SpoHntkSQ4zxwhAWRpqIiuLA9lj+qKiLLvF
+ 7K2NZFCXh9TEslfE98abhA93G+YP2CAYgvW5CQSXWaFhydtbdGyHpZqloKPsSleDbc1ULJL
+ kxfuR9A645lLHahWvsUoOuCJ7UEvM6z/QgJSuNn2HvBukic1DJjfT9ZrzcMyly2EygNY/NB
+ H+BBvitw01j3BDekVWuhA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EPX1zmu9EZs=:b66kWz7wlyXK8CaGzsC5R1
+ OIJTXQHxeIZjq9yFwdzgGaAYvKFtHDJMCyTkNvM2Z4lGddGAzWjUwuimCudzObZlYmXXd/vEM
+ cj+wcjVNLKTDljX7LhMayi7QgmZOJOqflSlPu8fVkL4iue4+X86SMe7O+fYyEB7orCaXhbtkd
+ ukKIngEA/BB62XP5L+osCwcTnoSsDzYPBVCf5Me4hAVhSi0TX27tl7VfsQD/OG02ZaW7dbrJ9
+ YZHS0V7S9VWxFRfSDQxUnxTHzrL/MjyNPTzTH3O9fLE5IdXs+OaxbcaaiHSxjDSvpUk+34/di
+ WtIoJfl6VG6EySx7jlI4t5WAC65VC0DlH/7h3cvpK7EtTa4DkfGuE/0O3soZdKT1hZeBl1FaL
+ wDl9qLUVzP7YUNhXO0iMtBeQ8Wt9GQcV7q9eXMbefuB52mAtbvUGY6ASfSpsCp8LhzvBoFV8q
+ zz+XppeWGE2MQHAHscK9mNnRnJ/clKjjfibr2zVgUkaguTNhxuQDGSRMiHXFNxkdtDmUaA2Pz
+ +cNiRJclP/3EUxjK1+9czlk966qDK1gVJcfx/yT+DP/DSa7FPkjik81Cn+99vrsiDR0j/aQnO
+ OYGmLYBeBdnsRxBauMO+yubSuwQ+W94NdX2u8NCK0ypGQTOFdlgv+TMscQUY7slnZjdi1vw7j
+ Q6ixFZ+c9NpkfkMiW85Nv+GmQQKy9GFJ7x8y9x29PmQwNQZOWFhrwVT8f9YiAIimtBumgv+ZG
+ 6jUYkH6h4MznC1xflf0+Vjl4+56yTRma/BaAHqZ80isUc6OkhBPszNGwdmDBUgr7m9dKAlWUi
+ pEkf3zMa+MxDoMVtCGkvkLf7DXcGozFP66hNJBA8I1nnCHXJgU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baikal-T1 Boot Controller provides an access to a RO storages, which are
-physically mapped into the MMIO space. In particularly there are the
-Internal ROM embedded into the SoC with a pre-installed firmware,
-externally attached SPI flash (also accessed in the read-only mode) and a
-memory region, which mirrors one of them in accordance with the currently
-enabled system boot mode (also called Boot ROM).
+On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+> From: Clay McClure <clay@daemons.net>
+>
+> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
+> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
+> form:
+>
+> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+>  ...
+>
+> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+> functions) _is_ enabled. So we end up compiling calls to functions that
+> don't exist, resulting in the linker errors.
+>
+> This patch fixes build errors and restores previous behavior by:
+>  - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+>  - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
 
-This commit adds the ROMs support to the physmap driver of the MTD kernel
-subsystem. Currently the driver only supports the Internal ROM, since
-physically mapped SPI flash is utilized by the Baikal-T1 System Boot
-Controller driver so won't be available over mtd-rom interface and
-the Boot ROM mirror mapping has dependency on the SPI flash mapping
-switcher available within the SPI flash registers space. The real access
-to the Boot ROM memory will be added in future.
+I don't understand what IS_REACHABLE() is needed for once all the other
+changes are in place. I'd hope we can avoid that. Do you still see
+failures without
+that or is it just a precaution. I can do some randconfig testing on your patch
+to see what else might be needed to avoid IS_REACHABLE().
 
-Note we had to create a dedicated code for the ROMs since read from the
-corresponding memory regions must be done via the dword-aligned addresses.
-In addition the driver in future states will have to take into account
-that the Boot ROM might mirror the SPI flash region so before accessing it
-the SPI flash direct mapping must be enabled by means of a dedicated flag
-in the Baikal-T1 System SPI register flag.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: linux-mips@vger.kernel.org
-
----
-
-This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-tag: v5.7-rc4
-
-New vendor prefix will be added in the framework of the next patchset:
-https://lkml.org/lkml/2020/5/6/1047
-
-Note since the next patchset is no longer relevant (as a result of a
-discussion with @Lee and @Miquel)
-https://lkml.org/lkml/2020/3/6/421
-and Boot ROM mtd is currently unsupported I can freely submit this patch,
-while in former case I had to wait for the patchset merged.
----
- drivers/mtd/maps/Kconfig           |   8 ++
- drivers/mtd/maps/Makefile          |   1 +
- drivers/mtd/maps/physmap-bt1-rom.c | 189 +++++++++++++++++++++++++++++
- drivers/mtd/maps/physmap-bt1-rom.h |  17 +++
- drivers/mtd/maps/physmap-core.c    |   5 +
- 5 files changed, 220 insertions(+)
- create mode 100644 drivers/mtd/maps/physmap-bt1-rom.c
- create mode 100644 drivers/mtd/maps/physmap-bt1-rom.h
-
-diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-index b28225a7c4f3..60b4285cd86a 100644
---- a/drivers/mtd/maps/Kconfig
-+++ b/drivers/mtd/maps/Kconfig
-@@ -107,6 +107,14 @@ config MTD_PHYSMAP_IXP4XX
- 	  This provides some extra DT physmap parsing for the Intel IXP4xx
- 	  platforms, some elaborate endianness handling in particular.
- 
-+config MTD_PHYSMAP_BT1_ROM
-+	bool "Baikal-T1 Boot ROMs OF-based physical memory map handling"
-+	depends on (MIPS_BAIKAL_T1 && MTD_PHYSMAP_OF) || COMPILE_TEST
-+	select MTD_COMPLEX_MAPPINGS
-+	help
-+	  This provides some extra DT physmap parsing for the Baikal-T1
-+	  platforms, some detection and setting up ROMs-specific accessors.
-+
- config MTD_PHYSMAP_GPIO_ADDR
- 	bool "GPIO-assisted Flash Chip Support"
- 	depends on MTD_PHYSMAP
-diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-index c0da86a5d26f..45f3a151f568 100644
---- a/drivers/mtd/maps/Makefile
-+++ b/drivers/mtd/maps/Makefile
-@@ -21,6 +21,7 @@ physmap-objs-y			+= physmap-core.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_VERSATILE) += physmap-versatile.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_GEMINI) += physmap-gemini.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_IXP4XX) += physmap-ixp4xx.o
-+physmap-objs-$(CONFIG_MTD_PHYSMAP_BT1_ROM) += physmap-bt1-rom.o
- physmap-objs			:= $(physmap-objs-y)
- obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
- obj-$(CONFIG_MTD_PISMO)		+= pismo.o
-diff --git a/drivers/mtd/maps/physmap-bt1-rom.c b/drivers/mtd/maps/physmap-bt1-rom.c
-new file mode 100644
-index 000000000000..55149af18729
---- /dev/null
-+++ b/drivers/mtd/maps/physmap-bt1-rom.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+ *
-+ * Authors:
-+ *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-+ *
-+ * Baikal-T1 Physically Mapped ROMs driver
-+ */
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/bits.h>
-+#include <linux/mtd/map.h>
-+#include <linux/mtd/xip.h>
-+#include <linux/string.h>
-+
-+#include "physmap-bt1-rom.h"
-+
-+struct bt1_rom_io {
-+	map_word (*read)(struct map_info *map, unsigned long ofs);
-+	void (*copy_from)(struct map_info *map, void *to, unsigned long from,
-+			  ssize_t len);
-+};
-+
-+/*
-+ * Baikal-T1 SoC ROMs are only accessible by the dword-aligned instructions.
-+ * We have to take this into account when implementing the data read-methods.
-+ * Note there is no need in bothering with endianness, since both Baikal-T1
-+ * CPU and MMIO are LE.
-+ */
-+static map_word __xipram bt1_rom_map_read(struct map_info *map,
-+					  unsigned long ofs)
-+{
-+	void __iomem *src = map->virt + ofs;
-+	unsigned long shift;
-+	map_word ret;
-+	u32 data;
-+
-+	/* Read data within offset dword. */
-+	shift = (unsigned long)src & 0x3;
-+	data = readl_relaxed(src - shift);
-+	if (!shift) {
-+		ret.x[0] = data;
-+		return ret;
-+	}
-+	ret.x[0] = data >> (shift * BITS_PER_BYTE);
-+
-+	/* Read data from the next dword. */
-+	shift = 4 - shift;
-+	if (ofs + shift >= map->size)
-+		return ret;
-+
-+	data = readl_relaxed(src + shift);
-+	ret.x[0] |= data << (shift * BITS_PER_BYTE);
-+
-+	return ret;
-+}
-+
-+static void __xipram bt1_rom_map_copy_from(struct map_info *map,
-+					   void *to, unsigned long from,
-+					   ssize_t len)
-+{
-+	void __iomem *src = map->virt + from;
-+	ssize_t shift, chunk;
-+	u32 data;
-+
-+	if (len <= 0 || from >= map->size)
-+		return;
-+
-+	/* Make sure we don't go over the map limit. */
-+	len = min_t(ssize_t, map->size - from, len);
-+
-+	/*
-+	 * Since requested data size can be pretty big we have to implement
-+	 * the copy procedure as optimal as possible. That's why it's split
-+	 * up into the next three stages: unaligned head, aligned body,
-+	 * unaligned tail.
-+	 */
-+	shift = (ssize_t)src & 0x3;
-+	if (shift) {
-+		chunk = min_t(ssize_t, 4 - shift, len);
-+		data = readl_relaxed(src - shift);
-+		memcpy(to, &data + shift, chunk);
-+		src += chunk;
-+		to += chunk;
-+		len -= chunk;
-+	}
-+
-+	while (len >= 4) {
-+		data = readl_relaxed(src);
-+		memcpy(to, &data, 4);
-+		src += 4;
-+		to += 4;
-+		len -= 4;
-+	}
-+
-+	if (len) {
-+		data = readl_relaxed(src);
-+		memcpy(to, &data, len);
-+	}
-+}
-+
-+static map_word __xipram bt1_rom_dummy_read(struct map_info *map,
-+					  unsigned long ofs)
-+{
-+	map_word ret;
-+
-+	ret.x[0] = 0xFF;
-+
-+	return ret;
-+}
-+
-+static void __xipram bt1_rom_dummy_copy_from(struct map_info *map,
-+					   void *to, unsigned long from,
-+					   ssize_t len)
-+{
-+	if (len <= 0 || from >= map->size)
-+		return;
-+
-+	len = min_t(ssize_t, map->size - from, len);
-+
-+	memset(to, 0xFF, len);
-+}
-+
-+static const struct bt1_rom_io bt1_rom_normal_io = {
-+	.read = bt1_rom_map_read,
-+	.copy_from = bt1_rom_map_copy_from
-+};
-+
-+static const struct bt1_rom_io bt1_rom_dummy_io = {
-+	.read = bt1_rom_dummy_read,
-+	.copy_from = bt1_rom_dummy_copy_from
-+};
-+
-+/*
-+ * Currently Baikal-T1 SoC internal ROM is only supported. Boot ROM region is
-+ * dummy-data filled for now since in case of the system booted up from an
-+ * external SPI flash the ROM will mirror the Baikal-T1 System Boot SPI direct
-+ * mapping memory region. That region can be only accessed when transparent
-+ * mode is enabled, which we unable to do here because this feature is provided
-+ * by the SPI controller config space occupied by the corresponding driver.
-+ * In future we'll export the mode setting method from the Baikal-T1 System
-+ * Boot SPI Controller driver to also have the Boot ROM supported here.
-+ */
-+static const struct of_device_id bt1_rom_of_match[] = {
-+	{
-+		.compatible = "baikal,bt1-int-rom",
-+		.data = &bt1_rom_normal_io
-+	},
-+	{
-+		.compatible = "baikal,bt1-boot-rom",
-+		.data = &bt1_rom_dummy_io
-+	},
-+	{ }
-+};
-+
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map)
-+{
-+	const struct of_device_id *match;
-+	struct device *dev = &pdev->dev;
-+	const struct bt1_rom_io *io;
-+
-+	/* It's supposed to be read-only MTD. */
-+	if (!of_device_is_compatible(np, "mtd-rom")) {
-+		dev_info(dev, "No mtd-rom compatible string\n");
-+		return 0;
-+	}
-+
-+	/* Multiplatform guard. */
-+	match = of_match_device(bt1_rom_of_match, dev);
-+	if (!match)
-+		return 0;
-+
-+	/* Sanity check the device parameters retrieved from DTB. */
-+	if (map->bankwidth != 4)
-+		dev_warn(dev, "Bank width is supposed to be 32 bits wide\n");
-+
-+	io = match->data;
-+	map->read = io->read;
-+	map->copy_from = io->copy_from;
-+
-+	return 0;
-+}
-diff --git a/drivers/mtd/maps/physmap-bt1-rom.h b/drivers/mtd/maps/physmap-bt1-rom.h
-new file mode 100644
-index 000000000000..5874f2acf929
---- /dev/null
-+++ b/drivers/mtd/maps/physmap-bt1-rom.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#include <linux/of.h>
-+#include <linux/mtd/map.h>
-+
-+#ifdef CONFIG_MTD_PHYSMAP_BT1_ROM
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map);
-+#else
-+static inline
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map)
-+{
-+	return 0;
-+}
-+#endif
-diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-index 8f7f966fa9a7..a0716da933b5 100644
---- a/drivers/mtd/maps/physmap-core.c
-+++ b/drivers/mtd/maps/physmap-core.c
-@@ -44,6 +44,7 @@
- #include "physmap-gemini.h"
- #include "physmap-ixp4xx.h"
- #include "physmap-versatile.h"
-+#include "physmap-bt1-rom.h"
- 
- struct physmap_flash_info {
- 	unsigned int		nmaps;
-@@ -383,6 +384,10 @@ static int physmap_flash_of_init(struct platform_device *dev)
- 		if (err)
- 			return err;
- 
-+		err = of_flash_probe_bt1_rom(dev, dp, &info->maps[i]);
-+		if (err)
-+			return err;
-+
- 		/*
- 		 * On some platforms (e.g. MPC5200) a direct 1:1 mapping
- 		 * may cause problems with JFFS2 usage, as the local bus (LPB)
--- 
-2.25.1
-
+        Arnd
