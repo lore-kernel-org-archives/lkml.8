@@ -2,102 +2,88 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99DAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A0FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3FFC206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F2A2495B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgEHNaM (ORCPT
+        id S1728194AbgEHNag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:30:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42708 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgEHNaK (ORCPT
+        Fri, 8 May 2020 09:30:36 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:45558 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgEHNac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:30:10 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3BFDC80307C7;
-        Fri,  8 May 2020 13:30:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id O3E0BWa4NuBz; Fri,  8 May 2020 16:30:06 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        <linux-mips@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 02/17] dt-bindings: spi: dw: Add DMA properties bindings
-Date:   Fri, 8 May 2020 16:29:27 +0300
-Message-ID: <20200508132943.9826-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 09:30:32 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-c9-5eb55ef619d7
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 7A.F4.17433.6FE55BE5; Fri,  8 May 2020 15:30:30 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Fri, 8 May 2020 15:30:23 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 00/11] Support ROHM BD99954 charger IC
+Thread-Topic: [PATCH v11 00/11] Support ROHM BD99954 charger IC
+Thread-Index: AQHWJDVjiBpLAI2GnUi/Ov7DoQHufKieDA6AgAADpIA=
+Date:   Fri, 8 May 2020 13:30:23 +0000
+Message-ID: <e5d57de76a11d0f450d358af187b52699c246cc9.camel@fi.rohmeurope.com>
+References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200508131719.GJ4820@sirena.org.uk>
+In-Reply-To: <20200508131719.GJ4820@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CDF085982B5E2A41AF4C7FC17215E545@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOTOzs2fVseN4O2lJLkKYeKUfi5gKEphEBP6ILq6NOrqr7q7M
+        rqEmKUjhhURLBTdvqEEZZK6Kt8haFEtJIVNLCtsSQX8oXlJQu8y43n6d93zv93zvgfNBkl2V
+        eUGt3sQLei5TSTtQb5/tdARuqrvVIXMrclW1bZ5WbX4uJlST/XW0av3hEFDVPX1PqcYGTNF0
+        bJ/5uzzW0lZCx65bfK6SNxwjkjjTnXhtmj448rajpmiyVZa1rcjpK0opBF8UpUABMTqPX3Vu
+        yEuBA2TRNMBvdqYI+2UE4Mbud+IFQhpF4NKvcglwQ4G4eruFlnpIdJ/AzcUThGS4oki8MDO+
+        3xSFFz/WALsOx01tjyhJU8gPN8z+FrUcMugKbr4oVVmkw909/XukAoXh8Y4ftKQBOo1LCpf3
+        ppPIE1sWtmT2NyPc+nqCtGt3vPjr737dF/dsvaSkF5PIH7f3B9vRaFxjbpTZtS+uKrPtRTHI
+        BX+onacqgIf5WIL5iDYfo83HaPMxugnI2gDWcdrMNM7EhwYJfHaQYNDoxCPZoLMA+xdu9IJ/
+        1ktWQEBgBSchoXRnzlzrVrPOSYaUXA1n1CQK2Zm80QowJJVuTGVOl5plUrjcPF4wHFjekFJ6
+        MmdtlQkskrIyeD6LFw7cUxAqMUMkiENdBD6Nz0nVZpqObAIqpOEOXm5GXp/CC1y2SZMoLUei
+        UdwOyXISczduiThjzOJ0YtWOjoIAWLFY30zCofqnzSRL6Q163suTuewstiKpVZOtPwxaAp4Q
+        KF0ZhbiwrJO4x4dzlsQIQoxYX7NIESbuyPIqBB3PDTF9UeFbbQX5ef5DL7IqfVTf4ogTMdEJ
+        c94DkVrZvdjOCe9PvR4hI3k3gwcDumaGneLjonQZw8kt2+5+Nmo3YqAhrGIBGsYj11Y6op7U
+        ULZO9Gc6epetqHJNvbC5qi1+vDyaXl5A/8x3ux7eP62KSB8cqy0vm7v7YCq8fVZJGTVc6DlS
+        MHL/Ae37dv6EAwAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since DW SPI controller may use DW DMA engine to perform the CPU-less
-Tx/Rx SPI transfers and the DW SPI driver now supports it, lets alter
-the DW SPI bindings file to accept the Rx and Tx DMA line specifiers.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: linux-mips@vger.kernel.org
----
- .../devicetree/bindings/spi/snps,dw-apb-ssi.yaml       | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-index e2f6d8aa6181..454208842084 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-@@ -73,6 +73,16 @@ properties:
-     minimum: 1
-     maximum: 4
- 
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
- patternProperties:
-   "^.*@[0-9a-f]+$":
-     type: object
--- 
-2.25.1
-
+DQpPbiBGcmksIDIwMjAtMDUtMDggYXQgMTQ6MTcgKzAxMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFRodSwgTWF5IDA3LCAyMDIwIGF0IDA5OjAzOjA2QU0gKzAzMDAsIE1hdHRpIFZhaXR0aW5l
+biB3cm90ZToNCj4gPiBTb3JyeSBmb2xrcyBmb3IgZXhjZXNzaXZlIGFtb3VudCBvZiBlbWFpbHMu
+IEkgYW0gcmVzZW5kaW5nIHRoaXMNCj4gPiBvbmNlDQo+ID4gbW9yZSAoSSBhbHJlYWR5IHJlc2Vu
+dCB2MTAgYW5kIHYxMSBoYXMgbm8gY2hhbmdlcyBidXQgd2FzIGp1c3QNCj4gPiByZWJhc2VkKQ0K
+PiA+IGJlY2F1c2UgSSBhbSBhZnJhaWQgdGhlIHByZXZpb3VzIHZlcnNpb24gZGlkIG5vdCByZWFj
+aCBNYXJrLiBJZg0KPiA+IHRoaXMgaXMNCj4gPiB0cnVlIC0gSSBhbSB0aGUgb25lIHRvIGJsYW1l
+LiBJIHNlZSBJIHNlbnQgb3JpZ2luYWwgdjEwIHRvIGFsbA0KPiA+IG90aGVyDQo+IA0KPiBZb3Ug
+cHJvYmFibHkgc2hvdWxkJ3ZlIG1lbnRpb25lZCBpbiB0aGlzIG1haWwgc29tZXRoaW5nIGFib3V0
+DQo+IGFwcGx5aW5nDQo+IG9uIGEgc2hhcmVkIGJyYW5jaCAtIEkgaGFkIHNlZW4gdGhlIG1haWwg
+YWJvdXQgdGhhdCBhbmQgd2FzIHBsYW5uaW5nDQo+IHRvDQo+IGhhbmRsZSB0aGVzZSB0aGlzIHdl
+ZWsgYnV0IGlmIEknZCBtaXNzZWQgU2ViYXN0aWFuJ3MgbWFpbCBmcm9tDQo+IGVhcmxpZXINCj4g
+aW4gdGhlIHdlZWsgSSdkIHByb2JhYmx5IGp1c3QgbG9vayBhdCB0aGlzIGFuZCByZWFsaXNlIEkn
+ZCByZXZpZXdlZA0KPiBldmVyeXRoaW5nIHJlbGV2YW50IGluIGl0Lg0KDQpUaGFua3MgZm9yIHRo
+ZSB0aXAuIEknbGwgdHJ5IHRvIGtlZXAgdGhpcyBpbiBtaW5kIGZvciB0aGUgZnV0dXJlIGFuZA0K
+YWRkIGEgbm90ZSBhYm91dCBhcHBseWluZyBpbiBkaWZmZXJlbnQgdHJlZXMgdG8gY292ZXIgbGV0
+dGVyLg0KDQotLU1hdHRpDQo=
