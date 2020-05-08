@@ -2,108 +2,109 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D216C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DDFC47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 100A22173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588974600;
-	bh=qkUTRLFzcDxgORfpd+BCzu4AQ/LotKSi2xDg0Aqh5Is=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MTj+cy/bTF2dAU0UkHPhLLWn08+qSYiAtmQwpQMjo/zaa8pCWYej02Dq4hJ+ZnDrM
-	 ZJsW8ixUFjEUYcnlk/Esj05FS6718j19OBk0Jw5FcMB1tdAxm04FaMN1Icdvd7PsTe
-	 jerDDclLywWHSKpb1s/AAmpgSO/mWY9PLiILY3zw=
+	by mail.kernel.org (Postfix) with ESMTP id E194F21655
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SSxf0gco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgEHVt7 (ORCPT
+        id S1728088AbgEHVuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:49:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:49:58 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 17:50:55 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48285 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726811AbgEHVuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588974653;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WfmItu00sqA0T6UZ4ttYmvbh9bbKybU1lr+8KSmJvZg=;
+        b=SSxf0gco69Ef0B3w4CpIMJIoMcdUnlS+Ultxrxw5cpDzWDMIgao1trzeHzz1T+VCEtq2/Z
+        4Km4EU4RUMlDb39KDlHjTfJzEa47p1GG/zE9Gt9PfhptQ7/xyxbB5mSLvRb5mHhu8BC/0i
+        hHvxdchN2xxYUfbI1LzNDYeEleBgmDU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-rgvPNQIfOmSSfAHrHEesyw-1; Fri, 08 May 2020 17:50:52 -0400
+X-MC-Unique: rgvPNQIfOmSSfAHrHEesyw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C703921655;
-        Fri,  8 May 2020 21:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588974598;
-        bh=qkUTRLFzcDxgORfpd+BCzu4AQ/LotKSi2xDg0Aqh5Is=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UHYOPg40kPT5bYMEEAeNbyA+aZeFkKmexvZ20xB9xEwmwkigFcWeY9vFrgfRa78aX
-         adsRCEaL7y3uwSHoxmKkZi5+3EjYFlyWQwX9tlH9F1u+VOtoPOjHBu3Nt7ORDF4L7Y
-         fwoj4ErTR6pTR+BWd6qE0lrR3KdUfv5QOkzkdfuw=
-Date:   Fri, 8 May 2020 14:49:56 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: Re: [PATCH net-next v1] hinic: add three net_device_ops of vf
-Message-ID: <20200508144956.19d2af7c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200507182119.20494-1-luobin9@huawei.com>
-References: <20200507182119.20494-1-luobin9@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9D138014C1;
+        Fri,  8 May 2020 21:50:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B5CE5C3FD;
+        Fri,  8 May 2020 21:50:43 +0000 (UTC)
+Subject: [PATCH 0/4] cachefiles, nfs: Fixes
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 08 May 2020 22:50:42 +0100
+Message-ID: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 18:21:19 +0000 Luo bin wrote:
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
-> index 564fb2294a29..bc2f87e6cb5d 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
-> @@ -627,7 +627,7 @@ wait_for_mbox_seg_completion(struct hinic_mbox_func_to_func *func_to_func,
->  	struct hinic_hwdev *hwdev = func_to_func->hwdev;
->  	struct completion *done = &send_mbox->send_done;
->  	u32 cnt = 0;
-> -	ulong jif;
-> +	unsigned long jif;
->  
->  	if (poll) {
->  		while (cnt < MBOX_MSG_POLLING_TIMEOUT) {
-> @@ -869,7 +869,7 @@ int hinic_mbox_to_func(struct hinic_mbox_func_to_func *func_to_func,
->  {
->  	struct hinic_recv_mbox *mbox_for_resp;
->  	struct mbox_msg_info msg_info = {0};
-> -	ulong timeo;
-> +	unsigned long timeo;
->  	int err;
->  
->  	mbox_for_resp = &func_to_func->mbox_resp[dst_func];
 
-Unrelated cleanup.
+Hi Linus, Trond, Anna,
 
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-> index b66bb86cff96..3d6569d7bac8 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-> @@ -427,10 +427,6 @@ static int hinic_open(struct net_device *netdev)
->  		goto err_func_port_state;
->  	}
->  
-> -	if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
-> -		/* Wait up to 3 sec between port enable to link state */
-> -		msleep(3000);
+Can you pull these fixes for cachefiles and NFS's use of fscache?  Should
+they go through the NFS tree or directly upstream?  The things fixed are:
 
-Why is this no longer needed?
+ (1) The reorganisation of bmap() use accidentally caused the return value
+     of cachefiles_read_or_alloc_pages() to get corrupted.
 
->  	down(&nic_dev->mgmt_lock);
->  
->  	err = hinic_port_link_state(nic_dev, &link_state);
+ (2) The NFS superblock index key accidentally got changed to include a
+     number of kernel pointers - meaning that the key isn't matchable after
+     a reboot.
 
-> +	if (link_state == HINIC_LINK_STATE_DOWN) {
-> +		netif_err(nic_dev, drv, netdev,
-> +			  "Link status must be up when setting vf tx rate\n");
-> +		return -EPERM;
-> +	}
+ (3) A redundant check in nfs_fscache_get_super_cookie().
 
-Does this also mean the configuration is lost if link goes down?
+ (4) The NFS change_attr sometimes set in the auxiliary data for the
+     caching of an file and sometimes not, which causes the cache to get
+     discarded when it shouldn't.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	tag fscache-fixes-20200508
+
+Thanks,
+David
+---
+Dave Wysochanski (3):
+      NFS: Fix fscache super_cookie index_key from changing after umount
+      NFS: Fix fscache super_cookie allocation
+      NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+
+David Howells (1):
+      cachefiles: Fix corruption of the return value in cachefiles_read_or_alloc_pages()
+
+
+ fs/cachefiles/rdwr.c |   10 +++++-----
+ fs/nfs/fscache.c     |   39 ++++++++++++++++++---------------------
+ fs/nfs/super.c       |    1 -
+ 3 files changed, 23 insertions(+), 27 deletions(-)
+
+
