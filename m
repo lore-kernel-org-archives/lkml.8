@@ -2,209 +2,394 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D380C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDFCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10CC02184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C172184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K1x45ekd"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="UPug7ezR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgEHQ4f (ORCPT
+        id S1727799AbgEHQ5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42662 "EHLO
+        Fri, 8 May 2020 12:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgEHQ4e (ORCPT
+        with ESMTP id S1726756AbgEHQ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:56:34 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D24CC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 09:56:34 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id f12so1742493edn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 09:56:34 -0700 (PDT)
+        Fri, 8 May 2020 12:57:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E67C05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 09:57:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m24so1265649wml.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 09:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qSHE/cDUYWET1agiZaWzN/cLhWh+dKZVdX5a77HIV0o=;
-        b=K1x45ekdP5M5U1MQqp4w0sbhv6u1/qfAEDLNfXKxfqr5iK3JD9mMli3EIjS1druXx4
-         I+/2i166tr6/suS6hqQgXXhRD4Mw7UhlO6V7jlEu3JhlhAdCjNiMoNa0EibtMdpvRMvm
-         s2Amar7H23yx37oA/d7ZX04clDeVlZRlKHpCM=
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
+        b=UPug7ezRRUUHdTzqSRfoxD2Iq04xZBfodbQycTm0KgfLU4x6z6TU9TmT6ufh9kG2W+
+         loyuu1DiSpCnOt94ZBBvIo76ANg/RXeU9jr/A+Hk5+vMDVTh2utNwAqIgE22iIHIqADO
+         ASluyrzSegNku2TaY6GbVfKGfu9//p49URGrn1K15ILRiySiNHzL/mSVBRhdIiC0F9aN
+         XdVBj8oSrlVIhl4jkPKl5cGD8SYmbw0mOGGkA77hGMV9UwO2DnCvsQS6Aa2BdY5ngrUn
+         yed1HaWUXlcoNMu+qjVUYQWCjSBaaNv2T91VYVxDNfpFTQMOrn1lwMTuKgOf3M7nQ94V
+         PZ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qSHE/cDUYWET1agiZaWzN/cLhWh+dKZVdX5a77HIV0o=;
-        b=hxB6hKev4grE/bHxYFte4XGCmIr/IE3Pxs1bEY8gByrDBQ/vEmbadxjGaQH4qBjeSI
-         zAIrzStrQKhRoQV2vTgZ/MEXAUvP33OcBOJ36JnMEf6yk7SbkcWx96Zz9X8mOS1z6gNw
-         LhK/BZVE0/vJozqunWDb/EjnYBH5MYNYEEZCImCPKnr7tNG2zUlMpvs+Kt+4d1tMe0lR
-         bfS9ej71qRBTy8oVySvlMvk07nHmwjGfmmiegeuYaw7wmMTtgAfwGhWYXSjgzZoqnvnv
-         nn5nyiJJm1NiKtexwKoq9jBXbWlYiwlkn/8epEEdJbV9uVbuSuT947EOpA+mbYWIcRlQ
-         FyuA==
-X-Gm-Message-State: AGi0Pub5z4jQqeZSnS4wo0KlhygwjiPPVjYN6sWSHfbJ9yJXTm/JlAee
-        79kKqqYXSZxzSP81pjU1NKSvo8DbmVXWgA==
-X-Google-Smtp-Source: APiQypIh25SSSCGcvHAl1MjhozEe9CAxKYa6V/sufOjW6Ko2OeGYinbcCBCShfJz25u10ezlP/sVuA==
-X-Received: by 2002:aa7:df8a:: with SMTP id b10mr3024424edy.263.1588956992534;
-        Fri, 08 May 2020 09:56:32 -0700 (PDT)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id r4sm240105ejz.28.2020.05.08.09.56.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 09:56:31 -0700 (PDT)
-Received: by mail-wr1-f43.google.com with SMTP id 50so2156103wrc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 09:56:31 -0700 (PDT)
-X-Received: by 2002:a5d:66c5:: with SMTP id k5mr3817089wrw.17.1588956990811;
- Fri, 08 May 2020 09:56:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
+        b=PhhggQhGfcUky/HQB/yfKugaExrkJu6p46v6CKlpOJoYkJpk89PL8Zbt5e1YbJY+Qm
+         BL0VHhyGKt3Ek6jyxPBzbD6l6qQ7JQeMVqo6Ni8fc24ydU2I1cDTTJC/xgRZZcKBmRFV
+         f4H7IRJjT2XdbgACNARvvtkFAKwx4fwQfXQM5fcPNVG3SGUDk3jWldyeQB5FzAoodKmX
+         NYDkCU+zbDaL/6K3C3+7f0u77n/XHS0e1MFwfb7fCFK+lhPLuuO7V3Y5gqBo9Q5r9OzY
+         zUORGIkqJJ/3mW5ig+0wJ1vLqEH+NIqPk7kUqo2c6dFD3sEE2rovNMJT/7YsGSQmml6S
+         KuNA==
+X-Gm-Message-State: AGi0PuaSDaBTf3t1NbWLS+colKr6QWNYB8FS8uBQypOyNT4nxksZoy3J
+        NCxqwesoRDrSUW1q+jEHtpg8cg==
+X-Google-Smtp-Source: APiQypKna+L9sCld26+Mf5vcDVlbO1sRL+4elnUNWXQ4zRpPTP7NgoDgERq7nVdBXn2PiaNnaKdKnQ==
+X-Received: by 2002:a05:600c:201:: with SMTP id 1mr621236wmi.155.1588957053999;
+        Fri, 08 May 2020 09:57:33 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id x24sm4147295wrd.51.2020.05.08.09.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 09:57:33 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:58:21 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+Message-ID: <20200508165821.GA14555@x1>
 MIME-Version: 1.0
-References: <20200505134110.3435-1-ezequiel@collabora.com> <20200505134110.3435-4-ezequiel@collabora.com>
- <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl> <b2160325f5b9bae5b437a37069db926d2a464e8d.camel@collabora.com>
-In-Reply-To: <b2160325f5b9bae5b437a37069db926d2a464e8d.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Fri, 8 May 2020 18:56:18 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5C3MpWqRRMGQJTW8rNz65T2CRYj6yFa56mJWR+DFqrFzg@mail.gmail.com>
-Message-ID: <CAAFQd5C3MpWqRRMGQJTW8rNz65T2CRYj6yFa56mJWR+DFqrFzg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 6:26 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> On Fri, 2020-05-08 at 12:34 +0200, Hans Verkuil wrote:
-> > On 05/05/2020 15:41, Ezequiel Garcia wrote:
-> > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > >
-> > > The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
-> > > a backend for this new format.
-> > >
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > ---
-> > >  drivers/staging/media/rkvdec/Makefile     |    2 +-
-> > >  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
-> > >  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
-> > >  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
-> > >  4 files changed, 1637 insertions(+), 4 deletions(-)
-> > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > >
-> > > diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
-> > > index c08fed0a39f9..cb86b429cfaa 100644
-> > > --- a/drivers/staging/media/rkvdec/Makefile
-> > > +++ b/drivers/staging/media/rkvdec/Makefile
-> > > @@ -1,3 +1,3 @@
-> > >  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
-> > >
-> > > -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
-> > > +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
-> > > diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > > new file mode 100644
-> > > index 000000000000..37d0ea4e3570
-> > > --- /dev/null
-> > > +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > > @@ -0,0 +1,1577 @@
-> >
-> > <snip>
-> >
-> > > +static void init_inter_probs(struct rkvdec_ctx *ctx,
-> > > +                        const struct rkvdec_vp9_run *run)
-> > > +{
-> > > +   const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
-> > > +   struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
-> > > +   struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
-> > > +   struct rkvdec_vp9_inter_frame_probs *rkprobs;
-> > > +   const struct v4l2_vp9_probabilities *probs;
-> > > +   unsigned int i, j, k;
-> > > +
-> > > +   rkprobs = &tbl->probs.inter;
-> > > +   dec_params = run->decode_params;
-> > > +   probs = &dec_params->probs;
-> > > +
-> > > +   /*
-> > > +    * inter probs
-> > > +    * 151 x 128 bits, aligned to 152 x 128 bits
-> > > +    * inter only
-> > > +    * intra_y_mode & inter_block info 6 x 128 bits
-> > > +    */
-> > > +
-> > > +   memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
-> > > +   memcpy(rkprobs->comp_mode, probs->comp_mode,
-> > > +          sizeof(rkprobs->comp_mode));
-> > > +   memcpy(rkprobs->comp_ref, probs->comp_ref,
-> > > +          sizeof(rkprobs->comp_ref));
-> > > +   memcpy(rkprobs->single_ref, probs->single_ref,
-> > > +          sizeof(rkprobs->single_ref));
-> > > +   memcpy(rkprobs->inter_mode, probs->inter_mode,
-> > > +          sizeof(rkprobs->inter_mode));
-> > > +   memcpy(rkprobs->interp_filter, probs->interp_filter,
-> > > +          sizeof(rkprobs->interp_filter));
-> > > +
-> > > +   /* 128 x 128 bits coeff related */
-> > > +   for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
-> > > +           for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
-> > > +                   for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
-> > > +                           write_coeff_plane(probs->coef[i][j][k],
-> > > +                                             rkprobs->coef[k][i][j]);
-> > > +           }
-> > > +   }
-> > > +
-> > > +   /* intra uv mode 6 x 128 */
-> > > +   memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
-> > > +          sizeof(rkprobs->uv_mode_0_2));
-> > > +   memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
-> > > +          sizeof(rkprobs->uv_mode_3_5));
-> > > +   memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
-> > > +          sizeof(rkprobs->uv_mode_6_8));
-> > > +   memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
-> > > +          sizeof(rkprobs->uv_mode_9));
-> > > +
-> > > +   /* mv related 6 x 128 */
-> > > +   memcpy(rkprobs->mv.joint, probs->mv.joint,
-> > > +          sizeof(rkprobs->mv.joint));
-> > > +   memcpy(rkprobs->mv.sign, probs->mv.sign,
-> > > +          sizeof(rkprobs->mv.sign));
-> > > +   memcpy(rkprobs->mv.class, probs->mv.class,
-> > > +          sizeof(rkprobs->mv.class));
-> > > +   memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
-> > > +          sizeof(rkprobs->mv.class0_bit));
-> > > +   memcpy(rkprobs->mv.bits, probs->mv.bits,
-> > > +          sizeof(rkprobs->mv.bits));
-> > > +   memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
-> > > +          sizeof(rkprobs->mv.class0_fr));
-> > > +   memcpy(rkprobs->mv.fr, probs->mv.fr,
-> > > +          sizeof(rkprobs->mv.fr));
-> > > +   memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
-> > > +          sizeof(rkprobs->mv.class0_hp));
-> > > +   memcpy(rkprobs->mv.hp, probs->mv.hp,
-> > > +          sizeof(rkprobs->mv.hp));
-> >
-> > Can't you just do: 'rkprobs->mv = probs->mv'?
-> >
->
-> I think I'd like to keep this as-is.
->
-> Having the memcpy makes it explicit that we are copying
-> these structs around. While the assignment would
-> bring type checking, it can be misleading for readers.
+Add gpio-line-names properties to the gpio controller nodes.
+BeagleBone boards have P8 and P9 headers [0] which expose many the
+AM3358 SoC balls to stacking expansion boards called "capes", or to
+other external connections like jumper wires to a breadboard.
 
-On the other hand, it's not obvious from the code that all fields of
-the structure are copied. Perhaps memcpy(&rkprobs->mv, &probs->mv,
-sizeof(rkprobs->mv)) would be a good compromise?
+Many of the P8/P9 header pins can muxed to a gpio line.  The
+gpio-line-names describe which P8/P9 pin that line goes to and the
+default mux for that P8/P9 pin.  Some lines are not routed to the
+P8/P9 headers, but instead are dedicated to some functionality such as
+status LEDs.  The line name will indicate this.  Some line names are
+left empty as the corresponding AM3358 balls are not connected.
+
+The goal is to make it easier for a user viewing the output of gpioinfo
+to determine which P8/P9 pin is connected to a line.  The output of
+gpioinfo on a BeagleBone Black will now look like this:
+
+gpiochip0 - 32 lines:
+	line   0:   "ethernet"       unused   input  active-high
+	line   1:   "ethernet"       unused   input  active-high
+	line   2: "P9_22 spi0_sclk" unused input active-high
+	line   3: "P9_21 spi0_d0" unused input active-high
+	line   4: "P9_18 spi0_d1" unused input active-high
+	line   5: "P9_17 spi0_cs0" unused input active-high
+	line   6:    "sd card"         "cd"   input   active-low [used]
+	line   7: "P9_42A ecappwm0" unused input active-high
+	line   8: "P8_35 hdmi"       unused   input  active-high
+	line   9: "P8_33 hdmi"       unused   input  active-high
+	line  10: "P8_31 hdmi"       unused   input  active-high
+	line  11: "P8_32 hdmi"       unused   input  active-high
+	line  12: "P9_20 i2c2_sda" unused input active-high
+	line  13: "P9_19 i2c2_scl" unused input active-high
+	line  14: "P9_26 uart1_rxd" unused input active-high
+	line  15: "P9_24 uart1_txd" unused input active-high
+	line  16:   "ethernet"       unused   input  active-high
+	line  17:   "ethernet"       unused   input  active-high
+	line  18:        "usb"       unused   input  active-high
+	line  19:       "hdmi"       unused   input  active-high
+	line  20: "P9_41B gpio" unused input active-high
+	line  21:   "ethernet"       unused   input  active-high
+	line  22: "P8_19 ehrpwm2a" unused input active-high
+	line  23: "P8_13 ehrpwm2b" unused input active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26: "P8_14 gpio"       unused   input  active-high
+	line  27: "P8_17 gpio"       unused   input  active-high
+	line  28:   "ethernet"       unused   input  active-high
+	line  29:   "ethernet"       unused   input  active-high
+	line  30: "P9_11 uart4_rxd" unused input active-high
+	line  31: "P9_13 uart4_txd" unused input active-high
+gpiochip1 - 32 lines:
+	line   0: "P8_25 emmc"       unused   input  active-high
+	line   1:       "emmc"       unused   input  active-high
+	line   2:  "P8_5 emmc"       unused   input  active-high
+	line   3:  "P8_6 emmc"       unused   input  active-high
+	line   4: "P8_23 emmc"       unused   input  active-high
+	line   5: "P8_22 emmc"       unused   input  active-high
+	line   6:  "P8_3 emmc"       unused   input  active-high
+	line   7:  "P8_4 emmc"       unused   input  active-high
+	line   8:      unnamed       unused   input  active-high
+	line   9:      unnamed       unused   input  active-high
+	line  10:      unnamed       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12: "P8_12 gpio"       unused   input  active-high
+	line  13: "P8_11 gpio"       unused   input  active-high
+	line  14: "P8_16 gpio"       unused   input  active-high
+	line  15: "P8_15 gpio"       unused   input  active-high
+	line  16: "P9_15A gpio" unused input active-high
+	line  17: "P9_23 gpio"       unused   input  active-high
+	line  18: "P9_14 ehrpwm1a" unused input active-high
+	line  19: "P9_16 ehrpwm1b" unused input active-high
+	line  20:       "emmc"       unused   input  active-high
+	line  21:   "usr0 led" "beaglebone:green:heart" output active-high [used]
+	line  22:   "usr1 led" "beaglebone:green:mmc0" output active-high [used]
+	line  23:   "usr2 led" "beaglebone:green:usr2" output active-high [used]
+	line  24:   "usr3 led" "beaglebone:green:usr3" output active-high [used]
+	line  25:       "hdmi"  "interrupt"   input  active-high [used]
+	line  26:        "usb"       unused   input  active-high
+	line  27: "hdmi audio"     "enable"  output  active-high [used]
+	line  28: "P9_12 gpio"       unused   input  active-high
+	line  29: "P8_26 gpio"       unused   input  active-high
+	line  30: "P8_21 emmc"       unused   input  active-high
+	line  31: "P8_20 emmc"       unused   input  active-high
+gpiochip2 - 32 lines:
+	line   0: "P9_15B gpio" unused input active-high
+	line   1: "P8_18 gpio"       unused   input  active-high
+	line   2:  "P8_7 gpio"       unused   input  active-high
+	line   3:  "P8_8 gpio"       unused   input  active-high
+	line   4: "P8_10 gpio"       unused   input  active-high
+	line   5:  "P8_9 gpio"       unused   input  active-high
+	line   6: "P8_45 hdmi"       unused   input  active-high
+	line   7: "P8_46 hdmi"       unused   input  active-high
+	line   8: "P8_43 hdmi"       unused   input  active-high
+	line   9: "P8_44 hdmi"       unused   input  active-high
+	line  10: "P8_41 hdmi"       unused   input  active-high
+	line  11: "P8_42 hdmi"       unused   input  active-high
+	line  12: "P8_39 hdmi"       unused   input  active-high
+	line  13: "P8_40 hdmi"       unused   input  active-high
+	line  14: "P8_37 hdmi"       unused   input  active-high
+	line  15: "P8_38 hdmi"       unused   input  active-high
+	line  16: "P8_36 hdmi"       unused   input  active-high
+	line  17: "P8_34 hdmi"       unused   input  active-high
+	line  18:   "ethernet"       unused   input  active-high
+	line  19:   "ethernet"       unused   input  active-high
+	line  20:   "ethernet"       unused   input  active-high
+	line  21:   "ethernet"       unused   input  active-high
+	line  22: "P8_27 hdmi"       unused   input  active-high
+	line  23: "P8_29 hdmi"       unused   input  active-high
+	line  24: "P8_28 hdmi"       unused   input  active-high
+	line  25: "P8_30 hdmi"       unused   input  active-high
+	line  26:       "emmc"       unused   input  active-high
+	line  27:       "emmc"       unused   input  active-high
+	line  28:       "emmc"       unused   input  active-high
+	line  29:       "emmc"       unused   input  active-high
+	line  30:       "emmc"       unused   input  active-high
+	line  31:       "emmc"       unused   input  active-high
+gpiochip3 - 32 lines:
+	line   0:   "ethernet"       unused   input  active-high
+	line   1:   "ethernet"       unused   input  active-high
+	line   2:   "ethernet"       unused   input  active-high
+	line   3:   "ethernet"       unused   input  active-high
+	line   4:   "ethernet"       unused   input  active-high
+	line   5:       "i2c0"       unused   input  active-high
+	line   6:       "i2c0"       unused   input  active-high
+	line   7:        "emu"       unused   input  active-high
+	line   8:        "emu"       unused   input  active-high
+	line   9:   "ethernet"       unused   input  active-high
+	line  10:   "ethernet"       unused   input  active-high
+	line  11:      unnamed       unused   input  active-high
+	line  12:      unnamed       unused   input  active-high
+	line  13:        "usb"       unused   input  active-high
+	line  14: "P9_31 spi1_sclk" unused input active-high
+	line  15: "P9_29 spi1_d0" unused input active-high
+	line  16: "P9_30 spi1_d1" unused input active-high
+	line  17: "P9_28 spi1_cs0" unused input active-high
+	line  18: "P9_42B ecappwm0" unused input active-high
+	line  19: "P9_27 gpio"       unused   input  active-high
+	line  20: "P9_41A gpio" unused input active-high
+	line  21: "P9_25 gpio"       unused   input  active-high
+	line  22:      unnamed       unused   input  active-high
+	line  23:      unnamed       unused   input  active-high
+	line  24:      unnamed       unused   input  active-high
+	line  25:      unnamed       unused   input  active-high
+	line  26:      unnamed       unused   input  active-high
+	line  27:      unnamed       unused   input  active-high
+	line  28:      unnamed       unused   input  active-high
+	line  29:      unnamed       unused   input  active-high
+	line  30:      unnamed       unused   input  active-high
+	line  31:      unnamed       unused   input  active-high
+
+[0] https://beagleboard.org/Support/bone101
+[1] https://beagleboard.org/capes
+
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 6c9187bc0f17..defdf68edb58 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -397,3 +397,147 @@
+ 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
++
++&gpio0 {
++	gpio-line-names =
++		"ethernet",
++		"ethernet",
++		"P9_22 spi0_sclk",
++		"P9_21 spi0_d0",
++		"P9_18 spi0_d1",
++		"P9_17 spi0_cs0",
++		"sd card",
++		"P9_42A ecappwm0",
++		"P8_35 hdmi",
++		"P8_33 hdmi",
++		"P8_31 hdmi",
++		"P8_32 hdmi",
++		"P9_20 i2c2_sda",
++		"P9_19 i2c2_scl",
++		"P9_26 uart1_rxd",
++		"P9_24 uart1_txd",
++		"ethernet",
++		"ethernet",
++		"usb",
++		"hdmi",
++		"P9_41B gpio",
++		"ethernet",
++		"P8_19 ehrpwm2a",
++		"P8_13 ehrpwm2b",
++		"",
++		"",
++		"P8_14 gpio",
++		"P8_17 gpio",
++		"ethernet",
++		"ethernet",
++		"P9_11 uart4_rxd",
++		"P9_13 uart4_txd";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"P8_25 emmc",
++		"emmc",
++		"P8_5 emmc",
++		"P8_6 emmc",
++		"P8_23 emmc",
++		"P8_22 emmc",
++		"P8_3 emmc",
++		"P8_4 emmc",
++		"",
++		"",
++		"",
++		"",
++		"P8_12 gpio",
++		"P8_11 gpio",
++		"P8_16 gpio",
++		"P8_15 gpio",
++		"P9_15A gpio",
++		"P9_23 gpio",
++		"P9_14 ehrpwm1a",
++		"P9_16 ehrpwm1b",
++		"emmc",
++		"usr0 led",
++		"usr1 led",
++		"usr2 led",
++		"usr3 led",
++		"hdmi",
++		"usb",
++		"hdmi audio",
++		"P9_12 gpio",
++		"P8_26 gpio",
++		"P8_21 emmc",
++		"P8_20 emmc";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"P9_15B gpio",
++		"P8_18 gpio",
++		"P8_7 gpio",
++		"P8_8 gpio",
++		"P8_10 gpio",
++		"P8_9 gpio",
++		"P8_45 hdmi",
++		"P8_46 hdmi",
++		"P8_43 hdmi",
++		"P8_44 hdmi",
++		"P8_41 hdmi",
++		"P8_42 hdmi",
++		"P8_39 hdmi",
++		"P8_40 hdmi",
++		"P8_37 hdmi",
++		"P8_38 hdmi",
++		"P8_36 hdmi",
++		"P8_34 hdmi",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"P8_27 hdmi",
++		"P8_29 hdmi",
++		"P8_28 hdmi",
++		"P8_30 hdmi",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc",
++		"emmc";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"ethernet",
++		"i2c0",
++		"i2c0",
++		"emu",
++		"emu",
++		"ethernet",
++		"ethernet",
++		"",
++		"",
++		"usb",
++		"P9_31 spi1_sclk",
++		"P9_29 spi1_d0",
++		"P9_30 spi1_d1",
++		"P9_28 spi1_cs0",
++		"P9_42B ecappwm0",
++		"P9_27 gpio",
++		"P9_41A gpio",
++		"P9_25 gpio",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"",
++		"";
++};
+-- 
+2.20.1
+
