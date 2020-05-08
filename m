@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54679C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D295AC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D6621582
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B338A21582
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ph/BhQVD"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="H0viADmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEHMXZ (ORCPT
+        id S1727123AbgEHMX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56376 "EHLO
+        Fri, 8 May 2020 08:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727094AbgEHMXX (ORCPT
+        by vger.kernel.org with ESMTP id S1727094AbgEHMXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:23:23 -0400
+        Fri, 8 May 2020 08:23:25 -0400
 Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880FEC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 05:23:22 -0700 (PDT)
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id ED8512E151F;
-        Fri,  8 May 2020 15:23:18 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 7NK2742NLq-NHb8lZG3;
-        Fri, 08 May 2020 15:23:18 +0300
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B10DC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 05:23:25 -0700 (PDT)
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 38F662E0DD7;
+        Fri,  8 May 2020 15:23:24 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id CwfcYZS86f-NNAWclZ0;
+        Fri, 08 May 2020 15:23:24 +0300
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588940598; bh=KU2g+Q0yPMTYZlBSSwWKdYtFznVsnPkB2sauyejITt4=;
+        t=1588940604; bh=fE5H5nxfbTVPsDYqy95Pi0qrqxG0n44r6YkokVlYuxs=;
         h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=Ph/BhQVD66wYtc1XAoeAQ8rPXfDRFEjS5ND7g8MKREO1d+1S3FOOlB09mrxBbycic
-         ilB0e9MG7CuVf+MUwol8NI2wO8wjpSzQwLsV75E8K39ZyTg+gAnxFL0e2MCEm06cOD
-         b0CaYwDrDTyPOgd42IzPNlN4Du43O30PJAgj/Vps=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+        b=H0viADmU8Q1pZpdoq3gUEj+1k51lST+hEaXaQzaspjNPreBUobGD5qFJJFWjDTZGp
+         qlxY2mfOF2tOueZPJ4/OWPOMlUWZTHdSiJAtumhD0dek8Lrtd2BO77fiuVy2fciQPS
+         vEFgofTlKQcoOtSbRFNqyibCu/ALHX0go6vjdkiE=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
 Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7008::1:4])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id ZuTxA7ymDv-NHWCQXMj;
-        Fri, 08 May 2020 15:23:17 +0300
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id fhizLjzH9z-NNWe0AWK;
+        Fri, 08 May 2020 15:23:23 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
-Subject: [PATCH RFC 2/8] selftests: add stress testing tool for dcache
+Subject: [PATCH RFC 4/8] fsnotify: stop walking child dentries if remaining
+ tail is negative
 From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     Waiman Long <longman@redhat.com>
-Date:   Fri, 08 May 2020 15:23:17 +0300
-Message-ID: <158894059714.200862.11121403612367981747.stgit@buzz>
+Date:   Fri, 08 May 2020 15:23:23 +0300
+Message-ID: <158894060308.200862.2000400345829882905.stgit@buzz>
 In-Reply-To: <158893941613.200862.4094521350329937435.stgit@buzz>
 References: <158893941613.200862.4094521350329937435.stgit@buzz>
 User-Agent: StGit/0.22-32-g6a05
@@ -62,241 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This tool fills dcache with negative dentries. Between iterations it prints
-statistics and measures time of inotify operation which might degrade.
+When notification starts/stops listening events from inode's children it
+have to update dentry->d_flags of all positive child dentries. Scanning
+may took a long time if directory has a lot of negative child dentries.
+
+This is main beneficiary of sweeping cached negative dentries to the end.
+
+Before patch:
+
+nr_dentry = 24172597	24.2M
+nr_buckets = 8388608	2.9 avg
+nr_unused = 24158110	99.9%
+nr_negative = 24142810	99.9%
+
+inotify time: 0.507182 seconds
+
+After patch:
+
+nr_dentry = 24562747    24.6M
+nr_buckets = 8388608    2.9 avg
+nr_unused = 24548714    99.9%
+nr_negative = 24543867  99.9%
+
+inotify time: 0.000010 seconds
+
+Negative dentries no longer slow down inotify op at parent directory.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- tools/testing/selftests/filesystems/Makefile       |    1 
- .../testing/selftests/filesystems/dcache_stress.c  |  210 ++++++++++++++++++++
- 2 files changed, 211 insertions(+)
- create mode 100644 tools/testing/selftests/filesystems/dcache_stress.c
+ fs/notify/fsnotify.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/filesystems/Makefile b/tools/testing/selftests/filesystems/Makefile
-index 129880fb42d3..6b5e08617d11 100644
---- a/tools/testing/selftests/filesystems/Makefile
-+++ b/tools/testing/selftests/filesystems/Makefile
-@@ -3,5 +3,6 @@
- CFLAGS += -I../../../../usr/include/
- TEST_GEN_PROGS := devpts_pts
- TEST_GEN_PROGS_EXTENDED := dnotify_test
-+TEST_GEN_FILES += dcache_stress
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/filesystems/dcache_stress.c b/tools/testing/selftests/filesystems/dcache_stress.c
-new file mode 100644
-index 000000000000..770e8876629e
---- /dev/null
-+++ b/tools/testing/selftests/filesystems/dcache_stress.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <sys/inotify.h>
-+#include <sys/stat.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <string.h>
-+#include <err.h>
-+
-+double now(void)
-+{
-+	struct timespec ts;
-+
-+	clock_gettime(CLOCK_MONOTONIC, &ts);
-+	return ts.tv_sec + ts.tv_nsec * 1e-9;
-+}
-+
-+struct dentry_stat {
-+	long nr_dentry;
-+	long nr_unused;
-+	long age_limit;		/* age in seconds */
-+	long want_pages;	/* pages requested by system */
-+	long nr_negative;	/* # of unused negative dentries */
-+	long nr_buckets;	/* count of dcache hash buckets */
-+};
-+
-+void show_dentry_state(void)
-+{
-+	struct dentry_stat stat;
-+	ssize_t len;
-+	FILE *f;
-+
-+	f = fopen("/proc/sys/fs/dentry-state", "r");
-+	if (!f)
-+		err(2, "open fs.dentry-state");
-+
-+	if (fscanf(f, "%ld %ld %ld %ld %ld %ld",
-+		   &stat.nr_dentry,
-+		   &stat.nr_unused,
-+		   &stat.age_limit,
-+		   &stat.want_pages,
-+		   &stat.nr_negative,
-+		   &stat.nr_buckets) != 6)
-+		err(2, "read fs.dentry-state");
-+	fclose(f);
-+
-+	if (!stat.nr_buckets)
-+		stat.nr_buckets = 1 << 20;	// for 8Gb ram
-+
-+	printf("nr_dentry = %ld\t%.1fM\n", stat.nr_dentry, stat.nr_dentry / 1e6);
-+	printf("nr_buckets = %ld\t%.1f avg\n", stat.nr_buckets, (double)stat.nr_dentry / stat.nr_buckets);
-+	printf("nr_unused = %ld\t%.1f%%\n", stat.nr_unused, stat.nr_unused * 100. / stat.nr_dentry);
-+	printf("nr_negative = %ld\t%.1f%%\n\n", stat.nr_negative, stat.nr_negative * 100. / stat.nr_dentry);
-+}
-+
-+void test_inotify(const char *path)
-+{
-+	double tm;
-+	int fd;
-+
-+	fd = inotify_init1(0);
-+
-+	tm = now();
-+	inotify_add_watch(fd, path, IN_OPEN);
-+	tm = now() - tm;
-+
-+	printf("inotify time: %f seconds\n\n", tm);
-+
-+	close(fd);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	char dir_name[] = "dcache_stress.XXXXXX";
-+	char name[4096];
-+	char *suffix = name;
-+	int nr_iterations = 10;
-+	int nr_names = 1 << 20;
-+	int iteration, index;
-+	int other_dir = -1;
-+	int mknod_unlink = 0;
-+	int mkdir_chdir = 0;
-+	int second_access = 0;
-+	long long total_names = 0;
-+	double tm;
-+	int opt;
-+
-+	while ((opt = getopt(argc, argv, "i:n:p:o:usdh")) != -1) {
-+		switch (opt) {
-+		case 'i':
-+			nr_iterations = atoi(optarg);
-+			break;
-+		case 'n':
-+			nr_names = atoi(optarg);
-+			break;
-+		case 'p':
-+			strcpy(suffix, optarg);
-+			suffix += strlen(suffix);
-+			break;
-+		case 'o':
-+			other_dir = open(optarg, O_RDONLY | O_DIRECTORY);
-+			if (other_dir < 0)
-+				err(2, "open %s", optarg);
-+			break;
-+		case 'u':
-+			mknod_unlink = 1;
-+			break;
-+		case 'd':
-+			mkdir_chdir = 1;
-+			break;
-+		case 's':
-+			second_access = 1;
-+			break;
-+		case '?':
-+		case 'h':
-+			printf("usage: %s [-i <iterations>] [-n <names>] [-p <prefix>] [-o <dir>] [-u] [-s]\n"
-+			       "  -i  test iterations, default %d\n"
-+			       "  -n  names at each iterations, default %d\n"
-+			       "  -p  prefix for names\n"
-+			       "  -o  interlave with other dir\n"
-+			       "  -s  touch twice\n"
-+			       "  -u  mknod-unlink sequence\n"
-+			       "  -d  mkdir-chdir sequence (leaves garbage)\n",
-+			       argv[0], nr_iterations, nr_names);
-+			return 1;
-+		}
-+	}
-+
-+
-+	if (!mkdtemp(dir_name))
-+		err(2, "mkdtemp");
-+
-+	if (chdir(dir_name))
-+		err(2, "chdir");
-+
-+	show_dentry_state();
-+
-+	if (!mkdir_chdir)
-+		test_inotify(".");
-+
-+	printf("working in temporary directory %s\n\n", dir_name);
-+
-+	for (iteration = 1; iteration <= nr_iterations; iteration++) {
-+
-+		printf("start iteration %d, %d names\n", iteration, nr_names);
-+
-+		tm = now();
-+
-+		sprintf(suffix, "%08x", iteration);
-+
-+		for (index = 0; index < nr_names; index++) {
-+			sprintf(suffix + 8, "%08x", index);
-+
-+			if (mknod_unlink) {
-+				if (mknod(name, S_IFREG, 0))
-+					err(2, "mknod %s", name);
-+				if (unlink(name))
-+					err(2, "unlink %s", name);
-+			} else if (mkdir_chdir) {
-+				if (mkdir(name, 0775))
-+					err(2, "mkdir %s", name);
-+				if (chdir(name))
-+					err(2, "chdir %s", name);
-+			} else
-+				access(name, 0);
-+
-+			if (second_access)
-+				access(name, 0);
-+
-+			if (other_dir >= 0) {
-+				faccessat(other_dir, name, 0, 0);
-+				if (second_access)
-+					faccessat(other_dir, name, 0, 0);
+diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
+index 72d332ce8e12..072974302950 100644
+--- a/fs/notify/fsnotify.c
++++ b/fs/notify/fsnotify.c
+@@ -127,8 +127,12 @@ void __fsnotify_update_child_dentry_flags(struct inode *inode)
+ 		 * original inode) */
+ 		spin_lock(&alias->d_lock);
+ 		list_for_each_entry(child, &alias->d_subdirs, d_child) {
+-			if (!child->d_inode)
++			if (!child->d_inode) {
++				/* all remaining children are negative */
++				if (d_is_tail_negative(child))
++					break;
+ 				continue;
 +			}
-+		}
-+
-+		total_names += nr_names;
-+
-+		tm = now() - tm;
-+		printf("iteration %d complete in %f seconds, total names %lld\n\n", iteration, tm, total_names);
-+
-+		show_dentry_state();
-+
-+		if (!mkdir_chdir)
-+			test_inotify(".");
-+	}
-+
-+	if (chdir(".."))
-+		err(2, "chdir");
-+
-+	if (mkdir_chdir) {
-+		printf("leave temporary directory %s\n", dir_name);
-+		return 0;
-+	}
-+
-+	printf("removing temporary directory %s\n", dir_name);
-+	tm = now();
-+	if (rmdir(dir_name))
-+		err(2, "rmdir");
-+	tm = now() - tm;
-+	printf("remove complete in %f seconds\n\n", tm);
-+
-+	show_dentry_state();
-+
-+	return 0;
-+}
+ 
+ 			spin_lock_nested(&child->d_lock, DENTRY_D_LOCK_NESTED);
+ 			if (watched)
 
