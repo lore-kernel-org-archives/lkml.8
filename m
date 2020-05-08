@@ -2,145 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610D2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F38DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4190D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588949177;
-	bh=rUna4BvqAdXmw2zWEnE1XX0U3nEpMJ9/qKR4xB4CzIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dmc0KXrdDYe2FdWjw7mpingyEjpWmNz0rnzYrtz9suS22d0CHqB26RrzdPXhdlC7h
-	 37hhmRgX+xHiLhtha4AEE0EfPiaAlzz8rhccpjo/7GmsVB5B+OXxRZioHKdyFBoRqm
-	 nZmdyTMrwlCVmEczcPMZwGvOIeVLtueyDPMPe0B8=
+	by mail.kernel.org (Postfix) with ESMTP id F41FF2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E7YUpOfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEHOqQ (ORCPT
+        id S1727955AbgEHOqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:46:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42456 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgEHOqP (ORCPT
+        Fri, 8 May 2020 10:46:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46982 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbgEHOqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:46:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s10so1407053edy.9;
-        Fri, 08 May 2020 07:46:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XarHM7quPtL8Iwp9fTwswhgZUavH/ZpsvuGgVu5XAdQ=;
-        b=s/ZHhlAj71VgJ8NnezjZBWro4BmGv+kztSHzy9OaFeyxmgcg4yrKfs91ak7WS/rjF0
-         xq6ErTJk3IsxZP480DStFO9tOyhR38TvWShYjzdduYmpnf9kRbOjCNW6ehXLn6IdLex+
-         lBtONwzWDLu0Bw18ILlbuDoKvcL4t9BnN3mjLGvv6PADRb3IP8c+jNQaP8inW3HaQfTt
-         uSn7kGk0K37Tz9PW0jd82VNFOLI01l3hAt7R6jPZElr/PQqp1hqW8EIJBJDTa7a6+N4b
-         0ey3uHJFOh7tW3LO4Vr+mzwybi3GDTg1/k7RCEIoWQbAYCpwI8udTTyZgyUMc901yWP9
-         MK6w==
-X-Gm-Message-State: AGi0PuYEgz24/EQPsqpy32zYDKrXkaecLzIA9HmXl1iM+Lk4afrMFdGG
-        4esZFW1O41NnuZHbqtBLIkY=
-X-Google-Smtp-Source: APiQypJjIQQnYzAO+FSyQEz9WwVtWHbUUhLRrRKlBcmzLwDdJK0dXJ06g9EggDcxrDp7mWZKsB0M9g==
-X-Received: by 2002:a05:6402:1515:: with SMTP id f21mr2448831edw.370.1588949173380;
-        Fri, 08 May 2020 07:46:13 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id a5sm289736edn.14.2020.05.08.07.46.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 07:46:12 -0700 (PDT)
-Date:   Fri, 8 May 2020 16:46:10 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Bernard Zhao <bernard@vivo.com>, Kukjin Kim <kgene@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: Re: [PATCH] memory/samsung: Maybe wrong triming parameter
-Message-ID: <20200508144610.GA5983@kozik-lap>
-References: <20200507114514.11589-1-bernard@vivo.com>
- <2eeb33f7-1acc-66bb-704a-b724fa0be0a8@arm.com>
+        Fri, 8 May 2020 10:46:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EhgYt060805;
+        Fri, 8 May 2020 14:45:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=mBsJBO8AIHjfSjv3iPsT+zmmyIaT3vU/FP/YdVrrvSA=;
+ b=E7YUpOfGLEDqJ0uMKlRI9FGlL2K/xojah3OPtoBtuE5lRvLgjSGAAzkyvzYmyUSmsy/p
+ 7xr2ERQyS70wY+kWe4PeG34MWzfey0lWEXEezE9Q2iu870nl+mrVb1E003fDA5gGRVKh
+ AqvJKRXsdZNbwrLIppkX1ksaESCMtutsJBZ9zrnjjrhuxGnVeTXlTVfhEC1ubhFLInYe
+ 6DV1bTW25YJJxLDsadsDTeZ77TVgtgky0N/UJxJt9qZgSdiykIsTKeSF/C84YuCjzQVW
+ F8UCQZ+sroMqDc1px8PXsiFQWEFMQnLGgZLBkEQMfTpCJjnpe074sPZ8PJCWW3tzzbQE LQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30vtepkbsh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:45:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EgvNo040482;
+        Fri, 8 May 2020 14:45:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30vtdnqmvw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:45:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 048EjZKg032026;
+        Fri, 8 May 2020 14:45:35 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 May 2020 07:45:34 -0700
+Date:   Fri, 8 May 2020 17:45:27 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <20200508144527.GR1992@kadam>
+References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
+ <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
+ <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
+ <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
+ <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
+ <20200508090053.430d28d7@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2eeb33f7-1acc-66bb-704a-b724fa0be0a8@arm.com>
+In-Reply-To: <20200508090053.430d28d7@gandalf.local.home>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005080131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 04:42:46PM +0100, Lukasz Luba wrote:
-> Hi Bernard,
+On Fri, May 08, 2020 at 09:00:53AM -0400, Steven Rostedt wrote:
+> On Fri, 8 May 2020 19:42:56 +0800
+> Yunfeng Ye <yeyunfeng@huawei.com> wrote:
 > 
-> 
-> On 5/7/20 12:45 PM, Bernard Zhao wrote:
-> > In function create_timings_aligned, all the max is to use
-> > dmc->min_tck->xxx, aligned with val dmc->timings->xxx.
-> > But the dmc->timings->tFAW use dmc->min_tck->tXP?
-> > Maybe this point is wrong parameter useing.
+> > On 2020/5/8 19:30, Markus Elfring wrote:
+> > >> this change can fix the warning of tools.  
+> > > 
+> > > Would you like to point any specific source code analysis tools out
+> > > for this issue?
+> > > (Can a corresponding attribution become relevant for a clearer
+> > > change description?)
+> > >   
+> > The tools we used is not for open source. it point out some error description like
+> > "Memory leak: data" and "Resource leak: fd" in tools/bootconfig/main.c.
 > > 
-> > Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> > ---
-> >   drivers/memory/samsung/exynos5422-dmc.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> > index 81a1b1d01683..22a43d662833 100644
-> > --- a/drivers/memory/samsung/exynos5422-dmc.c
-> > +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> > @@ -1091,7 +1091,7 @@ static int create_timings_aligned(struct exynos5_dmc *dmc, u32 *reg_timing_row,
-> >   	/* power related timings */
-> >   	val = dmc->timings->tFAW / clk_period_ps;
-> >   	val += dmc->timings->tFAW % clk_period_ps ? 1 : 0;
-> > -	val = max(val, dmc->min_tck->tXP);
-> > +	val = max(val, dmc->min_tck->tFAW);
-> >   	reg = &timing_power[0];
-> >   	*reg_timing_power |= TIMING_VAL2REG(reg, val);
-> > 
+> > Can I only description:
+> >   "Memory and resource leak is found by a static code analysis tools" ? thanks.
 > 
-> Good catch! Indeed this should be a dmc->min_tck->tFAW used for
-> clamping.
+> Markus please stop! Your suggestions are just your preferences that are not
+> required for the kernel.
 > 
-> It didn't show up in testing because the frequency values based on
-> which the 'clk_period_ps' are calculated are sane.
-> Check the dump below:
-> 
-> [    5.458227] DMC: mem tFAW=25000, clk_period_ps=6060
-> [    5.461743] DMC: tFAW=5, tXP=2 val=5
-> [    5.465273] DMC: mem tFAW=25000, clk_period_ps=4854
-> [    5.470101] DMC: tFAW=5, tXP=2 val=6
-> [    5.473668] DMC: mem tFAW=25000, clk_period_ps=3636
-> [    5.478507] DMC: tFAW=5, tXP=2 val=7
-> [    5.482072] DMC: mem tFAW=25000, clk_period_ps=2421
-> [    5.486951] DMC: tFAW=5, tXP=2 val=11
-> [    5.490531] DMC: mem tFAW=25000, clk_period_ps=1841
-> [    5.495439] DMC: tFAW=5, tXP=2 val=14
-> [    5.499113] DMC: mem tFAW=25000, clk_period_ps=1579
-> [    5.503877] DMC: tFAW=5, tXP=2 val=16
-> [    5.507476] DMC: mem tFAW=25000, clk_period_ps=1373
-> [    5.512368] DMC: tFAW=5, tXP=2 val=19
-> [    5.515968] DMC: mem tFAW=25000, clk_period_ps=1212
-> [    5.520826] DMC: tFAW=5, tXP=2 val=21
-> 
-> That's why in the existing configuration it does not harm
-> (the calculated 'val' is always >= 5) the board.
-> 
-> But I think this patch should be applied (after small changes in the
-> commit message).
-> 
-> @Krzysztof could you have a look on the commit message or take the
-> patch with small adjustment in the description, please?
-> 
-> I conditionally give (because of this description):
-> 
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Yunfeng, your v2 was fine and has already landed in Linus's tree. Feel free
+> to ignore Markus's suggestions in the future.
 
-Thanks for review.
+There was actually a bug in v2.  It exits with a non-zero instead of
+zero on success so it will mess up people's scripts.
 
-I applied patch with CC-stable and adjusred commit msg.
-
-Best regards,
-Krzysztof
-
+regards,
+dan carpenter
