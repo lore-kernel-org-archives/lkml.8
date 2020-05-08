@@ -2,138 +2,87 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7941CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57893C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5486A21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402EB20725
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgEHP7R (ORCPT
+        id S1727882AbgEHP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:59:17 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:49715 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgEHP7Q (ORCPT
+        Fri, 8 May 2020 11:59:22 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:48196 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgEHP7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:59:16 -0400
-Received: by mail-il1-f199.google.com with SMTP id z18so1992797ilp.16
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:59:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=/Z8ebm8JnEqgq5bx209BZcVEeu1IlwW2yeabxiXAO+A=;
-        b=imn2M9S2qZ9/FZP4u5vD6mfO1ClKwDHk1Fjp/ouuF7MSRWNZVS9m6PhFa8MVXJgHnM
-         NZ6xknAU9cdr2sDbHkqd/qPzJQOX+rcfx8KizSJlUhx0drcXdJG2fktuRIttJoTi7+dv
-         e7rhxizf7p4z5rvtJlL1fZPMq76q49U6ebwQcP9jXI6bh3mOlv9yXxaFdSdbRyezW16Y
-         /lQwlj9V/NZ/wviJo1QOnAMMoS1dSLqVsc+scKGKAMm+1xG+tbjCj3XKgehiq/Q3krvs
-         lQuRpLh8kd7kra0FzX9N9WISQGeHWze+fa5zsIvGTc0I4M17g1R1sslw5sKULm+oMh34
-         2dvw==
-X-Gm-Message-State: AGi0Puax8DpGBYg2/RDvMCQZRPmTiCI/r25j4y+NVRGbnoRhTDijkqAw
-        O+dIAU99ZIUGk7JFyf2Exuyu9MaT1UVYwt683+MKPfHGPbQM
-X-Google-Smtp-Source: APiQypKqftp0kt1EMnSsQN4HtMQxwBlXzGEM0gHQxmdOYiLVj7wA69CEAbdNCTom4ZPfIKsIpg/k//peBN3aN3pSPy24m8jMthWq
+        Fri, 8 May 2020 11:59:20 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-49-5eb581d7fa7e
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 58.35.17433.7D185BE5; Fri,  8 May 2020 17:59:19 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Fri, 8 May 2020 17:59:19 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v12 09/11] power: supply: Support ROHM bd99954 charger
+Thread-Topic: [PATCH v12 09/11] power: supply: Support ROHM bd99954 charger
+Thread-Index: AQHWJVBjC/LXJEv7ik2ClbqzFKaKX6ieNxAA
+Date:   Fri, 8 May 2020 15:59:18 +0000
+Message-ID: <7a6c4afc9caf5437567c520d5f50ecf540d1c303.camel@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+         <6d2f82459c5331fa7d27f41e6645a55cc1e44837.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <6d2f82459c5331fa7d27f41e6645a55cc1e44837.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0B2676C9C931EF41969BE989B42DDD39@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a02:860e:: with SMTP id e14mr3161121jai.109.1588953553458;
- Fri, 08 May 2020 08:59:13 -0700 (PDT)
-Date:   Fri, 08 May 2020 08:59:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001e5cef05a52514c5@google.com>
-Subject: KMSAN: uninit-value in route4_get
-From:   syzbot <syzbot+0f695e9c22e33a40e8b5@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, jhs@mojatatu.com,
-        jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOzPj7qzrxLiu7dEscgnSIE0LmkrC/oSWmlgQBWpjTo7pXpqd
+        NQ2sjS7omqZdDBcVr2RKhYti2ma2mFZSIqXWD6MtkVRUaCVLIZtx8vLnnJfv+573PXA+HFVZ
+        ZP54up5nOD2dqZV5Yl0NC/Ydw1dak3b2fNVQA5/uoNQ916iM+vUxD6E+dJTLKHdhN6DK619j
+        VN8zPlIe1W4bkUdV2c1R9sZ8WZTbvjkeO6WMSKH5rGPpafrQA6eVbH5zEWK8rciuHvzjYQGz
+        uBUocEjuhi5HqVzUKnIIwLJezgo8Bd0LYL77JmIFOC4jI6D1s1yUanIvbB7wFkdQsgWB1e5q
+        VGR9yMOwyOZApJkj8HreQbGsJsPhN1vdkj1GboUt7U1A1AQZByeKp+RSVC2AfZPzS6yCZGFe
+        v7c4A8hNMN8yjYgaJTXQPjbnIT2ZhHWOflTSvnD8+9//9UDYNvcYE21QMhg+6QiV0EhouTGH
+        SjoQ3i1wyaUneMM3ZaNYMdhgW5NgW6Vta2jbGtq2hq4CHo0A6uj0zDSaZ8JCOMYcwhlYnXCd
+        MejsQPrL2adg0RntBAgOnMAPR7S+xJYTrUmq9SmG1ByWNrHJnDmTMTkBxFGtmijJbklSEal0
+        zkWGMyy3NuKYVkNsc5UkqkgxK4NhjAy33A3AcS0kXlwWTL05Jo3JPpueya+2EVwhmnv6q02M
+        PpXhaDPPJovLkWwStkNseQm5rEXACZOR1glVCX0LwvDi8YoaFO+uqBfO4Znn9agK0xv0jL+G
+        iFkvAKQIsGb9StwE0OBA60OkCPur8hLWesVtQghChCD3T7sYxNOrLX8LyGB+85ap0FKiK7fu
+        /oOX7ExHza2xmoePoudT2s2GBNMuD2w80Bhr7XE5XMqKpjbefXxdDJU101mrzA6aaY1WxCvD
+        LzX8WOgPrr42JDuKJkwHnDd2HrranWtNdL67sK9Aq6NGXu0ZlMdVquf9Ws99mXy/GBh7Mrxw
+        f1uQo3i2UouZWDpsO8qZ6H9YqkInkwMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    21c44613 kmsan: page_alloc: more assuring comment
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=111271e4100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
-dashboard link: https://syzkaller.appspot.com/bug?extid=0f695e9c22e33a40e8b5
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0f695e9c22e33a40e8b5@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in route4_get+0x2cd/0x3d0 net/sched/cls_route.c:235
-CPU: 1 PID: 15044 Comm: syz-executor.4 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- route4_get+0x2cd/0x3d0 net/sched/cls_route.c:235
- tc_new_tfilter+0x1f32/0x4f40 net/sched/cls_api.c:2082
- rtnetlink_rcv_msg+0xcb7/0x1570 net/core/rtnetlink.c:5427
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
- rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5454
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
- ___sys_sendmsg net/socket.c:2399 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
- __compat_sys_sendmsg net/compat.c:642 [inline]
- __do_compat_sys_sendmsg net/compat.c:649 [inline]
- __se_compat_sys_sendmsg net/compat.c:646 [inline]
- __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f0bd99
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f5cc40cc EFLAGS: 00000296 ORIG_RAX: 0000000000000172
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000280
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2801 [inline]
- slab_alloc mm/slub.c:2810 [inline]
- kmem_cache_alloc_trace+0x6f3/0xd70 mm/slub.c:2827
- kmalloc include/linux/slab.h:555 [inline]
- batadv_forw_packet_alloc+0x1be/0x6d0 net/batman-adv/send.c:525
- batadv_iv_ogm_aggregate_new net/batman-adv/bat_iv_ogm.c:562 [inline]
- batadv_iv_ogm_queue_add+0x11cb/0x1900 net/batman-adv/bat_iv_ogm.c:670
- batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:833 [inline]
- batadv_iv_ogm_schedule+0xd4c/0x1430 net/batman-adv/bat_iv_ogm.c:869
- batadv_iv_send_outstanding_bat_ogm_packet+0xbae/0xd50 net/batman-adv/bat_iv_ogm.c:1722
- process_one_work+0x1555/0x1f40 kernel/workqueue.c:2266
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2412
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+DQpPbiBGcmksIDIwMjAtMDUtMDggYXQgMTg6NTAgKzAzMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
+ZToNCj4gVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRlcnkgTWFuYWdlbWVudCBMU0kgZm9yIDEt
+NCBjZWxsIExpdGhpdW0tSW9uDQo+IHNlY29uZGFyeSBiYXR0ZXJ5IGludGVuZGVkIHRvIGJlIHVz
+ZWQgaW4gc3BhY2UtY29uc3RyYWludCBlcXVpcG1lbnQNCj4gc3VjaA0KPiBhcyBMb3cgcHJvZmls
+ZSBOb3RlYm9vayBQQywgVGFibGV0cyBhbmQgb3RoZXIgYXBwbGljYXRpb25zLiBCRDk5OTU0DQo+
+IHByb3ZpZGVzIGEgRHVhbC1zb3VyY2UgQmF0dGVyeSBDaGFyZ2VyLCB0d28gcG9ydCBCQzEuMiBk
+ZXRlY3Rpb24gYW5kDQo+IGENCj4gQmF0dGVyeSBNb25pdG9yLg0KPiANCj4gU3VwcG9ydCBST0hN
+IEJEOTk5NTQgQ2hhcmdlciBJQy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5l
+biA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiBSZXZpZXdlZC1ieTogQW5k
+eSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQoNCkh1aC4g
+SSBzaG91bGRuJ3QgZG8gd29yayBhdCB0aGUgRnJpZGF5IGV2ZW5pbmdzLi4uIEl0IHNlZW1zIEkg
+ZGlkDQphY2NpZGVudGFsbHkgc2VuZCB0aGlzIHBhdGNoIHR3aWNlLiBIb3BlZnVsbHkgaXQgZG9l
+cyBub3QgbWVzcyB1cCB0aGUNCnNlcmllcyBmb3IgeW91IC0gSSdkIHJhdGhlciBub3QgcmVzZW5k
+IHRoaXMgYW55bW9yZS4uLiBQbGVhc2UgbGV0IG1lDQprbm93IGlmIEkgc2hvdWxkIGRvIHNvbWUg
+Y29ycmVjdGl2ZSBhY3Rpb25zLg0KDQpTb3JyeSENCg0KQmVzdCBSZWdhcmRzDQotLU1hdHRpDQo=
