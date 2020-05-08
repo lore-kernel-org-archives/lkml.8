@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D45C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB88C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6D06218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A724424959
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942258;
-	bh=x5czH2AzTGz++J/ka8Lv3Vap6frh2sjcJMcok6Ci0hQ=;
+	s=default; t=1588942259;
+	bh=uYN8LZz1ibwe/IWmuFlzlOnteIFIM2ocNjVnNCs3UmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhiF0wZqOnVuKILlA5JlpzDWDrfN+Dsu+pMTdOVA2xqVKyeVSl1Lx0dThuvuIzxC3
-	 Fk0nnIABxsZWOUByAfS+oTLAyohzx9uZO/DprZ+KaMuw9WDZNhUrjqbLJfu6QQoCaR
-	 qD1mEpD9RdFsqSlngYj/XxVVW+l2PV0DpnougnIw=
+	b=S+uYvrq29CYC7qeDIBA8T85iteXhrHXBFrQ4NuJsq+5t0J4+R1quIDo6UKxcyjoWr
+	 GRktz2XK2IT6HXmGUVvJo5mb+zToFBd9aNglXLVLtJO4YtWkvFEd3WFYAzxjjDOSwd
+	 FBu+oqsflOANVLfrpL1p3glbvg+5vv486nirfEto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgEHMu5 (ORCPT
+        id S1729868AbgEHMu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729639AbgEHMus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:48 -0400
+        id S1726913AbgEHMux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71EFA218AC;
-        Fri,  8 May 2020 12:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52FB9218AC;
+        Fri,  8 May 2020 12:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942247;
-        bh=x5czH2AzTGz++J/ka8Lv3Vap6frh2sjcJMcok6Ci0hQ=;
+        s=default; t=1588942252;
+        bh=uYN8LZz1ibwe/IWmuFlzlOnteIFIM2ocNjVnNCs3UmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1DZiGyPaghfROsrXdqIMauiZbjgK/eNq/s7WsBgY5h2RVRJZWrERYg/5lpcKFfpQE
-         rgBY2KIfgXloMxKHkAOU77RZuqioPhyQ05NIKokrDVFRDriB1XrcPQ8JoC4eay4bZY
-         KnAzA+6A6rsRnlF4bg3R7Bhl0yAXuN45jIFtwB0g=
+        b=J7Gs0mMGSglEZ62yoAUuFgAVkIl7RYNu42SlnwP0eovBLhe8TDolUZfIt10B4tvwt
+         rDbWHvmXMJsCLIHCWSKs1R0mmtgkA3W2VJvy9TdYenD2tI4qaBkThxFciiWFF/8/vJ
+         a88uOm/Sgm1VrKPP8o2OhkYiiVKjwJOMCw+42RE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/22] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-Date:   Fri,  8 May 2020 14:35:18 +0200
-Message-Id: <20200508123034.693664666@linuxfoundation.org>
+Subject: [PATCH 4.14 08/22] wimax/i2400m: Fix potential urb refcnt leak
+Date:   Fri,  8 May 2020 14:35:20 +0200
+Message-Id: <20200508123034.967844746@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
@@ -62,47 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit b94e164759b82d0c1c80d4b1c8f12c9bee83f11d ]
+[ Upstream commit 7717cbec172c3554d470023b4020d5781961187e ]
 
-The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
-sdata[0..3] inputs of the HDMI output block. The upper half of the
-register contains four blocks of 4 bits, with the most significant
-controlling the sdata3 line and the least significant the sdata0 line.
+i2400mu_bus_bm_wait_for_ack() invokes usb_get_urb(), which increases the
+refcount of the "notif_urb".
 
-The shift calculation has an off-by-one error, causing the parent SSI to
-be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
-As the parent SSI transmits the stereo L/R channels, and the HDMI core
-expects it on the sdata0 line, this causes no audio to be output when
-playing stereo audio on a multichannel capable HDMI out, and
-multichannel audio has permutated channels.
+When i2400mu_bus_bm_wait_for_ack() returns, local variable "notif_urb"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-Fix the shift calculation to map the parent SSI to sdata0, the first
-child to sdata1 etc.
+The issue happens in all paths of i2400mu_bus_bm_wait_for_ack(), which
+forget to decrease the refcnt increased by usb_get_urb(), causing a
+refcnt leak.
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this issue by calling usb_put_urb() before the
+i2400mu_bus_bm_wait_for_ack() returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssiu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wimax/i2400m/usb-fw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
-index 4d948757d300d..5e5ed54754739 100644
---- a/sound/soc/sh/rcar/ssiu.c
-+++ b/sound/soc/sh/rcar/ssiu.c
-@@ -172,7 +172,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
- 			i;
+diff --git a/drivers/net/wimax/i2400m/usb-fw.c b/drivers/net/wimax/i2400m/usb-fw.c
+index 502c346aa790b..7d396c81ec3eb 100644
+--- a/drivers/net/wimax/i2400m/usb-fw.c
++++ b/drivers/net/wimax/i2400m/usb-fw.c
+@@ -354,6 +354,7 @@ ssize_t i2400mu_bus_bm_wait_for_ack(struct i2400m *i2400m,
+ 		usb_autopm_put_interface(i2400mu->usb_iface);
+ 	d_fnend(8, dev, "(i2400m %p ack %p size %zu) = %ld\n",
+ 		i2400m, ack, ack_size, (long) result);
++	usb_put_urb(&notif_urb);
+ 	return result;
  
- 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
--			shift	= (i * 4) + 16;
-+			shift	= (i * 4) + 20;
- 			val	= (val & ~(0xF << shift)) |
- 				rsnd_mod_id(pos) << shift;
- 		}
+ error_exceeded:
 -- 
 2.20.1
 
