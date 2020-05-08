@@ -2,94 +2,99 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24BC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6106BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1E820870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943895;
-	bh=+Kr0YZdilqw32Wu6ZnjBEU69JrMi5MUb4OE8GixeM8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoXV2Y7hUZNCcPIYtqMixNKh+krHbyYZD3QERqrcxmpdj0n/c1mxeeU6V164eddg7
-	 p6GwPIRpsht4VVgKsIvUN2fR17otT+Blx7uqdIoVCUS/vhgvFIvM5ncHILNmfYEoDF
-	 zhbCsgLKF8VnPhQ2ZsZ86Znqu4le2m3wsxXgGI9g=
+	by mail.kernel.org (Postfix) with ESMTP id 3F858206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nANjiioT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbgEHNSO (ORCPT
+        id S1730109AbgEHNST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgEHMnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A54BA20731;
-        Fri,  8 May 2020 12:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941798;
-        bh=+Kr0YZdilqw32Wu6ZnjBEU69JrMi5MUb4OE8GixeM8M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdIYwOi7xxTrt/S6NXWhA+QFvrWRssbYbyh/NCMA6NNv31q0HKCr/ZL+3KsNK8wJL
-         zIgPLhcCMsjNEZSpdHJsAjTXcBCLW3c8Vy8lyKBkc7Q5hJMYgbr4Le8CFMZliDjyHu
-         oc5eEJgHmqLnjN7X72GzXW1cWuVIjloaiU53GA1Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 175/312] net: moxa: fix an error code
-Date:   Fri,  8 May 2020 14:32:46 +0200
-Message-Id: <20200508123136.803325883@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
-References: <20200508123124.574959822@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 May 2020 09:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728591AbgEHNSM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:18:12 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAABC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:18:10 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h9so1824234wrt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9nChlhKbO9BjNaYzNwfsyUYTQj0xKTlbsDHkjKVD9kg=;
+        b=nANjiioTUJaVJfjULoRIi8nV/rgHwSpBvsRO6EQVlFhkUVXkfEaQdlX2OM2u0OdRMu
+         uukdCy4/iM7UgCG09MdWXmIArxiuZ2VMHUo2iAZzLYAtWWkPYYfMQwDfwCNpzVM62TxG
+         mUOBHTf0AF4bWdYtQe+AEnyPj8Q78QjySWZnaA+WokDwSH97xWz6Bk3vkioelikKVepJ
+         9B9G3DmSUyAhDyN34cSXkOfMvqlT3VuvVxV+BxCxzXfJV3Ayi17oBZ5y1hoR5SgN6YPm
+         HWHKBji3uc81BImbm/IIiPjvdk9PEJxc5/eN+NZTa2lx/ooT7XplQU8h1lpoQW2UpVOg
+         x9aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9nChlhKbO9BjNaYzNwfsyUYTQj0xKTlbsDHkjKVD9kg=;
+        b=VOjGsEljeVkMnCVv1opxaIsK2Zw1yIpIqBnCz6rXpmcO072Y30uYwneJ1r71TONS9w
+         HrIsrvHlpeLLMziEFXRESgbwaaUCuSx9amVcJBsXpog0FmaFGAIqEIseI4Wh/JZLALEV
+         NkBWOv64RC2VtIJH0+abNMPKFjsE0v6Ge/PReWZp4fdv5p/8Gr2f86FTfZ8N3gakSBH3
+         GepwKhW5z/Q9RLJ6lXOvj6C+Dpj2ifQ2pYs/cX5DrasDaZHn+xZJfUQ5JNnGzWMeA0bZ
+         LSwKJF8a+iHPKtddYGYoXLx39YXPjJeMbCYUOn69X/avELdI2GdXQbi1B2ZCJBFHA6bh
+         BBBA==
+X-Gm-Message-State: AGi0PuaN7vqmaUb8FWKE4wcijOB2V6oUDXrWhhuowIiNRWfZoTsiGziY
+        ec8R89oGN5NrDicf6jUQ61fvPA==
+X-Google-Smtp-Source: APiQypL+1KhIUnHBdu8MermDCbWXNpBe6I70VK/mm3MUDxStvjwGwDUlBSSTUQKpESNMefoQrrDwTQ==
+X-Received: by 2002:adf:fac5:: with SMTP id a5mr3115224wrs.210.1588943888335;
+        Fri, 08 May 2020 06:18:08 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id u12sm13658718wmu.25.2020.05.08.06.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 06:18:07 -0700 (PDT)
+Date:   Fri, 8 May 2020 14:18:04 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+        rafael@kernel.org, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        fweisbec@gmail.com, tkjos@google.com, kernel-team@android.com
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200508131804.GC10541@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200508053359.ul5dbws6vkpdrbef@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508053359.ul5dbws6vkpdrbef@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+Hi Viresh,
 
-commit 1d3cd1773fddfdc9ffb0c2dec9a954c7a54bc207 upstream.
+On Friday 08 May 2020 at 11:03:59 (+0530), Viresh Kumar wrote:
+> IMHO, you have over-broken the patches, like first two could be merged
+> together and all exports could have been done in a single patch, etc.
+> i.e. all related or similar changes together...
 
-We accidentally return IS_ERR(priv->base) which is 1 instead of
-PTR_ERR(priv->base) which is the error code.
+Right, I don't mind squashing the first patches. For the exports, I'm
+guessing they'll need a case by case discussion, so it's probably
+reasonable to keep them separate, at least for now.
 
-Fixes: 6c821bd9edc9 ('net: Add MOXA ART SoCs ethernet driver')
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
----
- drivers/net/ethernet/moxa/moxart_ether.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -460,9 +460,9 @@ static int moxart_mac_probe(struct platf
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ndev->base_addr = res->start;
- 	priv->base = devm_ioremap_resource(p_dev, res);
--	ret = IS_ERR(priv->base);
--	if (ret) {
-+	if (IS_ERR(priv->base)) {
- 		dev_err(p_dev, "devm_ioremap_resource failed\n");
-+		ret = PTR_ERR(priv->base);
- 		goto init_fail;
- 	}
- 
-
-
+Thanks!
+Quentin
