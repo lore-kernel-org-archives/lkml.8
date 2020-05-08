@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC82C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C7E24963
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65EA2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942422;
-	bh=QfCTPjHy7WZEfNI4U+ak78qxUMtpTRzTtJbFMnLqnt8=;
+	s=default; t=1588942426;
+	bh=AcdBHF1lQqiPltsSywu3bPWQZYgMsimmEDEYiFo43n8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xpk3MpqgvD4rFoFZYiseqEovqhET6gTpWCHR/6VX+gSIS9FFAn4Mv3m7JL8sRBzly
-	 JV5IVa2/nylXPeEgr3fB1enNDqkswh1S4XVWzZgdVOK4W8F2TRAgAPv/nmLn39Dg57
-	 pFyq0C913WhEFYL2hecWgxdd1i+tbsPdY8l8/rKc=
+	b=F1OEZUTFuVBvOZM5/0vO33NcyuktgAVU8Lk3OU8bvFFKKpbW75VcY029RLFBauubx
+	 Jr/5Mgx1AQayenlYAK8R142aomjpv23XDaPYSLfqi0+Lm/lO9U++GzJcr6VQ6POVYJ
+	 53aDruSIlWkwD1jjJjfZl2cVogAyzbIyp5Yu+rog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgEHMxk (ORCPT
+        id S1730105AbgEHMxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbgEHMxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:34 -0400
+        id S1730087AbgEHMxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F812054F;
-        Fri,  8 May 2020 12:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8205D2054F;
+        Fri,  8 May 2020 12:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942414;
-        bh=QfCTPjHy7WZEfNI4U+ak78qxUMtpTRzTtJbFMnLqnt8=;
+        s=default; t=1588942419;
+        bh=AcdBHF1lQqiPltsSywu3bPWQZYgMsimmEDEYiFo43n8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t1JbKGMuxUZMD+ldGqoyTN/cBIxxlggEqdsbzCVvXyz9H0skNQH3i0foNnQu5hmnt
-         Nr6b+EUsWTY7nwYiwaG6PI7PxWnzXWwZr4dCu4zmY+ojK5POpZub2+ybL2Zr3da6O3
-         GHP6xHt63jzytc2uQ6Dgx+BJFo7BbZJJV14XitZs=
+        b=znOSmRaQrz274MbYFsbnPMuTi1nG2nsMuxrieorgkMKMUBPGnkvqUC2fXpKBR6YWP
+         /kZuhNYYYU6sM8EX+PJXaX32jgyFlRmlrp/IOXjqVUHx9EXnR/q/sBi/O8zxKuWPID
+         MoSnNaudjGK0S9a10J8vKx2h/foCAYzu2fk1uXOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.4 36/50] hexagon: clean up ioremap
-Date:   Fri,  8 May 2020 14:35:42 +0200
-Message-Id: <20200508123048.327630600@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 38/50] ALSA: hda: Match both PCI ID and SSID for driver blacklist
+Date:   Fri,  8 May 2020 14:35:44 +0200
+Message-Id: <20200508123048.527795103@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -58,64 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit ac32292c8552f7e8517be184e65dd09786e991f9 upstream.
+commit 977dfef40c8996b69afe23a9094d184049efb7bb upstream.
 
-Use ioremap as the main implemented function, and defined
-ioremap_nocache to it as a deprecated alias.
+The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
+new blacklist for the devices that are known to have empty codecs, and
+one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
+However, it turned out that the very same PCI SSID is used for the
+previous model that does have the valid HD-audio codecs and the change
+broke the sound on it.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Since the empty codec problem appear on the certain AMD platform (PCI
+ID 1022:1487), this patch changes the blacklist matching to both PCI
+ID and SSID using pci_match_id().  Also, the entry that was removed by
+the previous fix for ASUS ROG Zenigh II is re-added.
+
+Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/hexagon/include/asm/io.h       |   11 ++---------
- arch/hexagon/kernel/hexagon_ksyms.c |    2 +-
- arch/hexagon/mm/ioremap.c           |    2 +-
- 3 files changed, 4 insertions(+), 11 deletions(-)
+ sound/pci/hda/hda_intel.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/hexagon/include/asm/io.h
-+++ b/arch/hexagon/include/asm/io.h
-@@ -171,16 +171,9 @@ static inline void writel(u32 data, vola
- #define writew_relaxed __raw_writew
- #define writel_relaxed __raw_writel
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2023,9 +2023,10 @@ static void pcm_mmap_prepare(struct snd_
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
  
--/*
-- * Need an mtype somewhere in here, for cache type deals?
-- * This is probably too long for an inline.
-- */
--void __iomem *ioremap_nocache(unsigned long phys_addr, unsigned long size);
-+void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
-+#define ioremap_nocache ioremap
+@@ -2064,7 +2065,7 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
  
--static inline void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
--{
--	return ioremap_nocache(phys_addr, size);
--}
- 
- static inline void iounmap(volatile void __iomem *addr)
- {
---- a/arch/hexagon/kernel/hexagon_ksyms.c
-+++ b/arch/hexagon/kernel/hexagon_ksyms.c
-@@ -20,7 +20,7 @@ EXPORT_SYMBOL(__vmgetie);
- EXPORT_SYMBOL(__vmsetie);
- EXPORT_SYMBOL(__vmyield);
- EXPORT_SYMBOL(empty_zero_page);
--EXPORT_SYMBOL(ioremap_nocache);
-+EXPORT_SYMBOL(ioremap);
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memset);
- 
---- a/arch/hexagon/mm/ioremap.c
-+++ b/arch/hexagon/mm/ioremap.c
-@@ -9,7 +9,7 @@
- #include <linux/vmalloc.h>
- #include <linux/mm.h>
- 
--void __iomem *ioremap_nocache(unsigned long phys_addr, unsigned long size)
-+void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
- {
- 	unsigned long last_addr, addr;
- 	unsigned long offset = phys_addr & ~PAGE_MASK;
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
 
 
