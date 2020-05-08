@@ -2,115 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BFCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B26FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6565F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B9E208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEHJRb (ORCPT
+        id S1726678AbgEHJUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:17:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4297 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbgEHJR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:17:29 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BE68A22B3D822B2B4BE1;
-        Fri,  8 May 2020 17:17:26 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 17:17:19 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>
-CC:     <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wangxiongfeng2@huawei.com>
-Subject: [RFC PATCH 2/3] cpufreq: Add SW BOOST support for drivers without frequency table
-Date:   Fri, 8 May 2020 17:11:03 +0800
-Message-ID: <1588929064-30270-3-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
-References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
+        Fri, 8 May 2020 05:20:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34438 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbgEHJUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 05:20:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4FDBFB020;
+        Fri,  8 May 2020 09:20:07 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 70DEF1E12A6; Fri,  8 May 2020 11:20:03 +0200 (CEST)
+Date:   Fri, 8 May 2020 11:20:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Tan Hu <tan.hu@zte.com.cn>, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] lib/flex_proportions.c: aging counts when fraction
+ smaller than max_frac/FPROP_FRAC_BASE
+Message-ID: <20200508092003.GC20446@quack2.suse.cz>
+References: <1588746088-38605-1-git-send-email-tan.hu@zte.com.cn>
+ <20200507164614.4a816d2aa1b341be937b128a@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507164614.4a816d2aa1b341be937b128a@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Software-managed BOOST get the boost frequency by check the flag
-CPUFREQ_BOOST_FREQ at driver's frequency table. But some cpufreq driver
-don't have frequency table and use other methods to get the frequency
-range, such CPPC cpufreq driver.
+Thanks for CC Andrew.
 
-To add SW BOOST support for drivers without frequency table, we add
-members in 'cpufreq_policy.cpufreq_cpuinfo' to record the max frequency
-of boost mode and non-boost mode. The cpufreq driver initialize these two
-members when probing.
+On Thu 07-05-20 16:46:14, Andrew Morton wrote:
+> On Wed, 6 May 2020 14:21:28 +0800 Tan Hu <tan.hu@zte.com.cn> wrote:
+> 
+> > If the given type has fraction smaller than max_frac/FPROP_FRAC_BASE,
+> > __fprop_inc_percpu_max should follow the design formula and aging
+> > fraction too.
+> > 
+> > Signed-off-by: Tan Hu <tan.hu@zte.com.cn>
+> > ---
+> >  lib/flex_proportions.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
+> > index 7852bfff5..451543937 100644
+> > --- a/lib/flex_proportions.c
+> > +++ b/lib/flex_proportions.c
+> > @@ -266,8 +266,7 @@ void __fprop_inc_percpu_max(struct fprop_global *p,
+> >  		if (numerator >
+> >  		    (((u64)denominator) * max_frac) >> FPROP_FRAC_SHIFT)
+> >  			return;
+> > -	} else
+> > -		fprop_reflect_period_percpu(p, pl);
+> > -	percpu_counter_add_batch(&pl->events, 1, PROP_BATCH);
+> > -	percpu_counter_add(&p->events, 1);
+> > +	}
+> > +
+> > +	__fprop_inc_percpu(p, pl);
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/cpufreq/cpufreq.c | 23 +++++++++++++++--------
- include/linux/cpufreq.h   |  2 ++
- 2 files changed, 17 insertions(+), 8 deletions(-)
+So the code is actually correct as is because if max_frac <
+FPROP_FRAC_BASE, we call fprop_fraction_percpu() which calls
+fprop_reflect_period_percpu(). So the 'else' is there to avoid calling the
+function twice. That being said calling fprop_reflect_period_percpu() twice
+as we would with your patch does no big harm as we'd just quickly bail on
+pl->period == p->period test. So I think the code is easier to understand
+the way you suggest without significant downside. But please update the
+changelog to explain that this is just code cleanup (with the above
+reasoning) and not a functional fix.
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 475fb1b..a299426 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2508,15 +2508,22 @@ static int cpufreq_boost_set_sw(int state)
- 	int ret = -EINVAL;
- 
- 	for_each_active_policy(policy) {
--		if (!policy->freq_table)
--			continue;
--
--		ret = cpufreq_frequency_table_cpuinfo(policy,
-+		if (policy->freq_table) {
-+			ret = cpufreq_frequency_table_cpuinfo(policy,
- 						      policy->freq_table);
--		if (ret) {
--			pr_err("%s: Policy frequency update failed\n",
--			       __func__);
--			break;
-+			if (ret) {
-+				pr_err("%s: Policy frequency update failed\n",
-+				       __func__);
-+				break;
-+			}
-+		} else if (policy->cpuinfo.boost_max_freq) {
-+			if (state)
-+				policy->max = policy->cpuinfo.boost_max_freq;
-+			else
-+				policy->max = policy->cpuinfo.nonboost_max_freq;
-+			policy->cpuinfo.max_freq = policy->max;
-+		} else {
-+			continue;
- 		}
- 
- 		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 018dce8..c3449e6 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -43,6 +43,8 @@ enum cpufreq_table_sorting {
- struct cpufreq_cpuinfo {
- 	unsigned int		max_freq;
- 	unsigned int		min_freq;
-+	unsigned int		boost_max_freq;
-+	unsigned int		nonboost_max_freq;
- 
- 	/* in 10^(-9) s = nanoseconds */
- 	unsigned int		transition_latency;
+								Honza
+
 -- 
-1.7.12.4
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
