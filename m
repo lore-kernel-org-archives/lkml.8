@@ -2,126 +2,77 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49337C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4F6C54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25CB4206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKmcD7Lf"
+	by mail.kernel.org (Postfix) with ESMTP id C2047206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbgEHNAw (ORCPT
+        id S1730296AbgEHNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730200AbgEHNAo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:00:44 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267F4C05BD43;
-        Fri,  8 May 2020 06:00:44 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w2so1221447edx.4;
-        Fri, 08 May 2020 06:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UNr+F8apfDkpAFTpO6sFiBGjB6K7z8TvBITdy9tuPt8=;
-        b=DKmcD7LfBgTggHbWeEZ2mMx9ocC4GWT2Jq2oInpgnjocOYyMKyO2Qe+a3N2wfcnyv/
-         VbrJM0dXV1B/XTG6MrWuiqlDafHsw0Sv24765TJ9Cf2qJO0/YNzvxwPHJdyXW0dW0G1c
-         djCucTwC0qPpQZgIHNiT3cnJy/uI0d9PvK5xPoR3kN4iAwieic5za5bG1Lj4uHOzq/Za
-         UAhDon2ZUqawnDP/AouY2DvVCnq2Qh4HIoUc9NK0D7h5c+je/Y5H5UZrRBZ0tZRtQf/x
-         DDQ0mGcuKcO/HRyDQ2Mudv3YUjAK++dXvYiCBtq/cTOoseLbZedG5T1Ue/D88z0cokeu
-         t9dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UNr+F8apfDkpAFTpO6sFiBGjB6K7z8TvBITdy9tuPt8=;
-        b=hLrLgWsa6J1+xutzoQAKN5/XFhMEUbx5AQAwZZdFAvjk0G2dKMvGFpM7BtsOTGzlTg
-         fYUe5V8T9gkAY7AOtraMizXzBl1oWmmM/VpKCQOirp+F1OSZcGdl/CvXHDcrksNgbcrE
-         D18Xbkp0n37c/Sq3+T0pfod5GUkAnquB5rjmbNFqVKFjPAlhA6Qoy+D6iunTVHRis2lS
-         QYmXBLMKXkn/S0IqiMHbwIm3C75qICJdtetWcqNLBaL2y00KaK+djPOosnIBg11m2ziQ
-         vwihOJ7YoGZbxNdmFlsqnosroVkHcKBIPDtv59nFik1hn7m4BHmh2o3qXArubwj/j++U
-         yQTw==
-X-Gm-Message-State: AGi0PuabkXspaTGdpUn8pYL/9vpFVMVuerSjMc+HnKV2uSBhiKZm3JB8
-        nZ/TEsSGBmyv9xbEw44x3WlhaKf/Y7fX1TVss+pvGfCo
-X-Google-Smtp-Source: APiQypKno/Iywb79VTpCN3AA0UaOSPNgwwHas3Fsn84KPhzEmB1NfTgm9AhfEUxZaKRrx0Jii6MldZ8JuVpF38uL6LY=
-X-Received: by 2002:a05:6402:6c4:: with SMTP id n4mr2101038edy.368.1588942842669;
- Fri, 08 May 2020 06:00:42 -0700 (PDT)
+        Fri, 8 May 2020 09:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHNA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:00:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9ECA2054F;
+        Fri,  8 May 2020 13:00:54 +0000 (UTC)
+Date:   Fri, 8 May 2020 09:00:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Shiyuan Hu" <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <20200508090053.430d28d7@gandalf.local.home>
+In-Reply-To: <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
+References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
+        <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
+        <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
+        <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
+        <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1588939255-58038-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1588939255-58038-1-git-send-email-zou_wei@huawei.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 8 May 2020 16:00:31 +0300
-Message-ID: <CA+h21hryj+b3wm8JNGW8V9gpF11D6AjdEmhq0FAdunQkPQFFcw@mail.gmail.com>
-Subject: Re: [PATCH -next] net: dsa: sja1105: remove set but not used variable 'prev_time'
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+On Fri, 8 May 2020 19:42:56 +0800
+Yunfeng Ye <yeyunfeng@huawei.com> wrote:
 
-On Fri, 8 May 2020 at 14:55, Samuel Zou <zou_wei@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/dsa/sja1105/sja1105_vl.c:468:6: warning: variable =E2=80=98pr=
-ev_time=E2=80=99 set but not used [-Wunused-but-set-variable]
->   u32 prev_time =3D 0;
->       ^~~~~~~~~
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-> ---
+> On 2020/5/8 19:30, Markus Elfring wrote:
+> >> this change can fix the warning of tools.  
+> > 
+> > Would you like to point any specific source code analysis tools out
+> > for this issue?
+> > (Can a corresponding attribution become relevant for a clearer
+> > change description?)
+> >   
+> The tools we used is not for open source. it point out some error description like
+> "Memory leak: data" and "Resource leak: fd" in tools/bootconfig/main.c.
+> 
+> Can I only description:
+>   "Memory and resource leak is found by a static code analysis tools" ? thanks.
 
-Thank you for the patch!
+Markus please stop! Your suggestions are just your preferences that are not
+required for the kernel.
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Yunfeng, your v2 was fine and has already landed in Linus's tree. Feel free
+to ignore Markus's suggestions in the future.
 
->  drivers/net/dsa/sja1105/sja1105_vl.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja11=
-05/sja1105_vl.c
-> index b52f1af..aa9b0b9 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_vl.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_vl.c
-> @@ -465,7 +465,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_ga=
-ting_config *gating_cfg,
->         struct sja1105_gate_entry *last_e;
->         struct sja1105_gate_entry *e;
->         struct list_head *prev;
-> -       u32 prev_time =3D 0;
->
->         list_for_each_entry(e, &gating_cfg->entries, list) {
->                 struct sja1105_gate_entry *p;
-> @@ -476,7 +475,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_ga=
-ting_config *gating_cfg,
->                         continue;
->
->                 p =3D list_entry(prev, struct sja1105_gate_entry, list);
-> -               prev_time =3D e->interval;
->                 p->interval =3D e->interval - p->interval;
->         }
->         last_e =3D list_last_entry(&gating_cfg->entries,
-> --
-> 2.6.2
->
+See commit 8842604446d1f005abcbf8c63c12eabdb5695094
+
+-- Steve
