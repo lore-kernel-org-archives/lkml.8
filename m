@@ -2,71 +2,86 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA80C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF1FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A041A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8339F214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rbdz2xcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgEHWsj (ORCPT
+        id S1728194AbgEHWu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 18:48:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHWsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 18:48:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E8601FB;
-        Fri,  8 May 2020 15:48:35 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1777A3F68F;
-        Fri,  8 May 2020 15:48:34 -0700 (PDT)
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Fri, 8 May 2020 18:50:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727774AbgEHWu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 18:50:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A472FC061A0C;
+        Fri,  8 May 2020 15:50:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s8so3744559wrt.9;
+        Fri, 08 May 2020 15:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V3nc4NBSeZ0B9rUqgxGAX48Rma2M/iKEjSutkviGE4Q=;
+        b=Rbdz2xcrk8vpCyPDyAgfbsmQ8rl7ctSx/u0Q/RXDgSP+qyWCYVkMEEA5FGk1FFHlMu
+         0rG/+L7W3uqMRXEtCtPcoq0/VFYPz3BjOoM6ArXS4d4GVxmFIUhmCb4371XIeKm3TbNn
+         jmQ/Hz1FEOMOV/gkqny9GJ9Y0UDgRhrnVsuzsCEMpSYX1Xm7fJKtaAZhOZW182ssoRhM
+         vsqEtUjrKKqYGptTR+2Sk5lkS9Tz6Zi045IQCRGDjRu7SuV/us7o+kbop7E5cGyz45dS
+         3OXpIP9pqSEJjdmekc5kpnvljSQmOlq9Mggx/Zfkc1BWcRDZG7LBJLr6LrP57IyCv5xG
+         7TLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V3nc4NBSeZ0B9rUqgxGAX48Rma2M/iKEjSutkviGE4Q=;
+        b=JxXp3UsiJsMbGtIPl7IxkFHA+BX0YdlMmwQZafROpKBsqbo5r4mf4D7NhzyY1DR7lI
+         4pcP6xLUlj/s83p8n22AOArhpXP1av4TGu1jsrj8BRwjnz1ljevB9GGT3LiYVTNvMRUU
+         lkpVi+e/8LU0mLlyB9/ztrN6+bTj1VFX0WAbCYjm0zuKFyZUvYvreX98frgbLV2HO4zB
+         TirTKfICf2600f5SHtn/WMzC0gCvLhWvQflPfbRRPlGEpGIe+dZS7MRgNPyIOFYTmix+
+         oGfVUpElDcQUsiaBh0Gz0gfH9jFZ1AJ+Cpp59PAcQPLZyV3zoeySdGHZKcfVkJMuGrMN
+         5D7w==
+X-Gm-Message-State: AGi0PuY8uTdZH4+4VInLuC34LwgcQ9uHiMZrdFNVhQ/q8ND/MYXBk+GQ
+        MMvN6Vk1f3VWNcRJREO1Gf0=
+X-Google-Smtp-Source: APiQypLI4Byv5T7Lmh2uWKQSyxmalzDJUkuVIv6YUIt/fdFeuVoSLcHQsePCIMB8Z0kKMP4AhIDcKg==
+X-Received: by 2002:adf:ea44:: with SMTP id j4mr5797953wrn.38.1588978256310;
+        Fri, 08 May 2020 15:50:56 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u67sm3429631wmu.3.2020.05.08.15.50.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 15:50:55 -0700 (PDT)
+Subject: Re: [PATCH v8 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
- <20200508202722.GI298574@lunn.ch>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
-Date:   Fri, 8 May 2020 17:48:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200508211929.39020-1-alcooperx@gmail.com>
+ <20200508211929.39020-2-alcooperx@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <39262358-9ba5-20f7-656b-63825da369d6@gmail.com>
+Date:   Fri, 8 May 2020 15:50:51 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200508202722.GI298574@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200508211929.39020-2-alcooperx@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,95 +89,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 5/8/20 3:27 PM, Andrew Lunn wrote:
->>> There is a very small number of devices where the vendor messed up,
->>> and did not put valid contents in the ID registers. In such cases, we
->>> can read the IDs from device tree. These are then used in exactly the
->>> same way as if they were read from the device.
->>>
->>
->> Is that the case here?
+
+On 5/8/2020 2:19 PM, Al Cooper wrote:
+> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+> devices and OHCI handles <2.0 devices. Currently the Makefile
+> has XHCI linking at the bottom which will result in the XHIC driver
+> initalizing after the EHCI and OHCI drivers and any installed 3.0
+> device will be seen as a 2.0 device. Moving the XHCI linking
+> above the EHCI and OHCI linking fixes the issue.
 > 
-> Sorry, I don't understand the question?
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
-I was asking in general, does this machine report the ID's correctly. 
-More directed at Calvin, but part of it is the board vendor too. So I 
-suspect no one can really answer "yes", despite that seeming to be the case.
-
-
-
-> 
->> Also, how much of this was caused by uboot being deficient
-> 
-> None. It is a silicon issue. The PHY chip simply has the wrong or no
-> ID value in the registers.
-> 
->>> Not exactly true. It is the combination of can the bus master do C45
->>> and can the device do C45. Unfortunately, we have no knowledge of the
->>> bus masters capabilities, if it can do C45. And many MDIO drivers will
->>> do a C22 transaction when asked to perform a C45 transaction. All new
->>> submissions for MDIO drivers i ask for EOPNOTSUPP to be returned if
->>> C45 is not supported. But we cannot rely on that. Too much history >
->>>>
->>>> I tend to agree with you on this. Even for DT, ideal case, IMO should be:
->>>>
->>>> 1) mdiobus_scan scans the mdiobus for c22 devices by reading phy id from
->>>> registers 2 and 3
->>>> 2) if not found scan for c45 devices <= looks like this is missing in Linux
->>>> 3) look for phy_id from compatible string.
->>>
->>> It is somewhat more complex, in that there are a small number of
->>> devices which will respond to both C22 and C45. Generally, you want to
->>> use C45 if supported. So you would want to do the C45 scan first. But
->>> then the earlier problem comes to play, you have no idea if the bus
->>> master actually correctly supports C45.
->>
->> But this shouldn't this be implied by the mdio vendor/model?
-> 
-> Nope. Many MDIO bus masters don't even appear in DT, because they are
-> embedded into the MAC driver. The MAC driver just instantiates an MDIO
-> device, maybe passing a pointer where to find the PHY properties in
-> DT. If the MDIO bus master is in its own address range, then it
-> probably does exist in device tree, and has a compatible string. But
-> that just gets the driver loaded, it says nothing about what it is
-> capable of, C22 and or C45. And there are cases where the MDIO bus is
-> embedded inside an Ethernet switch, which is hanging off another MDIO
-> bus, etc.
-
-The embedded single mac:mdio per nic case seems like the normal case, 
-and most of the existing ACPI described devices are setup that way. But 
-at the same time, that shifts the c22/45 question to the nic driver, 
-where use of a DSD property before instantiating/probing MDIO isn't 
-really a problem if needed.
-
-In fact this embedded nic/mac/mdio/phy 1:1:1 case, is likely a 
-requirement for passthrough into a generic VM, otherwise someone has to 
-create a virtual mdio, and pass the phy in for the nic/mac.
-
-AFAIK, NXP's part avoids this despite having a shared MDIO, because the 
-phy state never leaves the mgmt side of the picture. It monitors the 
-state and then feeds that back into their nic mgmt complex rather than 
-using it directly.
-> 
->> How much of this can be simplified for ACPI buy ignoring the legacy and
->> putting some guides around the ACPI/platform requirements?
-> 
-> You can probably ignore the phy-idXXXX.YYYY compatible, since that is
-> working around silicon issues, and put in place some guidelines that
-> the PHY silicon needs to conform to the basics of C22 and C45 in terms
-> of ID registers.
-> 
-> C45 you are going to need. ACPI tends to be more high end devices,
-> which in general have higher speed network interfaces. Multi-Gige PHYs
-> tend to be C45. But there is also interest in using ACPI on 1G PHYs
-> where the majority is C22.
-
-Oh, I was just trying to see if we can get away with saying things like 
-"your phy's must respond as specified by the spec" and leave it at that 
-for the time being to simplify the probing sequence. I'm not really sure 
-we can represent the more complex switch/etc situations in ACPI either. 
-There is a certain amount of "use DT if you machine doesn't conform to 
-standards".
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
