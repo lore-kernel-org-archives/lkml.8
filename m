@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1BAC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A322145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48224221F7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941857;
-	bh=fJBfXKkqHa4pDVN/5kqG9euhjFO+AtPzVtwvh88wXeY=;
+	s=default; t=1588941860;
+	bh=NqgqboknEU7W4j7DX3XTLO0NqJtAt0PmLbZvEGdEgVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXXHtgaJZoMwNfiHqEB2w5EfdpVgDuMC8BumHNYioc0qJIoufoLsOrQXiPPS2hmVC
-	 VZeFy6Yzxb7mlOpuBHNqicBCBRvPthgTWwFJuKznFY7kmHFrUkH7UXi2mW2mpoqplB
-	 vMv1mrFq+SV210o2sckR5QxGQ5uoDf092hJhYHtE=
+	b=gAVvhdX8x9jUsB6EB4FXTu+BHgdRl7CqUq05kdgpt9PB7D7fqvhUfFoX0NUdZPqAE
+	 GLEPu8jGUwjnCCPU2oLK7dzAKXgwK0iSj9jGIhxpjoVqg8J0jrCxBZhIUUhLALzQwr
+	 39xOe6ktK7O7fuVpjtRb+u2It4HkouDG3hRq94gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgEHMoQ (ORCPT
+        id S1728349AbgEHMoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgEHMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:44:06 -0400
+        id S1729152AbgEHMoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E8821473;
-        Fri,  8 May 2020 12:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E90A21473;
+        Fri,  8 May 2020 12:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941844;
-        bh=fJBfXKkqHa4pDVN/5kqG9euhjFO+AtPzVtwvh88wXeY=;
+        s=default; t=1588941849;
+        bh=NqgqboknEU7W4j7DX3XTLO0NqJtAt0PmLbZvEGdEgVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZeIee6Pnqup3Ul+OS54TjHWlL7bqWEwtIdiKKfKRufU61THmbH2h7zS7olyPoBH6X
-         kj/EGEJuRx2WMtkLPh++dIq3ZhAwLWPSpWQNS9fXwKpJzaewYmuAQI4J2h879BL3b+
-         jHUO/SZj/g0Mq7aIQA6U91KIOIc2+X/7Uxa3HtfA=
+        b=OC2GFxrd3LIB1oGxz8el+gKN/KfOITILmy7Obs9HE21NxCwKf7munr2E+bIMtO03l
+         x0xPK1UrGM/J662SlpqDTqYvPilOOmGBSGI0ouQLF4z312ehynnniUp7oaTe+jPVv4
+         ICqr3gu4NzUeeb0lJZ/vrM2Aprh9SE/003ZsgTI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsa@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 196/312] net: ipv6: Fix processing of RAs in presence of VRF
-Date:   Fri,  8 May 2020 14:33:07 +0200
-Message-Id: <20200508123138.226850460@linuxfoundation.org>
+        stable@vger.kernel.org, Liping Zhang <zlpnobody@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 198/312] netfilter: nft_dynset: fix panic if NFT_SET_HASH is not enabled
+Date:   Fri,  8 May 2020 14:33:09 +0200
+Message-Id: <20200508123138.365229007@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,204 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsa@cumulusnetworks.com>
+From: Liping Zhang <zlpnobody@gmail.com>
 
-commit 830218c1add1da16519b71909e5cf21522b7d062 upstream.
+commit bb6a6e8e091353770074608c1d1bfde0e20b8154 upstream.
 
-rt6_add_route_info and rt6_add_dflt_router were updated to pull the FIB
-table from the device index, but the corresponding rt6_get_route_info
-and rt6_get_dflt_router functions were not leading to the failure to
-process RA's:
+When CONFIG_NFT_SET_HASH is not enabled and I input the following rule:
+"nft add rule filter output flow table test {ip daddr counter }", kernel
+panic happened on my system:
+ BUG: unable to handle kernel NULL pointer dereference at (null)
+ IP: [<          (null)>]           (null)
+ [...]
+ Call Trace:
+ [<ffffffffa0590466>] ? nft_dynset_eval+0x56/0x100 [nf_tables]
+ [<ffffffffa05851bb>] nft_do_chain+0xfb/0x4e0 [nf_tables]
+ [<ffffffffa0432f01>] ? nf_conntrack_tuple_taken+0x61/0x210 [nf_conntrack]
+ [<ffffffffa0459ea6>] ? get_unique_tuple+0x136/0x560 [nf_nat]
+ [<ffffffffa043bca1>] ? __nf_ct_ext_add_length+0x111/0x130 [nf_conntrack]
+ [<ffffffffa045a357>] ? nf_nat_setup_info+0x87/0x3b0 [nf_nat]
+ [<ffffffff81761e27>] ? ipt_do_table+0x327/0x610
+ [<ffffffffa045a6d7>] ? __nf_nat_alloc_null_binding+0x57/0x80 [nf_nat]
+ [<ffffffffa059f21f>] nft_ipv4_output+0xaf/0xd0 [nf_tables_ipv4]
+ [<ffffffff81702515>] nf_iterate+0x55/0x60
+ [<ffffffff81702593>] nf_hook_slow+0x73/0xd0
 
-    ICMPv6: RA: ndisc_router_discovery failed to add default route
+Because in rbtree type set, ops->update is not implemented. So just keep
+it simple, in such case, report -EOPNOTSUPP to the user space.
 
-Fix the 'get' functions by using the table id associated with the
-device when applicable.
-
-Also, now that default routes can be added to tables other than the
-default table, rt6_purge_dflt_routers needs to be updated as well to
-look at all tables. To handle that efficiently, add a flag to the table
-denoting if it is has a default route via RA.
-
-Fixes: ca254490c8dfd ("net: Add VRF support to IPv6 stack")
-Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 22fe54d5fefc ("netfilter: nf_tables: add support for dynamic set updates")
+Signed-off-by: Liping Zhang <zlpnobody@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/ip6_fib.h |    2 +
- net/ipv6/route.c      |   68 +++++++++++++++++++++++++++++++++++---------------
- 2 files changed, 50 insertions(+), 20 deletions(-)
+ net/netfilter/nft_dynset.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -258,6 +258,8 @@ struct fib6_table {
- 	rwlock_t		tb6_lock;
- 	struct fib6_node	tb6_root;
- 	struct inet_peer_base	tb6_peers;
-+	unsigned int		flags;
-+#define RT6_TABLE_HAS_DFLT_ROUTER	BIT(0)
- };
- 
- #define RT6_TABLE_UNSPEC	RT_TABLE_UNSPEC
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -101,11 +101,13 @@ static int rt6_score_route(struct rt6_in
- #ifdef CONFIG_IPV6_ROUTE_INFO
- static struct rt6_info *rt6_add_route_info(struct net *net,
- 					   const struct in6_addr *prefix, int prefixlen,
--					   const struct in6_addr *gwaddr, int ifindex,
-+					   const struct in6_addr *gwaddr,
-+					   struct net_device *dev,
- 					   unsigned int pref);
- static struct rt6_info *rt6_get_route_info(struct net *net,
- 					   const struct in6_addr *prefix, int prefixlen,
--					   const struct in6_addr *gwaddr, int ifindex);
-+					   const struct in6_addr *gwaddr,
-+					   struct net_device *dev);
- #endif
- 
- struct uncached_list {
-@@ -801,7 +803,7 @@ int rt6_route_rcv(struct net_device *dev
- 		rt = rt6_get_dflt_router(gwaddr, dev);
- 	else
- 		rt = rt6_get_route_info(net, prefix, rinfo->prefix_len,
--					gwaddr, dev->ifindex);
-+					gwaddr, dev);
- 
- 	if (rt && !lifetime) {
- 		ip6_del_rt(rt);
-@@ -809,8 +811,8 @@ int rt6_route_rcv(struct net_device *dev
+--- a/net/netfilter/nft_dynset.c
++++ b/net/netfilter/nft_dynset.c
+@@ -121,6 +121,9 @@ static int nft_dynset_init(const struct
+ 			return PTR_ERR(set);
  	}
  
- 	if (!rt && lifetime)
--		rt = rt6_add_route_info(net, prefix, rinfo->prefix_len, gwaddr, dev->ifindex,
--					pref);
-+		rt = rt6_add_route_info(net, prefix, rinfo->prefix_len, gwaddr,
-+					dev, pref);
- 	else if (rt)
- 		rt->rt6i_flags = RTF_ROUTEINFO |
- 				 (rt->rt6i_flags & ~RTF_PREF_MASK) | RTF_PREF(pref);
-@@ -2273,13 +2275,16 @@ static void ip6_rt_copy_init(struct rt6_
- #ifdef CONFIG_IPV6_ROUTE_INFO
- static struct rt6_info *rt6_get_route_info(struct net *net,
- 					   const struct in6_addr *prefix, int prefixlen,
--					   const struct in6_addr *gwaddr, int ifindex)
-+					   const struct in6_addr *gwaddr,
-+					   struct net_device *dev)
- {
-+	u32 tb_id = l3mdev_fib_table(dev) ? : RT6_TABLE_INFO;
-+	int ifindex = dev->ifindex;
- 	struct fib6_node *fn;
- 	struct rt6_info *rt = NULL;
- 	struct fib6_table *table;
- 
--	table = fib6_get_table(net, RT6_TABLE_INFO);
-+	table = fib6_get_table(net, tb_id);
- 	if (!table)
- 		return NULL;
- 
-@@ -2305,12 +2310,13 @@ out:
- 
- static struct rt6_info *rt6_add_route_info(struct net *net,
- 					   const struct in6_addr *prefix, int prefixlen,
--					   const struct in6_addr *gwaddr, int ifindex,
-+					   const struct in6_addr *gwaddr,
-+					   struct net_device *dev,
- 					   unsigned int pref)
- {
- 	struct fib6_config cfg = {
- 		.fc_metric	= IP6_RT_PRIO_USER,
--		.fc_ifindex	= ifindex,
-+		.fc_ifindex	= dev->ifindex,
- 		.fc_dst_len	= prefixlen,
- 		.fc_flags	= RTF_GATEWAY | RTF_ADDRCONF | RTF_ROUTEINFO |
- 				  RTF_UP | RTF_PREF(pref),
-@@ -2319,7 +2325,7 @@ static struct rt6_info *rt6_add_route_in
- 		.fc_nlinfo.nl_net = net,
- 	};
- 
--	cfg.fc_table = l3mdev_fib_table_by_index(net, ifindex) ? : RT6_TABLE_INFO;
-+	cfg.fc_table = l3mdev_fib_table(dev) ? : RT6_TABLE_INFO,
- 	cfg.fc_dst = *prefix;
- 	cfg.fc_gateway = *gwaddr;
- 
-@@ -2329,16 +2335,17 @@ static struct rt6_info *rt6_add_route_in
- 
- 	ip6_route_add(&cfg);
- 
--	return rt6_get_route_info(net, prefix, prefixlen, gwaddr, ifindex);
-+	return rt6_get_route_info(net, prefix, prefixlen, gwaddr, dev);
- }
- #endif
- 
- struct rt6_info *rt6_get_dflt_router(const struct in6_addr *addr, struct net_device *dev)
- {
-+	u32 tb_id = l3mdev_fib_table(dev) ? : RT6_TABLE_DFLT;
- 	struct rt6_info *rt;
- 	struct fib6_table *table;
- 
--	table = fib6_get_table(dev_net(dev), RT6_TABLE_DFLT);
-+	table = fib6_get_table(dev_net(dev), tb_id);
- 	if (!table)
- 		return NULL;
- 
-@@ -2372,20 +2379,20 @@ struct rt6_info *rt6_add_dflt_router(con
- 
- 	cfg.fc_gateway = *gwaddr;
- 
--	ip6_route_add(&cfg);
-+	if (!ip6_route_add(&cfg)) {
-+		struct fib6_table *table;
++	if (set->ops->update == NULL)
++		return -EOPNOTSUPP;
 +
-+		table = fib6_get_table(dev_net(dev), cfg.fc_table);
-+		if (table)
-+			table->flags |= RT6_TABLE_HAS_DFLT_ROUTER;
-+	}
+ 	if (set->flags & NFT_SET_CONSTANT)
+ 		return -EBUSY;
  
- 	return rt6_get_dflt_router(gwaddr, dev);
- }
- 
--void rt6_purge_dflt_routers(struct net *net)
-+static void __rt6_purge_dflt_routers(struct fib6_table *table)
- {
- 	struct rt6_info *rt;
--	struct fib6_table *table;
--
--	/* NOTE: Keep consistent with rt6_get_dflt_router */
--	table = fib6_get_table(net, RT6_TABLE_DFLT);
--	if (!table)
--		return;
- 
- restart:
- 	read_lock_bh(&table->tb6_lock);
-@@ -2399,6 +2406,27 @@ restart:
- 		}
- 	}
- 	read_unlock_bh(&table->tb6_lock);
-+
-+	table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
-+}
-+
-+void rt6_purge_dflt_routers(struct net *net)
-+{
-+	struct fib6_table *table;
-+	struct hlist_head *head;
-+	unsigned int h;
-+
-+	rcu_read_lock();
-+
-+	for (h = 0; h < FIB6_TABLE_HASHSZ; h++) {
-+		head = &net->ipv6.fib_table_hash[h];
-+		hlist_for_each_entry_rcu(table, head, tb6_hlist) {
-+			if (table->flags & RT6_TABLE_HAS_DFLT_ROUTER)
-+				__rt6_purge_dflt_routers(table);
-+		}
-+	}
-+
-+	rcu_read_unlock();
- }
- 
- static void rtmsg_to_fib6_config(struct net *net,
 
 
