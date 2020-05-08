@@ -2,109 +2,122 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C48C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF703C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022AC20725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EDF20725
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcCGcoif"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxLwCwC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEHB4w (ORCPT
+        id S1726922AbgEHB5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:56:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48940 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727084AbgEHB4u (ORCPT
+        Thu, 7 May 2020 21:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726701AbgEHB5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:56:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588903009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JT05FM/qFjOhlzVbidfMllXSBmmMs5hu8jLgUO53t7w=;
-        b=XcCGcoifhYmUdgA3GzlVGIVDUI672LJU4ks5eDxO7wKSRJAMmwBRfUAqcY/xYaBweMNO9j
-        UXOHG+tbO43vkEg+OdFGVqHktJR95cHcLU3LPD+KaLGMM9DOPmU+OGaw2HS5TjOUmdFMSX
-        4bQFlmj+/41MlXg+IOtH0Dov7Zb1O7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-MdXXWQgiPJ-p7NVrRQ1dJg-1; Thu, 07 May 2020 21:56:47 -0400
-X-MC-Unique: MdXXWQgiPJ-p7NVrRQ1dJg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AFB5107ACCA;
-        Fri,  8 May 2020 01:56:46 +0000 (UTC)
-Received: from [10.72.13.98] (ovpn-13-98.pek2.redhat.com [10.72.13.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D48125C1B0;
-        Fri,  8 May 2020 01:56:39 +0000 (UTC)
-Subject: Re: [PATCH net-next 1/2] virtio-net: don't reserve space for vnet
- header for XDP
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-References: <20200506061633.16327-1-jasowang@redhat.com>
- <20200506033834-mutt-send-email-mst@kernel.org>
- <7a169b06-b6b9-eac1-f03a-39dd1cfcce57@redhat.com>
- <20200506055436-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <c1df2cdf-eaff-f146-1804-f0a6cad6bb2d@redhat.com>
-Date:   Fri, 8 May 2020 09:56:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 21:57:19 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89957C05BD43;
+        Thu,  7 May 2020 18:57:19 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id f82so7228095ilh.8;
+        Thu, 07 May 2020 18:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+69UJCHoe33EYwKtcLPJBKj4jo21jYdcKYJIlnvd2X8=;
+        b=HxLwCwC8TRx/pKBzQSsc2fiNwMwDc9+bgoY7gJqpJTyWUYCEYxLSNXjYBMU1WlMMU1
+         109Uro6fOh3DUUSImAi1lOYUPpmgHp20jHMZKrX/FmKUO1+CkjNUtV7Ju/1BOvwEJTR2
+         Evsp+jKx8u/4qxSbQncZ0RtkPFVJ1E0wdtsRYjaXhh0HHuNs0aL0bL0G/Inace3dcL3C
+         MH4xy3WeTngVzK7YrwKUf9d1WT6IEhsHHJ2GYtQUZE1noaxK8YyVi6A168uohdV5b6/t
+         UadQyk5VJ4yeGpXeDkjHfgnfhAnkkavDKvHRTJvXmv9RA/R0POqqu+hSmbX3yHjMHf5w
+         6RvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+69UJCHoe33EYwKtcLPJBKj4jo21jYdcKYJIlnvd2X8=;
+        b=Fc3sdkmC4eor9G1jJrCGnn5Jd9MIOf8FhVwa/ECFKlzc+FUFovyw5jywiZvuFwph8i
+         sLzhzW773SI8ARdwZkNoVbNuMcHKCC8AMs8sxWB9MsydEjTCZ3i/hOy75cbZUAB938Dr
+         39lcNtJDedTZ9uJ4Q57kx2sRPhNU+OYN+tBjE06hE+Lwn4kZfgYGB4HEGJXiBbNDPS8m
+         80Sd1mDTPfC6RMB6qoQVAj9B7OhE2ZCoW72yNtc1FzhqUQ3zw0YQWoeN7oLo1gWyUF70
+         K6w+8oKg2DD1ow5UdlLqTmO+wYrabHutOgxsZBkclpmBdCJjrng9XsVPgyz1vuTr3AA2
+         NzAQ==
+X-Gm-Message-State: AGi0PuY6nZpzGRcaj/BU0JHJ+LIiySa+MF3iXe9bI3fbP1gmUslJajCh
+        rklpZlnPJlvI4LH2wdVmTqV3ARVJ+NlDhI9J0Q==
+X-Google-Smtp-Source: APiQypJWgXolt6buxgHn27fREaAUO11sgbKKU6WxrPa7V4fVSJ37lIGvSJS8RzOTTePKUgZ+xK4d0el86IGIGtmBvx8=
+X-Received: by 2002:a05:6e02:d0c:: with SMTP id g12mr245188ilj.27.1588903038948;
+ Thu, 07 May 2020 18:57:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200506055436-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200505174423.199985-1-ndesaulniers@google.com>
+ <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com> <20200507113422.GA3762@hirez.programming.kicks-ass.net>
+ <CAMzpN2hXUYvLuTA63N56ef4DEzyWXt_uVVq6PV0r8YQT-YN42g@mail.gmail.com>
+ <CAKwvOd=a3MR7osKBpbq=d41ieo7G9FtOp5Kok5por1P5ZS9s4g@mail.gmail.com> <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 7 May 2020 21:57:07 -0400
+Message-ID: <CAMzpN2gu4stkRKTsMTVxyzckO3SMhfA+dmCnSu6-aMg5QAA_JQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: bitops: fix build regression
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/5/6 下午5:54, Michael S. Tsirkin wrote:
-> On Wed, May 06, 2020 at 04:19:40PM +0800, Jason Wang wrote:
->> On 2020/5/6 下午3:53, Michael S. Tsirkin wrote:
->>> On Wed, May 06, 2020 at 02:16:32PM +0800, Jason Wang wrote:
->>>> We tried to reserve space for vnet header before
->>>> xdp.data_hard_start. But this is useless since the packet could be
->>>> modified by XDP which may invalidate the information stored in the
->>>> header and there's no way for XDP to know the existence of the vnet
->>>> header currently.
->>> What do you mean? Doesn't XDP_PASS use the header in the buffer?
->> We don't, see 436c9453a1ac0 ("virtio-net: keep vnet header zeroed after
->> processing XDP")
->>
->> If there's other place, it should be a bug.
->>
->>
->>>> So let's just not reserve space for vnet header in this case.
->>> In any case, we can find out XDP does head adjustments
->>> if we need to.
->> But XDP program can modify the packets without adjusting headers.
->>
->> Thanks
-> Then what's the problem?
-
-
-Then we can't do anything more than just invalidating vnet header since 
-we don't know whether or not the packet has been modified or not.
-
-Technically, XDP can give the driver some hint about whether or not the 
-packet has been modified, but AFAIK we haven't implemented this yet.
-
-Thanks
-
-
+On Thu, May 7, 2020 at 6:29 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
+> On Thu, May 7, 2020 at 12:19 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > On Thu, May 7, 2020 at 7:00 AM Brian Gerst <brgerst@gmail.com> wrote:
+> > >
+> > > This change will make sparse happy and allow these cleanups:
+> > > #define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
+> >
+> > yep, this is more elegant, IMO.  Will send a v3 later with this
+> > change.  Looking at the uses of CONST_MASK, I noticed
+> > arch_change_bit() currently has the (u8) cast from commit
+> > 838e8bb71dc0c ("x86: Implement change_bit with immediate operand as
+> > "lock xorb""), so that instance can get cleaned up with the above
+> > suggestion.
+>
+> Oh, we need the cast to be the final operation.  The binary AND and
+> XOR in 2 of the 3 uses of CONST_MASK implicitly promote the operands
+> of the binary operand to int, so the type of the evaluated
+> subexpression is int.
+> https://wiki.sei.cmu.edu/confluence/display/c/EXP14-C.+Beware+of+integer+promotion+when+performing+bitwise+operations+on+integer+types+smaller+than+int
+> So I think this version (v2) is most precise fix, and would be better
+> than defining more macros or (worse) using metaprogramming.
 
+One last suggestion.  Add the "b" modifier to the mask operand: "orb
+%b1, %0".  That forces the compiler to use the 8-bit register name
+instead of trying to deduce the width from the input.
+
+--
+Brian Gerst
