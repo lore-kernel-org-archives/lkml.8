@@ -2,206 +2,132 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CCFC54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5FBC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465872192A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588957659;
-	bh=gFrMAqNENiqsLuPP+ou0xff1gNs2mwSrUOEUDm/fTOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mnyxOPEc98BBEvx5sOQv5fcCMYpaCn1XQLG/dCBF4U6O8v2tkRsJFffT2UamP43Mw
-	 4A1RyzzegZP4r1xLrrrAmn+LUoqyER/uEgo3/+/yG9XGMo7fAC/8C1aD2Zdtmp+SrJ
-	 gVq6sAU6tkkGZ4gBJeRDB19Bhr9Fh83YHM+o0hgI=
+	by mail.kernel.org (Postfix) with ESMTP id D7AE62192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgEHRHi (ORCPT
+        id S1727837AbgEHRIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgEHRHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:07:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4CC2083B;
-        Fri,  8 May 2020 17:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588957657;
-        bh=gFrMAqNENiqsLuPP+ou0xff1gNs2mwSrUOEUDm/fTOM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kX/2yeg05jcKk+oVnZzlPwEc9jZ/nTz/aPemBJqejITzrT5lwkP62pRO9vzU3HjgN
-         +B/Iqt5YJ4Bu/Da0PiCBkcIVGIRraMpmFLrk2d1csggYueTfBvjpnn5Z85jCijRxOG
-         pXLz2DCR+cF7tmQ1h8zwoXl7iVRbTE5DK6BoKKYY=
-Date:   Fri, 8 May 2020 18:07:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200508170733.GL4820@sirena.org.uk>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
- <20200508101541.e3yxaocuilaiyutg@mobilestation>
- <20200508102210.GC4820@sirena.org.uk>
- <20200508154210.r2pp5asadalvf6ij@mobilestation>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TdMwOTenGjBWB1uY"
-Content-Disposition: inline
-In-Reply-To: <20200508154210.r2pp5asadalvf6ij@mobilestation>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 8 May 2020 13:08:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31736 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726750AbgEHRIX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:08:23 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048H1aow181718;
+        Fri, 8 May 2020 13:08:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtw0tstj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 13:08:11 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 048H2GHA183411;
+        Fri, 8 May 2020 13:08:11 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30vtw0tssw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 13:08:11 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048H4s14002508;
+        Fri, 8 May 2020 17:08:09 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma01fra.de.ibm.com with ESMTP id 30s0g5dn2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 17:08:09 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048H87PH8847814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 May 2020 17:08:07 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37D1EA405C;
+        Fri,  8 May 2020 17:08:07 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3B4FA4065;
+        Fri,  8 May 2020 17:08:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.139.55])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 May 2020 17:08:05 +0000 (GMT)
+Message-ID: <1588957684.5146.70.camel@linux.ibm.com>
+Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        John Johansen <john.johansen@canonical.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Fri, 08 May 2020 13:08:04 -0400
+In-Reply-To: <84e6acad739a415aa3e2457b5c37979f@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+         <1588864628.5685.78.camel@linux.ibm.com>
+         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+         <1588884313.5685.110.camel@linux.ibm.com>
+         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-08_15:2020-05-08,2020-05-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-05-08 at 10:20 +0000, Roberto Sassu wrote:
+> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> > On Thu, 2020-05-07 at 16:47 +0000, Roberto Sassu wrote:
 
---TdMwOTenGjBWB1uY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+<snip>
 
-On Fri, May 08, 2020 at 06:42:10PM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 11:22:10AM +0100, Mark Brown wrote:
+> > > > the file metadata to the file data.  The IMA and EVM policies really
+> > > > need to be in sync.
+> > >
+> > > It would be nice, but at the moment EVM considers also files that are
+> > > not selected by the IMA policy. An example of why this is a problem is
+> > > the audit service that fails to start when it tries to adjust the permissions
+> > > of the log files. Those files don't have security.evm because they are
+> > > not appraised by IMA, but EVM denies the operation.
+> > 
+> > No, this is a timing issue as to whether or not the builtin policy or
+> > a custom policy has been loaded.  A custom policy could exclude the
+> > log files based on LSM labels, but they are included in the builtin
+> > policy.
+> 
+> Yes, I was referring to a custom policy. In this case, EVM will not adapt
+> to the custom policy but still verifies all files. If access control is done
+> exclusively by IMA at the time evm_verifyxattr() is called, we wouldn't
+> need to add security.evm to all files.
 
-> > Can you be more specific about the issues?  From what you wrote it
-> > sounded like the main thing was chip select handling.
+Roberto, EVM is only triggered by IMA, unless you've modified the
+kernel to do otherwise.
 
-> I thought it would be obvious from the patch itself. I've thoroughly described all
-> the issues there. Here in cover-letter it's a summary of the main ones.
+I'm not interested in a complicated solution, just one that addresses
+the new EVM immutable and portable signature.  It might require EVM
+HMAC, IMA differentiating between a new file and an existing file, or
+it might require writing the new EVM signature last, after all the
+other xattrs or metadata are updated.  Please nothing that changes
+existing expectations.
 
-Bear in mind that the patch is a stand alone thing, there's not a copy
-of the existing driver sitting with it and the stylistic changes make
-comparisons even less obvious.
-
-> 1) Registers mapping. The DW SSI registers are shifted by 0x100 with
-> respect to the MMIO region start. The lowest 0x100 registers are
-> responsible for the Baikal-T1 Boot Controller settings. There aren't much
-> of them there though. Our code is interested only in a flag, which switches
-> an accessibility of the DW APB SSI registers and direct SPI flash mapping.
-> And this switchability is a reason of another peculiarity (see the next
-> item for details).
-
-That seems fairly easy to address, for example with a subdevice or
-indirecting through ops for I/O that could add on an offset (what a
-subdevice would end up accomplishing really).
-
-> 2) SPI flash direct mapping. SPI flash direct mapping and DW APB SSI registers
-> are mutual exclusive, so only one of them can be enabled at a time. In
-> order to use the dirmap we have to switch the RDA bit off in the Boot
-> Controller setup register. If DW APB SSI registers need to be accessed the
-> RDA bit should be set. For this reason we have to make sure that dirmap
-> operations, SPI operations and SPI-mem-ops operations are exclusive, since
-> some of them need to interact with the DW APB SSI registers, while another
-
-This exclusivity requirement is pretty standard for these flash memory
-map controllers, the framework should ensure you don't get any overlap
-between memory mapped and regular interactions.
-
-> the directly mapped SPI flash MMIO (currently ctlr->io_mutex is responsible
-> for this).
-
-It only seemed to be referenced in the debugfs code?
-
-> 3) A specific access to MMIO (concerning directly mapped SPI flash MMIO).
-> The SoC interconnect is designed in a way so we can't use any instruction to
-> read/write from/to the MMIO space. It has to be done by lw/sw with
-> dword-aligned address passed. Though in this driver we only use a read
-> operation from the directly mapped SPI flash memory.
-
-That's a custom IP block for your systems so that'd be a separate
-operation no matter what.
-
-> 4) No direct handling of the CS. Though this is an issue of all DW SSI
-> controllers, here with very small FIFO and no DMA/IRQ supported it mandates to
-> workaround any preemption/interruption during a non-GPIO-CS-based transfer.
-> For the same reason the driver doesn't support normal spi-messages based
-
-As I said when reviewing the driver I think all you need here is support
-in the core for linearizing messages into a single transfer and then
-what you're left with is what should be a fairly small quirk for running
-with interrupts disabled if there's no DMA or interrupts.  I'd expect
-both bits of that to benefit some other users too, there's definitely
-other controllers that have problems with automated chip select
-handling but happen to get away with it a lot of the time.
-
-> interface if no GPIO-CS supplied. In addition since FIFO is too small and most
-> of our platforms don't have GPIO-CS support we had to create the SPI-mem-ops
-> instead of generic SPI-callback.
-
-As I also said in reviewing the driver that's just not a good idea
-anyway, there is no way a driver should be open coding things like that
-and there are much better ways to support this.  This is only there
-because the driver isn't able to cope with normal messages, it's better
-to solve that problem and use the generic flash code than to emulate the
-generic flash code here.
-
-In both these cases it looks like the majority of the reason the driver
-is different is that you're trying to solve problems in the driver
-without changing the core, some things are a lot easier to handle
-further up the stack.
-
-> 5) MMIO access race condition. As I described in the in-code comment it's a
-> very tricky race happening during concurrent access from different cores to the
-> APB bus. Due to this if SPI interface is working high frequency like
-
-This looks like it should be a fairly small quirk?
-
-> I am pretty sure I have forgotten something. Anyway it has been much easier
-> to create a new driver instead of integrating all of these into a generic
-> one. Integrating something like this in the current DW APB SSI driver would
-> mean to have it completely overwritten (refactored if you want) which would
-> bring us to a new driver anyway. I don't think it would be good to
-> complicate the generic driver with so many peculiar things scattered around
-> the code with various hooks or ifdef, especially seeing the current code has
-> already become a bit messy.
-
-It really does sound like other than the bits I don't think should be
-implemented on a per-driver level these differences are relatively
-small.
-
---TdMwOTenGjBWB1uY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61kdQACgkQJNaLcl1U
-h9BK0Qf/XnNZ8iZshg/MisGBW5otVRjj/VHOY47GKBd8cBJFzqRzBItBC+FY9LTa
-M27kfFmD5PL6uQkyKLcMO6bT4fQfId97DgK6wFZTzD92iHA2HlDxplJfde+x7FYz
-MiW/SgJrKOiTjz7sDs3awuB3CcyEe9AdDtgxCaxiTe40MDhmIdYclRoxyZmTMpBi
-qFGmeBrGi6jUKiFTdeHu/hmaVa9du2/VaBZxsPicEJl21O2aLHcw5cCQHFiBFqgw
-fAaT2/gKAHlSQ9rJLXIr0kxMupFoP5ugVDgxGAqnhlrqLXeEvhaAcPmM6poRVkmO
-ETdt5doSEWB8225kqpKrDEBQUIlStQ==
-=ZZx2
------END PGP SIGNATURE-----
-
---TdMwOTenGjBWB1uY--
+Mimi
