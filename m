@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD67C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62FDB206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53398206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943742;
-	bh=+/gWU91NRcjLp1SF+8ye1yzd+kcLPTmZXVxyEtiOY+Q=;
+	s=default; t=1588943744;
+	bh=6j/AYi2hXS7FtfYynCmVLISadE4ztMNbYJq4Ye/1QdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XouO9vrKvdnspaarp03XAYxCZf/BC18/BHFhWNb56h6aidHHrzshb86NVfBP+lDFl
-	 igHyLbSt+u/Xx3DPPAZDVDd6MpiMh80JL0whbXX6oUa9LnwwHJlTyXmR2I/vkKVetJ
-	 xiN8G6LF9q1PfUafi97S4tZv3jKeMIgnnTaIDMN8=
+	b=rnMC5vX1BIPARGUaohpMXk9t96Z5b4cu8GYdKGoQYXstcgt+VdChvAcNyLC4DJNJ/
+	 ER6zSDzxbkpQZyIbXqsrj9nLBCzf6cqoJY5MctjMdx7wjHnAVt2vwBfXwSz/HkrUQK
+	 DMImjddgdfkGpdyvXYBbKsj5Q6pVH4SRJwcm91zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgEHMpz (ORCPT
+        id S1729347AbgEHMpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgEHMpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:51 -0400
+        id S1729339AbgEHMps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B668C21974;
-        Fri,  8 May 2020 12:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FABD2145D;
+        Fri,  8 May 2020 12:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941951;
-        bh=+/gWU91NRcjLp1SF+8ye1yzd+kcLPTmZXVxyEtiOY+Q=;
+        s=default; t=1588941948;
+        bh=6j/AYi2hXS7FtfYynCmVLISadE4ztMNbYJq4Ye/1QdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuuWYN8L4hfo1fwHUckOkg3N3PMEHSn6BHmC2zeRXE/ikYcrJufeC3329CEoIy0in
-         T4L+d+U9np00mf3UKsszIgdB8vJl/SzOU3ZRXlaP25+0YcYIILHSg3aE7ackkYmY5L
-         yuT3Zn7q/NR8y8MdqZxDGTs1OwWEDApYkdcQ70KQ=
+        b=W2uo0xAUff6si7vWGbwD6xglclVqGb34awLGQcIcnFGn0WR6ZhZCNnlrS2icysez4
+         Ut1kDcKSDviE8bSpx0GEjMeoyeRuzKxP52d3cdEXPQ/4MiNiUpXNfNX/Msr8EoiHvb
+         fnbeF80RBhLPWiMufVJPo4nR16cbsnmr4nBtNRdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.4 238/312] xprtrdma: Fix backchannel allocation of extra rpcrdma_reps
-Date:   Fri,  8 May 2020 14:33:49 +0200
-Message-Id: <20200508123141.165135340@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 4.4 229/312] power: bq27xxx: fix register numbers of bq27500
+Date:   Fri,  8 May 2020 14:33:40 +0200
+Message-Id: <20200508123140.550618374@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,142 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit d698c4a02ee02053bbebe051322ff427a2dad56a upstream.
+commit 099867a16a0fa9fd5aafc32e3b1a6f8a90f17834 upstream.
 
-The backchannel code uses rpcrdma_recv_buffer_put to add new reps
-to the free rep list. This also decrements rb_recv_count, which
-spoofs the receive overrun logic in rpcrdma_buffer_get_rep.
+bug: according to data sheet some register numbers are wrong.
 
-Commit 9b06688bc3b9 ("xprtrdma: Fix additional uses of
-spin_lock_irqsave(rb_lock)") replaced the original open-coded
-list_add with a call to rpcrdma_recv_buffer_put(), but then a year
-later, commit 05c974669ece ("xprtrdma: Fix receive buffer
-accounting") added rep accounting to rpcrdma_recv_buffer_put.
-It was an oversight to let the backchannel continue to use this
-function.
+tested: no
 
-The fix this, let's combine the "add to free list" logic with
-rpcrdma_create_rep.
-
-Also, do not allocate RPCRDMA_MAX_BC_REQUESTS rpcrdma_reps in
-rpcrdma_buffer_create and then allocate additional rpcrdma_reps in
-rpcrdma_bc_setup_reps. Allocating the extra reps during backchannel
-set-up is sufficient.
-
-Fixes: 05c974669ece ("xprtrdma: Fix receive buffer accounting")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: d74534c27775 ("power: bq27xxx_battery: Add support for additional bq27xxx family devices")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/backchannel.c |   12 ++----------
- net/sunrpc/xprtrdma/verbs.c       |   34 ++++++++++++++++++++--------------
- net/sunrpc/xprtrdma/xprt_rdma.h   |    2 +-
- 3 files changed, 23 insertions(+), 25 deletions(-)
+ drivers/power/bq27xxx_battery.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/sunrpc/xprtrdma/backchannel.c
-+++ b/net/sunrpc/xprtrdma/backchannel.c
-@@ -84,21 +84,13 @@ out_fail:
- static int rpcrdma_bc_setup_reps(struct rpcrdma_xprt *r_xprt,
- 				 unsigned int count)
- {
--	struct rpcrdma_rep *rep;
- 	int rc = 0;
- 
- 	while (count--) {
--		rep = rpcrdma_create_rep(r_xprt);
--		if (IS_ERR(rep)) {
--			pr_err("RPC:       %s: reply buffer alloc failed\n",
--			       __func__);
--			rc = PTR_ERR(rep);
-+		rc = rpcrdma_create_rep(r_xprt);
-+		if (rc)
- 			break;
--		}
--
--		rpcrdma_recv_buffer_put(rep);
- 	}
--
- 	return rc;
- }
- 
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -911,10 +911,17 @@ rpcrdma_create_req(struct rpcrdma_xprt *
- 	return req;
- }
- 
--struct rpcrdma_rep *
--rpcrdma_create_rep(struct rpcrdma_xprt *r_xprt)
-+/**
-+ * rpcrdma_create_rep - Allocate an rpcrdma_rep object
-+ * @r_xprt: controlling transport
-+ *
-+ * Returns 0 on success or a negative errno on failure.
-+ */
-+int
-+ rpcrdma_create_rep(struct rpcrdma_xprt *r_xprt)
- {
- 	struct rpcrdma_create_data_internal *cdata = &r_xprt->rx_data;
-+	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	struct rpcrdma_rep *rep;
- 	int rc;
-@@ -934,12 +941,18 @@ rpcrdma_create_rep(struct rpcrdma_xprt *
- 	rep->rr_device = ia->ri_device;
- 	rep->rr_rxprt = r_xprt;
- 	INIT_WORK(&rep->rr_work, rpcrdma_receive_worker);
--	return rep;
-+
-+	spin_lock(&buf->rb_lock);
-+	list_add(&rep->rr_list, &buf->rb_recv_bufs);
-+	spin_unlock(&buf->rb_lock);
-+	return 0;
- 
- out_free:
- 	kfree(rep);
- out:
--	return ERR_PTR(rc);
-+	dprintk("RPC:       %s: reply buffer %d alloc failed\n",
-+		__func__, rc);
-+	return rc;
- }
- 
- int
-@@ -975,17 +988,10 @@ rpcrdma_buffer_create(struct rpcrdma_xpr
- 	}
- 
- 	INIT_LIST_HEAD(&buf->rb_recv_bufs);
--	for (i = 0; i < buf->rb_max_requests + 2; i++) {
--		struct rpcrdma_rep *rep;
--
--		rep = rpcrdma_create_rep(r_xprt);
--		if (IS_ERR(rep)) {
--			dprintk("RPC:       %s: reply buffer %d alloc failed\n",
--				__func__, i);
--			rc = PTR_ERR(rep);
-+	for (i = 0; i <= buf->rb_max_requests; i++) {
-+		rc = rpcrdma_create_rep(r_xprt);
-+		if (rc)
- 			goto out;
--		}
--		list_add(&rep->rr_list, &buf->rb_recv_bufs);
- 	}
- 
- 	return 0;
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -431,8 +431,8 @@ int rpcrdma_ep_post_recv(struct rpcrdma_
-  * Buffer calls - xprtrdma/verbs.c
-  */
- struct rpcrdma_req *rpcrdma_create_req(struct rpcrdma_xprt *);
--struct rpcrdma_rep *rpcrdma_create_rep(struct rpcrdma_xprt *);
- void rpcrdma_destroy_req(struct rpcrdma_ia *, struct rpcrdma_req *);
-+int rpcrdma_create_rep(struct rpcrdma_xprt *r_xprt);
- int rpcrdma_buffer_create(struct rpcrdma_xprt *);
- void rpcrdma_buffer_destroy(struct rpcrdma_buffer *);
+--- a/drivers/power/bq27xxx_battery.c
++++ b/drivers/power/bq27xxx_battery.c
+@@ -198,10 +198,10 @@ static u8 bq27500_regs[] = {
+ 	INVALID_REG_ADDR,	/* TTECP - NA	*/
+ 	0x0c,	/* NAC		*/
+ 	0x12,	/* LMD(FCC)	*/
+-	0x1e,	/* CYCT		*/
++	0x2a,	/* CYCT		*/
+ 	INVALID_REG_ADDR,	/* AE - NA	*/
+-	0x20,	/* SOC(RSOC)	*/
+-	0x2e,	/* DCAP(ILMD)	*/
++	0x2c,	/* SOC(RSOC)	*/
++	0x3c,	/* DCAP(ILMD)	*/
+ 	INVALID_REG_ADDR,	/* AP - NA	*/
+ };
  
 
 
