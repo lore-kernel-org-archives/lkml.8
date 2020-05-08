@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01851C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEB920731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66E624979
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941801;
-	bh=D8sLH2taGBH1jwEvqLtqvnEN3ghJ4DGfw4UH7oD9zHY=;
+	s=default; t=1588941805;
+	bh=GQS6+EQAyU4PQ2E8sPYaUu3YJ+wCBWJ8k/5K90gMOfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGy+E7Nt+cvHkiFQibiWdVz9J5+T1MZnqTXoHZ5/0PZE5uHW+MGhZaQTDKpmk80GM
-	 pRGY8Yl0nwtut8S0v7t8AUkkXG6g3zlnU2KG5XA+hzDp9g3gSaxHsZWmtGxOQR0EHB
-	 2RNQs4ZTrSPGlNqEpyuNkY1FVkSXARyWS+ZrW6Aw=
+	b=UqHAwAUI0QYRD2DChTJk1ff37C5NL8xPezXfKNsoPVYtiA7gmAfYQ2lzNqy8cyw+K
+	 tih1ULa13hjf1Dk9Rxni7d/luYM39KF2sx1KwGbG39ZrCRN1rS4427T66X+f/yYHAR
+	 cgFq0+y2moLpg+RDT0shP1PrxZ2Nm3CCXbodSIOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgEHMnU (ORCPT
+        id S1729069AbgEHMnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbgEHMnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:43:13 -0400
+        id S1728620AbgEHMnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:43:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91ED820731;
-        Fri,  8 May 2020 12:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D2B24973;
+        Fri,  8 May 2020 12:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941793;
-        bh=D8sLH2taGBH1jwEvqLtqvnEN3ghJ4DGfw4UH7oD9zHY=;
+        s=default; t=1588941795;
+        bh=GQS6+EQAyU4PQ2E8sPYaUu3YJ+wCBWJ8k/5K90gMOfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n50cmSzH/hl11arDxOaP0RmSCRH3NXcEtbH4kIaCsiBs5F3J25cBdIJMjT+q3MTjq
-         pmtAXaB1skP3OgL7FHmXWPpEAqWVHNcQll7Sv0AfyKJuSsxv2nlpO2eFeVA9lvUmVm
-         /37oDNiHHQN1runGMj0B9P7037F3tjPc0WaCKTfA=
+        b=nXPJrs2Hn4Gs1YwI5H9ZGo2eN+AAjffUImrZhJtLm2sDW4ylhzo/6BH7LcOnkeunE
+         Dd8LtAnmfHeXa7E+Xm8fSN4DP/1uYnbpTAaFLu+BW2YKBkAPzRGxQktznoMEoaKFmc
+         In7bw7DZ1t33vV/jZnBlAXeK8Vs078uTFkBBkASY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 173/312] ath9k_htc: check for underflow in ath9k_htc_rx_msg()
-Date:   Fri,  8 May 2020 14:32:44 +0200
-Message-Id: <20200508123136.666797570@linuxfoundation.org>
+        Eric Auger <eric.auger@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.4 174/312] VFIO: platform: reset: fix a warning message condition
+Date:   Fri,  8 May 2020 14:32:45 +0200
+Message-Id: <20200508123136.734835774@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,30 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 3a318426e09a9c9266fe6440842e11238f640a20 upstream.
+commit 967628827f404b3063016c138ccc7b06c54350f8 upstream.
 
-We check for overflow here, but we don't check for underflow so it
-causes a static checker warning.
+This loop ends with count set to -1 and not zero so the warning message
+isn't printed when it should be.  I've fixed this by change the postop
+to a preop.
 
-Fixes: fb9987d0f748 ('ath9k_htc: Support for AR9271 chipset.')
+Fixes: 0990822c9866 ('VFIO: platform: reset: AMD xgbe reset module')
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reviewed-by: Eric Auger <eric.auger@linaro.org>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c |    2 +-
+ drivers/vfio/platform/reset/vfio_platform_amdxgbe.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -414,7 +414,7 @@ void ath9k_htc_rx_msg(struct htc_target
- 		return;
- 	}
+--- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
++++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+@@ -110,7 +110,7 @@ int vfio_platform_amdxgbe_reset(struct v
+ 	usleep_range(10, 15);
  
--	if (epid >= ENDPOINT_MAX) {
-+	if (epid < 0 || epid >= ENDPOINT_MAX) {
- 		if (pipe_id != USB_REG_IN_PIPE)
- 			dev_kfree_skb_any(skb);
- 		else
+ 	count = 2000;
+-	while (count-- && (ioread32(xgmac_regs->ioaddr + DMA_MR) & 1))
++	while (--count && (ioread32(xgmac_regs->ioaddr + DMA_MR) & 1))
+ 		usleep_range(500, 600);
+ 
+ 	if (!count)
 
 
