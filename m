@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD798C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE339C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A049820731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FCE24968
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941664;
-	bh=3uEuShsqQANn0H5av7DAVs0Ph+aR+CYOdRo0mjWHD2s=;
+	s=default; t=1588941668;
+	bh=QY6zjb2V3OOit3k+wXRi5I37kh5E4q5iqa6I1WeszCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0PE6l1OK0Sy5VnId5+WQCkXsPn8AzYv3iyz5pYRWHTDlj+5s5Kma+XetP4JaXmts
-	 QkRu1Las6R3hvqx/9sdAUGmYgV9/XNnq2qg1WuAMJk25GqZyJlTfTRjHOVu3y8fFPz
-	 8sLhYM30wmq1H24YhVU6JTaIVjB99JBscJ9VVBqg=
+	b=r6p1DFHixkNUoqrcSJkpz0KBx6uCp7dr9Tm6qglvkrBXnwP+JvewwpBgw7JTPOZTJ
+	 x25tFazeaUmerKdpjs1RzURARsq8jOd1LAyK9m8Tqj6gIz8KCZsPEnMqt1e4AYsp0x
+	 mFeYxxJbih64aN4GOJPg6NRfzLD+opmZYNKGY1Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgEHMlD (ORCPT
+        id S1728288AbgEHMlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbgEHMki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:38 -0400
+        id S1728318AbgEHMk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5CF22495F;
-        Fri,  8 May 2020 12:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E1E620731;
+        Fri,  8 May 2020 12:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941638;
-        bh=3uEuShsqQANn0H5av7DAVs0Ph+aR+CYOdRo0mjWHD2s=;
+        s=default; t=1588941655;
+        bh=QY6zjb2V3OOit3k+wXRi5I37kh5E4q5iqa6I1WeszCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHybevTKLsDF8e98yXEKdMTtA2JHZGd1CBNluzM4km8zKVklWzhzX3uMtopFKToq/
-         i8xoskSBXHX5mVdTYcEJSIdMmP5s0uiWXrPyX8mltHUkxPZS+V9DvGnQrBrIV8hRpE
-         HLi7SDIpSrn6rKeQmjdUMQIJDd08oqieDHdk2gJ8=
+        b=TJ9WKZuCszui/0xrVUHiCdfhrA+nFGJwJ7+fZCRRafPEC3KGl7RkXfmhz0N4JefOy
+         tLaXDPmDKXJCiWdSyVkwtwQzgIhSQ/4ABQJzsxB2lGDkY+oAuiQtJ7VV6trIxJvQXs
+         kEQ7+XD4eAsSit9YR+EvNNowl/ddfXku/FATwQDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsa@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 113/312] net: ipv6: tcp reset, icmp need to consider L3 domain
-Date:   Fri,  8 May 2020 14:31:44 +0200
-Message-Id: <20200508123132.428039604@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 120/312] Btrfs: clean up an error code in btrfs_init_space_info()
+Date:   Fri,  8 May 2020 14:31:51 +0200
+Message-Id: <20200508123132.897559635@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,64 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsa@cumulusnetworks.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 1d2f7b2d956e242179aaf4a08f3545f99c81f9a3 upstream.
+commit 0dc924c5f2a3c4d999e12feaccee5f970cea1315 upstream.
 
-Responses for packets to unused ports are getting lost with L3 domains.
+If we return 1 here, then the caller treats it as an error and returns
+-EINVAL.  It causes a static checker warning to treat positive returns
+as an error.
 
-IPv4 has ip_send_unicast_reply for sending TCP responses which accounts
-for L3 domains; update the IPv6 counterpart tcp_v6_send_response.
-For icmp the L3 master check needs to be moved up in icmp6_send
-to properly respond to UDP packets to a port with no listener.
-
-Fixes: ca254490c8df ("net: Add VRF support to IPv6 stack")
-Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1aba86d67f34 ('Btrfs: fix easily get into ENOSPC in mixed case')
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/icmp.c     |    5 ++---
- net/ipv6/tcp_ipv6.c |    7 ++++++-
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ fs/btrfs/extent-tree.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/icmp.c
-+++ b/net/ipv6/icmp.c
-@@ -445,6 +445,8 @@ static void icmp6_send(struct sk_buff *s
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10688,7 +10688,7 @@ int btrfs_init_space_info(struct btrfs_f
  
- 	if (__ipv6_addr_needs_scope_id(addr_type))
- 		iif = skb->dev->ifindex;
-+	else
-+		iif = l3mdev_master_ifindex(skb->dev);
+ 	disk_super = fs_info->super_copy;
+ 	if (!btrfs_super_root(disk_super))
+-		return 1;
++		return -EINVAL;
  
- 	/*
- 	 *	Must not send error if the source does not uniquely
-@@ -499,9 +501,6 @@ static void icmp6_send(struct sk_buff *s
- 	else if (!fl6.flowi6_oif)
- 		fl6.flowi6_oif = np->ucast_oif;
- 
--	if (!fl6.flowi6_oif)
--		fl6.flowi6_oif = l3mdev_master_ifindex(skb->dev);
--
- 	dst = icmpv6_route_lookup(net, skb, sk, &fl6);
- 	if (IS_ERR(dst))
- 		goto out;
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -815,8 +815,13 @@ static void tcp_v6_send_response(const s
- 	fl6.flowi6_proto = IPPROTO_TCP;
- 	if (rt6_need_strict(&fl6.daddr) && !oif)
- 		fl6.flowi6_oif = tcp_v6_iif(skb);
--	else
-+	else {
-+		if (!oif && netif_index_is_l3_master(net, skb->skb_iif))
-+			oif = skb->skb_iif;
-+
- 		fl6.flowi6_oif = oif;
-+	}
-+
- 	fl6.flowi6_mark = IP6_REPLY_MARK(net, skb->mark);
- 	fl6.fl6_dport = t1->dest;
- 	fl6.fl6_sport = t1->source;
+ 	features = btrfs_super_incompat_flags(disk_super);
+ 	if (features & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS)
 
 
