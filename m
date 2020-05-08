@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50065C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9817C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2158A206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B3206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942116;
-	bh=HG1/7NbqLg821Uffw2Nc5LYBgGCvCn1rd0f7CbQ4axk=;
+	s=default; t=1588942122;
+	bh=gkpBvoONpiwZyG0eIJDZj+HgoJlMvPCz1mgxWiTdj9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1y7/Z1Deg9eVR0L0u3mKYMejJS3eXSB2dgGLyjUyytkcU4fgd9V769nCTzT/VPnj
-	 Pc/pN6iuy80izRe4efWD9yVvecyq/aPQJsezH3QRsTifHyNcpj9FQNp2ejnje0pNqR
-	 6eFPlV/NuFi3KP/VvNv6v4Qh9WP0o4LZ4qCRztk4=
+	b=IjXOtVybiBLB7Pclu3b0ASOsqinNPz+vYvipY3rTXxya8vkECFRSWDUnkilZvTis8
+	 tI3bFL+TuDymX01Y5/4O+BabB8JdTsjvmb0IgdviFrpJRbvknWxSc59f0YtDxxJG40
+	 Tk9Sea8rWMepV+YX2LlocXGJDtRLMg9MtAZve2yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgEHMsf (ORCPT
+        id S1729683AbgEHMsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52298 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbgEHMs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:29 -0400
+        id S1729028AbgEHMsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD0024958;
-        Fri,  8 May 2020 12:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24213206D6;
+        Fri,  8 May 2020 12:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942108;
-        bh=HG1/7NbqLg821Uffw2Nc5LYBgGCvCn1rd0f7CbQ4axk=;
+        s=default; t=1588942118;
+        bh=gkpBvoONpiwZyG0eIJDZj+HgoJlMvPCz1mgxWiTdj9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bHSDmMA3ki318XiHpmUXe1j6IP53sJ4g8JIGvPq2j9X19LfZXWC/00OISM0KTV37t
-         paZDmB9rwaxGUR0KM7Xg5FHFkzyXnpiBjZUSSYIA488SovXadznzNSBMAmsXw2Dg1+
-         JrN+HgfoiEnuWRi3CKhH3t/Z4pz0KuY/HFGooMEE=
+        b=nznlKpTiljrCIb07RBWvzbz5YegkwHxLgSzVCvdQ3EPB3fVJX9xQTRlt5b6oYi9GP
+         ItIwTUFOr0Ws/BveJaG7SxOzge+4vDQ8ryo4PKbMJX1MkpIYJCnlwGCWf6gkHMRdUi
+         U9V3t1jWjmuhrvFrcdeaWNkzCXzC90/Gzj7qCg90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Hutchinson <b.hutchman@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 300/312] net: ethernet: davinci_emac: Fix platform_data overwrite
-Date:   Fri,  8 May 2020 14:34:51 +0200
-Message-Id: <20200508123145.516910614@linuxfoundation.org>
+        stable@vger.kernel.org, Jaap Jan Meijer <jjmeijer88@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 303/312] brcmfmac: add fallback for devices that do not report per-chain values
+Date:   Fri,  8 May 2020 14:34:54 +0200
+Message-Id: <20200508123145.763718643@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,47 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Jaap Jan Meijer <jjmeijer88@gmail.com>
 
-commit 210990b05a1247886539078e857cd038881bb2d6 upstream.
+commit 94abd778a7bb00ed5d00f56d9fbfcbf5b7c02a5c upstream.
 
-When the DaVinci emac driver is removed and re-probed, the actual
-pdev->dev.platform_data is populated with an unwanted valid pointer saved by
-the previous davinci_emac_of_get_pdata() call, causing a kernel crash when
-calling priv->int_disable() in emac_int_disable().
+If brcmf_cfg80211_get_station fails to determine the RSSI from the
+per-chain values get the value individually as a fallback.
 
-Unable to handle kernel paging request at virtual address c8622a80
-...
-[<c0426fb4>] (emac_int_disable) from [<c0427700>] (emac_dev_open+0x290/0x5f8)
-[<c0427700>] (emac_dev_open) from [<c04c00ec>] (__dev_open+0xb8/0x120)
-[<c04c00ec>] (__dev_open) from [<c04c0370>] (__dev_change_flags+0x88/0x14c)
-[<c04c0370>] (__dev_change_flags) from [<c04c044c>] (dev_change_flags+0x18/0x48)
-[<c04c044c>] (dev_change_flags) from [<c052bafc>] (devinet_ioctl+0x6b4/0x7ac)
-[<c052bafc>] (devinet_ioctl) from [<c04a1428>] (sock_ioctl+0x1d8/0x2c0)
-[<c04a1428>] (sock_ioctl) from [<c014f054>] (do_vfs_ioctl+0x41c/0x600)
-[<c014f054>] (do_vfs_ioctl) from [<c014f2a4>] (SyS_ioctl+0x6c/0x7c)
-[<c014f2a4>] (SyS_ioctl) from [<c000ff60>] (ret_fast_syscall+0x0/0x1c)
-
-Fixes: 42f59967a091 ("net: ethernet: davinci_emac: add OF support")
-Cc: Brian Hutchinson <b.hutchman@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1f0dc59a6de9 ("brcmfmac: rework .get_station() callback")
+Signed-off-by: Jaap Jan Meijer <jjmeijer88@gmail.com>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/ti/davinci_emac.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1888,8 +1888,6 @@ davinci_emac_of_get_pdata(struct platfor
- 		pdata->hw_ram_addr = auxdata->hw_ram_addr;
+--- a/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c
+@@ -2419,12 +2419,14 @@ brcmf_cfg80211_get_station(struct wiphy
+ 			   const u8 *mac, struct station_info *sinfo)
+ {
+ 	struct brcmf_if *ifp = netdev_priv(ndev);
++	struct brcmf_scb_val_le scb_val;
+ 	s32 err = 0;
+ 	struct brcmf_sta_info_le sta_info_le;
+ 	u32 sta_flags;
+ 	u32 is_tdls_peer;
+ 	s32 total_rssi;
+ 	s32 count_rssi;
++	int rssi;
+ 	u32 i;
+ 
+ 	brcmf_dbg(TRACE, "Enter, MAC %pM\n", mac);
+@@ -2505,6 +2507,20 @@ brcmf_cfg80211_get_station(struct wiphy
+ 			sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
+ 			total_rssi /= count_rssi;
+ 			sinfo->signal = total_rssi;
++		} else if (test_bit(BRCMF_VIF_STATUS_CONNECTED,
++			&ifp->vif->sme_state)) {
++			memset(&scb_val, 0, sizeof(scb_val));
++			err = brcmf_fil_cmd_data_get(ifp, BRCMF_C_GET_RSSI,
++						     &scb_val, sizeof(scb_val));
++			if (err) {
++				brcmf_err("Could not get rssi (%d)\n", err);
++				goto done;
++			} else {
++				rssi = le32_to_cpu(scb_val.val);
++				sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
++				sinfo->signal = rssi;
++				brcmf_dbg(CONN, "RSSI %d dBm\n", rssi);
++			}
+ 		}
  	}
- 
--	pdev->dev.platform_data = pdata;
--
- 	return  pdata;
- }
- 
+ done:
 
 
