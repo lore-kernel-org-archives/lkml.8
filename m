@@ -2,159 +2,162 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67E1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F38C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97DC221841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F162192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSenJWRi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AO3PI6ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgEHPcU (ORCPT
+        id S1727915AbgEHPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:32:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20207 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727067AbgEHPcT (ORCPT
+        Fri, 8 May 2020 11:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgEHPca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:32:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588951937;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0DyykdflDVUki0L9BuRfwBnn/zEUOvBXEj/RVUNAsOM=;
-        b=KSenJWRiQNmirmSHdiGDPBaI3fIEs3rBM+aWfzAOxnqPeRT3An2uy3puj29e8aZ8uDbXq/
-        LQv3+K0s5mR+rTjezWM2xQDJ5PZHV7kWEyP0WM5M+wFtgKq+rcbWnHcZf20Dfl3kXfNFZn
-        Bc9SaVcuZbT901uk8S7ZI98EmcrC9dY=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-zqy86_ozPiixTt4HVADlQg-1; Fri, 08 May 2020 11:32:13 -0400
-X-MC-Unique: zqy86_ozPiixTt4HVADlQg-1
-Received: by mail-qv1-f71.google.com with SMTP id ck5so2099900qvb.18
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 08:32:13 -0700 (PDT)
+        Fri, 8 May 2020 11:32:30 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C6C061A0C;
+        Fri,  8 May 2020 08:32:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id nv1so1565123ejb.0;
+        Fri, 08 May 2020 08:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GTz5l0c00hn6EnFjS5uVptjSE/ldgre8O5ShnulBHJM=;
+        b=AO3PI6cefQSmPY9BgmqyKwHSBzaduMYzVaTdFLkqa1efLEjNVN0/u65uQJMDpCBIX3
+         51zgKzcQzha+y6a7/OPfRXbr6m5R3VZIGkRkyTDGYpwMb9ECK4bvbMZ+I27CNLdLRx2F
+         /L36lYnM+Jq+IapA90rdEI3gOI4L3lxmsVQOXfIVklcUVPeHUY3/H9D1d4mIBDkNiIU9
+         bagZT/tZj6HuIh2pldNQ/3lRVSnEFjbyTjybV8POU8uwTdVqVCb8cSKFnIB3pmdiTvm1
+         rCAQLwWDd+jK0407FPY3RGYnxPBMz4sNO7Vaec1et5f5T8f3vYyj4bQZPX/GYmSL1TmQ
+         ac+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0DyykdflDVUki0L9BuRfwBnn/zEUOvBXEj/RVUNAsOM=;
-        b=j1RuRS97dLAEV3bSHY7kzNKZ5xGGIHUJT94TNNaDLFAy1PUICfLWwef/ugFugBvYlN
-         LB0Zmdb6T0KLiRRw5xjpAx+iyZdrtO9WRpeu5jiFqO2BF9/dQFUrQXP5nfTCDumR9PnH
-         bvqBahVAOtkK3bDGpV19sCUwqukZFIVf3POuRwQpgFs00sqNfuJidH+TEUQPmd7iVfrf
-         2I02/cqN8NP1BEbQ0IPZrJgv7BLsoKGjzBGUG+6PO/X3iPFg/SXxzUqdLIAEfYX/IRlQ
-         q+lfSkeMnnCDtnikE/0US+HVRivZPIVch84KFJfZ5qhstQebR3RqoNY3X79O0JGQ2rbR
-         zJAg==
-X-Gm-Message-State: AGi0PuZs0ClF3iznyuPpozctkAmTGMObAPUWbUrGsD1oBdYtKSQh6/r3
-        iKo4UvSXFf0c9fnLADvasg7dm5+h+c9QcyU6ILbm6upXlhfI0Rs8VvzJJuPpgmfQkR7Hm5h8+GH
-        60MtTJFnKA99OZ2N5CAfqEa0f
-X-Received: by 2002:ad4:4d06:: with SMTP id l6mr3440391qvl.34.1588951933140;
-        Fri, 08 May 2020 08:32:13 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKTUxfYKuj8cTaLbMJPJDpg+HZLLUYd2UvsYRdIdNjT8g6WJWzBB/nG1RdQZ6kL7p6i2SbCbQ==
-X-Received: by 2002:ad4:4d06:: with SMTP id l6mr3440362qvl.34.1588951932758;
-        Fri, 08 May 2020 08:32:12 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id u7sm1422893qkc.1.2020.05.08.08.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:32:12 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:32:10 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
- vmcb->save.dr6
-Message-ID: <20200508153210.GZ228260@xz-x1>
-References: <20200507115011.494562-1-pbonzini@redhat.com>
- <20200507115011.494562-9-pbonzini@redhat.com>
- <20200507192808.GK228260@xz-x1>
- <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GTz5l0c00hn6EnFjS5uVptjSE/ldgre8O5ShnulBHJM=;
+        b=MkRMhzRsnUrVVNRNHbWDmoLIcH2eLJKsyuZ0CkRZKdxguICuDhq7QA4sJVMb7w7bG/
+         opdU87icd1Qi848MdVKK+1PuqA0blHUmruar+VMNgppuk39sZA71YhhZNVKQCFfZCQW8
+         pGxBG8IjO93zEQdwV7YI5f2UKG/7/Pnfa9lc/3I7bls4WXUb2MSFLGHUq1N3KD9MyGup
+         0oGU8YrUxuFWrIfD2Ih8+Dl7vCzfTnEWw+XQbdf1HQ1/e3BTk98HgMXzML1y0rTrWGZ0
+         Z1QUzMKaZiSuiWa8kaNzLuBKiYc3HuQpyCfeGLA5dEHRRQZrm3Dl38B5LTPMfRGPnPIm
+         CYZw==
+X-Gm-Message-State: AGi0PuZdg0JDq64KSLLlXlEJ81gna+dSn8OcvFo5XBOXqHdN50b3fDly
+        m7HT+o5pw3ehq2rnxoPqmrUVSE4fWyzbrHmHLXk=
+X-Google-Smtp-Source: APiQypJyshfUHi9pIvxw9h4TZSugZC/AW7KiccDfzWF16matIJfx7xWHDYc2iaGC9dsLuUF9c5YEOslnCiicxndfdLU=
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr2165613ejb.293.1588951948487;
+ Fri, 08 May 2020 08:32:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+ <b491e02ad790a437115fdeab6b21bc48@codeaurora.org> <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+ <20200507125357.GA31783@willie-the-truck>
+In-Reply-To: <20200507125357.GA31783@willie-the-truck>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 8 May 2020 08:32:45 -0700
+Message-ID: <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+To:     Will Deacon <will@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:33:57AM +0200, Paolo Bonzini wrote:
-> On 07/05/20 21:28, Peter Xu wrote:
-> >> -	svm->vcpu.arch.dr6 = dr6;
-> >> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
-> >> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
-> >> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
-> > I failed to figure out what the above calculation is going to do... 
-> 
-> The calculation is merging the cause of the #DB with the guest DR6.
-> It's basically the same effect as kvm_deliver_exception_payload. The
-> payload has DR6_RTM flipped compared to DR6, so you have the following
-> simplfications:
-> 
-> 	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
-> 	/* This is kvm_deliver_exception_payload: */
->         vcpu->arch.dr6 &= ~DR_TRAP_BITS;
->         vcpu->arch.dr6 |= DR6_RTM;
-> 	/* copy dr6 bits other than RTM */
->         vcpu->arch.dr6 |= payload;
-> 	/* copy flipped RTM bit */
->         vcpu->arch.dr6 ^= payload & DR6_RTM;
-> 
-> ->
-> 
-> 	payload = (dr6 ^ DR6_RTM) & ~DR6_FIXED_1;
-> 	/* clear RTM here, so that we can OR it below */
->         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
-> 	/* copy dr6 bits other than RTM */
->         vcpu->arch.dr6 |= payload & ~DR6_RTM;
-> 	/* copy flipped RTM bit */
->         vcpu->arch.dr6 |= (payload ^ DR6_RTM) & DR6_RTM;
-> 
-> ->
-> 
-> 	/* we can drop the double XOR of DR6_RTM */
-> 	dr6 &= ~DR6_FIXED_1;
->         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
->         vcpu->arch.dr6 |= dr6 & ~DR6_RTM;
->         vcpu->arch.dr6 |= dr6 & DR6_RTM;
-> 
-> ->
-> 
-> 	/* we can do the two ORs with a single operation */
->         vcpu->arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
->         vcpu->arch.dr6 |= dr6 & ~DR6_FIXED_1;
+On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
+> > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
+> > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> > > > Add stall implementation hook to enable stalling
+> > > > faults on QCOM platforms which supports it without
+> > > > causing any kind of hardware mishaps. Without this
+> > > > on QCOM platforms, GPU faults can cause unrelated
+> > > > GPU memory accesses to return zeroes. This has the
+> > > > unfortunate result of command-stream reads from CP
+> > > > getting invalid data, causing a cascade of fail.
+> >
+> > I think this came up before, but something about this rationale doesn't add
+> > up - we're not *using* stalls at all, we're still terminating faulting
+> > transactions unconditionally; we're just using CFCFG to terminate them with
+> > a slight delay, rather than immediately. It's really not clear how or why
+> > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
+> > (or even a documented workaround for something), or might things start
+> > blowing up again if any other behaviour subtly changes? I'm not dead set
+> > against adding this, but I'd *really* like to have a lot more confidence in
+> > it.
+>
+> Rob mentioned something about the "bus returning zeroes" before, but I agree
+> that we need more information so that we can reason about this and maintain
+> the code as the driver continues to change. That needs to be a comment in
+> the driver, and I don't think "but android seems to work" is a good enough
+> justification. There was some interaction with HUPCF as well.
 
-Oh that's quite some math. :) Thanks Paolo!
+The issue is that there are multiple parallel memory accesses
+happening at the same time, for example CP (the cmdstream processor)
+will be reading ahead and setting things up for the next draw or
+compute grid, in parallel with some memory accesses from the shader
+which could trigger a fault.  (And with faults triggered by something
+in the shader, there are *many* shader threads running in parallel so
+those tend to generate a big number of faults at the same time.)
 
-Shall we introduce a helper for both kvm_deliver_exception_payload and here
-(e.g. kvm_merge_dr6)?  Also, wondering whether this could be a bit easier to
-follow by defining:
+We need either CFCFG or HUPCF, otherwise what I have observed is that
+while the fault happens, CP's memory access will start returning
+zero's instead of valid cmdstream data, which triggers a GPU hang.  I
+can't say whether this is something unique to qcom's implementation of
+the smmu spec or not.
 
-/*
- * These bits could be kept being set until the next #DB if not
- * explicitly cleared.
- */
-#define  DR6_CARRY_OVER_BITS  (DR6_BT | DR6_BS | DR6_BD)
+*Often* a fault is the result of the usermode gl/vk/cl driver bug,
+although I don't think that is an argument against fixing this in the
+smmu driver.. I've been carrying around a local patch to set HUPCF for
+*years* because debugging usermode driver issues is so much harder
+without.  But there are some APIs where faults can be caused by the
+user's app on top of the usermode driver.
 
-Then the imho above calculation could also become:
 
-    vcpu->arch.dr6 = (vcpu->arch.dr6 & DR6_CARRY_OVER_BITS) | save.dr6;
+BR,
+-R
 
-What do you think?
-
-> 
-> > E.g., I
-> > think the old "BT|BS|BD" bits in the old arch.dr6 cache will be leftover even
-> > if none of them is set in save.dr6, while we shouldn't?
-> 
-> Those bits should be kept; this is covered for example by the "hw
-> breakpoint (test that dr6.BS is not cleared)" testcase in kvm-unit-tests
-> x86/debug.c.
-
-Right.  Thanks!
-
--- 
-Peter Xu
-
+>
+> As a template, I'd suggest:
+>
+> > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > > index 8d1cd54d82a6..d5134e0d5cce 100644
+> > > > --- a/drivers/iommu/arm-smmu.h
+> > > > +++ b/drivers/iommu/arm-smmu.h
+> > > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
+> > > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
+> > > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+> > > >               int status);
+>
+> /*
+>  * Stall transactions on a context fault, where they will be terminated
+>  * in response to the resulting IRQ rather than immediately. This should
+>  * pretty much always be set to "false" as stalling can introduce the
+>  * potential for deadlock in most SoCs, however it is needed on Qualcomm
+>  * XXXX because YYYY.
+>  */
+>
+> > > > +    bool stall;
+>
+> Hmm, the more I think about this, the more I think this is an erratum
+> workaround in disguise, in which case this could be better named...
+>
+> Will
