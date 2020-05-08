@@ -2,113 +2,99 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C05C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CBFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F2C206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76043206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pWId5DxI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a2oF2gMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgEHQQV (ORCPT
+        id S1728620AbgEHQQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgEHQQM (ORCPT
+        Fri, 8 May 2020 12:16:30 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53532 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgEHQQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:16:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C90C061A0C;
-        Fri,  8 May 2020 09:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=+Yv7C4jWhNdI5E7GDESk/+lrv1mE06qtLyi6ilmMLLY=; b=pWId5DxIEtBm9Nf0k8N070gCl6
-        rkH5BRP1mzZwaakcYgsq8xK46fNXt3mXqwGxDCICzFKzl+Z47yC9p2tm1g4fzmWMdM///1Fpnxxdc
-        dxpYIh5MxiEKCcGT87F9/ugi5LnknMTbIFOr/nJRf0iThPSnRbTXKMn51g9c2Xez5GarT+vD9P7Ak
-        eUEWL0mIXwL17SNv/XTZUucc5oIZVnAkGEGBXnO1Mb+NnTzjuhKA4/lGOmVT4+3YknsXWSUxBRg3Z
-        A0vzLDAjfS2ryjq0rbU6cf+DSLkR9wrwUCvXLnS+mddUZs2+K42avBd19dI9dUmSr3yYujVmP1MAb
-        uwkA76nQ==;
-Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX5fT-0004qF-GE; Fri, 08 May 2020 16:16:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH 15/15] nvdimm/pmem: stop using ->queuedata
-Date:   Fri,  8 May 2020 18:15:17 +0200
-Message-Id: <20200508161517.252308-16-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508161517.252308-1-hch@lst.de>
-References: <20200508161517.252308-1-hch@lst.de>
+        Fri, 8 May 2020 12:16:23 -0400
+Received: from [192.168.1.17] (unknown [76.104.235.235])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 44FBD20B717B;
+        Fri,  8 May 2020 09:16:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 44FBD20B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1588954582;
+        bh=zN67uqgpQYPNIbXXPTElpBVedXzm8/J7FKeWL5LhcC0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=a2oF2gMsa+ICuVc/fFX8c0bRG5sTFQV0lrP2W7qsArF55ZaVGn5XMr/pThueCNHbj
+         uT96kdEZc0eh2ics2DZm0dXWKu6UGV1F9ivnSvk398WUneD5yx+7ke+Ft7d7l59NSm
+         u6bTcahIJckCuKo27xWXNu3LbEvuRzzP3VxXsz5o=
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <e50f4c00-12e6-19e6-ead3-f180074bceea@linux.microsoft.com>
+ <20200507180654.GA17632@wind.enjellic.com>
+From:   Jordan Hand <jorhand@linux.microsoft.com>
+Message-ID: <97a7a73b-53ea-d4f8-5323-f9f109150480@linux.microsoft.com>
+Date:   Fri, 8 May 2020 09:16:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200507180654.GA17632@wind.enjellic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvdimm/pmem.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 5/7/20 11:06 AM, Dr. Greg wrote:
+> On Wed, May 06, 2020 at 09:39:55AM -0700, Jordan Hand wrote:
+> 
+> Good afternoon, I hope the week is going well for everyone.
+> 
+>> On 4/21/20 2:52 PM, Jarkko Sakkinen wrote:
+>>> Make the vDSO callable directly from C by preserving RBX and taking leaf
+>>>    from RCX.
+> 
+>> Tested with the Open Enclave SDK on top of Intel PSW. Specifically built
+>> the Intel PSW with changes to support /dev/sgx mapping[1] new in v29.
+>>
+>> Tested-by: Jordan Hand <jorhand@linux.microsoft.com>
+>>
+>> [1] https://github.com/intel/linux-sgx/pull/530
+> 
+> Did you re-wire your SDK to convert all your ECALL and exception
+> handling to the new VDSO architecture?
+ >
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 2df6994acf836..f8dc5941215bf 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -196,7 +196,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 	unsigned long start;
- 	struct bio_vec bvec;
- 	struct bvec_iter iter;
--	struct pmem_device *pmem = q->queuedata;
-+	struct pmem_device *pmem = bio->bi_disk->private_data;
- 	struct nd_region *nd_region = to_region(pmem);
- 
- 	if (bio->bi_opf & REQ_PREFLUSH)
-@@ -231,7 +231,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- static int pmem_rw_page(struct block_device *bdev, sector_t sector,
- 		       struct page *page, unsigned int op)
- {
--	struct pmem_device *pmem = bdev->bd_queue->queuedata;
-+	struct pmem_device *pmem = bdev->bd_disk->private_data;
- 	blk_status_t rc;
- 
- 	if (op_is_write(op))
-@@ -464,7 +464,6 @@ static int pmem_attach_disk(struct device *dev,
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, q);
- 	if (pmem->pfn_flags & PFN_MAP)
- 		blk_queue_flag_set(QUEUE_FLAG_DAX, q);
--	q->queuedata = pmem;
- 
- 	disk = alloc_disk_node(0, nid);
- 	if (!disk)
-@@ -474,6 +473,7 @@ static int pmem_attach_disk(struct device *dev,
- 	disk->fops		= &pmem_fops;
- 	disk->queue		= q;
- 	disk->flags		= GENHD_FL_EXT_DEVT;
-+	disk->private_data	= pmem;
- 	disk->queue->backing_dev_info->capabilities |= BDI_CAP_SYNCHRONOUS_IO;
- 	nvdimm_namespace_disk_name(ndns, disk->disk_name);
- 	set_capacity(disk, (pmem->size - pmem->pfn_pad - pmem->data_offset)
--- 
-2.26.2
+No. We have many users of our SDK who rely on the out-of-tree driver and 
+will for the foreseeable future. I aim to support both in-tree and 
+out-of-tree with minimal code diff.
 
+>
+> Failures in enclave loading and initialization demonstrate themselves
+> pretty clearly and are in the domain of the PSW being used.  If there
+> are going to be subtle SGX application operability issues that need to
+> be found they will be in the new ECALL and exception handling
+> mechanisms.
+
+Fair enough, no I have not tested those mechanisms. Apologies, I should 
+have removed that line from the quoted text.
+
+-Jordan
