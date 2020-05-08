@@ -2,52 +2,66 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7662DC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82287C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4DC2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B4A208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHC3v (ORCPT
+        id S1726797AbgEHCbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:29:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:7799 "EHLO mga17.intel.com"
+        Thu, 7 May 2020 22:31:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11749 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgEHC3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:29:51 -0400
-IronPort-SDR: KtXrgXfhLJD2kP+iAMwZIjZQPCwogai6s2ES6SUrcoA80wvykAZlfTMBxhPNW9l2aG6L8VfQRc
- MHMcJIeFG5IA==
+        id S1726509AbgEHCbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 22:31:25 -0400
+IronPort-SDR: vGdYQ5yvVTiflf5X5JhROzCv9cquerCUsLWM6E8l17O7CEP3zUivQnj3iW+5LEuJMn75eZDR4C
+ q5/qSly2TmxA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:29:50 -0700
-IronPort-SDR: lYA0+S6rEXXxhg65kjZnYz7m4O6x3A5IdzbqkT2GRR/TGzl+7W30lXbtJ8J0IGHsN7L2U5V0AH
- KAgL5F5TvKGQ==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:31:25 -0700
+IronPort-SDR: CjOhS/m/S5QJz2g+WvbIMHXFxFQoeuzgIpCgt6bhRN43uycCy6cj+bYZcbgbqLgcXnSzSXFqZG
+ u343lCOsI7Eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="278804999"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 19:29:48 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v4 4/5] iommu/vt-d: Add page request draining support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
- <20200507005534.3080-5-baolu.lu@linux.intel.com>
- <MWHPR11MB1645726E6EB0D9248BC56DA78CA50@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <602f36ae-9e93-cee5-d7ca-6c2350f3e88c@linux.intel.com>
-Date:   Fri, 8 May 2020 10:26:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+   d="scan'208";a="296724654"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 07 May 2020 19:31:24 -0700
+Received: from [10.213.154.115] (vramuthx-MOBL1.gar.corp.intel.com [10.213.154.115])
+        by linux.intel.com (Postfix) with ESMTP id 642A1580378;
+        Thu,  7 May 2020 19:31:20 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v5 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507001537.4034-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507072831.1bf7f784@collabora.com>
+ <440c0002-e572-7b8b-ba08-773932370eb0@linux.intel.com>
+ <20200507082730.6425cd96@collabora.com>
+ <69a06362-1f9d-bf65-4a9b-98fc6b63a391@linux.intel.com>
+ <20200507084831.1483b19a@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <547af0d0-a304-8fd8-12a3-263a900da6af@linux.intel.com>
+Date:   Fri, 8 May 2020 10:31:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645726E6EB0D9248BC56DA78CA50@MWHPR11MB1645.namprd11.prod.outlook.com>
+In-Reply-To: <20200507084831.1483b19a@collabora.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -56,147 +70,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+Hi Boris,
 
-On 5/7/20 2:35 PM, Tian, Kevin wrote:
->> From: Lu Baolu
->> Sent: Thursday, May 7, 2020 8:56 AM
->>
->> When a PASID is stopped or terminated, there can be pending PRQs
->> (requests that haven't received responses) in remapping hardware.
->> This adds the interface to drain page requests and call it when a
->> PASID is terminated.
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel-svm.c   | 102 ++++++++++++++++++++++++++++++++++-
->> -
->>   include/linux/intel-iommu.h |   4 ++
->>   2 files changed, 101 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
->> index 9561ba59a170..7256eb965cf6 100644
->> --- a/drivers/iommu/intel-svm.c
->> +++ b/drivers/iommu/intel-svm.c
->> @@ -23,6 +23,7 @@
->>   #include "intel-pasid.h"
->>
->>   static irqreturn_t prq_event_thread(int irq, void *d);
->> +static void intel_svm_drain_prq(struct device *dev, int pasid);
->>
->>   #define PRQ_ORDER 0
->>
->> @@ -66,6 +67,8 @@ int intel_svm_enable_prq(struct intel_iommu *iommu)
->>   	dmar_writeq(iommu->reg + DMAR_PQT_REG, 0ULL);
->>   	dmar_writeq(iommu->reg + DMAR_PQA_REG, virt_to_phys(iommu-
->>> prq) | PRQ_ORDER);
->>
->> +	init_completion(&iommu->prq_complete);
->> +
->>   	return 0;
->>   }
->>
->> @@ -403,12 +406,8 @@ int intel_svm_unbind_gpasid(struct device *dev, int
->> pasid)
->>   			list_del_rcu(&sdev->list);
->>   			intel_pasid_tear_down_entry(iommu, dev,
->>   						    svm->pasid, false);
->> +			intel_svm_drain_prq(dev, svm->pasid);
->>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->> -			/* TODO: Drain in flight PRQ for the PASID since it
->> -			 * may get reused soon, we don't want to
->> -			 * confuse with its previous life.
->> -			 * intel_svm_drain_prq(dev, pasid);
->> -			 */
->>   			kfree_rcu(sdev, rcu);
->>
->>   			if (list_empty(&svm->devs)) {
->> @@ -647,6 +646,7 @@ int intel_svm_unbind_mm(struct device *dev, int
->> pasid)
->>   			 * hard to be as defensive as we might like. */
->>   			intel_pasid_tear_down_entry(iommu, dev,
->>   						    svm->pasid, false);
->> +			intel_svm_drain_prq(dev, svm->pasid);
->>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   			kfree_rcu(sdev, rcu);
->>
->> @@ -725,6 +725,92 @@ static bool is_canonical_address(u64 addr)
->>   	return (((saddr << shift) >> shift) == saddr);
->>   }
->>
->> +/**
->> + * intel_svm_drain_prq:
->> + *
->> + * Drain all pending page requests and responses related to a specific
->> + * pasid in both software and hardware.
->> + */
->> +static void intel_svm_drain_prq(struct device *dev, int pasid)
->> +{
->> +	struct device_domain_info *info;
->> +	struct dmar_domain *domain;
->> +	struct intel_iommu *iommu;
->> +	struct qi_desc desc[3];
->> +	struct pci_dev *pdev;
->> +	int head, tail;
->> +	u16 sid, did;
->> +	int qdep;
->> +
->> +	info = get_domain_info(dev);
->> +	if (WARN_ON(!info || !dev_is_pci(dev)))
->> +		return;
->> +
->> +	if (!info->ats_enabled)
->> +		return;
-> 
-> ats_enabled -> pri_enabled
+   Thank you very much for the review comments and your time...
+On 7/5/2020 2:48 pm, Boris Brezillon wrote:
+ > On Thu, 7 May 2020 14:38:52 +0800
+ > "Ramuthevar, Vadivel MuruganX"
+ > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+ >
+ >> Hi Boris,
+ >>
+ >>    Thank you very much for the review comments and your time...
+ >>
+ >> On 7/5/2020 2:27 pm, Boris Brezillon wrote:
+ >>> On Thu, 7 May 2020 14:13:42 +0800
+ >>> "Ramuthevar, Vadivel MuruganX"
+ >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+ >>>
+ >>>> Hi Boris,
+ >>>>
+ >>>>      Thank you very much for the review comments and your time...
+ >>>>
+ >>>> On 7/5/2020 1:28 pm, Boris Brezillon wrote:
+ >>>>> On Thu,  7 May 2020 08:15:37 +0800
+ >>>>> "Ramuthevar,Vadivel MuruganX"
+ >>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+ >>>>>
+ >>>>>> +	reg = readl(ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+ >>>>>> +	writel(reg | EBU_ADDR_MASK(5) | EBU_ADDR_SEL_REGEN,
+ >>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(ebu_host->cs_num));
+ >>>>> Seriously, did you really think I would not notice what you're doing
+ >>>>> here?
+ >>>> Yes , I know that you have very good understanding about this.
+ >>>>    You're reading the previous value which either contains a default
+ >>>>> mapping or has the mapping set by the bootloader, and write it 
+back to
+ >>>>> the register along with a new mask and the REGEN bit set (which
+ >>>>> BTW is wrong since you don't mask out other fields before updating
+ >>>>> them).
+ >>>> There is no other field get overwritten
+ >>>>    This confirms that this Core -> FPI address translation exists
+ >>>>> and has to be set properly, so please stop lying about that.
+ >>>> Sorry, there is no SW translation, as I have mentioned that it's
+ >>>> optional only, for safer side , reading and writing the default 
+values.
+ >>> Then write EBU_ADDR_SEL_REGEN and we'll if see that works. I suspect it
+ >>> won't.
+ >> You mean, without reading just writing EBU_ADDR_SEL_REGEN bit alone in
+ >> EBU_ADDR_SELx , as you said it won't work because it overwrites 0x174
+ >> with 0x0 values so BASE is lost.
+ > Which confirms that this mapping has to be defined.
+Sure, Noted.
+ >> either we can leave it or read & write with ORed | EBU_ADDR_SEL_REGEN
+ > None of this is acceptable IMO. You have to build the value based on the
+ > address translation described in the DT. Why are you so reluctant to
+ > this approach?
+Agreed!, will derive the values(0x174/0x17C) to be written into these 
+registers based on the chip select (CS0/CS1)
+Address_sel0_register: 0xE0F0_0020
+Address_sel1_register: 0xE0F0_0024
+Bits : 31...12|11...8| 7..4 |3..2|  1   |  0
+flags:  BASE  |------| MASK | -- | MRME | REGEN
 
-Yes. Sure!
+BASE : 0x17400 /0x17C00 to be written into 31:12 based on the chip selection
+MASK: 5: bits 26:22 to included address comparison
+MRME: Memory Region Memory Enable
+REGEN: Memory Region Access Enable
 
-> 
->> +
->> +	iommu = info->iommu;
->> +	domain = info->domain;
->> +	pdev = to_pci_dev(dev);
->> +	sid = PCI_DEVID(info->bus, info->devfn);
->> +	did = domain->iommu_did[iommu->seq_id];
->> +	qdep = pci_ats_queue_depth(pdev);
->> +
->> +	memset(desc, 0, sizeof(desc));
->> +	desc[0].qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
->> +			QI_IWD_FENCE |
->> +			QI_IWD_TYPE;
->> +	desc[1].qw0 = QI_EIOTLB_PASID(pasid) |
->> +			QI_EIOTLB_DID(did) |
->> +			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
->> +			QI_EIOTLB_TYPE;
->> +	desc[2].qw0 = QI_DEV_EIOTLB_PASID(pasid) |
->> +			QI_DEV_EIOTLB_SID(sid) |
->> +			QI_DEV_EIOTLB_QDEP(qdep) |
->> +			QI_DEIOTLB_TYPE |
->> +			QI_DEV_IOTLB_PFSID(info->pfsid);
->> +
->> +	/*
->> +	 * Submit an invalidation wait descriptor with fence and page request
->> +	 * drain flags set to invalidation queue. This ensures that all requests
->> +	 * submitted to the invalidation queue ahead of this wait descriptor
->> are
->> +	 * processed and completed, and all already issued page requests
->> from
->> +	 * the device are put in the page request queue.
->> +	 */
-> 
-> I feel this comment is better moved earlier since it explains the overall
-> flow including all 3 descriptors. Also it is not one wait descriptor which
-> gets both fence and drain flags set. There are two wait descriptors with
-> one setting fence and the other setting drain.
-> 
->> +	qi_submit_sync(iommu, desc, 1, QI_OPT_WAIT_DRAIN);
-> 
-> the count is '3' instead of '1'.
+As you have suggested to get the above base values from DT and update in 
+driver, will do that.
 
-Yes. Will fix it in the next version.
-
-Best regards,
-baolu
+Thanks!
+Regards
+Vadivel
+ >> Please correct me if anything is wrong, Thanks!
+ >>>
+ >>>> The memory region to enabled that's my concern so written the same
+ >>>> register values.
+ >>> I don't buy that, sorry.
+ >>>
+ >>>> This will not be impact other fields, so please see below for 
+reference
+ >>>>
+ >>>> The EBU Address Select Registers EBU_ADDR_SEL_0 to EBU_ADDSEL3 
+establish
+ >>>> and control memory regions for external accesses.
+ >>>>
+ >>>> Reset Value: 17400001H
+ >>> See, as suspected the reset value is exactly what you expect.
+ >> Yes , that's the reason said being optional.
+ > Then it's not optional. It just works because you use the default
+ > va
