@@ -2,88 +2,300 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A0FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE77EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F2A2495B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D172495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588944643;
+	bh=YJHuyYQUMy5ygGz555o/uN/njIbPp3jNOoxtdWfpOG8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wHsStVRXM0BMysIe2d8FpwruKNIrinvPNXTOFQXEzTu1Zor1oq7sUFBdpc4gIfi88
+	 4YsgtLw45sxiSirv+72dAoR6+lw3sxQoB2hrbAuGGM4/zXTsPPviNdq/CAsXucMWCp
+	 RhYOIXJamlGqiOjGPZMFMH07h2ppXfzmEnNpF304=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgEHNag (ORCPT
+        id S1728272AbgEHNam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:30:36 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:45558 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgEHNac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:30:32 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-c9-5eb55ef619d7
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 7A.F4.17433.6FE55BE5; Fri,  8 May 2020 15:30:30 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0487.000; Fri, 8 May 2020 15:30:23 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 00/11] Support ROHM BD99954 charger IC
-Thread-Topic: [PATCH v11 00/11] Support ROHM BD99954 charger IC
-Thread-Index: AQHWJDVjiBpLAI2GnUi/Ov7DoQHufKieDA6AgAADpIA=
-Date:   Fri, 8 May 2020 13:30:23 +0000
-Message-ID: <e5d57de76a11d0f450d358af187b52699c246cc9.camel@fi.rohmeurope.com>
-References: <cover.1588829892.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200508131719.GJ4820@sirena.org.uk>
-In-Reply-To: <20200508131719.GJ4820@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CDF085982B5E2A41AF4C7FC17215E545@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 8 May 2020 09:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgEHNad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:30:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0104206D6;
+        Fri,  8 May 2020 13:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588944632;
+        bh=YJHuyYQUMy5ygGz555o/uN/njIbPp3jNOoxtdWfpOG8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OM5E5CdyAJ7HatRGASNubsXEkL6oAzuJBc2VyCEtTeic50u+IUvJJc77CjbtTASbu
+         rCLeYtFvq9WcE1r5lr3usnJhZSAzfZZ3vrq9EyfQP5Z9djYlcvJx64T8TtxZxOH1TM
+         LCEXE5vt1ufwOlkaBXD72foe3hW50L0MzwQJDCPc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/49] 5.4.40-rc2 review
+Date:   Fri,  8 May 2020 15:30:29 +0200
+Message-Id: <20200508132934.548989409@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOTOzs2fVseN4O2lJLkKYeKUfi5gKEphEBP6ILq6NOrqr7q7M
-        rqEmKUjhhURLBTdvqEEZZK6Kt8haFEtJIVNLCtsSQX8oXlJQu8y43n6d93zv93zvgfNBkl2V
-        eUGt3sQLei5TSTtQb5/tdARuqrvVIXMrclW1bZ5WbX4uJlST/XW0av3hEFDVPX1PqcYGTNF0
-        bJ/5uzzW0lZCx65bfK6SNxwjkjjTnXhtmj448rajpmiyVZa1rcjpK0opBF8UpUABMTqPX3Vu
-        yEuBA2TRNMBvdqYI+2UE4Mbud+IFQhpF4NKvcglwQ4G4eruFlnpIdJ/AzcUThGS4oki8MDO+
-        3xSFFz/WALsOx01tjyhJU8gPN8z+FrUcMugKbr4oVVmkw909/XukAoXh8Y4ftKQBOo1LCpf3
-        ppPIE1sWtmT2NyPc+nqCtGt3vPjr737dF/dsvaSkF5PIH7f3B9vRaFxjbpTZtS+uKrPtRTHI
-        BX+onacqgIf5WIL5iDYfo83HaPMxugnI2gDWcdrMNM7EhwYJfHaQYNDoxCPZoLMA+xdu9IJ/
-        1ktWQEBgBSchoXRnzlzrVrPOSYaUXA1n1CQK2Zm80QowJJVuTGVOl5plUrjcPF4wHFjekFJ6
-        MmdtlQkskrIyeD6LFw7cUxAqMUMkiENdBD6Nz0nVZpqObAIqpOEOXm5GXp/CC1y2SZMoLUei
-        UdwOyXISczduiThjzOJ0YtWOjoIAWLFY30zCofqnzSRL6Q163suTuewstiKpVZOtPwxaAp4Q
-        KF0ZhbiwrJO4x4dzlsQIQoxYX7NIESbuyPIqBB3PDTF9UeFbbQX5ef5DL7IqfVTf4ogTMdEJ
-        c94DkVrZvdjOCe9PvR4hI3k3gwcDumaGneLjonQZw8kt2+5+Nmo3YqAhrGIBGsYj11Y6op7U
-        ULZO9Gc6epetqHJNvbC5qi1+vDyaXl5A/8x3ux7eP62KSB8cqy0vm7v7YCq8fVZJGTVc6DlS
-        MHL/Ae37dv6EAwAA
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.40-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.40-rc2
+X-KernelTest-Deadline: 2020-05-10T13:29+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBGcmksIDIwMjAtMDUtMDggYXQgMTQ6MTcgKzAxMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFRodSwgTWF5IDA3LCAyMDIwIGF0IDA5OjAzOjA2QU0gKzAzMDAsIE1hdHRpIFZhaXR0aW5l
-biB3cm90ZToNCj4gPiBTb3JyeSBmb2xrcyBmb3IgZXhjZXNzaXZlIGFtb3VudCBvZiBlbWFpbHMu
-IEkgYW0gcmVzZW5kaW5nIHRoaXMNCj4gPiBvbmNlDQo+ID4gbW9yZSAoSSBhbHJlYWR5IHJlc2Vu
-dCB2MTAgYW5kIHYxMSBoYXMgbm8gY2hhbmdlcyBidXQgd2FzIGp1c3QNCj4gPiByZWJhc2VkKQ0K
-PiA+IGJlY2F1c2UgSSBhbSBhZnJhaWQgdGhlIHByZXZpb3VzIHZlcnNpb24gZGlkIG5vdCByZWFj
-aCBNYXJrLiBJZg0KPiA+IHRoaXMgaXMNCj4gPiB0cnVlIC0gSSBhbSB0aGUgb25lIHRvIGJsYW1l
-LiBJIHNlZSBJIHNlbnQgb3JpZ2luYWwgdjEwIHRvIGFsbA0KPiA+IG90aGVyDQo+IA0KPiBZb3Ug
-cHJvYmFibHkgc2hvdWxkJ3ZlIG1lbnRpb25lZCBpbiB0aGlzIG1haWwgc29tZXRoaW5nIGFib3V0
-DQo+IGFwcGx5aW5nDQo+IG9uIGEgc2hhcmVkIGJyYW5jaCAtIEkgaGFkIHNlZW4gdGhlIG1haWwg
-YWJvdXQgdGhhdCBhbmQgd2FzIHBsYW5uaW5nDQo+IHRvDQo+IGhhbmRsZSB0aGVzZSB0aGlzIHdl
-ZWsgYnV0IGlmIEknZCBtaXNzZWQgU2ViYXN0aWFuJ3MgbWFpbCBmcm9tDQo+IGVhcmxpZXINCj4g
-aW4gdGhlIHdlZWsgSSdkIHByb2JhYmx5IGp1c3QgbG9vayBhdCB0aGlzIGFuZCByZWFsaXNlIEkn
-ZCByZXZpZXdlZA0KPiBldmVyeXRoaW5nIHJlbGV2YW50IGluIGl0Lg0KDQpUaGFua3MgZm9yIHRo
-ZSB0aXAuIEknbGwgdHJ5IHRvIGtlZXAgdGhpcyBpbiBtaW5kIGZvciB0aGUgZnV0dXJlIGFuZA0K
-YWRkIGEgbm90ZSBhYm91dCBhcHBseWluZyBpbiBkaWZmZXJlbnQgdHJlZXMgdG8gY292ZXIgbGV0
-dGVyLg0KDQotLU1hdHRpDQo=
+This is the start of the stable review cycle for the 5.4.40 release.
+There are 49 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
+
+Responses should be made by Sun, 10 May 2020 13:29:13 +0000.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.40-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.40-rc2
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    PM / devfreq: Add missing locking while setting suspend_freq
+
+Willem de Bruijn <willemb@google.com>
+    udp: document udp_rcv_segment special case for looped packets
+
+Arnaldo Carvalho de Melo <acme@redhat.com>
+    tools headers UAPI: Sync copy of arm64's asm/unistd.h with the kernel sources
+
+Zhan Liu <Zhan.Liu@amd.com>
+    Revert "drm/amd/display: setting the DIG_MODE to the correct value."
+
+Will Deacon <will@kernel.org>
+    mm/mremap: Add comment explaining the untagging behaviour of mremap()
+
+Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+    libbpf: Fix readelf output parsing for Fedora
+
+Jiri Slaby <jslaby@suse.cz>
+    cgroup, netclassid: remove double cond_resched
+
+Thomas Pedersen <thomas@adapt-ip.com>
+    mac80211: add ieee80211_is_any_nullfunc()
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
+
+Hans de Goede <hdegoede@redhat.com>
+    platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
+
+Qian Cai <cai@lca.pw>
+    x86/kvm: fix a missing-prototypes "vmread_error"
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda: Match both PCI ID and SSID for driver blacklist
+
+Nick Desaulniers <ndesaulniers@google.com>
+    hexagon: define ioremap_uc
+
+Christoph Hellwig <hch@lst.de>
+    hexagon: clean up ioremap
+
+Tuowen Zhao <ztuowen@gmail.com>
+    mfd: intel-lpss: Use devm_ioremap_uc for MMIO
+
+Tuowen Zhao <ztuowen@gmail.com>
+    lib: devres: add a helper function for ioremap_uc
+
+Brendan Higgins <brendanhiggins@google.com>
+    Revert "software node: Simplify software_node_release() function"
+
+Aaron Ma <aaron.ma@canonical.com>
+    drm/amdgpu: Fix oops when pp_funcs is unset in ACPI event
+
+Jere Leppänen <jere.leppanen@nokia.com>
+    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+
+Matt Roper <matthew.d.roper@intel.com>
+    drm/i915: Extend WaDisableDARBFClkGating to icl,ehl,tgl
+
+Doug Berger <opendmb@gmail.com>
+    net: systemport: suppress warnings on failed Rx SKB allocations
+
+Doug Berger <opendmb@gmail.com>
+    net: bcmgenet: suppress warnings on failed Rx SKB allocations
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    mac80211: sta_info: Add lockdep condition for RCU list usage
+
+Nathan Chancellor <natechancellor@gmail.com>
+    lib/mpi: Fix building for powerpc with clang
+
+Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+    tracing: Fix memory leaks in trace_events_hist.c
+
+Paulo Alcantara <pc@cjr.nz>
+    cifs: do not share tcons with DFS
+
+Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+    scripts/config: allow colons in option strings for sed
+
+Ronnie Sahlberg <lsahlber@redhat.com>
+    cifs: protect updating server->dstaddr with a spinlock
+
+Matthias Blankertz <matthias.blankertz@cetitec.com>
+    ASoC: rsnd: Fix "status check failed" spam for multi-SSI
+
+Matthias Blankertz <matthias.blankertz@cetitec.com>
+    ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
+
+Julien Beraud <julien.beraud@orolia.com>
+    net: stmmac: Fix sub-second increment
+
+Julien Beraud <julien.beraud@orolia.com>
+    net: stmmac: fix enabling socfpga's ptp_ref_clock
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    wimax/i2400m: Fix potential urb refcnt leak
+
+Sandeep Raghuraman <sandy.8925@gmail.com>
+    drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
+
+Alex Elder <elder@linaro.org>
+    remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
+
+Matthias Blankertz <matthias.blankertz@cetitec.com>
+    ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
+
+Matthias Blankertz <matthias.blankertz@cetitec.com>
+    ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: gadget: Properly set maxpacket limit
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Fix endianness issue
+
+Sebastian Reichel <sebastian.reichel@collabora.com>
+    ASoC: sgtl5000: Fix VAG power-on handling
+
+Tyler Hicks <tyhicks@linux.microsoft.com>
+    selftests/ipc: Fix test failure seen after initial test run
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Check return value of soc_tplg_dai_config
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Check return value of pcm_new_ver
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Check soc_tplg_add_route return value
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Check return value of soc_tplg_*_create
+
+Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+    ASoC: topology: Check return value of soc_tplg_create_tlv
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    drm/bridge: analogix_dp: Split bind() into probe() and real bind()
+
+Jia He <justin.he@arm.com>
+    vhost: vsock: kick send_pkt worker once device is started
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/hexagon/include/asm/io.h                      | 12 ++---
+ arch/hexagon/kernel/hexagon_ksyms.c                |  2 +-
+ arch/hexagon/mm/ioremap.c                          |  2 +-
+ arch/x86/kvm/vmx/ops.h                             |  1 +
+ drivers/acpi/sleep.c                               |  5 +-
+ drivers/base/swnode.c                              | 14 +++---
+ drivers/devfreq/devfreq.c                          |  4 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |  3 +-
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c      |  9 ----
+ .../gpu/drm/amd/powerplay/hwmgr/processpptables.c  | 26 +++++++++++
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 33 +++++++++-----
+ drivers/gpu/drm/exynos/exynos_dp.c                 | 29 +++++++-----
+ drivers/gpu/drm/i915/display/intel_display.c       |  7 ++-
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 36 ++++++++-------
+ drivers/mfd/intel-lpss.c                           |  2 +-
+ drivers/net/ethernet/broadcom/bcmsysport.c         |  3 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  3 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |  9 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 12 +++--
+ drivers/net/wimax/i2400m/usb-fw.c                  |  1 +
+ drivers/platform/x86/gpd-pocket-fan.c              |  2 +-
+ drivers/remoteproc/qcom_q6v5_mss.c                 |  2 +-
+ drivers/usb/dwc3/core.h                            |  4 ++
+ drivers/usb/dwc3/gadget.c                          | 52 ++++++++++++++++-----
+ drivers/vhost/vsock.c                              |  5 ++
+ fs/cifs/connect.c                                  |  6 +++
+ include/drm/bridge/analogix_dp.h                   |  5 +-
+ include/linux/ieee80211.h                          |  9 ++++
+ include/linux/io.h                                 |  2 +
+ include/net/udp.h                                  |  7 +++
+ kernel/trace/trace_events_hist.c                   |  7 +++
+ lib/devres.c                                       | 19 ++++++++
+ lib/mpi/longlong.h                                 | 34 +++++++-------
+ mm/mremap.c                                        | 10 ++++
+ net/core/netclassid_cgroup.c                       |  4 +-
+ net/mac80211/mlme.c                                |  2 +-
+ net/mac80211/rx.c                                  |  8 ++--
+ net/mac80211/sta_info.c                            |  3 +-
+ net/mac80211/status.c                              |  5 +-
+ net/mac80211/tx.c                                  |  2 +-
+ net/sctp/sm_make_chunk.c                           |  6 ++-
+ scripts/config                                     |  5 +-
+ sound/pci/hda/hda_intel.c                          |  9 ++--
+ sound/soc/codecs/hdac_hdmi.c                       |  6 +--
+ sound/soc/codecs/sgtl5000.c                        | 34 ++++++++++++++
+ sound/soc/codecs/sgtl5000.h                        |  1 +
+ sound/soc/sh/rcar/ssi.c                            | 11 ++++-
+ sound/soc/sh/rcar/ssiu.c                           |  2 +-
+ sound/soc/soc-topology.c                           | 53 ++++++++++++++++------
+ tools/arch/arm64/include/uapi/asm/unistd.h         |  1 +
+ tools/lib/bpf/Makefile                             |  2 +
+ tools/testing/selftests/ipc/msgque.c               |  2 +-
+ 53 files changed, 380 insertions(+), 157 deletions(-)
+
+
