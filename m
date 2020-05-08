@@ -2,173 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40C3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D81C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFFF21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VxWsmz6h"
+	by mail.kernel.org (Postfix) with ESMTP id E0C70218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEHTyh (ORCPT
+        id S1727118AbgEHT4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:54:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41629 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726767AbgEHTyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:54:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588967674;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s5cbh8+ouztnaKRRaYLQNlZBz5qzMye0e7qTGD4rFGs=;
-        b=VxWsmz6hQhOUlsv8b5jhwgTY841VLMGlgK+p/W2GZT1QddJR29A/pBFTg4eL5nXjak9qte
-        OWgMgUgkOF4buqaLi70MCyJWesa8B4YISI+qJA9qk99Jfz185abyylLO6fwjEne1k+1mR7
-        TcVCfb79OfPThcEI1+XD/tl1Y0fOy+M=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-aUTlINecMju21bpl574ojA-1; Fri, 08 May 2020 15:54:33 -0400
-X-MC-Unique: aUTlINecMju21bpl574ojA-1
-Received: by mail-wr1-f69.google.com with SMTP id q13so1379715wrn.14
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 12:54:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s5cbh8+ouztnaKRRaYLQNlZBz5qzMye0e7qTGD4rFGs=;
-        b=uKacwezNQ2UHAoVykef6c/T7aKiWc5e7E5RvTCAmMlTYQiQCDSnMP0jfcMZLjftrQr
-         0iKK6TTJjXu1vPEp8pxg3uitMtmQQsCYXhTYFv7VjoDsyl7DJ0aq0818T0/eI7EIzg2y
-         x+Wl4xl5+FIzkvgFj49WAvU2a7afvafrXlHHzduI+mzegDBN9cfehBCNey6Cl/m9CU9a
-         kAAcSAoCW9q95qNWizpcGDbJ9Y+qMGIvGUl6MUZsFWNPd1dOrPHpB1IoRvfH6UR3Nk20
-         /W2bMmk24fhTb7sha/pA44Hb4pEoPLb8fClRWPKvGiD++K161bEcyE4fdjerN20gXqTY
-         9yCQ==
-X-Gm-Message-State: AGi0PuZbwVoGfiZIgcymMNyD6ujRL3W4J8SJtR9HHnLlyFKj6UlgIbmX
-        2yOAHDx/kJ2HuU+r2y51dfk1IJ2YYKyZtbEEFhCJf0n5AZ5VNWB/9TrAFPyE1IK9RWiXPtp2VhU
-        z1JwZOsoZVICpied18jowkfFs
-X-Received: by 2002:a05:600c:206:: with SMTP id 6mr3790116wmi.171.1588967671897;
-        Fri, 08 May 2020 12:54:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIBI6rLXYcoq93Y+zxvA74WmuxCHNqHB3zIGRZ3df4OAX7qIF0r2Uz6EwU7+wTXmQom686gqA==
-X-Received: by 2002:a05:600c:206:: with SMTP id 6mr3790097wmi.171.1588967671653;
-        Fri, 08 May 2020 12:54:31 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id s14sm13815172wmh.18.2020.05.08.12.54.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 12:54:30 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and
- T200TA
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200422220559.99726-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bcb4d40a-8971-22d6-959b-14b2d329cfd4@redhat.com>
-Date:   Fri, 8 May 2020 21:54:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 8 May 2020 15:56:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28180 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726811AbgEHT4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:56:36 -0400
+IronPort-SDR: Md3Q+Boyc5oIN5e6H9kuKuPAMyNChTPMjHLpsByVsn3IuTCBfRjGq19giiuVaYOlIhKSMURH8E
+ fQv69+mqq0QA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:56:36 -0700
+IronPort-SDR: 5dvUlHF0eVomO7/SJ8Ft/0t312Z5Qft3VfjLwBlw3b+HpF2haHTQ5a2NFlWrt2OpYTu5cNOtGy
+ tD2mYVzEQvXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="296246998"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 12:56:35 -0700
+Date:   Fri, 8 May 2020 12:56:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200508195635.GR27052@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200426165753.GA11046@wind.enjellic.com>
+ <87d07gk24l.fsf@nanos.tec.linutronix.de>
+ <20200508190226.GA31465@wind.enjellic.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422220559.99726-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508190226.GA31465@wind.enjellic.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, May 08, 2020 at 02:02:26PM -0500, Dr. Greg wrote:
+> On Thu, May 07, 2020 at 02:41:30AM +0200, Thomas Gleixner wrote:
+> > The diffstat of your patch is irrelevant. What's relevant is the
+> > fact that it is completely unreviewed and that it creates yet
+> > another user space visible ABI with a noticable lack of
+> > documentation.
 
-On 4/23/20 12:05 AM, Hans de Goede wrote:
-> asus-nb-wmi does not add any extra functionality on these Asus
-> Transformer books. They have detachable keyboards, so the hotkeys are
-> send through a HID device (and handled by the hid-asus driver) and also
-> the rfkill functionality is not used on these devices.
-> 
-> Besides not adding any extra functionality, initializing the WMI interface
-> on these devices actually has a negative side-effect. For some reason
-> the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-> GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-> high and there is no (WMI or other) interface to drive this low again
-> causing the LED to be permanently on, even during suspend.
-> 
-> This commit adds a blacklist of DMI system_ids on which not to load the
-> asus-nb-wmi and adds these Transformer books to this list. This fixes
-> the webcam LED being permanently on under Linux.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+...
 
-Because of the BYT/CHT work which I do as a side project I have a bunch
-of BYT/CHT based 2-in-1s as test devices, including the T100TA and T200TA.
+> As to lack of review, we would certainly welcome technical and API
+> comments but we cannot force them.
 
-So recently I've been looking into properly reporting SW_TABLET_MODE
-state to userspace to let userspace know if the keyboard of these
-detachables is attached or not; and guess what, the Asus models
-report this through WMI. So blacklisting is not the right thing to do
-here after all :|  I do have a plan for another fix for this
-(which will also involve DMI matching)...
+Thomas' point isn't that your code needs to be reviewed, it's that trying
+to squeeze it into the initial merge will, not might, _will_ push out the
+acceptance of SGX.  The same is true for other features we have lined up,
+e.g. KVM and cgroup support.  It's not a slight on your code, it's just
+reality at this point.
 
-Andy, Darren, I see that you have already added this to the for-next
-branch of linux-platform-drivers-x86. I'm not sure what your vision
-on forced pushed there is. If forced pushes are ok, please drop this
-patch. If not let me know and I will send out a revert.
+> In fact, anyone who reviews the patch will see that the current driver
+> creates a pointer in the ioctl call to pass downward into the hardware
+> initialization routines.  Our code simply replaces that pointer with
+> one supplied by userspace.
 
-Regards,
+Personally, I'm in favor of adding a reserved placeholder for a token so
+as to avoid adding a second ioctl() in the event that something gets
+upstreamed that wants the token.  Ditto for a file descriptor for the
+backing store in sgx_enclave_create.
 
-Hans
+But, I have contributed exactly zero ioctls to the kernel, so take that
+with a big block of salt :-)
 
+> At the very least a modular form of the driver should be considered
+> that would allow alternate implementations.  Sean indicated that there
+> was a 'kludgy' approach that would allow an alternate modular
+> implementation alongside the in-kernel driver.  I believe that Andy
+> has already indicated that may not be an advisable approach.
 
+Modularizing the the driver does nothing for your use case.  The "driver"
+is a relatively lightweight wrapper, removing that is akin to making
+/dev/sgx/enclave inaccessible, i.e. it doesn't make the EPC tracking and
+core code go away.  Modularizing the whole thing is flat out not an option,
+as doing so is not compatible with an EPC cgroup and adds unnecessary
+complexity to KVM enabling, both of which are highly desired features by
+pretty much everyone that plans on using SGX.
 
-> ---
->   drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 6f12747a359a..c4404d9c1de4 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -515,9 +515,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
->   	.detect_quirks = asus_nb_wmi_quirks,
->   };
->   
-> +static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-> +	{
-> +		/*
-> +		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-> +		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-> +		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-> +		 */
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-> +		},
-> +	},
-> +	{
-> +		/* The Asus T200TA has the same issue as the T100TA */
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-> +		},
-> +	},
-> +	{} /* Terminating entry */
-> +};
->   
->   static int __init asus_nb_wmi_init(void)
->   {
-> +	if (dmi_check_system(asus_nb_wmi_blacklist))
-> +		return -ENODEV;
-> +
->   	return asus_wmi_register_driver(&asus_nb_wmi_driver);
->   }
->   
-> 
-
+Andy is right to caution against playing games to squish in-kernel things,
+but the virtualization snafu is a completely different beast.  E.g. SGX
+doesn't require fiddling with CR4, won't corrupt random memory across
+kexec(), doesn't block INIT, etc...  And I'm not advocating long-term
+shenanigans, I just wanted to point out that there are options for running
+out-of-tree drivers in the short term, e.g. until proper policy controls
+land upstream.
