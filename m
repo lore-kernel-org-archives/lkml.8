@@ -7,47 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D795C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36646C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76023249A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CED6249A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgEHNLv (ORCPT
+        id S1729161AbgEHNL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
+        Fri, 8 May 2020 09:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730333AbgEHNEx (ORCPT
+        by vger.kernel.org with ESMTP id S1728171AbgEHNEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 09:04:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312BBC05BD0A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 326A8C05BD0B;
         Fri,  8 May 2020 06:04:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gD-00074Z-6y; Fri, 08 May 2020 15:04:41 +0200
+        id 1jX2gJ-0007Bp-Tf; Fri, 08 May 2020 15:04:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E040C1C03AB;
-        Fri,  8 May 2020 15:04:40 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:40 -0000
-From:   "tip-bot2 for Mike Leach" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1B1171C0493;
+        Fri,  8 May 2020 15:04:45 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:45 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: cs-etm: Update to build with latest opencsd version.
-Cc:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+Subject: [tip: perf/core] perf evsel: Rename perf_evsel__env() to evsel__env()
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200501143615.1180-1-mike.leach@linaro.org>
-References: <20200501143615.1180-1-mike.leach@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158894308086.8414.11285755843467307275.tip-bot2@tip-bot2>
+Message-ID: <158894308502.8414.14606444643162583874.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,66 +59,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     29e2eb2a9e1fac8b320bf2b4c628c336afbdd84f
-Gitweb:        https://git.kernel.org/tip/29e2eb2a9e1fac8b320bf2b4c628c336afbdd84f
-Author:        Mike Leach <mike.leach@linaro.org>
-AuthorDate:    Fri, 01 May 2020 15:36:15 +01:00
+Commit-ID:     6e6d1d654ecdfd07890f9c0fc30f3222885c7571
+Gitweb:        https://git.kernel.org/tip/6e6d1d654ecdfd07890f9c0fc30f3222885c7571
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 04 May 2020 13:44:03 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:32 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
 
-perf: cs-etm: Update to build with latest opencsd version.
+perf evsel: Rename perf_evsel__env() to evsel__env()
 
-OpenCSD version v0.14.0 adds in a new output element. This is represented
-by a new value in the generic element type enum, which must be added to
-the handling code in perf cs-etm-decoder to prevent build errors due to
-build options on the perf project.
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
-This element is not currently used by the perf decoder.
-
-Perf build feature test updated to require a minimum of 0.14.0
-
-Tested on Linux 5.7-rc3.
-
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200501143615.1180-1-mike.leach@linaro.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/feature/test-libopencsd.c           | 4 ++--
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c | 2 +-
+ tools/perf/util/annotate.c | 2 +-
+ tools/perf/util/evsel.c    | 2 +-
+ tools/perf/util/evsel.h    | 2 +-
+ tools/perf/util/machine.c  | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/build/feature/test-libopencsd.c b/tools/build/feature/test-libopencsd.c
-index 2b0e02c..1547bc2 100644
---- a/tools/build/feature/test-libopencsd.c
-+++ b/tools/build/feature/test-libopencsd.c
-@@ -4,9 +4,9 @@
- /*
-  * Check OpenCSD library version is sufficient to provide required features
-  */
--#define OCSD_MIN_VER ((0 << 16) | (11 << 8) | (0))
-+#define OCSD_MIN_VER ((0 << 16) | (14 << 8) | (0))
- #if !defined(OCSD_VER_NUM) || (OCSD_VER_NUM < OCSD_MIN_VER)
--#error "OpenCSD >= 0.11.0 is required"
-+#error "OpenCSD >= 0.14.0 is required"
- #endif
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 025e190..3157571 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2382,7 +2382,7 @@ static int trace__fprintf_callchain(struct trace *trace, struct perf_sample *sam
  
- int main(void)
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index cd92a99..cd007cc 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -564,6 +564,8 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
- 		resp = cs_etm_decoder__set_tid(etmq, packet_queue,
- 					       elem, trace_chan_id);
- 		break;
-+	/* Unused packet types */
-+	case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
- 	case OCSD_GEN_TRC_ELEM_ADDR_NACC:
- 	case OCSD_GEN_TRC_ELEM_CYCLE_COUNT:
- 	case OCSD_GEN_TRC_ELEM_ADDR_UNKNOWN:
+ static const char *errno_to_name(struct evsel *evsel, int err)
+ {
+-	struct perf_env *env = perf_evsel__env(evsel);
++	struct perf_env *env = evsel__env(evsel);
+ 	const char *arch_name = perf_env__arch(env);
+ 
+ 	return arch_syscalls__strerrno(arch_name, err);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index dc3342f..d828c2d 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2156,7 +2156,7 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 		.evsel		= evsel,
+ 		.options	= options,
+ 	};
+-	struct perf_env *env = perf_evsel__env(evsel);
++	struct perf_env *env = evsel__env(evsel);
+ 	const char *arch_name = perf_env__arch(env);
+ 	struct arch *arch;
+ 	int err;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 5908cd8..32d178a 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2563,7 +2563,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			 err, str_error_r(err, sbuf, sizeof(sbuf)), evsel__name(evsel));
+ }
+ 
+-struct perf_env *perf_evsel__env(struct evsel *evsel)
++struct perf_env *evsel__env(struct evsel *evsel)
+ {
+ 	if (evsel && evsel->evlist)
+ 		return evsel->evlist->env;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 9de7efb..d76111c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -401,7 +401,7 @@ static inline bool evsel__has_br_stack(const struct evsel *evsel)
+ 	       evsel->synth_sample_type & PERF_SAMPLE_BRANCH_STACK;
+ }
+ 
+-struct perf_env *perf_evsel__env(struct evsel *evsel);
++struct perf_env *evsel__env(struct evsel *evsel);
+ 
+ int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
+ #endif /* __PERF_EVSEL_H */
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index da630e9..8ed2135 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2619,7 +2619,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 		chain_nr = chain->nr;
+ 
+ 	if (evsel__has_branch_callstack(evsel)) {
+-		struct perf_env *env = perf_evsel__env(evsel);
++		struct perf_env *env = evsel__env(evsel);
+ 
+ 		err = resolve_lbr_callchain_sample(thread, cursor, sample, parent,
+ 						   root_al, max_stack,
