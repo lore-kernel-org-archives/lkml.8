@@ -2,157 +2,122 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEEC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C606CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49AF52054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AC22054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588942976;
+	bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F293k4PESe2er/2PsRq2am08MJiUD4IGdEdCHAYxGl0vEto5vSj2a6rwDCXfYi8D0
+	 y17iT0qUnVk5I4WYWN+f7uNP/bjljU0eE6V7uY3GPntD7UuxZ69SP4qllKK6Y226GS
+	 jltAoWUgKH1gwMvG+UAqgHd1Iix6gMzNpmTKsdj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgEHNCu convert rfc822-to-8bit (ORCPT
+        id S1730163AbgEHNCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:02:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2168 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728171AbgEHNCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:02:46 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 543BE160904952BFEA35;
-        Fri,  8 May 2020 14:02:44 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 14:02:43 +0100
-Date:   Fri, 8 May 2020 14:02:21 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] iio: sca3000: Remove an erroneous 'get_device()'
-Message-ID: <20200508140221.0000018d@Huawei.com>
-In-Reply-To: <0a8cd600-2b21-2076-1355-8c97d7ceb709@wanadoo.fr>
-References: <20200506035206.192173-1-christophe.jaillet@wanadoo.fr>
-        <CAHp75Vdi+ZYpQPHgoREQ6LTaUHTPmNkR7ULZaVNTJr7Bvh-q9Q@mail.gmail.com>
-        <0a8cd600-2b21-2076-1355-8c97d7ceb709@wanadoo.fr>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 09:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728032AbgEHMug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9DFE2495C;
+        Fri,  8 May 2020 12:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942235;
+        bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XkYRF2hi27enzkp8d26mRWdCveNvNmRlaWgcCJufIpiq4Dalk48QJtU5m1B1OgPjs
+         2Z/V3R5n3sImhQqpwGxkvNKQRGDGhHNw9dd5VyqbPThauEIyKaj0kOD/ojPoo1R1En
+         vNVD3cfhb4g8skpVO5+5o54Vq+Aiu4bX3rz1Jyq8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 02/22] powerpc/pci/of: Parse unassigned resources
+Date:   Fri,  8 May 2020 14:35:14 +0200
+Message-Id: <20200508123034.179234373@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
+References: <20200508123033.915895060@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 19:31:38 +0200
-Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-> Le 06/05/2020 à 12:38, Andy Shevchenko a écrit :
-> > On Wed, May 6, 2020 at 6:55 AM Christophe JAILLET
-> > <christophe.jaillet@wanadoo.fr> wrote:  
-> >> This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
-> >> call.
-> >> Remove it.
-> >>
-> >> While at it add a missing \n at the end of the message.
-> >>  
-> > It should have Fixes tag because it is a quite an issue (get_device()
-> > breaks reference counting with all problems we may expect).  
-> 
-> Agreed and I usually do, but here, I've lost track when this driver has 
-> gone out of staging.
-> 
-> Based on:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/drivers/iio/accel/sca3000.c
-> The issue was already there on 2016/10/23, but when I try to go one step 
-> further:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/iio/accel/sca3000.c?id=2ccf61442ff142d2dde7c47471c2798a4d78b0ad
-> ^^^^         ^^^^^^^
-> works but if I try to see the log for that:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/drivers/staging/iio/accel/sca3000.c
-> ^^^         ^^^^^^^
-> is empty.
-> 
-> Most of the time, when I do it like that it works just fine, but not on 
-> this file.
+commit dead1c845dbe97e0061dae2017eaf3bd8f8f06ee upstream.
 
-Oddity of the web interface. Edit the url to get a log form a commit
+The pseries platform uses the PCI_PROBE_DEVTREE method of PCI probing
+which reads "assigned-addresses" of every PCI device and initializes
+the device resources. However if the property is missing or zero sized,
+then there is no fallback of any kind and the PCI resources remain
+undiscovered, i.e. pdev->resource[] array remains empty.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/drivers/staging/iio/accel/sca3000.c?id=2ccf61442ff142d2dde7c47471c2798a4d78b0ad
-                                                                    ^^^
-Then for more fun you have to deal with another rename
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/staging/iio/accel/?id=ced5c03d360aeebaac6faa7dd8d6d0a77733ab16
+This adds a fallback which parses the "reg" property in pretty much same
+way except it marks resources as "unset" which later make Linux assign
+those resources proper addresses.
 
-Next bit of log...
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/drivers/staging/iio/accel/sca3000_ring.c?id=ced5c03d360aeebaac6faa7dd8d6d0a77733ab16 
+This has an effect when:
+1. a hypervisor failed to assign any resource for a device;
+2. /chosen/linux,pci-probe-only=0 is in the DT so the system may try
+assigning a resource.
+Neither is likely to happen under PowerVM.
 
-It goes all the way..
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/staging/iio/accel/sca3000_core.c?id=574fb258d63658e4564c32c1940068a3bad666a0
+---
+ arch/powerpc/kernel/pci_of_scan.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
-
-Which was in the initial IIO patch set nearly 11 years ago in the merge window for 2.6.32.
-
-What can I say - I was young and just as capable of writing dumb bugs as I am today :)
-
-I'll get this queued up when I'm on the right computer...
-
-Thanks,
-
-Jonathan
-
-
-> 
-> Any other way to navigate in history of moved file would be appreciated.
-> 
-> CJ
-> 
-> >  
-> >> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> >> ---
-> >> This patch is purely speculative.
-> >> I've looked a bit arround and see no point for this get_device() but other
-> >> eyes are welcomed :)
-> >> ---
-> >>   drivers/iio/accel/sca3000.c | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-> >> index 66d768d971e1..6e429072e44a 100644
-> >> --- a/drivers/iio/accel/sca3000.c
-> >> +++ b/drivers/iio/accel/sca3000.c
-> >> @@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3000_state *st,
-> >>          st->tx[0] = SCA3000_READ_REG(reg_address_high);
-> >>          ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> >>          if (ret) {
-> >> -               dev_err(get_device(&st->us->dev), "problem reading register");
-> >> +               dev_err(&st->us->dev, "problem reading register\n");
-> >>                  return ret;
-> >>          }
-> >>
-> >> --
-> >> 2.25.1
-> >>  
-> >  
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -82,10 +82,16 @@ static void of_pci_parse_addrs(struct de
+ 	const __be32 *addrs;
+ 	u32 i;
+ 	int proplen;
++	bool mark_unset = false;
+ 
+ 	addrs = of_get_property(node, "assigned-addresses", &proplen);
+-	if (!addrs)
+-		return;
++	if (!addrs || !proplen) {
++		addrs = of_get_property(node, "reg", &proplen);
++		if (!addrs || !proplen)
++			return;
++		mark_unset = true;
++	}
++
+ 	pr_debug("    parse addresses (%d bytes) @ %p\n", proplen, addrs);
+ 	for (; proplen >= 20; proplen -= 20, addrs += 5) {
+ 		flags = pci_parse_of_flags(of_read_number(addrs, 1), 0);
+@@ -110,6 +116,8 @@ static void of_pci_parse_addrs(struct de
+ 			continue;
+ 		}
+ 		res->flags = flags;
++		if (mark_unset)
++			res->flags |= IORESOURCE_UNSET;
+ 		res->name = pci_name(dev);
+ 		region.start = base;
+ 		region.end = base + size - 1;
 
 
