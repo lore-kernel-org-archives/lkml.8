@@ -2,156 +2,108 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18796C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8D0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A5921841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YgqZnB4R"
+	by mail.kernel.org (Postfix) with ESMTP id 7E58F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588949240;
+	bh=UToAk1Et6hJqu9wWwasMqPrw4EHOYt9QHzG/u3OpO+0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=m14FLBnn54Fcm1bh8jmyAdkDOp5E3SQ96FYLILqTWvkpaeK6ECm+jQltttcFDGaN1
+	 TZdrB5qoWvx/mCRw53646jm2bCkcfT2/S226HFpyjE9GUmuhtjJzuX/Uw0PAWl4KLr
+	 5B8IpM7GCXL4PlfmvK6Hk++9B2NguB4fZdo4lI1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgEHOrP (ORCPT
+        id S1728104AbgEHOrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgEHOrP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:47:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21FBC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:47:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m24so857972wml.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 07:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
-        b=YgqZnB4RuOjA//ot7PQ9SM6mgul9T3GJZb2JM7reEJLe+IRa9O5JM4sxrsNjR0uFU5
-         1aINbi0xdDymbSd5NMRFOAUlhkiZJSJ5H/PBCFPow2nrWSbHP9TCNEs0b3CAEhZ0MXZm
-         9iFJA99yXpzPTA8APDAoSVseaZx4zuWd4cjJRy/zHxouAK4ksI2q606UQp9HBOGcQTI5
-         eGIf4zd7it3921mtpnBZIUzqmY9LEt97yFkyyPjm2/oDOpCMsQMexnCP9NeAmYWCvqtM
-         HxhYnwelmI7R0hy/iKmgG0GdsTXOr/iGOlui5Wd4IXLYn1PXIGySXBQzfSR5VdEsiMgN
-         VtVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
-        b=LxU5tVEUVQa5GIE9VY6+SU7Leru/GYFaFb8QH6+fB3NT8BmAujYAP8ClIFGodFxBW4
-         jbr534EiFhXh2elHXs3UuHBkhJrHYbN9XHSrNx/SNotg6KJwB8nGkhsU8u0QTocbhPEg
-         h4cvUa01i3Omlerdy3D2hii9LNRSha0aalOONjtn+8c7vNEje88Zk3Mk42FlUOsFRq84
-         bUj9Esp6Ebl5QqQLtvx9qO2/L9bB3xp+s0VZ2iQDwVlhD6Pb2iilI7lN8UiNeET112oA
-         x+cJl8j4jLwum4RT9+k0PqlsJNWs/mGMkWTtQgbBGVckN1RsVbDPOXilpD3DpRwcutGB
-         1BsA==
-X-Gm-Message-State: AGi0PuaX+2MS5CB0VomPGQWH+Wr5cqAN/+Y5KKQM77Rnha3gCXAoWR7R
-        GaAMIWn2G0Z4ULaBWyhUtFbjNA==
-X-Google-Smtp-Source: APiQypJJLLVHe7P9a5jALuZCR8Qgg8gQxNUQSAW/hY0Oj3Nia5RYacq2Xq1z/snXUBGJ6do0AQO7/A==
-X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr17413046wmm.174.1588949233557;
-        Fri, 08 May 2020 07:47:13 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id w18sm3344636wro.33.2020.05.08.07.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 07:47:12 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Add TI tps6598x DT binding and probe
-To:     Angus Ainslie <angus@akkea.ca>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
-        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
-        keescook@chromium.org, linux-usb-owner@vger.kernel.org
-References: <20200507214733.1982696-1-bryan.odonoghue@linaro.org>
- <20200508140132.GA1264047@kuha.fi.intel.com>
- <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <f6bd2b0b-1eda-8ea4-abf2-e17131b944d4@linaro.org>
-Date:   Fri, 8 May 2020 15:47:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 8 May 2020 10:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbgEHOrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:47:17 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF9B221775;
+        Fri,  8 May 2020 14:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588949236;
+        bh=UToAk1Et6hJqu9wWwasMqPrw4EHOYt9QHzG/u3OpO+0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=yEKqoFw5EU6cwX+Xs6Qg2naXNcwuRRhVLOQWKqc4XKTLu9x6ygQclkC/n/Cd+TVcg
+         61z/pTTeFaCZDaC/GQqp/1zEZPqvlmw2LiA8jfGUp1YkeHcZ6vs7rMf0OqJHtywXZJ
+         Tkympm5vF9BQklOwaPbWs8/OrNsGSAxSg4toMMtk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 950133522B1D; Fri,  8 May 2020 07:47:16 -0700 (PDT)
+Date:   Fri, 8 May 2020 07:47:16 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        akpm@linux-foundation.org, linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
+ fast/inefficient GP mode
+Message-ID: <20200508144716.GG2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
+ <20200507093647.11932-1-hdanton@sina.com>
+ <20200508133743.9356-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508133743.9356-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/2020 15:22, Angus Ainslie wrote:
-> Hi,
+On Fri, May 08, 2020 at 09:37:43PM +0800, Hillf Danton wrote:
 > 
-> On 2020-05-08 07:01, Heikki Krogerus wrote:
->> Hi,
->>
->> On Thu, May 07, 2020 at 10:47:31PM +0100, Bryan O'Donoghue wrote:
->>> V2:
->>> - Put myself down as sole schema maintainer as suggested - Andy
->>> - Fixed whitespace typo - Andy
->>> - Removed ifdef and of_match_ptr() - Andy
->>>
->>> V1:
->>> This simple series adds DT binding yaml and a DT lookup table for the
->>> tps6598x.
->>>
->>> Its possible to use i2c id_table to match the 'compatible = 
->>> "ti,tps6598x"
->>> and probe that way, however I think it is worthwhile adding a 
->>> specific OF
->>> way of doing it and having an accompanying yaml as an example.
->>>
->>> Bryan O'Donoghue (2):
->>>   dt-bindings: usb: Add TI tps6598x device tree binding documentation
->>>   usb: typec: tps6598x: Add OF probe binding
->>>
->>>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 64 +++++++++++++++++++
->>>  drivers/usb/typec/tps6598x.c                  |  7 ++
->>>  2 files changed, 71 insertions(+)
->>>  create mode 100644 
->>> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
->>
->> There was already a series from Angus [1] for this. The bindings
->> looked a bit different, but I think we should use these, because in
->> the DT bindings from Angus there appeared to be definitions for OF
->> graph that was not used. Or maybe I got it wrong?
->>
+> On Thu, 7 May 2020 08:49:10 Paul E. McKenney wrote:
+> >  
+> > > +static void rcu_mph_info(void *data)
+> >
+> > This pointer will always be &rcu_state, so why not ignore the pointer
+> > and use "rcu_state" below?
+> >
+> Yes you're right.
 > 
-> I was trying to include optional components but was not sure of the 
-> syntax so that might have been wrong.
+> > RCU grace periods are inherently global, so I don't know of any way
+> > for RCU to focus on a given NUMA node.  All or nothing.
 > 
->> Angus, is it OK if we use these patches instead the ones from you?
->>
-> 
-> Yeah these ones will work great for what we need.
-> 
-> Sorry Bryan I didn't realize there was a patch already in progress.
-> 
-> @Bryan, I'm going to send up some extcon patches for the tps6598x soon 
-> but maybe I should check and make sure you don't already have anything 
-> planned there.
-> 
-> It still needs to be retested after cleaning up but it's the top 9 
-> patches here:
-> 
-> https://source.puri.sm/angus.ainslie/linux-next/-/commits/next/extcon
+> Or is it feasible to expose certain RCU thing to VM, say, with which kswapd
+> can kick grace period every time the kthreads think it's needed? That way
+> the work to gauge memory pressure can be off RCU's shoulders.
 
-Makes me glad I didn't try to touch the PDO stuff :)
+A pair of functions RCU provides is easy for me.  ;-)
 
-That series looks fine to me.
+							Thanx, Paul
 
-The only other modification I have is here.
-
-https://lore.kernel.org/linux-usb/20200507215938.1983363-2-bryan.odonoghue@linaro.org/T/#u
-
-which is about data-role switching.
-
----
-bod
-
+> > But on the
+> > other hand, speeding up RCU grace periods will also help specific
+> > NUMA nodes, so I believe that it is all good.
+> > 
+> > > +{
+> > > +	struct rcu_state *state = data;
+> > > +
+> > > +	WRITE_ONCE(state->mph_end, jiffies + HZ / 10);
+> > > +	smp_store_release(&state->mph, true);
+> > > +	rcu_force_quiescent_state();
+> > > +}
+> > > +
+> > > +static struct mph_subscriber rcu_mph_subscriber = {
+> > > +	.info = rcu_mph_info,
+> > > +	.data = &rcu_state,
+> > 
+> > Then this ".data" entry can be omitted, correct?
+> 
+> Yes :)
+> 
+> Hillf
+> 
