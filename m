@@ -2,122 +2,129 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04F5C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CAEC54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF85B20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3148208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5YjvUPC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1RvCu9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgEHK0g (ORCPT
+        id S1726809AbgEHK1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
+        Fri, 8 May 2020 06:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgEHK0f (ORCPT
+        with ESMTP id S1725825AbgEHK1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:26:35 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A831BC05BD43;
-        Fri,  8 May 2020 03:26:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s8so1243553wrt.9;
-        Fri, 08 May 2020 03:26:34 -0700 (PDT)
+        Fri, 8 May 2020 06:27:01 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46469C05BD43;
+        Fri,  8 May 2020 03:27:00 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 7so5087990pjo.0;
+        Fri, 08 May 2020 03:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U/nGiKbFLFriNl4EVgpGj88MYeZZdcTLN4ma7CGTOns=;
-        b=f5YjvUPChhk0lY3dMb5i7+8WWfjET6KiM41cHBRUu6xufVdFD+lXMAQ8LwyL+QfbD4
-         W8rrmbc5708tczFvjA3+i0m70+26t13Dih7H2T0D/fedRyIbGkXRzjWEUsBoIbqs5uhU
-         Ustc+v1CDaRSr16TyxMWmiXR83u5yH0ipJxHRGfE9lGYtWNkGIy/U//whczKkAFjp1b9
-         GYUyiogtmunUJAeUY46LFh8/NRyJMxxO/CkFVlbB2V1yYRtxS7MAE2eEkQYMtwPM1NU7
-         EqRtaEhfIHvEzGkipg7KxZKDfELKELHg6PcsTrHA3O7Fc7aHahTQkvOG2/G+WK56HcKI
-         oVEw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DZy9pkcBOrjCjg4Qkt27IkR6JTIiM5cV3+uquhM8WpE=;
+        b=Y1RvCu9eoSCgYQeLeMRJWGSFq/GuuBWI1TSDsUK7iiTFqH94KTKwyxJsT1hTpwWcoT
+         lJ2c3P57GJQkDIhAVDbhPT3WOol41JCylmoDswHN4iZ84PMqYD+nb/wzezk+xglTBfCb
+         g+WIJ4C8KyoEs1Z5yJo6etJKvPbFzZoedopO6JL719invW2D4camVQwVlIB/khCDjp2/
+         LT1QOIqdywfL6kNoiUmzy1+x/7LbQXxKFnXMYxm7usNSBYz7wBKMmAqJwVe6FRcZ0DAq
+         IclQH+U6hOj8TAQAMJ+vWG5s6NQi8WJuUSzh103tguKXGig2/CdGi6d2QvgccyTC6Uoh
+         e7Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U/nGiKbFLFriNl4EVgpGj88MYeZZdcTLN4ma7CGTOns=;
-        b=Oy4yuKFjTE35o/g8FziF+iQC/pjcDbqZbXRdEMSEE72zbxZRiffoN3Q/n7nnjDIhYA
-         CNq1jB7qyLpTq6nM5nWXyblDwI3rqDl7AOOhVfCChi8PNhfnys6Xr/8L4w1wy8swR6fc
-         1Pgz094e2SlRkExwHFV8JigJ8rmHC5HGLBG8maTJ++vmG/1yUNAoQevyag4apP+pd39t
-         gxLlWoaNaFJV/EThJJpSE7dbIo9xR7p48f8Cea2xcv4422xZH6Sew5u7FU2a52MPkaqA
-         Y/TbV+Q/KaF0rMDN+O13kITHH2z4+VidOkqjbQVa2z+9Ze63OKc+UgwV3GsXqa9AqNzg
-         EzaQ==
-X-Gm-Message-State: AGi0PuaaPEnrmIa3dz+5URAfkb3mjzv5MhFhshn+5MrnRbM2Vos4rzh+
-        DsoQuGCPQHJ2iwZyZZ5Y5xE=
-X-Google-Smtp-Source: APiQypKRGJRAQ0UZdIySQIaoUKnB7SQfKdP6aHBF/MqvfySOmbKcCMXcGTUk1STZ47zTNYv8/b2/xw==
-X-Received: by 2002:adf:e788:: with SMTP id n8mr418066wrm.317.1588933593344;
-        Fri, 08 May 2020 03:26:33 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id c19sm2364623wrb.89.2020.05.08.03.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 03:26:31 -0700 (PDT)
-Date:   Fri, 8 May 2020 12:26:31 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] gpu: host1x: Clean up debugfs in error handling path in
- 'host1x_probe()'
-Message-ID: <20200508102631.GA3030605@ulmo>
-References: <20200426191630.41290-1-christophe.jaillet@wanadoo.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DZy9pkcBOrjCjg4Qkt27IkR6JTIiM5cV3+uquhM8WpE=;
+        b=tUC9yS5r3SmDG5VKwZGncadzreQK76Fn0oRIUTTOtnbnX1CnIh2L3CPhhDu2uNWz/2
+         4S1hQ7bF787NJBr6QBYoRKkjSKQL4gf61vlIjpdzylav9JNm+zO8C35iFWzmTGf1hlp4
+         0+kpUfIs52ecNzpcZf9k4qe/JSpB66W7+Sg3GuGjt/eOboS3lnMdBwR/nUGwxtVNKW6L
+         RsD+oZ/88TYKrXUOMjgP1JyGlU1un0KCbHfYumGf84nJxEp84aC9t0KupJD2hR/Tbazr
+         aUFLzd0pDQnmKlVuWjM3KJPE+Y8xa3d0wkJC5JbvbU5w9mX/Kj08Di5xthHLqx1FhauZ
+         aTXA==
+X-Gm-Message-State: AGi0Pua18fsC3HNFK38gDxAWSxdC/678bl9hpRaMynFmqPsxedhmgkc0
+        cGcDEYj5L20nK+R/vWlrqvq721EPtv6wYHiV490=
+X-Google-Smtp-Source: APiQypJqDoxKMk4xvuslikRiRX8ShXnPqbto61mW3jENDen09PX1j2bdXToCAPfWo+d3kRgJCDBnTBhOzAblxyDyzr8=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr5450560pjb.228.1588933619112;
+ Fri, 08 May 2020 03:26:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <20200426191630.41290-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com> <20200508101541.e3yxaocuilaiyutg@mobilestation>
+In-Reply-To: <20200508101541.e3yxaocuilaiyutg@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 May 2020 13:26:52 +0300
+Message-ID: <CAHp75VcaVGHfYN1hjD5eKgpKJkpKEif8NxBGO1YF61_apv82Kg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 8, 2020 at 1:15 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 8, 2020 at 12:37 PM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > This SPI-controller is a part of the Baikal-T1 System Controller and
+> > > is based on the DW APB SSI IP-core, but with very limited resources:
+> > > no IRQ, no DMA, only a single native chip-select and just 8 bytes Tx/Rx
+> > > FIFO available. In order to provide a transparent initial boot code
+> > > execution this controller is also utilized by an vendor-specific block,
+> > > which provides an CS0 SPI flash direct mapping interface. Since both
+> > > direct mapping and SPI controller normal utilization are mutual exclusive
+> > > only a one of these interfaces can be used to access an external SPI
+> > > slave device. Taking into account the peculiarities of the controller
+> > > registers and physically mapped SPI flash access, very limited resources
+> > > and seeing the normal usecase of the controller is to access an external
+> > > SPI-nor flash, we decided to create a dedicated SPI driver for it.
+> >
+> > It seems a lot of code.
+> > Why can't you use spi-dw-mmio.c et al.?
+>
+> I said above why. Even though the registers set is similar It's too specific
+> to be integrated into the generic DW SSI driver.
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+At least you may do at the beginning is to reuse header spi-dw.h and
+put your stuff under
+spi-dw-baikal.c or so. Then, look at the spi-dw.c and check what can
+be reused (I think a lot).
 
-On Sun, Apr 26, 2020 at 09:16:30PM +0200, Christophe JAILLET wrote:
-> 'host1x_debug_init()' must be reverted in an error handling path.
->=20
-> This is already fixed in the remove function since commit 44156eee91ba
-> ("gpu: host1x: Clean up debugfs on removal")
->=20
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/gpu/host1x/dev.c | 1 +
->  1 file changed, 1 insertion(+)
-
-Applied, thanks.
-
-Thierry
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl61M9QACgkQ3SOs138+
-s6E5qA/+MmoiWrLTVaFdEnFgY568ldpbMKJel9y+2djQ7IncLvkQt+g/Z6o0ghVD
-OkhEvQfWM6rdYUehLaFfN9k1VJ+8VaNqrvDPa+SEfivIS0lDAF5dU4x6rOxN8gFf
-t6VHONMlhZsHhPI8jlMvIW+v3OczrbDzXmo5P9o6iKPFDfkqEpbS8FAqlzhpXGPY
-qVSmowOZtNJcvF1754ssJFb95uz0kl0XZ6LNa5Pgl1YFHgBAZrUKHtu5ekmvs2hU
-tXJB6Z/nyJs8/38HWqQD6+6MjOsPVD3hBEf/Mz6PE3TLSQlTxUoGGvECjU4NNnnl
-HrdBPXIOCNYC5a8KAEyaFg9I4jUcpnhwfB7RwXZeFUmUMdl0DZx4m6jckCbD13pV
-Qax13ypm7mUuTAh1ZpzI01Vb193QG5Zx3YpSb/cFlFeoe12YXZH+j9lawuoCI83s
-TfcwxTaPtYhUd3UnxpW21SKmun49sL12lilKyLhydEWCVcMozaYJUyz7wkJPEoU5
-Jkpnu8M1YhW6W3nFa/hOBXdcEHg+LG14DRaGZ/Dfv+9oMRNcOEoW+p7WZSSDODs1
-84p1Ec/NedIcB9XJjtaB6RLkwu5PbPk5g7uBEZLl6hVSZfUnXW7/wg/zcuedwkO4
-p7GYMpqt2vRfQ7iM4VXH60fqlN3lF1GDj0T5JZsMrclFInwK2dw=
-=zg/O
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+-- 
+With Best Regards,
+Andy Shevchenko
