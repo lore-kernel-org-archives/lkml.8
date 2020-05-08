@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC82C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CEBC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65EA2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63BD2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942426;
-	bh=AcdBHF1lQqiPltsSywu3bPWQZYgMsimmEDEYiFo43n8=;
+	s=default; t=1588942429;
+	bh=4aXsBr/dL/0+ttwploB5BdhKcSkd4UKS64y/LQDQrx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1OEZUTFuVBvOZM5/0vO33NcyuktgAVU8Lk3OU8bvFFKKpbW75VcY029RLFBauubx
-	 Jr/5Mgx1AQayenlYAK8R142aomjpv23XDaPYSLfqi0+Lm/lO9U++GzJcr6VQ6POVYJ
-	 53aDruSIlWkwD1jjJjfZl2cVogAyzbIyp5Yu+rog=
+	b=pYYIlHG5zKkopTs3Vh1fcssVlBDbPhK4kpSCT8YRPj5khdo2Vn8kz/bTDmZKFB5l6
+	 xl1MzDYPJIoOaUhzDDx8edMxWoS9+wdK/zHmkjJGC7tMy5/G/78JVkOogDJ6okaWnx
+	 SwuYazM5aXXfeMDG6qwzrpqOcDzdwI3WpLf0gV2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgEHMxq (ORCPT
+        id S1729229AbgEHMxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730087AbgEHMxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:39 -0400
+        id S1730098AbgEHMxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8205D2054F;
-        Fri,  8 May 2020 12:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A19C24963;
+        Fri,  8 May 2020 12:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942419;
-        bh=AcdBHF1lQqiPltsSywu3bPWQZYgMsimmEDEYiFo43n8=;
+        s=default; t=1588942423;
+        bh=4aXsBr/dL/0+ttwploB5BdhKcSkd4UKS64y/LQDQrx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znOSmRaQrz274MbYFsbnPMuTi1nG2nsMuxrieorgkMKMUBPGnkvqUC2fXpKBR6YWP
-         /kZuhNYYYU6sM8EX+PJXaX32jgyFlRmlrp/IOXjqVUHx9EXnR/q/sBi/O8zxKuWPID
-         MoSnNaudjGK0S9a10J8vKx2h/foCAYzu2fk1uXOU=
+        b=ejdPe8AGsWE9UVkzZXshRPEIgLM+FudRgAwrizcnXUsdPy/Zeiu13ilZLwh5Fu/w7
+         rqlVzBIPDJB5o08ZVRiTv4UG73wCSepzASkkGuMN0xQ8i664wKwYymWWE215ETS2Ux
+         oz6af/lGmnKQCUM/fdc/uCrDIES0iwaBGLUM/+Vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 38/50] ALSA: hda: Match both PCI ID and SSID for driver blacklist
-Date:   Fri,  8 May 2020 14:35:44 +0200
-Message-Id: <20200508123048.527795103@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.4 40/50] dma-direct: exclude dma_direct_map_resource from the min_low_pfn check
+Date:   Fri,  8 May 2020 14:35:46 +0200
+Message-Id: <20200508123048.730720753@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -58,54 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 977dfef40c8996b69afe23a9094d184049efb7bb upstream.
+commit 68a33b1794665ba8a1d1ef1d3bfcc7c587d380a6 upstream.
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+The valid memory address check in dma_capable only makes sense when mapping
+normal memory, not when using dma_map_resource to map a device resource.
+Add a new boolean argument to dma_capable to exclude that check for the
+dma_map_resource case.
 
-Since the empty codec problem appear on the certain AMD platform (PCI
-ID 1022:1487), this patch changes the blacklist matching to both PCI
-ID and SSID using pci_match_id().  Also, the entry that was removed by
-the previous fix for ASUS ROG Zenigh II is re-added.
-
-Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b12d66278dd6 ("dma-direct: check for overflows on 32 bit DMA addresses")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kernel/amd_gart_64.c |    4 ++--
+ drivers/xen/swiotlb-xen.c     |    4 ++--
+ include/linux/dma-direct.h    |    5 +++--
+ kernel/dma/direct.c           |    4 ++--
+ kernel/dma/swiotlb.c          |    2 +-
+ 5 files changed, 10 insertions(+), 9 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2023,9 +2023,10 @@ static void pcm_mmap_prepare(struct snd_
-  * some HD-audio PCI entries are exposed without any codecs, and such devices
-  * should be ignored from the beginning.
-  */
--static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
--	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+static const struct pci_device_id driver_blacklist[] = {
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
- 	{}
- };
+--- a/arch/x86/kernel/amd_gart_64.c
++++ b/arch/x86/kernel/amd_gart_64.c
+@@ -185,13 +185,13 @@ static void iommu_full(struct device *de
+ static inline int
+ need_iommu(struct device *dev, unsigned long addr, size_t size)
+ {
+-	return force_iommu || !dma_capable(dev, addr, size);
++	return force_iommu || !dma_capable(dev, addr, size, true);
+ }
  
-@@ -2064,7 +2065,7 @@ static int azx_probe(struct pci_dev *pci
- 	bool schedule_probe;
- 	int err;
+ static inline int
+ nonforced_iommu(struct device *dev, unsigned long addr, size_t size)
+ {
+-	return !dma_capable(dev, addr, size);
++	return !dma_capable(dev, addr, size, true);
+ }
  
--	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+	if (pci_match_id(driver_blacklist, pci)) {
- 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
- 		return -ENODEV;
+ /* Map a single continuous physical area into the IOMMU.
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -375,7 +375,7 @@ static dma_addr_t xen_swiotlb_map_page(s
+ 	 * we can safely return the device addr and not worry about bounce
+ 	 * buffering it.
+ 	 */
+-	if (dma_capable(dev, dev_addr, size) &&
++	if (dma_capable(dev, dev_addr, size, true) &&
+ 	    !range_straddles_page_boundary(phys, size) &&
+ 		!xen_arch_need_swiotlb(dev, phys, dev_addr) &&
+ 		swiotlb_force != SWIOTLB_FORCE)
+@@ -397,7 +397,7 @@ static dma_addr_t xen_swiotlb_map_page(s
+ 	/*
+ 	 * Ensure that the address returned is DMA'ble
+ 	 */
+-	if (unlikely(!dma_capable(dev, dev_addr, size))) {
++	if (unlikely(!dma_capable(dev, dev_addr, size, true))) {
+ 		swiotlb_tbl_unmap_single(dev, map, size, size, dir,
+ 				attrs | DMA_ATTR_SKIP_CPU_SYNC);
+ 		return DMA_MAPPING_ERROR;
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -25,14 +25,15 @@ static inline phys_addr_t __dma_to_phys(
+ 	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+ }
+ 
+-static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
++static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
++		bool is_ram)
+ {
+ 	dma_addr_t end = addr + size - 1;
+ 
+ 	if (!dev->dma_mask)
+ 		return false;
+ 
+-	if (!IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
++	if (is_ram && !IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
+ 	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
+ 		return false;
+ 
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -327,7 +327,7 @@ static inline bool dma_direct_possible(s
+ 		size_t size)
+ {
+ 	return swiotlb_force != SWIOTLB_FORCE &&
+-		dma_capable(dev, dma_addr, size);
++		dma_capable(dev, dma_addr, size, true);
+ }
+ 
+ dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
+@@ -376,7 +376,7 @@ dma_addr_t dma_direct_map_resource(struc
+ {
+ 	dma_addr_t dma_addr = paddr;
+ 
+-	if (unlikely(!dma_capable(dev, dma_addr, size))) {
++	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+ 		report_addr(dev, dma_addr, size);
+ 		return DMA_MAPPING_ERROR;
  	}
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -678,7 +678,7 @@ bool swiotlb_map(struct device *dev, phy
+ 
+ 	/* Ensure that the address returned is DMA'ble */
+ 	*dma_addr = __phys_to_dma(dev, *phys);
+-	if (unlikely(!dma_capable(dev, *dma_addr, size))) {
++	if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
+ 		swiotlb_tbl_unmap_single(dev, *phys, size, size, dir,
+ 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
+ 		return false;
 
 
