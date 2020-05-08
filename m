@@ -2,53 +2,56 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B15C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CE7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD9220720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C5120720
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942895;
-	bh=mrRr83ZEhZRtXkTrCaGAISe1GATIbg6kouguMFDRez0=;
+	s=default; t=1588942901;
+	bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yn524LJ3p0/VPk1nrDlyJpJC8XwRgectABeTcQ0oxd7pNX3iF92azWk9flMjSv0v1
-	 iuj9wAsuAyYIZXGgQhFozIGKMRdIR4oRHts0GGIJsOsxR4yCpjJjXEuAfeO3iIkgKk
-	 9QcZi9ZfChElzL0dFjr/2H2DYuv44/eyAehaMuZU=
+	b=GMSvQDi1ipZ/2dBS0ZG8aU/Z2m4FqcVNQbfsmQkZ6pJbBJxH8npxZFCCgxqZaCi48
+	 WfRAzaI5U58WU/qvhyYds77wMvb/USHjng75a1KNRPTLSLst6ONpzMonoMQK5g9eCY
+	 miOEkJh2UoFC2ajjweVw+Xo1qwQZi0tsRUuBAujI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgEHMvt (ORCPT
+        id S1729174AbgEHNBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60794 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729921AbgEHMvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:38 -0400
+        id S1729928AbgEHMvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9D424964;
-        Fri,  8 May 2020 12:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB41724953;
+        Fri,  8 May 2020 12:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942297;
-        bh=mrRr83ZEhZRtXkTrCaGAISe1GATIbg6kouguMFDRez0=;
+        s=default; t=1588942307;
+        bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zm2dYq3qO0GL4nhbtrpF5QQpKoR6gGkf+hawPh6ZHEROT9JoE9s4GUTLmncp/2G2q
-         yCRYNqxsL1xBaXL1/FoYFQa3ZDvbn1wiMglOkyLXCMMT36qOCjFaBgqLOvRVlgfjjz
-         TqCLNwCljhsMRaWW9ofqaK1I16UvTB+2HMZLgJic=
+        b=jd0x0rb3IySeW5YMtM5NP7ZhJQaHB5j9tT+NB/v17sJLdT4xPgD/Lx8o31lCCP4mU
+         FIERpiUXWQC+pWJGQh7UTuZxQe0cp1lgZ5rfHb9YlgKkJJWp6u2vfxvBaBNtrj7NL6
+         AIjdFzzh9+EuKEiWtHhy8k0O3QQIfrnSI/jnGeo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 21/32] net: systemport: suppress warnings on failed Rx SKB allocations
-Date:   Fri,  8 May 2020 14:35:34 +0200
-Message-Id: <20200508123037.799883564@linuxfoundation.org>
+Subject: [PATCH 4.19 03/32] ASoC: topology: Check return value of pcm_new_ver
+Date:   Fri,  8 May 2020 14:35:16 +0200
+Message-Id: <20200508123035.259081294@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -61,42 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
+[ Upstream commit b3677fc3d68dd942c92de52f0bd9dd8b472a40e6 ]
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+Function pcm_new_ver can fail, so we should check it's return value and
+handle possible error.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
-
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
-
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200327204729.397-6-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -677,7 +677,8 @@ static struct sk_buff *bcm_sysport_rx_re
- 	dma_addr_t mapping;
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 756dd23031063..2c6598e07dde3 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1923,7 +1923,9 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
+ 			_pcm = pcm;
+ 		} else {
+ 			abi_match = false;
+-			pcm_new_ver(tplg, pcm, &_pcm);
++			ret = pcm_new_ver(tplg, pcm, &_pcm);
++			if (ret < 0)
++				return ret;
+ 		}
  
- 	/* Allocate a new SKB for a new packet */
--	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
-+	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
+ 		/* create the FE DAIs and DAI links */
+-- 
+2.20.1
+
 
 
