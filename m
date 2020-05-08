@@ -2,95 +2,290 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD8EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B8C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4B820870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46D224966
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943759;
-	bh=vZrATeGy2MPM3x6OJ+weUND1lMKETe0dUmLEuxDKKCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TczNncb8qNPSfjNO7SU5vKEGIp01aq8gE7T4jDlSyPRAC3ifCXm6eNVj4Gq5P40xI
-	 QZoZi55kyB5VpjrlDLMt6+TFY3Lj8OPapjqUASTc3vHr83oWmKO9FS6cu7haINpz+Q
-	 CurzVpXV9srVWdkhTaWVu57VJRTBPUA/DflWpN/s=
+	s=default; t=1588943760;
+	bh=iFD8Mfft0k7NWVbgyxaIRINdfUqCl7az6w/fb8VdR+c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=lEVNCxxZWPcNGnW0Ab4ybpswbROBMtDpsnIMHh+x87IYKMYF9XqtRF/9o/3CkA+zm
+	 QLKnKTvsAE2eYXuZgZX6pjXc3gG/+i7kEApGupIyhLHM9XBlqtA/anvLeQiNWht/Qf
+	 c/AzIM1bUEXWZ0a9PRUK05WkQuaWFFGS7xrDw4us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgEHNP6 (ORCPT
+        id S1729566AbgEHNP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbgEHMpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2C921473;
-        Fri,  8 May 2020 12:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941943;
-        bh=vZrATeGy2MPM3x6OJ+weUND1lMKETe0dUmLEuxDKKCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkG9u0MsRQCsFY0NKQdtY8de8GpZk3LwoeaP+CGEdsV+UW4QVZ4NEvwEIncHS13ci
-         a+DP7ufopMYv+dS3zDGWHzoApU01AjK/ZF6MFwMkeAHqGXwRxpWJz/m3T6En0cwC68
-         Em199+WcQGGipgUyFtJyLvPaMOqRjPYZl6Rnyh9I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 195/312] ipv6: add missing netconf notif when all is updated
-Date:   Fri,  8 May 2020 14:33:06 +0200
-Message-Id: <20200508123138.159632987@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
-References: <20200508123124.574959822@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 May 2020 09:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727958AbgEHMpp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B24C05BD43;
+        Fri,  8 May 2020 05:45:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id o14so460579ljp.4;
+        Fri, 08 May 2020 05:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=YSng6s9kq7jWuWtp8R03+la3j7hugWr6HZq0thRDMsw=;
+        b=b69aJl/1L7KB2qJ0oF7F6kv2hwxAQ4daURADql9u/ekBS/L1Tz2ZHu89m3XVcb2w6W
+         dNwZGU1DjplF/G0O18SW/cEBR4KEayJ4aU1GHAQjI843Tce1+GtZRPrc9bl1C6X0Ac+a
+         9eBUM4ABedE0ae3lmUoA4hrodg3QrX7lNRZPUjk8kviXNLv+Ud32Srz8spWXDFJlrtCx
+         0IQqzPRS9tWz5bONsL5w7EiC89orR/22yzymWjK3xsZS3mhrzdLq1WYwb22m577hA4hr
+         BHSJza1xJZUtIhyLawSd4eSrSVxZ+Xu8RAiERDAn9m9vZpe7zrGe1JJrwNqj7kH/McZq
+         6rBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=YSng6s9kq7jWuWtp8R03+la3j7hugWr6HZq0thRDMsw=;
+        b=BYL79snopseVuk2BNcws7JxWnX6bFj59xWTGaA6jWzndbKquQmeMFnUHhmC2AAuy8G
+         ZLjT1bTNbtGIy3Pz+GIyD0R5PS3l+A4cyT/NGdcpeTZ2iD2T70Aoh0dweLriBjpXHoaJ
+         5CnXGIBEGz3BMwaECXp+2NQ4inYz41JCQm9s6ThB5PYjh6AGyRVWioJe38p/NC8PBLkK
+         5FMx8GmmqjFkC41XfYOqhTat6I8tBdGxbC0sl/NIEZDdWte5585zPAfCbgDeoc5dYBIV
+         69FgRUsyTf0tRvu+OVL1TFQml9Fx+HmQq1/w+re36rx4NGyvjsIxLLp+GWtdyqcL4y0o
+         KuLg==
+X-Gm-Message-State: AOAM531PGdJSEB4EgZUy34zS69hY0rdBpeiW414hYkSibkB3NrxcBliv
+        RF7br3dGDCVCW0d+kL3pHLpbpuKiOLk=
+X-Google-Smtp-Source: ABdhPJwDS/GZZFlRRnVMI1EzibGW84OxWoBLd1oUiwjHRj+J4PaXXb+wv/M7CIgJEp5mHbyNe2lZQg==
+X-Received: by 2002:a2e:6e13:: with SMTP id j19mr1615226ljc.292.1588941943223;
+        Fri, 08 May 2020 05:45:43 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r3sm1133891lfm.52.2020.05.08.05.45.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 05:45:42 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [RFC 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+In-Reply-To: <1588888768-25315-2-git-send-email-wcheng@codeaurora.org>
+References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org> <1588888768-25315-2-git-send-email-wcheng@codeaurora.org>
+Date:   Fri, 08 May 2020 15:45:37 +0300
+Message-ID: <878si2mw7i.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-
-commit d26c638c16cb54f6fb1507e27df93ede692db572 upstream.
-
-The 'default' value was not advertised.
-
-Fixes: f3a1bfb11ccb ("rtnl/ipv6: use netconf msg to advertise forwarding status")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/ipv6/addrconf.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -771,7 +771,14 @@ static int addrconf_fixup_forwarding(str
- 	}
- 
- 	if (p == &net->ipv6.devconf_all->forwarding) {
-+		int old_dflt = net->ipv6.devconf_dflt->forwarding;
-+
- 		net->ipv6.devconf_dflt->forwarding = newf;
-+		if ((!newf) ^ (!old_dflt))
-+			inet6_netconf_notify_devconf(net, NETCONFA_FORWARDING,
-+						     NETCONFA_IFINDEX_DEFAULT,
-+						     net->ipv6.devconf_dflt);
-+
- 		addrconf_forward_change(net, newf);
- 		if ((!newf) ^ (!old))
- 			inet6_netconf_notify_devconf(net, NETCONFA_FORWARDING,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
+Hi,
+
+Wesley Cheng <wcheng@codeaurora.org> writes:
+> Some devices have USB compositions which may require multiple endpoints
+> that support EP bursting.  HW defined TX FIFO sizes may not always be
+> sufficient for these compositions.  By utilizing flexible TX FIFO
+> allocation, this allows for endpoints to request the required FIFO depth =
+to
+> achieve higher bandwidth.  With some higher bMaxBurst configurations, usi=
+ng
+> a larger TX FIFO size results in better TX throughput.
+
+This needs to be carefully thought out as it can introduce situations
+where gadget drivers that worked previously stop working.
+
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 4c171a8..e815c13 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -675,6 +675,7 @@ struct dwc3_event_buffer {
+>   *		isochronous START TRANSFER command failure workaround
+>   * @start_cmd_status: the status of testing START TRANSFER command with
+>   *		combo_num =3D 'b00
+> + * @fifo_depth: allocated TXFIFO depth
+>   */
+>  struct dwc3_ep {
+>  	struct usb_ep		endpoint;
+> @@ -718,6 +719,7 @@ struct dwc3_ep {
+>  	u8			resource_index;
+>  	u32			frame_number;
+>  	u32			interval;
+> +	int			fifo_depth;
+>=20=20
+>  	char			name[20];
+>=20=20
+> @@ -1004,6 +1006,7 @@ struct dwc3_scratchpad_array {
+>   * 	1	- utmi_l1_suspend_n
+>   * @is_fpga: true when we are using the FPGA board
+>   * @pending_events: true when we have pending IRQs to be handled
+> + * @needs_fifo_resize: not all users might want fifo resizing, flag it
+>   * @pullups_connected: true when Run/Stop bit is set
+>   * @setup_packet_pending: true when there's a Setup Packet in FIFO. Work=
+around
+>   * @three_stage_setup: set if we perform a three phase setup
+> @@ -1044,6 +1047,7 @@ struct dwc3_scratchpad_array {
+>   * @dis_metastability_quirk: set to disable metastability quirk.
+>   * @imod_interval: set the interrupt moderation interval in 250ns
+>   *                 increments or 0 to disable.
+> + * @last_fifo_depth: total TXFIFO depth of all enabled USB IN/INT endpoi=
+nts
+>   */
+>  struct dwc3 {
+>  	struct work_struct	drd_work;
+> @@ -1204,6 +1208,7 @@ struct dwc3 {
+>  	unsigned		is_utmi_l1_suspend:1;
+>  	unsigned		is_fpga:1;
+>  	unsigned		pending_events:1;
+> +	unsigned		needs_fifo_resize:1;
+
+Instead of passing a flag, this could be detected in runtime during ->udc_s=
+tart()
+
+> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+> index 6dee4da..7ee2302 100644
+> --- a/drivers/usb/dwc3/ep0.c
+> +++ b/drivers/usb/dwc3/ep0.c
+> @@ -611,6 +612,43 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, str=
+uct usb_ctrlrequest *ctrl)
+>  		return -EINVAL;
+>=20=20
+>  	case USB_STATE_ADDRESS:
+
+are you sure it's safe to fiddle with TX FIFO allocation at SetAddress()
+time?
+
+> +		/*
+> +		 * If tx-fifo-resize flag is not set for the controller, then
+> +		 * do not clear existing allocated TXFIFO since we do not
+> +		 * allocate it again in dwc3_gadget_resize_tx_fifos
+> +		 */
+> +		if (dwc->needs_fifo_resize) {
+> +			/* Read ep0IN related TXFIFO size */
+> +			dep =3D dwc->eps[1];
+> +			size =3D dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+> +			if (dwc3_is_usb31(dwc))
+> +				dep->fifo_depth =3D DWC31_GTXFIFOSIZ_TXFDEP(size);
+> +			else
+> +				dep->fifo_depth =3D DWC3_GTXFIFOSIZ_TXFDEP(size);
+> +
+> +			dwc->last_fifo_depth =3D dep->fifo_depth;
+> +			/* Clear existing TXFIFO for all IN eps except ep0 */
+> +			for (num =3D 3; num < min_t(int, dwc->num_eps,
+> +				DWC3_ENDPOINTS_NUM); num +=3D 2) {
+> +				dep =3D dwc->eps[num];
+> +				/* Don't change TXFRAMNUM on usb31 version */
+> +				size =3D dwc3_is_usb31(dwc) ?
+> +					dwc3_readl(dwc->regs,
+> +						   DWC3_GTXFIFOSIZ(num >> 1)) &
+> +						   DWC31_GTXFIFOSIZ_TXFRAMNUM :
+> +						   0;
+> +
+> +				dwc3_writel(dwc->regs,
+> +					    DWC3_GTXFIFOSIZ(num >> 1),
+> +					    size);
+> +				dep->fifo_depth =3D 0;
+> +
+> +				dev_dbg(dwc->dev, "%s(): %s fifo_depth:%x\n",
+> +					__func__, dep->name,
+> +					dep->fifo_depth);
+
+no dev_dbg() calls in this driver, please.
+
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 00746c2..6baca05 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -540,6 +540,97 @@ static int dwc3_gadget_start_config(struct dwc3_ep *=
+dep)
+>  	return 0;
+>  }
+>=20=20
+> +/*
+> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-=
+case
+> + * @dwc: pointer to our context structure
+> + *
+> + * This function will a best effort FIFO allocation in order
+> + * to improve FIFO usage and throughput, while still allowing
+> + * us to enable as many endpoints as possible.
+> + *
+> + * Keep in mind that this operation will be highly dependent
+> + * on the configured size for RAM1 - which contains TxFifo -,
+> + * the amount of endpoints enabled on coreConsultant tool, and
+> + * the width of the Master Bus.
+> + *
+> + * In the ideal world, we would always be able to satisfy the
+> + * following equation:
+> + *
+> + * ((512 + 2 * MDWIDTH-Bytes) + (Number of IN Endpoints - 1) * \
+> + * (3 * (1024 + MDWIDTH-Bytes) + MDWIDTH-Bytes)) / MDWIDTH-Bytes
+> + *
+> + * Unfortunately, due to many variables that's not always the case.
+> + */
+> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep =
+*dep)
+> +{
+> +	int fifo_size, mdwidth, max_packet =3D 1024;
+> +	int tmp, mult =3D 1, fifo_0_start, ram1_depth;
+> +
+> +	if (!dwc->needs_fifo_resize)
+> +		return 0;
+> +
+> +	/* resize IN endpoints excepts ep0 */
+
+typo: excepts
+
+> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <=3D 1)
+> +		return 0;
+> +
+> +	/* Don't resize already resized IN endpoint */
+> +	if (dep->fifo_depth) {
+> +		dev_dbg(dwc->dev, "%s fifo_depth:%d is already set\n",
+> +					dep->endpoint.name, dep->fifo_depth);
+
+no dev_dbg()
+
+> @@ -620,6 +711,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *d=
+ep, unsigned int action)
+>  	int			ret;
+>=20=20
+>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+> +		ret =3D dwc3_gadget_resize_tx_fifos(dwc, dep);
+
+technically, you're no resizing a single FIFO. In any case, what happens
+when you run out of space midway through the resizing? You already
+accepted the gadget driver, you're already bound to it, then you resize
+the FIFOs and things start to fall apart. How do we handle that?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl61VHEACgkQzL64meEa
+mQaO5hAAijU5AvEFe4sTMgb/COtCQI4iIFQWYlb/myz6eJ/um98np7FTt/nJuxbn
+Z1SjqTkKgOcAA542perYF9xmAjsB7ll4Nmluq1Z6brX1Pr3H6JbnPTKq2uvXF4+v
+OgMPIYa3X8hgK5Wi/wyooVm6IlbymDOHGHCI2/3X1YVrs1wZg9HznPibFooMIVS7
+pFwO95hnMSDLnzklaIbQYurpGt3KPjBJCSkyxZoUTCpcL5gbgCFE62kSCmJnjIoX
+dncti3l6eBc1D2eGf8Vl926WbsrROrnX7bD/56CA4Wrk3XfA4JzouMOpxLuTl6ca
+RcQYauEXIsm6SgrD10l3Dw3DEC44wEo+IUd6H7eF+96HHRtvgEYiFp165LyOOvtB
+s6QX1XnzZbHUa0CbaHZ8TmgefWMe9faCdPiILCQP7UDHS2/tyoePVd/W77TydlFP
+2f8UiAmJwGhVWx4evDBvCKYUCH049OY9xi980U4yMw+A3U6jicOGuUI5kiCHWENO
+l6l4M6V/mR1Q/bJaoFNyddTCMBOUCSM6Og2Hy8sfcRSvzf1PzuUMHNhFxGFExIKM
+gO68Hllos8wpaHTnDXRemD97zzzKufB/kYc/PQ0rqpk3LNaUHftozhODkjnMua6m
+K69ac7JRE/ElKMEbQFcnsO9426COQTv5KLJULWApDuHQoCaqwHI=
+=bjYh
+-----END PGP SIGNATURE-----
+--=-=-=--
