@@ -2,85 +2,102 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A6CC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC65C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F1820746
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C14208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Shlav7+D"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p77wP1IT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgEHAke (ORCPT
+        id S1726641AbgEHArZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 20:40:34 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54122 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgEHAkd (ORCPT
+        Thu, 7 May 2020 20:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726470AbgEHArZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 20:40:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0480eTnb053648;
-        Thu, 7 May 2020 19:40:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588898429;
-        bh=sZLqc6bcUyrr7YvApm7EgW/hqpn5lokyznG7/dwl9Q4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Shlav7+D1aY0m3636dTmu/xp9CH0EpC2xAasUq9An7zHGalx6giqVV4UWT171oQw1
-         Lil3Psl+Q0XLgmA94qPA/Q0l26whowWdJHsAnAtWnUoavoPrDPUmU/9vGsj6yhQR32
-         Lee5TYqKGkn+mR7hBTxL0KXeCi+fA3715en3nXEg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0480eTGM072433
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 7 May 2020 19:40:29 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 7 May
- 2020 19:40:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 7 May 2020 19:40:28 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0480eLZN024416;
-        Thu, 7 May 2020 19:40:24 -0500
-Subject: Re: [PATCH net/master] net: ethernet: ti: cpts: Fix linker issue when
- TI_CPTS is defined
-To:     <davem@davemloft.net>, <richardcochran@gmail.com>,
-        <ivan.khoronzhuk@linaro.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20200507214740.14693-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ab0a9a19-c96b-f90f-827d-aa10bf49a4b7@ti.com>
-Date:   Thu, 7 May 2020 19:31:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 20:47:25 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB20C05BD43;
+        Thu,  7 May 2020 17:47:24 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JBVz0N4lz9sPF;
+        Fri,  8 May 2020 10:47:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588898843;
+        bh=Sru0SU7UziI8B/5HJP5reha3IJ1qcfyy07IpBlawwvI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p77wP1IT79SXzozt69RTp8dNAiU008XViZuFgeF5IPEkncTmwxhVc2u/Lv/WAqwow
+         lSpDrVVj2vo+5UFUhK9ANnLLemMMnrBZ+qhgcbCQGG6E7O3PgtMMZTz1+ARGKyDmg9
+         FyIbBmkwn4+r4o6TTTUQq+z2WxwanSGziOkJ2T7HaZTzU9lvcUi5rNWop1Nkx92+hy
+         9Qz45P03q9HdYfUgojWja0dXaf2qSxJMEwelu1jM/JY1KajnBfluKm01fwm/dKu/N3
+         K+/0gW995Xd8qyyPhEKxpqBBcFkHBjAnkwMV/tPhfh6Xqn+WHqQjjS8K+BYZulThLQ
+         ii40WZa/S2eTg==
+Date:   Fri, 8 May 2020 10:47:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the nfsd tree
+Message-ID: <20200508104720.5c7f72a5@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200507214740.14693-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/47Xwc3.kga22M=IgcKZ_CGU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All
+--Sig_/47Xwc3.kga22M=IgcKZ_CGU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/20 4:47 PM, Dan Murphy wrote:
-> Fix build issue when CONFIG_TI_CPTS is defined in the defconfig but
-> CONFIG_TI_CPTS_MOD is not set.
+Hi all,
 
-I see this already has a pending patch to fix this so unless this 
-solution is better I will drop the patch
+After merging the nfsd tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-https://lore.kernel.org/patchwork/patch/1235642/
+kernel/trace/trace_hwlat.c:329:12: error: conflicting types for 'kthread_fn'
+  329 | static int kthread_fn(void *data)
+      |            ^~~~~~~~~~
+In file included from kernel/trace/trace_hwlat.c:40:
+include/linux/kthread.h:60:7: note: previous declaration of 'kthread_fn' wa=
+s here
+   60 | void *kthread_fn(struct task_struct *k);
+      |       ^~~~~~~~~~
 
-Dan
+Caused by commit
 
+  7df082e85764 ("kthread: save thread function")
+
+I have used the nfsd tree from next-20200507 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/47Xwc3.kga22M=IgcKZ_CGU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl60rBgACgkQAVBC80lX
+0GxZvQf/d5tNT2G+QHIRnp0WtQqMaMA6jY9pkvVDdcr3sPHplddTnzvwmAJc5jN7
+f1zugUsifO445Esb243fZaukl7hNsWbGjs24pFqRcsLLs26NLL1RswDF7Qgis6qV
+8Uo6VjIzYed7hIySjjnWzCblIdBCKK6Pqh0gWq/cQz2gMq0o2hqa3ekFsDoZ/rzQ
+r4Pe+aT3E8Wxm+h3cU3p2axorqlhqe0PvU0lQvGEvtXOR1PaRAENsfqntJ1B50GJ
+cbNzfCBTexKvQfvHm5X29yy8RxctvItm1rmiNhhzRB0utsXU0MhMmqUZwPdXDieo
+zzdhd+m1ZtpYaVufkKhpinFVxsWwSQ==
+=6At+
+-----END PGP SIGNATURE-----
+
+--Sig_/47Xwc3.kga22M=IgcKZ_CGU--
