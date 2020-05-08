@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1512C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C433C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8042F24963
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B90124958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942409;
-	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+	s=default; t=1588942412;
+	bh=5hhbYVQCTy75BKT8wdUxSHaCzVbKKnijehTwzZXWmEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ovj/z5hfjPeAGaKk6pm2T5xarkIpunt0cMsz5GOeqaZY1y7OMhhZFXsuTLYtwrjr
-	 utWdMymmrZ1sAyn8v49rl4vPt4zbB4E3DwE3/H0AJywfJxJRfx/A9iGtUb4naQ9/1V
-	 9uRh9hR6Yjefiyb4uh4MSHukl8Z6qUMqjFtAsWJY=
+	b=1q/SrDE1z3gyFcyqJzCk1wHrlYrupZ3ZngtMJKaTJFWg1x5JL2Guryre0EkM1MNOQ
+	 J78eV9eaoPrxO3HXNeHCopjPl0HdVXfIQGeOuDstcb9Dl9aEdbgxrQhkijXww9PUxP
+	 6jOw2ka9tkeOz5FJRNJvs0Xa5lEqmsTw92lYDkdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgEHMx0 (ORCPT
+        id S1728398AbgEHMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgEHMxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:22 -0400
+        id S1730075AbgEHMxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C4924953;
-        Fri,  8 May 2020 12:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC14524953;
+        Fri,  8 May 2020 12:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942401;
-        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+        s=default; t=1588942404;
+        bh=5hhbYVQCTy75BKT8wdUxSHaCzVbKKnijehTwzZXWmEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVv8Y+9lHvNelmXr7QePV2Vt5SBkC1y8x/gXVYS6SzN0ME0+vU5oP2642HYLDzUGN
-         cjzd6EeAHYK67Gme7XGlVv80nbn3qyncv1LeTQnmpF5AEKqc/UPRNjSpY3M8naVdR9
-         z/EGwm8WadvkQg3X7iVWuvBxE7jxYPaT6D8Z0w6g=
+        b=Y6mIwl8qErt4tGjsXW/bpKioPRZo57BrfsJ+br1UHSdYTeXPnXwcsI7skpIxUxsHH
+         HKoWXWmFNxeI2WQwGfH34U1G41uK5qLFCNFaxvqSqed3Ay1g99wVmh3hs0OOWNG7Jl
+         GYa9Alv62HgEZEGs0ZRi+2dF96trOVotWu/zECEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Fabio Estevam <festivem@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 08/50] selftests/ipc: Fix test failure seen after initial test run
-Date:   Fri,  8 May 2020 14:35:14 +0200
-Message-Id: <20200508123044.532376143@linuxfoundation.org>
+Subject: [PATCH 5.4 09/50] ASoC: sgtl5000: Fix VAG power-on handling
+Date:   Fri,  8 May 2020 14:35:15 +0200
+Message-Id: <20200508123044.691442503@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -60,59 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+[ Upstream commit aa7812737f2877e192d57626cbe8825cc7cf6de9 ]
 
-After successfully running the IPC msgque test once, subsequent runs
-result in a test failure:
+As mentioned slightly out of patch context in the code, there
+is no reset routine for the chip. On boards where the chip is
+supplied by a fixed regulator, it might not even be resetted
+during (e.g. watchdog) reboot and can be in any state.
 
-  $ sudo ./run_kselftest.sh
-  TAP version 13
-  1..1
-  # selftests: ipc: msgque
-  # Failed to get stats for IPC queue with id 0
-  # Failed to dump queue: -22
-  # Bail out!
-  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-  not ok 1 selftests: ipc: msgque # exit=1
+If the device is probed with VAG enabled, the driver's probe
+routine will generate a loud pop sound when ANA_POWER is
+being programmed. Avoid this by properly disabling just the
+VAG bit and waiting the required power down time.
 
-The dump_queue() function loops through the possible message queue index
-values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
-represents the index value. The first time the test is ran, the initial
-index value of 0 is valid and the test is able to complete. The index
-value of 0 is not valid in subsequent test runs and the loop attempts to
-try index values of 1, 2, 3, and so on until a valid index value is
-found that corresponds to the message queue created earlier in the test.
-
-The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
-index values are used. The test failure is caused by incorrectly
-comparing errno to -EINVAL when cycling through possible index values.
-
-Fix invalid test failures on subsequent runs of the msgque test by
-correctly comparing errno values to a non-negated EINVAL.
-
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-by: Fabio Estevam <festivem@gmail.com>
+Link: https://lore.kernel.org/r/20200414181140.145825-1-sebastian.reichel@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ipc/msgque.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/sgtl5000.h |  1 +
+ 2 files changed, 35 insertions(+)
 
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 4c156aeab6b80..5ec4d9e18806c 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index e949b372ceada..f5b59305c957a 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1645,6 +1645,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
+ 		dev_err(&client->dev,
+ 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
+ 
++	/* Mute everything to avoid pop from the following power-up */
++	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
++			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
++	if (ret) {
++		dev_err(&client->dev,
++			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
++		goto disable_clk;
++	}
++
++	/*
++	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
++	 * by the write to ANA_POWER in later steps of the probe code. This
++	 * may create a loud pop even with all outputs muted. The proper way
++	 * to circumvent this is disabling the bit first and waiting the proper
++	 * cool-down time.
++	 */
++	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
++	if (ret) {
++		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
++		goto disable_clk;
++	}
++	if (value & SGTL5000_VAG_POWERUP) {
++		ret = regmap_update_bits(sgtl5000->regmap,
++					 SGTL5000_CHIP_ANA_POWER,
++					 SGTL5000_VAG_POWERUP,
++					 0);
++		if (ret) {
++			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
++			goto disable_clk;
++		}
++
++		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
++	}
++
+ 	/* Follow section 2.2.1.1 of AN3663 */
+ 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
+ 	if (sgtl5000->num_supplies <= VDDD) {
+diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
+index a4bf4bca95bf7..56ec5863f2507 100644
+--- a/sound/soc/codecs/sgtl5000.h
++++ b/sound/soc/codecs/sgtl5000.h
+@@ -233,6 +233,7 @@
+ /*
+  * SGTL5000_CHIP_ANA_CTRL
+  */
++#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
+ #define SGTL5000_LINE_OUT_MUTE			0x0100
+ #define SGTL5000_HP_SEL_MASK			0x0040
+ #define SGTL5000_HP_SEL_SHIFT			6
 -- 
 2.20.1
 
