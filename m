@@ -2,43 +2,43 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062CFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FA4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92962054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB52206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942988;
-	bh=ev1tv+6hnFkG0avYA73Iper+0UcLbZROgtinSu5hH04=;
+	s=default; t=1588942992;
+	bh=0mSkGy0oC3RiEQxtQffXpbxMNK+NEg71P7bFUCmUyDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWpwkbY+Drc0bK+OR51U1r1Wy9PC/TgDMDuKroMj1m/dxdLOJIu0UXRgBtAMxHwfJ
-	 xpG2ogbL/h8k4ok1EyYiGClc12w1IX6EVvRGELY/n8QFyykg18fqSpXIqQuLaRm164
-	 FFbip79ToszOb1cBzjTQ3xODCuZDIr3mexAIQDmE=
+	b=H+/sEC8qCAgKxwtRYJxVdthc9Slz0wvuzVS5FKpQw6mYzFl2ym2abILy2kNWVrSop
+	 3t8Y3XF8v3DcxGUzGt/LW/wxlOz2QAQ/CeTxKT7OoMSdncwYrzDWJB0Z/ony2O8VOS
+	 p/4TkZaMuQ0/in9r0teD6NGLJwc+KrvfkS3whEzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgEHNDH (ORCPT
+        id S1730328AbgEHNDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbgEHMu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:28 -0400
+        id S1727852AbgEHMu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7725924953;
-        Fri,  8 May 2020 12:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F833218AC;
+        Fri,  8 May 2020 12:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942227;
-        bh=ev1tv+6hnFkG0avYA73Iper+0UcLbZROgtinSu5hH04=;
+        s=default; t=1588942225;
+        bh=0mSkGy0oC3RiEQxtQffXpbxMNK+NEg71P7bFUCmUyDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUlqCudbTpi5vJWG4gLnwinkVT2Qzmqf68PuYXGay1AWqnH9INz1wcS8LEsF/AGiB
-         ux/3GPcZYS6wazEjYNGAwIdjzCdvliDsUyP/Zx5SQxiT0hNqTlPCCgesQqPectEOzG
-         wi++uH9ghX7PzLkh48WX9ga+NIKdTYNR6glbKCPw=
+        b=LUyazTB4hSi+eLdfCtnNJLwmT4+7BTmReQlo8y/dVykeIQzx4QqdVl7uQWGU1l946
+         Iljd2+UbZkKmqhPURwHii+aJ9Q8rY+bTJJ66m+QZNj+8mJOKTXZxgsbey3KPHaPtw2
+         PfBFsetnQj8vBDrxHh+rdiDF5CIRHRaGN/p98pUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/22] net: systemport: suppress warnings on failed Rx SKB allocations
-Date:   Fri,  8 May 2020 14:35:29 +0200
-Message-Id: <20200508123036.048157812@linuxfoundation.org>
+Subject: [PATCH 4.14 16/22] net: bcmgenet: suppress warnings on failed Rx SKB allocations
+Date:   Fri,  8 May 2020 14:35:28 +0200
+Message-Id: <20200508123035.908374446@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
+[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
 
 The driver is designed to drop Rx packets and reclaim the buffers
 when an allocation fails, and the network interface needs to safely
@@ -83,20 +83,25 @@ Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c |    3 ++-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -645,7 +645,8 @@ static struct sk_buff *bcm_sysport_rx_re
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 4b3660c63b864..38391230ca860 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1674,7 +1674,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
  	dma_addr_t mapping;
  
- 	/* Allocate a new SKB for a new packet */
--	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
-+	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
+ 	/* Allocate a new Rx skb */
+-	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
++	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
 +				 GFP_ATOMIC | __GFP_NOWARN);
  	if (!skb) {
  		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
+ 		netif_err(priv, rx_err, priv->dev,
+-- 
+2.20.1
+
 
 
