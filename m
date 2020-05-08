@@ -2,302 +2,91 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73BCC54E8A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10061C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B51E2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5182083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zbWum2G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgEHOlC (ORCPT
+        id S1728290AbgEHOlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgEHOkz (ORCPT
+        Fri, 8 May 2020 10:41:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40152 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbgEHOk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:40:55 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4DDC05BD0B
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:40:55 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 85B084D9; Fri,  8 May 2020 16:40:51 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: [RFC PATCH 7/7] x86/mm: Remove vmalloc faulting
-Date:   Fri,  8 May 2020 16:40:43 +0200
-Message-Id: <20200508144043.13893-8-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508144043.13893-1-joro@8bytes.org>
-References: <20200508144043.13893-1-joro@8bytes.org>
+        Fri, 8 May 2020 10:40:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048Ebnqo151224;
+        Fri, 8 May 2020 14:40:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=9Pd6sdzTLPNAE5lKGbzkZBJdj4O3PQMJ6IPM7eKBgG0=;
+ b=zbWum2G0ONLEDe7HujZ8RBdWshb1C66Kikq4kBZLWK8MnHDZeaeAWVUKi69rxnM2H5fF
+ Pp2l5cdPtT+ceGsDz8gE/TLnApl3ov1kZekOJwZETwF3KnIHUBj8ry8oS5/KOiyO7qKb
+ JcZchFi6mTiicfnWuz5J27g+0+geKdvynDn/UJ+w9YDOahr1KYecK+2x95ElNdueXBHM
+ uhSxQbaP90ziupWiHQjPj3nrg4lr3gKPBbe3ariNHs/42VAQ/4MZyczzF7dVDy3BLKHl
+ IUu+XWX3qOYHbspSdU78fuF3wj1oTOjUnMcENgblh0Hxm4FUDPXD8uUZ6h1v5+xomvpr ag== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30vtewub88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:40:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048Eap0a190858;
+        Fri, 8 May 2020 14:40:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30vtegvcrh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:40:19 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 048EeHOB002292;
+        Fri, 8 May 2020 14:40:17 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 May 2020 07:40:16 -0700
+Date:   Fri, 8 May 2020 17:40:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        Markus.Elfring@web.de, rostedt@goodmis.org,
+        kernel-janitors@vger.kernel.org, Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+Subject: Re: [PATCH v4] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <20200508144009.GQ1992@kadam>
+References: <bdda096b-9f8a-dacb-9f89-9077d1288ad7@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bdda096b-9f8a-dacb-9f89-9077d1288ad7@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 mlxlogscore=899 bulkscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=946
+ malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Looks good thanks!
 
-Remove fault handling on vmalloc areas, as the vmalloc code now takes
-care of synchronizing changes to all page-tables in the system.
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/switch_to.h |  23 ------
- arch/x86/kernel/setup_percpu.c   |   6 +-
- arch/x86/mm/fault.c              | 134 -------------------------------
- arch/x86/mm/pti.c                |   8 +-
- 4 files changed, 4 insertions(+), 167 deletions(-)
-
-diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
-index 0e059b73437b..9f69cc497f4b 100644
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -12,27 +12,6 @@ struct task_struct *__switch_to_asm(struct task_struct *prev,
- __visible struct task_struct *__switch_to(struct task_struct *prev,
- 					  struct task_struct *next);
- 
--/* This runs runs on the previous thread's stack. */
--static inline void prepare_switch_to(struct task_struct *next)
--{
--#ifdef CONFIG_VMAP_STACK
--	/*
--	 * If we switch to a stack that has a top-level paging entry
--	 * that is not present in the current mm, the resulting #PF will
--	 * will be promoted to a double-fault and we'll panic.  Probe
--	 * the new stack now so that vmalloc_fault can fix up the page
--	 * tables if needed.  This can only happen if we use a stack
--	 * in vmap space.
--	 *
--	 * We assume that the stack is aligned so that it never spans
--	 * more than one top-level paging entry.
--	 *
--	 * To minimize cache pollution, just follow the stack pointer.
--	 */
--	READ_ONCE(*(unsigned char *)next->thread.sp);
--#endif
--}
--
- asmlinkage void ret_from_fork(void);
- 
- /*
-@@ -67,8 +46,6 @@ struct fork_frame {
- 
- #define switch_to(prev, next, last)					\
- do {									\
--	prepare_switch_to(next);					\
--									\
- 	((last) = __switch_to_asm((prev), (next)));			\
- } while (0)
- 
-diff --git a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
-index e6d7894ad127..fd945ce78554 100644
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -287,9 +287,9 @@ void __init setup_per_cpu_areas(void)
- 	/*
- 	 * Sync back kernel address range again.  We already did this in
- 	 * setup_arch(), but percpu data also needs to be available in
--	 * the smpboot asm.  We can't reliably pick up percpu mappings
--	 * using vmalloc_fault(), because exception dispatch needs
--	 * percpu data.
-+	 * the smpboot asm and arch_sync_kernel_mappings() doesn't sync to
-+	 * swapper_pg_dir on 32-bit. The per-cpu mappings need to be available
-+	 * there too.
- 	 *
- 	 * FIXME: Can the later sync in setup_cpu_entry_areas() replace
- 	 * this call?
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 255fc631b042..dffe8e4d3140 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -214,44 +214,6 @@ void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
- 	}
- }
- 
--/*
-- * 32-bit:
-- *
-- *   Handle a fault on the vmalloc or module mapping area
-- */
--static noinline int vmalloc_fault(unsigned long address)
--{
--	unsigned long pgd_paddr;
--	pmd_t *pmd_k;
--	pte_t *pte_k;
--
--	/* Make sure we are in vmalloc area: */
--	if (!(address >= VMALLOC_START && address < VMALLOC_END))
--		return -1;
--
--	/*
--	 * Synchronize this task's top level page-table
--	 * with the 'reference' page table.
--	 *
--	 * Do _not_ use "current" here. We might be inside
--	 * an interrupt in the middle of a task switch..
--	 */
--	pgd_paddr = read_cr3_pa();
--	pmd_k = vmalloc_sync_one(__va(pgd_paddr), address);
--	if (!pmd_k)
--		return -1;
--
--	if (pmd_large(*pmd_k))
--		return 0;
--
--	pte_k = pte_offset_kernel(pmd_k, address);
--	if (!pte_present(*pte_k))
--		return -1;
--
--	return 0;
--}
--NOKPROBE_SYMBOL(vmalloc_fault);
--
- /*
-  * Did it hit the DOS screen memory VA from vm86 mode?
-  */
-@@ -316,79 +278,6 @@ static void dump_pagetable(unsigned long address)
- 
- #else /* CONFIG_X86_64: */
- 
--/*
-- * 64-bit:
-- *
-- *   Handle a fault on the vmalloc area
-- */
--static noinline int vmalloc_fault(unsigned long address)
--{
--	pgd_t *pgd, *pgd_k;
--	p4d_t *p4d, *p4d_k;
--	pud_t *pud;
--	pmd_t *pmd;
--	pte_t *pte;
--
--	/* Make sure we are in vmalloc area: */
--	if (!(address >= VMALLOC_START && address < VMALLOC_END))
--		return -1;
--
--	/*
--	 * Copy kernel mappings over when needed. This can also
--	 * happen within a race in page table update. In the later
--	 * case just flush:
--	 */
--	pgd = (pgd_t *)__va(read_cr3_pa()) + pgd_index(address);
--	pgd_k = pgd_offset_k(address);
--	if (pgd_none(*pgd_k))
--		return -1;
--
--	if (pgtable_l5_enabled()) {
--		if (pgd_none(*pgd)) {
--			set_pgd(pgd, *pgd_k);
--			arch_flush_lazy_mmu_mode();
--		} else {
--			BUG_ON(pgd_page_vaddr(*pgd) != pgd_page_vaddr(*pgd_k));
--		}
--	}
--
--	/* With 4-level paging, copying happens on the p4d level. */
--	p4d = p4d_offset(pgd, address);
--	p4d_k = p4d_offset(pgd_k, address);
--	if (p4d_none(*p4d_k))
--		return -1;
--
--	if (p4d_none(*p4d) && !pgtable_l5_enabled()) {
--		set_p4d(p4d, *p4d_k);
--		arch_flush_lazy_mmu_mode();
--	} else {
--		BUG_ON(p4d_pfn(*p4d) != p4d_pfn(*p4d_k));
--	}
--
--	BUILD_BUG_ON(CONFIG_PGTABLE_LEVELS < 4);
--
--	pud = pud_offset(p4d, address);
--	if (pud_none(*pud))
--		return -1;
--
--	if (pud_large(*pud))
--		return 0;
--
--	pmd = pmd_offset(pud, address);
--	if (pmd_none(*pmd))
--		return -1;
--
--	if (pmd_large(*pmd))
--		return 0;
--
--	pte = pte_offset_kernel(pmd, address);
--	if (!pte_present(*pte))
--		return -1;
--
--	return 0;
--}
--NOKPROBE_SYMBOL(vmalloc_fault);
--
- #ifdef CONFIG_CPU_SUP_AMD
- static const char errata93_warning[] =
- KERN_ERR 
-@@ -1227,29 +1116,6 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
- 	 */
- 	WARN_ON_ONCE(hw_error_code & X86_PF_PK);
- 
--	/*
--	 * We can fault-in kernel-space virtual memory on-demand. The
--	 * 'reference' page table is init_mm.pgd.
--	 *
--	 * NOTE! We MUST NOT take any locks for this case. We may
--	 * be in an interrupt or a critical region, and should
--	 * only copy the information from the master page table,
--	 * nothing more.
--	 *
--	 * Before doing this on-demand faulting, ensure that the
--	 * fault is not any of the following:
--	 * 1. A fault on a PTE with a reserved bit set.
--	 * 2. A fault caused by a user-mode access.  (Do not demand-
--	 *    fault kernel memory due to user-mode accesses).
--	 * 3. A fault caused by a page-level protection violation.
--	 *    (A demand fault would be on a non-present page which
--	 *     would have X86_PF_PROT==0).
--	 */
--	if (!(hw_error_code & (X86_PF_RSVD | X86_PF_USER | X86_PF_PROT))) {
--		if (vmalloc_fault(address) >= 0)
--			return;
--	}
--
- 	/* Was the fault spurious, caused by lazy TLB invalidation? */
- 	if (spurious_kernel_fault(hw_error_code, address))
- 		return;
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 843aa10a4cb6..da0fb17a1a36 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -448,13 +448,7 @@ static void __init pti_clone_user_shared(void)
- 		 * the sp1 and sp2 slots.
- 		 *
- 		 * This is done for all possible CPUs during boot to ensure
--		 * that it's propagated to all mms.  If we were to add one of
--		 * these mappings during CPU hotplug, we would need to take
--		 * some measure to make sure that every mm that subsequently
--		 * ran on that CPU would have the relevant PGD entry in its
--		 * pagetables.  The usual vmalloc_fault() mechanism would not
--		 * work for page faults taken in entry_SYSCALL_64 before RSP
--		 * is set up.
-+		 * that it's propagated to all mms.
- 		 */
- 
- 		unsigned long va = (unsigned long)&per_cpu(cpu_tss_rw, cpu);
--- 
-2.17.1
+regards,
+dan carpenter
 
