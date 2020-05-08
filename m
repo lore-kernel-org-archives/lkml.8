@@ -2,182 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDDFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9509C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C14F24955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BFC20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgEHKyN (ORCPT
+        id S1726864AbgEHKzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:54:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14356 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbgEHKyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:54:13 -0400
-IronPort-SDR: O6QlClkhZYPFBw9s7YfYOOVPYbRMOcTYAoPt8m3gcws6ZbYT7b5aSU0vdcEAu93Q4K1a641n+E
- GfDszH6jZJYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 03:54:11 -0700
-IronPort-SDR: CA7gJTH3lUJ69SSEFGjJQa+cCHIHDvI87CRz4eqyRq1T34fYKozBur+E58VMr/Yf3cC8j3qeIj
- v15opxaLgGrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="407992467"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 03:54:11 -0700
-Received: from [10.249.224.104] (abudanko-mobl.ccr.corp.intel.com [10.249.224.104])
-        by linux.intel.com (Postfix) with ESMTP id A9E9A5805B4;
-        Fri,  8 May 2020 03:54:09 -0700 (PDT)
-Subject: [PATCH v3 9/9] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <fae71acb-350f-be18-3e35-a2c66ff38430@linux.intel.com>
-Date:   Fri, 8 May 2020 13:54:07 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 06:55:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726091AbgEHKzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:55:24 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 048AVrEj129164;
+        Fri, 8 May 2020 06:54:54 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30vtsggm8k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 06:54:54 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 048AohPf023916;
+        Fri, 8 May 2020 10:54:51 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5w8wk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 May 2020 10:54:51 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 048Asnn157737450
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 May 2020 10:54:49 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17D6FA4054;
+        Fri,  8 May 2020 10:54:49 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 563C5A405C;
+        Fri,  8 May 2020 10:54:46 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.93.12])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri,  8 May 2020 10:54:46 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 08 May 2020 16:24:45 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <ellerman@au1.ibm.com>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC] seq_buf: Export symbols to external modules
+In-Reply-To: <20200420152043.1cd0a2ae@gandalf.local.home>
+References: <20200416035124.549067-1-vaibhav@linux.ibm.com> <20200416090951.6f74b0c8@gandalf.local.home> <87eesmwjwj.fsf@vajain21.in.ibm.com> <20200420152043.1cd0a2ae@gandalf.local.home>
+Date:   Fri, 08 May 2020 16:24:45 +0530
+Message-ID: <87eeru8znu.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-08_08:2020-05-07,2020-05-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=668
+ spamscore=0 phishscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-from command line. Extend perf-record.txt file with --ctl-fd[-ack]
-options description. Document possible usage model introduced by
---ctl-fd[-ack] options by providing example bash shell script.
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-record.txt | 39 ++++++++++++++++++++++++
- tools/perf/builtin-record.c              |  9 ++++++
- tools/perf/util/record.h                 |  2 ++
- 3 files changed, 50 insertions(+)
+> On Fri, 17 Apr 2020 14:47:48 +0530
+> Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+>
+>> Having these symbols exported to modules should simplify generating file
+>> content for pseudo file systems like sysfs or procfs. Many of the in
+>> kernel modules export atleast one such attribute file. Using seq_buf
+>> api provides a safe way to populate the read buffers for these attrs
+>> as these string buffers are PAGE_SIZE in length and a buggy module can
+>> easily cause an overflow.
+>> 
+>> My specific use-case is exporting a set of nvdimm specific flags from
+>> papr_scm kernel module [1] via sysfs through a patch proposed at [2] and
+>> using seq_buf should considerably simply my code as suggested by Mpe
+>> at [3].
+>> 
+>> [1] arch/powerpc/platforms/pseries/papr_scm.c
+>> [2] https://lore.kernel.org/linux-nvdimm/20200331143229.306718-2-vaibhav@linux.ibm.com
+>> [3] https://lore.kernel.org/linux-nvdimm/878sjetcis.fsf@mpe.ellerman.id.au
+>
+> This patch should be added to a patch series that needs it. Then I'll give
+> my ack to it. That way, there's a reason to export them.
+Thanks Steve,
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index c2c4ce7ccee2..5c012cfe68a4 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -614,6 +614,45 @@ appended unit character - B/K/M/G
- 	The number of threads to run when synthesizing events for existing processes.
- 	By default, the number of threads equals 1.
- 
-+--ctl-fd::
-+--ctl-fd-ack::
-+Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-+'disable': disable events. Optionally send control command completion ('ack') to fd-ack
-+descriptor to synchronize with the controlling process. Example of bash shell script
-+to enable and disable events during measurements:
-+
-+#!/bin/bash
-+
-+ctl_dir=/tmp/
-+
-+ctl_fifo=${ctl_dir}perf_ctl.fifo
-+test -p ${ctl_fifo} && unlink ${ctl_fifo}
-+mkfifo ${ctl_fifo}
-+exec {ctl_fd}<>${ctl_fifo}
-+
-+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-+mkfifo ${ctl_ack_fifo}
-+exec {ctl_fd_ack}<>${ctl_ack_fifo}
-+
-+perf record -D -1 -e cpu-cycles -a                        \
-+            --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-+            -- sleep 30 &
-+perf_pid=$!
-+
-+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-+
-+exec {ctl_fd_ack}>&-
-+unlink ${ctl_ack_fifo}
-+
-+exec {ctl_fd}>&-
-+unlink ${ctl_fifo}
-+
-+wait -n ${perf_pid}
-+exit $?
-+
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 3ed352508b83..252d86b34e0e 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1704,6 +1704,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		perf_evlist__start_workload(rec->evlist);
- 	}
- 
-+	evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack);
-+
- 	if (opts->initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 		if (opts->initial_delay > 0) {
-@@ -1850,6 +1852,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
- 
- out_child:
-+	evlist__finalize_ctlfd(rec->evlist);
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-@@ -2331,6 +2334,8 @@ static struct record record = {
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-+		.ctl_fd              = -1,
-+		.ctl_fd_ack          = -1,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -2526,6 +2531,10 @@ static struct option __record_options[] = {
- 	OPT_UINTEGER(0, "num-thread-synthesize",
- 		     &record.opts.nr_threads_synthesize,
- 		     "number of threads to run for event synthesis"),
-+	OPT_INTEGER(0, "ctl-fd", &record.opts.ctl_fd,
-+		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
-+	OPT_INTEGER(0, "ctl-fd-ack", &record.opts.ctl_fd_ack,
-+		    "Send control command completion ('ack') to fd ack descriptor"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 96a73bbd8cd4..da18aeca3623 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -69,6 +69,8 @@ struct record_opts {
- 	int	      mmap_flush;
- 	unsigned int  comp_level;
- 	unsigned int  nr_threads_synthesize;
-+	int	      ctl_fd;
-+	int	      ctl_fd_ack;
- };
- 
- extern const char * const *record_usage;
--- 
-2.24.1
+I have posted a patch series at 
+https://lore.kernel.org/linux-nvdimm/20200508104922.72565-1-vaibhav@linux.ibm.com/
+titled "powerpc/papr_scm: Add support for reporting nvdimm health" that
+contains a patch to export seq_buf_printf() viz patch
+https://lore.kernel.org/linux-nvdimm/20200508104922.72565-3-vaibhav@linux.ibm.com/
+titled "seq_buf: Export seq_buf_printf() to external modules"
 
+~ Vaibhav
+>
+> -- Steve
