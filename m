@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75415C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E866FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DCD249A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9306249A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943588;
-	bh=qzYNDhtpLuwueXHwvbGyvraMwYzkwZnlwdpOq893pAM=;
+	s=default; t=1588943590;
+	bh=+eu7PDIcnxjJ0UsZQxg1LtGjttTgz0EEIalbJfwifiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQvalUX7LZLGMo/TaTy8AvzFslLzCPdUi2ZEdDG42Zh0iFikmXCoA8JhXV0CIx/e8
-	 ql4KroA3KFKf/yx30Dak868ainNj/Nx+EsRakeCpmQ5FxvM3HOeCriiGPbik6FG0x1
-	 WxGzSpZbTT3q7tfU70dkz58Nf6ev/IFt19oHOza0=
+	b=a3QSwGz804/xU/icvv14gD8hoL5LkqjMzlZkjZDOoL+3hciDjRzZHv/pUxPLDmKcX
+	 WyvETW3uUqIl1QIeqIfsnWzEdjLKTbUUujEQUsRpMN5+1dk5RUye8YKUsJyGwNMERq
+	 B4PmkSTw9lOQoz+6SHeo563B5xxYoOzYwaxbvGW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgEHMsO (ORCPT
+        id S1730424AbgEHNNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgEHMsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:04 -0400
+        id S1728736AbgEHMsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C0D1221F7;
-        Fri,  8 May 2020 12:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E1D2145D;
+        Fri,  8 May 2020 12:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942083;
-        bh=qzYNDhtpLuwueXHwvbGyvraMwYzkwZnlwdpOq893pAM=;
+        s=default; t=1588942093;
+        bh=+eu7PDIcnxjJ0UsZQxg1LtGjttTgz0EEIalbJfwifiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACcwdd9aPbyEU0tZMo+ShQiOFEaUlBP1Qu1HkwelWJoCGV7WDAupTvvyooU9rvedV
-         bkoTJuR4fCdlFloKqao7/mkAL6EDd5E1MVXXq3eNR3exBE80qfSlPWMSjIDu8/OtU5
-         f9hVwOoDffg0W+db/KhpZDveUFaI6TQyyW5USb6Y=
+        b=rCDm0kSKDKLfL72MU33Yoqm7LOPUjTaTgAkD85o98JNAKDhY+6mDsP4Z5sBcNFdAZ
+         JKOTLDaAtk5LWTTyIKXDdnJcAWC6rA77fk/PYA8iu3QYt5HttfxVxkwCkEsNhdtQPm
+         j38tP/uNI7v3NTCFOP95knG0LXDaD6D711pgXtIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
+        stable@vger.kernel.org, Nicolas Schichan <nschichan@freebox.fr>,
+        Philipp Kirchhofer <philipp@familie-kirchhofer.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 273/312] qdisc: fix a module refcount leak in qdisc_create_dflt()
-Date:   Fri,  8 May 2020 14:34:24 +0200
-Message-Id: <20200508123143.633410338@linuxfoundation.org>
+Subject: [PATCH 4.4 294/312] net: mv643xx_eth: fix packet corruption with TSO and tiny unaligned packets.
+Date:   Fri,  8 May 2020 14:34:45 +0200
+Message-Id: <20200508123145.044031109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,49 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nicolas Schichan <nschichan@freebox.fr>
 
-commit 166ee5b87866de07a3e56c1b757f2b5cabba72a5 upstream.
+commit 3b89624ab54b9dc2d92fc08ce2670e5f19ad8ec8 upstream.
 
-Should qdisc_alloc() fail, we must release the module refcount
-we got right before.
+The code in txq_put_data() would use txq->tx_curr_desc to index the
+tso_hdrs/tso_hdrs_dma buffers, for less than 8 bytes unaligned
+fragments, which is already moved to the next descriptor at the
+beginning of the function.
 
-Fixes: 6da7c8fcbcbd ("qdisc: allow setting default queuing discipline")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: John Fastabend <john.r.fastabend@intel.com>
-Acked-by: John Fastabend <john.r.fastabend@intel.com>
+If that fragment was the last of the the skb, the next skb would use
+that same space to place the ip headers, overwritting that small
+fragment data.
+
+Fixes: 91986fd3d335 (net: mv643xx_eth: Ensure proper data alignment in TSO TX path)
+Signed-off-by: Nicolas Schichan <nschichan@freebox.fr>
+Reviewed-by: Philipp Kirchhofer <philipp@familie-kirchhofer.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sched/sch_generic.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/mv643xx_eth.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -626,18 +626,19 @@ struct Qdisc *qdisc_create_dflt(struct n
- 	struct Qdisc *sch;
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -762,10 +762,10 @@ txq_put_data_tso(struct net_device *dev,
  
- 	if (!try_module_get(ops->owner))
--		goto errout;
-+		return NULL;
- 
- 	sch = qdisc_alloc(dev_queue, ops);
--	if (IS_ERR(sch))
--		goto errout;
-+	if (IS_ERR(sch)) {
-+		module_put(ops->owner);
-+		return NULL;
-+	}
- 	sch->parent = parentid;
- 
- 	if (!ops->init || ops->init(sch, NULL) == 0)
- 		return sch;
- 
- 	qdisc_destroy(sch);
--errout:
- 	return NULL;
- }
- EXPORT_SYMBOL(qdisc_create_dflt);
+ 	if (length <= 8 && (uintptr_t)data & 0x7) {
+ 		/* Copy unaligned small data fragment to TSO header data area */
+-		memcpy(txq->tso_hdrs + txq->tx_curr_desc * TSO_HEADER_SIZE,
++		memcpy(txq->tso_hdrs + tx_index * TSO_HEADER_SIZE,
+ 		       data, length);
+ 		desc->buf_ptr = txq->tso_hdrs_dma
+-			+ txq->tx_curr_desc * TSO_HEADER_SIZE;
++			+ tx_index * TSO_HEADER_SIZE;
+ 	} else {
+ 		/* Alignment is okay, map buffer and hand off to hardware */
+ 		txq->tx_desc_mapping[tx_index] = DESC_DMA_MAP_SINGLE;
 
 
