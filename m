@@ -2,51 +2,52 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BC2C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D97C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1438124958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA58C2495C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942187;
-	bh=EAKMgY6xCrZM4up5avqLeTfZ9cOLJffNlQWSPmJWuEc=;
+	s=default; t=1588942191;
+	bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxDGgKDlrZFqc+b7aF/wk4hW4EnPdlSWPHal4/yUyV+hBMEIwqvgjaJ8ucsmLi59r
-	 XcxGYqxziJ/41+WPnU1g4Tv4WJbuOODElOR4iy/x42fsH9dSm2YpjsGztbuLkSIVRa
-	 AYI/I3ZHVxxpIjWZRN9X7JQV/fa7J9s2XjPljqts=
+	b=ZFF5/ha+AL0tX/lTbWEnYQ9KFGatsqN+MyfYK59N2NHYeuPzUJLIBRmuOKpB4CQ3L
+	 ZQ4dwSEMY0/QxZFcVlXRKNj9iDeIeDQ583MQmfuAh4WWemj5G0RZiQeo6SsViaWid/
+	 +85kHocHZRMNpuqVc6a87ybgA2lg8vlKQss9lCJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgEHMtq (ORCPT
+        id S1729756AbgEHMtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgEHMto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:44 -0400
+        id S1729770AbgEHMtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB62D21473;
-        Fri,  8 May 2020 12:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55143218AC;
+        Fri,  8 May 2020 12:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942183;
-        bh=EAKMgY6xCrZM4up5avqLeTfZ9cOLJffNlQWSPmJWuEc=;
+        s=default; t=1588942185;
+        bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2Gu5buDsv8aGgqbijBg657Atc0kq/ObIHoMf24XaoytszVFcMqgESaAhIzH2JoZE
-         /tQ21LCtIUQpjoSm6DsX/aFasvxPN9VZDOq5VDsP7WNfgm/FvMT4YxnzChjy4xCk+X
-         2MeEllwWWqdJrXi2Yx2B8hsFzolnJnC24laY4Iyg=
+        b=OzSJak2mYpwEXs4QDgS+dCQ+lvVS9eknm4El9VcYTJKvo8EahMBhgVwitzck2ACqs
+         vNgkF/H3r1hqApTz0Xh68qHCgC89WnV2JEaTv0FgUrciQAWphfh2zM6SgZ6iyeIbDX
+         BtLagHRga8jlnl3ScEICWHutG22EFBCI71QSYZ9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 18/18] mac80211: add ieee80211_is_any_nullfunc()
-Date:   Fri,  8 May 2020 14:35:21 +0200
-Message-Id: <20200508123034.475166325@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 02/18] powerpc/pci/of: Parse unassigned resources
+Date:   Fri,  8 May 2020 14:35:05 +0200
+Message-Id: <20200508123031.588689946@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
@@ -59,128 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@adapt-ip.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit 30b2f0be23fb40e58d0ad2caf8702c2a44cda2e1 upstream.
+commit dead1c845dbe97e0061dae2017eaf3bd8f8f06ee upstream.
 
-commit 08a5bdde3812 ("mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED")
-Fixed a bug where we failed to take into account a
-nullfunc frame can be either non-QoS or QoS. It turns out
-there is at least one more bug in
-ieee80211_sta_tx_notify(), introduced in
-commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing"),
-where we forgot to check for the QoS variant and so
-assumed the QoS nullfunc frame never went out
+The pseries platform uses the PCI_PROBE_DEVTREE method of PCI probing
+which reads "assigned-addresses" of every PCI device and initializes
+the device resources. However if the property is missing or zero sized,
+then there is no fallback of any kind and the PCI resources remain
+undiscovered, i.e. pdev->resource[] array remains empty.
 
-Fix this by adding a helper ieee80211_is_any_nullfunc()
-which consolidates the check for non-QoS and QoS nullfunc
-frames. Replace existing compound conditionals and add a
-couple more missing checks for QoS variant.
+This adds a fallback which parses the "reg" property in pretty much same
+way except it marks resources as "unset" which later make Linux assign
+those resources proper addresses.
 
-Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
-Link: https://lore.kernel.org/r/20200114055940.18502-3-thomas@adapt-ip.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This has an effect when:
+1. a hypervisor failed to assign any resource for a device;
+2. /chosen/linux,pci-probe-only=0 is in the DT so the system may try
+assigning a resource.
+Neither is likely to happen under PowerVM.
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |    9 +++++++++
- net/mac80211/mlme.c       |    2 +-
- net/mac80211/rx.c         |    8 +++-----
- net/mac80211/status.c     |    5 ++---
- net/mac80211/tx.c         |    2 +-
- 5 files changed, 16 insertions(+), 10 deletions(-)
+ arch/powerpc/kernel/pci_of_scan.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -620,6 +620,15 @@ static inline bool ieee80211_is_qos_null
- }
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -82,10 +82,16 @@ static void of_pci_parse_addrs(struct de
+ 	const __be32 *addrs;
+ 	u32 i;
+ 	int proplen;
++	bool mark_unset = false;
  
- /**
-+ * ieee80211_is_any_nullfunc - check if frame is regular or QoS nullfunc frame
-+ * @fc: frame control bytes in little-endian byteorder
-+ */
-+static inline bool ieee80211_is_any_nullfunc(__le16 fc)
-+{
-+	return (ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc));
-+}
+ 	addrs = of_get_property(node, "assigned-addresses", &proplen);
+-	if (!addrs)
+-		return;
++	if (!addrs || !proplen) {
++		addrs = of_get_property(node, "reg", &proplen);
++		if (!addrs || !proplen)
++			return;
++		mark_unset = true;
++	}
 +
-+/**
-  * ieee80211_is_bufferable_mmpdu - check if frame is bufferable MMPDU
-  * @fc: frame control field in little-endian byteorder
-  */
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2277,7 +2277,7 @@ void ieee80211_sta_tx_notify(struct ieee
- 	if (!ieee80211_is_data(hdr->frame_control))
- 	    return;
- 
--	if (ieee80211_is_nullfunc(hdr->frame_control) &&
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
- 	    sdata->u.mgd.probe_send_count > 0) {
- 		if (ack)
- 			ieee80211_sta_reset_conn_monitor(sdata);
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -1231,8 +1231,7 @@ ieee80211_rx_h_check_dup(struct ieee8021
- 		return RX_CONTINUE;
- 
- 	if (ieee80211_is_ctl(hdr->frame_control) ||
--	    ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control) ||
-+	    ieee80211_is_any_nullfunc(hdr->frame_control) ||
- 	    is_multicast_ether_addr(hdr->addr1))
- 		return RX_CONTINUE;
- 
-@@ -1617,8 +1616,7 @@ ieee80211_rx_h_sta_process(struct ieee80
- 	 * Drop (qos-)data::nullfunc frames silently, since they
- 	 * are used only to control station power saving mode.
- 	 */
--	if (ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control)) {
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control)) {
- 		I802_DEBUG_INC(rx->local->rx_handlers_drop_nullfunc);
- 
- 		/*
-@@ -2112,7 +2110,7 @@ static int ieee80211_drop_unencrypted(st
- 
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
--		     !ieee80211_is_nullfunc(fc) &&
-+		     !ieee80211_is_any_nullfunc(fc) &&
- 		     ieee80211_is_data(fc) && rx->key))
- 		return -EACCES;
- 
---- a/net/mac80211/status.c
-+++ b/net/mac80211/status.c
-@@ -480,8 +480,7 @@ static void ieee80211_report_ack_skb(str
- 		rcu_read_lock();
- 		sdata = ieee80211_sdata_from_skb(local, skb);
- 		if (sdata) {
--			if (ieee80211_is_nullfunc(hdr->frame_control) ||
--			    ieee80211_is_qos_nullfunc(hdr->frame_control))
-+			if (ieee80211_is_any_nullfunc(hdr->frame_control))
- 				cfg80211_probe_status(sdata->dev, hdr->addr1,
- 						      cookie, acked,
- 						      GFP_ATOMIC);
-@@ -914,7 +913,7 @@ void ieee80211_tx_status(struct ieee8021
- 			I802_DEBUG_INC(local->dot11FailedCount);
- 	}
- 
--	if (ieee80211_is_nullfunc(fc) && ieee80211_has_pm(fc) &&
-+	if (ieee80211_is_any_nullfunc(fc) && ieee80211_has_pm(fc) &&
- 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
- 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
- 	    local->ps_sdata && !(local->scanning)) {
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -294,7 +294,7 @@ ieee80211_tx_h_check_assoc(struct ieee80
- 	if (unlikely(test_bit(SCAN_SW_SCANNING, &tx->local->scanning)) &&
- 	    test_bit(SDATA_STATE_OFFCHANNEL, &tx->sdata->state) &&
- 	    !ieee80211_is_probe_req(hdr->frame_control) &&
--	    !ieee80211_is_nullfunc(hdr->frame_control))
-+	    !ieee80211_is_any_nullfunc(hdr->frame_control))
- 		/*
- 		 * When software scanning only nullfunc frames (to notify
- 		 * the sleep state to the AP) and probe requests (for the
+ 	pr_debug("    parse addresses (%d bytes) @ %p\n", proplen, addrs);
+ 	for (; proplen >= 20; proplen -= 20, addrs += 5) {
+ 		flags = pci_parse_of_flags(of_read_number(addrs, 1), 0);
+@@ -110,6 +116,8 @@ static void of_pci_parse_addrs(struct de
+ 			continue;
+ 		}
+ 		res->flags = flags;
++		if (mark_unset)
++			res->flags |= IORESOURCE_UNSET;
+ 		res->name = pci_name(dev);
+ 		region.start = base;
+ 		region.end = base + size - 1;
 
 
