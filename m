@@ -2,234 +2,103 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D038CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C211C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE15220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5051324959
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgEHHVB (ORCPT
+        id S1727812AbgEHHVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:21:01 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59314 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgEHHUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E6342012D5;
-        Fri,  8 May 2020 09:20:49 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 01C6F2012CD;
-        Fri,  8 May 2020 09:20:49 +0200 (CEST)
-Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 75C0F204BD;
-        Fri,  8 May 2020 09:20:48 +0200 (CEST)
-From:   Diana Craciun <diana.craciun@oss.nxp.com>
-To:     alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        bharatb.linux@gmail.com, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v2 9/9] vfio/fsl-mc: Add read/write support for fsl-mc devices
-Date:   Fri,  8 May 2020 10:20:39 +0300
-Message-Id: <20200508072039.18146-10-diana.craciun@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 8 May 2020 03:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727083AbgEHHVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:21:03 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1E8C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 00:21:03 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jWxJS-0001g6-HU; Fri, 08 May 2020 09:20:50 +0200
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jWxJR-0002Lo-IX; Fri, 08 May 2020 09:20:49 +0200
+Date:   Fri, 8 May 2020 09:20:49 +0200
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/11] PCI: qcom: add missing reset for ipq806x
+Message-ID: <20200508072049.GA31261@pengutronix.de>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-5-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430220619.3169-5-ansuelsmth@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:18:34 up 78 days, 14:49, 108 users,  load average: 0.06, 0.16,
+ 0.24
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The software uses a memory-mapped I/O command interface (MC portals) to
-communicate with the MC hardware. This command interface is used to
-discover, enumerate, configure and remove DPAA2 objects. The DPAA2
-objects use MSIs, so the command interface needs to be emulated
-such that the correct MSI is configured in the hardware (the guest
-has the virtual MSIs).
+Hi Ansuel,
 
-This patch is adding read/write support for fsl-mc devices. The mc
-commands are emulated by the userspace. The host is just passing
-the correct command to the hardware.
+On Fri, May 01, 2020 at 12:06:11AM +0200, Ansuel Smith wrote:
+> Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
+> 
+> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: stable@vger.kernel.org # v4.5+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 7a8901efc031..921030a64bab 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+[...]
+> @@ -347,6 +353,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  		goto err_deassert_ahb;
+>  	}
+>  
+> +	ret = reset_control_deassert(res->ext_reset);
+> +	if (ret) {
+> +		dev_err(dev, "cannot assert ext reset\n");
+                                     ^
+This probably should say "cannot deassert ext reset". Apart from this,
 
-Also the current patch limits userspace to write complete
-64byte command once and read 64byte response by one ioctl.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
----
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 122 +++++++++++++++++++++-
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
- 2 files changed, 121 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index ec8ab85d54d6..bf11bcbfd09c 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/vfio.h>
- #include <linux/fsl/mc.h>
-+#include <linux/delay.h>
- 
- #include "vfio_fsl_mc_private.h"
- 
-@@ -116,6 +117,11 @@ static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
- 
- static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
- {
-+	int i;
-+
-+	for (i = 0; i < vdev->num_regions; i++)
-+		iounmap(vdev->regions[i].ioaddr);
-+
- 	vdev->num_regions = 0;
- 	kfree(vdev->regions);
- }
-@@ -309,13 +315,125 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
- static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
- 				size_t count, loff_t *ppos)
- {
--	return -EINVAL;
-+	struct vfio_fsl_mc_device *vdev = device_data;
-+	unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
-+	loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
-+	struct vfio_fsl_mc_region *region;
-+	u64 data[8];
-+	int i;
-+
-+	/* Read ioctl supported only for DPRC and DPMCP device */
-+	if (strcmp(vdev->mc_dev->obj_desc.type, "dprc") &&
-+	    strcmp(vdev->mc_dev->obj_desc.type, "dpmcp"))
-+		return -EINVAL;
-+
-+	if (index >= vdev->num_regions)
-+		return -EINVAL;
-+
-+	region = &vdev->regions[index];
-+
-+	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ))
-+		return -EINVAL;
-+
-+	if (!region->ioaddr) {
-+		region->ioaddr = ioremap(region->addr, region->size);
-+		if (!region->ioaddr)
-+			return -ENOMEM;
-+	}
-+
-+	if (count != 64 || off != 0)
-+		return -EINVAL;
-+
-+	for (i = 7; i >= 0; i--)
-+		data[i] = readq(region->ioaddr + i * sizeof(uint64_t));
-+
-+	if (copy_to_user(buf, data, 64))
-+		return -EFAULT;
-+
-+	return count;
-+}
-+
-+#define MC_CMD_COMPLETION_TIMEOUT_MS    5000
-+#define MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS    500
-+
-+static int vfio_fsl_mc_send_command(void __iomem *ioaddr, uint64_t *cmd_data)
-+{
-+	int i;
-+	enum mc_cmd_status status;
-+	unsigned long timeout_usecs = MC_CMD_COMPLETION_TIMEOUT_MS * 1000;
-+
-+	/* Write at command parameter into portal */
-+	for (i = 7; i >= 1; i--)
-+		writeq_relaxed(cmd_data[i], ioaddr + i * sizeof(uint64_t));
-+
-+	/* Write command header in the end */
-+	writeq(cmd_data[0], ioaddr);
-+
-+	/* Wait for response before returning to user-space
-+	 * This can be optimized in future to even prepare response
-+	 * before returning to user-space and avoid read ioctl.
-+	 */
-+	for (;;) {
-+		u64 header;
-+		struct mc_cmd_header *resp_hdr;
-+
-+		header = cpu_to_le64(readq_relaxed(ioaddr));
-+
-+		resp_hdr = (struct mc_cmd_header *)&header;
-+		status = (enum mc_cmd_status)resp_hdr->status;
-+		if (status != MC_CMD_STATUS_READY)
-+			break;
-+
-+		udelay(MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS);
-+		timeout_usecs -= MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS;
-+		if (timeout_usecs == 0)
-+			return -ETIMEDOUT;
-+	}
-+
-+	return 0;
- }
- 
- static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
- 				 size_t count, loff_t *ppos)
- {
--	return -EINVAL;
-+	struct vfio_fsl_mc_device *vdev = device_data;
-+	unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
-+	loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
-+	struct vfio_fsl_mc_region *region;
-+	u64 data[8];
-+	int ret;
-+
-+	/* Write ioctl supported only for DPRC and DPMCP device */
-+	if (strcmp(vdev->mc_dev->obj_desc.type, "dprc") &&
-+	    strcmp(vdev->mc_dev->obj_desc.type, "dpmcp"))
-+		return -EINVAL;
-+
-+	if (index >= vdev->num_regions)
-+		return -EINVAL;
-+
-+	region = &vdev->regions[index];
-+
-+	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE))
-+		return -EINVAL;
-+
-+	if (!region->ioaddr) {
-+		region->ioaddr = ioremap(region->addr, region->size);
-+		if (!region->ioaddr)
-+			return -ENOMEM;
-+	}
-+
-+	if (count != 64 || off != 0)
-+		return -EINVAL;
-+
-+	if (copy_from_user(&data, buf, 64))
-+		return -EFAULT;
-+
-+	ret = vfio_fsl_mc_send_command(region->ioaddr, data);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+
- }
- 
- static int vfio_fsl_mc_mmap_mmio(struct vfio_fsl_mc_region region,
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-index be0cdc35b40c..dfd2a2bc0b22 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -34,6 +34,7 @@ struct vfio_fsl_mc_region {
- 	u32			type;
- 	u64			addr;
- 	resource_size_t		size;
-+	void __iomem		*ioaddr;
- };
- 
- struct vfio_fsl_mc_device {
--- 
-2.17.1
-
+regards
+Philipp
