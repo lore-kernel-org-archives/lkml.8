@@ -2,113 +2,175 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EABC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7547CC54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C16A21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiGzKwDS"
+	by mail.kernel.org (Postfix) with ESMTP id 476F52496C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588958254;
+	bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xsmTV+Zjl1Co6FUe2zWpDQ/CD+8iRrjQyA7FxNl3YYyRVLp0mNOtkIBJRQieNMvNn
+	 92+WW8S+vfwGSMXe6K/dIYKYc86vbf/LO4luPRZ3WrRm59TLZ84myrZ27U0pDhKAR8
+	 m6rM+2E8UOxOrMElF22hLJEZLfR1gvAuLeZhvGCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHRQW (ORCPT
+        id S1727783AbgEHRRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgEHRQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:16:22 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABA8C061A0C;
-        Fri,  8 May 2020 10:16:21 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id h9so2772971wrt.0;
-        Fri, 08 May 2020 10:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nEx7VWUEE5CS/7MRII1BtXnU4gjE+aVUwjHid+Nm0Kc=;
-        b=MiGzKwDSoc9PlgUPs6sZC1firZIaNgaQQNEf7spMf50dnlhJeYzZ59BSprQj3laLfH
-         uvYRTTgUhfIab+eUXvBTEkvb8I7o5xPXvSknJE9PjOAPqesk0s2LlA/siQHjQIoLbTM7
-         Dzr8feJ8u4Ifo3rli4/JNvxXgVtSX96Ml0cn3M4m7hBqOK4UNtIQI50WaArpdL4I13ot
-         k8Yc+LTcBKbMypfACeTNXlk4FP4iCcsOMZ3ZYtRGyI4vvBNsGyZcD20JDT6mHuqclbr4
-         gl9S3sHMkdq5oWHi89tBqLKYzBIv6RjckI3mcxjN0PnNFabSy/Z24VC2JT+KFoo6OUQg
-         3c3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nEx7VWUEE5CS/7MRII1BtXnU4gjE+aVUwjHid+Nm0Kc=;
-        b=nF06th7R1HxfeEwi9goDCIYcMM6n3c/VJQUyfilXneX3D4TfRB9PdNaJ0lAp48GaSc
-         fiOvAxFywnDNN+yjg6/97paez0CFcJp90JpwUaqmsnuNFLba7tyOFkNNvT8NpyzPPOwA
-         kbU0MehchMcQM5xXdtwPOqY90bFObzgDDEYRk1e1uaWzik21PwbMt5pxuLaFpQdIu1/e
-         oMWD53fRSTJ83G6W+mj2gXd/ljNEMYS0pBRgM4IWokXqQ4d9+KrAz9Wvzn5uPgQSnW26
-         5XAfw3/7+dpNc15fJpKaYVqOYEJFgaXu4eivahdazaBaDelPmOpyGjArnxPgIq9qEu+e
-         wTgQ==
-X-Gm-Message-State: AGi0PuawREVx1oTfEhfna0QX7DqacVeTX+3SDUZcJS9CAnb9WaRAHap4
-        ysUQkDdjfMZbuyQOnXG/tLSZa/KJ
-X-Google-Smtp-Source: APiQypI3RKIhnbHTS3W+/EeF1X2blbLwhwFUzrh91OmXRN/tq/LSpfxNgB1Vd4OZ+uSpNeVnPGE9jA==
-X-Received: by 2002:a5d:6a85:: with SMTP id s5mr4001053wru.122.1588958180684;
-        Fri, 08 May 2020 10:16:20 -0700 (PDT)
-Received: from kwango.redhat.com (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
-        by smtp.gmail.com with ESMTPSA id s18sm4392616wra.94.2020.05.08.10.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 10:16:20 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.7-rc5
-Date:   Fri,  8 May 2020 19:16:13 +0200
-Message-Id: <20200508171613.27097-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Fri, 8 May 2020 13:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbgEHRRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:17:33 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253BE21775;
+        Fri,  8 May 2020 17:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588958252;
+        bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UJRtPzmVwMWVnflrX3KDmQSe9RghPB6FFqzryHss0CmhasZffpCJ6w7TrGX91nj0t
+         h1Px988c9VKfcx2bSGVHdGHjXSco6eahi9hxaDwfTOjjfnksyMZYJfddu7O5c0vD9p
+         nI3RS0gDNSuAXsGv8bG79vY/AsMZ2P8uFEfJeuJA=
+Date:   Fri, 8 May 2020 12:17:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     maz@kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200508171730.GA77036@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508113414.3091532-2-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, May 08, 2020 at 07:34:02PM +0800, Jiaxun Yang wrote:
+> This controller can be found on Loongson-2K SoC, Loongson-3
+> systems with RS780E/LS7A PCH.
+> 
+> The RS780E part of code was previously located at
+> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> driver implementation.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
+> +static void system_bus_quirk(struct pci_dev *pdev)
+> +{
+> +	u16 tmp;
+> +
+> +	/* 
+> +	 * System buses on Loongson system contain garbage in BARs
+> +	 * but their decoding need to be enabled to ensure devices
+> +	 * under system buses are reachable. In most cases it should
+> +	 * be done by the firmware.
 
-  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
+This isn't a very satisfying explanation because devices that have
+decoding enabled can interfere with other devices in the system, and I
+can't tell whether that's a problem here.
 
-are available in the Git repository at:
+What happens when you turn on MEM/IO decoding below?  Does the device
+decode any address space?  How do we know what it is?  Is it related
+to the BAR contents?
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc5
+I'm a little dubious about the need for the PCI_COMMAND write because
+the previous version didn't do it (since it incorrectly wrote to
+PCI_STATUS), and I assume that version worked.
 
-for you to fetch changes up to 12ae44a40a1be891bdc6463f8c7072b4ede746ef:
+> +	pdev->mmio_always_on = 1;
+> +	pdev->non_compliant_bars = 1;
+> +	/* Enable MEM & IO Decoding */
+> +	pci_read_config_word(pdev, PCI_COMMAND, &tmp);
+> +	tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
+> +	pci_write_config_word(pdev, PCI_COMMAND, tmp);
 
-  ceph: demote quotarealm lookup warning to a debug message (2020-05-08 18:44:40 +0200)
 
-----------------------------------------------------------------
-Fixes for an endianness handling bug that prevented mounts on
-big-endian arches, a spammy log message and a couple error paths.
-Also included a MAINTAINERS update.
+> +}
+> +
 
-----------------------------------------------------------------
-Jeff Layton (1):
-      ceph: fix endianness bug when handling MDS session feature bits
+Omit this blank line.
 
-Luis Henriques (1):
-      ceph: demote quotarealm lookup warning to a debug message
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS2K_APB, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_CONF, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_LPC, system_bus_quirk);
+> +
+> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *bus = dev->bus;
+> +	struct pci_dev *bridge;
+> +	static const struct pci_device_id bridge_devids[] = {
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> +		{ 0, },
+> +	};
+> +
+> +
 
-Sage Weil (1):
-      MAINTAINERS: remove myself as ceph co-maintainer
+Remove one of these blank lines.
 
-Wu Bo (2):
-      ceph: fix special error code in ceph_try_get_caps()
-      ceph: fix double unlock in handle_cap_export()
+> +	/* look for the matching bridge */
+> +	while (!pci_is_root_bus(bus)) {
+> +		bridge = bus->self;
+> +		bus = bus->parent;
+> +		/*
+> +		 * Some Loongson PCIe ports have a h/w limitation of
+> +		 * 256 bytes maximum read request size. They can't handle
+> +		 * anything larger than this. So force this limit on
+> +		 * any devices attached under these ports.
+> +		 */
+> +		if (pci_match_id(bridge_devids, bridge)) {
+> +			if (pcie_get_readrq(dev) > 256) {
+> +				pci_info(dev, "limiting MRRS to 256\n");
+> +				pcie_set_readrq(dev, 256);
+> +			}
+> +			break;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
 
- MAINTAINERS          | 6 ------
- fs/ceph/caps.c       | 3 ++-
- fs/ceph/mds_client.c | 8 +++-----
- fs/ceph/quota.c      | 4 ++--
- 4 files changed, 7 insertions(+), 14 deletions(-)
+> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +			       int where)
+> +{
+> +	unsigned char busnum = bus->number;
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
+> +
+> +	/*
+> +	 * Do not read more than one device on the bus other than
+> +	 * the host bridge.
+
+s/host bridge/root bus/ ?
+
+IIUC, the test below assumes the root bus is bus 0, which is not
+necessarily the case.  Many other .*_map_bus() implementations have
+similar tests for devices on the root bus:
+
+  al_pcie_map_bus(...)
+  {
+    if (bus->number == cfg->busr.start) {
+
+> +	if (priv->flags & FLAG_DEV_FIX && bus->primary != 0 &&
+> +		PCI_SLOT(devfn) > 0)
+> +		return NULL;
