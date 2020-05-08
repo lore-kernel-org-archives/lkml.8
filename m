@@ -2,129 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC33C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DE3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76E0320736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4B220720
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588917861;
+	bh=9bFkVGNTv2FLfvQPxTLIZwCeKL0Hz20Fpl2o6uhgv6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X6LDGLlKAgSNDd397Pq2BEFANWP49CpXNwOUkL5C8Oj0Ca3OP6M/Wca0SogJm/C6e
+	 sqM3RaLzlYt0YttxxSLl4w6OFE6AUQ4ngY8eztl0Wc3TbBsVrkzr5Elv1pGVYyj8gr
+	 gJeqsIjrOSPadDeclyc2sWI6UmiqS3eXI70nrae4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgEHGAx (ORCPT
+        id S1726751AbgEHGEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:00:53 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:21956 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgEHF5V (ORCPT
+        Fri, 8 May 2020 02:04:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41070 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgEHGET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:57:21 -0400
-IronPort-SDR: VNTh+qtmXJ2y1073y4XPJZE0KiM5jVaXv4SYaF6e2vggFs3uf70IQu8IY6O5oKNdvw5XzBgY1Y
- 8x6sZqMgcDuR+N9Ce23TT4miPgx8UyJgUcSJ5+t4jyKHiax+mBkSpTqmRVgiwBo5vZRg8+2SqU
- bD23jlTxrjk7pSkiLQVi/duAYUl4MZyWz8K/7VrM3OLFPXgKyQOe+yYR9C3qra+62hQWmT9lqv
- xYCL6baj3q80h5bZq1ZIp6QvpeH+JNd55Zw/yKcL5e3/ZzeI75ZSBhtlnMAoRoPxlDHhQ+Cu/l
- fjI=
-X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="48651902"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 07 May 2020 21:57:18 -0800
-IronPort-SDR: ltE0ZwoC3R5bRPsD+OTehOiLRU8BsmP7rEb48qc7UPRFIWy3Hq3DItZMRwYCix/vOx837PJzjp
- H/mf3mLPXmMbxlQp3NfI+sH34+WV/Co8WFX28oOOy9sMY3Zl6xjRNO8b4KZUPJskI6JweXChit
- 5F0CYbN7G4qwG1QOW4KnMw0JVBhgWJwa+o0EBuhVk3IUXrqkh8kFIwypIjRIYfTP3tJ+0GjOEr
- gs34TjncMR4gLxe+JgD/QS2GeeGPgnKbyOe3HqpiQ3oreqqhSRy4Oy3ajSXyKbvWbgysKCA8Zn
- ZPI=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v11 04/56] Input: atmel_mxt_ts - split large i2c transfers into blocks
-Date:   Thu, 7 May 2020 22:56:04 -0700
-Message-ID: <20200508055656.96389-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508055656.96389-1-jiada_wang@mentor.com>
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
+        Fri, 8 May 2020 02:04:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u10so263759pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 23:04:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Bhh8Hh8RF4UmT7ZujEDKC5a04db0JAVysUUltBxyiuc=;
+        b=QfLfERn6y81T1/rns3p0EvYPTZq82PTb7/f156pX+D85MNf/ml6E0FQEyPKPuGokfF
+         XePKhuQYo3pH9p7EvMxb2i0pjOHMBUL7jLIwstlNk1MFx8Anj7OSivgTrV8EaVPYBzya
+         Fe13toNIakgPONgrrCaXeUmNqMWQDYB+2/KYXjNqRPZy+jy/2otVZTyZ6k9yTDgkWcZV
+         meu9HMyOQRibZTg0jzkJISnHC82XCea8lj/blvaCdyBGiyTzaq09I9OxLQ1aAFdI3nla
+         Vro0rvknD6zlGIrdz40hWWr4NvVVHvhhGGjlnbyTgmfDiltvc1hRU4WZzCNoyZEfQAyb
+         IKCg==
+X-Gm-Message-State: AGi0PuZvrWj2SrQFm/3R1F3v1AbSeAXe9mB2t/BCuO5HDd5Opa+UyMHk
+        aUlVDKLY2dbPt+L/28GKSHs=
+X-Google-Smtp-Source: APiQypLL/0NgJzJ9C6A/AWa+BcOb2rxReqycHPYHl3403j+fYrWnyGK3SAQ7xTo/uSgdux6NmFla0Q==
+X-Received: by 2002:a17:90b:3843:: with SMTP id nl3mr4377936pjb.72.1588917858973;
+        Thu, 07 May 2020 23:04:18 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id m63sm629925pfb.101.2020.05.07.23.04.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 23:04:17 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1B19A403EA; Fri,  8 May 2020 06:04:17 +0000 (UTC)
+Date:   Fri, 8 May 2020 06:04:17 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
+        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, daniel.vetter@ffwll.ch,
+        will@kernel.org, mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] taint: add module firmware crash taint support
+Message-ID: <20200508060417.GE11244@42.do-not-panic.com>
+References: <20200508021438.4373-1-mcgrof@kernel.org>
+ <202005072244.F2E0286@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005072244.F2E0286@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Thu, May 07, 2020 at 10:47:08PM -0700, Kees Cook wrote:
+> On Fri, May 08, 2020 at 02:14:38AM +0000, Luis Chamberlain wrote:
+> > Device driver firmware can crash, and sometimes, this can leave your
+> > system in a state which makes the device or subsystem completely
+> > useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
+> > of scraping some magical words from the kernel log, which is driver
+> > specific, is much easier. So instead provide a helper which lets drivers
+> > annotate this.
+> > 
+> > Once this happens, scrapers can easily scrape modules taint flags.
+> > This will taint both the kernel and respective calling module.
+> > 
+> > The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
+> > this fact should in no way shape or form affect lockdep. This taint
+> > is device driver specific.
+> > 
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> > 
+> > Below is the full diff stat of manual inspection throughout the kernel
+> > when this happens. My methodology is to just scrape for "crash" and
+> > then study the driver a bit to see if indeed it seems like that the
+> > firmware crashes there. In *many* cases there is even infrastructure
+> > for this, so this is sometimes clearly obvious. Some other times it
+> > required a bit of deciphering.
+> > 
+> > The diff stat below is what I have so far, however the patch below
+> > only includes the drivers that start with Q, as they were a source of
+> > inspiration for this, and to make this RFC easier to read.
+> > 
+> > If this seems sensible, I can follow up with the kernel helper first,
+> > and then tackle each subsystem independently.
+> > 
+> > I purposely skipped review of remoteproc and virtualization. That should
+> > require its own separate careful review and considerations.
+> 
+> This all seems reasonable to me. You might need to break these up into
+> per-maintainer patches to get appropriate review. Perhaps land the
+> infrastructure and some initial patches via netdev and in the next
+> release send patches for DRM, media, etc?
 
-On some firmware variants, the size of the info block exceeds what can
-be read in a single transfer.
+Works for me.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 74c4f5277cfa403d43fafc404119dc57a08677db)
-[gdavis: Forward port and fix conflicts due to v4.14.51 commit
-	 960fe000b1d3 ("Input: atmel_mxt_ts - fix the firmware
-	 update").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Change mxt_read_blks() to __mxt_read_reg(), original __mxt_read_reg() to
-	__mxt_read_chunk()]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 28 +++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+I'll give it a few more days for review on the RFC before I shoot out a
+series for netdev.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 3f1ebe14802f..7e6a66e3e1e0 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -40,7 +40,7 @@
- #define MXT_OBJECT_START	0x07
- #define MXT_OBJECT_SIZE		6
- #define MXT_INFO_CHECKSUM_SIZE	3
--#define MXT_MAX_BLOCK_WRITE	256
-+#define MXT_MAX_BLOCK_WRITE	255
- 
- /* Object types */
- #define MXT_DEBUG_DIAGNOSTIC_T37	37
-@@ -624,8 +624,8 @@ static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
- 	return 0;
- }
- 
--static int __mxt_read_reg(struct i2c_client *client,
--			       u16 reg, u16 len, void *val)
-+static int __mxt_read_chunk(struct i2c_client *client,
-+			    u16 reg, u16 len, void *val)
- {
- 	struct i2c_msg xfer[2];
- 	u8 buf[2];
-@@ -659,6 +659,28 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	return ret;
- }
- 
-+static int __mxt_read_reg(struct i2c_client *client,
-+			  u16 reg, u16 len, void *buf)
-+{
-+	u16 offset = 0;
-+	int error;
-+	u16 size;
-+
-+	while (offset < len) {
-+		size = min(MXT_MAX_BLOCK_WRITE, len - offset);
-+
-+		error = __mxt_read_chunk(client,
-+					 reg + offset,
-+					 size, buf + offset);
-+		if (error)
-+			return error;
-+
-+		offset += size;
-+	}
-+
-+	return 0;
-+}
-+
- static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 			   const void *val)
- {
--- 
-2.17.1
-
+  Luis
