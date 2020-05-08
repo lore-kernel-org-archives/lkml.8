@@ -2,218 +2,156 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18796C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E7221841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588949201;
-	bh=2sJ/3yDz2mDmjR8ffxdDFq5JitVXlv2S2l/8CgRo+rM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=zdnYIruXU5lStXt4hm7Zy3u6dg8i6immjxAHW2e8TMgFd5E8BEflzEAinFvPvaiC7
-	 WOp7Eq4kodubXR4VKKB0duyvvHBsbcrzDUH5yeP1CmphZUuSlsR0rf7BudurI+UCv/
-	 TxxCOmYiGT4gC6F0drxIeSeD1+FZPJJTdNRBIY7M=
+	by mail.kernel.org (Postfix) with ESMTP id E9A5921841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:47:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YgqZnB4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgEHOqk (ORCPT
+        id S1728055AbgEHOrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgEHOqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:46:39 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF695216FD;
-        Fri,  8 May 2020 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588949198;
-        bh=2sJ/3yDz2mDmjR8ffxdDFq5JitVXlv2S2l/8CgRo+rM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cfTDms3OZBMtmPJkbjka686bD2X0sZEBN1p1vV2fAKxQJlkHEnVjM4nadK09wkrVv
-         PgX/tNFkVeCXOJx988f044QrDkHRNxMRV7Qujlo1vihwC8lgBKqRh48hCGjiydlhLK
-         yl3CC30zm/trgcxtTX+7eoDrrTAa86h2VlE+DLaI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A32593522B1D; Fri,  8 May 2020 07:46:38 -0700 (PDT)
-Date:   Fri, 8 May 2020 07:46:38 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-ID: <20200508144638.GF2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
- <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
- <20200507170006.GA155220@cmpxchg.org>
- <20200507170903.GR2869@paulmck-ThinkPad-P72>
- <20200507183102.GB155220@cmpxchg.org>
- <20200507190905.GX2869@paulmck-ThinkPad-P72>
- <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
+        Fri, 8 May 2020 10:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgEHOrP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:47:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21FBC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:47:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m24so857972wml.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 07:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
+        b=YgqZnB4RuOjA//ot7PQ9SM6mgul9T3GJZb2JM7reEJLe+IRa9O5JM4sxrsNjR0uFU5
+         1aINbi0xdDymbSd5NMRFOAUlhkiZJSJ5H/PBCFPow2nrWSbHP9TCNEs0b3CAEhZ0MXZm
+         9iFJA99yXpzPTA8APDAoSVseaZx4zuWd4cjJRy/zHxouAK4ksI2q606UQp9HBOGcQTI5
+         eGIf4zd7it3921mtpnBZIUzqmY9LEt97yFkyyPjm2/oDOpCMsQMexnCP9NeAmYWCvqtM
+         HxhYnwelmI7R0hy/iKmgG0GdsTXOr/iGOlui5Wd4IXLYn1PXIGySXBQzfSR5VdEsiMgN
+         VtVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ItCLlAEcrRObJaFc8zjZZAyKUelFuntamK73qSCmQaw=;
+        b=LxU5tVEUVQa5GIE9VY6+SU7Leru/GYFaFb8QH6+fB3NT8BmAujYAP8ClIFGodFxBW4
+         jbr534EiFhXh2elHXs3UuHBkhJrHYbN9XHSrNx/SNotg6KJwB8nGkhsU8u0QTocbhPEg
+         h4cvUa01i3Omlerdy3D2hii9LNRSha0aalOONjtn+8c7vNEje88Zk3Mk42FlUOsFRq84
+         bUj9Esp6Ebl5QqQLtvx9qO2/L9bB3xp+s0VZ2iQDwVlhD6Pb2iilI7lN8UiNeET112oA
+         x+cJl8j4jLwum4RT9+k0PqlsJNWs/mGMkWTtQgbBGVckN1RsVbDPOXilpD3DpRwcutGB
+         1BsA==
+X-Gm-Message-State: AGi0PuaX+2MS5CB0VomPGQWH+Wr5cqAN/+Y5KKQM77Rnha3gCXAoWR7R
+        GaAMIWn2G0Z4ULaBWyhUtFbjNA==
+X-Google-Smtp-Source: APiQypJJLLVHe7P9a5jALuZCR8Qgg8gQxNUQSAW/hY0Oj3Nia5RYacq2Xq1z/snXUBGJ6do0AQO7/A==
+X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr17413046wmm.174.1588949233557;
+        Fri, 08 May 2020 07:47:13 -0700 (PDT)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id w18sm3344636wro.33.2020.05.08.07.47.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 07:47:12 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Add TI tps6598x DT binding and probe
+To:     Angus Ainslie <angus@akkea.ca>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     robh+dt@kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
+        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
+        keescook@chromium.org, linux-usb-owner@vger.kernel.org
+References: <20200507214733.1982696-1-bryan.odonoghue@linaro.org>
+ <20200508140132.GA1264047@kuha.fi.intel.com>
+ <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <f6bd2b0b-1eda-8ea4-abf2-e17131b944d4@linaro.org>
+Date:   Fri, 8 May 2020 15:47:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:00:28PM +0300, Konstantin Khlebnikov wrote:
-> On 07/05/2020 22.09, Paul E. McKenney wrote:
-> > On Thu, May 07, 2020 at 02:31:02PM -0400, Johannes Weiner wrote:
-> > > On Thu, May 07, 2020 at 10:09:03AM -0700, Paul E. McKenney wrote:
-> > > > On Thu, May 07, 2020 at 01:00:06PM -0400, Johannes Weiner wrote:
-> > > > > On Wed, May 06, 2020 at 05:55:35PM -0700, Andrew Morton wrote:
-> > > > > > On Wed, 6 May 2020 17:42:40 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > > 
-> > > > > > > This commit adds a shrinker so as to inform RCU when memory is scarce.
-> > > > > > > RCU responds by shifting into the same fast and inefficient mode that is
-> > > > > > > used in the presence of excessive numbers of RCU callbacks.  RCU remains
-> > > > > > > in this state for one-tenth of a second, though this time window can be
-> > > > > > > extended by another call to the shrinker.
-> > > > > 
-> > > > > We may be able to use shrinkers here, but merely being invoked does
-> > > > > not carry a reliable distress signal.
-> > > > > 
-> > > > > Shrinkers get invoked whenever vmscan runs. It's a useful indicator
-> > > > > for when to age an auxiliary LRU list - test references, clear and
-> > > > > rotate or reclaim stale entries. The urgency, and what can and cannot
-> > > > > be considered "stale", is encoded in the callback frequency and scan
-> > > > > counts, and meant to be relative to the VM's own rate of aging: "I've
-> > > > > tested X percent of mine for recent use, now you go and test the same
-> > > > > share of your pool." It doesn't translate well to other
-> > > > > interpretations of the callbacks, although people have tried.
-> > > > 
-> > > > Would it make sense for RCU to interpret two invocations within (say)
-> > > > 100ms of each other as indicating urgency?  (Hey, I had to ask!)
-> > > 
-> > > It's the perfect number for one combination of CPU, storage device,
-> > > and shrinker implementation :-)
-> > 
-> > Woo-hoo!!!
-> > 
-> > But is that one combination actually in use anywhere?  ;-)
-> > 
-> > > > > > > If it proves feasible, a later commit might add a function call directly
-> > > > > > > indicating the end of the period of scarce memory.
-> > > > > > 
-> > > > > > (Cc David Chinner, who often has opinions on shrinkers ;))
-> > > > > > 
-> > > > > > It's a bit abusive of the intent of the slab shrinkers, but I don't
-> > > > > > immediately see a problem with it.  Always returning 0 from
-> > > > > > ->scan_objects might cause a problem in some situations(?).
-> > > > > > 
-> > > > > > Perhaps we should have a formal "system getting low on memory, please
-> > > > > > do something" notification API.
-> > > > > 
-> > > > > It's tricky to find a useful definition of what low on memory
-> > > > > means. In the past we've used sc->priority cutoffs, the vmpressure
-> > > > > interface (reclaimed/scanned - reclaim efficiency cutoffs), oom
-> > > > > notifiers (another reclaim efficiency cutoff). But none of these
-> > > > > reliably capture "distress", and they vary highly between different
-> > > > > hardware setups. It can be hard to trigger OOM itself on fast IO
-> > > > > devices, even when the machine is way past useful (where useful is
-> > > > > somewhat subjective to the user). Userspace OOM implementations that
-> > > > > consider userspace health (also subjective) are getting more common.
-> > > > > 
-> > > > > > How significant is this?  How much memory can RCU consume?
-> > > > > 
-> > > > > I think if rcu can end up consuming a significant share of memory, one
-> > > > > way that may work would be to do proper shrinker integration and track
-> > > > > the age of its objects relative to the age of other allocations in the
-> > > > > system. I.e. toss them all on a clock list with "new" bits and shrink
-> > > > > them at VM velocity. If the shrinker sees objects with new bit set,
-> > > > > clear and rotate. If it sees objects without them, we know rcu_heads
-> > > > > outlive cache pages etc. and should probably cycle faster too.
-> > > > 
-> > > > It would be easy for RCU to pass back (or otherwise use) the age of the
-> > > > current grace period, if that would help.
-> > > > 
-> > > > Tracking the age of individual callbacks is out of the question due to
-> > > > memory overhead, but RCU could approximate this via statistical sampling.
-> > > > Comparing this to grace-period durations could give information as to
-> > > > whether making grace periods go faster would be helpful.
-> > > 
-> > > That makes sense.
-> > > 
-> > > So RCU knows the time and the VM knows the amount of memory. Either
-> > > RCU needs to figure out its memory component to be able to translate
-> > > shrinker input to age, or the VM needs to learn about time to be able
-> > > to say: I'm currently scanning memory older than timestamp X.
-> > > 
-> > > The latter would also require sampling in the VM. Nose goes. :-)
-> > 
-> > Sounds about right.  ;-)
-> > 
-> > Does reclaim have any notion of having continuously scanned for
-> > longer than some amount of time?  Or could RCU reasonably deduce this?
-> > For example, if RCU noticed that reclaim had been scanning for longer than
-> > (say) five grace periods, RCU might decide to speed things up.
-> > 
-> > But on the other hand, with slow disks, reclaim might go on for tens of
-> > seconds even without much in the way of memory pressure, mightn't it?
-> > 
-> > I suppose that another indicator would be recent NULL returns from
-> > allocators.  But that indicator flashes a bit later than one would like,
-> > doesn't it?  And has false positives when allocators are invoked from
-> > atomic contexts, no doubt.  And no doubt similar for sleeping more than
-> > a certain length of time in an allocator.
-> > 
-> > > There actually is prior art for teaching reclaim about time:
-> > > https://lore.kernel.org/linux-mm/20130430110214.22179.26139.stgit@zurg/
-> > > 
-> > > CCing Konstantin. I'm curious how widely this ended up being used and
-> > > how reliably it worked.
-> > 
-> > Looking forward to hearing of any results!
+On 08/05/2020 15:22, Angus Ainslie wrote:
+> Hi,
 > 
-> Well, that was some experiment about automatic steering memory pressure
-> between containers. LRU timings from milestones itself worked pretty well.
-> Remaining engine were more robust than mainline cgroups these days.
-> Memory becomes much cheaper - I hope nobody want's overcommit it that badly anymore.
+> On 2020-05-08 07:01, Heikki Krogerus wrote:
+>> Hi,
+>>
+>> On Thu, May 07, 2020 at 10:47:31PM +0100, Bryan O'Donoghue wrote:
+>>> V2:
+>>> - Put myself down as sole schema maintainer as suggested - Andy
+>>> - Fixed whitespace typo - Andy
+>>> - Removed ifdef and of_match_ptr() - Andy
+>>>
+>>> V1:
+>>> This simple series adds DT binding yaml and a DT lookup table for the
+>>> tps6598x.
+>>>
+>>> Its possible to use i2c id_table to match the 'compatible = 
+>>> "ti,tps6598x"
+>>> and probe that way, however I think it is worthwhile adding a 
+>>> specific OF
+>>> way of doing it and having an accompanying yaml as an example.
+>>>
+>>> Bryan O'Donoghue (2):
+>>>   dt-bindings: usb: Add TI tps6598x device tree binding documentation
+>>>   usb: typec: tps6598x: Add OF probe binding
+>>>
+>>>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 64 +++++++++++++++++++
+>>>  drivers/usb/typec/tps6598x.c                  |  7 ++
+>>>  2 files changed, 71 insertions(+)
+>>>  create mode 100644 
+>>> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+>>
+>> There was already a series from Angus [1] for this. The bindings
+>> looked a bit different, but I think we should use these, because in
+>> the DT bindings from Angus there appeared to be definitions for OF
+>> graph that was not used. Or maybe I got it wrong?
+>>
 > 
-> It seems modern MM has plenty signals about memory pressure.
-> Kswapsd should have enough knowledge to switch gears in RCU.
+> I was trying to include optional components but was not sure of the 
+> syntax so that might have been wrong.
+> 
+>> Angus, is it OK if we use these patches instead the ones from you?
+>>
+> 
+> Yeah these ones will work great for what we need.
+> 
+> Sorry Bryan I didn't realize there was a patch already in progress.
+> 
+> @Bryan, I'm going to send up some extcon patches for the tps6598x soon 
+> but maybe I should check and make sure you don't already have anything 
+> planned there.
+> 
+> It still needs to be retested after cleaning up but it's the top 9 
+> patches here:
+> 
+> https://source.puri.sm/angus.ainslie/linux-next/-/commits/next/extcon
 
-Easy for me to provide "start fast and inefficient mode" and "stop fast
-and inefficient mode" APIs for MM to call!
+Makes me glad I didn't try to touch the PDO stuff :)
 
-How about rcu_mempressure_start() and rcu_mempressure_end()?  I would
-expect them not to nest (as in if you need them to nest, please let
-me know).  I would not expect these to be invoked all that often (as in
-if you do need them to be fast and scalable, please let me know).
+That series looks fine to me.
 
-RCU would then be in fast/inefficient mode if either MM told it to be
-or if RCU had detected callback overload on at least one CPU.
+The only other modification I have is here.
 
-Seem reasonable?
+https://lore.kernel.org/linux-usb/20200507215938.1983363-2-bryan.odonoghue@linaro.org/T/#u
 
-							Thanx, Paul
+which is about data-role switching.
 
-> > > > But, yes, it would be better to have an elusive unambiguous indication
-> > > > of distress.  ;-)
-> > > 
-> > > I agree. Preferably something more practical than a dialogue box
-> > > asking the user on how well things are going for them :-)
-> > 
-> > Indeed, that dialog box should be especially useful for things like
-> > light bulbs running Linux.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
+---
+bod
+
