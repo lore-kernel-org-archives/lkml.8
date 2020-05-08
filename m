@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E9AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81160C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1773D20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBDD218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943810;
-	bh=5qwJ1HXduhShhqO66V2xRuZoNmsgUkmpW5HiZw1jGHg=;
+	s=default; t=1588943814;
+	bh=+paItO5s4jfSbClbx7dPMpQsd3fzWtEyPMi442+bDpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lB3SatDiAqyjC7HNs/jU9r/Qt2i8/4bKXCX0LKWWNv0f08p8Bcinm+9cvRJCtXQTa
-	 tudpj7CR3aRMAAkL3j1X12C7KRYsJHbwUQc9KR1EwcbrKAnRVVFKdkRZOCkS1ANwwJ
-	 WrsQttJT61y80c02NBDBHmqpfSlr8an+HnswWDf8=
+	b=k/Pk7DgQnTvmsBIQDFMGL32c/drIMGnYNQIpjVSvj1fwaGfJFFIlb4rOoVFpt0c+g
+	 5MpywSsxtv1dhB18Pv3qm+WoVCuTwmBDgHXNtFWhP0IiWGX23+2R/bGJoZfA8FzknR
+	 8p3DH4DALRaM7RF2uuDsy0F8Dvxll+/97kZYH6GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgEHNQs (ORCPT
+        id S1729208AbgEHMog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbgEHMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:44:42 -0400
+        id S1729198AbgEHMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:44:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1512145D;
-        Fri,  8 May 2020 12:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 436CF208D6;
+        Fri,  8 May 2020 12:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941882;
-        bh=5qwJ1HXduhShhqO66V2xRuZoNmsgUkmpW5HiZw1jGHg=;
+        s=default; t=1588941872;
+        bh=+paItO5s4jfSbClbx7dPMpQsd3fzWtEyPMi442+bDpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0zOpcfs8wvyvdfWO888M0Ib4t/7wRE0MxS8fRcHBPKkkhah6aOjsDKgs8X5RnNv3
-         UHUZ67/UY5dhMnPaP3UVCmnjKCO2AoF9BEykWQe+TaeKSrs7dGZGBqnDzUvMPrsSOr
-         eaLpegonuDfQl+L2jCCrgmQQrt2zYiEubnEicjrM=
+        b=YZzPISnW6X4f6KLTFqW+lrBBrXNlhMj/hFX96CKGffTVAJLifduGvxr5RI2TzPgAX
+         QqEh8i1hg6ceXsS2lYLxZ5FR5wG0vbE0uCvc+JFgSAkqvK2ydlhKOv4geqFv4MI0Od
+         /sHTkevuJX3MNAzc+74OZodJngKxsvn/Uf2Hcesg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 210/312] bpf, trace: check event type in bpf_perf_event_read
-Date:   Fri,  8 May 2020 14:33:21 +0200
-Message-Id: <20200508123139.179064292@linuxfoundation.org>
+        stable@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.4 206/312] clk: imx: clk-pllv3: fix incorrect handle of enet powerdown bit
+Date:   Fri,  8 May 2020 14:33:17 +0200
+Message-Id: <20200508123138.910534395@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,36 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@fb.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
 
-commit ad572d174787daa59e24b8b5c83028c09cdb5ddb upstream.
+commit b3e76bdc0b2190e67427d31cd740debd01c03631 upstream.
 
-similar to bpf_perf_event_output() the bpf_perf_event_read() helper
-needs to check the type of the perf_event before reading the counter.
+After commit f53947456f98 ("ARM: clk: imx: update pllv3 to support imx7"),
+the former used BM_PLL_POWER bit is not correct anymore for IMX7 ENET.
+Instead, pll->powerdown holds the correct bit, so using powerdown bit
+in clk_pllv3_{prepare | unprepare} functions.
 
-Fixes: a43eec304259 ("bpf: introduce bpf_perf_event_output() helper")
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f53947456f98 ("ARM: clk: imx: update pllv3 to support imx7")
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/bpf_trace.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/imx/clk-pllv3.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -206,6 +206,10 @@ static u64 bpf_perf_event_read(u64 r1, u
- 	    event->pmu->count)
- 		return -EINVAL;
+--- a/drivers/clk/imx/clk-pllv3.c
++++ b/drivers/clk/imx/clk-pllv3.c
+@@ -76,9 +76,9 @@ static int clk_pllv3_prepare(struct clk_
  
-+	if (unlikely(event->attr.type != PERF_TYPE_HARDWARE &&
-+		     event->attr.type != PERF_TYPE_RAW))
-+		return -EINVAL;
-+
- 	/*
- 	 * we don't know if the function is run successfully by the
- 	 * return value. It can be judged in other places, such as
+ 	val = readl_relaxed(pll->base);
+ 	if (pll->powerup_set)
+-		val |= BM_PLL_POWER;
++		val |= pll->powerdown;
+ 	else
+-		val &= ~BM_PLL_POWER;
++		val &= ~pll->powerdown;
+ 	writel_relaxed(val, pll->base);
+ 
+ 	return clk_pllv3_wait_lock(pll);
+@@ -91,9 +91,9 @@ static void clk_pllv3_unprepare(struct c
+ 
+ 	val = readl_relaxed(pll->base);
+ 	if (pll->powerup_set)
+-		val &= ~BM_PLL_POWER;
++		val &= ~pll->powerdown;
+ 	else
+-		val |= BM_PLL_POWER;
++		val |= pll->powerdown;
+ 	writel_relaxed(val, pll->base);
+ }
+ 
 
 
