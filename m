@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBD0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F353FC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20AAB218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE80218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944152;
-	bh=dgN/DUqz39yavDE/8yM29cvjUKtLkthSL/wVYeaGG/w=;
+	s=default; t=1588944155;
+	bh=xKYlgra1bjz4M+bEPOOEvT6lJyexDCQK/RPwfLRVI/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/WFH63DkyNjWzNPCFtLuZROcSJPeySqkX/5mIkLn9MNnoos/HDiI+ayvhGEgYx8H
-	 W3zSap30g+TnaeSb1Jxr6wumgRqwI6v5ZZbHq0E6fkH383mOCK4a6umKOFPUhMCNbk
-	 Mp6QdImEhzJIN/nzCqQKuh1DIFZSV0vdlBP+dHu4=
+	b=A/3P0rW9D311g+xTbtHnZWU5abXs94fhufqp6npWGaVQZtOKLTLGsM3XiSgIPgqbr
+	 gK5sLGvP8lokcOZ+W2bNVanlZ7ZG8NMUezMT2j35MlCJxB8PcO60BTq8oZ6u8VDeib
+	 RS8en4j3vKLcTh5yzj3jA3jVtxSrbskWui3A7Rxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgEHNWb (ORCPT
+        id S1728515AbgEHMi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57886 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728567AbgEHMjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:15 -0400
+        id S1728489AbgEHMiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 436DB2495F;
-        Fri,  8 May 2020 12:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71393215A4;
+        Fri,  8 May 2020 12:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941553;
-        bh=dgN/DUqz39yavDE/8yM29cvjUKtLkthSL/wVYeaGG/w=;
+        s=default; t=1588941533;
+        bh=xKYlgra1bjz4M+bEPOOEvT6lJyexDCQK/RPwfLRVI/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HyeWM+IjLgCMJu0KWmk8GV5dWIiU4yXCOdKNGVpwRyPLQh4LODThW31BDK+0WrI0h
-         d9VoY9zuBk12Cm7DX+IJoVRQ/S8eXuEI9MBmO1UA+2JxgECWr6ci5RyTL0XIazxTJ6
-         VWRL4+DLLEt3i/KhS50c4Ihwuh5PNfxez6pi2O7k=
+        b=he4J6LqiZB9wzP+Nesa1v8zPvADzboLSxXCT9fat51fC048KRzahru3Y3pC+PN+wt
+         HjsqsOhSBn+uVbVEapY/4bnQnaFOyEVTlnW4iA905uVbIZUaR3m98HNAgr1lVG/cjc
+         8FlidofO7Xkiu7dv4J5qmIsIS3s2V5MZ3E7amn+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 061/312] net/mlx4_core: Implement pci_resume callback
-Date:   Fri,  8 May 2020 14:30:52 +0200
-Message-Id: <20200508123128.845255959@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: [PATCH 4.4 071/312] [media] c8sectpfe: Rework firmware loading mechanism
+Date:   Fri,  8 May 2020 14:31:02 +0200
+Message-Id: <20200508123129.537219276@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,104 +59,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jurgens <danielj@mellanox.com>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-commit c12833acff62cff83a8b728253e7ebbc1264d75e upstream.
+commit c23ac90f78aa9190643c82c1975a0cfe480d7c60 upstream.
 
-Move resume related activities to a new pci_resume function instead of
-performing them in mlx4_pci_slot_reset.  This change is needed to avoid
-a hotplug during EEH recovery due to commit f2da4ccf8bd4 ("powerpc/eeh:
-More relaxed hotplug criterion").
+c8sectpfe driver relied on CONFIG_FW_LOADER_USER_HELPER_FALLBACK option
+for loading its xp70 firmware. A previous commit removed this Kconfig
+option, as it is apparently harmful, but did not update the driver
+code which relied on it.
 
-Fixes: 2ba5fbd62b25 ('net/mlx4_core: Handle AER flow properly')
-Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch reworks the firmware loading into the start_feed callback.
+At this point we can be sure the rootfs is present, thereby removing
+the depedency on CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
+
+Fixes: 79f5b6ae960d ('[media] c8sectpfe: Remove select on CONFIG_FW_LOADER_USER_HELPER_FALLBACK')
+
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c |   39 ++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c |   65 ++++++------------
+ 1 file changed, 22 insertions(+), 43 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -3854,45 +3854,53 @@ static pci_ers_result_t mlx4_pci_slot_re
- {
- 	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
- 	struct mlx4_dev	 *dev  = persist->dev;
--	struct mlx4_priv *priv = mlx4_priv(dev);
--	int               ret;
--	int nvfs[MLX4_MAX_PORTS + 1] = {0, 0, 0};
--	int total_vfs;
-+	int err;
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -49,7 +49,7 @@ MODULE_FIRMWARE(FIRMWARE_MEMDMA);
+ #define PID_TABLE_SIZE 1024
+ #define POLL_MSECS 50
  
- 	mlx4_err(dev, "mlx4_pci_slot_reset was called\n");
--	ret = pci_enable_device(pdev);
+-static int load_c8sectpfe_fw_step1(struct c8sectpfei *fei);
++static int load_c8sectpfe_fw(struct c8sectpfei *fei);
+ 
+ #define TS_PKT_SIZE 188
+ #define HEADER_SIZE (4)
+@@ -143,6 +143,7 @@ static int c8sectpfe_start_feed(struct d
+ 	struct channel_info *channel;
+ 	u32 tmp;
+ 	unsigned long *bitmap;
++	int ret;
+ 
+ 	switch (dvbdmxfeed->type) {
+ 	case DMX_TYPE_TS:
+@@ -171,8 +172,9 @@ static int c8sectpfe_start_feed(struct d
+ 	}
+ 
+ 	if (!atomic_read(&fei->fw_loaded)) {
+-		dev_err(fei->dev, "%s: c8sectpfe fw not loaded\n", __func__);
+-		return -EINVAL;
++		ret = load_c8sectpfe_fw(fei);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	mutex_lock(&fei->lock);
+@@ -267,8 +269,9 @@ static int c8sectpfe_stop_feed(struct dv
+ 	unsigned long *bitmap;
+ 
+ 	if (!atomic_read(&fei->fw_loaded)) {
+-		dev_err(fei->dev, "%s: c8sectpfe fw not loaded\n", __func__);
+-		return -EINVAL;
++		ret = load_c8sectpfe_fw(fei);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	mutex_lock(&fei->lock);
+@@ -882,13 +885,6 @@ static int c8sectpfe_probe(struct platfo
+ 		goto err_clk_disable;
+ 	}
+ 
+-	/* ensure all other init has been done before requesting firmware */
+-	ret = load_c8sectpfe_fw_step1(fei);
 -	if (ret) {
--		mlx4_err(dev, "Can not re-enable device, ret=%d\n", ret);
-+	err = pci_enable_device(pdev);
-+	if (err) {
-+		mlx4_err(dev, "Can not re-enable device, err=%d\n", err);
- 		return PCI_ERS_RESULT_DISCONNECT;
- 	}
+-		dev_err(dev, "Couldn't load slim core firmware\n");
+-		goto err_clk_disable;
+-	}
+-
+ 	c8sectpfe_debugfs_init(fei);
  
- 	pci_set_master(pdev);
- 	pci_restore_state(pdev);
- 	pci_save_state(pdev);
-+	return PCI_ERS_RESULT_RECOVERED;
-+}
-+
-+static void mlx4_pci_resume(struct pci_dev *pdev)
-+{
-+	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
-+	struct mlx4_dev	 *dev  = persist->dev;
-+	struct mlx4_priv *priv = mlx4_priv(dev);
-+	int nvfs[MLX4_MAX_PORTS + 1] = {0, 0, 0};
-+	int total_vfs;
-+	int err;
- 
-+	mlx4_err(dev, "%s was called\n", __func__);
- 	total_vfs = dev->persist->num_vfs;
- 	memcpy(nvfs, dev->persist->nvfs, sizeof(dev->persist->nvfs));
- 
- 	mutex_lock(&persist->interface_state_mutex);
- 	if (!(persist->interface_state & MLX4_INTERFACE_STATE_UP)) {
--		ret = mlx4_load_one(pdev, priv->pci_dev_data, total_vfs, nvfs,
-+		err = mlx4_load_one(pdev, priv->pci_dev_data, total_vfs, nvfs,
- 				    priv, 1);
--		if (ret) {
--			mlx4_err(dev, "%s: mlx4_load_one failed, ret=%d\n",
--				 __func__,  ret);
-+		if (err) {
-+			mlx4_err(dev, "%s: mlx4_load_one failed, err=%d\n",
-+				 __func__,  err);
- 			goto end;
- 		}
- 
--		ret = restore_current_port_types(dev, dev->persist->
-+		err = restore_current_port_types(dev, dev->persist->
- 						 curr_port_type, dev->persist->
- 						 curr_port_poss_type);
--		if (ret)
--			mlx4_err(dev, "could not restore original port types (%d)\n", ret);
-+		if (err)
-+			mlx4_err(dev, "could not restore original port types (%d)\n", err);
- 	}
- end:
- 	mutex_unlock(&persist->interface_state_mutex);
- 
--	return ret ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+ 	return 0;
+@@ -1093,15 +1089,14 @@ static void load_dmem_segment(struct c8s
+ 		phdr->p_memsz - phdr->p_filesz);
  }
  
- static void mlx4_shutdown(struct pci_dev *pdev)
-@@ -3909,6 +3917,7 @@ static void mlx4_shutdown(struct pci_dev
- static const struct pci_error_handlers mlx4_err_handler = {
- 	.error_detected = mlx4_pci_err_detected,
- 	.slot_reset     = mlx4_pci_slot_reset,
-+	.resume		= mlx4_pci_resume,
- };
+-static int load_slim_core_fw(const struct firmware *fw, void *context)
++static int load_slim_core_fw(const struct firmware *fw, struct c8sectpfei *fei)
+ {
+-	struct c8sectpfei *fei = context;
+ 	Elf32_Ehdr *ehdr;
+ 	Elf32_Phdr *phdr;
+ 	u8 __iomem *dst;
+ 	int err = 0, i;
  
- static struct pci_driver mlx4_driver = {
+-	if (!fw || !context)
++	if (!fw || !fei)
+ 		return -EINVAL;
+ 
+ 	ehdr = (Elf32_Ehdr *)fw->data;
+@@ -1153,29 +1148,35 @@ static int load_slim_core_fw(const struc
+ 	return err;
+ }
+ 
+-static void load_c8sectpfe_fw_cb(const struct firmware *fw, void *context)
++static int load_c8sectpfe_fw(struct c8sectpfei *fei)
+ {
+-	struct c8sectpfei *fei = context;
++	const struct firmware *fw;
+ 	int err;
+ 
++	dev_info(fei->dev, "Loading firmware: %s\n", FIRMWARE_MEMDMA);
++
++	err = request_firmware(&fw, FIRMWARE_MEMDMA, fei->dev);
++	if (err)
++		return err;
++
+ 	err = c8sectpfe_elf_sanity_check(fei, fw);
+ 	if (err) {
+ 		dev_err(fei->dev, "c8sectpfe_elf_sanity_check failed err=(%d)\n"
+ 			, err);
+-		goto err;
++		return err;
+ 	}
+ 
+-	err = load_slim_core_fw(fw, context);
++	err = load_slim_core_fw(fw, fei);
+ 	if (err) {
+ 		dev_err(fei->dev, "load_slim_core_fw failed err=(%d)\n", err);
+-		goto err;
++		return err;
+ 	}
+ 
+ 	/* now the firmware is loaded configure the input blocks */
+ 	err = configure_channels(fei);
+ 	if (err) {
+ 		dev_err(fei->dev, "configure_channels failed err=(%d)\n", err);
+-		goto err;
++		return err;
+ 	}
+ 
+ 	/*
+@@ -1188,28 +1189,6 @@ static void load_c8sectpfe_fw_cb(const s
+ 	writel(0x1,  fei->io + DMA_CPU_RUN);
+ 
+ 	atomic_set(&fei->fw_loaded, 1);
+-err:
+-	complete_all(&fei->fw_ack);
+-}
+-
+-static int load_c8sectpfe_fw_step1(struct c8sectpfei *fei)
+-{
+-	int err;
+-
+-	dev_info(fei->dev, "Loading firmware: %s\n", FIRMWARE_MEMDMA);
+-
+-	init_completion(&fei->fw_ack);
+-	atomic_set(&fei->fw_loaded, 0);
+-
+-	err = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
+-				FIRMWARE_MEMDMA, fei->dev, GFP_KERNEL, fei,
+-				load_c8sectpfe_fw_cb);
+-
+-	if (err) {
+-		dev_err(fei->dev, "request_firmware_nowait err: %d.\n", err);
+-		complete_all(&fei->fw_ack);
+-		return err;
+-	}
+ 
+ 	return 0;
+ }
 
 
