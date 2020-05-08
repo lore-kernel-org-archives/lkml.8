@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BABCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737D5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F41920731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489812495F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941694;
-	bh=AaVBMed/jK2tTG+Zl65dMFrH0jP3Wozb96iodgcBeLQ=;
+	s=default; t=1588941699;
+	bh=TWVZp//Y38gc0wX2cTOnRapUQ18gETsH64Rw0nidY3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kISN3bm7tXUI9ozx6SB8rptQ/DaMHfGaKOFNgDqDLBT6GF9Na9NH3uevNkENLdwh0
-	 4+Yvz7fgdXhwrblZHDROjT2wIEb0xUqTAqe0AxgLMbRYCGfDHltCqQtv7uBVotiPJS
-	 19JSFXovYxbM2n5lAWJCchCGyEd3ZO8GmwJeCeHU=
+	b=Nv/uptAPW5dcFbkWREKEVrNJI6fT1DuMo2pPT7DVifk1aacos9aRBQY45OtkShH2i
+	 PI+rwm8vJgnddQEB3tQNA9VGxjnYxxlnO3xHR6nf7f1+HsqLEM33k8I2OyyE0XljSv
+	 E/YgxxncSIweu9+0vAsDYnhns9vPQnRAZ/N2KYzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgEHMld (ORCPT
+        id S1728841AbgEHMli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36304 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbgEHMl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:26 -0400
+        id S1728833AbgEHMld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15FB2495F;
-        Fri,  8 May 2020 12:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 568D12495F;
+        Fri,  8 May 2020 12:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941685;
-        bh=AaVBMed/jK2tTG+Zl65dMFrH0jP3Wozb96iodgcBeLQ=;
+        s=default; t=1588941692;
+        bh=TWVZp//Y38gc0wX2cTOnRapUQ18gETsH64Rw0nidY3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqt18IfLeao4MTKZ/+gAq0xrwJwyi4r+K3kLC1a/YpUhji2TFlXwFHbQOlYxwehM0
-         GqTjYEhMPcJMpofYitve6iNFFgGTGwWosFWIWqQn+uD9Kwx3z5xCQUuJTGR7AtGdGP
-         YREFPklQqfedKgoaLcPqbAgiaFWUZXrfqYIbSNbk=
+        b=Pqu2TBbRKtdQLyRLJXak81fou9Ek+OsXg8F2d84AZ/7KbpMR1WoDcPufIehe0RWCC
+         B5m4zQ0bJ3eX0RZWiu0FGWmR+TJvqqNOXvsSzApHTgGQoOr5oaAT/Z1d2gJeYBCvhw
+         Qc9mwU5RLzcYLArVtRt9oKoMsd1Nep7xD4RXWwNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 131/312] net: get rid of an signed integer overflow in ip_idents_reserve()
-Date:   Fri,  8 May 2020 14:32:02 +0200
-Message-Id: <20200508123133.721321591@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Brian Norris <computersforpeace@gmail.com>
+Subject: [PATCH 4.4 133/312] mtd: nand: pxa3xx_nand: fix dmaengine initialization
+Date:   Fri,  8 May 2020 14:32:04 +0200
+Message-Id: <20200508123133.859362525@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,51 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-commit adb03115f4590baa280ddc440a8eff08a6be0cb7 upstream.
+commit 9097103f06332d099c5ab06d1e7f22f4bcaca6e2 upstream.
 
-Jiri Pirko reported an UBSAN warning happening in ip_idents_reserve()
+When the driver is initialized in a pure device-tree platform, the
+driver's probe fails allocating the dma channel :
+[  525.624435] pxa3xx-nand 43100000.nand: no resource defined for data DMA
+[  525.632088] pxa3xx-nand 43100000.nand: alloc nand resource failed
 
-[] UBSAN: Undefined behaviour in ./arch/x86/include/asm/atomic.h:156:11
-[] signed integer overflow:
-[] -2117905507 + -695755206 cannot be represented in type 'int'
+The reason is that the DMA IO resource is not acquired through platform
+resources but by OF bindings.
 
-Since we do not have uatomic_add_return() yet, use atomic_cmpxchg()
-so that the arithmetics can be done using unsigned int.
+Fix this by ensuring that DMA IO resources are only queried in the non
+device-tree case.
 
-Fixes: 04ca6973f7c1 ("ip: make IP identifiers less predictable")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8f5ba31aa565 ("mtd: nand: pxa3xx-nand: switch to dmaengine")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Acked-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/route.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/pxa3xx_nand.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -477,12 +477,18 @@ u32 ip_idents_reserve(u32 hash, int segs
- 	atomic_t *p_id = ip_idents + hash % IP_IDENTS_SZ;
- 	u32 old = ACCESS_ONCE(*p_tstamp);
- 	u32 now = (u32)jiffies;
--	u32 delta = 0;
-+	u32 new, delta = 0;
+--- a/drivers/mtd/nand/pxa3xx_nand.c
++++ b/drivers/mtd/nand/pxa3xx_nand.c
+@@ -1750,7 +1750,7 @@ static int alloc_nand_resource(struct pl
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (old != now && cmpxchg(p_tstamp, old, now) == old)
- 		delta = prandom_u32_max(now - old);
- 
--	return atomic_add_return(segs + delta, p_id) - segs;
-+	/* Do not use atomic_add_return() as it makes UBSAN unhappy */
-+	do {
-+		old = (u32)atomic_read(p_id);
-+		new = old + delta + segs;
-+	} while (atomic_cmpxchg(p_id, old, new) != old);
-+
-+	return new - segs;
- }
- EXPORT_SYMBOL(ip_idents_reserve);
- 
+-	if (use_dma) {
++	if (!np && use_dma) {
+ 		r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+ 		if (r == NULL) {
+ 			dev_err(&pdev->dev,
 
 
