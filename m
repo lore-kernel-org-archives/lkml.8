@@ -2,124 +2,129 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3787C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A8DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8EF2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D604F2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kqccxOzr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XW2aHJLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEHLOk (ORCPT
+        id S1727083AbgEHLPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:14:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35348 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEHLOk (ORCPT
+        Fri, 8 May 2020 07:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726616AbgEHLPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:14:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048BEQpR077154;
-        Fri, 8 May 2020 06:14:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588936466;
-        bh=ZoYcMIj00piv51ZsPhg0qvcGYShGcn7KMqwUuvC0zPI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kqccxOzrqjmb95R4BiFMjrYc+xbny9z3EQ+mjqc8tFQ6jS2nVE8bL/zvVunKt/CZm
-         ViJLmldxvmPOAjv9VxuHrNpRQZjNaDRA8gRJIvG3vLld1l2xbq9bly9Nx1p0yMmrpu
-         OhnK59wLR2UuhE2mBSLvq0K7l1DUOuzv0a1Xo4LM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 048BEQo7115039
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 May 2020 06:14:26 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 06:14:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 06:14:26 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048BEMOE130802;
-        Fri, 8 May 2020 06:14:23 -0500
-Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
- TI_CPTS_MOD workaround
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Networking <netdev@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-References: <20200508095914.20509-1-grygorii.strashko@ti.com>
- <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com>
-Date:   Fri, 8 May 2020 14:14:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 07:15:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10ADDC05BD43;
+        Fri,  8 May 2020 04:15:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so1392015wrb.8;
+        Fri, 08 May 2020 04:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fYVKyLBoNazrldB00m19zXIkILYKVcaKghSKl2P2ohk=;
+        b=XW2aHJLA6Mx+PiVTSct4Xp3IlQ0EtB/u43rWDJ9lX7/I5B0bPPdp0s1Lx3tJ9p3zOD
+         5xJy8jDID8S1mZb+joNkFZhRrYepAd9ak3YTc3fKx4Mh/PUGGwdhD/Z0yA45iycYNHsJ
+         wE2trO0TyuA2EqvESOWjNI2leIv9EhuIvWFdZaeZF3fbj9ZEnOfZr93fqTIV0Gs6LGqo
+         /qzEn1PmaiZWXb1bacZQhqHR9hojXlV6slthspVatXKk/SAj6FaiUWZNsLTHeFWtknES
+         xGS2dpCoa2iyZco/HzDzqh4gKqU8D+CB6E8d2sNdcrTP//p6jlx6OT5Qdk7ERUdBMPoU
+         VAfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fYVKyLBoNazrldB00m19zXIkILYKVcaKghSKl2P2ohk=;
+        b=m2a667IQgXLd1vvB1k7KyF0WbHi7MMuXnjOTG/qRpxcerZE95AliIDm3Tv98Yss79g
+         CKlPuT5EoNMSSRV3UM9yLCCBdNEOKpSbAw6TWXRe5a3z6/Wok3nfp6q3oxwa+kw20MaL
+         ARdqsVguuThCuwoEk/9WpHlvnLPoax+jhhFyBPNaFvDXIVNUrxo/BYxHixDWUASEG3Bw
+         9zB3Y+R8mDLcxziE5dnwmWL4Il4nuY+qYpS7QiE5bWTNBAwygSnPNreSvHRo+xRUo7tL
+         JjPmJl6ijHPZO6Ll/4o7Lz9ebj+sKcXfJiG6J1Ymh+t4q3vFLBx2kXYFzQxu6BZj2Kn1
+         TlpQ==
+X-Gm-Message-State: AGi0PuZHyHWLXeQ7Rm7pGdv/ZvO1wCR+fAuL8AyOml2/mJukUidBxSx/
+        kw8RRZDrXWX8nwA7A/o95Rk=
+X-Google-Smtp-Source: APiQypIpsDAj8HfWoRBDBp1VG1Dv4CQ4hSbll1vTO2j1vgMnnhkGXrmVoOXfzOZzSbK7QkjjBt0e1w==
+X-Received: by 2002:a5d:4b4d:: with SMTP id w13mr2528537wrs.178.1588936516876;
+        Fri, 08 May 2020 04:15:16 -0700 (PDT)
+Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
+        by smtp.gmail.com with ESMTPSA id k5sm2308675wrx.16.2020.05.08.04.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 04:15:15 -0700 (PDT)
+Date:   Fri, 8 May 2020 13:15:14 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: max77620: Use single-byte writes on MAX77620
+Message-ID: <20200508111514.GA3034899@ulmo>
+References: <20200417170913.2552327-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
+In-Reply-To: <20200417170913.2552327-1-thierry.reding@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 08/05/2020 13:10, Arnd Bergmann wrote:
-> On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->> From: Clay McClure <clay@daemons.net>
->>
->> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
->> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
->> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
->> form:
->>
->> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
->> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
->>   ...
->>
->> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
->> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
->> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
->> functions) _is_ enabled. So we end up compiling calls to functions that
->> don't exist, resulting in the linker errors.
->>
->> This patch fixes build errors and restores previous behavior by:
->>   - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
->>   - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
-> 
-> I don't understand what IS_REACHABLE() is needed for once all the other
-> changes are in place. I'd hope we can avoid that. Do you still see
-> failures without
-> that or is it just a precaution. I can do some randconfig testing on your patch
-> to see what else might be needed to avoid IS_REACHABLE().
+On Fri, Apr 17, 2020 at 07:09:13PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> The MAX77620 doesn't support bulk writes, so make sure the regmap code
+> breaks bulk writes into multiple single-byte writes.
+>=20
+> Note that this is mostly cosmetic because currently only the RTC sub-
+> driver uses bulk writes and the RTC driver ends up using a different
+> regmap on the MAX77620 anyway. However, it seems like a good idea to
+> make this change now in order to avoid running into issues if bulk
+> writes are ever used by other sub-drivers sometime down the road.
+>=20
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/mfd/max77620.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-I've not changed this part of original patch, but seems you're right.
+Hi Lee,
 
-I can drop it and resend, but, unfortunately, i do not have time today for full build testing.
-Sorry.
+did you have a chance to look at this patch?
 
-By the way in ptp_clock_kernel.h
-#if IS_REACHABLE(CONFIG_PTP_1588_CLOCK)
+Thierry
 
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Best regards,
-grygorii
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl61Pz8ACgkQ3SOs138+
+s6E+7A//a03m70gtgZGEknOoNZ0CgU5RIPvSY0ARoSLPdVfn3U7lymln4Qozoqpd
+fG1juRJx4/a1rW2kKjNrXAGtp02I5UMyNH3gQ++Hv+dHKOzQwS2daqpFYBNstg52
+MxfQXZGeCY6itzefnnQOV39wGkRLnPnDWdyi+KvPj+AxTM0snKT2CplhcRLNrFIO
+08IF7EQgO1I8pQxqggbZD/PYyFVEMql07N4ngnNw+ffdvwKa8tBrE5XN6fkkOXZY
+YbNGJuR7CznCYwwgEbG7lg232hKHuTW41e9M3NBvkWknIeLCHcWdyUNYQYqYQ4yC
+Olbv/CbVrS1UxDgOQHT/v80MI4rIYgMBDqu9uTZP8kp5uG2kc67RiQopaA1y1trP
+9zXIBR5m9aA8KcMQtl5QXXbFMqqSgeuBPsKAmIFknufJjCOiJYD0nv/f4ZEEKcBL
+eW48OH5LbAsmU82kBEO+UvL6mcH/Y0a5q2cNhmWvCx5bWJUfOfkjgRAcdIQzUW8X
+b4qPznmtylujpafCIT110QwyThH6sOXocJwJkvybAWcD8JJh6Lux6kH73IDWbH13
+uDOODx1CxRzhJWf0Qy75sVEnwZKSlhneb/AcjVD1AxvHfN5sKJGIHqR8mrOGddJF
+qQtRSBX8eBXMIqp3E+hOq3ZZy7YYDXUDJhrSw7Icgu7Ews6N9vQ=
+=2rKA
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
