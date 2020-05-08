@@ -2,160 +2,84 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF036C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B265FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72E32184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9875E207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgEHPwc (ORCPT
+        id S1728051AbgEHPxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:52:32 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33201 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgEHPwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:52:31 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z22so1813954lfd.0;
-        Fri, 08 May 2020 08:52:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3qIvzDxmqP7D/AjiF6m94r9Ud+ISzBYrfJ2jwWGrV6Y=;
-        b=KAJtUO12mnXXCzi3aj/YQup0pcFHuumLmlFxrG7OHjT1gDEPaPs7XAZFQASozbyDCe
-         fbxHYDvR805Lkg3Mswe2qh5KMDx0ueg/G8w1ByGhn6NWfmCN8bIfWf3rP+NHqA5Oi//a
-         fblbvG3xqZD3aSi/tUwlvOGtWAvX004uPUyVIQtU04RiNu6FIiOhGbN3VHqCOqXnrm5D
-         kJDbSNBYJthSD5IBSGE9PulVcIAM8iM9ckLXnyZQU3emHgKYlJK5nbHS+CLRzweNay+f
-         wAF4ZdFYSJUD9ttfUM3xEY7RAsViNaVDOP6xTth8pLH4RBuhNX4Mpo69Trvmj0L8tBJf
-         z3lA==
-X-Gm-Message-State: AOAM533OD2ZVwMEYesvBisW6m595fBA6Av7k4dj9UHhdKyPlVRzk5rmA
-        cHOsh14ZvsioQ7OUF5R7x5M=
-X-Google-Smtp-Source: ABdhPJy5GSDxWUa4jQw2b8yXSkPwp/Wt651C6V9/mfvGmrvtu9t969ynQzuHKVe2zaAV8N+Y0WOGSA==
-X-Received: by 2002:a19:4f1b:: with SMTP id d27mr2385773lfb.81.1588953149263;
-        Fri, 08 May 2020 08:52:29 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id v17sm1504445lfi.49.2020.05.08.08.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:52:28 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:51:42 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 10/11] power: supply: Fix Kconfig help text indentiation
-Message-ID: <f557d685dd2d664a45f5938dca08a5bda2b496d7.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:53:09 -0400
+Received: from verein.lst.de ([213.95.11.211]:53335 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727051AbgEHPxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:53:09 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 804DA68C7B; Fri,  8 May 2020 17:53:06 +0200 (CEST)
+Date:   Fri, 8 May 2020 17:53:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     hch@lst.de, axboe@kernel.dk, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com
+Subject: Re: [PATCH v3 2/3] block: add a s390-only biodasdinfo method
+Message-ID: <20200508155306.GB4200@lst.de>
+References: <20200508131455.55407-1-sth@linux.ibm.com> <20200508131455.55407-3-sth@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200508131455.55407-3-sth@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indent the help text as explained in
-Documentation/process/coding-style.rst
+On Fri, May 08, 2020 at 03:14:54PM +0200, Stefan Haberland wrote:
+> From: Christoph Hellwig <hch@lst.de>
+> 
+> The IBM partition parser needs to query the DASD driver for details that
+> are very s390 specific.  Instead of using ioctl_by_bdev with a fake user
+> space pointer just add a s390-specific method to get the information
+> directly.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> [sth@linux.ibm.com: remove fop, add gendisk check, export funcion]
+> Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+The subject and changelog need updates for your changes.  I think you
+should also claim authorship, even if a few bits are originally from me.
+Probaby it would make sense to even just merge this into the next patch.
 
----
+> index fa552f9f1666..6eac7b11c75b 100644
+> --- a/drivers/s390/block/dasd_int.h
+> +++ b/drivers/s390/block/dasd_int.h
+> @@ -845,6 +845,7 @@ void dasd_destroy_partitions(struct dasd_block *);
+>  
+>  /* externals in dasd_ioctl.c */
+>  int  dasd_ioctl(struct block_device *, fmode_t, unsigned int, unsigned long);
+> +int dasd_biodasdinfo(struct gendisk *disk, struct dasd_information2_t *info);
 
-I just learned the help text in Kconfigs should be indented by two
-spaces. I fixed this for BD99954 as suggested by Randy and decided
-that I could do this for few other entries as well while I was at
-it anyways.
----
- drivers/power/supply/Kconfig | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+I think this needs to go to a public include/linux/ header for the
+partitioning code to share the prototype.
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 436680ee8523..ec028e47c3c2 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -415,7 +415,7 @@ config CHARGER_PCF50633
- 	tristate "NXP PCF50633 MBC"
- 	depends on MFD_PCF50633
- 	help
--	 Say Y to include support for NXP PCF50633 Main Battery Charger.
-+	  Say Y to include support for NXP PCF50633 Main Battery Charger.
- 
- config BATTERY_RX51
- 	tristate "Nokia RX-51 (N900) battery driver"
-@@ -609,15 +609,15 @@ config CHARGER_TPS65090
- 	tristate "TPS65090 battery charger driver"
- 	depends on MFD_TPS65090
- 	help
--	 Say Y here to enable support for battery charging with TPS65090
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65090
-+	  PMIC chips.
- 
- config CHARGER_TPS65217
- 	tristate "TPS65217 battery charger driver"
- 	depends on MFD_TPS65217
- 	help
--	 Say Y here to enable support for battery charging with TPS65217
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65217
-+	  PMIC chips.
- 
- config BATTERY_GAUGE_LTC2941
- 	tristate "LTC2941/LTC2943 Battery Gauge Driver"
-@@ -671,16 +671,16 @@ config CHARGER_SC2731
- 	tristate "Spreadtrum SC2731 charger driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	help
--	 Say Y here to enable support for battery charging with SC2731
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with SC2731
-+	  PMIC chips.
- 
- config FUEL_GAUGE_SC27XX
- 	tristate "Spreadtrum SC27XX fuel gauge driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	depends on IIO
- 	help
--	 Say Y here to enable support for fuel gauge with SC27XX
--	 PMIC chips.
-+	  Say Y here to enable support for fuel gauge with SC27XX
-+	  PMIC chips.
- 
- config CHARGER_UCS1002
- 	tristate "Microchip UCS1002 USB Port Power Controller"
-@@ -698,9 +698,9 @@ config CHARGER_BD70528
- 	select LINEAR_RANGES
- 	default n
- 	help
--	 Say Y here to enable support for getting battery status
--	 information and altering charger configurations from charger
--	 block of the ROHM BD70528 Power Management IC.
-+	  Say Y here to enable support for getting battery status
-+	  information and altering charger configurations from charger
-+	  block of the ROHM BD70528 Power Management IC.
- 
- config CHARGER_BD99954
- 	tristate "ROHM bd99954 charger driver"
--- 
-2.21.0
+> +int dasd_biodasdinfo(struct gendisk *disk, struct dasd_information2_t *info)
+> +{
+> +	struct dasd_device *base;
+> +	int error;
+> +
+> +	/*
+> +	 * we might get called externaly, so check if the gendisk belongs
+> +	 * to a DASD by checking the fops pointer
+> +	 */
+> +	if (disk->fops != &dasd_device_operations)
+> +		return -EINVAL;
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+I think a function comment (e.g. kernel doc) explaining the use case and
+this detail might be useful.
