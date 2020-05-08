@@ -2,131 +2,100 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B9C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452E1C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B2721974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B39620735
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqH4kh2p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LSasER3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgEHGjR (ORCPT
+        id S1727816AbgEHGkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59328 "EHLO
+        Fri, 8 May 2020 02:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727071AbgEHGjR (ORCPT
+        by vger.kernel.org with ESMTP id S1726873AbgEHGj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:39:17 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2111FC05BD43;
-        Thu,  7 May 2020 23:39:17 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so442677pfn.5;
-        Thu, 07 May 2020 23:39:17 -0700 (PDT)
+        Fri, 8 May 2020 02:39:59 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F29C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 23:39:58 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z11so991063ybk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 23:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4aQlSgO0Elh0LQFz4EdrUrM6btXVzv3njgKIJHFMY3A=;
-        b=fqH4kh2pc7Zm5xI9ma42CYbrngTvtTiiEy7mkfbS9jsJuLN24ngPBYnA4FxKtssdUW
-         04aV6fyqzFV3FCS2lKkaiSxuSbqNDH5L/LWkWrN74qgPVOoyZHs1YDDKuz1SPr6E9J4m
-         JK/uuJauH90bvJ/8hSHIo72eOfy08MIe8WRALTsnYCBipNK+wPGgByJ/j0sSGDF7lvMz
-         59klzb/Uuc2JPl0wMIoCLnWaH9goX3g1MYsq3jWA+2h3CY5MuMIVhhNC3ohL5M9uGsRm
-         NB5al4LOsWgZolzFGhfKzqeN/OMYKun0J3ByMF/hAfIEsD0QCwI5sSHWFruWlngdRIWd
-         snKw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JqKocGa5cimql1fp4DS+xPXwrVZ2Z2hJEVO/fiKh20k=;
+        b=LSasER3WBqtfBg/bGE3PeVOf3C1Dim6JBLIEgeU3rioM9+MNBKorVZ4wLEoKOWeVEB
+         WVpX2iRLeOoAaTH5FU79u0hIMkOIFUHESFKAB1oxCjCgjRvmMdaxTMqaBOwQHVR2u8SD
+         YZHIpK0wPVJW+tg5pO++cjzhWrun5K+JyrZzWt5wXl2Y8cto4/QGzWXb3Z/TQ/PXtNRg
+         qgUSdqGjHPbW9fg5ueq6bMEwFbpewcbkDB66XY25g0+h47IYWDzeNld91gofqSW4vQkh
+         JGmHEsw+wh2w1youzj1UIYZYEk5FplV54amOTaCJkWNEEuH/6+HkYRwNtBmntewVUL2F
+         WsrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=4aQlSgO0Elh0LQFz4EdrUrM6btXVzv3njgKIJHFMY3A=;
-        b=RyLbrveKnK2QLOYMFAqwJrqXV4fKgWAHNcPw/M/dxLMY0ll5sKhvggv+nHjnOzX5uG
-         et0hkq1Z+gbDkjRmTOjGafQ/A0MsQ/QjFuOPJJwAv3H4KhxY5xyMBgpjd9Iu0hu9UP49
-         WWO901tRQrzc3ZG78mmEB0hotkD94fqNXWdrIZazlLrJw8tWHVW82vzg5tMZIYBRm3Aq
-         hraUjU6m2PIuOk15SAgfMhlct0ZkRKBYFTdtZtNjSbWxikVE4WdNzh+O2PEMquxOQ2uD
-         sFALzD3+vy1z4fq9+0DYqjps7sGb3jAGYv/wElwgNw++DhFo2o9HSfggmnw0+1k2uSzR
-         bzyQ==
-X-Gm-Message-State: AGi0PubqRQ5gwUD9zuPFiHxzA+V5Qjtmh08cpj4kKF349zKhB5wh9ygR
-        FeaNQhJCft0ueyey+sBZ/wCnft5G
-X-Google-Smtp-Source: APiQypLQfREFkfCiTZTKfTnNytxjyVvXbyfxeaa0IMd44kGxgxvh/rgY7LDEjnXYez0t65A8tLeNjw==
-X-Received: by 2002:a63:a505:: with SMTP id n5mr897719pgf.173.1588919956500;
-        Thu, 07 May 2020 23:39:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id k24sm712913pfk.134.2020.05.07.23.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 23:39:15 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] dtc: Remove warning for I2C_OWN_SLAVE_ADDRESS
-Date:   Fri,  8 May 2020 16:09:04 +0930
-Message-Id: <20200508063904.60162-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JqKocGa5cimql1fp4DS+xPXwrVZ2Z2hJEVO/fiKh20k=;
+        b=sp89BUCDpK2wAXZoXq+ke7j9wBDiJoGyxgvNfljfcF7aIOubz2hrSYydXmqcBYm4bi
+         qK1bj6THhqV5YTadpDGTqts/9crXrqjGlCSDQBXU0/N/YIz+NtlhXymuZ8xM1wM3p+UN
+         kuGJH1SxjiOPR8w3IF8QwqfCTQ+mfc37js06uBV9qxqy/7pftJFJIH87ZcAROhqrLkpv
+         O2PW3PLmvjbioU5QwoxBFKDxt1M9vDowVfBhPAKT6oSBMdn1vYlEVII0bF2G7NRyy10o
+         gbz64VCvDPgMteCbAmTqlDg6D4G1X3dyllP21EqlnlAldnE6USVeR0tOVRr33o+65yH9
+         BoFQ==
+X-Gm-Message-State: AGi0PubIw/wDqigNWSUrNhyAGqKGePzBqn1ZmCjZG77GJpGMUhI7QWB0
+        6GVguQ+n+d4JaWOPI9Sdo2JtuT8QHjYj
+X-Google-Smtp-Source: APiQypIzG335LQcvib+amwZBO3RBTIJWyEl0ag5FnTDtNK3nU2gmInNWeH2R0b+Fk2aSWTZl0MrQJhBzEET6
+X-Received: by 2002:a25:dbd2:: with SMTP id g201mr2328607ybf.17.1588919997600;
+ Thu, 07 May 2020 23:39:57 -0700 (PDT)
+Date:   Thu,  7 May 2020 23:39:54 -0700
+Message-Id: <20200508063954.256593-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH] libbpf hashmap: fix undefined behavior in hash_bits
+From:   Ian Rogers <irogers@google.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dtc does a sanity check on reg properties that they are within the 10
-bit address range for i2c slave addresses. In the case of multi-master
-buses the binding may describe an address that the bus will listen on as
-a device. Do not warn when this flag is set.
+If bits is 0, the case when the map is empty, then the >> is the size of
+the register which is undefined behavior - on x86 it is the same as a
+shift by 0. Fix by handling the 0 case explicitly.
 
-This fixes the following build warnings reported by Stephen:
-
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4:
-  Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:
-    I2C bus unit address format error, expected "40000010"
-arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30:
-  Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg:
-    I2C address must be less than 10-bits, got "0x40000010"
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- scripts/dtc/checks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/lib/bpf/hashmap.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 4b3c486f1399..986754f858cf 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -1022,6 +1022,8 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
- }
- WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
- 
-+#define I2C_OWN_SLAVE_ADDRESS	(1 << 30)
-+
- static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
+diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+index d5ef212a55ba..781db653d16c 100644
+--- a/tools/lib/bpf/hashmap.h
++++ b/tools/lib/bpf/hashmap.h
+@@ -19,6 +19,8 @@
+ static inline size_t hash_bits(size_t h, int bits)
  {
- 	struct property *prop;
-@@ -1044,6 +1046,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 	}
+ 	/* shuffle bits and return requested number of upper bits */
++	if (bits == 0)
++		return 0;
+ 	return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
+ }
  
- 	reg = fdt32_to_cpu(*cells);
-+	/* Ingore I2C_OWN_SLAVE_ADDRESS */
-+	reg &= ~I2C_OWN_SLAVE_ADDRESS;
- 	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
- 	if (!streq(unitname, unit_addr))
- 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
-@@ -1051,6 +1055,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 
- 	for (len = prop->val.len; len > 0; len -= 4) {
- 		reg = fdt32_to_cpu(*(cells++));
-+		/* Ingore I2C_OWN_SLAVE_ADDRESS */
-+		reg &= ~I2C_OWN_SLAVE_ADDRESS;
- 		if (reg > 0x3ff)
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
- 				  reg);
 -- 
-2.26.2
+2.26.2.645.ge9eca65c58-goog
 
