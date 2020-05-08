@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C21C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBD6C54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BD924953
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9012192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="lutlyDk7"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="kJ+Yukfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgEHScf (ORCPT
+        id S1728000AbgEHScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
+        Fri, 8 May 2020 14:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727912AbgEHSc3 (ORCPT
+        by vger.kernel.org with ESMTP id S1727903AbgEHScc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:32:29 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A67C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:32:28 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id p12so2110151qtn.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:32:28 -0700 (PDT)
+        Fri, 8 May 2020 14:32:32 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AA5C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:32:32 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id c4so735952qvi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WC4jrzYMizmual3lrTfako1Ay0HwXWehMCxzqAQWr+k=;
-        b=lutlyDk7XcQrbdUBMc4HdCSwUlANrRyCjjBoXISjZv17WXskZpZ20Cj9+iqR/gMG7a
-         F08/+ecQQEMRP+w1OH3ybCHe0jHoofCdtnXzPDpIii8W3G7DayqiGborI5YoncifA1RY
-         SNCebjOhCxuh/1cov7w422+kmgzKxYXAsEnUkynMaMf0T9fehD8fz1cAwuwdZu7XW7tp
-         Zg8wgOTHTObURvDl0f3Wg5dmWwaPtbUtGvZmAYzmqjtFt1CMIt3g2War7SLKE/vf+7yO
-         7Vmb7p+eqo7JIWgVkXCSJ9nxGW+c5jAas+cwMQueE5eYLdDewqWXqc4MVmneuX/HcG1p
-         qlTw==
+        bh=ZybKj/hrHeEZIVHdPNsqOos0TY5Kh5D8W8ZpFPXZKJg=;
+        b=kJ+YukfhluUDLc43RoMkVCbL0Q/9IsJh96aeSBnqEWw4vGOi1sdbTAI6tEyX1LRg3i
+         DjiTUXs5C6/HkaCH37WDNwtHMSHkpkOkxJPf3n++GeKjIkKBMXQNBu56GwVVrXBaNu5Z
+         tv1YxvXSvlcttEp3I1POTr+lPJIxwu+u9CT7lAjF1L9jJfcbtXJalSm8KiXQSPhylmiJ
+         G8Jfo8O2BNFSC9PwzEeEUrgG+hZ2WayBbCjX04f99C/GEhUB7y3PDHad0aZJXHlf4Ddo
+         9tY+yAU94F2q33NNXmdKBD5CxXkFLKK7BIdRMraEpUce1RuSXxVcDiVaf0fX6wRnu9/e
+         wTxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WC4jrzYMizmual3lrTfako1Ay0HwXWehMCxzqAQWr+k=;
-        b=dzTZpR8bVxQWeVpVoNjqrHR4m5dASSoUhawDYZXPyyBMJJMWkyta3bIWWxnwhmAWUW
-         7w7uZ6QrZ88desN1EU5rCYNK9WqzUrq9viKZkyCIzrfg1g+WUSHmVGWa83g/9lcPmyIW
-         vPhbK+yhTqtEIDiwUNKKKeACHHL+YsVXxM5f4+VNWSm+sdVbsQ5lKrIYdfPZUqjQMrJ8
-         Rhmda8foww+Wde/3RLghv+r2YJUVFfPR3PUKvusDj589pCcD0fjypOhrAegyrP0izAcz
-         CKJ8JdvgmZKIel77C7m7eGaWUvYML4O1lOoh74lZi0zEHSQlO5HGK90/SJVkxgnMxIih
-         6BCA==
-X-Gm-Message-State: AGi0PuZi57Jhc8FrngRS0eHJwa+8Hj6U9pN+QSirEGj0xhl6DqO6LE3i
-        aGDL32GtHdhywYIYky7Opi52Bw==
-X-Google-Smtp-Source: APiQypID2sSyS8OO3wQ7SUtOIm02bnN3kD62zXkzP+p6q48v5flLk481z+Kdt0pCeP06kwGh61Fw3w==
-X-Received: by 2002:ac8:543:: with SMTP id c3mr4313827qth.8.1588962747854;
-        Fri, 08 May 2020 11:32:27 -0700 (PDT)
+        bh=ZybKj/hrHeEZIVHdPNsqOos0TY5Kh5D8W8ZpFPXZKJg=;
+        b=XhxIhhpNztAS8YOb62LMhsf0ygK0ChRoF8kSki0BQ5DyAPYt8/itp3qTyW3zO0Raad
+         olaTIQmy8o5iV07G7fjnkgVVFroya4Go1POW5GHQs3MR7Zn63Gobr1oRJqSxp4cGRK4a
+         shMtsiZXjPQSSpyPLuk1RWQ9GLmq+Bf0sgTTzcCRIw0SNI+iYsOOxLHGSJKy7PDw+dhT
+         MP3Fnn9vHT4lDp/QcbaBokhFgghaQOXHRGObVgwz5zyawayAU4k+ZgmsT8/yR2fJHQds
+         /7cW5hwUdnz7TMJBrlF6Cl7iWEahD7JcmUEbVluMam4uzYgTLF+gFp1swpVpypM7WFj4
+         xtGA==
+X-Gm-Message-State: AGi0PubN03ypVxEZDrpRXljsfYhOt1tcPc6f4/t4iSD+PSGCqt0Wcdux
+        MduMVZQvnwQTpidoxXY03v9nqw==
+X-Google-Smtp-Source: APiQypKiMQIYkuDn2nAgpPV8KxRqOQ2MPk729HS4+PBjvo0k2F8acseFbEwdahC8QWnfscPpNdxDbw==
+X-Received: by 2002:a0c:facb:: with SMTP id p11mr4105188qvo.17.1588962751543;
+        Fri, 08 May 2020 11:32:31 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id o43sm2196587qtb.49.2020.05.08.11.32.26
+        by smtp.gmail.com with ESMTPSA id y23sm1675968qta.37.2020.05.08.11.32.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 11:32:27 -0700 (PDT)
+        Fri, 08 May 2020 11:32:30 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
@@ -70,9 +70,9 @@ Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 09/19] mm: memcontrol: switch to native NR_FILE_PAGES and NR_SHMEM counters
-Date:   Fri,  8 May 2020 14:30:56 -0400
-Message-Id: <20200508183105.225460-10-hannes@cmpxchg.org>
+Subject: [PATCH 11/19] mm: memcontrol: switch to native NR_ANON_THPS counter
+Date:   Fri,  8 May 2020 14:30:58 -0400
+Message-Id: <20200508183105.225460-12-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508183105.225460-1-hannes@cmpxchg.org>
 References: <20200508183105.225460-1-hannes@cmpxchg.org>
@@ -83,290 +83,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memcg maintains private MEMCG_CACHE and NR_SHMEM counters. This
-divergence from the generic VM accounting means unnecessary code
-overhead, and creates a dependency for memcg that page->mapping is set
-up at the time of charging, so that page types can be told apart.
-
-Convert the generic accounting sites to mod_lruvec_page_state and
-friends to maintain the per-cgroup vmstat counters of NR_FILE_PAGES
-and NR_SHMEM. The page is already locked in these places, so
-page->mem_cgroup is stable; we only need minimal tweaks of two
-mem_cgroup_migrate() calls to ensure it's set up in time.
-
-Then replace MEMCG_CACHE with NR_FILE_PAGES and delete the private
-NR_SHMEM accounting sites.
+With rmap memcg locking already in place for NR_ANON_MAPPED, it's just
+a small step to remove the MEMCG_RSS_HUGE wart and switch memcg to the
+native NR_ANON_THPS accounting sites.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
  include/linux/memcontrol.h |  3 +--
- mm/filemap.c               | 17 +++++++++--------
- mm/khugepaged.c            | 16 +++++++++++-----
- mm/memcontrol.c            | 28 +++++++++++-----------------
- mm/migrate.c               | 15 +++++++++++----
- mm/shmem.c                 | 14 +++++++-------
- 6 files changed, 50 insertions(+), 43 deletions(-)
+ mm/huge_memory.c           |  4 +++-
+ mm/memcontrol.c            | 39 ++++++++++++++++----------------------
+ mm/rmap.c                  |  6 +++---
+ 4 files changed, 23 insertions(+), 29 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 5b110ac7dd83..f932e7e9fad8 100644
+index 2df978a3a253..9b1054bf6d35 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
 @@ -29,8 +29,7 @@ struct kmem_cache;
  
  /* Cgroup-specific page state, on top of universal node page state */
  enum memcg_stat_item {
--	MEMCG_CACHE = NR_VM_NODE_STAT_ITEMS,
--	MEMCG_RSS,
-+	MEMCG_RSS = NR_VM_NODE_STAT_ITEMS,
- 	MEMCG_RSS_HUGE,
- 	MEMCG_SWAP,
+-	MEMCG_RSS_HUGE = NR_VM_NODE_STAT_ITEMS,
+-	MEMCG_SWAP,
++	MEMCG_SWAP = NR_VM_NODE_STAT_ITEMS,
  	MEMCG_SOCK,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index ee9882509566..d5b6e3d7d402 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -199,9 +199,9 @@ static void unaccount_page_cache_page(struct address_space *mapping,
- 
- 	nr = hpage_nr_pages(page);
- 
--	__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, -nr);
-+	__mod_lruvec_page_state(page, NR_FILE_PAGES, -nr);
- 	if (PageSwapBacked(page)) {
--		__mod_node_page_state(page_pgdat(page), NR_SHMEM, -nr);
-+		__mod_lruvec_page_state(page, NR_SHMEM, -nr);
- 		if (PageTransHuge(page))
- 			__dec_node_page_state(page, NR_SHMEM_THPS);
- 	} else if (PageTransHuge(page)) {
-@@ -802,21 +802,22 @@ int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask)
- 	new->mapping = mapping;
- 	new->index = offset;
- 
-+	mem_cgroup_migrate(old, new);
-+
- 	xas_lock_irqsave(&xas, flags);
- 	xas_store(&xas, new);
- 
- 	old->mapping = NULL;
- 	/* hugetlb pages do not participate in page cache accounting. */
- 	if (!PageHuge(old))
--		__dec_node_page_state(old, NR_FILE_PAGES);
-+		__dec_lruvec_page_state(old, NR_FILE_PAGES);
- 	if (!PageHuge(new))
--		__inc_node_page_state(new, NR_FILE_PAGES);
-+		__inc_lruvec_page_state(new, NR_FILE_PAGES);
- 	if (PageSwapBacked(old))
--		__dec_node_page_state(old, NR_SHMEM);
-+		__dec_lruvec_page_state(old, NR_SHMEM);
- 	if (PageSwapBacked(new))
--		__inc_node_page_state(new, NR_SHMEM);
-+		__inc_lruvec_page_state(new, NR_SHMEM);
- 	xas_unlock_irqrestore(&xas, flags);
--	mem_cgroup_migrate(old, new);
- 	if (freepage)
- 		freepage(old);
- 	put_page(old);
-@@ -867,7 +868,7 @@ static int __add_to_page_cache_locked(struct page *page,
- 
- 		/* hugetlb pages do not participate in page cache accounting */
- 		if (!huge)
--			__inc_node_page_state(page, NR_FILE_PAGES);
-+			__inc_lruvec_page_state(page, NR_FILE_PAGES);
- unlock:
- 		xas_unlock_irq(&xas);
- 	} while (xas_nomem(&xas, gfp_mask & GFP_RECLAIM_MASK));
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index b73d2af6d11a..e2be7f9a92db 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1834,12 +1834,18 @@ static void collapse_file(struct mm_struct *mm,
+ 	/* XXX: why are these zone and not node counters? */
+ 	MEMCG_KERNEL_STACK_KB,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 07c012d89570..74f8b4013203 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2159,15 +2159,17 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+ 			atomic_inc(&page[i]._mapcount);
  	}
  
- 	if (nr_none) {
--		struct zone *zone = page_zone(new_page);
--
--		__mod_node_page_state(zone->zone_pgdat, NR_FILE_PAGES, nr_none);
-+		struct lruvec *lruvec;
-+		/*
-+		 * XXX: We have started try_charge and pinned the
-+		 * memcg, but the page isn't committed yet so we
-+		 * cannot use mod_lruvec_page_state(). This hackery
-+		 * will be cleaned up when remove the page->mapping
-+		 * dependency from memcg and fully charge above.
-+		 */
-+		lruvec = mem_cgroup_lruvec(memcg, page_pgdat(new_page));
-+		__mod_lruvec_state(lruvec, NR_FILE_PAGES, nr_none);
- 		if (is_shmem)
--			__mod_node_page_state(zone->zone_pgdat,
--					      NR_SHMEM, nr_none);
-+			__mod_lruvec_state(lruvec, NR_SHMEM, nr_none);
++	lock_page_memcg(page);
+ 	if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+ 		/* Last compound_mapcount is gone. */
+-		__dec_node_page_state(page, NR_ANON_THPS);
++		__dec_lruvec_page_state(page, NR_ANON_THPS);
+ 		if (TestClearPageDoubleMap(page)) {
+ 			/* No need in mapcount reference anymore */
+ 			for (i = 0; i < HPAGE_PMD_NR; i++)
+ 				atomic_dec(&page[i]._mapcount);
+ 		}
  	}
++	unlock_page_memcg(page);
  
- xa_locked:
+ 	smp_wmb(); /* make pte visible before pmd */
+ 	pmd_populate(mm, pmd, pgtable);
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b7be4cd6ddc5..c4c060ce1876 100644
+index fccb396ed7bd..fd92c1c99e1f 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -842,11 +842,6 @@ static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
- 	 */
- 	if (PageAnon(page))
- 		__mod_memcg_state(memcg, MEMCG_RSS, nr_pages);
--	else {
--		__mod_memcg_state(memcg, MEMCG_CACHE, nr_pages);
--		if (PageSwapBacked(page))
--			__mod_memcg_state(memcg, NR_SHMEM, nr_pages);
+@@ -836,11 +836,6 @@ static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
+ 					 struct page *page,
+ 					 int nr_pages)
+ {
+-	if (abs(nr_pages) > 1) {
+-		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+-		__mod_memcg_state(memcg, MEMCG_RSS_HUGE, nr_pages);
 -	}
- 
- 	if (abs(nr_pages) > 1) {
- 		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
-@@ -1392,7 +1387,7 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
- 		       (u64)memcg_page_state(memcg, MEMCG_RSS) *
+-
+ 	/* pagein of a big page is an event. So, ignore page size */
+ 	if (nr_pages > 0)
+ 		__count_memcg_events(memcg, PGPGIN, 1);
+@@ -1406,15 +1401,9 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+ 		       (u64)memcg_page_state(memcg, NR_WRITEBACK) *
  		       PAGE_SIZE);
- 	seq_buf_printf(&s, "file %llu\n",
--		       (u64)memcg_page_state(memcg, MEMCG_CACHE) *
-+		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
- 		       PAGE_SIZE);
- 	seq_buf_printf(&s, "kernel_stack %llu\n",
- 		       (u64)memcg_page_state(memcg, MEMCG_KERNEL_STACK_KB) *
-@@ -3302,7 +3297,7 @@ static unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
- 	unsigned long val;
  
- 	if (mem_cgroup_is_root(memcg)) {
--		val = memcg_page_state(memcg, MEMCG_CACHE) +
-+		val = memcg_page_state(memcg, NR_FILE_PAGES) +
- 			memcg_page_state(memcg, MEMCG_RSS);
- 		if (swap)
- 			val += memcg_page_state(memcg, MEMCG_SWAP);
-@@ -3773,7 +3768,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
- #endif /* CONFIG_NUMA */
+-	/*
+-	 * TODO: We should eventually replace our own MEMCG_RSS_HUGE counter
+-	 * with the NR_ANON_THP vm counter, but right now it's a pain in the
+-	 * arse because it requires migrating the work out of rmap to a place
+-	 * where the page->mem_cgroup is set up and stable.
+-	 */
+ 	seq_buf_printf(&s, "anon_thp %llu\n",
+-		       (u64)memcg_page_state(memcg, MEMCG_RSS_HUGE) *
+-		       PAGE_SIZE);
++		       (u64)memcg_page_state(memcg, NR_ANON_THPS) *
++		       HPAGE_PMD_NR * PAGE_SIZE);
  
+ 	for (i = 0; i < NR_LRU_LISTS; i++)
+ 		seq_buf_printf(&s, "%s %llu\n", lru_list_name(i),
+@@ -3006,8 +2995,6 @@ void mem_cgroup_split_huge_fixup(struct page *head)
+ 
+ 	for (i = 1; i < HPAGE_PMD_NR; i++)
+ 		head[i].mem_cgroup = head->mem_cgroup;
+-
+-	__mod_memcg_state(head->mem_cgroup, MEMCG_RSS_HUGE, -HPAGE_PMD_NR);
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+@@ -3763,7 +3750,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
  static const unsigned int memcg1_stats[] = {
--	MEMCG_CACHE,
-+	NR_FILE_PAGES,
- 	MEMCG_RSS,
- 	MEMCG_RSS_HUGE,
+ 	NR_FILE_PAGES,
+ 	NR_ANON_MAPPED,
+-	MEMCG_RSS_HUGE,
++	NR_ANON_THPS,
  	NR_SHMEM,
-@@ -5405,6 +5400,14 @@ static int mem_cgroup_move_account(struct page *page,
- 	lock_page_memcg(page);
+ 	NR_FILE_MAPPED,
+ 	NR_FILE_DIRTY,
+@@ -3800,11 +3787,14 @@ static int memcg_stat_show(struct seq_file *m, void *v)
+ 	BUILD_BUG_ON(ARRAY_SIZE(memcg1_stat_names) != ARRAY_SIZE(memcg1_stats));
  
- 	if (!PageAnon(page)) {
-+		__mod_lruvec_state(from_vec, NR_FILE_PAGES, -nr_pages);
-+		__mod_lruvec_state(to_vec, NR_FILE_PAGES, nr_pages);
+ 	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
++		unsigned long nr;
 +
-+		if (PageSwapBacked(page)) {
-+			__mod_lruvec_state(from_vec, NR_SHMEM, -nr_pages);
-+			__mod_lruvec_state(to_vec, NR_SHMEM, nr_pages);
-+		}
-+
+ 		if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
+ 			continue;
+-		seq_printf(m, "%s %lu\n", memcg1_stat_names[i],
+-			   memcg_page_state_local(memcg, memcg1_stats[i]) *
+-			   PAGE_SIZE);
++		nr = memcg_page_state_local(memcg, memcg1_stats[i]);
++		if (memcg1_stats[i] == NR_ANON_THPS)
++			nr *= HPAGE_PMD_NR;
++		seq_printf(m, "%s %lu\n", memcg1_stat_names[i], nr * PAGE_SIZE);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
+@@ -5396,6 +5386,13 @@ static int mem_cgroup_move_account(struct page *page,
  		if (page_mapped(page)) {
- 			__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
- 			__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
-@@ -6614,10 +6617,8 @@ struct uncharge_gather {
+ 			__mod_lruvec_state(from_vec, NR_ANON_MAPPED, -nr_pages);
+ 			__mod_lruvec_state(to_vec, NR_ANON_MAPPED, nr_pages);
++			if (PageTransHuge(page)) {
++				__mod_lruvec_state(from_vec, NR_ANON_THPS,
++						   -nr_pages);
++				__mod_lruvec_state(to_vec, NR_ANON_THPS,
++						   nr_pages);
++			}
++
+ 		}
+ 	} else {
+ 		__mod_lruvec_state(from_vec, NR_FILE_PAGES, -nr_pages);
+@@ -6612,7 +6609,6 @@ struct uncharge_gather {
  	unsigned long nr_pages;
  	unsigned long pgpgout;
- 	unsigned long nr_anon;
--	unsigned long nr_file;
  	unsigned long nr_kmem;
- 	unsigned long nr_huge;
--	unsigned long nr_shmem;
+-	unsigned long nr_huge;
  	struct page *dummy_page;
  };
  
-@@ -6641,9 +6642,7 @@ static void uncharge_batch(const struct uncharge_gather *ug)
+@@ -6635,7 +6631,6 @@ static void uncharge_batch(const struct uncharge_gather *ug)
+ 	}
  
  	local_irq_save(flags);
- 	__mod_memcg_state(ug->memcg, MEMCG_RSS, -ug->nr_anon);
--	__mod_memcg_state(ug->memcg, MEMCG_CACHE, -ug->nr_file);
- 	__mod_memcg_state(ug->memcg, MEMCG_RSS_HUGE, -ug->nr_huge);
--	__mod_memcg_state(ug->memcg, NR_SHMEM, -ug->nr_shmem);
+-	__mod_memcg_state(ug->memcg, MEMCG_RSS_HUGE, -ug->nr_huge);
  	__count_memcg_events(ug->memcg, PGPGOUT, ug->pgpgout);
  	__this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_pages);
  	memcg_check_events(ug->memcg, ug->dummy_page);
-@@ -6684,11 +6683,6 @@ static void uncharge_page(struct page *page, struct uncharge_gather *ug)
- 			ug->nr_huge += nr_pages;
- 		if (PageAnon(page))
- 			ug->nr_anon += nr_pages;
--		else {
--			ug->nr_file += nr_pages;
--			if (PageSwapBacked(page))
--				ug->nr_shmem += nr_pages;
--		}
+@@ -6672,8 +6667,6 @@ static void uncharge_page(struct page *page, struct uncharge_gather *ug)
+ 	ug->nr_pages += nr_pages;
+ 
+ 	if (!PageKmemcg(page)) {
+-		if (PageTransHuge(page))
+-			ug->nr_huge += nr_pages;
  		ug->pgpgout++;
  	} else {
  		ug->nr_kmem += nr_pages;
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 50c7a08f8f31..3af5447e7aca 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -490,11 +490,18 @@ int migrate_page_move_mapping(struct address_space *mapping,
- 	 * are mapped to swap space.
- 	 */
- 	if (newzone != oldzone) {
--		__dec_node_state(oldzone->zone_pgdat, NR_FILE_PAGES);
--		__inc_node_state(newzone->zone_pgdat, NR_FILE_PAGES);
-+		struct lruvec *old_lruvec, *new_lruvec;
-+		struct mem_cgroup *memcg;
-+
-+		memcg = page_memcg(page);
-+		old_lruvec = mem_cgroup_lruvec(memcg, oldzone->zone_pgdat);
-+		new_lruvec = mem_cgroup_lruvec(memcg, newzone->zone_pgdat);
-+
-+		__dec_lruvec_state(old_lruvec, NR_FILE_PAGES);
-+		__inc_lruvec_state(new_lruvec, NR_FILE_PAGES);
- 		if (PageSwapBacked(page) && !PageSwapCache(page)) {
--			__dec_node_state(oldzone->zone_pgdat, NR_SHMEM);
--			__inc_node_state(newzone->zone_pgdat, NR_SHMEM);
-+			__dec_lruvec_state(old_lruvec, NR_SHMEM);
-+			__inc_lruvec_state(new_lruvec, NR_SHMEM);
- 		}
- 		if (dirty && mapping_cap_account_dirty(mapping)) {
- 			__dec_node_state(oldzone->zone_pgdat, NR_FILE_DIRTY);
-diff --git a/mm/shmem.c b/mm/shmem.c
-index afd5a057ebb7..d0306a36f42c 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -653,8 +653,8 @@ static int shmem_add_to_page_cache(struct page *page,
- 			__inc_node_page_state(page, NR_SHMEM_THPS);
- 		}
- 		mapping->nrpages += nr;
--		__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, nr);
--		__mod_node_page_state(page_pgdat(page), NR_SHMEM, nr);
-+		__mod_lruvec_page_state(page, NR_FILE_PAGES, nr);
-+		__mod_lruvec_page_state(page, NR_SHMEM, nr);
- unlock:
- 		xas_unlock_irq(&xas);
- 	} while (xas_nomem(&xas, gfp));
-@@ -685,8 +685,8 @@ static void shmem_delete_from_page_cache(struct page *page, void *radswap)
- 	error = shmem_replace_entry(mapping, page->index, page, radswap);
- 	page->mapping = NULL;
- 	mapping->nrpages--;
--	__dec_node_page_state(page, NR_FILE_PAGES);
--	__dec_node_page_state(page, NR_SHMEM);
-+	__dec_lruvec_page_state(page, NR_FILE_PAGES);
-+	__dec_lruvec_page_state(page, NR_SHMEM);
- 	xa_unlock_irq(&mapping->i_pages);
- 	put_page(page);
- 	BUG_ON(error);
-@@ -1593,8 +1593,9 @@ static int shmem_replace_page(struct page **pagep, gfp_t gfp,
- 	xa_lock_irq(&swap_mapping->i_pages);
- 	error = shmem_replace_entry(swap_mapping, swap_index, oldpage, newpage);
- 	if (!error) {
--		__inc_node_page_state(newpage, NR_FILE_PAGES);
--		__dec_node_page_state(oldpage, NR_FILE_PAGES);
-+		mem_cgroup_migrate(oldpage, newpage);
-+		__inc_lruvec_page_state(newpage, NR_FILE_PAGES);
-+		__dec_lruvec_page_state(oldpage, NR_FILE_PAGES);
- 	}
- 	xa_unlock_irq(&swap_mapping->i_pages);
- 
-@@ -1606,7 +1607,6 @@ static int shmem_replace_page(struct page **pagep, gfp_t gfp,
+diff --git a/mm/rmap.c b/mm/rmap.c
+index e96f1d099c3f..bd98a995c573 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1138,7 +1138,7 @@ void do_page_add_anon_rmap(struct page *page,
+ 		 * disabled.
  		 */
- 		oldpage = newpage;
- 	} else {
--		mem_cgroup_migrate(oldpage, newpage);
- 		lru_cache_add_anon(newpage);
- 		*pagep = newpage;
+ 		if (compound)
+-			__inc_node_page_state(page, NR_ANON_THPS);
++			__inc_lruvec_page_state(page, NR_ANON_THPS);
+ 		__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
  	}
+ 
+@@ -1180,7 +1180,7 @@ void page_add_new_anon_rmap(struct page *page,
+ 		if (hpage_pincount_available(page))
+ 			atomic_set(compound_pincount_ptr(page), 0);
+ 
+-		__inc_node_page_state(page, NR_ANON_THPS);
++		__inc_lruvec_page_state(page, NR_ANON_THPS);
+ 	} else {
+ 		/* Anon THP always mapped first with PMD */
+ 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+@@ -1286,7 +1286,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+ 		return;
+ 
+-	__dec_node_page_state(page, NR_ANON_THPS);
++	__dec_lruvec_page_state(page, NR_ANON_THPS);
+ 
+ 	if (TestClearPageDoubleMap(page)) {
+ 		/*
 -- 
 2.26.2
 
