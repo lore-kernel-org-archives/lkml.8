@@ -2,78 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CDEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCE7C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA2020661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="myzmSBT/"
+	by mail.kernel.org (Postfix) with ESMTP id 9D1B8208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588945452;
+	bh=Qsyz2CrbR4xCc8ca/uokwedAFc+9rG0zKRD2WnexmDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gm2M+fZn3P3ZuqV9Rn15t3+wbVRW+xcO6EVVUfFBuF9w7qXRd2pHIuNuznfeJw3ey
+	 /haJoqQ5LadGJgIXD2/6Knm76fCJ2je42sV025JFw2AbHjuXqXXPQ4rbb6nd4dhPgF
+	 +TB2C/088UK4bdHyePrc+0bmtm5GdVk8W6991uGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgEHNnr (ORCPT
+        id S1728004AbgEHNoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:43:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40931 "EHLO ozlabs.org"
+        Fri, 8 May 2020 09:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgEHNnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:43:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726736AbgEHNoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:44:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JWkk2BXVz9sT2;
-        Fri,  8 May 2020 23:43:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1588945424;
-        bh=p+YBkyP2GHp01pThlHZu2zNE3/neu24osdVU16EmOus=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=myzmSBT/czcoOa5b0uNfJvnSn0EcensBRxDGTXSXsFZHz7Ctw4cmolttivclZzczn
-         TlU4xQX1sFeEGOftI9Vt/Yg7n9poabHDRrJD9dFFlDt9HOZEqTv21AH+l6TCSACJ+G
-         LzS3HI2pTjb4HspWPolQxP9uBnlTFgDZQ6ylB+dBKG4qPpkcOlxszBgodBCGGUmAFz
-         Q93GiXrPMyhMZQGgNOXOYLEcRd+vvVE96ReVfh9QW0MP4ysX2iPOSugJKl/xbhnJGC
-         +t49vCyjdXj2x+CfQrmiPjxrxBDghm8z3dEzePmFlSG9Pl3oO4Ea39uGSlgu+ZudGZ
-         ayiGjaAF21wwA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Borislav Petkov <bp@alien8.de>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: Re: [PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external modules
-In-Reply-To: <20200508113100.GA19436@zn.tnic>
-References: <20200508104922.72565-1-vaibhav@linux.ibm.com> <20200508104922.72565-3-vaibhav@linux.ibm.com> <20200508113100.GA19436@zn.tnic>
-Date:   Fri, 08 May 2020 23:44:00 +1000
-Message-ID: <875zd6czj3.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 38EC020708;
+        Fri,  8 May 2020 13:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588945450;
+        bh=Qsyz2CrbR4xCc8ca/uokwedAFc+9rG0zKRD2WnexmDI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jybO2y7NJJxik42jn2wBwKs2Ej1oDrkWaPIH1Jf5b5LICDmeLJ65X/VwAB3y/8c6E
+         UhtBVYUK5xUjIMC+VJimvwIdF0RaANl+cVQ8BoVzE+zoN28v/e4C/DFBVW9phyRGRS
+         wniBc1VrBM2VuwCGI+OLBTbdTWetVbSHJTRYIpX0=
+Date:   Fri, 8 May 2020 15:44:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/312] 4.4.223-rc1 review
+Message-ID: <20200508134408.GA196344@kroah.com>
+References: <20200508123124.574959822@linuxfoundation.org>
+ <fe060262-1712-9205-b1cd-cd209d0ed395@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe060262-1712-9205-b1cd-cd209d0ed395@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Borislav Petkov <bp@alien8.de> writes:
-> On Fri, May 08, 2020 at 04:19:19PM +0530, Vaibhav Jain wrote:
->> 'seq_buf' provides a very useful abstraction for writing to a string
->> buffer without needing to worry about it over-flowing. However even
->> though the API has been stable for couple of years now its stills not
->> exported to external modules limiting its usage.
->> 
->> Hence this patch proposes update to 'seq_buf.c' to mark
->> seq_buf_printf() which is part of the seq_buf API to be exported to
->> external GPL modules. This symbol will be used in later parts of this
->
-> What is "external GPL modules"?
+On Fri, May 08, 2020 at 06:37:56AM -0700, Guenter Roeck wrote:
+> On 5/8/20 5:29 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.223 release.
+> > There are 312 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> This is not a complete list of errors.
 
-A module that has MODULE_LICENSE("GPL") ?
+Yeah, I knew this was going to be a rough one.  I was hoping the "early
+warning" messages from Linaro would have caught most of these, oh well
+:(
 
-cheers
+> 
+> arm64:allmodconfig
+> 
+> drivers/spi/spi-rockchip.c: In function 'rockchip_spi_prepare_dma':
+> drivers/spi/spi-rockchip.c:461:19: error: 'struct dma_slave_caps' has no member named 'max_burst'
+
+Now fixed.
+
+> arm:allmodconfig
+> 
+> drivers/mtd/nand/pxa3xx_nand.c: In function 'alloc_nand_resource':
+> drivers/mtd/nand/pxa3xx_nand.c:1753:7: error: 'np' undeclared
+
+Now fixed.
+
+> mips:defconfig
+> 
+> Lots of
+> 
+> In file included from ./arch/mips/include/asm/fpu.h:24,
+>                  from arch/mips/kernel/branch.c:16:
+> ./arch/mips/include/asm/msa.h: In function 'read_msa_ir':
+> ./arch/mips/include/asm/msa.h:204:2: error: expected ':' or ')' before '_ASM_INSN_IF_MIPS'
+> 
+> and similar errors.
+> 
+> arch/mips/mm/tlbex.c: In function 'config_htw_params':
+> arch/mips/mm/tlbex.c:2334:13: error: 'MIPS_PWSIZE_PS_MASK' undeclared
+> 
+> All mips builds are badly broken.
+
+Odd, I thought I had tested mips locally, I guess I got it completly
+wrong...  Let me go through those again...
+
+I'll push out a -rc2 after digging into the mips mess...
+
+greg k-h
