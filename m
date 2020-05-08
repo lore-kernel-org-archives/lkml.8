@@ -2,105 +2,204 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1698CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5ACC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC24208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9AF2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hnWnfFl6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsInb96P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgEHSXa (ORCPT
+        id S1727827AbgEHSYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:23:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55779 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726873AbgEHSXa (ORCPT
+        Fri, 8 May 2020 14:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726807AbgEHSY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:23:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588962209;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=myo8Tk8TgNvVtlGSwYNrPjsKmagFJfTNCigTo/58By4=;
-        b=hnWnfFl6Iofwt/CLoj0DqW0ZdfyQLUL+z4sIYpURjEhoXMxtZxcJWRLoMMwkadV38Xujmj
-        IqZCVnVlxKecyni56OVLwxWBfLs+5zBgXpAuXWkZSpVzVrkLA/5xr/XnT+hSQW9fZQotts
-        DzAboyW7EMGeukage18R2MLUYNRZZSw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-5zrj16gVMhmfL_UvzKa_wg-1; Fri, 08 May 2020 14:23:27 -0400
-X-MC-Unique: 5zrj16gVMhmfL_UvzKa_wg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBDC0107ACF9;
-        Fri,  8 May 2020 18:23:25 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-49.phx2.redhat.com [10.3.113.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 57FFA6AD1B;
-        Fri,  8 May 2020 18:23:18 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG record to cover async unregister
-Date:   Fri, 08 May 2020 14:23:17 -0400
-Message-ID: <1894903.vQEQaK82eK@x2>
-Organization: Red Hat
-In-Reply-To: <20200506224233.najv6ltb5gzcicqb@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com> <3250272.v6NOfJhyum@x2> <20200506224233.najv6ltb5gzcicqb@madcap2.tricolour.ca>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Fri, 8 May 2020 14:24:29 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B902CC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:24:29 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d206so3082118ybh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1V7q5o/ItajItDx2fBMJH7Cm/96EukZlRI5pzOV5Nh0=;
+        b=EsInb96PWReVQg3NpHEVUBr/5zp2mwXiQdj8C/5KnpjyUPjK/GVTmMZr/3tf2YpiF6
+         nCUDpMXRvZu2cZRjHsoMqjonTZQ6QPmtElreMhkQ+SBFvqcYTqY9XriUhCNSLKGAeAWV
+         cRFj6xoNF7XP0I1iTYbFALuMgSrB87IIx5RnbfwFdV2FnCtMdLl2zOSRLqG1mqJb7+7e
+         O9ZBP/LlJBy2ODeomKEFpGbSwe+rxGoqGykCcIGCveC+QC8Am4Ln9Ea+DRZQmQ3qzb94
+         si2Ehl6+ry3xT78xc0UxSbXVamCqGl0b8VuHUWFPvZOA9mly58BrZilrUn0lh6dFYwxn
+         Ef1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1V7q5o/ItajItDx2fBMJH7Cm/96EukZlRI5pzOV5Nh0=;
+        b=DAFIe5Jl2+j0HaD1Ehj47k73AR+/bTd53wn6K5q3bmBXspF9zNAZ96AFYt52D6aOuQ
+         B3RvaMbTHDzIwt3Sxq4UgoEwKIa1EBr8KSxGjPlgKCRWv0q5rdZpL5G9kzNLXb3hsJu8
+         xaWUpkwH3bzKo8wvBu/9m8OZGz3eLryBS153eVAQCsCI1zgHOP8hkFsM0RMVY65Tcp6X
+         aZWjQS6hdFmfiFl5VI7paN/i6zUjahA36E2v2i+4VTk1AeUvQfoRbmQFnYl7tzW5XrOG
+         ifoma6+R6//CB9tJaDQE82qur88NfLRPolcBAJENeP6U65+7KIpsX40Rr3sPRA4cBOKX
+         m0Mw==
+X-Gm-Message-State: AGi0PuaNyIVNDesfvuB2MpdvS7w22Olvt6u7O7Gxoz45M1OvWK/Xl7Fu
+        MngwrFGLll2g+RbRP9okcSSoXNeWMcZ7ZA==
+X-Google-Smtp-Source: APiQypKJdA2qSGfKe9pCHnZTDpUzjjbVa8/7G8r1CHKpUvyWadRcy0iS07qo8g1yjey1kHax0zr+qD5q6+heBA==
+X-Received: by 2002:a25:d757:: with SMTP id o84mr6996891ybg.144.1588962268930;
+ Fri, 08 May 2020 11:24:28 -0700 (PDT)
+Date:   Fri,  8 May 2020 11:24:25 -0700
+Message-Id: <20200508182425.69249-1-jcargill@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH] kvm: x86 mmu: avoid mmu_page_hash lookup for direct_map-only VM
+From:   Jon Cargille <jcargill@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Peter Feiner <pfeiner@google.com>,
+        Jon Cargille <jcargill@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, May 6, 2020 6:42:33 PM EDT Richard Guy Briggs wrote:
-> > > > We can't be adding deleting fields based on how its triggered. If
-> > > > they are unset, that is fine. The main issue is they have to behave
-> > > > the same.
-> > > 
-> > > I don't think the intent was to have fields swing in and out depending
-> > > on trigger.  The idea is to potentially permanently not include them in
-> > > this record type only.  The justification is that where they aren't
-> > > needed for the kernel trigger situation it made sense to delete them
-> > > because if it is a user context event it will be accompanied by a
-> > > syscall record that already has that information and there would be no
-> > > sense in duplicating it.
-> > 
-> > We should not be adding syscall records to anything that does not result
-> > from a syscall rule triggering the event. Its very wasteful. More
-> > wasteful than just adding the necessary fields.
-> 
-> So what you are saying is you want all the fields that are being
-> proposed to be added to this record?
+From: Peter Feiner <pfeiner@google.com>
 
-Yes.
+Optimization for avoiding lookups in mmu_page_hash. When there's a
+single direct root, a shadow page has at most one parent SPTE
+(non-root SPs have exactly one; the root has none). Thus, if an SPTE
+is non-present, it can be linked to a newly allocated SP without
+first checking if the SP already exists.
 
-> If the records are all from one event, they all should all have the same
-> timestamp/serial number so that the records are kept together and not
-> mistaken for multiple events.
+This optimization has proven significant in batch large SP shattering
+where the hash lookup accounted for 95% of the overhead.
 
-But NETFILTER_CFG is a simple event known to have only 1 record.
+Signed-off-by: Peter Feiner <pfeiner@google.com>
+Signed-off-by: Jon Cargille <jcargill@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 
-> One reason for having information in seperate records is to be able to
-> filter them either in kernel or in userspace if you don't need certain
-> records.
+---
+ arch/x86/include/asm/kvm_host.h | 13 ++++++++
+ arch/x86/kvm/mmu/mmu.c          | 55 +++++++++++++++++++--------------
+ 2 files changed, 45 insertions(+), 23 deletions(-)
 
-We can't filter out SYSCALL.
-
--Steve
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a239a297be33..9b70d764b626 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -913,6 +913,19 @@ struct kvm_arch {
+ 	struct kvm_page_track_notifier_node mmu_sp_tracker;
+ 	struct kvm_page_track_notifier_head track_notifier_head;
+ 
++	/*
++	 * Optimization for avoiding lookups in mmu_page_hash. When there's a
++	 * single direct root, a shadow page has at most one parent SPTE
++	 * (non-root SPs have exactly one; the root has none). Thus, if an SPTE
++	 * is non-present, it can be linked to a newly allocated SP without
++	 * first checking if the SP already exists.
++	 *
++	 * False initially because there are no indirect roots.
++	 *
++	 * Guarded by mmu_lock.
++	 */
++	bool shadow_page_may_have_multiple_parents;
++
+ 	struct list_head assigned_dev_head;
+ 	struct iommu_domain *iommu_domain;
+ 	bool iommu_noncoherent;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e618472c572b..d94552b0ed77 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2499,35 +2499,40 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+ 		quadrant &= (1 << ((PT32_PT_BITS - PT64_PT_BITS) * level)) - 1;
+ 		role.quadrant = quadrant;
+ 	}
+-	for_each_valid_sp(vcpu->kvm, sp, gfn) {
+-		if (sp->gfn != gfn) {
+-			collisions++;
+-			continue;
+-		}
+ 
+-		if (!need_sync && sp->unsync)
+-			need_sync = true;
++	if (vcpu->kvm->arch.shadow_page_may_have_multiple_parents ||
++	    level == vcpu->arch.mmu->root_level) {
++		for_each_valid_sp(vcpu->kvm, sp, gfn) {
++			if (sp->gfn != gfn) {
++				collisions++;
++				continue;
++			}
+ 
+-		if (sp->role.word != role.word)
+-			continue;
++			if (!need_sync && sp->unsync)
++				need_sync = true;
+ 
+-		if (sp->unsync) {
+-			/* The page is good, but __kvm_sync_page might still end
+-			 * up zapping it.  If so, break in order to rebuild it.
+-			 */
+-			if (!__kvm_sync_page(vcpu, sp, &invalid_list))
+-				break;
++			if (sp->role.word != role.word)
++				continue;
+ 
+-			WARN_ON(!list_empty(&invalid_list));
+-			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+-		}
++			if (sp->unsync) {
++				/* The page is good, but __kvm_sync_page might
++				 * still end up zapping it.  If so, break in
++				 * order to rebuild it.
++				 */
++				if (!__kvm_sync_page(vcpu, sp, &invalid_list))
++					break;
+ 
+-		if (sp->unsync_children)
+-			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++				WARN_ON(!list_empty(&invalid_list));
++				kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++			}
+ 
+-		__clear_sp_write_flooding_count(sp);
+-		trace_kvm_mmu_get_page(sp, false);
+-		goto out;
++			if (sp->unsync_children)
++				kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++
++			__clear_sp_write_flooding_count(sp);
++			trace_kvm_mmu_get_page(sp, false);
++			goto out;
++		}
+ 	}
+ 
+ 	++vcpu->kvm->stat.mmu_cache_miss;
+@@ -3735,6 +3740,10 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 	gfn_t root_gfn, root_pgd;
+ 	int i;
+ 
++	spin_lock(&vcpu->kvm->mmu_lock);
++	vcpu->kvm->arch.shadow_page_may_have_multiple_parents = true;
++	spin_unlock(&vcpu->kvm->mmu_lock);
++
+ 	root_pgd = vcpu->arch.mmu->get_guest_pgd(vcpu);
+ 	root_gfn = root_pgd >> PAGE_SHIFT;
+ 
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
