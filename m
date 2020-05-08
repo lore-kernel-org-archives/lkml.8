@@ -2,56 +2,59 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8D8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8AFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3B32054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB27720A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943005;
-	bh=LTRsRa4wOMiSn/uoTzJ5hVuhRHAn+clpoI749rHtK7w=;
+	s=default; t=1588943013;
+	bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPKXRDVlqAn+3dpVLWZsV3aaL7qKDyN95iyO1C4xXMPyVzgNeM6fzJZamJ/0H/RpQ
-	 SBEFXGdNYbimlVVUm7cPzbLBo8pn5zaPfcoJ/cECDdgintr1OwM9wux/RvA9K4Fzpl
-	 bGWFC/fmef+gkgWT+3evXI9OU+GlomJUkwvW5a/A=
+	b=MfD8Hjx7cjm1jLnzw7ToK8eFIfG2rxjhfT+k7wjc69c+DYL+hWVElArcCMgwSD/L1
+	 3UAB8AK/rB4QRbKg/BSc02iYq14sQtXkBkUIvZ3Gfsr4s2VKzoBurWqAkmADnCjapL
+	 ZudWlyKIJPw3eusWTK1MJr+vqSrgy65J55jW1XMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgEHNDY (ORCPT
+        id S1730113AbgEHNDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgEHMuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:16 -0400
+        id S1729822AbgEHMuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 458F1218AC;
-        Fri,  8 May 2020 12:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8433F24959;
+        Fri,  8 May 2020 12:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942215;
-        bh=LTRsRa4wOMiSn/uoTzJ5hVuhRHAn+clpoI749rHtK7w=;
+        s=default; t=1588942208;
+        bh=tS8yISY2FPSoFA2Xz5HcnvqcY9twKKqKe7VbtyvOpsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+KP2wiwUxqKYaYhjTDkniVzStddqB3Nyc/NZBwby9D3Y63qKdl/U/gtA1fwz9EHN
-         C8fqD9Xh++kX4HgxIsFXV7UlqcNSNElR+U5AJkNL5NB7nfJmqBR43NNSeK1KeY+OPw
-         mGlnKZs8j8IJZj4bD/mN+Ai9zbR28xOMTr5ZmWGo=
+        b=H2um+XcrmlVfahll5O52Ua+Fai3NmpjfDc+R1V1CaEjX2BPVeBc8He7KVy3gYNgo4
+         24y6Wu/eXnVMSi7CrRgr3HXtK2QG60XVCDXEaf/lWo/YMwAiECwuryFJxK6D/FmtJZ
+         RFZlh1MW+cN6oZ03mokuw9vIUozCuJWMDiu2qOfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/22] s390/ftrace: fix potential crashes when switching tracers
-Date:   Fri,  8 May 2020 14:35:24 +0200
-Message-Id: <20200508123035.392899555@linuxfoundation.org>
+        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jia He <justin.he@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 4.14 01/22] vhost: vsock: kick send_pkt worker once device is started
+Date:   Fri,  8 May 2020 14:35:13 +0200
+Message-Id: <20200508123034.093635974@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,78 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Jia He <justin.he@arm.com>
 
-[ Upstream commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 ]
+commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
 
-Switching tracers include instruction patching. To prevent that a
-instruction is patched while it's read the instruction patching is done
-in stop_machine 'context'. This also means that any function called
-during stop_machine must not be traced. Thus add 'notrace' to all
-functions called within stop_machine.
+Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+connecting from the client side. The vhost vsock client tries to connect
+an initializing virtio vsock server.
 
-Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
-Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
-Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The abnormal flow looks like:
+host-userspace           vhost vsock                       guest vsock
+==============           ===========                       ============
+connect()     -------->  vhost_transport_send_pkt_work()   initializing
+   |                     vq->private_data==NULL
+   |                     will not be queued
+   V
+schedule_timeout(2s)
+                         vhost_vsock_start()  <---------   device ready
+                         set vq->private_data
+
+wait for 2s and failed
+connect() again          vq->private_data!=NULL         recv connecting pkt
+
+Details:
+1. Host userspace sends a connect pkt, at that time, guest vsock is under
+   initializing, hence the vhost_vsock_start has not been called. So
+   vq->private_data==NULL, and the pkt is not been queued to send to guest
+2. Then it sleeps for 2s
+3. After guest vsock finishes initializing, vq->private_data is set
+4. When host userspace wakes up after 2s, send connecting pkt again,
+   everything is fine.
+
+As suggested by Stefano Garzarella, this fixes it by additional kicking the
+send_pkt worker in vhost_vsock_start once the virtio device is started. This
+makes the pending pkt sent again.
+
+After this patch, kata-runtime (with vsock enabled) boot time is reduced
+from 3s to 1s on a ThunderX2 arm64 server.
+
+[1] https://github.com/kata-containers/runtime/issues/1917
+
+Reported-by: Ning Bo <n.b@live.com>
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/kernel/diag.c  | 2 +-
- arch/s390/kernel/smp.c   | 4 ++--
- arch/s390/kernel/trace.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/vhost/vsock.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index 35c842aa87058..4c7cf8787a848 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -128,7 +128,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
- }
- EXPORT_SYMBOL(diag_stat_inc);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -499,6 +499,11 @@ static int vhost_vsock_start(struct vhos
+ 		mutex_unlock(&vq->mutex);
+ 	}
  
--void diag_stat_inc_norecursion(enum diag_stat_enum nr)
-+void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
- {
- 	this_cpu_inc(diag_stat.counter[nr]);
- 	trace_s390_diagnose_norecursion(diag_map[nr].code);
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index b649a6538350d..808f4fbe869e7 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -406,7 +406,7 @@ int smp_find_processor_id(u16 address)
- 	return -1;
- }
++	/* Some packets may have been queued before the device was started,
++	 * let's kick the send worker to send them.
++	 */
++	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++
+ 	mutex_unlock(&vsock->dev.mutex);
+ 	return 0;
  
--bool arch_vcpu_is_preempted(int cpu)
-+bool notrace arch_vcpu_is_preempted(int cpu)
- {
- 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
- 		return false;
-@@ -416,7 +416,7 @@ bool arch_vcpu_is_preempted(int cpu)
- }
- EXPORT_SYMBOL(arch_vcpu_is_preempted);
- 
--void smp_yield_cpu(int cpu)
-+void notrace smp_yield_cpu(int cpu)
- {
- 	if (MACHINE_HAS_DIAG9C) {
- 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
-diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
-index 490b52e850145..11a669f3cc93c 100644
---- a/arch/s390/kernel/trace.c
-+++ b/arch/s390/kernel/trace.c
-@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
- 
- static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
- 
--void trace_s390_diagnose_norecursion(int diag_nr)
-+void notrace trace_s390_diagnose_norecursion(int diag_nr)
- {
- 	unsigned long flags;
- 	unsigned int *depth;
--- 
-2.20.1
-
 
 
