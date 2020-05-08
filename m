@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF82C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445D4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25DFE24953
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211E524955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qa2htAHP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ECjye1lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgEHPhH (ORCPT
+        id S1728486AbgEHPhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
+        Fri, 8 May 2020 11:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbgEHPhD (ORCPT
+        with ESMTP id S1728418AbgEHPhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:37:03 -0400
+        Fri, 8 May 2020 11:37:11 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F37EFC061A0C;
-        Fri,  8 May 2020 08:37:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F247EC061A0C;
+        Fri,  8 May 2020 08:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Fa8g/lJWKeJOUWpYZKXVATFBsUbfwqV0WZlzPMoN0uA=; b=Qa2htAHPQfxVvAUTYEeMqFgrdh
-        GOwnTg4ulWQqLx6PIvQwXwOQ38d99ysssfAJK0A0785ViFbs5O4fMdbZzuq2dDKpS8pELW7HGvkBM
-        p1nwmkCOWeGuhoWNIarZEKQnoIq2R5Ex6v5mA07Q/8cRXM1obeyxcP5oPlOnMLj/LE/DGq17tKzG5
-        C72uis6BvgLT+nnvwsubs4tEk9aZUMn1y7yUC4eLB2h/N8MLIsTdMkKA9um8pxHIhYStpxq4EUKhW
-        JF8NNAytHWoxkh5ov5BS8g1yn0WriNp19+/h+gp0YDDSf/AdqPHNP83wqLC7LkpEXhpV8LqMLPmdF
-        xf6VlBZg==;
+        bh=uQupytwSEXnv3/F3EONV14yFM9iDWY0BYhUPftguMlU=; b=ECjye1lFh/oDKkHSp8s8r3/PBL
+        bY/42wC5a85E1iHD+psjQ/gkXg7hcCE7r0N2ufr4ZnmtVS2rYT80SgF8xdIozTYFqxl0tf1Z49wkr
+        brImDOTrRr2yXeQqkxa8oM7wZ8d1A07kuZ+YelyRE3/Ejv0WR63qqwEi7NkSPvm6JCdwbnIFIuFhh
+        ca06xctQt3/rLg9MSgExt6X6hISxql6kbhSk4akzhzTPYah7nLCyDQJuj3qQCGYA/oqYFM9Kr5h5f
+        gIMF4UxTD82Q2/oQLlx6fL74cfXHXgNPMz/nvaxsMY6cMkjGOAWo/Ha8ThQx5El+S/JcOa/eOm9Qh
+        ch4YtVZw==;
 Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX53e-0004QB-FT; Fri, 08 May 2020 15:37:02 +0000
+        id 1jX53m-0004ST-Ff; Fri, 08 May 2020 15:37:10 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -46,9 +46,9 @@ Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 09/12] rdma: use __anon_inode_getfd
-Date:   Fri,  8 May 2020 17:36:31 +0200
-Message-Id: <20200508153634.249933-10-hch@lst.de>
+Subject: [PATCH 12/12] vtpm_proxy: use __anon_inode_getfd
+Date:   Fri,  8 May 2020 17:36:34 +0200
+Message-Id: <20200508153634.249933-13-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508153634.249933-1-hch@lst.de>
 References: <20200508153634.249933-1-hch@lst.de>
@@ -65,48 +65,60 @@ get_unused_fd_flags + anon_inode_getfile.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/infiniband/core/rdma_core.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/char/tpm/tpm_vtpm_proxy.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
-index 5128cb16bb485..541e5e06347f6 100644
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -462,30 +462,21 @@ alloc_begin_fd_uobject(const struct uverbs_api_object *obj,
- 	if (WARN_ON(fd_type->fops->release != &uverbs_uobject_fd_release))
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
+index 91c772e38bb54..4c0a31209ae5a 100644
+--- a/drivers/char/tpm/tpm_vtpm_proxy.c
++++ b/drivers/char/tpm/tpm_vtpm_proxy.c
+@@ -534,7 +534,7 @@ static struct file *vtpm_proxy_create_device(
+ 				 struct vtpm_proxy_new_dev *vtpm_new_dev)
+ {
+ 	struct proxy_dev *proxy_dev;
+-	int rc, fd;
++	int fd;
+ 	struct file *file;
  
--	new_fd = get_unused_fd_flags(O_CLOEXEC);
--	if (new_fd < 0)
--		return ERR_PTR(new_fd);
--
- 	uobj = alloc_uobj(attrs, obj);
- 	if (IS_ERR(uobj))
--		goto err_fd;
-+		return uobj;
+ 	if (vtpm_new_dev->flags & ~VTPM_PROXY_FLAGS_ALL)
+@@ -546,19 +546,10 @@ static struct file *vtpm_proxy_create_device(
  
- 	/* Note that uverbs_uobject_fd_release() is called during abort */
--	filp = anon_inode_getfile(fd_type->name, fd_type->fops, NULL,
--				  fd_type->flags);
--	if (IS_ERR(filp)) {
--		uobj = ERR_CAST(filp);
-+	new_fd = __anon_inode_getfd(fd_type->name, fd_type->fops, NULL,
-+			fd_type->flags | O_CLOEXEC, &filp);
-+	if (new_fd < 0)
- 		goto err_uobj;
+ 	proxy_dev->flags = vtpm_new_dev->flags;
+ 
+-	/* setup an anonymous file for the server-side */
+-	fd = get_unused_fd_flags(O_RDWR);
+-	if (fd < 0) {
+-		rc = fd;
++	fd = __anon_inode_getfd("[vtpms]", &vtpm_proxy_fops, proxy_dev, O_RDWR,
++			&file);
++	if (fd < 0)
+ 		goto err_delete_proxy_dev;
 -	}
- 	uobj->object = filp;
 -
- 	uobj->id = new_fd;
- 	return uobj;
+-	file = anon_inode_getfile("[vtpms]", &vtpm_proxy_fops, proxy_dev,
+-				  O_RDWR);
+-	if (IS_ERR(file)) {
+-		rc = PTR_ERR(file);
+-		goto err_put_unused_fd;
+-	}
  
- err_uobj:
- 	uverbs_uobject_put(uobj);
--err_fd:
--	put_unused_fd(new_fd);
- 	return uobj;
+ 	/* from now on we can unwind with put_unused_fd() + fput() */
+ 	/* simulate an open() on the server side */
+@@ -576,13 +567,9 @@ static struct file *vtpm_proxy_create_device(
+ 
+ 	return file;
+ 
+-err_put_unused_fd:
+-	put_unused_fd(fd);
+-
+ err_delete_proxy_dev:
+ 	vtpm_proxy_delete_proxy_dev(proxy_dev);
+-
+-	return ERR_PTR(rc);
++	return ERR_PTR(fd);
  }
  
+ /*
 -- 
 2.26.2
 
