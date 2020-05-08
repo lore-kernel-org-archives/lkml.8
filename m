@@ -2,77 +2,133 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB571C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70472C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6911206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43407206D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VDpXtkg8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLFb5O24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgEHIRG (ORCPT
+        id S1726906AbgEHISe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        Fri, 8 May 2020 04:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgEHIRG (ORCPT
+        with ESMTP id S1726797AbgEHISe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:17:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E87AC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Q+BamE3ASAFBZ68gIprCCAuc5n4tI6nmcvfyYRppIqM=; b=VDpXtkg8x50anrq+65d7Tr6chP
-        b/qLdMbKJ4YA8CXopAw3eP9Dtta/tW5Uvs/laZNLZEpyXkHIsNsw4c5Z74M1dyaQ3I/ELs0Rr+3T7
-        IGTZM9Az6W5/I1pq0NOO2ZNWH1ObzfK74Dzph/X/rbIYPQINsI/B71y+kprugmVPuyxSDgCbSrhNP
-        yW4KsSxMoLF/jdmjhEe8566KFgrHm8O3vPN5EWm6ynbDVSKLCdxMbc6SDbcuihBzXtZ2qS6s/73gc
-        TIse3GOk15yxenxHGiMiLSRDwZgSoLHMB5dYTL/etwsyy8DDpZGqtj2SlJDHjvSKAzmd6oRIf8agc
-        u08IPSAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWyBM-0002z5-0Z; Fri, 08 May 2020 08:16:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1F77D30018B;
-        Fri,  8 May 2020 10:16:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 048732038FB83; Fri,  8 May 2020 10:16:30 +0200 (CEST)
-Date:   Fri, 8 May 2020 10:16:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        Julia.Lawall@lip6.fr
-Subject: Re: [PATCH] sched/fair: Return true,false in
- voluntary_active_balance()
-Message-ID: <20200508081629.GN5298@hirez.programming.kicks-ass.net>
-References: <20200507110625.37254-1-yanaijie@huawei.com>
+        Fri, 8 May 2020 04:18:34 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99264C05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:18:32 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id b6so350579uak.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 01:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bJPuuntZlyPktcvouMtEMcRXu/bHP0lxYUGNqG/wwec=;
+        b=XLFb5O24UDkagdH/uOB3eXjd2JILpBfOOgDrS9QVue3xsAGnEEJkSltb7/cok3nupa
+         WCySEqYIvOkec/rE7Xn2Yq/0sjXONb98Gt4Pr+edjjMKEPuXrBIjlXKLvPrljUEJnTqe
+         Y0n59JOGKhYdQXxPusx44/H3xunCUZ7f74wMTOrNXGKvX4TIbKjFvnAznMMEXZf5rTXz
+         eaQrLNPxNBpKjqMSEKqgudbPBKXIdysHgtzUsacjN4x2bPAyQn/ULDYxlblOE7BU8wL8
+         E7HWpDnz/RjC0JINvLsDXIYp6qFT6rlRYr4HxnOzBQ2WzyImn19iVOZm7yBfT/8VnOf/
+         ai7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bJPuuntZlyPktcvouMtEMcRXu/bHP0lxYUGNqG/wwec=;
+        b=IHBr0uTPsDOx3GgJlt151uHBdNELCpm/vYYJydZLYaN6qXEqqhyH3KkrQpuNo8ouI1
+         PJrHgScyW0XLz2DuGswCRBwRyXAq7JqvKelE7xcl4SNGVkJcp79/CiTrzsoN4fHQvFV7
+         3cjVPeazvh81mHlbzGhWcrKrzEHw+gficL+L0xlYuTcou4CbabfPPnZLRnI6I+msTruh
+         dUBeX0TPVMBcTzeBwzqsNwFmmMa4lspwQUyQA4K2cV+sdyLZmZOeqzWVU9KxKoReJ3S6
+         jwJrKUarJygGIvnIgpNDmDlP1fJMn23fOx7tSgPxa/Ir38Nxof5iieG4axqax3pt3OXV
+         WfkQ==
+X-Gm-Message-State: AGi0PubM8NILBVomWd+2GVAnamOP9DVNL/H2YPYQ1HBM3GG0vhbVNBI7
+        YROXPdW+anMX6Jl6SaoqmEMEkKKx26JTuy5vCyiRzQ==
+X-Google-Smtp-Source: APiQypKdQso64EgPEWBYjRx71h5U/5siNxu0JtIlehtPAZ8Eg05DqIqWRugC48y3iDP4vq4H+ef9bwEbxz9g+8Xi4I0=
+X-Received: by 2002:ab0:544a:: with SMTP id o10mr919614uaa.15.1588925911701;
+ Fri, 08 May 2020 01:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507110625.37254-1-yanaijie@huawei.com>
+References: <CAPDyKFo10JFbe7ZFnRBE2e55eGs-odAWYxU+Ep0S74003aLGpg@mail.gmail.com>
+ <20200508062227.23144-1-adrian.hunter@intel.com>
+In-Reply-To: <20200508062227.23144-1-adrian.hunter@intel.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 8 May 2020 10:17:55 +0200
+Message-ID: <CAPDyKFqAuxDhxpMOJSWut3YbE=p0w53KStDn1JAbizJMoWeDBQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND] mmc: block: Fix request completion in the CQE
+ timeout path
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sarthak Garg <sartgarg@codeaurora.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:06:25PM +0800, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> kernel/sched/fair.c:9375:9-10: WARNING: return of 0/1 in function
-> 'voluntary_active_balance' with return type bool
+On Fri, 8 May 2020 at 08:22, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> First, it should be noted that the CQE timeout (60 seconds) is substantial
+> so a CQE request that times out is really stuck, and the race between
+> timeout and completion is extremely unlikely. Nevertheless this patch
+> fixes an issue with it.
+>
+> Commit ad73d6feadbd7b ("mmc: complete requests from ->timeout")
+> preserved the existing functionality, to complete the request.
+> However that had only been necessary because the block layer
+> timeout handler had been marking the request to prevent it from being
+> completed normally. That restriction was removed at the same time, the
+> result being that a request that has gone will have been completed anyway.
+> That is, the completion was unnecessary.
+>
+> At the time, the unnecessary completion was harmless because the block
+> layer would ignore it, although that changed in kernel v5.0.
+>
+> Note for stable, this patch will not apply cleanly without patch "mmc:
+> core: Fix recursive locking issue in CQE recovery path"
+>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: ad73d6feadbd7b ("mmc: complete requests from ->timeout")
+> Cc: stable@vger.kernel.org
 
-That's not a warning, that's a broken cocinelle script, which if these
-stupid patches don't stop, I'm going to delete myself!
+Applied for fixes, thanks!
 
+Kind regards
+Uffe
 
+> ---
+>  drivers/mmc/core/queue.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 72bef39d7011..10ea67892b5f 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -110,8 +110,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
+>                                 mmc_cqe_recovery_notifier(mrq);
+>                         return BLK_EH_RESET_TIMER;
+>                 }
+> -               /* No timeout (XXX: huh? comment doesn't make much sense) */
+> -               blk_mq_complete_request(req);
+> +               /* The request has gone already */
+>                 return BLK_EH_DONE;
+>         default:
+>                 /* Timeout is handled by mmc core */
+> --
+> 2.17.1
+>
