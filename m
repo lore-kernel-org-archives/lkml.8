@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB11C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ED3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6D6206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB64208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944209;
-	bh=YiG3H9HqTXW2QqFS7PgVLcz+lfygo584WVKmM9d3lao=;
+	s=default; t=1588944221;
+	bh=Imwsq8Dk+5IJzjZMSRQZFWn6/nsVrYk/2ds6zEGRW/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPKb1UW5efX4B5DNjsFPBM+bszSmyWExLX50/dMPVNYaav2wAw+1wiLNO1/mYBtfa
-	 WMXFEYnY1duzWdXuUpoB3P+NwYAPgqLl3sfznrT/SfcikE7bm3Ho4d5DhgZo/ipMQ1
-	 LGmpJ3beIE57AmLPe5WGBXroXz5bWtxA9mPnbTzI=
+	b=L/HP78TrtZ+e+iGXel+VrPI4yftR4Hx/xyv/kvit41gnPfGjL1CTGRmRiVnncDOZy
+	 mE9PQJiN8B4IQwYSqLiV+3rYMT8qmaPP3NAbZu9PPe1IOJhcBO2psWLQm++SxfOOaD
+	 B40AyceEq6mXQyWvjCLqB5CUih+ZXYXdsVb+aZ9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgEHNX2 (ORCPT
+        id S1728409AbgEHNXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:23:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgEHMiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:24 -0400
+        id S1728281AbgEHMh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:37:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B94024968;
-        Fri,  8 May 2020 12:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F7B221F7;
+        Fri,  8 May 2020 12:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941504;
-        bh=YiG3H9HqTXW2QqFS7PgVLcz+lfygo584WVKmM9d3lao=;
+        s=default; t=1588941476;
+        bh=Imwsq8Dk+5IJzjZMSRQZFWn6/nsVrYk/2ds6zEGRW/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3hfeaNf4LYQ6c2Q3V9Ah5/6Z1xzpUsKdiUlB90oUUaeEPEV6bQ3zq0U0mbVoQ6uI
-         IMFku5TUFvICK1RftnYEz6qg6ko2oTSFcP7VzclaHUqlNdK47OngBXV2xE3oE3fJMe
-         rknFHBDUYW8x5VD3T4cW74pDECS6y0fSuNYW8+KE=
+        b=CSTxxUJSRva6aONpln7Y54Spwo+ydpqENyU3X4aPJq/4JhC+WqBL6J/k+TzjQBsfK
+         2efW3R+ypfCI/vKWvZ0ja1PyuOsT6MQLnynBoRArdcexHS71CfOBsx+RwSRV3nL+Bd
+         +I3r2IwhqAtletrqvapuos5e6NXeQeoUwNN8HGaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 057/312] dccp: limit sk_filter trim to payload
-Date:   Fri,  8 May 2020 14:30:48 +0200
-Message-Id: <20200508123128.569712900@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Alex Thorlton <athorlton@sgi.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Travis <travis@sgi.com>, Nathan Zimmer <nzimmer@sgi.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 047/312] x86/apic/uv: Silence a shift wrapping warning
+Date:   Fri,  8 May 2020 14:30:38 +0200
+Message-Id: <20200508123127.863583911@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,100 +66,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 4f0c40d94461cfd23893a17335b2ab78ecb333c8 upstream.
+commit c4597fd756836a5fb7900f2091797ab564390ad0 upstream.
 
-Dccp verifies packet integrity, including length, at initial rcv in
-dccp_invalid_packet, later pulls headers in dccp_enqueue_skb.
+'m_io' is stored in 6 bits so it's a number in the 0-63 range.  Static
+analysis tools complain that 1 << 63 will wrap so I have changed it to
+1ULL << m_io.
 
-A call to sk_filter in-between can cause __skb_pull to wrap skb->len.
-skb_copy_datagram_msg interprets this as a negative value, so
-(correctly) fails with EFAULT. The negative length is reported in
-ioctl SIOCINQ or possibly in a DCCP_WARN in dccp_close.
+This code is over three years old so presumably the bug doesn't happen
+very frequently in real life or someone would have complained by now.
 
-Introduce an sk_receive_skb variant that caps how small a filter
-program can trim packets, and call this in dccp with the header
-length. Excessively trimmed packets are now processed normally and
-queued for reception as 0B payloads.
-
-Fixes: 7c657876b63c ("[DCCP]: Initial implementation")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Alex Thorlton <athorlton@sgi.com>
+Cc: Dimitri Sivanich <sivanich@sgi.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Travis <travis@sgi.com>
+Cc: Nathan Zimmer <nzimmer@sgi.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kernel-janitors@vger.kernel.org
+Fixes: b15cc4a12bed ("x86, uv, uv3: Update x2apic Support for SGI UV3")
+Link: http://lkml.kernel.org/r/20161123221908.GA23997@mwanda
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sock.h |    8 +++++++-
- net/core/sock.c    |    7 ++++---
- net/dccp/ipv4.c    |    2 +-
- net/dccp/ipv6.c    |    2 +-
- 4 files changed, 13 insertions(+), 6 deletions(-)
+ arch/x86/kernel/apic/x2apic_uv_x.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1651,7 +1651,13 @@ static inline void sock_put(struct sock
-  */
- void sock_gen_put(struct sock *sk);
- 
--int sk_receive_skb(struct sock *sk, struct sk_buff *skb, const int nested);
-+int __sk_receive_skb(struct sock *sk, struct sk_buff *skb, const int nested,
-+		     unsigned int trim_cap);
-+static inline int sk_receive_skb(struct sock *sk, struct sk_buff *skb,
-+				 const int nested)
-+{
-+	return __sk_receive_skb(sk, skb, nested, 1);
-+}
- 
- static inline void sk_tx_queue_set(struct sock *sk, int tx_queue)
- {
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -484,11 +484,12 @@ int sock_queue_rcv_skb(struct sock *sk,
- }
- EXPORT_SYMBOL(sock_queue_rcv_skb);
- 
--int sk_receive_skb(struct sock *sk, struct sk_buff *skb, const int nested)
-+int __sk_receive_skb(struct sock *sk, struct sk_buff *skb,
-+		     const int nested, unsigned int trim_cap)
- {
- 	int rc = NET_RX_SUCCESS;
- 
--	if (sk_filter(sk, skb))
-+	if (sk_filter_trim_cap(sk, skb, trim_cap))
- 		goto discard_and_relse;
- 
- 	skb->dev = NULL;
-@@ -524,7 +525,7 @@ discard_and_relse:
- 	kfree_skb(skb);
- 	goto out;
- }
--EXPORT_SYMBOL(sk_receive_skb);
-+EXPORT_SYMBOL(__sk_receive_skb);
- 
- struct dst_entry *__sk_dst_check(struct sock *sk, u32 cookie)
- {
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -868,7 +868,7 @@ lookup:
- 		goto discard_and_relse;
- 	nf_reset(skb);
- 
--	return sk_receive_skb(sk, skb, 1);
-+	return __sk_receive_skb(sk, skb, 1, dh->dccph_doff * 4);
- 
- no_dccp_socket:
- 	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -741,7 +741,7 @@ lookup:
- 	if (!xfrm6_policy_check(sk, XFRM_POLICY_IN, skb))
- 		goto discard_and_relse;
- 
--	return sk_receive_skb(sk, skb, 1) ? -1 : 0;
-+	return __sk_receive_skb(sk, skb, 1, dh->dccph_doff * 4) ? -1 : 0;
- 
- no_dccp_socket:
- 	if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb))
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -648,9 +648,9 @@ static __init void map_mmioh_high_uv3(in
+ 				l = li;
+ 			}
+ 			addr1 = (base << shift) +
+-				f * (unsigned long)(1 << m_io);
++				f * (1ULL << m_io);
+ 			addr2 = (base << shift) +
+-				(l + 1) * (unsigned long)(1 << m_io);
++				(l + 1) * (1ULL << m_io);
+ 			pr_info("UV: %s[%03d..%03d] NASID 0x%04x ADDR 0x%016lx - 0x%016lx\n",
+ 				id, fi, li, lnasid, addr1, addr2);
+ 			if (max_io < l)
 
 
