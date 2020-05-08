@@ -2,106 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6402DC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D77C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41996208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3A8208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HmpjRH8U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vdy5gWLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHMP5 (ORCPT
+        id S1726942AbgEHMQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        Fri, 8 May 2020 08:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbgEHMP4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726627AbgEHMQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:15:56 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4373C05BD43;
-        Fri,  8 May 2020 05:15:56 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:e0:f181:b238:7275:17ea:845e:bb31])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 5189A2049E;
-        Fri,  8 May 2020 12:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1588940156; bh=UlB/LTQO9GDoNBWvUvxhRQdqtyIVKakesW0HTOXtYEY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HmpjRH8UIJe/LGtE/KC4xshp8rXQyfTRgfTtU/ZHHyOip/0iU/qXM8YZ7BfFEZyFZ
-         6TyU+Pv5kC/pms8VXZMRefwS8Q62sa1VRbuJ6GpguxtnMeTQn/q90m7GW7Ch640bnG
-         TZxQie1uUxnJ6m8hjCffzP5geBSOmcHc7nycjdtAxZ4Fd1ejSm/tV+sPY+QMO8zPBL
-         N5NK6i1RD9qrGTZYE+4NxDWvjxtb1f4+yuv6iwXsXcEAbssbkKFOJMHPyPhc5kbAf3
-         RR4bmSjeSHIH+H8110o8qAhgZraRnYjjPjSXeDZF4fPU5h0AN8MIPrLsxmoHZ9r4ja
-         2Lw1Daucvo8bw==
-Date:   Fri, 8 May 2020 20:15:34 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 17/20] mips: Add udelay lpj numbers adjustment
-Message-ID: <20200508201534.2a54da17@flygoat-x1e>
-In-Reply-To: <20200506174238.15385-18-Sergey.Semin@baikalelectronics.ru>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
-        <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
-        <20200506174238.15385-18-Sergey.Semin@baikalelectronics.ru>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 8 May 2020 08:16:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EDAC05BD43;
+        Fri,  8 May 2020 05:16:01 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j5so1604839wrq.2;
+        Fri, 08 May 2020 05:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=p022wi7eOZ/mGn1ToBo+V56FcvhDPdcFh/MpymQ6w34=;
+        b=vdy5gWLvmv4WW60B+MSjZYY0aEofZ1J9SFJ2Zl3QjbUu0gGnVQyJ31nDFWiM9PPRtQ
+         MlSTkL2AZ0qfIZEolIG6QsQwfKPm2k5CnCs+WvwzBmI+3W4NE2PKX0NtZw15J7rB5bjo
+         dXmUh7EW1n7vTefA/bv+SKmac0NXb96aZ3fu0jD8ciE+xUuyFGZdnkOyoxX59evb6Eax
+         boX9OhA/WzJ0UuJsPdAegkG4JzL6nBmxmlRK2D99p32UpZNUzbE+E3Xp+9PmN4p//agV
+         lTUuTrcvTAFeemOZtQ4FkuTZ4iDSCoNJs3EcOkkGc+Umd24P6LfPz0CRFkYhR/Cmbc5Y
+         Nj8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p022wi7eOZ/mGn1ToBo+V56FcvhDPdcFh/MpymQ6w34=;
+        b=Lg6Gpbpq8krDdP5FRJWJGY1DH3JJMrSCGA79epMfEb/VHGBdbvbdGKiYRUa0bNfFle
+         lqZkiFTBonJTaQVi83qmAFl/sW077VeMclcdXtngcRaHn0Jqg9qoG9/Z54lSQiSvJHap
+         8uZXUKg/KF+UVGhjc0dcmeeoksqzan8ycxzPoVWaHVuuORrhxtwzkZaUP1pZ90V2hUaP
+         zfH5EdsmYTQ1deKAPspc3EOruPSPZKJeL9buw8+ytRgklNWl1OjIwK/QK9/afWgJYAJ+
+         Ncl+qobwxd8gdvDFZgAlWj/aGmpAWpJb62DbzMDpeWyKN8OfsXB/KZuxBuFvai+0fHME
+         44QQ==
+X-Gm-Message-State: AGi0PuanU6IE1dr3ZZdPOtEs63pICSfXmo/aUNqvX9ZbQvY4njm5TYl7
+        Fj50hjVDU0CJroJyZIoF7loPWLxXhZ8=
+X-Google-Smtp-Source: APiQypKQU3XDMt2+QtR6u6sPyGZk8FmmD0FXgCIHUio+Q83GS6nn6Uuz7ZrQwJsUcKFtfiGStoCvIA==
+X-Received: by 2002:adf:fe90:: with SMTP id l16mr2647798wrr.222.1588940160456;
+        Fri, 08 May 2020 05:16:00 -0700 (PDT)
+Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.googlemail.com with ESMTPSA id r20sm12168431wmh.26.2020.05.08.05.15.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 05:16:00 -0700 (PDT)
+Message-ID: <12cf335dc86f6eafa1f090dc0b150796532da3e1.camel@gmail.com>
+Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
+ Booster(HPB) driver
+From:   Bean Huo <huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>
+Date:   Fri, 08 May 2020 14:15:58 +0200
+In-Reply-To: <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200504142032.16619-1-beanhuo@micron.com>
+         <20200504142032.16619-6-beanhuo@micron.com>
+         <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:42:35 +0300
-<Sergey.Semin@baikalelectronics.ru> wrote:
-
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Fri, 2020-05-08 at 11:38 +0000, Avri Altman wrote:
+> Hi Bean,
+> This patch is ~3,000 lines long.
+> Is it possible to divide it into a series of a smaller, more
+> reviewable patches?
+> E.g. it can be something like:
+> 1) Init part I - Read HPB config
+> 2) Init part II - prepare for L2P cache management (introduce here
+> all the new data structures, memory allocation, etc.)
+> 3) L2P cache management - activation / inactivation / eviction
+> handlers
+> 4) Add response API
+> 5) Add prep_fn handler - the flows that contruct HPB-READ command.
+> Or any other division that makes sense to you.
 > 
-> Loops-per-jiffies is a special number which represents a number of
-> noop-loop cycles per CPU-scheduler quantum - jiffies. As you
-> understand aside from CPU-specific implementation it depends on
-> the CPU frequency. So when a platform has the CPU frequency fixed,
-> we have no problem and the current udelay interface will work
-> just fine. But as soon as CPU-freq driver is enabled and the cores
-> frequency changes, we'll end up with distorted udelay's. In order
-> to fix this we have to accordinly adjust the per-CPU udelay_val
-> (the same as the global loops_per_jiffy) number. This can be done
-> in the CPU-freq transition event handler. We subscribe to that event
-> in the MIPS arch time-inititalization method.
+> Also, Is there a way to avoid all those #ifdefs everywhere?
 > 
-> Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> Thanks,
+> Avri
+> 
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Hi, Avri
 
-That have been absent in MIPS kernel so long!
+Thanks. I will split it in the next version based on each different
+funcitonality.
 
-Thanks.
-> ---
-[...]
----
-Jiaxun Yang
+thanks,
+
+Bean
+
+
+
