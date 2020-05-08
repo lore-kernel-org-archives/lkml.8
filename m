@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3A4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325E9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C44E24968
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148B621835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941726;
-	bh=iJSSwgbjwlw+bhfTaVrzdgSQJxv45InytS0Mp514Yvo=;
+	s=default; t=1588941729;
+	bh=DhElWUnJuyF6ZplEmiqhWawJeWoKKGBe42iI3FjfasE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+NOVLPsTzmqruvbbESOO5MhzFrbi1xsXpYtq+BHgiqn/OVRvZ2tqkX1LDzayaZwy
-	 oQ6KpggC5evuCfgHAnQhvOTkAx9ZHRhHR616Tct5ftXNJKygVPbFAdyNzlvUOQ4/+h
-	 ZD6Nd7VxQkgJ8wfcyqVKu3rCfPyP/Swy4wymzVTU=
+	b=nXyYaCdhzmUKOrnXq00lS7sbwJrFCJXumT3qeYjOihOb8JonoUqria6rYVql6MjyV
+	 Wlt1gB3R9P2kdTpz/EwPnlFGt7ZJcQ29MwgZOFwNshYG75W7lqyviCOD7oGRi5moCu
+	 B+y71Jfq3rECLI2TkY3Z4FzEFMJDgFvFh2j84mM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgEHMmF (ORCPT
+        id S1728909AbgEHMmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37880 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgEHMlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:55 -0400
+        id S1728425AbgEHMl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87372496A;
-        Fri,  8 May 2020 12:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 389C121835;
+        Fri,  8 May 2020 12:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941715;
-        bh=iJSSwgbjwlw+bhfTaVrzdgSQJxv45InytS0Mp514Yvo=;
+        s=default; t=1588941717;
+        bh=DhElWUnJuyF6ZplEmiqhWawJeWoKKGBe42iI3FjfasE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOmm7Q1do5ezE+ukBwkwjT9Ec3PNjAlvwyuq8wHS7uDC+7Aamcrtq3Q/Cjsjm204c
-         SHfDpttOx3JpfuxRD5t4pOkRgDeZHjQaoMHYcAxOTp/FxSJVL+VhY/er0kc5QJuuNN
-         P5XHBSDAe/rtyaPuxpUCSMocLom2GjeDTmDcAVBo=
+        b=hXP4AwnVc2NCMWdl+9dCTMBgQbM8ltuZdGlNFYfcerWkLsmH/QnQuGsGvcCPDHNwP
+         zMxZf5us57/pLa5ZUmXGLuAmC8smb09XaLHGTJ1KNdnW4jPdYnYDugornLYuZCVoVk
+         rkCNDalE5SbH08ns8KQetkXXar7+iWbIakECdU0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 106/312] mlxsw: spectrum: Disable learning according to STP state
-Date:   Fri,  8 May 2020 14:31:37 +0200
-Message-Id: <20200508123131.955732121@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.4 142/312] clk: rockchip: Revert "clk: rockchip: reset init state before mmc card initialization"
+Date:   Fri,  8 May 2020 14:32:13 +0200
+Message-Id: <20200508123134.463790536@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,38 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 454911333b1d86e1d58a557be271bc6b7e9e7f10 upstream.
+commit 4715f81afc342996f680b08c944a712d9cbef11b upstream.
 
-When port is put into LISTENING state it shouldn't populate the FDB, so
-set the port's STP state in hardware to DISCARDING instead of LEARNING.
-It will therefore keep listening to BPDU packets, but discard other
-non-control packets and won't perform any learning.
+This reverts commit 7a03fe6f48f3 ("clk: rockchip: reset init state
+before mmc card initialization").
 
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Though not totally obvious from the commit message nor from the source
+code, that commit appears to be trying to reset the "_drv" MMC clocks to
+90 degrees (note that the "_sample" MMC clocks have a shift of 0 so are
+not touched).
+
+The major problem here is that it doesn't properly reset things.  The
+phase is a two bit field and the commit only touches one of the two
+bits.  Thus the commit had the following affect:
+- phase   0  => phase  90
+- phase  90  => phase  90
+- phase 180  => phase 270
+- phase 270  => phase 270
+
+Things get even weirder if you happen to have a bootloader that was
+actually using delay elements (should be no reason to, but you never
+know), since those are additional bits that weren't touched by the
+original patch.
+
+This is unlikely to be what we actually want.  Checking on rk3288-veyron
+devices, I can see that the bootloader leaves these clocks as:
+- emmc:  phase 180
+- sdmmc: phase 90
+- sdio0: phase 90
+
+Thus on rk3288-veyron devices the commit we're reverting had the effect
+of changing the eMMC clock to phase 270.  This probably explains the
+scattered reports I've heard of eMMC devices not working on some veyron
+devices when using the upstream kernel.
+
+The original commit was presumably made because previously the kernel
+didn't touch the "_drv" phase at all and relied on whatever value was
+there when the kernel started.  If someone was using a bootloader that
+touched the "_drv" phase then, indeed, we should have code in the kernel
+to fix that.  ...and also, to get ideal timings, we should also have the
+kernel change the phase depending on the speed mode.  In fact, that's
+the subject of a recent patch I posted at
+<https://patchwork.kernel.org/patch/9075141/>.
+
+Ideally, we should take both the patch posted to dw_mmc and this
+revert.  Since those will likely go through different trees, here I
+describe behavior with the combos:
+
+1. Just this revert: likely will fix rk3288-veyron eMMC on some devices
+   + other cases; might break someone with a strange bootloader that
+   sets the phase to 0 or one that uses delay elements (pretty
+   unpredicable what would happen in that case).
+2. Just dw_mmc patch: fixes everyone.  Effectly the dw_mmc patch will
+   totally override the broken patch and fix everything.
+3. Both patches: fixes everyone.  Once dw_mmc is initting properly then
+   any defaults from the clock code doesn't mattery.
+
+Fixes: 7a03fe6f48f3 ("clk: rockchip: reset init state before mmc card initialization")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[emmc and sdmmc still work on all current boards in mainline after this
+revert, so they should take precedence over any out-of-tree board that
+will hopefully again get fixed with the better upcoming dw_mmc change.]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-@@ -90,10 +90,10 @@ static int mlxsw_sp_port_stp_state_set(s
- 	case BR_STATE_FORWARDING:
- 		spms_state = MLXSW_REG_SPMS_STATE_FORWARDING;
- 		break;
--	case BR_STATE_LISTENING: /* fall-through */
- 	case BR_STATE_LEARNING:
- 		spms_state = MLXSW_REG_SPMS_STATE_LEARNING;
- 		break;
-+	case BR_STATE_LISTENING: /* fall-through */
- 	case BR_STATE_DISABLED: /* fall-through */
- 	case BR_STATE_BLOCKING:
- 		spms_state = MLXSW_REG_SPMS_STATE_DISCARDING;
+---
+ drivers/clk/rockchip/clk-mmc-phase.c |   11 -----------
+ 1 file changed, 11 deletions(-)
+
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -41,8 +41,6 @@ static unsigned long rockchip_mmc_recalc
+ #define ROCKCHIP_MMC_DEGREE_MASK 0x3
+ #define ROCKCHIP_MMC_DELAYNUM_OFFSET 2
+ #define ROCKCHIP_MMC_DELAYNUM_MASK (0xff << ROCKCHIP_MMC_DELAYNUM_OFFSET)
+-#define ROCKCHIP_MMC_INIT_STATE_RESET 0x1
+-#define ROCKCHIP_MMC_INIT_STATE_SHIFT 1
+ 
+ #define PSECS_PER_SEC 1000000000000LL
+ 
+@@ -183,15 +181,6 @@ struct clk *rockchip_clk_register_mmc(co
+ 	mmc_clock->reg = reg;
+ 	mmc_clock->shift = shift;
+ 
+-	/*
+-	 * Assert init_state to soft reset the CLKGEN
+-	 * for mmc tuning phase and degree
+-	 */
+-	if (mmc_clock->shift == ROCKCHIP_MMC_INIT_STATE_SHIFT)
+-		writel(HIWORD_UPDATE(ROCKCHIP_MMC_INIT_STATE_RESET,
+-				     ROCKCHIP_MMC_INIT_STATE_RESET,
+-				     mmc_clock->shift), mmc_clock->reg);
+-
+ 	clk = clk_register(NULL, &mmc_clock->hw);
+ 	if (IS_ERR(clk))
+ 		goto err_free;
 
 
