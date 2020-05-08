@@ -2,153 +2,198 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE14C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FBAC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169C9206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98AF20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 04:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Kmk0Qc6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgEHE00 (ORCPT
+        id S1725971AbgEHE3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 00:26:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:43296 "EHLO foss.arm.com"
+        Fri, 8 May 2020 00:29:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:51841 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgEHE0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 00:26:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06A7530E;
-        Thu,  7 May 2020 21:26:25 -0700 (PDT)
-Received: from [10.163.73.155] (unknown [10.163.73.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8DAA3F68F;
-        Thu,  7 May 2020 21:26:22 -0700 (PDT)
-Subject: Re: [PATCH V3 02/16] arm64/cpufeature: Drop TraceFilt feature
- exposure from ID_DFR0 register
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
- <1588426445-24344-3-git-send-email-anshuman.khandual@arm.com>
- <20200504202453.GA5012@willie-the-truck>
- <56cd3062-a0c2-6cdf-b7c6-c2b7bf56d23b@arm.com>
- <20200505104250.GA19710@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <26002f7f-865c-bcdb-8394-c8565bebeb5c@arm.com>
-Date:   Fri, 8 May 2020 09:55:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725550AbgEHE3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 00:29:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JHRG3tDvz9sRf;
+        Fri,  8 May 2020 14:29:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588912173;
+        bh=RQXB8rPuh7y1lmH6XmNpcRx9cxb29ebZDhSL2BWaWGE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Kmk0Qc6jV47rfbR4JJMZVgjQ0mq8aZLc+0V/3bzayxQw46n4OF8x+wPXXoFt+UykK
+         GFhfSGWGUi66BNnBaQ77CYF+xshVShMAK6ds6KrUj/1H8At4lcNLBxEBs8XiDxUrK3
+         Yhm5/X+WUN9QQALZ88Z6fcTpR6w8+FFeHUuln1NgN3wSeLUsxtDaXgk9QPtXo5Gxfe
+         FGgzA8DQLNnnZCQNgnaDQNtdOOJuIvaCRYNH9AODgfuRrg4semAkauxpwjBLeHYmoA
+         nUopS9xE0Hcnru08X0/1qnCZ/TKtEPyGhi2861++jyBU0+OcBxchMHW0KBnFK6KFbz
+         TsNspZ5zs69lg==
+Date:   Fri, 8 May 2020 14:29:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: linux-next: build failure after merge of the drm tree
+Message-ID: <20200508142928.05cde878@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200505104250.GA19710@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/e.nyMLmvHLl8O.HE3RkDMhs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/e.nyMLmvHLl8O.HE3RkDMhs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 05/05/2020 04:12 PM, Will Deacon wrote:
-> On Tue, May 05, 2020 at 12:20:41PM +0530, Anshuman Khandual wrote:
->> On 05/05/2020 01:54 AM, Will Deacon wrote:
->>> On Sat, May 02, 2020 at 07:03:51PM +0530, Anshuman Khandual wrote:
->>>> ID_DFR0 based TraceFilt feature should not be exposed to guests. Hence lets
->>>> drop it.
->>>>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Will Deacon <will@kernel.org>
->>>> Cc: Marc Zyngier <maz@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: James Morse <james.morse@arm.com>
->>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>>
->>>> Suggested-by: Mark Rutland <mark.rutland@arm.com>
->>>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>> ---
->>>>  arch/arm64/kernel/cpufeature.c | 1 -
->>>>  1 file changed, 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->>>> index 6d032fbe416f..51386dade423 100644
->>>> --- a/arch/arm64/kernel/cpufeature.c
->>>> +++ b/arch/arm64/kernel/cpufeature.c
->>>> @@ -435,7 +435,6 @@ static const struct arm64_ftr_bits ftr_id_pfr1[] = {
->>>>  };
->>>>  
->>>>  static const struct arm64_ftr_bits ftr_id_dfr0[] = {
->>>> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
->>>
->>> Hmm, this still confuses me. Is this not now FTR_NONSTRICT? Why is that ok?
->>
->> Mark had mentioned about it earlier (https://patchwork.kernel.org/patch/11287805/)
->> Did I misinterpret the first part ? Could not figure "capping the emulated debug
->> features" part. Probably, Mark could give some more details.
->>
->> From the earlier discussion:
->>
->> * ID_DFR0 fields need more thought; we should limit what we expose here.
->>   I don't think it's valid for us to expose TraceFilt, and I suspect we
->>   need to add capping for debug features we currently emulate.
-> 
-> Sorry, I for confused (again) by the cpufeature code :) I'm going to add
-> the following to my comment:
-> 
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index c1d44d127baa..9b05843d67af 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -53,6 +53,11 @@
->   *   arbitrary physical CPUs, but some features not present on the host are
->   *   also advertised and emulated. Look at sys_reg_descs[] for the gory
->   *   details.
-> + *
-> + * - If the arm64_ftr_bits[] for a register has a missing field, then this
-> + *   field is treated as STRICT RES0, including for read_sanitised_ftr_reg().
-> + *   This is stronger than FTR_HIDDEN and can be used to hide features from
-> + *   KVM guests.
->   */
->  
->  #define pr_fmt(fmt) "CPU features: " fmt
-> 
+After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-Wondering if you will take this comment via a separate patch/branch or
-should I fold it here instead.
+In file included from include/asm-generic/bug.h:19,
+                 from arch/x86/include/asm/bug.h:83,
+                 from include/linux/bug.h:5,
+                 from include/linux/seq_file.h:7,
+                 from include/drm/drm_print.h:31,
+                 from drivers/gpu/drm/i915/gt/intel_engine_cs.c:25:
+drivers/gpu/drm/i915/gt/intel_engine_cs.c: In function 'intel_engine_print_=
+registers':
+drivers/gpu/drm/i915/gt/intel_engine_cs.c:1428:31: error: 'struct intel_con=
+text' has no member named 'lrc_desc'
+ 1428 |      upper_32_bits(rq->context->lrc_desc));
+      |                               ^~
+drivers/gpu/drm/i915/gt/intel_engine_cs.c:1440:31: error: 'struct intel_con=
+text' has no member named 'lrc_desc'
+ 1440 |      upper_32_bits(rq->context->lrc_desc));
+      |                               ^~
+In file included from include/linux/interrupt.h:6,
+                 from drivers/gpu/drm/i915/gt/intel_lrc.c:134:
+drivers/gpu/drm/i915/gt/intel_lrc.c: In function 'active_context':
+drivers/gpu/drm/i915/gt/intel_lrc.c:2850:32: error: 'struct intel_context' =
+has no member named 'lrc_desc'
+ 2850 |   if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
+      |                                ^~
+drivers/gpu/drm/i915/gt/intel_lrc.c:2859:32: error: 'struct intel_context' =
+has no member named 'lrc_desc'
+ 2859 |   if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
+      |                                ^~
 
-> 
-> However, I think we really want to get rid of ftr_generic_32bits[] entirely
-> and spell out all of the register fields, even just using comments for the
-> fields we're omitting:
+Caused by commit
 
-Should we do that later or in this series itself ?
+  53b2622e7746 ("drm/i915/execlists: Avoid reusing the same logical CCID")
 
-> 
-> 
-> @@ -425,7 +430,7 @@ static const struct arm64_ftr_bits ftr_id_pfr1[] = {
->  };
->  
->  static const struct arm64_ftr_bits ftr_id_dfr0[] = {
-> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
-> +	/* 31:28	TraceFilt */
->  	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0xf),	/* PerfMon */
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),
-> 
-> 
-> Longer term, I think we'll probably want to handle these within
-> ARM64_FTR_BITS, as we may end up with features that we want to hide from
-> KVM guests but not from the host kernel.
+from the drm-intel-fixes tree interacting with commits
 
-Sure, but for now will fold the above changes here.
+  606727842d8b ("drm/i915/gt: Include the execlists CCID of each port in th=
+e engine dump")
+  4c977837ba29 ("drm/i915/execlists: Peek at the next submission for error =
+interrupts")
+
+from the drm tree.
+
+I have added teh following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 8 May 2020 14:21:40 +1000
+Subject: [PATCH] drm/i915/execlists: fix up for "Avoid reusing the same log=
+ical CCID"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/i915/gt/intel_engine_cs.c | 4 ++--
+ drivers/gpu/drm/i915/gt/intel_lrc.c       | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/intel_engine_cs.c b/drivers/gpu/drm/i9=
+15/gt/intel_engine_cs.c
+index b1f8527f02c8..7c3cb5aedfdf 100644
+--- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
++++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
+@@ -1425,7 +1425,7 @@ static void intel_engine_print_registers(struct intel=
+_engine_cs *engine,
+ 			len =3D scnprintf(hdr, sizeof(hdr),
+ 					"\t\tActive[%d]:  ccid:%08x, ",
+ 					(int)(port - execlists->active),
+-					upper_32_bits(rq->context->lrc_desc));
++					rq->context->lrc.ccid);
+ 			len +=3D print_ring(hdr + len, sizeof(hdr) - len, rq);
+ 			scnprintf(hdr + len, sizeof(hdr) - len, "rq: ");
+ 			print_request(m, rq, hdr);
+@@ -1437,7 +1437,7 @@ static void intel_engine_print_registers(struct intel=
+_engine_cs *engine,
+ 			len =3D scnprintf(hdr, sizeof(hdr),
+ 					"\t\tPending[%d]: ccid:%08x, ",
+ 					(int)(port - execlists->pending),
+-					upper_32_bits(rq->context->lrc_desc));
++					rq->context->lrc.ccid);
+ 			len +=3D print_ring(hdr + len, sizeof(hdr) - len, rq);
+ 			scnprintf(hdr + len, sizeof(hdr) - len, "rq: ");
+ 			print_request(m, rq, hdr);
+diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/=
+intel_lrc.c
+index 233f815c3c86..456d286c17dd 100644
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -2847,7 +2847,7 @@ active_context(struct intel_engine_cs *engine, u32 cc=
+id)
+ 	 */
+=20
+ 	for (port =3D el->active; (rq =3D *port); port++) {
+-		if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
++		if (rq->context->lrc.ccid =3D=3D ccid) {
+ 			ENGINE_TRACE(engine,
+ 				     "ccid found at active:%zd\n",
+ 				     port - el->active);
+@@ -2856,7 +2856,7 @@ active_context(struct intel_engine_cs *engine, u32 cc=
+id)
+ 	}
+=20
+ 	for (port =3D el->pending; (rq =3D *port); port++) {
+-		if (upper_32_bits(rq->context->lrc_desc) =3D=3D ccid) {
++		if (rq->context->lrc.ccid =3D=3D ccid) {
+ 			ENGINE_TRACE(engine,
+ 				     "ccid found at pending:%zd\n",
+ 				     port - el->pending);
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/e.nyMLmvHLl8O.HE3RkDMhs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl604CgACgkQAVBC80lX
+0GyuCQf/bCPaY923Ltga+uVnvu2+bMet/ju0S6gT8ZEkVZm7RQm541Baslq8hB6d
+dlUv3F3qRXJ9M5OJlP9HvmOJMSP3gygYHtFYDhuILvlOyjH2VCDwrccfaFRNGi3U
+52ZeDWVsGlEUyVrMLEphJ9Rad6IAEEHUactBa/K1flYyjNa6ZAax3CQjnwSgKbm5
+ANN5tbW3Fjs1HFkGjGTw6ja9RAqFo0/b+TU3AXZQdvDdpzeD8BeBOQwiQCd7yP6h
+CXdz1lha86iNUyvuBgFAwJRQXlT+S3rx6xXTrCMuUSaHu0+Vsr54q1hFe1wyEEuR
+JK30f87thgOzc23PGy4P+XNRX5BmNw==
+=JUUx
+-----END PGP SIGNATURE-----
+
+--Sig_/e.nyMLmvHLl8O.HE3RkDMhs--
