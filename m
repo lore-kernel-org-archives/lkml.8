@@ -2,170 +2,97 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139C3C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5260EC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8FF4208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF1C20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TVVEgyyq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SYHZqJya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgEHCx3 (ORCPT
+        id S1727093AbgEHCyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgEHCx3 (ORCPT
+        Thu, 7 May 2020 22:54:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43798 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEHCyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:53:29 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E5FC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 19:53:29 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id js4so1538000pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 19:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=um3mI9LmYrUvelmN4ru3INCNryFm6dnCjlmdCTLr9ao=;
-        b=TVVEgyyqm/kK9/OemwN+zgXn3on4bbRKhx3Cy38nRns+DTL5BXOau4BfM1OMRb4hmi
-         U64R4g5JdBSU6iz4WjA+sXyDG+orAwaPmDyNvDbOmzqvbcRjk0p1P23HP5GFKEzR9tWw
-         fyLGOswEQM1RTh/RdnE8asYdThCIRO3gihQL2WI3TdpExiz5thCBkXoo1x1jV/8E61MC
-         toEHulgivJUVJtpG50zDFpv+GKuZgFCtDpk0Tqrwwkz4XW595+BpJfWvJLQfvT9siHyJ
-         Kkmv7lmFKVWV+hdW5fjTnB9bSxaGfCtewe1W40/1EZvvFD91KjXjiSFyW7z/k1cvVB/v
-         BRpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=um3mI9LmYrUvelmN4ru3INCNryFm6dnCjlmdCTLr9ao=;
-        b=AOiOo4YvKNl3pxM/OvAP9/zbWDHe3aEU4pTeJiX+i6nR+6uo1TXtx1lU+GHYmlTFeF
-         PgM0bvTtvbnCsi5qNxGdnKBphtm/oWuV8JxsfrucM9wrJe44dNZMhlaXRYVp2bJn2qGh
-         2QCn3PP7Xtaso5cmZwyul7SzZaBOvxi9aopzVKwaXhWAauShN14XGhZt0VNCgKGYhQ4e
-         G+A6Ys7PmdqOrA2gBz5tt4ru/Xr8pysxafV+3sMxBXRW+aRjBY3xrXLN9h9UQPSctWa5
-         MiFs0l7XiJgzae211kdSwzoGbnS5RH3FLi8Wi+/Z194pdWcc+01/pBRJlKU9VB2loKTZ
-         p76g==
-X-Gm-Message-State: AGi0PuZPPNwFd9e2Q+Jct2156jl/QkPH/qAszKgvUo0E9Blq/xLP47tw
-        sUi+D/zHbZQ12ylN5pCNCLiDZD/MdRA=
-X-Google-Smtp-Source: APiQypKy9TgJamBvSmsR9YdO8pkJvhKSJM26xMFwf1LATbkMrBLCPemDgtow7vBHH/1jeMKYcVZU7A==
-X-Received: by 2002:a17:90a:2843:: with SMTP id p3mr3333214pjf.204.1588906408379;
-        Thu, 07 May 2020 19:53:28 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id d12sm179788pfq.36.2020.05.07.19.53.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 19:53:27 -0700 (PDT)
-Subject: Re: [PATCH] fs/io_uring: fix O_PATH fds in openat, openat2, statx
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Max Kellermann <mk@cm4all.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200507185725.15840-1-mk@cm4all.com>
- <20200507190131.GF23230@ZenIV.linux.org.uk>
- <4cac0e53-656c-50f0-3766-ae3cc6c0310a@kernel.dk>
- <20200507192903.GG23230@ZenIV.linux.org.uk>
- <8e3c88cc-027b-4f90-b4f8-a20d11d35c4b@kernel.dk>
- <20200507220637.GH23230@ZenIV.linux.org.uk>
- <283c8edb-fea2-5192-f1d6-3cc57815b1e2@kernel.dk>
- <20200507224447.GI23230@ZenIV.linux.org.uk>
- <e16125f2-c3ec-f029-c607-19bede54fa17@kernel.dk>
- <20200507233132.GJ23230@ZenIV.linux.org.uk>
- <629de3b6-cf80-fe37-1dde-7f0464da0a04@kernel.dk>
-Message-ID: <672e9220-2634-95f1-95a1-62c35bcf7341@kernel.dk>
-Date:   Thu, 7 May 2020 20:53:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 22:54:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0482rgEv195084;
+        Fri, 8 May 2020 02:54:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=GDuzAR7cfBdS59kHOBOXSQHR1eeCHBSM/ilFf/BqV5Y=;
+ b=SYHZqJyabHNHbvEj1eBWtnVilhi5V0yQ4Jw3C2my79l1EnvdkhtU1WzBrA7PaMMal49l
+ uL+2noZmf0qkrBI1eww+dzkCOWhDyxepf+3yqxxwEjGlwhgxHozi7SZfcF0O3p/lsc1U
+ 6o+/v7nFSYjnW+3Iph7IVMx/dkdTD0aCtMoSRlgtWSjK8ePCx0aPSMoA5eEL4uNz2YC/
+ 2+hrDKtgZK2o82l9dRW3NjinLppydL/4BIoH4iru1nbdAY84SV5ph81IkJXscYvbzchp
+ VQcQtydyY/4jRXbruAtCZkvWc88qw7SPH3acvD0xdxh8JHjceezvUHW0+DUd6kugyQLe Jw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30vtewrrr3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 02:54:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0482qggs012603;
+        Fri, 8 May 2020 02:54:44 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30vtefqn9e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 02:54:44 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0482sh2L003640;
+        Fri, 8 May 2020 02:54:43 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 May 2020 19:54:42 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     jejb@linux.ibm.com, MPT-FusionLinux.pdl@broadcom.com,
+        chaitra.basappa@broadcom.com, Jason Yan <yanaijie@huawei.com>,
+        sathya.prakash@broadcom.com, suganath-prabu.subramani@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: mpt3sas: use true,false for ioc->use_32bit_dma
+Date:   Thu,  7 May 2020 22:54:29 -0400
+Message-Id: <158890633246.6466.16530284033755369229.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200430121738.15151-1-yanaijie@huawei.com>
+References: <20200430121738.15151-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <629de3b6-cf80-fe37-1dde-7f0464da0a04@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 mlxlogscore=932 bulkscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=994
+ malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 8:28 PM, Jens Axboe wrote:
-> On 5/7/20 5:31 PM, Al Viro wrote:
->> On Thu, May 07, 2020 at 05:03:17PM -0600, Jens Axboe wrote:
->>> On 5/7/20 4:44 PM, Al Viro wrote:
->>>> On Thu, May 07, 2020 at 04:25:24PM -0600, Jens Axboe wrote:
->>>>
->>>>>  static int io_close(struct io_kiocb *req, bool force_nonblock)
->>>>>  {
->>>>> +	struct files_struct *files = current->files;
->>>>>  	int ret;
->>>>>  
->>>>>  	req->close.put_file = NULL;
->>>>> -	ret = __close_fd_get_file(req->close.fd, &req->close.put_file);
->>>>> +	spin_lock(&files->file_lock);
->>>>> +	if (req->file->f_op == &io_uring_fops ||
->>>>> +	    req->close.fd == req->ctx->ring_fd) {
->>>>> +		spin_unlock(&files->file_lock);
->>>>> +		return -EBADF;
->>>>> +	}
->>>>> +
->>>>> +	ret = __close_fd_get_file_locked(files, req->close.fd,
->>>>> +						&req->close.put_file);
->>>>
->>>> Pointless.  By that point req->file might have nothing in common with
->>>> anything in any descriptor table.
->>>
->>> How about the below then? Stop using req->file, defer the lookup until
->>> we're in the handler instead. Not sure the 'fd' check makes sense
->>> at this point, but at least we should be consistent in terms of
->>> once we lookup the file and check the f_op.
->>
->> Actually, what _is_ the reason for that check?  Note, BTW, that if the
->> file in question happens to be an AF_UNIX socket, closing it will
->> close all references held in SCM_RIGHTS datagrams sitting in its queue,
->> which might very well include io_uring files.
->>
->> IOW, if tries to avoid something really unpleasant, it's not enough.
->> And if it doesn't, then what is it for?
+On Thu, 30 Apr 2020 20:17:38 +0800, Jason Yan wrote:
+
+> Fix the following coccicheck warning:
 > 
-> Maybe there is no issue at all, the point was obviously to not have
-> io_uring close itself. But we might just need an ordering of the
-> fput vs put_request to make that just fine. Let me experiment a bit
-> and see what's going on.
+> drivers/scsi/mpt3sas/mpt3sas_base.c:7202:1-19: WARNING: Assignment of
+> 0/1 to bool variable
 
-Ran various bits of testing and tracing with just the below, and
-I don't see anything wrong. Even verified the same cases with
-pending poll requests and an async read (punted to thread), and
-it works and doesn't complain with KASAN either.
+Applied to 5.8/scsi-queue, thanks!
 
-And I did think this would work after looking at it. The ctx
-referencing should handle this just fine. Hence it seems to me
-that my initial attempts at blocking the ring closing itself
-were not needed at all.
+[1/1] scsi: mpt3sas: Use true, false for ioc->use_32bit_dma
+      https://git.kernel.org/mkp/scsi/c/55d4ce458c77
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 979d9f977409..9099a9362ad4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -786,7 +786,6 @@ static const struct io_op_def io_op_defs[] = {
- 		.needs_fs		= 1,
- 	},
- 	[IORING_OP_CLOSE] = {
--		.needs_file		= 1,
- 		.file_table		= 1,
- 	},
- 	[IORING_OP_FILES_UPDATE] = {
-@@ -3399,10 +3398,6 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return -EBADF;
- 
- 	req->close.fd = READ_ONCE(sqe->fd);
--	if (req->file->f_op == &io_uring_fops ||
--	    req->close.fd == req->ctx->ring_fd)
--		return -EBADF;
--
- 	return 0;
- }
- 
 -- 
-Jens Axboe
-
+Martin K. Petersen	Oracle Linux Engineering
