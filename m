@@ -4,142 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5A9C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A47C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1C420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1381C21841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQxYapeY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a66yDCyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgEHF0g (ORCPT
+        id S1726767AbgEHF2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgEHF0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:26:36 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71C3C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:26:35 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id e10so359416vsp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jgXEH2RG1EUF/osFI6e00b26mIaF+BkthMPU4Amf75U=;
-        b=aQxYapeY3RhEj3QL+T0cTy4xQcneFUuBAt8xTEY2IXRwEOOVRYsKFr1vFpbknIr7TQ
-         Dt6Sg0Y7pSFJBAiB17pgomIr28oE2tVknu4W9Kv7SKPx0Su1+iO83SgeJib8yog72aod
-         CYvnQHz6m0I97taYXOmH/9t8sac2Mj9xpoRaiRC7Urd2KbpcB6xMFeq4JWglybksHYae
-         0suCF36vSePFEYyetLKwBK08CUFHmo/nPc8dhhqiCEotWsV4V70GtePv6YmEp6G/d/E0
-         hk2LE8bxRcbIcDeUCNSa0nnVBqLEDSenIS60AyrCG2rp0clckoQmFtpu/VhJKE7OD5HT
-         5wVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jgXEH2RG1EUF/osFI6e00b26mIaF+BkthMPU4Amf75U=;
-        b=Wh2P4pNhp3jPzjw88zJnhEhQnJr0HmIsgfcChMnPBw9dFT5YTrP8dRmJBSYFrozt1J
-         4fjzIvj/DR6q4qb/esC26QxHxAqRUsVVR8MCsCuHAJc/pf6f5IqtDajd/AYM8DfH6Lli
-         prUn5qWS3lz0bzIOoiBSGOwcOhkk5pindbSciH9IpHDc5nxQNAtPO3cFspeZT1vn/c1y
-         H2qoYDRNJULzk1xmFtgGrPORAkNQb29j9QF3fl7MeHYJMe0JeuFuwYtpTgVqbwTIDM2r
-         4ry0MfdGn8ZVve8M1cNYFLdluM9fN7dt7I0EXMKnZNlO42yru7bb29X9j6FXEUaV9qmV
-         kFAA==
-X-Gm-Message-State: AGi0PubTD7fKdBnC7ZiMuClTy8zSLLPQlSP97Bs3mUwY8rsxKdFsskCm
-        i6f/QENF5DjA/T1nYxVlmO1fZg9WL/yrBULKVkmZLUDe
-X-Google-Smtp-Source: APiQypIrnxR8E4rtJEWtj/6ZH8t5DZDcf7RygyXFGfVM1Io8rU8yL+5jnboGDWJNeT0QTfXFiWaC/4h8RJ4VKlAz4Go=
-X-Received: by 2002:a67:8b46:: with SMTP id n67mr567817vsd.35.1588915594812;
- Thu, 07 May 2020 22:26:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588775643-18037-1-git-send-email-vbadigan@codeaurora.org>
- <1588775643-18037-3-git-send-email-vbadigan@codeaurora.org>
- <b4a01f2c-479a-2a23-58b7-64f16cbc17a2@intel.com> <66747f4c-e61f-509f-a3cc-7e3499a844e4@intel.com>
-In-Reply-To: <66747f4c-e61f-509f-a3cc-7e3499a844e4@intel.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 8 May 2020 07:25:58 +0200
-Message-ID: <CAPDyKFo10JFbe7ZFnRBE2e55eGs-odAWYxU+Ep0S74003aLGpg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: block: Fix request completion in the CQE timeout path
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Fri, 8 May 2020 01:28:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:38673 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbgEHF2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 01:28:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JJlR68jPz9sSk;
+        Fri,  8 May 2020 15:28:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588915716;
+        bh=dQc43ogTgSb8NPgTzBm/D7KQjb0ycLXQsSyJCR301ZE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=a66yDCydRrudsOc7jI5grRLoXAQgJfeNogtTdGSt9MPgHDe/yMxZenaYLHgONJRst
+         deTnzErClPdLgUpbKMnO4m6acFr3GHX1rkZEZbWS+7gOnBj2tJUNFV7nlM9caxN/in
+         7QkbqkJvOXXOX/MZJwFb3I8f8R2vMF5gP4FhggbrfRR3f4PV1PdQ2n6JLrRxvGjVoz
+         jKTrdxPQYLW1V1XlRQbiUmwCUsrUmKfNHBvGHXZW0eE8ZqsxtU9V/2uXLqkSSxH3Sn
+         +d9R/auMCClWXA6RnzFm+p3uLQpovFqDW2563I9sevgIvkAMTRh6D7wOUXESacjAL4
+         AIfj6EUkwMV8A==
+Date:   Fri, 8 May 2020 15:28:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+        Yufen Yu <yuyufen@huawei.com>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20200508152833.7e840076@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/hmqVjdEB8aFiTqUt97aKeGF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 at 16:06, Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> First, it should be noted that the CQE timeout (60 seconds) is substantial
-> so a CQE request that times out is really stuck, and the race between
-> timeout and completion is extremely unlikely. Nevertheless this patch
-> fixes an issue with it.
->
-> Commit ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-> preserved the existing functionality, to complete the request.
-> However that had only been necessary because the block layer
-> timeout handler had been marking the request to prevent it from being
-> completed normally. That restriction was removed at the same time, the
-> result being that a request that has gone will have been completed anyway.
-> That is, the completion in the timeout handler became unnecessary.
->
-> At the time, the unnecessary completion was harmless because the block
-> layer would ignore it, although that changed in kernel v5.0.
->
-> Note for stable, this patch will not apply cleanly without patch "mmc:
-> core: Fix recursive locking issue in CQE recovery path"
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-> Cc: stable@vger.kernel.org
-> ---
->
->
-> This is the patch I alluded to when replying to "mmc: core: Fix recursive
-> locking issue in CQE recovery path"
+--Sig_/hmqVjdEB8aFiTqUt97aKeGF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Looks like the patch got corrupted, I was trying to fix it, but just
-couldn't figure it out.
+Hi all,
 
-Can you please re-format and do a repost?
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Kind regards
-Uffe
+In file included from include/linux/kernel.h:15,
+                 from include/linux/list.h:9,
+                 from include/linux/module.h:12,
+                 from block/bfq-iosched.c:116:
+block/bfq-iosched.c: In function 'bfq_set_next_ioprio_data':
+block/bfq-iosched.c:4980:5: error: implicit declaration of function 'bdi_de=
+v_name'; did you mean 'blkg_dev_name'? [-Werror=3Dimplicit-function-declara=
+tion]
+ 4980 |     bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
+      |     ^~~~~~~~~~~~
 
->
->
->  drivers/mmc/core/queue.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-> index 72bef39d7011..10ea67892b5f 100644
-> --- a/drivers/mmc/core/queue.c
-> +++ b/drivers/mmc/core/queue.c
-> @@ -110,8 +110,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct
-> request *req)
->                                 mmc_cqe_recovery_notifier(mrq);
->                         return BLK_EH_RESET_TIMER;
->                 }
-> -               /* No timeout (XXX: huh? comment doesn't make much sense) */
-> -               blk_mq_complete_request(req);
-> +               /* The request has gone already */
->                 return BLK_EH_DONE;
->         default:
->                 /* Timeout is handled by mmc core */
-> --
-> 2.17.1
->
+Caused by commit
+
+  0f6438fca125 ("bdi: use bdi_dev_name() to get device name")
+
+I have applied the following patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 8 May 2020 15:23:50 +1000
+Subject: [PATCH] bdi: bdi_dev_name() needs backing-dev.h
+
+Fixes: 0f6438fca125 ("bdi: use bdi_dev_name() to get device name")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ block/bfq-iosched.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 4d4fe44a9eea..3d411716d7ee 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -123,6 +123,7 @@
+ #include <linux/ioprio.h>
+ #include <linux/sbitmap.h>
+ #include <linux/delay.h>
++#include <linux/backing-dev.h>
+=20
+ #include "blk.h"
+ #include "blk-mq.h"
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hmqVjdEB8aFiTqUt97aKeGF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl607gEACgkQAVBC80lX
+0GxdIwgAo98U9fDp3r4sqmd92szVIhSq/U9RqtWdGJg07HB7y6C9OAX2naNnyEDF
+P79BpmaaoBkcmI+yc1VhhcNW7YRCUPOJ98PY92lqiWy9fw+oAJAwOUwTnFH70X9W
+UMri2AqD6OCJma1Y7KTrLkJ3e1pLqMPBE/dAVq96KAuhNo+1XlpPOqL9+LxbHPm3
+yPDt1mUUQFsMG78eyKmJoZEMPUXWV/f11LhfiG4li9CsPHpeWiSk171PT3WAtP3s
+z3fq6DioiMCMSYk7dvEYzoRBCumpcTyVsslPwNJjbG2DCaPuYU73L7HGzYYqWVx2
+JbgFMzt4gun5Ck3vdqqSPyuWqXBWkA==
+=T44d
+-----END PGP SIGNATURE-----
+
+--Sig_/hmqVjdEB8aFiTqUt97aKeGF--
