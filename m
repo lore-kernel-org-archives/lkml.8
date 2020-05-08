@@ -2,99 +2,128 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4456C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88647C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F52C20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698BE207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEHIrn (ORCPT
+        id S1726948AbgEHIrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:47:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52842 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726616AbgEHIrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:47:43 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7F7242C8CAB7887673CB;
-        Fri,  8 May 2020 16:47:41 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.55) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 16:47:40 +0800
-Subject: Re: [PATCH 1/1] mm: remove an unnecessary goto jump
-To:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200505115858.1718-1-thunder.leizhen@huawei.com>
- <6d06207c-5b1c-d526-ef01-e437c7696dd3@redhat.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <dc38f5a5-e318-de61-89ff-27aa35528fed@huawei.com>
-Date:   Fri, 8 May 2020 16:47:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 8 May 2020 04:47:53 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:38851 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgEHIrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:47:53 -0400
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 527F61A33D1;
+        Fri,  8 May 2020 16:47:17 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AAsAdQBuCHzEtmuRTR69xqrg.3.1588927637309.Hmail.bernard@vivo.com>
+To:     =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6UmU6IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4ZWwgY2xvY2sgZW5hYmxlZCB3aXRoIHdyb25nIGZvcm1hdA==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <AKgAPAB2CNW-P97ALGekNqqN.3.1587728256276.Hmail.bernard@vivo.com>
 MIME-Version: 1.0
-In-Reply-To: <6d06207c-5b1c-d526-ef01-e437c7696dd3@redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 8 May 2020 16:47:17 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Fri, 8 May 2020 16:47:17 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VKQ0xLS0tJTE9NTkNJWVdZKFlBSE
+        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT0pISkhMTkxJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Ogg6Hyo5DjgzAT4PFg4pLylNQgMKCRxVSFVKTkNDQklMTU9LT0hJVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTExDSjcG
+X-HM-Tid: 0a71f377a76193b4kuws527f61a33d1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/5/8 16:06, David Hildenbrand wrote:
-> On 05.05.20 13:58, Zhen Lei wrote:
->> This "goto" doesn't reduce any code, but bother the readers.
-> 
-> "mm/page_io.c: mm: remove an unnecessary goto in generic_swapfile_activate"
-
-Do you mean change the subject? So is it:
-"mm/page_io.c: remove an unnecessary goto in generic_swapfile_activate()" ?
-
-> 
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  mm/page_io.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/page_io.c b/mm/page_io.c
->> index 76965be1d40e..b1d4f4558e6b 100644
->> --- a/mm/page_io.c
->> +++ b/mm/page_io.c
->> @@ -235,10 +235,10 @@ int generic_swapfile_activate(struct swap_info_struct *sis,
->>  	sis->highest_bit = page_no - 1;
->>  out:
->>  	return ret;
->> +
-> 
-> nit: I'd just not mess with newlines here.
-
-OK, I will drop it.
-
-> 
->>  bad_bmap:
->>  	pr_err("swapon: swapfile has holes\n");
->> -	ret = -EINVAL;
->> -	goto out;
->> +	return -EINVAL;
->>  }
->>  
->>  /*
->>
-> 
-> apart from that
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> 
-> 
-
+RnJvbTogIui1teWGm+WljiIgPGJlcm5hcmRAdml2by5jb20+CkRhdGU6IDIwMjAtMDQtMjQgMTk6
+Mzc6MzYKVG86ICBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KQ2M6ICBCcmlhbiBT
+dGFya2V5IDxicmlhbi5zdGFya2V5QGFybS5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51
+eC5pZT4sRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsb3BlbnNvdXJjZS5rZXJu
+ZWxAdml2by5jb20KU3ViamVjdDogUmU6UmU6IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4
+ZWwgY2xvY2sgZW5hYmxlZCB3aXRoIHdyb25nIGZvcm1hdAoKCgoKRnJvbTogTGl2aXUgRHVkYXUg
+PGxpdml1LmR1ZGF1QGFybS5jb20+CkRhdGU6IDIwMjAtMDQtMjQgMTk6MDk6NTAKVG86ICBCZXJu
+YXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+CkNjOiAgQnJpYW4gU3RhcmtleSA8YnJpYW4uc3Rh
+cmtleUBhcm0uY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+LERhbmllbCBWZXR0
+ZXIgPGRhbmllbEBmZndsbC5jaD4sZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tClN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjJdIGRybS9hcm06IGZpeGVzIHBpeGVsIGNsb2NrIGVuYWJsZWQgd2l0
+aCB3cm9uZyBmb3JtYXQ+SGkgQmVybmFuZCwKPgo+T24gVGh1LCBBcHIgMjMsIDIwMjAgYXQgMTE6
+MzU6NTFQTSAtMDcwMCwgQmVybmFyZCBaaGFvIHdyb3RlOgo+PiBUaGUgcGl4ZWwgY2xvY2sgaXMg
+c3RpbGwgZW5hYmxlZCB3aGVuIHRoZSBmb3JtYXQgaXMgd3JvbmcuCj4+IG5vIGVycm9yIGJyYW5j
+aCBoYW5kbGUsIGFuZCBhbHNvIHNvbWUgcmVnaXN0ZXIgaXMgbm90IHNldAo+PiBpbiB0aGlzIGNh
+c2UsIGUuZzogSERMQ0RfUkVHXzxjb2xvcj5fU0VMRUNULiBNYXliZSB3ZQo+PiBzaG91bGQgZGlz
+YWJsZSB0aGlzIGNsb2NrIGFuZCB0aHJvdyBhbiB3YXJuIG1lc3NhZ2Ugd2hlbgo+PiB0aGlzIGhh
+cHBlbmVkLgo+PiBXaXRoIHRoaXMgY2hhbmdlLCB0aGUgY29kZSBtYXliZSBhIGJpdCBtb3JlIHJl
+YWRhYmxlLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8u
+Y29tPgo+PiAKPj4gQ2hhbmdlcyBzaW5jZSBWMToKPj4gKmFkZCBmb3JtYXQgZXJyb3IgaGFuZGxl
+LCBpZiBmb3JtYXQgaXMgbm90IGNvcnJlY3QsIHRocm93Cj4+IGFuIHdhcm5pbmcgbWVzc2FnZSBh
+bmQgZGlzYWJsZSB0aGlzIGNsb2NrLgo+PiAKPj4gTGluayBmb3IgVjE6Cj4+ICpodHRwczovL2xv
+cmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTIyODUwMS8KPj4gLS0tCj4+ICBkcml2ZXJz
+L2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYyB8IDEzICsrKysrKysrKy0tLS0KPj4gIDEgZmlsZSBj
+aGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+IAo+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
+L2hkbGNkX2NydGMuYwo+PiBpbmRleCBhZjY3ZmVmZWQzOGQuLmYzOTQ1ZGVlMmI3ZCAxMDA2NDQK
+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMKPj4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMKPj4gQEAgLTk2LDcgKzk2LDcgQEAgc3RhdGljIGlu
+dCBoZGxjZF9zZXRfcHhsX2ZtdChzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4+ICAJfQo+PiAgCj4+
+ICAJaWYgKFdBUk5fT04oIWZvcm1hdCkpCj4+IC0JCXJldHVybiAwOwo+PiArCQlyZXR1cm4gLUVJ
+TlZBTDsKPgo+VGhhdCBpcyB0aGUgcmlnaHQgZml4IQo+Cj4+ICAKPj4gIAkvKiBIRExDRCB1c2Vz
+ICdieXRlcyBwZXIgcGl4ZWwnLCB6ZXJvIG1lYW5zIDEgYnl0ZSAqLwo+PiAgCWJ0cHAgPSAoZm9y
+bWF0LT5iaXRzX3Blcl9waXhlbCArIDcpIC8gODsKPj4gQEAgLTEyNSw3ICsxMjUsNyBAQCBzdGF0
+aWMgaW50IGhkbGNkX3NldF9weGxfZm10KHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPj4gIAlyZXR1
+cm4gMDsKPj4gIH0KPj4gIAo+PiAtc3RhdGljIHZvaWQgaGRsY2RfY3J0Y19tb2RlX3NldF9ub2Zi
+KHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPj4gK3N0YXRpYyBpbnQgaGRsY2RfY3J0Y19tb2RlX3Nl
+dF9ub2ZiKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPgo+QnV0IHRoaXMgaXMgbm90LiBXZSBkb24n
+dCBuZWVkIHRvIHByb3BhZ2F0ZSB0aGUgZXJyb3IgZnVydGhlciwganVzdCAuLi4uCj4KPj4gIHsK
+Pj4gIAlzdHJ1Y3QgaGRsY2RfZHJtX3ByaXZhdGUgKmhkbGNkID0gY3J0Y190b19oZGxjZF9wcml2
+KGNydGMpOwo+PiAgCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptID0gJmNydGMtPnN0YXRlLT5h
+ZGp1c3RlZF9tb2RlOwo+PiBAQCAtMTYyLDkgKzE2MiwxMCBAQCBzdGF0aWMgdm9pZCBoZGxjZF9j
+cnRjX21vZGVfc2V0X25vZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+PiAgCj4+ICAJZXJyID0g
+aGRsY2Rfc2V0X3B4bF9mbXQoY3J0Yyk7Cj4+ICAJaWYgKGVycikKPj4gLQkJcmV0dXJuOwo+CgpN
+eSBwcmV2aW91cyB1bmRlcnN0YW5kaW5nIHdhcyB0aGF0IHdoZW4gc3VjaCBhbiBleGNlcHRpb24g
+b2NjdXJyZWQsIGl0IHdhcyBjYXVnaHQKaW4gdGhlIGF0b21pY19lbmFibGUgaW50ZXJmYWNlLCBh
+bmQgdGhlbiBkaXNhYmxlIHBpeGVsIGNsb2NrLiBJIGFtIG5vdCBzdXJlIGlzIHRoaXMgb2sgb3IK
+aSBoYXZlIHRvIGRvIG1vcmUgcmVnaXN0ZXIgY2xlYW4gb3BlcmFjdGlvbi4KCj4uLi4gcmV0dXJu
+IGhlcmUgc28gdGhhdCB3ZSBkb24ndCBjYWxsIGNsa19zZXRfcmF0ZSgpOwpBbmQgZm9yIHRoaXMg
+cGFydCwgaSBhbSBhIGxpdHRsZSBjb25mdXNlZCA6CjEgY2xrX3NldF9yYXRlIG11c3QgYmUgc2V0
+IGV2ZW4gaWYgZm9ybWF0IGlzIHdyb25nPwoyIFRoZSBvcmlnaW5hbCBjb2RlIGxvZ2ljIHNob3dz
+IHRoYXQgSWYgZm9ybWF0IGlzIG5vdCBjb3JyZWN0LCB3ZSB3aWxsIG5vdCBzZXQgcmVnaXN0ZXJz
+IApIRExDRF9SRUdfUElYRUxfRk9STUFUICYgSERMQ0RfUkVHXzxjb2xvcj5fU0VMRUNULCB3aWxs
+IHRoaXMgYnJpbmcgaW4KYW55IHByb2JsZW1zPwozIGlmIDEgdGhlIHJhdGUgbXVzdCBzZXQgJiAy
+IHJlZ2lzdGVycyBhYm92ZSBkb2VzbmB0IG1hdHRlciwgdGhlbiBtYXliZSB0aGVyZSBpcyBubwpu
+ZWVkIHRvIGRpc2FibGUgcGl4ZWwgY2xvY2suCkFtIGkgbWlzdW5kZXJzdGFuZGluZwoKUmVnYXJk
+cywKQmVybmFyZAoKPj4gKwkJcmV0dXJuIGVycjsKPj4gIAo+PiAgCWNsa19zZXRfcmF0ZShoZGxj
+ZC0+Y2xrLCBtLT5jcnRjX2Nsb2NrICogMTAwMCk7Cj4+ICsJcmV0dXJuIDA7Cj4+ICB9Cj4+ICAK
+Pj4gIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMg
+KmNydGMsCj4+IEBAIC0xNzMsNyArMTc0LDExIEBAIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRv
+bWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4+ICAJc3RydWN0IGhkbGNkX2RybV9w
+cml2YXRlICpoZGxjZCA9IGNydGNfdG9faGRsY2RfcHJpdihjcnRjKTsKPj4gIAo+PiAgCWNsa19w
+cmVwYXJlX2VuYWJsZShoZGxjZC0+Y2xrKTsKPj4gLQloZGxjZF9jcnRjX21vZGVfc2V0X25vZmIo
+Y3J0Yyk7Cj4+ICsJaWYgKGhkbGNkX2NydGNfbW9kZV9zZXRfbm9mYihjcnRjKSkgewo+PiArCQlE
+Uk1fREVCVUdfS01TKCJJbnZhbGlkIGZvcm1hdCwgcGl4ZWwgY2xvY2sgZW5hYmxlIGZhaWxlZCFc
+biIpOwo+PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaGRsY2QtPmNsayk7Cj4+ICsJCXJldHVy
+bjsKPj4gKwl9Cj4+ICAJaGRsY2Rfd3JpdGUoaGRsY2QsIEhETENEX1JFR19DT01NQU5ELCAxKTsK
+Pj4gIAlkcm1fY3J0Y192Ymxhbmtfb24oY3J0Yyk7Cj4+ICB9Cj4+IC0tIAo+PiAyLjI2LjIKPj4g
+Cj4KPi0tIAo+PT09PT09PT09PT09PT09PT09PT0KPnwgSSB3b3VsZCBsaWtlIHRvIHwKPnwgZml4
+IHRoZSB3b3JsZCwgIHwKPnwgYnV0IHRoZXkncmUgbm90IHwKPnwgZ2l2aW5nIG1lIHRoZSAgIHwK
+PiBcIHNvdXJjZSBjb2RlISAgLwo+ICAtLS0tLS0tLS0tLS0tLS0KPiAgICDCr1xfKOODhClfL8Kv
+CgoNCg0K
