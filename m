@@ -2,115 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA22C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A382496B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gwz1VLQA"
+	by mail.kernel.org (Postfix) with ESMTP id 913F4206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgEHPHz (ORCPT
+        id S1727891AbgEHPJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:07:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47948 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgEHPHy (ORCPT
+        Fri, 8 May 2020 11:09:10 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10924 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgEHPJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:07:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048F7oj4126568;
-        Fri, 8 May 2020 15:07:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=ygriZszAK7uOqyWhz842ZZT0KgYajtrTrd4tzNFIj/0=;
- b=Gwz1VLQALtvp35MtFeGpQufTqn1dft1N2tri/H7KDUgJpn+hO0jTDG0JBpAEIfEScZRR
- xsuqcFHBfV8Z4F6aJELnyplEfgY6BTM/I58RHGPiI4PBM6vd4+UmDv1/sGZzjzPYT2Mu
- JzO5W4gqfsJIyPbY52IWIWDa01L99Uwr0ph3IrvO5i1gEQPHnV0d60hrce3ZmOc7rkDS
- O5zKK7NxAQfItqJv6VJ43Avm/kK95h8rBNUp5FEbqUKGfs0EhSVF4unu/VWhynfSwkD0
- jwt5gdNBuNqQ3ToQsPqolj3qYOMlSTzWaOv89rQWjQE1l/5W2FueCWKUBYWe8GP3sBpR hQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30vtexug38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 15:07:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048F6wb0129074;
-        Fri, 8 May 2020 15:07:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30vtdnrwck-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 15:07:47 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 048F7lxK016233;
-        Fri, 8 May 2020 15:07:47 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 May 2020 08:07:46 -0700
-Date:   Fri, 8 May 2020 18:07:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tejun Heo <tj@kernel.org>, Sean Fu <fxinrong@gmail.com>
-Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] workqueue: Fix an use after free in init_rescuer()
-Message-ID: <20200508150740.GA415175@mwanda>
+        Fri, 8 May 2020 11:09:10 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95eb5748fa8f-5ad2c; Fri, 08 May 2020 23:02:41 +0800 (CST)
+X-RM-TRANSID: 2ee95eb5748fa8f-5ad2c
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.43.52] (unknown[223.104.148.118])
+        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75eb574902e0-a19d8;
+        Fri, 08 May 2020 23:02:41 +0800 (CST)
+X-RM-TRANSID: 2ee75eb574902e0-a19d8
+Subject: Re: [PATCH] USB: host: ehci: Add error handlinginehci_mxc_drv_probe()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
+ <20200508114858.GA4085349@kroah.com>
+ <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
+ <20200508143110.GA447591@kroah.com>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
+Date:   Fri, 8 May 2020 23:03:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080135
+In-Reply-To: <20200508143110.GA447591@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to preserve error code before freeing "rescuer".
 
-Fixes: f187b6974f6df ("workqueue: Use IS_ERR and PTR_ERR instead of PTR_ERR_OR_ZERO.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Another option would be to just revert the original commit.
+On 2020/5/8 22:31, Greg KH wrote:
+> On Fri, May 08, 2020 at 09:55:53PM +0800, Tang Bin wrote:
+>> Hi, Greg:
+>>
+>> On 2020/5/8 19:48, Greg KH wrote:
+>>> On Fri, May 08, 2020 at 07:44:53PM +0800, Tang Bin wrote:
+>>>> The function ehci_mxc_drv_probe() does not perform sufficient error
+>>>> checking after executing platform_get_irq(), thus fix it.
+>>>>
+>>>> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
+>>>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+>>>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>>>> ---
+>>>>    drivers/usb/host/ehci-mxc.c | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+>>>> index a1eb5ee77..a0b42ba59 100644
+>>>> --- a/drivers/usb/host/ehci-mxc.c
+>>>> +++ b/drivers/usb/host/ehci-mxc.c
+>>>> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+>>>>    	}
+>>>>    	irq = platform_get_irq(pdev, 0);
+>>>> +	if (irq < 0)
+>>>> +		return irq;
+>>> <= ?
+>> In the file 'drivers/base/platform.c'， the function platform_get_irq() is
+>> explained and used as follows:
+>>
+>>       * Gets an IRQ for a platform device and prints an error message if
+>> finding the
+>>       * IRQ fails. Device drivers should check the return value for errors so
+>> as to
+>>       * not pass a negative integer value to the request_irq() APIs.
+>>       *
+>>       * Example:
+>>       *        int irq = platform_get_irq(pdev, 0);
+>>       *        if (irq < 0)
+>>       *            return irq;
+>>       *
+>>       * Return: IRQ number on success, negative error number on failure.
+>>
+>> And in my hardware experiment, even if I set the irq failed deliberately in
+>> the DTS, the returned value is negative instead of zero.
+> Please read the thread at
+> 	https://lore.kernel.org/r/20200501224042.141366-1-helgaas%40kernel.org
+> for more details about this.
+>
+Great, It looks beautiful, finally someone took a knife to the file 
+'platform.c'.
 
- kernel/workqueue.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I have been studied this place for a long time, and don't know what 
+platform can return 0, which made me curious.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index ddf0537dce140..10ed8d761e0b7 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4197,6 +4197,7 @@ static int wq_clamp_max_active(int max_active, unsigned int flags,
- static int init_rescuer(struct workqueue_struct *wq)
- {
- 	struct worker *rescuer;
-+	int ret;
- 
- 	if (!(wq->flags & WQ_MEM_RECLAIM))
- 		return 0;
-@@ -4208,8 +4209,9 @@ static int init_rescuer(struct workqueue_struct *wq)
- 	rescuer->rescue_wq = wq;
- 	rescuer->task = kthread_create(rescuer_thread, rescuer, "%s", wq->name);
- 	if (IS_ERR(rescuer->task)) {
-+		ret = PTR_ERR(rescuer->task);
- 		kfree(rescuer);
--		return PTR_ERR(rescuer->task);
-+		return ret;
- 	}
- 
- 	wq->rescuer = rescuer;
--- 
-2.26.2
+So the example should be:
+
+      *        int irq = platform_get_irq(pdev, 0);
+      *        if (irq <= 0)
+      *            return irq;
+
+Thanks,
+
+Tang Bin
+
+
 
