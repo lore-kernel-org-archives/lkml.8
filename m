@@ -7,153 +7,136 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1131EC54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA16C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E194E208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDF5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nK2YQiQh"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qT/3ml4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgEHLCf (ORCPT
+        id S1726885AbgEHLEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726519AbgEHLCe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:02:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89066C05BD43;
-        Fri,  8 May 2020 04:02:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z8so1370747wrw.3;
-        Fri, 08 May 2020 04:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FkEHL5zjH9NOXTmK8upd4DOiKhI1dh7AJQdWAx10iwY=;
-        b=nK2YQiQhonp8TBWc6SJQNRqvr7zeP+LE21igKDXN4j5VesKJlVCmRjhYHS8JobWE06
-         ixAqzm1gXoUMXs3AYjA5wsC1v+EiKr3WvQQ0MD/7NcqqAlFW1DuFGErGsLGZnF4EPDFX
-         0+Fr7zGjSHs+RzyNBviNQlfvM/Sfs9icoKyE+WJN+K8F88Wea3uFAornpjZ53yge2MLY
-         aDolyAbVZMXeUVHyfBzNC7E481UOo2YllD0m8NqYLkNUVAKvR0iSYtKWMrtThkbtPmRR
-         6Ttdvw0IxnkqfCbwaR0phfvfNvCK5KTj06PwrOP9FVq0O4762kGy6xuzbIVD1QBQJ9BB
-         Gexw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FkEHL5zjH9NOXTmK8upd4DOiKhI1dh7AJQdWAx10iwY=;
-        b=g4M93J81oRg58IHWgdRH0QL3i0444JLvtIBPoF2TMR2VDZWiyAp3GZ5VC+M7GJz78d
-         GYpxo+DqUb2Y8na8iUizW5cNmWZc1mPabHurG4VuXgt5oIzvO9zw8en0uBXX9gU5Y5Yx
-         vEFYF3MdmYqBLLRokJkWSdCRVYMNL1u8vGPodFgLI3ugUwkS6lyg0Wif1aGC+P0w7Okc
-         aY9q9ZuIp7jcMAju22Kj83o4UwJRNP6SfiVWwopwjS9XuY6AWnMTOgaBfSyUbWy6yYzL
-         Tj8pWDh0o3NxO9kPJhEDIqNvR8I88kDkajWyUYGwSWjUXmB/eMF4F7KwE8kBb/r53OYb
-         WBQg==
-X-Gm-Message-State: AGi0PubLMngXqGJvzKMZFR1MOp0X7mwj1cRPj+NAqJiSZgTgjlvhNpAh
-        OkZnNE/a+unLKk6ZbdVpl6E=
-X-Google-Smtp-Source: APiQypIp6YIwXaUa5824wcmZA6NiTZhT6Gn3InjfzNfs5u6CIl1RBWsEt6Jq9rAgWjRRJ2CQI0Z/Dw==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr2304234wrm.406.1588935753156;
-        Fri, 08 May 2020 04:02:33 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id a81sm5874924wmh.7.2020.05.08.04.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 04:02:27 -0700 (PDT)
-Date:   Fri, 8 May 2020 13:02:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
- MAX77620
-Message-ID: <20200508110226.GA3034719@ulmo>
-References: <20200417170825.2551367-1-thierry.reding@gmail.com>
- <20200430140701.GA21776@bogus>
- <20200430141520.GA101194@piout.net>
- <CAL_Jsq+HzG8QT+kHUjqC8joDxfm1WM+N_F1ZwYXg7cL5faGxVA@mail.gmail.com>
- <20200501135309.GC51277@piout.net>
+        Fri, 8 May 2020 07:04:11 -0400
+Received: from mout.web.de ([212.227.15.14]:44795 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgEHLEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:04:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588935793;
+        bh=c9S9YQqI67Ut1hb9mGfmb0uXO8OHJpACeLw+sXmMQH4=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
+        b=qT/3ml4Q28KaqNcMgUPKa6qR7AFbI5sxDtqzEfFr0aBld0oi+qbIqCkzbBynOpSZy
+         8rYIKwD55ylYNoYZ4pb15fo2xlb2ArPsOP5GzwSZ+QTyAdfAEw+FyTqhPFByPOTEPU
+         fedGLuRHWGxZAuRa9Kj6YiU3WseFWphEy3SXi25A=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.146.138]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lv7eE-1j7Kz50Wp8-010Okc; Fri, 08
+ May 2020 13:03:13 +0200
+Subject: Re: [PATCH v3] tools/bootconfig: fix resource leak in apply_xbc()
+To:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Message-ID: <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
+Date:   Fri, 8 May 2020 13:03:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
-Content-Disposition: inline
-In-Reply-To: <20200501135309.GC51277@piout.net>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FQdNLKBV7s/N7eSryvWj9UO2O2wbostJB794cgIyhdQXN8ptV85
+ AWIsuoAbra/H8zZ0ihf8mqN/AqiCNIAK89k5rj7vmexqicbcxHG1EADs8QP5RIUKg68LgHO
+ zfeK/lC1ODbh8vzrAF1y7ZuQ8cRROPLkPr7eRDdaW5Gl5gtq0EsH45t3Xp/X99kckatjkzd
+ EmC/9YuiRbqxvy5tBcrKA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aDhgPo9rUjE=:7gHk1urOAQE4Ij5TVK006n
+ /Sei2G+hJ7O7vbkb9b/GanK/ed5etVM5qETJi5QsVuEHglleLrpRyLhezoEDUYOMAAn/pz/9p
+ 2oc9D3G15/hJ3mPlV3gKcWIqtCvP+BVyfRqjoD7PGdmPkN6CIp99Q44Z5jLe95YUFrK1/Y5Fn
+ b1ve+KRn8MQNgTE8YZla+c1QAc+X5aw6BQ+EEiWcDhmSoWiaaeu7wmCGwMuyhJR2VJJF3DXcE
+ kfGT/KPTlCyjCEbcrFosEjy5nMnLOkvCbFwEAvVpxI+LAV2qynsekWPUw/0gRspwoZu/6T7/v
+ XgAq6qRHYBR74vTGbjemKBv6yFsV107cAo7j8o2z3rERCGPby24SyF5cjkK4aUOKnRwxuSoX1
+ ML5HeO6uW2kM0Wr4mV2rBEUfd7mZeSfnJ2S+yfBk9r9l8jys3oe/IRQ5535FgCTcye4+sN9nj
+ B6B93WB6JvrFZ7hVC0IG5H3O7FfIoohCEhMLtaWSOzK3vx0r8Cjd8LPx+BnaR+bX5IFUIFZ44
+ dxUdB0NCtvkTBykI4elb2DnU1AHtaqd7LgutR99ZvgqHCVX55KCUMctkclQDnHFdDf4KKrYL8
+ q4/l5hjlkWtzZYsJ6213+aXldVDCK6J8vMsaU82U8mimsP9Q0kUTXQFMO/ZS0uOAPurwBDJHP
+ VyLBSlcVCZDjVkKr0PxjvaxwzRsJ19D9Op0z7U+wmQvwfZi6azaMZ2L6ED8Plj3+7N+oEj3+k
+ ymWxq6QTGfk0IfTqHPhlNqNgUmEC2/GzBLzPWPcNbOAV69sT3nPnSaiimLZk/WncRRn3hZizl
+ LKnePmX9ZC3Q66TxAp57qX3iUQCaMI5Vs1XlJ00T6nzddSZaR31dT3iRlHdIxBuQy2/XKk3C0
+ PzqUIweQ6uRcDxZV4fJ7i3/7KwKbLUeDZeI3THrdsNJ1jvSc/ooFQxf/b5L3JJy1PypohJ9YH
+ 4RhXIZBpABf/X9hoXxx+4eVrZJ5aNJFmD3SJrE4KGVJ6xSyd4thUrv7Bn4ZTZcfQWorno4GO4
+ dKXg4iumqlAO7u9dciA2GEeEve5o1H8nizqD2DADR/wo8TqQgV13sIlnIRNt41mLnZ1caJIOQ
+ NjSW44yHL+iFiMp99FbBlo0Azv9ePm3aqnkovdSkKK24blX3Vu/lteQbfyIYMrn2xCFqycvrp
+ Ttnn4kusJlKG71Uoy0wLnlceTy4pb12JNVLF7EXZ6fOJuiPLJkE27AUTk2cv/CRNm2ExILYyp
+ azLxCTGs7nOl7Q+nu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+=E2=80=A6
+> +++ b/tools/bootconfig/main.c
+> @@ -314,31 +314,35 @@ int apply_xbc(const char *path, const char *xbc_pa=
+th)
+=E2=80=A6
+> +free_data:
+>  	free(data);
+=E2=80=A6
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Would any software users prefer to omit the memory release for
+a quicker program termination?
 
-On Fri, May 01, 2020 at 03:53:09PM +0200, Alexandre Belloni wrote:
-> On 01/05/2020 08:00:11-0500, Rob Herring wrote:
-> > > I don't think this is true because in the case of a discrete RTC, its
-> > > interrupt pin can be connected directly to a PMIC to power up a board
-> > > instead of being connected to the SoC. In that case we don't have an
-> > > interrupt property but the RTC is still a wakeup source. This is the
-> > > usual use case for wakeup-source in the RTC subsystem. Else, if there=
- is
-> > > an interrupt, then we assume the RTC is a wakeup source and there is =
-no
-> > > need to have the wakeup-source property.
-> >=20
-> > Yes, that would be an example of "unless the wakeup mechanism is
-> > somehow not an interrupt". I guess I should add not an interrupt from
-> > the perspective of the OS.
-> >=20
-> > So if the wakeup is self contained within the PMIC, why do we need a
-> > DT property? The capability is always there and enabling/disabling
-> > wakeup from it is userspace policy.
-> >=20
->=20
-> Yes, for this particular case, I'm not sure wakeup-source is actually
-> necessary. If the interrupt line is used to wakeup the SoC, then the
-> presence of the interrupts property is enough to enable wakeup.
+Can the commit message become clearer about the explanation for
+the importance of the proposed change?
 
-So yes, the wakeup-source property isn't necessary. The goal of patches
-1 and 2 was to allow the RTC to be actually disabled as a wakeup-source
-in case it didn't work as intended. But since the RTC is enabled as a
-wakeup source on these PMICs by default, the idea was to add a new sub-
-node for the RTC and required the wakeup-source in that subnode if that
-subnode was present.
-
-That said, patch 3 actually does make the RTC work as a wakeup source
-on the particular board that I tested this, so patches 1 and 2 are no
-longer really required from my point of view.
-
-Do you want me to send patch 3/3 again separately or can you pick it up
-=66rom this series?
-
-Thanks,
-Thierry
-
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl61PD8ACgkQ3SOs138+
-s6GV8BAAgLR4lg0g62qMQgR8ZL2stOQFzJoRTr3EOif7vMW34wGNJxEkGewzJGN0
-eEuXOqMN5x0bVIqbb1/xETy7P6/38SOUx6PwaaxuFCVCi+XjCdg5lqoYSliMaUcC
-LWZnojhwjBiEb5MyesMgZPtAq9zoimroASiCC2MMgadKefm3qhO6dF5l3L46Mscl
-63NpGDbQVhmXCzASor/+yzV+x6SjpzFSL61J2bUuaovMcWSBljsiLtMu5z3m39f8
-UeQ3brtGLDlXRHMNfPNt9+F7Wtd7oUyfhAhu5lSS2ukSVSZgoID1fX3ctBlunGn/
-U/Ou0jaefIItGRTsENY+7sebpZoQeeo6x0/BYE2rPFPw5Nle4u7QYw5WIIFG2U1p
-+Ijti2WHSAt3jgWc0pw1LiCMPpmJ+BGQ//ceT3X1Fca4z4tNERcRbR4eJqjPuRV8
-GQKsjPYP1kmaxDPtZpPoq9LCizS1dkITkFCl3PlFbEIJt1tF6nOn0XaYSd43LCBZ
-zP82oKrtnWFH0+mob1WgZ5zIs5Z5Azhua4Ad7+SVl0m0tGQEncH2u0xV3yGd2yJl
-KUiJZY0CWad3b32pKSPhZY7hHzXN26XsnCQH7YqhWoKdR5b6d4Z9zcBTUpK1uezY
-0PCUNKzTTvMJHsJR2lMeoNNSNu6sCCEz8CPj+2FPHZXvALC/354=
-=L+Q9
------END PGP SIGNATURE-----
-
---sm4nu43k4a2Rpi4c--
+Regards,
+Markus
