@@ -2,80 +2,84 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B64EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB895C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E312724955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C702495B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fBiQd9Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgEHOKL (ORCPT
+        id S1727801AbgEHOKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:10:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4356 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726792AbgEHOKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:10:10 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EC0DB1A56182C8F5F6C2;
-        Fri,  8 May 2020 22:10:00 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 22:09:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <Roy.Pledge@nxp.com>, <leoyang.li@nxp.com>,
-        <youri.querry_1@nxp.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register
-Date:   Fri, 8 May 2020 22:09:47 +0800
-Message-ID: <20200508140947.28712-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 8 May 2020 10:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726792AbgEHOKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:10:23 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81BD8C05BD43;
+        Fri,  8 May 2020 07:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0S9YlEMp9Fll1gT9k7DjCjsWQkPxcTbl7fnb3cKQ7G4=; b=fBiQd9Iz1busnHlOGBKJ5hWfHK
+        VcHIwfHaTUDN8GUwzo86b71ehk4KpZzkjb4rK+QFmyAc2eVLTeKpJL6ygT4xq/the3Ue2hL4CLhch
+        CR4i7CXFLkj20SB4bc8yqzgddId1ZbU8dVEoznPe96yFCNi0acypBXqbeF4ceXz4e72fXzwxCWxvL
+        BixOPAZb50ASIYtxi/EoQ7gTMzIKYPe/cvob6kwUYwyF9L3anypR6ASURchw0+OEZL8ewvZN69TN/
+        LCfyP21Y/Lj/ph0jTnnhURUZ7/opiQQu5XBoPhbrFKcxY+Tqa6C+avK3qRpxwmYgSbzn/ibn0PKBO
+        xME49MLA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX3h8-0005Ij-AE; Fri, 08 May 2020 14:09:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2712E3079EB;
+        Fri,  8 May 2020 16:09:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0A42C28688AB1; Fri,  8 May 2020 16:09:39 +0200 (CEST)
+Date:   Fri, 8 May 2020 16:09:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, sudeep.holla@arm.com,
+        rafael@kernel.org, viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        fweisbec@gmail.com, tkjos@google.com, kernel-team@android.com
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200508140938.GA3344@hirez.programming.kicks-ass.net>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200508081128.GM5298@hirez.programming.kicks-ass.net>
+ <20200508103721.GA3860390@kroah.com>
+ <20200508111612.GA252673@google.com>
+ <20200508113141.GB5298@hirez.programming.kicks-ass.net>
+ <20200508130507.GA10541@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508130507.GA10541@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no callers in-tree anymore since commit
-3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
+On Fri, May 08, 2020 at 02:05:07PM +0100, Quentin Perret wrote:
+> So, all in all, I don't think the series actively makes schedutil worse
+> by adding out-of-line calls in the hot path or anything like that, and
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/soc/fsl/dpio/qbman-portal.c | 12 ------------
- 1 file changed, 12 deletions(-)
+Do note that (afaik) ARM64 (and Power and probably others) has modules
+in an address space that is not reachable from regular kernel text and
+needs those intermediate trampolines.
 
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-index 804b8ba9bf5c..e2e9fbb58a72 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.c
-+++ b/drivers/soc/fsl/dpio/qbman-portal.c
-@@ -572,18 +572,6 @@ void qbman_eq_desc_set_qd(struct qbman_eq_desc *d, u32 qdid,
- #define EQAR_VB(eqar)      ((eqar) & 0x80)
- #define EQAR_SUCCESS(eqar) ((eqar) & 0x100)
- 
--static inline void qbman_write_eqcr_am_rt_register(struct qbman_swp *p,
--						   u8 idx)
--{
--	if (idx < 16)
--		qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT + idx * 4,
--				     QMAN_RT_MODE);
--	else
--		qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT2 +
--				     (idx - 16) * 4,
--				     QMAN_RT_MODE);
--}
--
- #define QB_RT_BIT ((u32)0x100)
- /**
-  * qbman_swp_enqueue_direct() - Issue an enqueue command
--- 
-2.17.1
-
-
+While that's probably not a very big deal, it does increase L1$ pressure
+and things.
