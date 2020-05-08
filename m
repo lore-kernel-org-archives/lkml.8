@@ -2,168 +2,125 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E7C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEFC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397732075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8227208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588903690;
+	bh=ksEqcqImipmxWT3Iy/S3JUAYsjC/OSyXI0gG+NiBwk8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=M39ZEvxzUZDXArhZ3ac84VpVWnSAVrot3FA72xitiw5ipenQvj1nmWaogdgpadl13
+	 x7e/ihbhbg5LlLDAHuyaw4BuwQOe2odJz3x/QRlxHlg9bYErtxqnAHFRmcjghOuT+d
+	 YkMiU5hqojn+E5JgGbe2ZFPIAqRxYSXT9FH3GjIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEHCFR (ORCPT
+        id S1726809AbgEHCIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:05:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbgEHCFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:05:16 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DDEBC25F166B0051E54;
-        Fri,  8 May 2020 10:05:10 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 10:05:04 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net v1] hinic: fix a bug of ndo_stop
-Date:   Thu, 7 May 2020 18:22:27 +0000
-Message-ID: <20200507182227.20553-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+        Thu, 7 May 2020 22:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbgEHCIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 22:08:09 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 298292075E;
+        Fri,  8 May 2020 02:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588903689;
+        bh=ksEqcqImipmxWT3Iy/S3JUAYsjC/OSyXI0gG+NiBwk8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PLBCeydaQyu0oOyiHn6JxAxH+fAjVnKeKDYLwzI8b/aSvxuvJ9QGI0YYFultEwPh8
+         J+c6O0CgkncOBptSUnEOAw0pDeri23FDwaMsi27VmLdI900zwmoDYuJbafWO799E9x
+         wuquKUTzN8n6SHU/45QtMQGhFRTrp2QZl+m0mdlM=
+Date:   Thu, 7 May 2020 19:08:08 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-Id: <20200507190808.c6cdd5ffd68d0a154ef8ff18@linux-foundation.org>
+In-Reply-To: <20200508114338.02d2b843@canb.auug.org.au>
+References: <20200507221721.0330271c@canb.auug.org.au>
+        <20200508114338.02d2b843@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if some function in ndo_stop interface returns failure because of
-hardware fault, must go on excuting rest steps rather than return
-failure directly, otherwise will cause memory leak
+On Fri, 8 May 2020 11:43:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+> Hi all,
+> 
+> On Thu, 7 May 2020 22:17:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the akpm-current tree, today's linux-next build (arm
+> > collie_defconfig and many others) failed like this:
+> > 
+> > arch/arm/mm/dma-mapping.c: In function 'dma_cache_maint_page':
+> > arch/arm/mm/dma-mapping.c:892:6: error: implicit declaration of function 'kunmap_high' [-Werror=implicit-function-declaration]
+> >       kunmap_high(page);
+> >       ^
+> > arch/arm/mm/flush.c: In function '__flush_dcache_page':
+> > arch/arm/mm/flush.c:221:6: error: implicit declaration of function 'kunmap_high' [-Werror=implicit-function-declaration]
+> >       kunmap_high(page + i);
+> >       ^
+> > 
+> > Caused by commit
+> > 
+> >   6b66ab470b4d ("arch/kunmap: remove duplicate kunmap implementations")
+> > 
+> > kunmap_high() is now only declared when CONFIG_HIGHMEM is defined.
+> 
+> Is there anything that can be done quickly about this as it broke a
+> large number of builds ...
+
+This?  It's based on Ira's v3 series but should work.
+
+
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: arch-kunmap-remove-duplicate-kunmap-implementations-fix
+
+fix CONFIG_HIGHMEM=n build on various architectures
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.c | 28 ++++++++++++++-----
- .../net/ethernet/huawei/hinic/hinic_main.c    | 16 ++---------
- 2 files changed, 23 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-index eef855f11a01..e66659bab012 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -45,6 +45,10 @@
- 
- #define MGMT_MSG_TIMEOUT                5000
- 
-+#define SET_FUNC_PORT_MBOX_TIMEOUT	30000
-+
-+#define SET_FUNC_PORT_MGMT_TIMEOUT	25000
-+
- #define mgmt_to_pfhwdev(pf_mgmt)        \
- 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
- 
-@@ -238,12 +242,13 @@ static int msg_to_mgmt_sync(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 			    u8 *buf_in, u16 in_size,
- 			    u8 *buf_out, u16 *out_size,
- 			    enum mgmt_direction_type direction,
--			    u16 resp_msg_id)
-+			    u16 resp_msg_id, u32 timeout)
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
- 	struct hinic_recv_msg *recv_msg;
- 	struct completion *recv_done;
-+	unsigned long timeo;
- 	u16 msg_id;
- 	int err;
- 
-@@ -267,8 +272,9 @@ static int msg_to_mgmt_sync(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 		goto unlock_sync_msg;
- 	}
- 
--	if (!wait_for_completion_timeout(recv_done,
--					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
-+	timeo = msecs_to_jiffies(timeout ? timeout : MGMT_MSG_TIMEOUT);
-+
-+	if (!wait_for_completion_timeout(recv_done, timeo)) {
- 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
- 		err = -ETIMEDOUT;
- 		goto unlock_sync_msg;
-@@ -342,6 +348,7 @@ int hinic_msg_to_mgmt(struct hinic_pf_to_mgmt *pf_to_mgmt,
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
-+	u32 timeout = 0;
- 
- 	if (sync != HINIC_MGMT_MSG_SYNC) {
- 		dev_err(&pdev->dev, "Invalid MGMT msg type\n");
-@@ -353,13 +360,20 @@ int hinic_msg_to_mgmt(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 		return -EINVAL;
- 	}
- 
--	if (HINIC_IS_VF(hwif))
-+	if (HINIC_IS_VF(hwif)) {
-+		if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
-+			timeout = SET_FUNC_PORT_MBOX_TIMEOUT;
-+
- 		return hinic_mbox_to_pf(pf_to_mgmt->hwdev, mod, cmd, buf_in,
--					in_size, buf_out, out_size, 0);
--	else
-+					in_size, buf_out, out_size, timeout);
-+	} else {
-+		if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
-+			timeout = SET_FUNC_PORT_MGMT_TIMEOUT;
-+
- 		return msg_to_mgmt_sync(pf_to_mgmt, mod, cmd, buf_in, in_size,
- 				buf_out, out_size, MGMT_DIRECT_SEND,
--				MSG_NOT_RESP);
-+				MSG_NOT_RESP, timeout);
-+	}
+ include/linux/highmem.h |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/include/linux/highmem.h~arch-kunmap-remove-duplicate-kunmap-implementations-fix
++++ a/include/linux/highmem.h
+@@ -53,6 +53,7 @@ static inline void *kmap(struct page *pa
  }
  
- /**
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 3d6569d7bac8..22ee868dd11e 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -487,7 +487,6 @@ static int hinic_close(struct net_device *netdev)
+ void kunmap_high(struct page *page);
++
+ static inline void kunmap(struct page *page)
  {
- 	struct hinic_dev *nic_dev = netdev_priv(netdev);
- 	unsigned int flags;
--	int err;
+ 	might_sleep();
+@@ -111,6 +112,10 @@ static inline void *kmap(struct page *pa
+ 	return page_address(page);
+ }
  
- 	down(&nic_dev->mgmt_lock);
- 
-@@ -504,20 +503,9 @@ static int hinic_close(struct net_device *netdev)
- 	if (!HINIC_IS_VF(nic_dev->hwdev->hwif))
- 		hinic_notify_all_vfs_link_changed(nic_dev->hwdev, 0);
- 
--	err = hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev,
--			  "Failed to set func port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
-+	hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
- 
--	err = hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev, "Failed to set port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
-+	hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
- 
- 	if (nic_dev->flags & HINIC_RSS_ENABLE) {
- 		hinic_rss_deinit(nic_dev);
--- 
-2.17.1
++static inline void kunmap_high(struct page *page)
++{
++}
++
+ static inline void kunmap(struct page *page)
+ {
+ }
+_
 
