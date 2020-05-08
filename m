@@ -2,134 +2,435 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A70C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0FCC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDF424958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:22:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="pDY0Fio+";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="pDY0Fio+"
+	by mail.kernel.org (Postfix) with ESMTP id D643D24964
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgEHOWZ (ORCPT
+        id S1728073AbgEHOWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:22:25 -0400
-Received: from node.akkea.ca ([192.155.83.177]:42034 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHOWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:22:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id A53EE4E2006;
-        Fri,  8 May 2020 14:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588947744; bh=0jec+jyyIGui6THZvYPbXVUAbTgjEq58la8/fReMJWA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=pDY0Fio+N/ZYSgp4G4IWyN95erGxxsyJfMdlBlOBX8vIOX5l5lTiFQQKwW32teAun
-         q7OLwm17UjAt7C49CYljidwoSF/byO56pNx3TC0iMsQhB6FV/GQvtvXDh+xmycEid7
-         qjf/tAdA31ybShvUeoJgF8A0c2SK8ZZbBc2lzfmc=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nL4lATXDCIRE; Fri,  8 May 2020 14:22:24 +0000 (UTC)
-Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
-        by node.akkea.ca (Postfix) with ESMTPSA id 0751C4E2003;
-        Fri,  8 May 2020 14:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1588947744; bh=0jec+jyyIGui6THZvYPbXVUAbTgjEq58la8/fReMJWA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=pDY0Fio+N/ZYSgp4G4IWyN95erGxxsyJfMdlBlOBX8vIOX5l5lTiFQQKwW32teAun
-         q7OLwm17UjAt7C49CYljidwoSF/byO56pNx3TC0iMsQhB6FV/GQvtvXDh+xmycEid7
-         qjf/tAdA31ybShvUeoJgF8A0c2SK8ZZbBc2lzfmc=
+        Fri, 8 May 2020 10:22:54 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2173 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbgEHOWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:22:54 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 52CC78E7FE0F72B49E69;
+        Fri,  8 May 2020 15:22:52 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:22:51 +0100
+Date:   Fri, 8 May 2020 15:22:29 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <robh@kernel.org>,
+        <mchehab+huawei@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/12] iio: imu: inv_icm42600: add device interrupt
+ trigger
+Message-ID: <20200508152229.00005de2@Huawei.com>
+In-Reply-To: <20200507144222.20989-9-jmaneyrol@invensense.com>
+References: <20200507144222.20989-1-jmaneyrol@invensense.com>
+        <20200507144222.20989-9-jmaneyrol@invensense.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 08 May 2020 07:22:24 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
-        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
-        keescook@chromium.org, linux-usb-owner@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Add TI tps6598x DT binding and probe
-In-Reply-To: <20200508140132.GA1264047@kuha.fi.intel.com>
-References: <20200507214733.1982696-1-bryan.odonoghue@linaro.org>
- <20200508140132.GA1264047@kuha.fi.intel.com>
-Message-ID: <e1f5fac00b4d574edf187f2ccd19ebe2@akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.3.6
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 7 May 2020 16:42:18 +0200
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
-On 2020-05-08 07:01, Heikki Krogerus wrote:
-> Hi,
+> Add INT1 interrupt support and use it as an iio trigger.
+> Support interrupt edge and level, active high or low.
+> Push-pull configuration only.
 > 
-> On Thu, May 07, 2020 at 10:47:31PM +0100, Bryan O'Donoghue wrote:
->> V2:
->> - Put myself down as sole schema maintainer as suggested - Andy
->> - Fixed whitespace typo - Andy
->> - Removed ifdef and of_match_ptr() - Andy
->> 
->> V1:
->> This simple series adds DT binding yaml and a DT lookup table for the
->> tps6598x.
->> 
->> Its possible to use i2c id_table to match the 'compatible = 
->> "ti,tps6598x"
->> and probe that way, however I think it is worthwhile adding a specific 
->> OF
->> way of doing it and having an accompanying yaml as an example.
->> 
->> Bryan O'Donoghue (2):
->>   dt-bindings: usb: Add TI tps6598x device tree binding documentation
->>   usb: typec: tps6598x: Add OF probe binding
->> 
->>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 64 
->> +++++++++++++++++++
->>  drivers/usb/typec/tps6598x.c                  |  7 ++
->>  2 files changed, 71 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> Trigger enables FIFO and will be useful with buffer support.
 > 
-> There was already a series from Angus [1] for this. The bindings
-> looked a bit different, but I think we should use these, because in
-> the DT bindings from Angus there appeared to be definitions for OF
-> graph that was not used. Or maybe I got it wrong?
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+
+So it's an odd trigger... But you check its only used for the
+device itself which stops that being visible to anyone.
+
+The open question in my mind is why we need a trigger at all?
+If there is no advantage we don't need to expose that.  Can just
+directly call the buffer functions from the interrupt handler.
+
+It's perfectly acceptable to not have a trigger exposed if:
+* It would only be useful for the device providing it.
+* You don't need to use it to select between various options.
+
+For some of the other fifo devices IIRC we do support other
+triggers but if you don't provide one the local fifo is used.
+
+Here I don't think we actually support other triggers though we
+don't prevent them being used? So even simpler.
+With the complex interleaved fifo I suspect it would be hard
+to support other triggers anyway except in a trivial poll like
+mode so probably not of interest to anyone...
+
+J 
+
+> ---
+>  drivers/iio/imu/inv_icm42600/Kconfig          |   1 +
+>  drivers/iio/imu/inv_icm42600/Makefile         |   1 +
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h   |   8 +-
+>  .../iio/imu/inv_icm42600/inv_icm42600_core.c  |  19 +-
+>  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   |   2 +-
+>  .../iio/imu/inv_icm42600/inv_icm42600_spi.c   |   2 +-
+>  .../imu/inv_icm42600/inv_icm42600_trigger.c   | 177 ++++++++++++++++++
+>  7 files changed, 206 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_trigger.c
 > 
+> diff --git a/drivers/iio/imu/inv_icm42600/Kconfig b/drivers/iio/imu/inv_icm42600/Kconfig
+> index 22390a72f0a3..7b3eaeb2aa4a 100644
+> --- a/drivers/iio/imu/inv_icm42600/Kconfig
+> +++ b/drivers/iio/imu/inv_icm42600/Kconfig
+> @@ -2,6 +2,7 @@
+>  
+>  config INV_ICM42600
+>  	tristate
+> +	select IIO_TRIGGER
+>  
+>  config INV_ICM42600_I2C
+>  	tristate "InvenSense ICM-426xx I2C driver"
+> diff --git a/drivers/iio/imu/inv_icm42600/Makefile b/drivers/iio/imu/inv_icm42600/Makefile
+> index 48965824f00c..e1f2aacbe888 100644
+> --- a/drivers/iio/imu/inv_icm42600/Makefile
+> +++ b/drivers/iio/imu/inv_icm42600/Makefile
+> @@ -5,6 +5,7 @@ inv-icm42600-y += inv_icm42600_core.o
+>  inv-icm42600-y += inv_icm42600_gyro.o
+>  inv-icm42600-y += inv_icm42600_accel.o
+>  inv-icm42600-y += inv_icm42600_temp.o
+> +inv-icm42600-y += inv_icm42600_trigger.o
+>  
+>  obj-$(CONFIG_INV_ICM42600_I2C) += inv-icm42600-i2c.o
+>  inv-icm42600-i2c-y += inv_icm42600_i2c.o
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> index bc963b3d1800..175c1f67faee 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> @@ -13,6 +13,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/pm.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+>  
+>  enum inv_icm42600_chip {
+>  	INV_CHIP_ICM42600,
+> @@ -122,6 +123,7 @@ struct inv_icm42600_suspended {
+>   *  @suspended:		suspended sensors configuration.
+>   *  @indio_gyro:	gyroscope IIO device.
+>   *  @indio_accel:	accelerometer IIO device.
+> + *  @trigger:		device internal interrupt trigger
+>   */
+>  struct inv_icm42600_state {
+>  	struct mutex lock;
+> @@ -135,6 +137,7 @@ struct inv_icm42600_state {
+>  	struct inv_icm42600_suspended suspended;
+>  	struct iio_dev *indio_gyro;
+>  	struct iio_dev *indio_accel;
+> +	struct iio_trigger *trigger;
+>  };
+>  
+>  /* Virtual register addresses: @bank on MSB (4 upper bits), @address on LSB */
+> @@ -370,11 +373,14 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
+>  int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
+>  			     unsigned int writeval, unsigned int *readval);
+>  
+> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
+>  			    inv_icm42600_bus_setup bus_setup);
+>  
+>  int inv_icm42600_gyro_init(struct inv_icm42600_state *st);
+>  
+>  int inv_icm42600_accel_init(struct inv_icm42600_state *st);
+>  
+> +int inv_icm42600_trigger_init(struct inv_icm42600_state *st, int irq,
+> +			      int irq_type);
+> +
+>  #endif
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> index 4e33f263d3ea..1102c54396e3 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> @@ -447,11 +447,13 @@ static void inv_icm42600_disable_pm(void *_data)
+>  	pm_runtime_disable(dev);
+>  }
+>  
+> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
+>  			    inv_icm42600_bus_setup bus_setup)
+>  {
+>  	struct device *dev = regmap_get_device(regmap);
+>  	struct inv_icm42600_state *st;
+> +	struct irq_data *irq_desc;
+> +	int irq_type;
+>  	int ret;
+>  
+>  	BUILD_BUG_ON(ARRAY_SIZE(inv_icm42600_hw) != INV_CHIP_NB);
+> @@ -460,6 +462,16 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  		return -ENODEV;
+>  	}
+>  
+> +	/* get irq data, set trigger falling by default */
+> +	irq_desc = irq_get_irq_data(irq);
+> +	if (!irq_desc) {
+> +		dev_err(dev, "could not find IRQ %d\n", irq);
+> +		return -EINVAL;
+> +	}
+> +	irq_type = irqd_get_trigger_type(irq_desc);
+> +	if (!irq_type)
+> +		irq_type = IRQF_TRIGGER_FALLING;
+> +
+>  	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
+>  	if (!st)
+>  		return -ENOMEM;
+> @@ -503,6 +515,11 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* setup interrupt trigger */
+> +	ret = inv_icm42600_trigger_init(st, irq, irq_type);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* create and init gyroscope iio device */
+>  	ret = inv_icm42600_gyro_init(st);
+>  	if (ret)
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> index b61f993beacf..b1478ece43f6 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> @@ -70,7 +70,7 @@ static int inv_icm42600_probe(struct i2c_client *client,
+>  	if (IS_ERR(regmap))
+>  		return PTR_ERR(regmap);
+>  
+> -	return inv_icm42600_core_probe(regmap, chip,
+> +	return inv_icm42600_core_probe(regmap, chip, client->irq,
+>  				       inv_icm42600_i2c_bus_setup);
+>  }
+>  
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> index 835ced68a3a3..ec784f9e3c2c 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> @@ -70,7 +70,7 @@ static int inv_icm42600_probe(struct spi_device *spi)
+>  	if (IS_ERR(regmap))
+>  		return PTR_ERR(regmap);
+>  
+> -	return inv_icm42600_core_probe(regmap, chip,
+> +	return inv_icm42600_core_probe(regmap, chip, spi->irq,
+>  				       inv_icm42600_spi_bus_setup);
+>  }
+>  
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_trigger.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_trigger.c
+> new file mode 100644
+> index 000000000000..7a5e76305f0b
+> --- /dev/null
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_trigger.c
+> @@ -0,0 +1,177 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2020 Invensense, Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +
+> +#include "inv_icm42600.h"
+> +
+> +static irqreturn_t inv_icm42600_trigger_timestamp(int irq, void *_data)
+> +{
+> +	struct inv_icm42600_state *st = _data;
+> +
+> +	if (st->indio_gyro)
+> +		iio_pollfunc_store_time(irq, st->indio_gyro->pollfunc);
+> +	if (st->indio_accel)
+> +		iio_pollfunc_store_time(irq, st->indio_accel->pollfunc);
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t inv_icm42600_trigger_int_handler(int irq, void *_data)
+> +{
+> +	struct inv_icm42600_state *st = _data;
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int status;
+> +	int ret;
+> +
+> +	mutex_lock(&st->lock);
+> +
+> +	ret = regmap_read(st->map, INV_ICM42600_REG_INT_STATUS, &status);
+> +	if (ret)
+> +		goto out_unlock;
+> +	dev_dbg(dev, "int_status = %#02x\n", status);
+> +
+> +	/* FIFO full */
+> +	if (status & INV_ICM42600_INT_STATUS_FIFO_FULL)
+> +		dev_warn(dev, "FIFO full data lost!\n");
+> +
+> +	/* FIFO threshold reached */
+> +	if (status & INV_ICM42600_INT_STATUS_FIFO_THS)
+> +		iio_trigger_poll_chained(st->trigger);
+> +
+> +out_unlock:
+> +	mutex_unlock(&st->lock);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int inv_icm42600_trigger_set_state(struct iio_trigger *trig, bool state)
+> +{
+> +	struct inv_icm42600_state *st = iio_trigger_get_drvdata(trig);
+> +	unsigned int val;
+> +	uint16_t dummy;
+> +	int ret;
+> +
+> +	mutex_lock(&st->lock);
+> +
+> +	/*
+> +	 * IIO buffers preenable and postdisable are managing power on/off.
+> +	 * update_scan_mode is setting data FIFO enabled.
+> +	 */
+> +	if (state) {
+> +		/* set FIFO threshold interrupt */
+> +		val = INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN;
+> +		ret = regmap_update_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,
+> +					 val, val);
+> +		if (ret)
+> +			goto out_unlock;
 
-I was trying to include optional components but was not sure of the 
-syntax so that might have been wrong.
+blank line after each block.  Makes it easier for my tired eyes to parse :)
 
-> Angus, is it OK if we use these patches instead the ones from you?
-> 
+> +		/* flush FIFO data */
+> +		ret = regmap_write(st->map, INV_ICM42600_REG_SIGNAL_PATH_RESET,
+> +				   INV_ICM42600_SIGNAL_PATH_RESET_FIFO_FLUSH);
+> +		if (ret)
+> +			goto out_unlock;
 
-Yeah these ones will work great for what we need.
+> +		/* set FIFO in streaming mode */
+> +		ret = regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,
+> +				   INV_ICM42600_FIFO_CONFIG_STREAM);
+> +		if (ret)
+> +			goto out_unlock;
 
-Sorry Bryan I didn't realize there was a patch already in progress.
+> +		/* workaround: dummy read of FIFO count */
 
-@Bryan, I'm going to send up some extcon patches for the tps6598x soon 
-but maybe I should check and make sure you don't already have anything 
-planned there.
+Work around for what?
 
-It still needs to be retested after cleaning up but it's the top 9 
-patches here:
+> +		ret = regmap_bulk_read(st->map, INV_ICM42600_REG_FIFO_COUNT,
+> +				       &dummy, sizeof(dummy));
+> +	} else {
+> +		/* set FIFO in bypass mode */
+> +		ret = regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,
+> +				   INV_ICM42600_FIFO_CONFIG_BYPASS);
+> +		if (ret)
+> +			goto out_unlock;
 
-https://source.puri.sm/angus.ainslie/linux-next/-/commits/next/extcon
+> +		/* flush FIFO data */
+> +		ret = regmap_write(st->map, INV_ICM42600_REG_SIGNAL_PATH_RESET,
+> +				   INV_ICM42600_SIGNAL_PATH_RESET_FIFO_FLUSH);
+> +		if (ret)
+> +			goto out_unlock;
 
-Thanks
-Angus
+> +		/* disable FIFO threshold interrupt */
+> +		val = INV_ICM42600_INT_SOURCE0_FIFO_THS_INT1_EN;
+> +		ret = regmap_update_bits(st->map, INV_ICM42600_REG_INT_SOURCE0,
+> +					 val, 0);
+> +	}
+> +
+> +out_unlock:
+> +	mutex_unlock(&st->lock);
+> +	return ret;
+> +}
+> +
+> +static int inv_icm42600_trigger_validate(struct iio_trigger *trig,
+> +					 struct iio_dev *indio_dev)
+> +{
+> +	struct inv_icm42600_state *st = iio_trigger_get_drvdata(trig);
+> +
+> +	if (iio_device_get_drvdata(indio_dev) != st)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_trigger_ops inv_icm42600_trigger_ops = {
+> +	.set_trigger_state = &inv_icm42600_trigger_set_state,
+> +	.validate_device = &inv_icm42600_trigger_validate,
+> +};
+> +
+> +int inv_icm42600_trigger_init(struct inv_icm42600_state *st, int irq,
+> +			      int irq_type)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	st->trigger = devm_iio_trigger_alloc(dev, "%s-dev", st->name);
+> +	if (!st->trigger)
+> +		return -ENOMEM;
+> +
+> +	st->trigger->dev.parent = dev;
+> +	st->trigger->ops = &inv_icm42600_trigger_ops;
+> +	iio_trigger_set_drvdata(st->trigger, st);
+> +
+> +	/* configure INT1 with correct mode */
+> +	/* falling or both-edge */
+> +	if (irq_type & IRQF_TRIGGER_FALLING) {
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_LOW;
+> +	} else if (irq_type == IRQF_TRIGGER_RISING) {
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_HIGH;
+> +	} else if (irq_type == IRQF_TRIGGER_LOW) {
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_LOW |
+> +				INV_ICM42600_INT_CONFIG_INT1_LATCHED;
+> +	} else if (irq_type == IRQF_TRIGGER_HIGH) {
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_LOW |
+> +				INV_ICM42600_INT_CONFIG_INT1_LATCHED;
+> +	} else {
+> +		dev_err(dev, "invalid interrupt type %#x\n", irq_type);
+> +		return -EINVAL;
+> +	}
+> +	val |= INV_ICM42600_INT_CONFIG_INT1_PUSH_PULL;
+> +	ret = regmap_write(st->map, INV_ICM42600_REG_INT_CONFIG, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Deassert async reset for proper INT pin operation (cf datasheet) */
+> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INT_CONFIG1,
+> +				 INV_ICM42600_INT_CONFIG1_ASYNC_RESET, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_request_threaded_irq(dev, irq,
+> +					inv_icm42600_trigger_timestamp,
+> +					inv_icm42600_trigger_int_handler,
+> +					irq_type, "inv_icm42600", st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_trigger_register(dev, st->trigger);
+> +}
 
-> [1] 
-> https://lore.kernel.org/linux-usb/20200506191718.2144752-1-angus@akkea.ca/
-> 
-> thanks,
+
