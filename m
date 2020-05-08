@@ -2,186 +2,165 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA79C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6421C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9601B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlAIkhZz"
+	by mail.kernel.org (Postfix) with ESMTP id 8D6B12173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgEHVIC (ORCPT
+        id S1727830AbgEHVJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:08:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43287 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727977AbgEHVIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:08:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588972080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=51tOjAmGuPsQ8dYkV+2UxiGwYwlSXctoheg2IBU0/Os=;
-        b=FlAIkhZz65vh9zWbtoAicqcRUdHsEUhAAEfMpa27vJtYon5ZWmaePvm+di/UEtD+HIkYSl
-        +fyxujOAmdsYGvtPCZRZGt14/7etwPjWpBjQRZ7AnMJNXt3MYTlDEOwlf44flFvr3F+Kzs
-        kZz6vqyXOyyICDgfLL3sFGGpnLd7dXc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-QKkOAGwFOJmYIONrrCIoCQ-1; Fri, 08 May 2020 17:07:58 -0400
-X-MC-Unique: QKkOAGwFOJmYIONrrCIoCQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50978872FE4;
-        Fri,  8 May 2020 21:07:57 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-83.rdu2.redhat.com [10.10.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46D88707D3;
-        Fri,  8 May 2020 21:07:56 +0000 (UTC)
-Subject: Re: [PATCH RFC 8/8] dcache: prevent flooding with negative dentries
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>
-References: <158893941613.200862.4094521350329937435.stgit@buzz>
- <158894061332.200862.9812452563558764287.stgit@buzz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <b3e29b86-7231-fcd1-3dbf-224bb82b079f@redhat.com>
-Date:   Fri, 8 May 2020 17:07:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 8 May 2020 17:09:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:47831 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726811AbgEHVJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:09:27 -0400
+IronPort-SDR: QO0FxIEqTehsgRPWcWhn8OHH+9Tg6Ok9g5yi5cVANRlkFFGlmbC6ZWyXuABWC651F8Z7VXPJDA
+ EqW426tMwqKQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 14:09:26 -0700
+IronPort-SDR: t8aaeoiPvCzOsEvHLJZqAjj+9C+nJFuYFvskqaR0vlh09eQuAezALf37FWPrOromuz1phYNjBv
+ 46F3pt5Fq19A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="264510152"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 08 May 2020 14:09:25 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXAFI-000B77-Rl; Sat, 09 May 2020 05:09:24 +0800
+Date:   Sat, 09 May 2020 05:08:47 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ 059c6d68cfc5f85ba3ab71d71a6de380016f7936
+Message-ID: <5eb5ca5f.JfnaeVrQ3S0+Hpp2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <158894061332.200862.9812452563558764287.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
-> Without memory pressure count of negative dentries isn't bounded.
-> They could consume all memory and drain all other inactive caches.
->
-> Typical scenario is an idle system where some process periodically creates
-> temporary files and removes them. After some time, memory will be filled
-> with negative dentries for these random file names. Reclaiming them took
-> some time because slab frees pages only when all related objects are gone.
-> Time of dentry lookup is usually unaffected because hash table grows along
-> with size of memory. Unless somebody especially crafts hash collisions.
-> Simple lookup of random names also generates negative dentries very fast.
->
-> This patch implements heuristic which detects such scenarios and prevents
-> unbounded growth of completely unneeded negative dentries. It keeps up to
-> three latest negative dentry in each bucket unless they were referenced.
->
-> At first dput of negative dentry when it swept to the tail of siblings
-> we'll also clear it's reference flag and look at next dentries in chain.
-> Then kill third in series of negative, unused and unreferenced denries.
->
-> This way each hash bucket will preserve three negative dentry to let them
-> get reference and survive. Adding positive or used dentry into hash chain
-> also protects few recent negative dentries. In result total size of dcache
-> asymptotically limited by count of buckets and positive or used dentries.
->
-> Before patch: tool 'dcache_stress' could fill entire memory with dentries.
->
-> nr_dentry = 104913261   104.9M
-> nr_buckets = 8388608    12.5 avg
-> nr_unused = 104898729   100.0%
-> nr_negative = 104883218 100.0%
->
-> After this patch count of dentries saturates at around 3 per bucket:
->
-> nr_dentry = 24619259    24.6M
-> nr_buckets = 8388608    2.9 avg
-> nr_unused = 24605226    99.9%
-> nr_negative = 24600351  99.9%
->
-> This heuristic isn't bulletproof and solves only most practical case.
-> It's easy to deceive: just touch same random name twice.
->
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->   fs/dcache.c |   54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 54 insertions(+)
->
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index 60158065891e..9f3d331b4978 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -632,6 +632,58 @@ static inline struct dentry *lock_parent(struct dentry *dentry)
->   	return __lock_parent(dentry);
->   }
->   
-> +/*
-> + * Called at first dput of each negative dentry.
-> + * Prevents filling cache with never reused negative dentries.
-> + *
-> + * This clears reference and then looks at following dentries in hash chain.
-> + * If they are negative, unused and unreferenced then keep two and kill third.
-> + */
-> +static void trim_negative(struct dentry *dentry)
-> +	__releases(dentry->d_lock)
-> +{
-> +	struct dentry *victim, *parent;
-> +	struct hlist_bl_node *next;
-> +	int keep = 2;
-> +
-> +	rcu_read_lock();
-> +
-> +	dentry->d_flags &= ~DCACHE_REFERENCED;
-> +	spin_unlock(&dentry->d_lock);
-> +
-> +	next = rcu_dereference_raw(dentry->d_hash.next);
-> +	while (1) {
-> +		victim = hlist_bl_entry(next, struct dentry, d_hash);
-> +
-> +		if (!next || d_count(victim) || !d_is_negative(victim) ||
-> +		    (victim->d_flags & DCACHE_REFERENCED)) {
-> +			rcu_read_unlock();
-> +			return;
-> +		}
-> +
-> +		if (!keep--)
-> +			break;
-> +
-> +		next = rcu_dereference_raw(next->next);
-> +	}
-> +
-> +	spin_lock(&victim->d_lock);
-> +	parent = lock_parent(victim);
-> +
-> +	rcu_read_unlock();
-> +
-> +	if (d_count(victim) || !d_is_negative(victim) ||
-> +	    (victim->d_flags & DCACHE_REFERENCED)) {
-> +		if (parent)
-> +			spin_unlock(&parent->d_lock);
-> +		spin_unlock(&victim->d_lock);
-> +		return;
-> +	}
-> +
-> +	__dentry_kill(victim);
-> +	dput(parent);
-> +}
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
+branch HEAD: 059c6d68cfc5f85ba3ab71d71a6de380016f7936  Merge tag 'perf-core-for-mingo-5.8-20200506' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core
 
-Since you are picking a victim from the hash list, I think it is better 
-to kill it only if it has already been in the LRU. Otherwise, it could 
-be in the process of being instantiated or in the middle of some operations.
+elapsed time: 483m
 
-Besides, I feel a bit uneasy about picking a random negative dentry to 
-kill like that.
+configs tested: 98
+configs skipped: 21
 
-Cheers,
-Longman
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+parisc                              defconfig
+parisc                            allnoconfig
+s390                                defconfig
+c6x                              allyesconfig
+alpha                            allyesconfig
+nds32                               defconfig
+powerpc                             defconfig
+sparc64                             defconfig
+alpha                               defconfig
+arc                              allyesconfig
+ia64                                defconfig
+riscv                             allnoconfig
+microblaze                        allnoconfig
+c6x                               allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+openrisc                         allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20200508
+i386                 randconfig-a004-20200508
+i386                 randconfig-a003-20200508
+i386                 randconfig-a002-20200508
+i386                 randconfig-a001-20200508
+i386                 randconfig-a006-20200508
+x86_64               randconfig-a015-20200509
+x86_64               randconfig-a014-20200509
+x86_64               randconfig-a011-20200509
+x86_64               randconfig-a013-20200509
+x86_64               randconfig-a012-20200509
+x86_64               randconfig-a016-20200509
+i386                 randconfig-a012-20200508
+i386                 randconfig-a014-20200508
+i386                 randconfig-a016-20200508
+i386                 randconfig-a011-20200508
+i386                 randconfig-a013-20200508
+i386                 randconfig-a015-20200508
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
