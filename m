@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11B7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445E6C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2651218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1B32054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942600;
-	bh=8zk+QF+qhgskiuTgcQ5ftCBfM2M46oQfz0+/HdbgpwY=;
+	s=default; t=1588942613;
+	bh=Cqr8eghnHCwYfy32Xoq0YNy2OmKR9+KhkhznVTmFUrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjG1WyINLXVBTv2QWcuq9DfbrSxsZg5OCWSoaA6nbKU6s+qaqCJuoniFj/YmGLcfj
-	 oQdG8XJroSNbEQvfKgfxe8zksq0vhWo5gT6EcPT8+gI7ybpbQDtZ9FiqSEkR5X7svR
-	 bse+iT+XaknCjWpkWAbHThm2vARRDtrQJ1MxvlpA=
+	b=Wws57O/liJLGFBatxnDAxFqkrO6RIB6vd32hepUY7ir7f4P8NNyQPXLu7bTR20Gq2
+	 HpoL6/ljGyb7vP1iG+BDno/Davft7xsK9SKwBzMKcfX+rQR98AY1UooNWyYObhJ352
+	 wC0v4U6za7774nnTlKCxYQo2gJEEOCbFe0nSioq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbgEHM4k (ORCPT
+        id S1730196AbgEHM4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:56:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40206 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbgEHM4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:56:35 -0400
+        id S1729826AbgEHM4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:56:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50979218AC;
-        Fri,  8 May 2020 12:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABB80218AC;
+        Fri,  8 May 2020 12:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942594;
-        bh=8zk+QF+qhgskiuTgcQ5ftCBfM2M46oQfz0+/HdbgpwY=;
+        s=default; t=1588942582;
+        bh=Cqr8eghnHCwYfy32Xoq0YNy2OmKR9+KhkhznVTmFUrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwhIBUibBbeg71fn4UbBPprLdEuUDDNq+yzpGRF2KGH7KGPaWFZ69kgYeKBauE8Ho
-         vFfz3D890eoUCoyQSXateD4gB3i0jaOWVGYWN1YKCyDxk1qW30fk8NAh9P6mtoySUU
-         EIDXhGo0E8A4xe7Vx76Bi2VSWJBWBvg30GC3Hqh8=
+        b=j+wzxpbbibs5fHLgYck6ap1v0BmzbbLDzO3Z5vYw7eaJWQdu1z51MBITihZmNG3bb
+         HwB6Xx3ijzJ2HqwJieat0uXie9wZuPhorJJkyU0ifBQKriQfOI9N2Emo3kr8KySJsl
+         YuYRL00+PMt5FQfpZOETBjuL2t7k3y6g+cP8868k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 19/49] ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
-Date:   Fri,  8 May 2020 14:35:36 +0200
-Message-Id: <20200508123045.708344451@linuxfoundation.org>
+Subject: [PATCH 5.6 24/49] drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
+Date:   Fri,  8 May 2020 14:35:41 +0200
+Message-Id: <20200508123046.472976640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -62,65 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Sandeep Raghuraman <sandy.8925@gmail.com>
 
-[ Upstream commit a09fb3f28a60ba3e928a1fa94b0456780800299d ]
+[ Upstream commit bbc25dadc7ed19f9d6b2e30980f0eb4c741bb8bf ]
 
-The parent SSI of a multi-SSI setup must be fully setup, started and
-stopped since it is also part of the playback/capture setup. So only
-skip the SSI (as per commit 203cdf51f288 ("ASoC: rsnd: SSI parent cares
-SWSP bit") and commit 597b046f0d99 ("ASoC: rsnd: control SSICR::EN
-correctly")) if the SSI is parent outside of a multi-SSI setup.
+Initialize thermal controller fields in the PowerPlay table for Hawaii
+GPUs, so that fan speeds are reported.
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-2-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../drm/amd/powerplay/hwmgr/processpptables.c | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index fc5d089868dfc..d51fb3a394486 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -407,7 +407,7 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 	 * We shouldn't exchange SWSP after running.
- 	 * This means, parent needs to care it.
- 	 */
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		goto init_end;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
+index 77c14671866c0..719597c5d27d9 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c
+@@ -984,6 +984,32 @@ static int init_thermal_controller(
+ 			struct pp_hwmgr *hwmgr,
+ 			const ATOM_PPLIB_POWERPLAYTABLE *powerplay_table)
+ {
++	hwmgr->thermal_controller.ucType =
++			powerplay_table->sThermalController.ucType;
++	hwmgr->thermal_controller.ucI2cLine =
++			powerplay_table->sThermalController.ucI2cLine;
++	hwmgr->thermal_controller.ucI2cAddress =
++			powerplay_table->sThermalController.ucI2cAddress;
++
++	hwmgr->thermal_controller.fanInfo.bNoFan =
++		(0 != (powerplay_table->sThermalController.ucFanParameters &
++			ATOM_PP_FANPARAMETERS_NOFAN));
++
++	hwmgr->thermal_controller.fanInfo.ucTachometerPulsesPerRevolution =
++		powerplay_table->sThermalController.ucFanParameters &
++		ATOM_PP_FANPARAMETERS_TACHOMETER_PULSES_PER_REVOLUTION_MASK;
++
++	hwmgr->thermal_controller.fanInfo.ulMinRPM
++		= powerplay_table->sThermalController.ucFanMinRPM * 100UL;
++	hwmgr->thermal_controller.fanInfo.ulMaxRPM
++		= powerplay_table->sThermalController.ucFanMaxRPM * 100UL;
++
++	set_hw_cap(hwmgr,
++		   ATOM_PP_THERMALCONTROLLER_NONE != hwmgr->thermal_controller.ucType,
++		   PHM_PlatformCaps_ThermalController);
++
++	hwmgr->thermal_controller.use_hw_fan_control = 1;
++
+ 	return 0;
+ }
  
- 	if (rsnd_io_is_play(io))
-@@ -559,7 +559,7 @@ static int rsnd_ssi_start(struct rsnd_mod *mod,
- 	 * EN is for data output.
- 	 * SSI parent EN is not needed.
- 	 */
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	ssi->cr_en = EN;
-@@ -582,7 +582,7 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
- 	if (!rsnd_ssi_is_run_mods(mod, io))
- 		return 0;
- 
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	cr  =	ssi->cr_own	|
-@@ -620,7 +620,7 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 	if (rsnd_is_gen1(priv))
- 		return 0;
- 
--	if (rsnd_ssi_is_parent(mod, io))
-+	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
- 		return 0;
- 
- 	if (!rsnd_ssi_is_run_mods(mod, io))
 -- 
 2.20.1
 
