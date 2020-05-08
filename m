@@ -2,608 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163FFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B1C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48662070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3D321473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEHM2r (ORCPT
+        id S1726843AbgEHMan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:28:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49208 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgEHM2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:28:47 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id D0F152A2F29
-Message-ID: <f885e94250778916c09a29269f9c9f42eb67cb66.camel@collabora.com>
-Subject: Re: [PATCH v3 2/3] media: uapi: Add VP9 stateless decoder controls
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Fri, 08 May 2020 09:28:34 -0300
-In-Reply-To: <6459bd9f-20f6-9910-8d45-04870a19019d@xs4all.nl>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-3-ezequiel@collabora.com>
-         <6459bd9f-20f6-9910-8d45-04870a19019d@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Fri, 8 May 2020 08:30:43 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44801 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbgEHMan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:30:43 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jX29G-00031U-00; Fri, 08 May 2020 14:30:38 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id E727DC0418; Fri,  8 May 2020 14:21:37 +0200 (CEST)
+Date:   Fri, 8 May 2020 14:21:37 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Huacai Chen <chenhc@lemote.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/20] mips: Add MIPS Warrior P5600 support
+Message-ID: <20200508122137.GA13177@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-8-Sergey.Semin@baikalelectronics.ru>
+ <20200507111735.GF11616@alpha.franken.de>
+ <20200507211923.kfu2ly3ncqms4c2u@mobilestation>
+ <20200508093259.GB9085@alpha.franken.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508093259.GB9085@alpha.franken.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
-
-On Fri, 2020-05-08 at 12:27 +0200, Hans Verkuil wrote:
-> On 05/05/2020 15:41, Ezequiel Garcia wrote:
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
+On Fri, May 08, 2020 at 11:32:59AM +0200, Thomas Bogendoerfer wrote:
+> On Fri, May 08, 2020 at 12:19:23AM +0300, Serge Semin wrote:
+> > On Thu, May 07, 2020 at 01:17:35PM +0200, Thomas Bogendoerfer wrote:
+> > > P5600 is CPU_MIPS_R5 so can't you select it here and drop all the || CPU_5600
+> > > above/below ?
 > > 
-> > Add the VP9 stateless decoder controls plus the documentation that goes
-> > with it.
+> > Alas, We can't do this so easy. CONFIG_CPU_MIPS32_{R2,R5,R6} and any other
+> > CONFIG_CPU_* configs is something that kernel config-file is supposed to select.
+> > Their availability is enabled by the CONFIG_SYS_HAS_CPU_* configs. CONFIG_CPU_*
+> > is supposed to activate CPU-specific features and there is only one
+> > CONFIG_CPU_x can be enabled at a time seeing it's a part of the "CPU type"
+> > choice kconfig menu. In addition the CPU config also tunes a compiler to activate
+> > the arch-specific ISA and optimizations in the arch/mips/Makefile by setting
+> > -march=cpu-name (where cpu-name can be p5600, mips32r5, etc).
 > > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  .../userspace-api/media/v4l/biblio.rst        |  10 +
-> >  .../media/v4l/ext-ctrls-codec.rst             | 581 ++++++++++++++++++
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          | 242 ++++++++
-> >  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
-> >  include/media/v4l2-ctrls.h                    |   1 +
-> >  include/media/vp9-ctrls.h                     | 510 +++++++++++++++
-> >  6 files changed, 1345 insertions(+)
-> >  create mode 100644 include/media/vp9-ctrls.h
-> > 
-> > diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documentation/userspace-api/media/v4l/biblio.rst
-> > index 3c9634173e82..e09102e572fd 100644
-> > --- a/Documentation/userspace-api/media/v4l/biblio.rst
-> > +++ b/Documentation/userspace-api/media/v4l/biblio.rst
-> > @@ -414,3 +414,13 @@ VP8
-> >  :title:     RFC 6386: "VP8 Data Format and Decoding Guide"
-> >  
-> >  :author:    J. Bankoski et al.
-> > +
-> > +.. _vp9:
-> > +
-> > +VP9
-> > +===
-> > +
-> > +
-> > +:title:     VP9 Bitstream & Decoding Process Specification
-> > +
-> > +:author:    Adrian Grange (Google), Peter de Rivaz (Argon Design), Jonathan Hunt (Argon Design)
-> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > index d0d506a444b1..fb657197b372 100644
-> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > @@ -2668,6 +2668,587 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        - ``padding[3]``
-> >        - Applications and drivers must set this to zero.
-> >  
-> > +.. _v4l2-mpeg-vp9:
-> > +
-> > +``V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(0..3) (struct)``
-> > +    Stores VP9 probabilities attached to a specific frame context. The VP9
-> > +    specification allows using a maximum of 4 contexts. Each frame being
-> > +    decoded refers to one of those context. See section '7.1.2 Refresh
-> > +    probs semantics' section of :ref:`vp9` for more details about these
-> > +    contexts.
-> > +
-> > +    This control is bi-directional:
-> > +
-> > +    * all 4 contexts must be initialized by userspace just after the
-> > +      stream is started and before the first decoding request is submitted
+> > Yes, P5600 is based on the MIPS32r5, but it also has got some specific features
+> > (see config CPU_P5600 and config MIPS32_R5), which makes it to be different from
+> > the ancestor. So In addition to the difficulties described above IMHO converting
+> > CPU_P5600 to a set of features activated on top of the CPU_MIPS32_R5 config
+> > would contradict the design of the CPU-support configs implemented in the MIPS
+> > arch subsystem.
 > 
-> Missing . at the end.
+> maybe I wasn't clear enough, my suggestion is
 > 
+> use 
+> 
+> config CPU_P5600
+> 	bool "MIPS Warrior P5600"
+> 	depends on SYS_HAS_CPU_P5600
+> 	select CPU_MIPS32_R5
+> 	select CPU_SUPPORTS_UNCACHED_ACCELERATED
+> 	select CPU_SUPPORTS_CPUFREQ
+> 	select CPU_MIPSR2_IRQ_VI
+> 	select CPU_MIPSR2_IRQ_EI
+> 
+> That way you don't need to any "|| CPU_P5600" where CPU_MIPS32_R5 is
+> already there. Or are there cases, where this would be wrong ?
 
-Oops, thanks for catching this.
+nevermind, this would also need a select SYS_HAS_CPU_MIPS32_R5, which
+isn't wanted here. So patch is fine as is.
 
-> > +    * the referenced context might be read by the kernel when a decoding
-> > +      request is submitted, and will be updated after the decoder is done
-> > +      decoding the frame if the `V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX` flag
-> > +      is set.
-> > +    * contexts will be read back by user space before each decoding request
-> > +      to retrieve the updated probabilities.
-> > +    * userspace will re-initialize the context to their default values when
-> > +      a reset context is required.
-> > +
-> > +    .. note::
-> > +
-> > +       This compound control is not yet part of the public kernel API and
-> > +       it is expected to change.
-> > +
-> > +.. c:type:: v4l2_ctrl_vp9_frame_ctx
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{5.8cm}|p{4.8cm}|p{6.6cm}|
-> > +
-> > +.. flat-table:: struct v4l2_ctrl_vp9_frame_ctx
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - struct :c:type:`v4l2_vp9_probabilities`
-> > +      - ``probs``
-> > +      - Structure with VP9 probabilities attached to the context.
-> > +
-> > +.. c:type:: v4l2_vp9_probabilities
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: struct v4l2_vp9_probabilities
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u8
-> > +      - ``tx8[2][1]``
-> > +      - TX 8x8 probabilities.
-> > +    * - __u8
-> > +      - ``tx16[2][2]``
-> > +      - TX 16x16 probabilities.
-> > +    * - __u8
-> > +      - ``tx32[2][3]``
-> > +      - TX 32x32 probabilities.
-> > +    * - __u8
-> > +      - ``coef[4][2][2][6][6][3]``
-> > +      - Coefficient probabilities.
-> > +    * - __u8
-> > +      - ``skip[3]``
-> > +      - Skip probabilities.
-> > +    * - __u8
-> > +      - ``inter_mode[7][3]``
-> > +      - Inter prediction mode probabilities.
-> > +    * - __u8
-> > +      - ``interp_filter[4][2]``
-> > +      - Interpolation filter probabilities.
-> > +    * - __u8
-> > +      - ``is_inter[4]``
-> > +      - Is inter-block probabilities.
-> > +    * - __u8
-> > +      - ``comp_mode[5]``
-> > +      - Compound prediction mode probabilities.
-> > +    * - __u8
-> > +      - ``single_ref[5][2]``
-> > +      - Single reference probabilities.
-> > +    * - __u8
-> > +      - ``comp_mode[5]``
-> > +      - Compound reference probabilities.
-> > +    * - __u8
-> > +      - ``y_mode[4][9]``
-> > +      - Y prediction mode probabilities.
-> > +    * - __u8
-> > +      - ``uv_mode[10][9]``
-> > +      - UV prediction mode probabilities.
-> > +    * - __u8
-> > +      - ``partition[16][3]``
-> > +      - Partition probabilities.
-> > +    * - __u8
-> > +      - ``mv.joint[3]``
-> > +      - Motion vector joint probabilities.
-> > +    * - __u8
-> > +      - ``mv.sign[2]``
-> > +      - Motion vector sign probabilities.
-> > +    * - __u8
-> > +      - ``mv.class[2][10]``
-> > +      - Motion vector class probabilities.
-> > +    * - __u8
-> > +      - ``mv.class0_bit[2]``
-> > +      - Motion vector class0 bit probabilities.
-> > +    * - __u8
-> > +      - ``mv.bits[2][10]``
-> > +      - Motion vector bits probabilities.
-> > +    * - __u8
-> > +      - ``mv.class0_fr[2][2][3]``
-> > +      - Motion vector class0 fractional bit probabilities.
-> > +    * - __u8
-> > +      - ``mv.fr[2][3]``
-> > +      - Motion vector fractional bit probabilities.
-> > +    * - __u8
-> > +      - ``mv.class0_hp[2]``
-> > +      - Motion vector class0 high precision fractional bit probabilities.
-> > +    * - __u8
-> > +      - ``mv.hp[2]``
-> > +      - Motion vector high precision fractional bit probabilities.
-> > +
-> > +``V4L2_CID_MPEG_VIDEO_VP9_FRAME_DECODE_PARAMS (struct)``
-> > +    Specifies the frame parameters for the associated VP9 frame decode request.
-> > +    This includes the necessary parameters for configuring a stateless hardware
-> > +    decoding pipeline for VP9. The bitstream parameters are defined according
-> > +    to :ref:`vp9`.
-> > +
-> > +    .. note::
-> > +
-> > +       This compound control is not yet part of the public kernel API and
-> > +       it is expected to change.
-> > +
-> > +.. c:type:: v4l2_ctrl_vp9_frame_decode_params
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: struct v4l2_ctrl_vp9_frame_decode_params
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u32
-> > +      - ``flags``
-> > +      - Combination of V4L2_VP9_FRAME_FLAG_* flags. See
-> > +        :c:type:`v4l2_vp9_frame_flags`.
-> > +    * - __u16
-> > +      - ``compressed_header_size``
-> > +      - Compressed header size in bytes.
-> > +    * - __u16
-> > +      - ``uncompressed_header_size``
-> > +      - Uncompressed header size in bytes.
-> > +    * - __u8
-> > +      - ``profile``
-> > +      - VP9 profile. Can be 0, 1, 2 or 3.
-> > +    * - __u8
-> > +      - ``reset_frame_context``
-> > +      - Frame context that should be used/updated when decoding the frame.
-> > +    * - __u8
-> > +      - ``bit_depth``
-> > +      - Component depth in bits. Must be 8 for profile 0 and 1. Must 10 or 12
-> > +        for profile 2 and 3.
-> > +    * - __u8
-> > +      - ``color_space``
-> > +      - Specifies the color space of the stream. See V4L2_VP9_COLOR_SPACE_*
-> > +        values. See :c:type:`v4l2_vp9_color_space`
-> 
-> Ditto.
-> 
-> > +    * - __u8
-> > +      - ``interpolation_filter``
-> > +      - Specifies the filter selection used for performing inter prediction. See
-> > +        :c:type:`v4l2_vp9_interpolation_filter`.
-> > +    * - __u8
-> > +      - ``tile_cols_log2``
-> > +      - Specifies the base 2 logarithm of the width of each tile (where the
-> > +        width is measured in units of 8x8 blocks). Shall be less than or equal
-> > +        to 6.
-> > +    * - __u8
-> > +      - ``tile_rows_log2``
-> > +      - Specifies the base 2 logarithm of the height of each tile (where the
-> > +        height is measured in units of 8x8 blocks)
-> 
-> Ditto
-> 
-> > +    * - __u8
-> > +      - ``tx_mode``
-> > +      - Specifies the TX mode. See :c:type:`v4l2_vp9_tx_mode`.
-> > +    * - __u8
-> > +      - ``reference_mode``
-> > +      - Specifies the type of inter prediction to be used. See
-> > +        :c:type:`v4l2_vp9_reference_mode`.
-> > +    * - __u8
-> > +      - ``padding``
-> > +      - Needed to make this struct 64 bit aligned. Shall be filled with zeros.
-> > +    * - __u16
-> > +      - ``frame_width_minus_1``
-> > +      - Add 1 to get the frame width expressed in pixels.
-> > +    * - __u16
-> > +      - ``frame_height_minus_1``
-> > +      - Add 1 to to get the frame height expressed in pixels.
-> > +    * - __u16
-> > +      - ``frame_width_minus_1``
-> > +      - Add 1 to to get the expected render width expressed in pixels. This is
-> > +        not used during the decoding process but might be used by HW scalers to
-> > +        prepare a frame that's ready for scanout.
-> > +    * - __u16
-> > +      - frame_height_minus_1
-> > +      - Add 1 to get the expected render height expressed in pixels. This is
-> > +        not used during the decoding process but might be used by HW scalers to
-> > +        prepare a frame that's ready for scanout.
-> > +    * - __u64
-> > +      - ``refs[3]``
-> > +      - Array of reference frame timestamps.
-> > +    * - struct :c:type:`v4l2_vp9_loop_filter`
-> > +      - ``lf``
-> > +      - Loop filter parameters. See struct :c:type:`v4l2_vp9_loop_filter`.
-> > +    * - struct :c:type:`v4l2_vp9_quantization`
-> > +      - ``quant``
-> > +      - Quantization parameters. See :c:type:`v4l2_vp9_quantization`.
-> > +    * - struct :c:type:`v4l2_vp9_segmentation`
-> > +      - ``seg``
-> > +      - Segmentation parameters. See :c:type:`v4l2_vp9_segmentation`.
-> > +    * - struct :c:type:`v4l2_vp9_probabilities`
-> > +      - ``probs``
-> > +      - Probabilities. See :c:type:`v4l2_vp9_probabilities`.
-> > +
-> > +.. c:type:: v4l2_vp9_frame_flags
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_frame_flags
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_FRAME_FLAG_KEY_FRAME``
-> > +      - The frame is a key frame.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_SHOW_FRAME``
-> > +      - The frame should be displayed.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT``
-> > +      - The decoding should be error resilient.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_INTRA_ONLY``
-> > +      - The frame does not reference other frames.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_ALLOW_HIGH_PREC_MV``
-> > +      - the frame might can high precision motion vectors.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX``
-> > +      - Frame context should be updated after decoding.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE``
-> > +      - Parallel decoding is used.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING``
-> > +      - Vertical subsampling is enabled.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING``
-> > +      - Horizontal subsampling is enabled.
-> > +    * - ``V4L2_VP9_FRAME_FLAG_COLOR_RANGE_FULL_SWING``
-> > +      - The full UV range is used.
-> > +
-> > +.. c:type:: v4l2_vp9_ref_id
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_ref_id
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_REF_ID_LAST``
-> > +      - Last reference frame.
-> > +    * - ``V4L2_REF_ID_GOLDEN``
-> > +      - Golden reference frame.
-> > +    * - ``V4L2_REF_ID_ALTREF``
-> > +      - Alternative reference frame.
-> > +    * - ``V4L2_REF_ID_CNT``
-> > +      - Number of reference frames.
-> > +
-> > +.. c:type:: v4l2_vp9_tx_mode
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_tx_mode
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_TX_MODE_ONLY_4X4``
-> > +      - Transform size is 4x4.
-> > +    * - ``V4L2_VP9_TX_MODE_ALLOW_8X8``
-> > +      - Transform size can be up to 8x8.
-> > +    * - ``V4L2_VP9_TX_MODE_ALLOW_16X16``
-> > +      - Transform size can be up to 16x16.
-> > +    * - ``V4L2_VP9_TX_MODE_ALLOW_32X32``
-> > +      - transform size can be up to 32x32.
-> > +    * - ``V4L2_VP9_TX_MODE_SELECT``
-> > +      - Bitstream contains transform size for each block.
-> > +
-> > +.. c:type:: v4l2_vp9_reference_mode
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_reference_mode
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_REF_MODE_SINGLE``
-> > +      - Indicates that all the inter blocks use only a single reference frame
-> > +        to generate motion compensated prediction.
-> > +    * - ``V4L2_VP9_REF_MODE_COMPOUND``
-> > +      - Requires all the inter blocks to use compound mode. Single reference
-> > +        frame prediction is not allowed.
-> > +    * - ``V4L2_VP9_REF_MODE_SELECT``
-> > +      - Allows each individual inter block to select between single and
-> > +        compound prediction modes.
-> > +
-> > +.. c:type:: v4l2_vp9_interpolation_filter
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_interpolation_filter
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_INTERP_FILTER_8TAP``
-> > +      - Height tap filter.
-> > +    * - ``V4L2_VP9_INTERP_FILTER_8TAP_SMOOTH``
-> > +      - Height tap smooth filter.
-> > +    * - ``V4L2_VP9_INTERP_FILTER_8TAP_SHARP``
-> > +      - Height tap sharp filter.
-> > +    * - ``V4L2_VP9_INTERP_FILTER_BILINEAR``
-> > +      - Bilinear filter.
-> > +    * - ``V4L2_VP9_INTERP_FILTER_SWITCHABLE``
-> > +      - Filter selection is signaled at the block level.
-> > +
-> > +.. c:type:: v4l2_vp9_color_space
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_color_space
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_COLOR_SPACE_UNKNOWN``
-> > +      - Unknown color space. In this case the color space must be signaled
-> > +        outside the VP9 bitstream.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_BT_601``
-> > +      - Rec. ITU-R BT.601-7 color space.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_BT_709``
-> > +      - Rec. ITU-R BT.709-6 color space.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_SMPTE_170``
-> > +      - SMPTE-170 color space.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_SMPTE_240``
-> > +      - SMPTE-240 color space.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_BT_2020``
-> > +      - Rec. ITU-R BT.2020-2 color space.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_RESERVED``
-> > +      - Reserved. This value shall never be passed.
-> > +    * - ``V4L2_VP9_COLOR_SPACE_SRGB``
-> > +      - sRGB (IEC 61966-2-1) color space.
-> 
-> Should this be here? We already have colorspace information in the pix format structs.
-> 
-> It is also unclear from reading just this bit whether e.g. V4L2_VP9_COLOR_SPACE_SRGB
-> just describes the sRGB color primaries or also the transfer function and quantization
-> range.
-> 
-> I'd like to see some more about how this is used. None of the other codec headers
-> have this.
-> 
+Thomas.
 
-I think this comes directly from the spec. The Rockchip VDEC doesn't
-seem to use it.
-
-Do you think we can drop it from here, and rely on the V4L2 colorspace
-passed in the format negotiation?
- 
-> > +
-> > +.. c:type:: v4l2_vp9_reset_frame_context
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_reset_frame_context
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
-> > +      - Do not reset any frame context.
-> > +    * - ``V4L2_VP9_RESET_FRAME_CTX_SPEC``
-> > +      - Reset the frame context pointed by
-> > +        :c:type:`v4l2_ctrl_vp9_frame_decode_params`.frame_context_idx.
-> > +    * - ``V4L2_VP9_RESET_FRAME_CTX_ALL``
-> > +      - Reset all frame contexts.
-> > +
-> > +.. c:type:: v4l2_vp9_intra_prediction_mode
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: enum v4l2_vp9_intra_prediction_mode
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 2
-> > +
-> > +    * - ``V4L2_VP9_INTRA_PRED_DC``
-> > +      - DC intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_V``
-> > +      - Vertical intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_H``
-> > +      - Horizontal intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D45``
-> > +      - D45 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D135``
-> > +      - D135 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D117``
-> > +      - D117 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D153``
-> > +      - D153 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D207``
-> > +      - D207 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_D63``
-> > +      - D63 intra prediction.
-> > +    * - ``V4L2_VP9_INTRA_PRED_MODE_TM``
-> > +      - True motion intra prediction.
-> > +
-> > +.. c:type:: v4l2_vp9_segmentation
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > +
-> > +.. flat-table:: struct v4l2_vp9_segmentation
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u8
-> > +      - ``flags``
-> > +      - Combination of V4L2_VP9_SEGMENTATION_FLAG_* flags. See
-> > +        :c:type:`v4l2_vp9_segmentation_flags`.
-> > +    * - __u8
-> > +      - ``tree_probs[7]``
-> > +      - Specifies the probability values to be used when decoding segment_id.
-> 
-> segment_id? Does this refer to a term defined in the VP9 spec?
-> 
-
-Yes, this is all strictly spec compliant. segment_id and seg_id_predicted
-are VP9 syntax elements.
-
-In particular that description is copy-pasted from the spec, but
-I agree it may seem confusing in this context. How about:
-
-"to be used when decoding a Segment-ID"
-
-> > +    * - __u8
-> > +      - ``pred_prob[3]``
-> > +      - Specifies the probability values to be used when decoding
-> > +        seg_id_predicte.
-> 
-> seg_id_predicte: typo? I don't see any field called seg_id_predicte.
-> 
-> It looks like segment_id and seg_id_predicte are C field names, but I suspect
-> they are not. I think this should be clarified.
-> 
-
-Ditto,
-
-"to be used when decoding a Predicted-Segment-ID"
-
-Maybe this will be clearer ?
-
-
-> > +    * - __u8
-> > +      - ``padding[5]``
-> > +      - Used to align this struct on 64 bit. Shall be filled with zeros.
-> 
-> zeroes.
-> 
-
-Oops, more typos :-)
-
-Thanks for reviewing,
-Ezequiel
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
