@@ -2,140 +2,155 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8C2C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A3AC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF942173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9D224953
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W5D2scAP"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="c1OctmAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgEHU1h (ORCPT
+        id S1727834AbgEHU1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:27:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49908 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHU1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:27:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=99PO3vaZTM46qvS0LR8bXv5m1BEVlIFvFmNNPuHSrcU=; b=W5D2scAPXtxzyvIYaVnSFKVXeL
-        ZqkHeN4Ll77OUV9rI72SL8SPBFaWhVarfaXMhS/ggsB1zhom6zD9coCA0B5vJ6qy2LhJH2ZHGvFAV
-        h0NldpoKACJnE+1za8zyt18VTFJZO3SPLta76FPexc3DJhgMMy2idyfNfkFugBkt8QKE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jX9ac-001Pvw-Kd; Fri, 08 May 2020 22:27:22 +0200
-Date:   Fri, 8 May 2020 22:27:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-Message-ID: <20200508202722.GI298574@lunn.ch>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
+        Fri, 8 May 2020 16:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726811AbgEHU1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 16:27:42 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5674FC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:27:42 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 188so2432519lfa.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H7hdF+TXU+z5warwWctoW0ejNkNB5ByIm48BqwSmIjk=;
+        b=c1OctmAOUzcC966xGv96Qy3CyvDsCLzmCpNDffti/u3sU9BbV7CH3jhpTMMnRsQSwy
+         qE/7vlHukdClIs8gJ+/yOBckSTdPtUCHbNat27L/asSCI8yCf7TNIQSupXSEIYeLorKw
+         /Oo84qo2i0jTtaDj0v2XbivFiJB6+KoTwVXotTxMXlfD/QZ/lcRieNieqTYO8Sz0SMLN
+         JAnJJ2IcgwapNOrq+zSYmyyTuLqH2N6S4kuizaDqnXodQnpHnfzkH2zal8UrGUKy+Bjy
+         5ghZtvqFRuR3nHSQdIXG/6t3ETIBTnzqmmvDbo44EGOtKhaLdt3s6v01G3WS+WduZRHZ
+         lqtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=H7hdF+TXU+z5warwWctoW0ejNkNB5ByIm48BqwSmIjk=;
+        b=RUgOKLAKGgLcanzNh2KWONA6gwzubw+qnZFxiMTjcnOFka58KsblxO7AdN/YRQkOrW
+         a2Vbv4t88jUBZR4wbsAL1ztpf2I52C7nF4ciYXGHFQFnQ1bnfnU863gLvUGvPjbOxdSC
+         OlPESROP7vAD0LUhvfLRTL/8PwdGzaQyf5C+UMimG5XFN9PI//aaLL+3k/5WJokspdCu
+         aBYLZOpUhIGjlii/3kSBg8hoolqeI5gWKmr1kIh1dCwxzwP/HSEMwf5n3doairKu3OYU
+         KBCdpNxOznuztRuYAisHnOtkLgq0q91wnhkQ0D26jZ5umx4/xQNpFCxmyXZa9/pWlv64
+         YuOA==
+X-Gm-Message-State: AOAM530dMNhErCg/7+RHsb95MkdoS/vP096dITy/h3FzqPRZvhJt6Lxx
+        pGHyyZU2wjsREbkXtBFylIFZRA==
+X-Google-Smtp-Source: ABdhPJwhM6HSpwQmv/7uHamxME3MWQs8CZ24wPPZCd6IAhDGdZQI+53saRBbO43ShtN8OjAP4cmK9Q==
+X-Received: by 2002:ac2:4304:: with SMTP id l4mr3074961lfh.87.1588969660574;
+        Fri, 08 May 2020 13:27:40 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:222:bcfb:3767:1ed2:9bbb:4cab])
+        by smtp.gmail.com with ESMTPSA id g22sm1950160ljl.17.2020.05.08.13.27.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 13:27:39 -0700 (PDT)
+Subject: Re: [PATCH] USB: host: ehci: Add error handlinginehci_mxc_drv_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
+ <20200508114858.GA4085349@kroah.com>
+ <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
+ <20200508143110.GA447591@kroah.com>
+ <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <66a6bbca-4218-fb71-7284-37f73d5a3c58@cogentembedded.com>
+Date:   Fri, 8 May 2020 23:27:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
+In-Reply-To: <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > There is a very small number of devices where the vendor messed up,
-> > and did not put valid contents in the ID registers. In such cases, we
-> > can read the IDs from device tree. These are then used in exactly the
-> > same way as if they were read from the device.
-> > 
+On 05/08/2020 06:03 PM, Tang Bin wrote:
+
+>>>> On Fri, May 08, 2020 at 07:44:53PM +0800, Tang Bin wrote:
+>>>>> The function ehci_mxc_drv_probe() does not perform sufficient error
+>>>>> checking after executing platform_get_irq(), thus fix it.
+>>>>>
+>>>>> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
+>>>>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+>>>>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>>>>> ---
+>>>>>    drivers/usb/host/ehci-mxc.c | 2 ++
+>>>>>    1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+>>>>> index a1eb5ee77..a0b42ba59 100644
+>>>>> --- a/drivers/usb/host/ehci-mxc.c
+>>>>> +++ b/drivers/usb/host/ehci-mxc.c
+>>>>> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+>>>>>        }
+>>>>>        irq = platform_get_irq(pdev, 0);
+>>>>> +    if (irq < 0)
+>>>>> +        return irq;
+>>>> <= ?
+>>> In the file 'drivers/base/platform.c'， the function platform_get_irq() is
+>>> explained and used as follows:
+>>>
+>>>       * Gets an IRQ for a platform device and prints an error message if
+>>> finding the
+>>>       * IRQ fails. Device drivers should check the return value for errors so
+>>> as to
+>>>       * not pass a negative integer value to the request_irq() APIs.
+>>>       *
+>>>       * Example:
+>>>       *        int irq = platform_get_irq(pdev, 0);
+>>>       *        if (irq < 0)
+>>>       *            return irq;
+>>>       *
+>>>       * Return: IRQ number on success, negative error number on failure.
+>>>
+>>> And in my hardware experiment, even if I set the irq failed deliberately in
+>>> the DTS, the returned value is negative instead of zero.
+>> Please read the thread at
+>>     https://lore.kernel.org/r/20200501224042.141366-1-helgaas%40kernel.org
+>> for more details about this.
+>>
+> Great, It looks beautiful, finally someone took a knife to the file 'platform.c'.
+
+   I thought I did that already couple years ago, when returned 0 from platform_get_irq() could mean both IRQ # and error... :-)
+
 > 
-> Is that the case here?
-
-Sorry, I don't understand the question?
-
-> Also, how much of this was caused by uboot being deficient
-
-None. It is a silicon issue. The PHY chip simply has the wrong or no
-ID value in the registers.
-
-> > Not exactly true. It is the combination of can the bus master do C45
-> > and can the device do C45. Unfortunately, we have no knowledge of the
-> > bus masters capabilities, if it can do C45. And many MDIO drivers will
-> > do a C22 transaction when asked to perform a C45 transaction. All new
-> > submissions for MDIO drivers i ask for EOPNOTSUPP to be returned if
-> > C45 is not supported. But we cannot rely on that. Too much history >
-> > > 
-> > > I tend to agree with you on this. Even for DT, ideal case, IMO should be:
-> > > 
-> > > 1) mdiobus_scan scans the mdiobus for c22 devices by reading phy id from
-> > > registers 2 and 3
-> > > 2) if not found scan for c45 devices <= looks like this is missing in Linux
-> > > 3) look for phy_id from compatible string.
-> > 
-> > It is somewhat more complex, in that there are a small number of
-> > devices which will respond to both C22 and C45. Generally, you want to
-> > use C45 if supported. So you would want to do the C45 scan first. But
-> > then the earlier problem comes to play, you have no idea if the bus
-> > master actually correctly supports C45.
+> I have been studied this place for a long time, and don't know what platform can return 0, which made me curious.
 > 
-> But this shouldn't this be implied by the mdio vendor/model?
+> So the example should be:
+> 
+>      *        int irq = platform_get_irq(pdev, 0);
+>      *        if (irq <= 0)
+>      *            return irq;
 
-Nope. Many MDIO bus masters don't even appear in DT, because they are
-embedded into the MAC driver. The MAC driver just instantiates an MDIO
-device, maybe passing a pointer where to find the PHY properties in
-DT. If the MDIO bus master is in its own address range, then it
-probably does exist in device tree, and has a compatible string. But
-that just gets the driver loaded, it says nothing about what it is
-capable of, C22 and or C45. And there are cases where the MDIO bus is
-embedded inside an Ethernet switch, which is hanging off another MDIO
-bus, etc.
+   And you then return 0 (success) as if your probe() succeeded. Congratulations! :-P
 
-> How much of this can be simplified for ACPI buy ignoring the legacy and
-> putting some guides around the ACPI/platform requirements?
+> 
+> Thanks,
+> 
+> Tang Bin
 
-You can probably ignore the phy-idXXXX.YYYY compatible, since that is
-working around silicon issues, and put in place some guidelines that
-the PHY silicon needs to conform to the basics of C22 and C45 in terms
-of ID registers.
-
-C45 you are going to need. ACPI tends to be more high end devices,
-which in general have higher speed network interfaces. Multi-Gige PHYs
-tend to be C45. But there is also interest in using ACPI on 1G PHYs
-where the majority is C22.
-
-      Andrew
+MBR, Sergei
