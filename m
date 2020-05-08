@@ -2,96 +2,334 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E081C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B421CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7860A21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJyrvR/+"
+	by mail.kernel.org (Postfix) with ESMTP id 97EDE21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgEHTl3 (ORCPT
+        id S1727811AbgEHTlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726797AbgEHTl2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:41:28 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F30C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 12:41:26 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h26so2344631lfg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 12:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o4LTBtkW42ncc3xQ7z7L3UptQlNLannjQiNWN85xz6s=;
-        b=PJyrvR/+6sIkZyAcKbhumskZG8NDstC0NjMWeWUa2gXrnapzGgrIUDv//WNM52ITv6
-         3Kgui9JoHsNvLQmzlOxVY1ZmU8LYVhjSAybWTonwvajI5Jg7mU7xhWVST6veGrCtgetF
-         5BAO33H/r1llfRPVsarse3bYf+Rg1HyVgxe4+u6FUlHGFy8BJh/U3lY8olz8RyIEeNGN
-         YZtn/yWuBKm3I/we0P8dnTRtpDU09oZBfP8rijonMrG4WEUiymNlOtNmdoVhtw+xUjQj
-         sR28pIYVmKqUYIQSMbVOXahn1Xez2Sgerb/+VPH7g+Tij5QkxyHn0/XbomfIiTZUv+8W
-         XrTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4LTBtkW42ncc3xQ7z7L3UptQlNLannjQiNWN85xz6s=;
-        b=kCbtEdIg7Q5r1NKUMz1N4k9VyQjRscJQWMnGEUEYQ0nIh+FIInagYu7xItOGX4pTtv
-         s8r5xXjbqC/IcARzN/jSyYWmTujfnkEi73serOKldOfYxRLbNcniA07VXtBzRmvEGcA2
-         77aNEW1sQFDRpUJisMnEXQgOsGCBuVygpyQWILGRw4fqbM04H1X3Aq4VUaNEjZrNFmTU
-         XwAtKzMF32d/aAJbt+uOUkZ+1lmln9D2pMSQxXipi5Kc1T4+exzC2oo9UjLMfJIAO4cZ
-         9SbhrlgtXJEjazbcrVuUQ7f9pzA+wsU0lu4M5JRFw8C4Jh5qUd17Fq/kXkvqmZnCTDEe
-         OlrA==
-X-Gm-Message-State: AOAM532Jgl9CL89OAfomJoWsikzIj8S0NxWTCo1C7LTilBYJUSEC5hwY
-        jMu7Vp7Up/D/81VVh76oNj/5jgS4fUk06Vg89tLOfg==
-X-Google-Smtp-Source: ABdhPJzAjAstldzlrJ0KZee1gVua53zcjm+vjwc4UDwqEaPy842LDceP7toVn6P/HY7LTJK+cY0zCyMDWr1qXY8xY0g=
-X-Received: by 2002:ac2:414c:: with SMTP id c12mr2921938lfi.47.1588966884749;
- Fri, 08 May 2020 12:41:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200503172206.13782-1-xc-racer2@live.ca> <BN6PR04MB0660B420EFA83668BBF4F315A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
- <CACRpkdb3kG=7SQg8RGh1F=8=_mivV6p_zxpodFT=M-f3PmiyYQ@mail.gmail.com>
- <BN6PR04MB0660BA0E181869F866594E98A3A50@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200507042318.GD89269@dtor-ws> <BN6PR04MB0660FB7E230C514608743560A3A20@BN6PR04MB0660.namprd04.prod.outlook.com>
-In-Reply-To: <BN6PR04MB0660FB7E230C514608743560A3A20@BN6PR04MB0660.namprd04.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 8 May 2020 21:41:13 +0200
-Message-ID: <CACRpkdaZtwVva0sqYgkyPzZNTTJRF3GjFUjhG0wDiOFqJHfniw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] input: misc: bma150: Conditionally disable bma023 support
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
+        Fri, 8 May 2020 15:41:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54129 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbgEHTlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:41:35 -0400
+IronPort-SDR: i9ihioUmJoj3x4vyVsA3zhcKcka4yKgZcgr0Mzf49hrJ1n6+WzxJAcZhlur7TJQloj3ZmIwL09
+ ZuXKnLMVZ/gg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:41:34 -0700
+IronPort-SDR: fhabmOqBcdC+XBCYtEWhLT4FdVREruEpU4fdXul7v54ugQw01rf8nndo4AXb868/H0V5QIZOPd
+ f4TFruPgphLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="285581357"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 12:41:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8sD-005TEr-0Y; Fri, 08 May 2020 22:41:29 +0300
+Date:   Fri, 8 May 2020 22:41:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux Input <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Raymond Tan <raymond.tan@intel.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/17] spi: dw: Split up the generic DMA code and Intel
+ MID driver
+Message-ID: <20200508194129.GZ185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-4-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508132943.9826-4-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 5:57 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
+On Fri, May 08, 2020 at 04:29:28PM +0300, Serge Semin wrote:
+> This is an initial preparation patch before adding the DW DMA support
+> into the DW SPI MMIO driver. We need to unpin the DMA-specific code
+> from the code intended to be used for Intel MID. This isn't that hard,
+> since most part of the spi-dw-mid.c driver in fact implements a generic
+> DW DMA interface for the DW SPI controller driver. The only Intel MID
+> specifics concern getting the max frequency from the MRST Clock
+> Control Unit and fetching the DMA controller channels from
+> corresponding PCIe DMA controller. Since first one is related with the
+> SPI interface configuration we moved it' implementation into the
+> DW PCIe-SPI driver object. While seeing there is no other than Medfield
+> board with DW DMA controller currently supported we left the DMA
+> channels search procedure in the DW SPI DMA module. After being
+> cleaned up of the Intel MID specifics former spi-dw-mid.c module
+> can be just renamed to be the DW SPI DMA driver.
 
-> It looks to me like the preferred method would be to also add IIO support for
-> smb380/bma150, add the exclusive Kconfig entries, and leave the input
-> driver in place.  Does this work for everyone?
+And I guess this already been done in spi/for-next in less invasive way.
 
-That's my preferred solution for sure, so go for it if I have a say.
+> 
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Gareth Williams <gareth.williams.jx@renesas.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/spi/Kconfig                        |  8 ++---
+>  drivers/spi/Makefile                       |  4 +--
+>  drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} | 36 ++------------------
+>  drivers/spi/spi-dw-pci.c                   | 38 ++++++++++++++++++++--
+>  drivers/spi/spi-dw.h                       | 12 +++++--
+>  5 files changed, 55 insertions(+), 43 deletions(-)
+>  rename drivers/spi/{spi-dw-mid.c => spi-dw-dma.c} (88%)
+> 
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 741b9140992a..9653c7f271e9 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -226,14 +226,14 @@ config SPI_DESIGNWARE
+>  	help
+>  	  general driver for SPI controller core from DesignWare
+>  
+> +config SPI_DW_DMA
+> +	tristate "DMA support for DW SPI controller"
+> +	depends on SPI_DESIGNWARE && DW_DMAC_PCI
+> +
+>  config SPI_DW_PCI
+>  	tristate "PCI interface driver for DW SPI core"
+>  	depends on SPI_DESIGNWARE && PCI
+>  
+> -config SPI_DW_MID_DMA
+> -	bool "DMA support for DW SPI controller on Intel MID platform"
+> -	depends on SPI_DW_PCI && DW_DMAC_PCI
+> -
+>  config SPI_DW_MMIO
+>  	tristate "Memory-mapped io interface driver for DW SPI core"
+>  	depends on SPI_DESIGNWARE
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index 28f601327f8c..15eb760412a9 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -36,9 +36,9 @@ obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
+>  obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
+>  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
+>  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+> +obj-$(CONFIG_SPI_DW_DMA)		+= spi-dw-dma.o
+>  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
+> -obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
+> -spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
+> +obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-pci.o
+>  obj-$(CONFIG_SPI_EFM32)			+= spi-efm32.o
+>  obj-$(CONFIG_SPI_EP93XX)		+= spi-ep93xx.o
+>  obj-$(CONFIG_SPI_FALCON)		+= spi-falcon.o
+> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-dma.c
+> similarity index 88%
+> rename from drivers/spi/spi-dw-mid.c
+> rename to drivers/spi/spi-dw-dma.c
+> index 0d86c37e0aeb..0230b4252611 100644
+> --- a/drivers/spi/spi-dw-mid.c
+> +++ b/drivers/spi/spi-dw-dma.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Special handling for DW core on Intel MID platform
+> + * Special handling for DW DMA core
+>   *
+>   * Copyright (c) 2009, 2014 Intel Corporation.
+>   */
+> @@ -14,7 +14,6 @@
+>  
+>  #include "spi-dw.h"
+>  
+> -#ifdef CONFIG_SPI_DW_MID_DMA
+>  #include <linux/pci.h>
+>  #include <linux/platform_data/dma-dw.h>
+>  
+> @@ -283,40 +282,11 @@ static const struct dw_spi_dma_ops mid_dma_ops = {
+>  	.dma_transfer	= mid_spi_dma_transfer,
+>  	.dma_stop	= mid_spi_dma_stop,
+>  };
+> -#endif
+>  
+> -/* Some specific info for SPI0 controller on Intel MID */
+> -
+> -/* HW info for MRST Clk Control Unit, 32b reg per controller */
+> -#define MRST_SPI_CLK_BASE	100000000	/* 100m */
+> -#define MRST_CLK_SPI_REG	0xff11d86c
+> -#define CLK_SPI_BDIV_OFFSET	0
+> -#define CLK_SPI_BDIV_MASK	0x00000007
+> -#define CLK_SPI_CDIV_OFFSET	9
+> -#define CLK_SPI_CDIV_MASK	0x00000e00
+> -#define CLK_SPI_DISABLE_OFFSET	8
+> -
+> -int dw_spi_mid_init(struct dw_spi *dws)
+> +void dw_spi_pci_dma_setup(struct dw_spi *dws)
+>  {
+> -	void __iomem *clk_reg;
+> -	u32 clk_cdiv;
+> -
+> -	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
+> -	if (!clk_reg)
+> -		return -ENOMEM;
+> -
+> -	/* Get SPI controller operating freq info */
+> -	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
+> -	clk_cdiv &= CLK_SPI_CDIV_MASK;
+> -	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
+> -	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
+> -
+> -	iounmap(clk_reg);
+> -
+> -#ifdef CONFIG_SPI_DW_MID_DMA
+>  	dws->dma_tx = &mid_dma_tx;
+>  	dws->dma_rx = &mid_dma_rx;
+>  	dws->dma_ops = &mid_dma_ops;
+> -#endif
+> -	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(dw_spi_pci_dma_setup);
+> diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
+> index 12c131b5fb4e..068f6897b903 100644
+> --- a/drivers/spi/spi-dw-pci.c
+> +++ b/drivers/spi/spi-dw-pci.c
+> @@ -16,6 +16,17 @@
+>  
+>  #define DRIVER_NAME "dw_spi_pci"
+>  
+> +/* HW info for MRST Clk Control Unit, 32b reg per controller */
+> +#define MRST_SPI_CLK_BASE	100000000	/* 100m */
+> +#define MRST_CLK_SPI_REG	0xff11d86c
+> +#define CLK_SPI_BDIV_OFFSET	0
+> +#define CLK_SPI_BDIV_MASK	0x00000007
+> +#define CLK_SPI_CDIV_OFFSET	9
+> +#define CLK_SPI_CDIV_MASK	0x00000e00
+> +#define CLK_SPI_DISABLE_OFFSET	8
+> +
+> +static int spi_mid_init(struct dw_spi *dws);
+> +
+>  struct spi_pci_desc {
+>  	int	(*setup)(struct dw_spi *);
+>  	u16	num_cs;
+> @@ -24,13 +35,13 @@ struct spi_pci_desc {
+>  };
+>  
+>  static struct spi_pci_desc spi_pci_mid_desc_1 = {
+> -	.setup = dw_spi_mid_init,
+> +	.setup = spi_mid_init,
+>  	.num_cs = 5,
+>  	.bus_num = 0,
+>  };
+>  
+>  static struct spi_pci_desc spi_pci_mid_desc_2 = {
+> -	.setup = dw_spi_mid_init,
+> +	.setup = spi_mid_init,
+>  	.num_cs = 2,
+>  	.bus_num = 1,
+>  };
+> @@ -41,6 +52,29 @@ static struct spi_pci_desc spi_pci_ehl_desc = {
+>  	.max_freq = 100000000,
+>  };
+>  
+> +/* Some specific info for SPI0 controller on Intel MID */
+> +static int spi_mid_init(struct dw_spi *dws)
+> +{
+> +	void __iomem *clk_reg;
+> +	u32 clk_cdiv;
+> +
+> +	clk_reg = ioremap(MRST_CLK_SPI_REG, 16);
+> +	if (!clk_reg)
+> +		return -ENOMEM;
+> +
+> +	/* Get SPI controller operating freq info */
+> +	clk_cdiv = readl(clk_reg + dws->bus_num * sizeof(u32));
+> +	clk_cdiv &= CLK_SPI_CDIV_MASK;
+> +	clk_cdiv >>= CLK_SPI_CDIV_OFFSET;
+> +	dws->max_freq = MRST_SPI_CLK_BASE / (clk_cdiv + 1);
+> +
+> +	iounmap(clk_reg);
+> +
+> +	dw_spi_pci_dma_setup(dws);
+> +
+> +	return 0;
+> +}
+> +
+>  static int spi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  {
+>  	struct dw_spi *dws;
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index 1bf5713e047d..0a4e0890ef85 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -253,6 +253,14 @@ extern void dw_spi_remove_host(struct dw_spi *dws);
+>  extern int dw_spi_suspend_host(struct dw_spi *dws);
+>  extern int dw_spi_resume_host(struct dw_spi *dws);
+>  
+> -/* platform related setup */
+> -extern int dw_spi_mid_init(struct dw_spi *dws); /* Intel MID platforms */
+> +#ifdef CONFIG_SPI_DW_DMA
+> +
+> +extern void dw_spi_pci_dma_setup(struct dw_spi *dws);
+> +
+> +#else /* !CONFIG_SPI_DW_DMA */
+> +
+> +static inline void dw_spi_pci_dma_setup(struct dw_spi *dws) {}
+> +
+> +#endif /* !CONFIG_SPI_DW_DMA */
+> +
+>  #endif /* DW_SPI_HEADER_H */
+> -- 
+> 2.25.1
+> 
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
