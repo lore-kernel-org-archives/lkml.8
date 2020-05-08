@@ -2,169 +2,215 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7445AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F62208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kH3u9qP5"
+	by mail.kernel.org (Postfix) with ESMTP id 540B6208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgEHFbO (ORCPT
+        id S1726638AbgEHFdQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:31:14 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:13383 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbgEHFbN (ORCPT
+        Fri, 8 May 2020 01:33:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57004 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbgEHFdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:31:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588915872; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=yBlsnDa9mB7yVmBNrfzU9ebqr5YvNXeZgf6sXTZor6k=; b=kH3u9qP5GDsSQ4Gnc0D1Vq07AgsbhFfEF7ZKJ5VxUXNvNuk9WKmFN3qyqwI+Qs++9FTXNRkh
- HoblV12d45bpTTG02moxKQTv1FGzs/cOCt0K27vFKi/ghtWPrJeaGdYc09pyjYb9Xv8CNACk
- 5WHWbW5lLyiSX5+O4piyooBLQb8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb4ee9c.7efc26e3f8f0-smtp-out-n04;
- Fri, 08 May 2020 05:31:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E12BBC44798; Fri,  8 May 2020 05:31:05 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57574C433D2;
-        Fri,  8 May 2020 05:30:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57574C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Fri, 8 May 2020 11:00:53 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH 13/14] sched: cpufreq: Use IS_ENABLED() for schedutil
-Message-ID: <20200508053053.GG19464@codeaurora.org>
-References: <20200507181012.29791-1-qperret@google.com>
- <20200507181012.29791-14-qperret@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507181012.29791-14-qperret@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 8 May 2020 01:33:15 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jWvdI-0006os-PB
+        for linux-kernel@vger.kernel.org; Fri, 08 May 2020 05:33:13 +0000
+Received: by mail-pl1-f197.google.com with SMTP id s9so636840plq.18
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:33:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hkJ6wNdMEe4PD7sEwcpd8encCS5UsQds8Zt//bKfPFw=;
+        b=LBTPx8M+/DJq1rXGG4JJtvzuFm64aypeg0ua4NPP1eMJH9qAFmtQDRH2NMB8BvDSB0
+         PWSUJpliunLVZ5CXv5WTV9jnnNLi21fLVLNHfdx/p18Hdi/LF/IfhUFM51jkZy84K3lj
+         91AeF4xuy77FzmiDhmKKWOO/LtxZtw+Sdny8YOFuDB5kiBGYWN8X51ntlZs4f8RgsvaX
+         VAeSnZWLieetQkufNPOK21ublBtRk2G05ZCjOPR9BAIO6uZ9haxO6h4jbu7Vy2P3QTMX
+         gJ5fHrLLr5Msth3Ea3eR3QhlxyKVFAn8qDEf1tkI4vPzpXgcikQRTqNPfUDGVXzVvbdZ
+         wnLA==
+X-Gm-Message-State: AGi0PuYu2aNG0vSghL/tIgn7NCPVS/v4+TfWQTjx6UdsVLIXLFVjf/Bl
+        +/o4ERVZvGtQEl9U0oesa7xArFWriEcxGVEzCJ77oq7ky8PdgsvPC4fZRRa9KWwXQThQuY8hucT
+        QX2+YsGiiXByrdBFDwasEvcraqXFRK/mm0qfTPQgjLQ==
+X-Received: by 2002:a17:90a:6d03:: with SMTP id z3mr4163433pjj.32.1588915991304;
+        Thu, 07 May 2020 22:33:11 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLX1pum8yBSdzqLwBMgVaOm2f65x54RtXNMc9wz43tGmgKuAat0LXqyoNLXTqJTLwm3Yr9+CQ==
+X-Received: by 2002:a17:90a:6d03:: with SMTP id z3mr4163395pjj.32.1588915990873;
+        Thu, 07 May 2020 22:33:10 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 19sm1297922pjl.52.2020.05.07.22.33.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 May 2020 22:33:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] HID: multitouch: Remove MT_CLS_WIN_8_DUAL
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200414091842.25972-1-kai.heng.feng@canonical.com>
+Date:   Fri, 8 May 2020 13:33:07 +0800
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <AC3B52A7-B122-4834-8E48-21AA4F9FBA94@canonical.com>
+References: <20200414091842.25972-1-kai.heng.feng@canonical.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin
 
-On Thu, May 07, 2020 at 07:10:11PM +0100, Quentin Perret wrote:
-> The IS_ENABLED() macro evaluates to true when an option is set to =y or
-> =m. As such, it is a good fit for tristate options.
+
+> On Apr 14, 2020, at 17:18, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> In preparation for modularizing schedutil, change all the related ifdefs
-> to use IS_ENABLED().
+> After commit c23e2043d5f7 ("HID: multitouch: do not filter mice nodes"),
+> MT_CLS_WIN_8 also supports mouse nodes, hence make MT_CLS_WIN_8_DUAL
+> redundant.
 > 
-> Signed-off-by: Quentin Perret <qperret@google.com>
+> Remove MT_CLS_WIN_8_DUAL accordingly.
+
+A gentle ping...
+
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  include/linux/cpufreq.h      | 2 +-
->  include/linux/sched/sysctl.h | 2 +-
->  kernel/sched/sched.h         | 4 ++--
->  kernel/sched/topology.c      | 4 ++--
->  kernel/sysctl.c              | 2 +-
->  5 files changed, 7 insertions(+), 7 deletions(-)
+> drivers/hid/hid-ids.h        |  9 --------
+> drivers/hid/hid-multitouch.c | 45 ++----------------------------------
+> 2 files changed, 2 insertions(+), 52 deletions(-)
 > 
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index 267cc3b624da..c1176b8a0f61 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -983,7 +983,7 @@ static inline bool policy_has_boost_freq(struct cpufreq_policy *policy)
->  }
->  #endif
->  
-> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
->  			struct cpufreq_governor *old_gov);
->  #else
-> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> index d4f6215ee03f..704d971f204f 100644
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -94,7 +94,7 @@ extern int sysctl_schedstats(struct ctl_table *table, int write,
->  				 void __user *buffer, size_t *lenp,
->  				 loff_t *ppos);
->  
-> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  extern unsigned int sysctl_sched_energy_aware;
->  extern int sched_energy_aware_handler(struct ctl_table *table, int write,
->  				 void __user *buffer, size_t *lenp,
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 60592cde80e8..087508723e58 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -217,7 +217,7 @@ static inline void update_avg(u64 *avg, u64 sample)
->  
->  static inline bool dl_entity_is_special(struct sched_dl_entity *dl_se)
->  {
-> -#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-> +#if IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  	return unlikely(dl_se->flags & SCHED_FLAG_SUGOV);
->  #else
->  	return false;
-> @@ -2459,7 +2459,7 @@ unsigned long scale_irq_capacity(unsigned long util, unsigned long irq, unsigned
->  }
->  #endif
->  
-> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  
->  #define perf_domain_span(pd) (to_cpumask(((pd)->em_pd->cpus)))
->  
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index b905f2e8d9b2..5f49d25730bd 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -201,7 +201,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
->  	return 1;
->  }
->  
-> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  DEFINE_STATIC_KEY_FALSE(sched_energy_present);
->  unsigned int sysctl_sched_energy_aware = 1;
->  DEFINE_MUTEX(sched_energy_mutex);
-> @@ -2287,7 +2287,7 @@ void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
->  		;
->  	}
->  
-> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> +#if defined(CONFIG_ENERGY_MODEL) && IS_ENABLED(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
->  	/* Build perf. domains: */
->  	for (i = 0; i < ndoms_new; i++) {
->  		for (j = 0; j < n && !sched_energy_update; j++) {
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index b18b13147a6f..7134389afd2e 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -76,12 +76,8 @@
+> 
+> #define USB_VENDOR_ID_ALPS_JP		0x044E
+> #define HID_DEVICE_ID_ALPS_U1_DUAL	0x120B
+> -#define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
+> -#define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+> #define HID_DEVICE_ID_ALPS_U1		0x1215
+> #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+> -#define HID_DEVICE_ID_ALPS_1222		0x1222
+> -
+> 
+> #define USB_VENDOR_ID_AMI		0x046b
+> #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
+> @@ -281,9 +277,6 @@
+> 
+> #define USB_VENDOR_ID_CIDC		0x1677
+> 
+> -#define I2C_VENDOR_ID_CIRQUE		0x0488
+> -#define I2C_PRODUCT_ID_CIRQUE_121F	0x121F
+> -
+> #define USB_VENDOR_ID_CJTOUCH		0x24b8
+> #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0020	0x0020
+> #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0040	0x0040
+> @@ -729,8 +722,6 @@
+> #define USB_DEVICE_ID_LENOVO_SCROLLPOINT_OPTICAL	0x6049
+> #define USB_DEVICE_ID_LENOVO_TPPRODOCK	0x6067
+> #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
+> -#define USB_DEVICE_ID_LENOVO_X1_TAB	0x60a3
+> -#define USB_DEVICE_ID_LENOVO_X1_TAB3	0x60b5
+> #define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D	0x608d
+> 
+> #define USB_VENDOR_ID_LG		0x1fd2
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 362805ddf377..bcd37abb2a4a 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -188,7 +188,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
+> /* reserved					0x0011 */
+> #define MT_CLS_WIN_8				0x0012
+> #define MT_CLS_EXPORT_ALL_INPUTS		0x0013
+> -#define MT_CLS_WIN_8_DUAL			0x0014
+> +/* reserved					0x0014 */
+> 
+> /* vendor specific classes */
+> #define MT_CLS_3M				0x0101
+> @@ -272,14 +272,6 @@ static const struct mt_class mt_classes[] = {
+> 		.quirks = MT_QUIRK_ALWAYS_VALID |
+> 			MT_QUIRK_CONTACT_CNT_ACCURATE,
+> 		.export_all_inputs = true },
+> -	{ .name = MT_CLS_WIN_8_DUAL,
+> -		.quirks = MT_QUIRK_ALWAYS_VALID |
+> -			MT_QUIRK_IGNORE_DUPLICATES |
+> -			MT_QUIRK_HOVERING |
+> -			MT_QUIRK_CONTACT_CNT_ACCURATE |
+> -			MT_QUIRK_WIN8_PTP_BUTTONS,
+> -		.export_all_inputs = true },
+> -
+> 	/*
+> 	 * vendor specific classes
+> 	 */
+> @@ -754,8 +746,7 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+> 			MT_STORE_FIELD(inrange_state);
+> 			return 1;
+> 		case HID_DG_CONFIDENCE:
+> -			if ((cls->name == MT_CLS_WIN_8 ||
+> -				cls->name == MT_CLS_WIN_8_DUAL) &&
+> +			if (cls->name == MT_CLS_WIN_8 &&
+> 				(field->application == HID_DG_TOUCHPAD ||
+> 				 field->application == HID_DG_TOUCHSCREEN))
+> 				app->quirks |= MT_QUIRK_CONFIDENCE;
+> @@ -1786,32 +1777,6 @@ static const struct hid_device_id mt_devices[] = {
+> 		MT_USB_DEVICE(USB_VENDOR_ID_3M,
+> 			USB_DEVICE_ID_3M3266) },
+> 
+> -	/* Alps devices */
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> -			USB_VENDOR_ID_ALPS_JP,
+> -			HID_DEVICE_ID_ALPS_U1_DUAL_PTP) },
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> -			USB_VENDOR_ID_ALPS_JP,
+> -			HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP) },
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> -			USB_VENDOR_ID_ALPS_JP,
+> -			HID_DEVICE_ID_ALPS_1222) },
+> -
+> -	/* Lenovo X1 TAB Gen 2 */
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_USB, HID_GROUP_MULTITOUCH_WIN_8,
+> -			   USB_VENDOR_ID_LENOVO,
+> -			   USB_DEVICE_ID_LENOVO_X1_TAB) },
+> -
+> -	/* Lenovo X1 TAB Gen 3 */
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_USB, HID_GROUP_MULTITOUCH_WIN_8,
+> -			   USB_VENDOR_ID_LENOVO,
+> -			   USB_DEVICE_ID_LENOVO_X1_TAB3) },
+> -
+> 	/* Anton devices */
+> 	{ .driver_data = MT_CLS_EXPORT_ALL_INPUTS,
+> 		MT_USB_DEVICE(USB_VENDOR_ID_ANTON,
+> @@ -1846,12 +1811,6 @@ static const struct hid_device_id mt_devices[] = {
+> 		MT_USB_DEVICE(USB_VENDOR_ID_CHUNGHWAT,
+> 			USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH) },
+> 
+> -	/* Cirque devices */
+> -	{ .driver_data = MT_CLS_WIN_8_DUAL,
+> -		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> -			I2C_VENDOR_ID_CIRQUE,
+> -			I2C_PRODUCT_ID_CIRQUE_121F) },
+> -
+> 	/* CJTouch panels */
+> 	{ .driver_data = MT_CLS_NSMU,
+> 		MT_USB_DEVICE(USB_VENDOR_ID_CJTOUCH,
+> -- 
+> 2.17.1
+> 
 
-Now that scheduler does not have any references to schedutil_gov and cpufreq
-has want_eas flag, do we need this CONFIG_CPU_FREQ_GOV_SCHEDUTIL checks here?
-
-Thanks,
-Pavan
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
