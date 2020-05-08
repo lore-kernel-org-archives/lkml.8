@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134ADC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D52AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E428E2496A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F7221974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588960960;
-	bh=NXgOr8+IDDJ86JzwJlupV+Xks7Oz1oRGnMkA9Se54V0=;
+	s=default; t=1588960963;
+	bh=oMjpzDDlh2D1GE9o+Fjd+U1ibu0bpncO6VpG1sd997M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6qg6gzgkhxS07UH4c5wEDctx+idnHosk0df2bzjWJhWCRb4twjWUpa6KRZjwDTfe
-	 kP7VRgTJ5EnEjH8ZoSVxolgGDknMR6lRpbw/OVXHOKWiICnZUc+udhCk5Zhm/LI4gG
-	 H336fOeCrT8ZKTlrQluNjq1jhpxX9gyiLtyceO1s=
+	b=bqd4hjtOjSXJ89CCKOe+1e5dLVgtYpwc50wFLWuemWzPqIPZh6XAvvjrqxNIcesH9
+	 uL3lRyWn/r6UV7NI7y84tYv4qiIXPBw0blQP4Zus64+qjmIL7lLqWHFxcf4Vcrwuf+
+	 V/ppy1Et9OVISBRE3W43mADVc/g0zWryIb77uGQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEHSCk (ORCPT
+        id S1727958AbgEHSCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 14:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbgEHSCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:02:33 -0400
+        id S1727922AbgEHSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:02:38 -0400
 Received: from e123331-lin.nice.arm.com (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A833F24957;
-        Fri,  8 May 2020 18:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D607924966;
+        Fri,  8 May 2020 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588960952;
-        bh=NXgOr8+IDDJ86JzwJlupV+Xks7Oz1oRGnMkA9Se54V0=;
+        s=default; t=1588960958;
+        bh=oMjpzDDlh2D1GE9o+Fjd+U1ibu0bpncO6VpG1sd997M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chkI37xlMKjCwq9IVeoRBZlXmxOvdEHVCnMZ6tvXyXMjvAPUkOiwbTf9A8MAqpAQJ
-         8jMQPfk0NtJCL40bsAoyK6emepc7g7pMvvKy72YdtUfuVeSCMgro3xghsupLUqj3yU
-         PteWy90qjB3hrVrZEGW8wi40UKrktVd9CRFiDo+Q=
+        b=fhj4MoXdUqj8yzhTUGgvYW+H0XQoe3/Zz/3lcPtHgGzEURkTg/ySvKnHgAhDpdIAT
+         ui9qEe1p+jXCZ8SXhTjYbLI9CWaS8bLjiMQuuLfr9iarzNy5EmjKtg79eA5mcLQySl
+         8ZhIsUrSnWMc/6AO6TpyTfZ2WNec59jI7H7slTio=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Guenter Roeck <linux@roeck-us.net>,
         Joe Perches <joe@perches.com>
-Subject: [PATCH 05/15] efi/gop: Use efi_err for error messages
-Date:   Fri,  8 May 2020 20:01:47 +0200
-Message-Id: <20200508180157.1816-6-ardb@kernel.org>
+Subject: [PATCH 07/15] efi/libstub: Upgrade ignored dtb= argument message to error
+Date:   Fri,  8 May 2020 20:01:49 +0200
+Message-Id: <20200508180157.1816-8-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508180157.1816-1-ardb@kernel.org>
 References: <20200508180157.1816-1-ardb@kernel.org>
@@ -60,63 +60,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arvind Sankar <nivedita@alum.mit.edu>
 
-Use efi_err instead of bare efi_printk for error messages.
+Use efi_err if we ignore a command-line dtb= argument, so that it shows
+up even on a quiet boot.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200430182843.2510180-6-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200430182843.2510180-8-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/gop.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/firmware/efi/libstub/efi-stub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index 64cee0febae0..34c0cba2c8bf 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -134,14 +134,14 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index 72ffd2670f99..cb02e8bb6b44 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -241,7 +241,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 	if (!IS_ENABLED(CONFIG_EFI_ARMSTUB_DTB_LOADER) ||
+ 	     secure_boot != efi_secureboot_mode_disabled) {
+ 		if (strstr(cmdline_ptr, "dtb="))
+-			efi_info("Ignoring DTB from command line.\n");
++			efi_err("Ignoring DTB from command line.\n");
+ 	} else {
+ 		status = efi_load_dtb(image, &fdt_addr, &fdt_size);
  
- 	max_mode = efi_table_attr(mode, max_mode);
- 	if (cmdline.mode >= max_mode) {
--		efi_printk("Requested mode is invalid\n");
-+		efi_err("Requested mode is invalid\n");
- 		return cur_mode;
- 	}
- 
- 	status = efi_call_proto(gop, query_mode, cmdline.mode,
- 				&info_size, &info);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Couldn't get mode information\n");
-+		efi_err("Couldn't get mode information\n");
- 		return cur_mode;
- 	}
- 
-@@ -150,7 +150,7 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
- 	efi_bs_call(free_pool, info);
- 
- 	if (pf == PIXEL_BLT_ONLY || pf >= PIXEL_FORMAT_MAX) {
--		efi_printk("Invalid PixelFormat\n");
-+		efi_err("Invalid PixelFormat\n");
- 		return cur_mode;
- 	}
- 
-@@ -222,7 +222,7 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
- 			return m;
- 	}
- 
--	efi_printk("Couldn't find requested mode\n");
-+	efi_err("Couldn't find requested mode\n");
- 
- 	return cur_mode;
- }
-@@ -316,7 +316,7 @@ static void set_mode(efi_graphics_output_protocol_t *gop)
- 		return;
- 
- 	if (efi_call_proto(gop, set_mode, new_mode) != EFI_SUCCESS)
--		efi_printk("Failed to set requested mode\n");
-+		efi_err("Failed to set requested mode\n");
- }
- 
- static void find_bits(u32 mask, u8 *pos, u8 *size)
 -- 
 2.17.1
 
