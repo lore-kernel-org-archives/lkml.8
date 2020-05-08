@@ -2,98 +2,123 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E356C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E17AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E44F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D821A208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgEHJ16 (ORCPT
+        id S1726761AbgEHJ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:27:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:55803 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgEHJ15 (ORCPT
+        Fri, 8 May 2020 05:28:14 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:49018 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgEHJ2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:27:57 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N0WwO-1jA6oq1HyG-00wVKc for <linux-kernel@vger.kernel.org>; Fri, 08 May
- 2020 11:27:56 +0200
-Received: by mail-qk1-f170.google.com with SMTP id n14so884172qke.8
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 02:27:56 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaMvPf4mKO3Pbw1FIny9qT/avyl9rlkqGLH7sh2pK5/LoA02iRL
-        Iar01g2RAxv4eKRO7y+2X91HmH1Drzf+Y68OKFc=
-X-Google-Smtp-Source: APiQypIT5KGAy6nduWP+f4Ah+CHDgMCWNiHI9NZ/Jg9NOh6Uos1ERK6OAeEd1eWPfJzvShL2GXArM5FV2hTFxejddLQ=
-X-Received: by 2002:a05:620a:3c5:: with SMTP id r5mr1861152qkm.138.1588930075188;
- Fri, 08 May 2020 02:27:55 -0700 (PDT)
+        Fri, 8 May 2020 05:28:13 -0400
+Received: by mail-io1-f72.google.com with SMTP id p1so1267326iof.15
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 02:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=M45NYhiOkDhNVXzn+E9veIWDhXY5Tgcs9GMRd88d/wA=;
+        b=Es/98GmbmDfkuI7aluVh3icN02ZqtOwpH40Wy5dWZAj7eR7vSnC0/1fnBCSe8HBeDA
+         QZrQ1nAX5fEjulkrREKBZlyakyPmh6WFgrKDUnPzkpHlQhJiCQe095tkLPH2b0Q+v3YT
+         Nl5eowjwSZ8iRHRKPANRmWcGwyxqFEJu5sIi/iz+2PgCdSa5/Trfo/7ZfVb0eEbZWreb
+         T99HsG4H3yDXZlxpuTMFmhXEJaDReG9/3hOroONFC+upRWsLyoCwTev6ruoGmDwhJLpv
+         s9V7vLwPdlearjidemp9clT2kjsYtmvXrLowNYt+L9F1Yg6KGo5L1Sa/JVXgVhxQ6RdJ
+         KP4Q==
+X-Gm-Message-State: AGi0PuYyui5q5uTuYcAzzXEBeXhVZTccr+s7T1hQO5YcNz+l1gDEAvqs
+        og8S9Jeo1TXdfHIRpedjxcikeAuA/WOQT1jG/ZAiKEcoi/u/
+X-Google-Smtp-Source: APiQypKt+590tOHdh0r3kO47FiNs0JpumYuqScz3lsN3PuoZSq+8b+AqcFgbgo30VfZAIU/DW3QKUlTCrSxi98Vb5/8Pqkx8xUIh
 MIME-Version: 1.0
-References: <CAK8P3a0QkqyA2wq_EbA+oWrLGgVdQwpBvb+G0aKyz60BOLs6fg@mail.gmail.com>
- <20200507232941.jccuywl56bppxfyp@treble>
-In-Reply-To: <20200507232941.jccuywl56bppxfyp@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 8 May 2020 11:27:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0pY+tu=3hvWTZVwD7nbA7UhaaCGWbBVba0eDuNcpt2Sg@mail.gmail.com>
-Message-ID: <CAK8P3a0pY+tu=3hvWTZVwD7nbA7UhaaCGWbBVba0eDuNcpt2Sg@mail.gmail.com>
-Subject: Re: objtool warning breaks build for fs/dlm/lock.o
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:2411:: with SMTP id k17mr1907949ilk.138.1588930092814;
+ Fri, 08 May 2020 02:28:12 -0700 (PDT)
+Date:   Fri, 08 May 2020 02:28:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c15b0c05a51f9d8c@google.com>
+Subject: KASAN: user-memory-access Read in do_con_trol
+From:   syzbot <syzbot+c5c252a500b90d63e07f@syzkaller.appspotmail.com>
+To:     daniel.vetter@ffwll.ch, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org, nico@fluxnic.net,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:XVGLGx9hS5I3qn1xMKGlp0QdSoZ9iP/hTcbUyFD6l89JJgbgbX9
- gGzi+AT58wbWE7p4aOHyzcja1xJskQHBWubCN3A2EFS/fNWF0fuPglZDU56wWVXVXU1cUgp
- D6+1OcLEo7p7kFv/YH+tKaBRtUFhhqOaK6BxB/48qv1nvZPttbWbf5kgHb4R2INaQ097//I
- xioMwON9OjBN5nEEGO8Yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U6QLziOnm0s=:YpL0QRtPZAjfvfAoL23iDh
- XY7+BVIILKDLnpxPgu0BOUD1fPfHFjpT4MxVAamJjw6axSyZ0fmuEf+LlOcgqkz4HWMPLbUCZ
- tCXCiyAA06iGTIPJx9ZBwnADvhtABy+egPcYR4NzaZg0o9S1iwGzN+vUNIxOjG3GFsp6fc5sw
- SdSeOH7xb1PmKntmHG+W+yW6f/IQW/TcnUjVf8sVQTRawFBqj1/8FE1v0OGpSv/sS+h6eauDD
- sDjgKjD7KVsAyf0nQo13DXoWO2+TtGGiieQGJkzqi/nYYjraCFEWMIHf9Bf5bqh5eI1uaL0jt
- q6J44mcLJ27gClHI37Jr3Hnaw0/zkP7utDUSBcYu8ETjixVML0jMGRIgCswwvRizVrekAORu0
- L7junExFjB0LDJmJUVgF9nEeifiifXM9DDIuU3UCKDSQ6DY69mOS0CS2f27oQEZ0RRmxs0IwY
- EwCGPVGn0KU1dtYbiWJfCWoUovJDcev6e3LWPHvMY/v9dS4b87jUtrrUSoOdltLXr0V3P1sMl
- 4GGBVWghFb/N76K39PyvqD8zjyTIeOFw0Awv2V2bOicLv7NxTiFhwgsc5eiiZ1/TJFGe9mZAD
- h87oALMhYLwsqrmSeM+76pcwdTYRBG8Gl/bXQ0/ftVxdAkks8ANSBx/Ly05kBFLei5zqHw+cf
- oi/v44z7lsVGz/dBv1daqoNSk8a5mK8kL3VPY8o4eZmVQvzQYI1Cyww31X3gqsn+sAAS8aVTH
- jdZUppo0RWXCNfYL3XgqxiH+UrsFQXuCXylhTrRTumn2VZxVMNG9LvyMkmzEILxFb1AxOMJ02
- MZjWFYPSZZRKaMaEisEs4lV/p+KR5qwIkfaTQc9rUJZ9MFMSq4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 1:29 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Wed, May 06, 2020 at 04:07:25PM +0200, Arnd Bergmann wrote:
-> > Hi,
-> >
-> > During randconfig testing with clang-10 I came across a number
-> > of additional objtool warnings, I'll send another mail about those
-> > when I have collected more information and some object files.
-> >
-> > This one sticks out however, as objtool returns an error code that
-> > stops the build:
->
-> > fs/dlm/lock.o: warning: objtool: __receive_convert_reply()+0x1e5: can't find jump dest instruction at .text+0xcaa7
->
-> Thanks for sending the patch for this one.  Objtool always gets confused
-> by new compiler versions, I really think we need to revert
->
->   644592d32837 ("objtool: Fail the kernel build on fatal errors")
->
-> because objtool is never going to be reliable enough such that we can be
-> confident that failing the build is the right thing to do.
+Hello,
 
-Right, makes sense. It would be nice though to have a way of intentionally
-turning all objtool warnings into errors. I do my randconfig tests
-with '-Werror'
-at the moment in order to catch all new warnings, but this does not catch
-objtool errors at the moment. For now, this is probably the right thing to do,
-as there are a couple of warnings that I have no patches for, but at some point
-I would prefer to trap immediately when a new warning pops up.
+syzbot found the following crash on:
 
-     Arnd
+HEAD commit:    3c40cdb0 Merge branch 'linus' of git://git.kernel.org/pub/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14733d6c100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=c5c252a500b90d63e07f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c5c252a500b90d63e07f@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: user-memory-access in memcpy include/linux/string.h:381 [inline]
+BUG: KASAN: user-memory-access in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+BUG: KASAN: user-memory-access in delete_char drivers/tty/vt/vt.c:853 [inline]
+BUG: KASAN: user-memory-access in csi_P drivers/tty/vt/vt.c:2008 [inline]
+BUG: KASAN: user-memory-access in do_con_trol+0x364/0x5d00 drivers/tty/vt/vt.c:2402
+Read of size 398 at addr 00000000fffffe82 by task syz-executor.5/11995
+
+CPU: 1 PID: 11995 Comm: syz-executor.5 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ check_memory_region_inline mm/kasan/generic.c:187 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+ memcpy+0x20/0x60 mm/kasan/common.c:106
+ memcpy include/linux/string.h:381 [inline]
+ scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+ delete_char drivers/tty/vt/vt.c:853 [inline]
+ csi_P drivers/tty/vt/vt.c:2008 [inline]
+ do_con_trol+0x364/0x5d00 drivers/tty/vt/vt.c:2402
+ do_con_write.part.0+0xf34/0x1dc0 drivers/tty/vt/vt.c:2818
+ do_con_write drivers/tty/vt/vt.c:2588 [inline]
+ con_write+0x41/0xe0 drivers/tty/vt/vt.c:3154
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x3f0/0xf90 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x495/0x800 drivers/tty/tty_io.c:1046
+ __vfs_write+0x76/0x100 fs/read_write.c:495
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x12d/0x250 fs/read_write.c:612
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fe8c3dc7c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000050c660 RCX: 000000000045c829
+RDX: 0000000000000320 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000cea R14: 00000000004cf16f R15: 00007fe8c3dc86d4
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
