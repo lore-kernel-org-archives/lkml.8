@@ -4,47 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE0C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A19C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226F824999
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8AA249A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgEHNJH (ORCPT
+        id S1730600AbgEHNJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34718 "EHLO
+        Fri, 8 May 2020 09:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730497AbgEHNFZ (ORCPT
+        by vger.kernel.org with ESMTP id S1730501AbgEHNFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 09:05:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43C2C05BD0F;
-        Fri,  8 May 2020 06:05:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F0EC05BD43;
+        Fri,  8 May 2020 06:05:25 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gp-0007h9-Mb; Fri, 08 May 2020 15:05:19 +0200
+        id 1jX2gV-0007Hq-AV; Fri, 08 May 2020 15:04:59 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3241C1C04D3;
-        Fri,  8 May 2020 15:05:05 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:05:05 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 39D2A1C0493;
+        Fri,  8 May 2020 15:04:49 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:49 -0000
+From:   "tip-bot2 for Stephane Eranian" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evlist: Move the sideband thread routines to
- separate object
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] tools feature: Add support for detecting libpfm4
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, yuzhoujian <yuzhoujian@didichuxing.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200429231443.207201-3-irogers@google.com>
+References: <20200429231443.207201-3-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158894310511.8414.8812865769346391673.tip-bot2@tip-bot2>
+Message-ID: <158894308913.8414.14143682861215689982.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,294 +82,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     9a39994467d493eba38d8f69e42fd9c31cb1da9a
-Gitweb:        https://git.kernel.org/tip/9a39994467d493eba38d8f69e42fd9c31cb1da9a
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 05 May 2020 12:18:21 -03:00
+Commit-ID:     5ef86146de941f273d669a8e018036f549bf058c
+Gitweb:        https://git.kernel.org/tip/5ef86146de941f273d669a8e018036f549bf058c
+Author:        Stephane Eranian <eranian@google.com>
+AuthorDate:    Wed, 29 Apr 2020 16:14:41 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:29 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:31 -03:00
 
-perf evlist: Move the sideband thread routines to separate object
+tools feature: Add support for detecting libpfm4
 
-To avoid dragging more stuff into the perf python binding in the
-following csets.
+libpfm4 provides an alternate command line encoding of perf events.
 
-Reported-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Igor Lubashev <ilubashe@akamai.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiwei Sun <jiwei.sun@windriver.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: yuzhoujian <yuzhoujian@didichuxing.com>
+Link: http://lore.kernel.org/lkml/20200429231443.207201-3-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/Build             |   1 +-
- tools/perf/util/evlist.c          | 117 +---------------------------
- tools/perf/util/sideband_evlist.c | 125 +++++++++++++++++++++++++++++-
- 3 files changed, 126 insertions(+), 117 deletions(-)
- create mode 100644 tools/perf/util/sideband_evlist.c
+ tools/build/Makefile.feature       |  3 ++-
+ tools/build/feature/Makefile       |  6 +++++-
+ tools/build/feature/test-libpfm4.c |  9 +++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 229abef..ca07a16 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -10,6 +10,7 @@ perf-y += db-export.o
- perf-y += env.o
- perf-y += event.o
- perf-y += evlist.o
-+perf-y += sideband_evlist.o
- perf-y += evsel.o
- perf-y += evsel_fprintf.o
- perf-y += perf_event_attr_fprintf.o
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 6fe11f4..6d902c0 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1704,120 +1704,3 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 	}
- 	return leader;
- }
--
--int perf_evlist__add_sb_event(struct evlist *evlist,
--			      struct perf_event_attr *attr,
--			      perf_evsel__sb_cb_t cb,
--			      void *data)
--{
--	struct evsel *evsel;
--
--	if (!attr->sample_id_all) {
--		pr_warning("enabling sample_id_all for all side band events\n");
--		attr->sample_id_all = 1;
--	}
--
--	evsel = perf_evsel__new_idx(attr, evlist->core.nr_entries);
--	if (!evsel)
--		return -1;
--
--	evsel->side_band.cb = cb;
--	evsel->side_band.data = data;
--	evlist__add(evlist, evsel);
--	return 0;
--}
--
--static void *perf_evlist__poll_thread(void *arg)
--{
--	struct evlist *evlist = arg;
--	bool draining = false;
--	int i, done = 0;
--	/*
--	 * In order to read symbols from other namespaces perf to needs to call
--	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
--	 * unshare(2) the fs so that we may continue to setns into namespaces
--	 * that we're observing when, for instance, reading the build-ids at
--	 * the end of a 'perf record' session.
--	 */
--	unshare(CLONE_FS);
--
--	while (!done) {
--		bool got_data = false;
--
--		if (evlist->thread.done)
--			draining = true;
--
--		if (!draining)
--			evlist__poll(evlist, 1000);
--
--		for (i = 0; i < evlist->core.nr_mmaps; i++) {
--			struct mmap *map = &evlist->mmap[i];
--			union perf_event *event;
--
--			if (perf_mmap__read_init(&map->core))
--				continue;
--			while ((event = perf_mmap__read_event(&map->core)) != NULL) {
--				struct evsel *evsel = perf_evlist__event2evsel(evlist, event);
--
--				if (evsel && evsel->side_band.cb)
--					evsel->side_band.cb(event, evsel->side_band.data);
--				else
--					pr_warning("cannot locate proper evsel for the side band event\n");
--
--				perf_mmap__consume(&map->core);
--				got_data = true;
--			}
--			perf_mmap__read_done(&map->core);
--		}
--
--		if (draining && !got_data)
--			break;
--	}
--	return NULL;
--}
--
--int perf_evlist__start_sb_thread(struct evlist *evlist,
--				 struct target *target)
--{
--	struct evsel *counter;
--
--	if (!evlist)
--		return 0;
--
--	if (perf_evlist__create_maps(evlist, target))
--		goto out_delete_evlist;
--
--	evlist__for_each_entry(evlist, counter) {
--		if (evsel__open(counter, evlist->core.cpus,
--				     evlist->core.threads) < 0)
--			goto out_delete_evlist;
--	}
--
--	if (evlist__mmap(evlist, UINT_MAX))
--		goto out_delete_evlist;
--
--	evlist__for_each_entry(evlist, counter) {
--		if (evsel__enable(counter))
--			goto out_delete_evlist;
--	}
--
--	evlist->thread.done = 0;
--	if (pthread_create(&evlist->thread.th, NULL, perf_evlist__poll_thread, evlist))
--		goto out_delete_evlist;
--
--	return 0;
--
--out_delete_evlist:
--	evlist__delete(evlist);
--	evlist = NULL;
--	return -1;
--}
--
--void perf_evlist__stop_sb_thread(struct evlist *evlist)
--{
--	if (!evlist)
--		return;
--	evlist->thread.done = 1;
--	pthread_join(evlist->thread.th, NULL);
--	evlist__delete(evlist);
--}
-diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 3e0c019..3abd431 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
+          llvm                           \
+          llvm-version                   \
+          clang                          \
+-         libbpf
++         libbpf                         \
++         libpfm4
+ 
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
+ 
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 9201238..84f845b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -69,7 +69,8 @@ FILES=                                          \
+          test-libaio.bin			\
+          test-libzstd.bin			\
+          test-clang-bpf-global-var.bin		\
+-         test-file-handle.bin
++         test-file-handle.bin			\
++         test-libpfm4.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -331,6 +332,9 @@ $(OUTPUT)test-clang-bpf-global-var.bin:
+ $(OUTPUT)test-file-handle.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libpfm4.bin:
++	$(BUILD) -lpfm
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
 new file mode 100644
-index 0000000..073d201
+index 0000000..af49b25
 --- /dev/null
-+++ b/tools/perf/util/sideband_evlist.c
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/tools/build/feature/test-libpfm4.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/types.h>
++#include <perfmon/pfmlib.h>
 +
-+#include "util/debug.h"
-+#include "util/evlist.h"
-+#include "util/evsel.h"
-+#include "util/mmap.h"
-+#include <perf/mmap.h>
-+#include <linux/perf_event.h>
-+#include <limits.h>
-+#include <pthread.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+
-+int perf_evlist__add_sb_event(struct evlist *evlist, struct perf_event_attr *attr,
-+			      perf_evsel__sb_cb_t cb, void *data)
++int main(void)
 +{
-+	struct evsel *evsel;
-+
-+	if (!attr->sample_id_all) {
-+		pr_warning("enabling sample_id_all for all side band events\n");
-+		attr->sample_id_all = 1;
-+	}
-+
-+	evsel = perf_evsel__new_idx(attr, evlist->core.nr_entries);
-+	if (!evsel)
-+		return -1;
-+
-+	evsel->side_band.cb = cb;
-+	evsel->side_band.data = data;
-+	evlist__add(evlist, evsel);
++	pfm_initialize();
 +	return 0;
-+}
-+
-+static void *perf_evlist__poll_thread(void *arg)
-+{
-+	struct evlist *evlist = arg;
-+	bool draining = false;
-+	int i, done = 0;
-+	/*
-+	 * In order to read symbols from other namespaces perf to needs to call
-+	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
-+	 * unshare(2) the fs so that we may continue to setns into namespaces
-+	 * that we're observing when, for instance, reading the build-ids at
-+	 * the end of a 'perf record' session.
-+	 */
-+	unshare(CLONE_FS);
-+
-+	while (!done) {
-+		bool got_data = false;
-+
-+		if (evlist->thread.done)
-+			draining = true;
-+
-+		if (!draining)
-+			evlist__poll(evlist, 1000);
-+
-+		for (i = 0; i < evlist->core.nr_mmaps; i++) {
-+			struct mmap *map = &evlist->mmap[i];
-+			union perf_event *event;
-+
-+			if (perf_mmap__read_init(&map->core))
-+				continue;
-+			while ((event = perf_mmap__read_event(&map->core)) != NULL) {
-+				struct evsel *evsel = perf_evlist__event2evsel(evlist, event);
-+
-+				if (evsel && evsel->side_band.cb)
-+					evsel->side_band.cb(event, evsel->side_band.data);
-+				else
-+					pr_warning("cannot locate proper evsel for the side band event\n");
-+
-+				perf_mmap__consume(&map->core);
-+				got_data = true;
-+			}
-+			perf_mmap__read_done(&map->core);
-+		}
-+
-+		if (draining && !got_data)
-+			break;
-+	}
-+	return NULL;
-+}
-+
-+int perf_evlist__start_sb_thread(struct evlist *evlist, struct target *target)
-+{
-+	struct evsel *counter;
-+
-+	if (!evlist)
-+		return 0;
-+
-+	if (perf_evlist__create_maps(evlist, target))
-+		goto out_delete_evlist;
-+
-+	evlist__for_each_entry(evlist, counter) {
-+		if (evsel__open(counter, evlist->core.cpus, evlist->core.threads) < 0)
-+			goto out_delete_evlist;
-+	}
-+
-+	if (evlist__mmap(evlist, UINT_MAX))
-+		goto out_delete_evlist;
-+
-+	evlist__for_each_entry(evlist, counter) {
-+		if (evsel__enable(counter))
-+			goto out_delete_evlist;
-+	}
-+
-+	evlist->thread.done = 0;
-+	if (pthread_create(&evlist->thread.th, NULL, perf_evlist__poll_thread, evlist))
-+		goto out_delete_evlist;
-+
-+	return 0;
-+
-+out_delete_evlist:
-+	evlist__delete(evlist);
-+	evlist = NULL;
-+	return -1;
-+}
-+
-+void perf_evlist__stop_sb_thread(struct evlist *evlist)
-+{
-+	if (!evlist)
-+		return;
-+	evlist->thread.done = 1;
-+	pthread_join(evlist->thread.th, NULL);
-+	evlist__delete(evlist);
 +}
