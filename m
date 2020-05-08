@@ -2,64 +2,58 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A23C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECBD424964
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E677724964
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942264;
-	bh=M0MB1D8c9E4aDRoDDf4vYS0ucKOU3XJnBVKI6wSa2lA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rSXhyEA6foUIfsaM5jc2OgKYkPkFTG3J3AHjODGmrltTeSOZSxq1A4zh525HXDb4P
-	 K1128JOLd4gCQBH11MxZa9ddDpDowb3qaoj3YynulkrBK52WTEeamfkAWS3cgs6wFT
-	 BKNz8TYi0MdRcQuI5245nccLACV5TIhS8+VWE67c=
+	s=default; t=1588942271;
+	bh=0JdQPdHvUAwfNehrZPdJ0HV1zrRmpMt3IIEHaznFoDQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Kb9+ndg8CiuYxQ3YNgVb8B7nUnYkfgiJs2zOK8++GTNUpz3yfXabEl8c7UnxYJQyk
+	 UCkLjYmtvAgi/Lm3K2d+LllDkTyyyeit3Nmj9dXl4Ydm5gcJbIaFg5SRv7y3TtYJwd
+	 4ok1PiLHokSDQR8eAIg+A8HrXuDKUujeyqusN3S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgEHMvC (ORCPT
+        id S1728861AbgEHMvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:51:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729861AbgEHMu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:58 -0400
+        id S1729871AbgEHMvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A8624953;
-        Fri,  8 May 2020 12:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA81218AC;
+        Fri,  8 May 2020 12:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942257;
-        bh=M0MB1D8c9E4aDRoDDf4vYS0ucKOU3XJnBVKI6wSa2lA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KV0OpifUSjHx0zOEnt2SNRo8Nwlp6O9OZNJL5xhHbzBHxAn813iPqqCrg6qmPshs6
-         4RXugLhgvHges4OWSBqLyJ1ud1MNehXEPQCuffL5mC6/uIJ7TFkSxy4FPcrAYpK0eY
-         oYiCucW3+T/ItyHi03D4bkU5y9jIqomQSawKJwTI=
+        s=default; t=1588942260;
+        bh=0JdQPdHvUAwfNehrZPdJ0HV1zrRmpMt3IIEHaznFoDQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pRPGxandZNMZ5r6zGsETf9IG7jkYhmlG82RElIvEf19zZzv0OkU9hdnDBYYedadQv
+         3zkeHP/SPO0+5GqGFQKDK6SOR10d6IXRUt8JdgUDlPlnddrK58XQWcoXyFu9A2myLz
+         B97bqAYRjq2ibLDlqeVqqWk43eLnFo2td0ezLvWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/22] 4.14.180-rc1 review
-Date:   Fri,  8 May 2020 14:35:12 +0200
-Message-Id: <20200508123033.915895060@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 22/22] cgroup, netclassid: remove double cond_resched
+Date:   Fri,  8 May 2020 14:35:34 +0200
+Message-Id: <20200508123036.692041061@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
+References: <20200508123033.915895060@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.180-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.180-rc1
-X-KernelTest-Deadline: 2020-05-10T12:30+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,133 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.180 release.
-There are 22 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Jiri Slaby <jslaby@suse.cz>
 
-Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-Anything received after that time might be too late.
+commit 526f3d96b8f83b1b13d73bd0b5c79cc2c487ec8e upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.180-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+Commit 018d26fcd12a ("cgroup, netclassid: periodically release file_lock
+on classid") added a second cond_resched to write_classid indirectly by
+update_classid_task. Remove the one in write_classid.
 
-thanks,
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Dmitry Yakunin <zeil@yandex-team.ru>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ net/core/netclassid_cgroup.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.180-rc1
-
-Jiri Slaby <jslaby@suse.cz>
-    cgroup, netclassid: remove double cond_resched
-
-Thomas Pedersen <thomas@adapt-ip.com>
-    mac80211: add ieee80211_is_any_nullfunc()
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda: Match both PCI ID and SSID for driver blacklist
-
-Steven Rostedt (VMware) <rostedt@goodmis.org>
-    tracing: Reverse the order of trace_types_lock and event_mutex
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-
-Doug Berger <opendmb@gmail.com>
-    net: systemport: suppress warnings on failed Rx SKB allocations
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: suppress warnings on failed Rx SKB allocations
-
-Nathan Chancellor <natechancellor@gmail.com>
-    lib/mpi: Fix building for powerpc with clang
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: b53: Rework ARL bin logic
-
-Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-    scripts/config: allow colons in option strings for sed
-
-Philipp Rudo <prudo@linux.ibm.com>
-    s390/ftrace: fix potential crashes when switching tracers
-
-Ronnie Sahlberg <lsahlber@redhat.com>
-    cifs: protect updating server->dstaddr with a spinlock
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: Fix sub-second increment
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: fix enabling socfpga's ptp_ref_clock
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    wimax/i2400m: Fix potential urb refcnt leak
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-
-Matthias Blankertz <matthias.blankertz@cetitec.com>
-    ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-
-Sebastian Reichel <sebastian.reichel@collabora.com>
-    ASoC: sgtl5000: Fix VAG power-on handling
-
-Tyler Hicks <tyhicks@linux.microsoft.com>
-    selftests/ipc: Fix test failure seen after initial test run
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    ASoC: topology: Check return value of pcm_new_ver
-
-Alexey Kardashevskiy <aik@ozlabs.ru>
-    powerpc/pci/of: Parse unassigned resources
-
-Jia He <justin.he@arm.com>
-    vhost: vsock: kick send_pkt worker once device is started
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +--
- arch/powerpc/kernel/pci_of_scan.c                  | 12 ++++++--
- arch/s390/kernel/diag.c                            |  2 +-
- arch/s390/kernel/smp.c                             |  4 +--
- arch/s390/kernel/trace.c                           |  2 +-
- drivers/net/dsa/b53/b53_common.c                   | 30 ++++++++++++++++---
- drivers/net/dsa/b53/b53_regs.h                     |  3 ++
- drivers/net/ethernet/broadcom/bcmsysport.c         |  3 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  3 +-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |  9 ++++--
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 12 +++++---
- drivers/net/wimax/i2400m/usb-fw.c                  |  1 +
- drivers/vhost/vsock.c                              |  5 ++++
- fs/cifs/connect.c                                  |  2 ++
- include/linux/ieee80211.h                          |  9 ++++++
- kernel/trace/trace.c                               |  5 ++++
- kernel/trace/trace_events.c                        | 31 ++++++++++----------
- lib/mpi/longlong.h                                 | 34 +++++++++++-----------
- net/core/netclassid_cgroup.c                       |  4 +--
- net/mac80211/mlme.c                                |  2 +-
- net/mac80211/rx.c                                  |  8 ++---
- net/mac80211/status.c                              |  5 ++--
- net/mac80211/tx.c                                  |  2 +-
- net/sctp/sm_make_chunk.c                           |  6 +++-
- scripts/config                                     |  5 +++-
- sound/pci/hda/hda_intel.c                          |  9 +++---
- sound/soc/codecs/hdac_hdmi.c                       |  6 ++--
- sound/soc/codecs/sgtl5000.c                        | 34 ++++++++++++++++++++++
- sound/soc/codecs/sgtl5000.h                        |  1 +
- sound/soc/sh/rcar/ssiu.c                           |  2 +-
- sound/soc/soc-topology.c                           |  4 ++-
- tools/testing/selftests/ipc/msgque.c               |  2 +-
- 32 files changed, 182 insertions(+), 79 deletions(-)
+--- a/net/core/netclassid_cgroup.c
++++ b/net/core/netclassid_cgroup.c
+@@ -131,10 +131,8 @@ static int write_classid(struct cgroup_s
+ 	cs->classid = (u32)value;
+ 
+ 	css_task_iter_start(css, 0, &it);
+-	while ((p = css_task_iter_next(&it))) {
++	while ((p = css_task_iter_next(&it)))
+ 		update_classid_task(p, cs->classid);
+-		cond_resched();
+-	}
+ 	css_task_iter_end(&it);
+ 
+ 	return 0;
 
 
