@@ -2,117 +2,181 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EF4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44417208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B67208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hXER7gFz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKd8CfHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgEHImN (ORCPT
+        id S1727821AbgEHImh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:42:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40720 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgEHImM (ORCPT
+        Fri, 8 May 2020 04:42:37 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43163 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726598AbgEHImg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:42:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488gBvN020971;
-        Fri, 8 May 2020 03:42:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588927331;
-        bh=j0RPwytwTGu6DXnBXsaicV6+R0ACC0J3LuDsBmxAjQ4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hXER7gFzPsBdW1U2+5FyzdOorrvEDdsp/UzYYcmXg92H1um39+yV547pRu/ZsOq6C
-         OYwIWlU1UyWh3ivKj8Dk2V+Q865+Vk1w6V1KjkU+md8ZqUNqY3MvZPXB8ZROSiN6vm
-         /6pXM8XDZI6Z4LOSYIHnSNyzRWko1VRK18QR1Ioo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488gA2I115472;
-        Fri, 8 May 2020 03:42:10 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 03:42:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 03:42:10 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488g8hm050354;
-        Fri, 8 May 2020 03:42:09 -0500
-Subject: Re: [PATCH v3 1/7] dt-bindings: syscon: Add TI's J721E specific
- compatible string
-To:     Kishon Vijay Abraham I <kishon@ti.com>, <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <nm@ti.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200508082937.14171-1-rogerq@ti.com>
- <20200508082937.14171-2-rogerq@ti.com>
- <6efa9374-e8f2-4054-3f35-6cacead783b8@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <e833753a-20dd-e57d-2aa4-49e96f31df4d@ti.com>
-Date:   Fri, 8 May 2020 11:42:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 04:42:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588927354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HDqdz7vUW07g8cOkfmGPIO8ov0KvSWCkjJFS1FzKfW0=;
+        b=PKd8CfHjInkPQDlzTXLjoPHpLLRReMA407Bb7KAxFLKQbm7rB5oiHahykWYdbOxaHNrhW0
+        1fP0jLAlk1+w0tPa2FcHCHYti4MpvBycR7ACx87bbRdThjpv/WkNpuCb0jllaRp8v0sJaU
+        hzeJuR+4wUezllvIoUtt+fALWbssR6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-tly-VFRPOxOjTHrhhsV3FQ-1; Fri, 08 May 2020 04:42:32 -0400
+X-MC-Unique: tly-VFRPOxOjTHrhhsV3FQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41EEE8018AB;
+        Fri,  8 May 2020 08:42:31 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-181.ams2.redhat.com [10.36.113.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F93E5C1B0;
+        Fri,  8 May 2020 08:42:28 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        kexec@lists.infradead.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>, stable@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user space after unloading kmem
+Date:   Fri,  8 May 2020 10:42:14 +0200
+Message-Id: <20200508084217.9160-2-david@redhat.com>
+In-Reply-To: <20200508084217.9160-1-david@redhat.com>
+References: <20200508084217.9160-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <6efa9374-e8f2-4054-3f35-6cacead783b8@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+Assume we have kmem configured and loaded:
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory$
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : dax0.0
+      150000000-33fffffff : System RAM
 
-On 08/05/2020 11:40, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 5/8/2020 1:59 PM, Roger Quadros wrote:
->> From: Kishon Vijay Abraham I <kishon@ti.com>
->>
->> Add TI's J721E SoC specific compatible string.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> This patch should be dropped given that patch 2 adds a new binding for the
-> compatible added here.
+Assume we try to unload kmem. This force-unloading will work, even if
+memory cannot get removed from the system.
+  [root@localhost ~]# rmmod kmem
+  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
+  ...
+  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
 
-Indeed, my bad.
+Now, we can reconfigure the namespace:
+  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
+  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
+  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
+  ...
 
-> 
-> Thanks
-> Kishon
-> 
->> ---
->>   Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
->> index 39375e4313d2..f9aac75d423a 100644
->> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
->> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
->> @@ -38,6 +38,7 @@ properties:
->>             - allwinner,sun8i-h3-system-controller
->>             - allwinner,sun8i-v3s-system-controller
->>             - allwinner,sun50i-a64-system-controller
->> +          - ti,j721e-system-controller
->>   
->>           - const: syscon
->>   
->>
+This fails as expected due to the busy memory resource, and the memory
+cannot be used. However, the dax0.0 device is removed, and along its name.
 
-cheers,
--roger
+The name of the memory resource now points at freed memory (name of the
+device).
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
+    150000000-33fffffff : System RAM
+
+We have to make sure to duplicate the string. While at it, remove the
+superfluous setting of the name and fixup a stale comment.
+
+Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
+Cc: stable@vger.kernel.org # v5.3
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/dax/kmem.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 3d0a7e702c94..1e678bdf5aed 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	resource_size_t kmem_size;
+ 	resource_size_t kmem_end;
+ 	struct resource *new_res;
++	const char *new_res_name;
+ 	int numa_node;
+ 	int rc;
+ 
+@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	kmem_size &= ~(memory_block_size_bytes() - 1);
+ 	kmem_end = kmem_start + kmem_size;
+ 
+-	/* Region is permanently reserved.  Hot-remove not yet implemented. */
+-	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
++	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
++	if (!new_res_name)
++		return -ENOMEM;
++
++	/* Region is permanently reserved if hotremove fails. */
++	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
+ 	if (!new_res) {
+ 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
+ 			 &kmem_start, &kmem_end);
++		kfree(new_res_name);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	 * unknown to us that will break add_memory() below.
+ 	 */
+ 	new_res->flags = IORESOURCE_SYSTEM_RAM;
+-	new_res->name = dev_name(dev);
+ 
+ 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+ 	if (rc) {
+ 		release_resource(new_res);
+ 		kfree(new_res);
++		kfree(new_res_name);
+ 		return rc;
+ 	}
+ 	dev_dax->dax_kmem_res = new_res;
+@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct device *dev)
+ 	struct resource *res = dev_dax->dax_kmem_res;
+ 	resource_size_t kmem_start = res->start;
+ 	resource_size_t kmem_size = resource_size(res);
++	const char *res_name = res->name;
+ 	int rc;
+ 
+ 	/*
+@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct device *dev)
+ 	/* Release and free dax resources */
+ 	release_resource(res);
+ 	kfree(res);
++	kfree(res_name);
+ 	dev_dax->dax_kmem_res = NULL;
+ 
+ 	return 0;
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.25.4
+
