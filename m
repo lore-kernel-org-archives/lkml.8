@@ -2,120 +2,122 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11730C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB62C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD06C2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gl4lNuj7"
+	by mail.kernel.org (Postfix) with ESMTP id 668042083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgEHOkA (ORCPT
+        id S1728045AbgEHOkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:40:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30611 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727915AbgEHOj7 (ORCPT
+        Fri, 8 May 2020 10:40:15 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:50002 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbgEHOkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588948798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hEKOJFeBe0XhjAsTACvee48OxZfeBzXxgNIQnHiBGQA=;
-        b=Gl4lNuj7Ki9pavwxpT7H1K3PsTz9f9XvJI3PAsJqmdFwhxlzQJrrVkeWprMV/N67y4bQ8j
-        Mt/W21+61NlFx5L5A01EcezdhZ2E+zJ2DzWuBm8tzlAeJx0aawbnTxdzJccdHHT+QhZrJE
-        1DXe4LFBr1KhzSPKr06oPKYBS4DYP84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-uSDcl7BqPWCt8KdWQCXcuA-1; Fri, 08 May 2020 10:39:54 -0400
-X-MC-Unique: uSDcl7BqPWCt8KdWQCXcuA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D86B464;
-        Fri,  8 May 2020 14:39:52 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 42DCE707A6;
-        Fri,  8 May 2020 14:39:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <713141.1588775072@warthog.procyon.org.uk>
-References: <713141.1588775072@warthog.procyon.org.uk> <20200506110942.GL16070@bombadil.infradead.org> <20200505115946.GF16070@bombadil.infradead.org> <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk> <158861253957.340223.7465334678444521655.stgit@warthog.procyon.org.uk> <683739.1588751878@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 54/61] afs: Wait on PG_fscache before modifying/releasing a page
+        Fri, 8 May 2020 10:40:15 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65eb56f398a3-5ab21; Fri, 08 May 2020 22:39:57 +0800 (CST)
+X-RM-TRANSID: 2ee65eb56f398a3-5ab21
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[223.104.148.118])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35eb56f39bf1-33a14;
+        Fri, 08 May 2020 22:39:56 +0800 (CST)
+X-RM-TRANSID: 2ee35eb56f39bf1-33a14
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH v2] USB: host: ehci-mxc: Use the defined variable to simplify code
+Date:   Fri,  8 May 2020 22:40:24 +0800
+Message-Id: <20200508144024.7836-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1040570.1588948788.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 08 May 2020 15:39:48 +0100
-Message-ID: <1040571.1588948788@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
+Use the defined variable "dev" to make the code cleaner. And
+delete an extra blank line.
 
-> ITER_MAPPING relies on the mapping to maintain the pointers to the pages=
- so
-> that it can find them rather than being like ITER_BVEC where there's a
-> separate list.
-> =
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+Changes from v1:
+ - fix the subject and the code.
+---
+ drivers/usb/host/ehci-mxc.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-> Truncate removes the pages from the mapping - at which point ITER_MAPPIN=
-G can
-> no longer find them.
+diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+index c9f91e6c7..09e01397f 100644
+--- a/drivers/usb/host/ehci-mxc.c
++++ b/drivers/usb/host/ehci-mxc.c
+@@ -36,12 +36,12 @@ static const struct ehci_driver_overrides ehci_mxc_overrides __initconst = {
+ 
+ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ {
+-	struct mxc_usbh_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	struct device *dev = &pdev->dev;
++	struct mxc_usbh_platform_data *pdata = dev_get_platdata(dev);
+ 	struct usb_hcd *hcd;
+ 	struct resource *res;
+ 	int irq, ret;
+ 	struct ehci_mxc_priv *priv;
+-	struct device *dev = &pdev->dev;
+ 	struct ehci_hcd *ehci;
+ 
+ 	if (!pdata) {
+@@ -56,7 +56,7 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
++	hcd->regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		ret = PTR_ERR(hcd->regs);
+ 		goto err_alloc;
+@@ -69,14 +69,14 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 	priv = (struct ehci_mxc_priv *) ehci->priv;
+ 
+ 	/* enable clocks */
+-	priv->usbclk = devm_clk_get(&pdev->dev, "ipg");
++	priv->usbclk = devm_clk_get(dev, "ipg");
+ 	if (IS_ERR(priv->usbclk)) {
+ 		ret = PTR_ERR(priv->usbclk);
+ 		goto err_alloc;
+ 	}
+ 	clk_prepare_enable(priv->usbclk);
+ 
+-	priv->ahbclk = devm_clk_get(&pdev->dev, "ahb");
++	priv->ahbclk = devm_clk_get(dev, "ahb");
+ 	if (IS_ERR(priv->ahbclk)) {
+ 		ret = PTR_ERR(priv->ahbclk);
+ 		goto err_clk_ahb;
+@@ -84,13 +84,12 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 	clk_prepare_enable(priv->ahbclk);
+ 
+ 	/* "dr" device has its own clock on i.MX51 */
+-	priv->phyclk = devm_clk_get(&pdev->dev, "phy");
++	priv->phyclk = devm_clk_get(dev, "phy");
+ 	if (IS_ERR(priv->phyclk))
+ 		priv->phyclk = NULL;
+ 	if (priv->phyclk)
+ 		clk_prepare_enable(priv->phyclk);
+ 
+-
+ 	/* call platform specific init function */
+ 	if (pdata->init) {
+ 		ret = pdata->init(pdev);
+-- 
+2.20.1.windows.1
 
-It looks like ITER_MAPPING is fine with truncate, provided the invalidatio=
-n
-waits for the iterator to complete first:
 
-	int truncate_inode_page(struct address_space *mapping, struct page *page)
-	{
-		VM_BUG_ON_PAGE(PageTail(page), page);
-
-		if (page->mapping !=3D mapping)
-			return -EIO;
-
-		truncate_cleanup_page(mapping, page);
-		delete_from_page_cache(page);
-		return 0;
-	}
-
-In which case, ->invalidatepage() needs to wait for PG_fscache.
-
-Similarly, it looks like ->releasepage() is fine, provided it waits for
-PG_fscache also.
-
-If I have to use ITER_BVEC, what's the advisability of using vmalloc() to
-allocate the bio_vec array for a transient op?  Such an array can referenc=
-e up
-to 1MiB on a 64-bit machine with 4KiB non-compound pages if it only alloca=
-tes
-up to a single page.  I'm wondering what the teardown cost is, though, if =
-all
-the corresponding PTEs have to be erased from all CPUs.
-
-David
 
