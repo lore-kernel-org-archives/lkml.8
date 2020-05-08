@@ -2,115 +2,86 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E31C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2E2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F339E206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F00206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKQHfrZQ"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="dAECvcdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgEHQP5 (ORCPT
+        id S1728171AbgEHQQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgEHQPw (ORCPT
+        Fri, 8 May 2020 12:16:51 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:50852 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728174AbgEHQQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:15:52 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40DBC05BD43;
-        Fri,  8 May 2020 09:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=n4BlxfAoE46GqdVKTfjn1wvj9x7W8SFFzAKjtn35NUg=; b=lKQHfrZQB3GVXEMVIOYmIOeirj
-        k6P+pmqjWE7FwNcOkwYPsn3MPHj0sFH9E4w1meppGWuplBMsBFB47fPwsB91XmikKZdgEXhbDSe05
-        qSkL/o0Nz+2+InxXUotF0J6zcJPmxpHWCv0LmD3xmPzS+lsH69Aq5k8bunTPRPCxcQObZqYj9DrsX
-        4SB+yfX4bveVlF1PogC1UTcjZFFu6mOHsqvu6w3jlW0WH0EXwyAN6SMo8BbYEl4VlmKKi8dkdhydM
-        gzLg53434yA02j2ouHixP58m9ko79Q8MVeC4r3z6LWlBHCIiQP/kTaSnFwOrdfIaSt0ZbIbUOHmdb
-        LqIMRQJQ==;
-Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX5fA-0004jV-Eh; Fri, 08 May 2020 16:15:49 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH 09/15] lightnvm: stop using ->queuedata
-Date:   Fri,  8 May 2020 18:15:11 +0200
-Message-Id: <20200508161517.252308-10-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508161517.252308-1-hch@lst.de>
-References: <20200508161517.252308-1-hch@lst.de>
+        Fri, 8 May 2020 12:16:46 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 1DA522E14C4;
+        Fri,  8 May 2020 19:16:43 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id FUmgX13TVC-GeAWkgPx;
+        Fri, 08 May 2020 19:16:43 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1588954603; bh=fBUtwXBek4NM+L2c+v6a5Q30Xgg4O7DzdNaSB/H01/M=;
+        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
+        b=dAECvcdKmUWk2CVnMXeTHO8Vk04t0GhdKk6GVVazxHMmEd4vqdRBdWvIWqkI271c7
+         CSAWWDV/ZA13LhBGUZXu96IhmqX7dtLDQOdPEN9crnTRzNnC73pXVD2TgYv1vXjxGT
+         5ykQhY615zHDuCC3cU53VoEyWgY+W+NlFyLvCwzM=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7008::1:4])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id qhpQEsyI8M-GeWCH2g5;
+        Fri, 08 May 2020 19:16:40 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC 1/8] dcache: show count of hash buckets in sysctl
+ fs.dentry-state
+To:     Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <158893941613.200862.4094521350329937435.stgit@buzz>
+ <158894059427.200862.341530589978120554.stgit@buzz>
+ <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <ac1ece33-46ea-175a-98ef-c79fcd1ced90@yandex-team.ru>
+Date:   Fri, 8 May 2020 19:16:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <7c1cef87-2940-eb17-51d4-cbc40218b770@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/lightnvm/core.c      | 1 -
- drivers/lightnvm/pblk-init.c | 2 +-
- drivers/lightnvm/pblk.h      | 2 +-
- 3 files changed, 2 insertions(+), 3 deletions(-)
+On 08/05/2020 17.49, Waiman Long wrote:
+> On 5/8/20 8:23 AM, Konstantin Khlebnikov wrote:
+>> Count of buckets is required for estimating average length of hash chains.
+>> Size of hash table depends on memory size and printed once at boot.
+>>
+>> Let's expose nr_buckets as sixth number in sysctl fs.dentry-state
+> 
+> The hash bucket count is a constant determined at boot time. Is there a need to use up one dentry_stat entry for that? Besides one can get 
+> it by looking up the kernel dmesg log like:
+> 
+> [    0.055212] Dentry cache hash table entries: 8388608 (order: 14, 67108864 bytes)
 
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index db38a68abb6c0..85c5490cdfd2e 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -400,7 +400,6 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
- 	}
- 
- 	tdisk->private_data = targetdata;
--	tqueue->queuedata = targetdata;
- 
- 	mdts = (dev->geo.csecs >> 9) * NVM_MAX_VLBA;
- 	if (dev->geo.mdts) {
-diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index 9a967a2e83dd7..bec904ec0f7c0 100644
---- a/drivers/lightnvm/pblk-init.c
-+++ b/drivers/lightnvm/pblk-init.c
-@@ -49,7 +49,7 @@ struct bio_set pblk_bio_set;
- 
- static blk_qc_t pblk_make_rq(struct request_queue *q, struct bio *bio)
- {
--	struct pblk *pblk = q->queuedata;
-+	struct pblk *pblk = bio->bi_disk->private_data;
- 
- 	if (bio_op(bio) == REQ_OP_DISCARD) {
- 		pblk_discard(pblk, bio);
-diff --git a/drivers/lightnvm/pblk.h b/drivers/lightnvm/pblk.h
-index 86ffa875bfe16..ed364afaed0d8 100644
---- a/drivers/lightnvm/pblk.h
-+++ b/drivers/lightnvm/pblk.h
-@@ -1255,7 +1255,7 @@ static inline int pblk_boundary_ppa_checks(struct nvm_tgt_dev *tgt_dev,
- 				continue;
- 		}
- 
--		print_ppa(tgt_dev->q->queuedata, ppa, "boundary", i);
-+		print_ppa(tgt_dev->disk->private_data, ppa, "boundary", i);
- 
- 		return 1;
- 	}
--- 
-2.26.2
+Grepping logs since boot time is a worst API ever.
 
+dentry-state shows count of dentries in various states.
+It's very convenient to show count of buckets next to it,
+because this number defines overall scale.
+
+> 
+> Cheers,
+> Longman
+> 
