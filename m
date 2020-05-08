@@ -2,77 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4F6C54E4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4DEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2047206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724E0206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588942866;
+	bh=6MhnXnbtNfLJ0jlaUPyyoCpxL8tqSH1IEalC6dOkG0Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r3RAXo5ZWcHKWmS0q/IQkz/HkKbavhpN3FidmD4xpXK3+Yrl7QIoRcDMThHZaWBU2
+	 NKe65F93lK+FQBxg2TgBsS8/T7XVL4owC0pbkaCjjcc1GTEHBYyLY6AhcG+uxDYn17
+	 omNiUjCjHmQo36055ZUaBjSToebc2y/Mlm2dX9BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgEHNA5 (ORCPT
+        id S1730300AbgEHNBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45234 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgEHNA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:00:56 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1729924AbgEHMwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9ECA2054F;
-        Fri,  8 May 2020 13:00:54 +0000 (UTC)
-Date:   Fri, 8 May 2020 09:00:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Shiyuan Hu" <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
-Message-ID: <20200508090053.430d28d7@gandalf.local.home>
-In-Reply-To: <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
-References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
-        <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
-        <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
-        <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
-        <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4467524959;
+        Fri,  8 May 2020 12:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588942327;
+        bh=6MhnXnbtNfLJ0jlaUPyyoCpxL8tqSH1IEalC6dOkG0Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J73+g/+JmFmgqxlLUbJUjTUkVovbjr9u3h3Nn+Y9YUZijysZxeMY/cAG7FYOJ2KB4
+         sAQ2BjXvvMNirGjISheZWW+cUY6hFcE7rkHs4EtIFP9LFTnPASzV/7htxJ+p1q1tvj
+         2zqLE2paHdSNn4i2vAxCOHmWbftXNePzxgiRd7AM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.19 26/32] hexagon: clean up ioremap
+Date:   Fri,  8 May 2020 14:35:39 +0200
+Message-Id: <20200508123038.724700825@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
+References: <20200508123034.886699170@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 19:42:56 +0800
-Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+From: Christoph Hellwig <hch@lst.de>
 
-> On 2020/5/8 19:30, Markus Elfring wrote:
-> >> this change can fix the warning of tools.  
-> > 
-> > Would you like to point any specific source code analysis tools out
-> > for this issue?
-> > (Can a corresponding attribution become relevant for a clearer
-> > change description?)
-> >   
-> The tools we used is not for open source. it point out some error description like
-> "Memory leak: data" and "Resource leak: fd" in tools/bootconfig/main.c.
-> 
-> Can I only description:
->   "Memory and resource leak is found by a static code analysis tools" ? thanks.
+commit ac32292c8552f7e8517be184e65dd09786e991f9 upstream.
 
-Markus please stop! Your suggestions are just your preferences that are not
-required for the kernel.
+Use ioremap as the main implemented function, and defined
+ioremap_nocache to it as a deprecated alias.
 
-Yunfeng, your v2 was fine and has already landed in Linus's tree. Feel free
-to ignore Markus's suggestions in the future.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-See commit 8842604446d1f005abcbf8c63c12eabdb5695094
+---
+ arch/hexagon/include/asm/io.h       |   11 ++---------
+ arch/hexagon/kernel/hexagon_ksyms.c |    2 +-
+ arch/hexagon/mm/ioremap.c           |    2 +-
+ 3 files changed, 4 insertions(+), 11 deletions(-)
 
--- Steve
+--- a/arch/hexagon/include/asm/io.h
++++ b/arch/hexagon/include/asm/io.h
+@@ -186,16 +186,9 @@ static inline void writel(u32 data, vola
+ 
+ #define mmiowb()
+ 
+-/*
+- * Need an mtype somewhere in here, for cache type deals?
+- * This is probably too long for an inline.
+- */
+-void __iomem *ioremap_nocache(unsigned long phys_addr, unsigned long size);
++void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
++#define ioremap_nocache ioremap
+ 
+-static inline void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
+-{
+-	return ioremap_nocache(phys_addr, size);
+-}
+ 
+ static inline void iounmap(volatile void __iomem *addr)
+ {
+--- a/arch/hexagon/kernel/hexagon_ksyms.c
++++ b/arch/hexagon/kernel/hexagon_ksyms.c
+@@ -33,7 +33,7 @@ EXPORT_SYMBOL(__vmgetie);
+ EXPORT_SYMBOL(__vmsetie);
+ EXPORT_SYMBOL(__vmyield);
+ EXPORT_SYMBOL(empty_zero_page);
+-EXPORT_SYMBOL(ioremap_nocache);
++EXPORT_SYMBOL(ioremap);
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memset);
+ 
+--- a/arch/hexagon/mm/ioremap.c
++++ b/arch/hexagon/mm/ioremap.c
+@@ -22,7 +22,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/mm.h>
+ 
+-void __iomem *ioremap_nocache(unsigned long phys_addr, unsigned long size)
++void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
+ {
+ 	unsigned long last_addr, addr;
+ 	unsigned long offset = phys_addr & ~PAGE_MASK;
+
+
