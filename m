@@ -2,133 +2,120 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70472C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6053EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43407206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:18:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLFb5O24"
+	by mail.kernel.org (Postfix) with ESMTP id 315A0208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588926068;
+	bh=1qrZyfgQXpqnIg3qSAN+KpOgI+WIHBj5X2B6Chs2z1A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=G/uoJMbgARplXz7FA8rOKEn05UNdl2YZdlDHUGzevLcSz2wlfKyrhjaYrNoFQgY88
+	 rjm1r5QL91TICxH/vA9SbqaiU5c/hZlYRnSPeGOYLOFFm0Ucl4CnwDy/9ESbWpsIXf
+	 GkV+DNLlNkKlmsqsCmPwWrm+lQ8k6xZJsiBDVfoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEHISe (ORCPT
+        id S1726913AbgEHIVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgEHISe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:18:34 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99264C05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:18:32 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id b6so350579uak.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 01:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bJPuuntZlyPktcvouMtEMcRXu/bHP0lxYUGNqG/wwec=;
-        b=XLFb5O24UDkagdH/uOB3eXjd2JILpBfOOgDrS9QVue3xsAGnEEJkSltb7/cok3nupa
-         WCySEqYIvOkec/rE7Xn2Yq/0sjXONb98Gt4Pr+edjjMKEPuXrBIjlXKLvPrljUEJnTqe
-         Y0n59JOGKhYdQXxPusx44/H3xunCUZ7f74wMTOrNXGKvX4TIbKjFvnAznMMEXZf5rTXz
-         eaQrLNPxNBpKjqMSEKqgudbPBKXIdysHgtzUsacjN4x2bPAyQn/ULDYxlblOE7BU8wL8
-         E7HWpDnz/RjC0JINvLsDXIYp6qFT6rlRYr4HxnOzBQ2WzyImn19iVOZm7yBfT/8VnOf/
-         ai7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bJPuuntZlyPktcvouMtEMcRXu/bHP0lxYUGNqG/wwec=;
-        b=IHBr0uTPsDOx3GgJlt151uHBdNELCpm/vYYJydZLYaN6qXEqqhyH3KkrQpuNo8ouI1
-         PJrHgScyW0XLz2DuGswCRBwRyXAq7JqvKelE7xcl4SNGVkJcp79/CiTrzsoN4fHQvFV7
-         3cjVPeazvh81mHlbzGhWcrKrzEHw+gficL+L0xlYuTcou4CbabfPPnZLRnI6I+msTruh
-         dUBeX0TPVMBcTzeBwzqsNwFmmMa4lspwQUyQA4K2cV+sdyLZmZOeqzWVU9KxKoReJ3S6
-         jwJrKUarJygGIvnIgpNDmDlP1fJMn23fOx7tSgPxa/Ir38Nxof5iieG4axqax3pt3OXV
-         WfkQ==
-X-Gm-Message-State: AGi0PubM8NILBVomWd+2GVAnamOP9DVNL/H2YPYQ1HBM3GG0vhbVNBI7
-        YROXPdW+anMX6Jl6SaoqmEMEkKKx26JTuy5vCyiRzQ==
-X-Google-Smtp-Source: APiQypKdQso64EgPEWBYjRx71h5U/5siNxu0JtIlehtPAZ8Eg05DqIqWRugC48y3iDP4vq4H+ef9bwEbxz9g+8Xi4I0=
-X-Received: by 2002:ab0:544a:: with SMTP id o10mr919614uaa.15.1588925911701;
- Fri, 08 May 2020 01:18:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPDyKFo10JFbe7ZFnRBE2e55eGs-odAWYxU+Ep0S74003aLGpg@mail.gmail.com>
- <20200508062227.23144-1-adrian.hunter@intel.com>
-In-Reply-To: <20200508062227.23144-1-adrian.hunter@intel.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 8 May 2020 10:17:55 +0200
-Message-ID: <CAPDyKFqAuxDhxpMOJSWut3YbE=p0w53KStDn1JAbizJMoWeDBQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND] mmc: block: Fix request completion in the CQE
- timeout path
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 May 2020 04:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHIVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:21:07 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5160E20735;
+        Fri,  8 May 2020 08:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588926066;
+        bh=1qrZyfgQXpqnIg3qSAN+KpOgI+WIHBj5X2B6Chs2z1A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ycqg8hpwU4K3LUuckAxe6zddaMcwnTOtCI98oip49ugxR+iu10Fwqwvj3WuGhQXAd
+         q+gZ+nK+atD++rpO97Xhhqefj3OMZYoisJFjO34oyBcuw5l7N/5bEzkhsVdzEr10yQ
+         iG7j8I5GyvG2lb+4w6jpQ2Yb/fAFkTDKhKWM8pFA=
+Date:   Fri, 8 May 2020 17:21:00 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 2 03/18] x86/entry: Mark enter_from_user_mode()
+ noinstr
+Message-Id: <20200508172100.38fa5eec6b0d6047c841b030@kernel.org>
+In-Reply-To: <20200505134340.429059405@linutronix.de>
+References: <20200505134112.272268764@linutronix.de>
+        <20200505134340.429059405@linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 08:22, Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> First, it should be noted that the CQE timeout (60 seconds) is substantial
-> so a CQE request that times out is really stuck, and the race between
-> timeout and completion is extremely unlikely. Nevertheless this patch
-> fixes an issue with it.
->
-> Commit ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-> preserved the existing functionality, to complete the request.
-> However that had only been necessary because the block layer
-> timeout handler had been marking the request to prevent it from being
-> completed normally. That restriction was removed at the same time, the
-> result being that a request that has gone will have been completed anyway.
-> That is, the completion was unnecessary.
->
-> At the time, the unnecessary completion was harmless because the block
-> layer would ignore it, although that changed in kernel v5.0.
->
-> Note for stable, this patch will not apply cleanly without patch "mmc:
-> core: Fix recursive locking issue in CQE recovery path"
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-> Cc: stable@vger.kernel.org
+On Tue, 05 May 2020 15:41:15 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Applied for fixes, thanks!
+> Both the callers in the low level ASM code and __context_tracking_exit()
+> which is invoked from enter_from_user_mode() via user_exit_irqoff() are
+> marked NOKPROBE. Allowing enter_from_user_mode() to be probed is
+> inconsistent at best.
+> 
+> Aside of that while function tracing per se is safe the function trace
+> entry/exit points can be used via BPF as well which is not safe to use
+> before context tracking has reached CONTEXT_KERNEL and adjusted RCU.
+> 
+> Mark it noinstr which moves it into the instrumentation protected text
+> section and includes notrace.
+> 
+> Note, this needs further fixups in context tracking to ensure that the
+> full call chain is protected. Will be addressed in follow up changes.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Kind regards
-Uffe
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
 
 > ---
->  drivers/mmc/core/queue.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-> index 72bef39d7011..10ea67892b5f 100644
-> --- a/drivers/mmc/core/queue.c
-> +++ b/drivers/mmc/core/queue.c
-> @@ -110,8 +110,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
->                                 mmc_cqe_recovery_notifier(mrq);
->                         return BLK_EH_RESET_TIMER;
->                 }
-> -               /* No timeout (XXX: huh? comment doesn't make much sense) */
-> -               blk_mq_complete_request(req);
-> +               /* The request has gone already */
->                 return BLK_EH_DONE;
->         default:
->                 /* Timeout is handled by mmc core */
-> --
-> 2.17.1
->
+>  arch/x86/entry/common.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -41,7 +41,7 @@
+>  
+>  #ifdef CONFIG_CONTEXT_TRACKING
+>  /* Called on entry from user mode with IRQs off. */
+> -__visible inline void enter_from_user_mode(void)
+> +__visible inline noinstr void enter_from_user_mode(void)
+>  {
+>  	CT_WARN_ON(ct_state() != CONTEXT_USER);
+>  	user_exit_irqoff();
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
