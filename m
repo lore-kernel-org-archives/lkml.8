@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64978C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6A8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A4520870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943059;
-	bh=1QYDlRPcvqbyXMsB9wotdQhXZF3aw5xyGZAehkYXLsU=;
+	s=default; t=1588943066;
+	bh=pizm5190yqEzNfwvsx7bXg5xW4jY2Iiy10XBwxmLmXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/HANYYi/lzwZFvduoSwYzWKCZ6ZwsolTI+/dBGTFUZY0W4yFU4cg2lln/E0eN3mi
-	 HlLqpphAIG2UR4++toy/SavWz+Uvv/pVgSKk4qG3Gd0UnVkKHcHiVQIVSVHSyGUatg
-	 P+cxu0mBOc8rzsNzTvXnyPnK6l/BqAEzH8bjtDqs=
+	b=uiE71auWeqiRLx/D4I4KsmNxgDNUVv0W1O5wnsJZf8G3MhZgSUB+omtLYGLO3VUO6
+	 V+ntqGDx2a2cFjx6DplzgnX0PTHpHckS5vbJ6CfWB0BjLr87uXpJEINKM7fpg7+TVX
+	 kOLmYXPMMmBocH7Z+90HK28rFDHZHJ8vQruSEX3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgEHNES (ORCPT
+        id S1729542AbgEHNEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbgEHMtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:13 -0400
+        id S1728905AbgEHMtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C92218AC;
-        Fri,  8 May 2020 12:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1AF721473;
+        Fri,  8 May 2020 12:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942153;
-        bh=1QYDlRPcvqbyXMsB9wotdQhXZF3aw5xyGZAehkYXLsU=;
+        s=default; t=1588942148;
+        bh=pizm5190yqEzNfwvsx7bXg5xW4jY2Iiy10XBwxmLmXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9njWvpE6h7DRDmIaavMPDWZt2vxCsHxvK28ly8lDoXoBFeRWQkcukrE/cNdr6PQ+
-         YT2jigdG3xOFP5nlUrWSkXXD805TFMkY1bY4jy6xHtygR/5f/Zv9azKLwFTCD9YAoC
-         C6bSBoJ3l5xOzqzs4lPBHRMnhLK7h/7baB5mHAm0=
+        b=DcWbVQN36j0VS0GUZLdG9MI52xW4Iss2boT6ddkOxua5ZiXBq7HLrU2ASf/4VlAJz
+         3vTWRxY9p4F4bZX9WslWT8RbuCpVTntZoEOXEQSNvBr4WZzLiBijDmxNa6W4bH0oAB
+         ebigjr+aZbbfjl17mE7s0lwPpYHWxz7X9CLHReE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 279/312] net: ethernet: ti: cpsw: fix secondary-emac probe error path
-Date:   Fri,  8 May 2020 14:34:30 +0200
-Message-Id: <20200508123144.041298536@linuxfoundation.org>
+Subject: [PATCH 4.4 277/312] net: ethernet: mvneta: Remove IFF_UNICAST_FLT which is not implemented
+Date:   Fri,  8 May 2020 14:34:28 +0200
+Message-Id: <20200508123143.908731565@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
 
-commit a7fe9d466f6a33558a38c7ca9d58bcc83512d577 upstream.
+commit 97db8afa2ab919fc400fe982f5054060868bdf07 upstream.
 
-Make sure to deregister the primary device in case the secondary emac
-fails to probe.
+The mvneta driver advertises it supports IFF_UNICAST_FLT. However, it
+actually does not. The hardware probably does support it, but there is
+no code to configure the filter. As a quick and simple fix, remove the
+flag. This will cause the core to fall back to promiscuous mode.
 
-kernel BUG at /home/johan/work/omicron/src/linux/net/core/dev.c:7743!
-...
-[<c05b3dec>] (free_netdev) from [<c04fe6c0>] (cpsw_probe+0x9cc/0xe50)
-[<c04fe6c0>] (cpsw_probe) from [<c047b28c>] (platform_drv_probe+0x5c/0xc0)
-
-Fixes: d9ba8f9e6298 ("driver: net: ethernet: cpsw: dual emac interface
-implementation")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: b50b72de2f2f ("net: mvneta: enable features before registering the driver")
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/ti/cpsw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvneta.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2532,12 +2532,14 @@ static int cpsw_probe(struct platform_de
- 		ret = cpsw_probe_dual_emac(pdev, priv);
- 		if (ret) {
- 			cpsw_err(priv, probe, "error probe slave 2 emac interface\n");
--			goto clean_ale_ret;
-+			goto clean_unregister_netdev_ret;
- 		}
- 	}
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -3406,7 +3406,7 @@ static int mvneta_probe(struct platform_
+ 	dev->features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO;
+ 	dev->hw_features |= dev->features;
+ 	dev->vlan_features |= dev->features;
+-	dev->priv_flags |= IFF_UNICAST_FLT | IFF_LIVE_ADDR_CHANGE;
++	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+ 	dev->gso_max_segs = MVNETA_MAX_TSO_SEGS;
  
- 	return 0;
- 
-+clean_unregister_netdev_ret:
-+	unregister_netdev(ndev);
- clean_ale_ret:
- 	cpsw_ale_destroy(priv->ale);
- clean_dma_ret:
+ 	err = register_netdev(dev);
 
 
