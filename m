@@ -2,123 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB526C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3444C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D171421841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA7F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588954254;
+	bh=CngiETS7U8ogJRzhIAr/EkeUvISa1C5VP4Jj6loUtak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zz5gMDMYI+FrIAKrjsFnBDT/LojKZMjx4fDaK+BcWes/biUyERsejsGedKJ4KO0gz
+	 SfT/8jmy5aCyEUXL9Dcc8Z2+coQJG+r8ctutAcQwKdrxzx/l+lxdbISee/chfQ8Ax8
+	 Jx0hHEW9nGUjGBZ6LrNhpeuUo2sJnPQIUZs0oBTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgEHQKB (ORCPT
+        id S1727940AbgEHQKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:10:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63570 "EHLO mga07.intel.com"
+        Fri, 8 May 2020 12:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbgEHQKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:10:00 -0400
-IronPort-SDR: eODYJ66lIqbkDKoLhL0J/78k8qPl+c01vs+hn00ciYQMCqALv+I2MBjS3vnzH/cks3OzS/drN2
- IotnHPZRrEwA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 09:09:59 -0700
-IronPort-SDR: kMuRVDTxyHoYaf54TerCs/bPQWfFHXQ19Pxsa4cyoq61C504anqi3UDaBHYTTvlhpwJJxvJg8A
- N/3WNncHJbBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="285516921"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 09:09:58 -0700
-Date:   Fri, 8 May 2020 09:09:58 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-Message-ID: <20200508160958.GA19631@otc-nc-03>
-References: <20200508005528.GB61703@otc-nc-03>
- <87368almbm.fsf@nanos.tec.linutronix.de>
+        id S1726771AbgEHQKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:10:53 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A6921473;
+        Fri,  8 May 2020 16:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588954252;
+        bh=CngiETS7U8ogJRzhIAr/EkeUvISa1C5VP4Jj6loUtak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oStbxdglOMtUlQGeVwfj1nbCiFYPbNAyqYsWAckLKAfCrntEbOxHnepG8AU/EuuQP
+         S9Ys7M4l6CEpsTsKd7OZ5UgO6WuMZhMM73CLZu+avs+f4q6nDVoC6LcqkOORyGx2m4
+         yir+WIq2rwTMo5QWsw757cHq67kWjTtLeBKTFl58=
+Date:   Fri, 8 May 2020 09:10:52 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sayali Lokhande <sayalil@codeaurora.org>
+Cc:     yuchao0@huawei.com, linux-f2fs-devel@lists.sourceforge.net,
+        stummala@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
+Message-ID: <20200508161052.GA49579@google.com>
+References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87368almbm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Sayali,
 
-On Fri, May 08, 2020 at 01:04:29PM +0200, Thomas Gleixner wrote:
-> Ashok,
-> 
-> "Raj, Ashok" <ashok.raj@intel.com> writes:
-> >> But as this last one is the migration thread, aka stomp machine, I
-> >> assume this is a hotplug operation. Which means the CPU cannot handle
-> >> interrupts anymore. In that case we check the old vector on the
-> >> unplugged CPU in fixup_irqs() and do the retrigger from there.
-> >> Can you please add tracing to that one as well?
-> >
-> > New tracelog attached. It just happened once.
-> 
-> Correct and it worked as expected.
-> 
->      migration/3-24    [003] d..1   275.665751: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 6
->      migration/3-24    [003] d..1   275.665776: msi_set_affinity: Redirect to new vector 36 on old apic 6
->      migration/3-24    [003] d..1   275.665789: msi_set_affinity: Transition to new target apic 4 vector 36
->      migration/3-24    [003] d..1   275.665790: msi_set_affinity: Update Done [IRR 0]: irq 123 Nvec 36 Napic 4
->      migration/3-24    [003] d..1   275.666792: fixup_irqs: retrigger vector 33 irq 123
-> 
-> So looking at your trace further down, the problem is not the last
-> one. It dies already before that:
-> 
->            <...>-14    [001] d..1   284.901587: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
->            <...>-14    [001] d..1   284.901604: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
->            
-> Here, the interrupts stop coming in and that's just a regular direct
-> update, i.e. same vector, different CPU. The update below is updating a
-> dead device already.
+In order to address the perf regression, how about this?
 
-So we lost the interrupt either before or after we migrated to apic2?
+From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+Date: Fri, 8 May 2020 09:08:37 -0700
+Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
 
-In the direct update when we migrate same vector but different CPU
-if there was a pending IRR on the current CPU, where is that getting cleaned up?
+There could be a scenario where f2fs_sync_node_pages gets
+called during checkpoint, which in turn tries to flush
+inline data and calls iput(). This results in deadlock as
+iput() tries to hold cp_rwsem, which is already held at the
+beginning by checkpoint->block_operations().
 
-> 
->      migration/3-24    [003] d..1   284.924960: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 6
->      migration/3-24    [003] d..1   284.924987: msi_set_affinity: Redirect to new vector 36 on old apic 6
->      migration/3-24    [003] d..1   284.924999: msi_set_affinity: Transition to new target apic 4 vector 36
->      migration/3-24    [003] d..1   284.925000: msi_set_affinity: Update Done [IRR 0]: irq 123 Nvec 36 Napic 4
-> 
-> TBH, I can't see anything what's wrong here from the kernel side and as
-> this is new silicon and you're the only ones reporting this it seems
-> that this is something which is specific to that particular
-> hardware. Have you talked to the hardware people about this?
-> 
+Call stack :
 
-After chasing it, I'm also trending to think that way. We had a question
-about the moderation timer and how its affecting this behavior.
-Mathias tried to turn off the moderation timer, and we are still able to 
-see this hang. We are reaching out to the HW folks to get a handle on this.
+Thread A		Thread B
+f2fs_write_checkpoint()
+- block_operations(sbi)
+ - f2fs_lock_all(sbi);
+  - down_write(&sbi->cp_rwsem);
 
-With legacy MSI we can have these races and kernel is trying to do the
-song and dance, but we see this happening even when IR is turned on.
-Which is perplexing. I think when we have IR, once we do the change vector 
-and flush the interrupt entry cache, if there was an outstandng one in 
-flight it should be in IRR. Possibly should be clearned up by the
-send_cleanup_vector() i suppose.
+                        - open()
+                         - igrab()
+                        - write() write inline data
+                        - unlink()
+- f2fs_sync_node_pages()
+ - if (is_inline_node(page))
+  - flush_inline_data()
+   - ilookup()
+     page = f2fs_pagecache_get_page()
+     if (!page)
+      goto iput_out;
+     iput_out:
+			-close()
+			-iput()
+       iput(inode);
+       - f2fs_evict_inode()
+        - f2fs_truncate_blocks()
+         - f2fs_lock_op()
+           - down_read(&sbi->cp_rwsem);
 
-Cheers,
-Ashok
+Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/node.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 1db8cabf727ef..626d7daca09de 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+ 				goto continue_unlock;
+ 			}
+ 
+-			/* flush inline_data */
+-			if (is_inline_node(page)) {
++			/* flush inline_data, if it's not sync path. */
++			if (do_balance && is_inline_node(page)) {
+ 				clear_inline_node(page);
+ 				unlock_page(page);
+ 				flush_inline_data(sbi, ino_of_node(page));
+-- 
+2.26.2.645.ge9eca65c58-goog
+
