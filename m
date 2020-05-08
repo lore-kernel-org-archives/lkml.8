@@ -2,93 +2,93 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852CEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2C32173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637F2216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:57:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tYAv3EZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEHO4i (ORCPT
+        id S1727898AbgEHO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:56:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2176 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726690AbgEHO4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:56:38 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5C856535883A350AC80C;
-        Fri,  8 May 2020 15:56:36 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 15:56:35 +0100
-Date:   Fri, 8 May 2020 15:56:13 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gwendal Grignou <gwendal@chromium.org>
-CC:     <enric.balletbo@collabora.com>, <jic23@kernel.org>,
-        <bleung@chromium.org>, <groeck@chromium.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v3 0/3] iio: cros_ec: Add support for RGB light sensor
-Message-ID: <20200508155613.00005c95@Huawei.com>
-In-Reply-To: <20200506230324.139241-1-gwendal@chromium.org>
-References: <20200506230324.139241-1-gwendal@chromium.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 10:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgEHO5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:57:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE21FC061A0C;
+        Fri,  8 May 2020 07:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LHxKO+UrbR4+N0mrKQD3SVjztItTGAPxETGyiyCS0KY=; b=tYAv3EZiihxSVIyjLOo2dQQ7a9
+        Bl/iA0wlNBAcurTP2/8JqFqwEiJij4LmdgLOHMQW1Lqi6DFGUhEvTU/wyN4pbsTMjx2HcVm7FMqWY
+        U6UXavvfgjdbsJPeDSfV9eG/eoVMrohfDnyXXrkH+oCnvAzZRsV/3dEgizbxIgBq9Uyl2OsTebpPY
+        VJNy3L2drtIqgfxSpUiY77XbXu2bkKFIpuiq1WUgEXEiNd0ecij/1runxNHl3qoDntIuAxWCyn0t4
+        0X7zDJQqo+b2dehNS/V0SXyaQ4Oet0TSd8ApfQsnfaVFKmWboZrCku77ZeD0E3VD9vwCVfWaHvLzt
+        lXiahHTA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX4Qt-0002IW-AC; Fri, 08 May 2020 14:56:59 +0000
+Date:   Fri, 8 May 2020 07:56:59 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH RFC 8/8] dcache: prevent flooding with negative dentries
+Message-ID: <20200508145659.GQ16070@bombadil.infradead.org>
+References: <158893941613.200862.4094521350329937435.stgit@buzz>
+ <158894061332.200862.9812452563558764287.stgit@buzz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158894061332.200862.9812452563558764287.stgit@buzz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 16:03:21 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-> Add support for color light sensor presented by the Chromebook Embedded
-> Controller (EC).
-> Instead of just presenting lux measurement (clear channel), a color light
-> sensor is able to report color temperature measurement.
+On Fri, May 08, 2020 at 03:23:33PM +0300, Konstantin Khlebnikov wrote:
+> This patch implements heuristic which detects such scenarios and prevents
+> unbounded growth of completely unneeded negative dentries. It keeps up to
+> three latest negative dentry in each bucket unless they were referenced.
 > 
-> The EC, using factory settings, can transform the raw measurement into
-> the CIE 1931 XYZ color space (XYZ) and take adavantage of color sensor
-> autocalibration to provide the most accurate measurements.
-
-v3 of series with v2 patches?
-
-Also my earlier comment about colour channels cannot be illuminance
-still stands. It is a term that "only" applies to light measurements with
-a particular frequency / sensitivity curve.
-
-The colour channels should all be in_intensity_xxx_raw.
-
-If you want to do the computation in driver to derive the illuminance
-that would be great, otherwise we shouldn't have any illuminance channels.
-
-Jonathan
-
-
+> At first dput of negative dentry when it swept to the tail of siblings
+> we'll also clear it's reference flag and look at next dentries in chain.
+> Then kill third in series of negative, unused and unreferenced denries.
 > 
-> Gwendal Grignou (3):
->   iio: Add in_illumincance vectors in different color spaces
->   iio: cros_ec: Allow enabling/disabling calibration mode
->   iio: cros_ec_light: Add support for RGB sensor
+> This way each hash bucket will preserve three negative dentry to let them
+> get reference and survive. Adding positive or used dentry into hash chain
+> also protects few recent negative dentries. In result total size of dcache
+> asymptotically limited by count of buckets and positive or used dentries.
 > 
->  Documentation/ABI/testing/sysfs-bus-iio       |  27 +
->  .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
->  drivers/iio/light/cros_ec_light_prox.c        | 469 +++++++++++++++---
->  drivers/platform/chrome/cros_ec_sensorhub.c   |   3 +
->  .../linux/iio/common/cros_ec_sensors_core.h   |   1 -
->  .../linux/platform_data/cros_ec_commands.h    |  14 +-
->  6 files changed, 441 insertions(+), 76 deletions(-)
-> 
+> This heuristic isn't bulletproof and solves only most practical case.
+> It's easy to deceive: just touch same random name twice.
 
+I'm not sure if that's "easy to deceive" ... My concern with limiting
+negative dentries is something like a kernel compilation where there
+are many (11 for mm/mmap.c, 9 in general) and there will be a lot of
+places where <linux/fs.h> does not exist
 
+-isystem /usr/lib/gcc/x86_64-linux-gnu/9/include
+-I../arch/x86/include
+-I./arch/x86/include/generated
+-I../include
+-I./include
+-I../arch/x86/include/uapi
+-I./arch/x86/include/generated/uapi
+-I../include/uapi
+-I./include/generated/uapi
+-I ../mm
+-I ./mm
+
+So it'd be good to know that kernel compilation times are unaffected by
+this patch.
