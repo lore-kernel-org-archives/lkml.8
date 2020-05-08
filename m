@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E711C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F248C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 454E32496A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796EE2496C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942441;
-	bh=Afv2FaG5DQaHqoUBgBp0RuCQ3U8KX62WJDiJFCsqfJs=;
+	s=default; t=1588942443;
+	bh=CG5L+HPinmACqHR+Nsp6zb8O1bqdbTC8gH5OpjjR8pY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrpxK5aU1in5kZubPX7vsIL2MOaDLx5fkug2mrQhw5GR9Vn0igLbXjegGTbtB0GzQ
-	 x0d2pw02b1x6JqjjkyLNURTiAEF0yWZX11h1SA2vOrDcHzkm1o0yHyRatddsLgvH+O
-	 VoTaFYD6SXtad6xQe4tRUb0CBtgD6CzZ3dgq7w2w=
+	b=kWtzI/xRoMi8BTqa88YL2bs6Yq0ABzsHL9sd/io/XbCpcdE4EdfrG86bG8Vm8QVRU
+	 rQwZR55lGv+moGL1+X1WLUnJWSBZBkh7KY3dgma/U+c3ndjDkSLeQRw2on2fZ4YaKa
+	 UyCEHAbcxN98AhjQrzPFUL8Pn17fNg+Hu87EW4p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgEHMx7 (ORCPT
+        id S1730151AbgEHMyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35952 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbgEHMxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:53 -0400
+        id S1730141AbgEHMx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29AC524953;
-        Fri,  8 May 2020 12:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32DF924953;
+        Fri,  8 May 2020 12:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942433;
-        bh=Afv2FaG5DQaHqoUBgBp0RuCQ3U8KX62WJDiJFCsqfJs=;
+        s=default; t=1588942438;
+        bh=CG5L+HPinmACqHR+Nsp6zb8O1bqdbTC8gH5OpjjR8pY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFDwC2+Lm6Ee/nn5ghgUYXADnJp1vHlJaGWdX1YrNQfd2/WADXELeGiKnq8qLR4hS
-         UOZjB75u0CE76szv/zLeqFE1ecDQ6Pl33EwHwrlRzCT8KHwZ33pgFiXy7ejkGlVZBq
-         u5iCG0JbZe39Oze0si2/5LqOjIES2vH9tuV1CSvg=
+        b=q/jBLmb9uQ0kpSq6L730czCgGJ5dbfCdCtaqQi8sooPtvRECDy+SKHPuJPpcYxTzR
+         cLNvsCk/JU3lLyK1/WvqKkHkzzMF3auWJRKHaZed0SZFoyQbiBlesfGG8JLeQJUmUq
+         WsmMJE1O0C22dG3ZKTPbwZdhfkRj9tsNrKKKU7hU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Dmitry Yakunin <zeil@yandex-team.ru>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 44/50] cgroup, netclassid: remove double cond_resched
-Date:   Fri,  8 May 2020 14:35:50 +0200
-Message-Id: <20200508123049.158807378@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Forbes <jmforbes@linuxtx.org>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>
+Subject: [PATCH 5.4 45/50] libbpf: Fix readelf output parsing for Fedora
+Date:   Fri,  8 May 2020 14:35:51 +0200
+Message-Id: <20200508123049.261521656@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -61,38 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit 526f3d96b8f83b1b13d73bd0b5c79cc2c487ec8e upstream.
+commit aa915931ac3e53ccf371308e6750da510e3591dd upstream.
 
-Commit 018d26fcd12a ("cgroup, netclassid: periodically release file_lock
-on classid") added a second cond_resched to write_classid indirectly by
-update_classid_task. Remove the one in write_classid.
+Fedora binutils has been patched to show "other info" for a symbol at the
+end of the line. This was done in order to support unmaintained scripts
+that would break with the extra info. [1]
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Dmitry Yakunin <zeil@yandex-team.ru>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[1] https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
+
+This in turn has been done to fix the build of ruby, because of checksec.
+[2] Thanks Michael Ellerman for the pointer.
+
+[2] https://bugzilla.redhat.com/show_bug.cgi?id=1479302
+
+As libbpf Makefile is not unmaintained, we can simply deal with either
+output format, by just removing the "other info" field, as it always comes
+inside brackets.
+
+Fixes: 3464afdf11f9 (libbpf: Fix readelf output parsing on powerpc with recent binutils)
+Reported-by: Justin Forbes <jmforbes@linuxtx.org>
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/bpf/20191213101114.GA3986@calabresa
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/netclassid_cgroup.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/lib/bpf/Makefile |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/core/netclassid_cgroup.c
-+++ b/net/core/netclassid_cgroup.c
-@@ -127,10 +127,8 @@ static int write_classid(struct cgroup_s
- 	cs->classid = (u32)value;
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -145,6 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_F
  
- 	css_task_iter_start(css, 0, &it);
--	while ((p = css_task_iter_next(&it))) {
-+	while ((p = css_task_iter_next(&it)))
- 		update_classid_task(p, cs->classid);
--		cond_resched();
--	}
- 	css_task_iter_end(&it);
- 
- 	return 0;
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
++			   sed 's/\[.*\]//' | \
+ 			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+@@ -217,6 +218,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(BPF_IN_SHARED) |			 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
++		    sed 's/\[.*\]//' |					 \
+ 		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
 
 
