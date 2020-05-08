@@ -2,124 +2,374 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F02C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771A4C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA45D20736
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvpvLe2f"
+	by mail.kernel.org (Postfix) with ESMTP id 5770420736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgEHHVb (ORCPT
+        id S1727907AbgEHHVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727861AbgEHHV2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:21:28 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6428CC05BD0A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 00:21:28 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id c2so445112ybi.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 00:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ghSLWmPTjJa1N7MEynHoO3xq1duNAQVUBZp+ZfGFuUE=;
-        b=PvpvLe2fjNxojvQSID9SqgyPUOOpkTHnRBJ4bKWtgUvCTb1sqFaHRGvTkaAOfucQjA
-         ybn2zA/+aGvjSF4YEBRK4zlBdZgfmQkmyM4ZU3TyWAaRapPBD0eDc56ti633wmr/mj9K
-         MuJ8LzN2rwCYRWSQKAMPomnzvvD7JgBZXstlRUzd8Vzszd7okoFqLSk8KypFJqtizd88
-         dG9jgLNAVqgfGbfG+eUDUgSJWFovkUxrMBRo9lw9N7zehkqs0JGQ6XZzqlwx5oEVT1VG
-         YxfnyfGAt/Rv+yVKMWjChUJJrrJtJzv9ZNfbjBdMrTI0JuN5jnfKCG7M4Hx84OXWOG60
-         m1qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ghSLWmPTjJa1N7MEynHoO3xq1duNAQVUBZp+ZfGFuUE=;
-        b=gGeu5k8i6DGS1QB8O0PRYQ8qgiAznJKnanI365nLu+GjTOz0QANXyLyoe18xdF8mRU
-         R4eSJZiM+w3HIYNJJZ8hhG+HCrYG8JzD0+rdhpD2k87AMgxaiBe4d6vl3ofKz+xcW/EP
-         R3M58OKueuzhjJwvMusvJR2LuP6zrRQatnMMvWEzjSAL+G6ZiA0WpL2D1zkWFx7qVu9n
-         OAfZyd6OR+i800ebh/arzbBB2OcjFsGZMgv9JRgUeR2uEjudahbFckWO2ITfB6Qlqk2D
-         +VPByxsGwEuDwS2/U2jX9m8x5gt/9YNwe6ibdKW6+AHpPzlPogWrC52h8Ge1Iwl6uKSX
-         2LXw==
-X-Gm-Message-State: AGi0PuZzHFQY4SEV2SEVpsFxGJmBXct2+c6/PPBayw0u2lMas6s+bmBf
-        +PxZqrND5z8lQykiCFERYZcpxFgipWDcsasdHuqBDg==
-X-Google-Smtp-Source: APiQypJ4LfbqVmL56J7m3SlKiNGelvh5pQdV/+Uielt+V3/tJezOCmC5ry3w7km1U2msTfPMA+0Jm8HumNdz8jGZrS4=
-X-Received: by 2002:a05:6902:4ee:: with SMTP id w14mr1110079ybs.383.1588922487266;
- Fri, 08 May 2020 00:21:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508063954.256593-1-irogers@google.com> <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 8 May 2020 00:21:16 -0700
-Message-ID: <CAP-5=fU-QxfdkQoHP=Ksqeb9gPTE4xYcgEcp9Ej6trZpkCDvPA@mail.gmail.com>
-Subject: Re: [PATCH] libbpf hashmap: fix undefined behavior in hash_bits
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 May 2020 03:21:44 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56692 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgEHHUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 03:20:47 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE24D1A13FC;
+        Fri,  8 May 2020 09:20:43 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E0F061A1286;
+        Fri,  8 May 2020 09:20:43 +0200 (CEST)
+Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6137F204BD;
+        Fri,  8 May 2020 09:20:43 +0200 (CEST)
+From:   Diana Craciun <diana.craciun@oss.nxp.com>
+To:     alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
+        bharatb.linux@gmail.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>
+Subject: [PATCH v2 1/9] vfio/fsl-mc: Add VFIO framework skeleton for fsl-mc devices
+Date:   Fri,  8 May 2020 10:20:31 +0300
+Message-Id: <20200508072039.18146-2-diana.craciun@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
+References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:12 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, May 7, 2020 at 11:40 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > If bits is 0, the case when the map is empty, then the >> is the size of
-> > the register which is undefined behavior - on x86 it is the same as a
-> > shift by 0. Fix by handling the 0 case explicitly.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
->
-> No need. The only case when bits can be 0 is when hashmap is
-> completely empty (no elements have ever been added yet). In that case,
-> it doesn't matter what value hash_bits() returns,
-> hashmap__for_each_key_entry/hashmap__for_each_key_entry_safe will
-> behave correctly, because map->buckets will be NULL.
+From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
 
-Agreed. Unfortunately the LLVM undefined behavior sanitizer (I've not
-tested with GCC to the same extent) will cause an exit when it sees >>
-64 regardless of whether the value is used or not. It'd be possible to
-#ifdef this code on whether a sanitizer was present.
+DPAA2 (Data Path Acceleration Architecture) consists in
+mechanisms for processing Ethernet packets, queue management,
+accelerators, etc.
 
-Thanks,
-Ian
+The Management Complex (mc) is a hardware entity that manages the DPAA2
+hardware resources. It provides an object-based abstraction for software
+drivers to use the DPAA2 hardware. The MC mediates operations such as
+create, discover, destroy of DPAA2 objects.
+The MC provides memory-mapped I/O command interfaces (MC portals) which
+DPAA2 software drivers use to operate on DPAA2 objects.
 
-> >  tools/lib/bpf/hashmap.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
-> > index d5ef212a55ba..781db653d16c 100644
-> > --- a/tools/lib/bpf/hashmap.h
-> > +++ b/tools/lib/bpf/hashmap.h
-> > @@ -19,6 +19,8 @@
-> >  static inline size_t hash_bits(size_t h, int bits)
-> >  {
-> >         /* shuffle bits and return requested number of upper bits */
-> > +       if (bits == 0)
-> > +               return 0;
-> >         return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
-> >  }
-> >
-> > --
-> > 2.26.2.645.ge9eca65c58-goog
-> >
+A DPRC is a container object that holds other types of DPAA2 objects.
+Each object in the DPRC is a Linux device and bound to a driver.
+The MC-bus driver is a platform driver (different from PCI or platform
+bus). The DPRC driver does runtime management of a bus instance. It
+performs the initial scan of the DPRC and handles changes in the DPRC
+configuration (adding/removing objects).
+
+All objects inside a container share the same hardware isolation
+context, meaning that only an entire DPRC can be assigned to
+a virtual machine.
+When a container is assigned to a virtual machine, all the objects
+within that container are assigned to that virtual machine.
+The DPRC container assigned to the virtual machine is not allowed
+to change contents (add/remove objects) by the guest. The restriction
+is set by the host and enforced by the mc hardware.
+
+The DPAA2 objects can be directly assigned to the guest. However
+the MC portals (the memory mapped command interface to the MC) need
+to be emulated because there are commands that configure the
+interrupts and the isolation IDs which are virtual in the guest.
+
+Example:
+echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.2/driver_override
+echo dprc.2 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
+
+The dprc.2 is bound to the VFIO driver and all the objects within
+dprc.2 are going to be bound to the VFIO driver.
+
+This patch adds the infrastructure for VFIO support for fsl-mc
+devices. Subsequent patches will add support for binding and secure
+assigning these devices using VFIO.
+
+More details about the DPAA2 objects can be found here:
+Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
+
+Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+---
+ MAINTAINERS                               |   6 +
+ drivers/vfio/Kconfig                      |   1 +
+ drivers/vfio/Makefile                     |   1 +
+ drivers/vfio/fsl-mc/Kconfig               |   9 ++
+ drivers/vfio/fsl-mc/Makefile              |   4 +
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 160 ++++++++++++++++++++++
+ drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  14 ++
+ include/uapi/linux/vfio.h                 |   1 +
+ 8 files changed, 196 insertions(+)
+ create mode 100644 drivers/vfio/fsl-mc/Kconfig
+ create mode 100644 drivers/vfio/fsl-mc/Makefile
+ create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc.c
+ create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..14cf1f1fb4cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17755,6 +17755,12 @@ F:	drivers/vfio/
+ F:	include/linux/vfio.h
+ F:	include/uapi/linux/vfio.h
+ 
++VFIO FSL-MC DRIVER
++M:	Diana Craciun <diana.craciun@oss.nxp.com>
++L:	kvm@vger.kernel.org
++S:	Maintained
++F:	drivers/vfio/fsl-mc/
++
+ VFIO MEDIATED DEVICE DRIVERS
+ M:	Kirti Wankhede <kwankhede@nvidia.com>
+ L:	kvm@vger.kernel.org
+diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
+index fd17db9b432f..5533df91b257 100644
+--- a/drivers/vfio/Kconfig
++++ b/drivers/vfio/Kconfig
+@@ -47,4 +47,5 @@ menuconfig VFIO_NOIOMMU
+ source "drivers/vfio/pci/Kconfig"
+ source "drivers/vfio/platform/Kconfig"
+ source "drivers/vfio/mdev/Kconfig"
++source "drivers/vfio/fsl-mc/Kconfig"
+ source "virt/lib/Kconfig"
+diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
+index de67c4725cce..fee73f3d9480 100644
+--- a/drivers/vfio/Makefile
++++ b/drivers/vfio/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
+ obj-$(CONFIG_VFIO_PCI) += pci/
+ obj-$(CONFIG_VFIO_PLATFORM) += platform/
+ obj-$(CONFIG_VFIO_MDEV) += mdev/
++obj-$(CONFIG_VFIO_FSL_MC) += fsl-mc/
+diff --git a/drivers/vfio/fsl-mc/Kconfig b/drivers/vfio/fsl-mc/Kconfig
+new file mode 100644
+index 000000000000..b1a527d6b6f2
+--- /dev/null
++++ b/drivers/vfio/fsl-mc/Kconfig
+@@ -0,0 +1,9 @@
++config VFIO_FSL_MC
++	tristate "VFIO support for QorIQ DPAA2 fsl-mc bus devices"
++	depends on VFIO && FSL_MC_BUS && EVENTFD
++	help
++	  Driver to enable support for the VFIO QorIQ DPAA2 fsl-mc
++	  (Management Complex) devices. This is required to passthrough
++	  fsl-mc bus devices using the VFIO framework.
++
++	  If you don't know what to do here, say N.
+diff --git a/drivers/vfio/fsl-mc/Makefile b/drivers/vfio/fsl-mc/Makefile
+new file mode 100644
+index 000000000000..0c6e5d2ddaae
+--- /dev/null
++++ b/drivers/vfio/fsl-mc/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++
++vfio-fsl-mc-y := vfio_fsl_mc.o
++obj-$(CONFIG_VFIO_FSL_MC) += vfio-fsl-mc.o
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+new file mode 100644
+index 000000000000..8b53c2a25b32
+--- /dev/null
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+@@ -0,0 +1,160 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright 2013-2016 Freescale Semiconductor Inc.
++ * Copyright 2016-2017,2019-2020 NXP
++ */
++
++#include <linux/device.h>
++#include <linux/iommu.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/vfio.h>
++#include <linux/fsl/mc.h>
++
++#include "vfio_fsl_mc_private.h"
++
++static int vfio_fsl_mc_open(void *device_data)
++{
++	if (!try_module_get(THIS_MODULE))
++		return -ENODEV;
++
++	return 0;
++}
++
++static void vfio_fsl_mc_release(void *device_data)
++{
++	module_put(THIS_MODULE);
++}
++
++static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
++			      unsigned long arg)
++{
++	switch (cmd) {
++	case VFIO_DEVICE_GET_INFO:
++	{
++		return -ENOTTY;
++	}
++	case VFIO_DEVICE_GET_REGION_INFO:
++	{
++		return -ENOTTY;
++	}
++	case VFIO_DEVICE_GET_IRQ_INFO:
++	{
++		return -ENOTTY;
++	}
++	case VFIO_DEVICE_SET_IRQS:
++	{
++		return -ENOTTY;
++	}
++	case VFIO_DEVICE_RESET:
++	{
++		return -ENOTTY;
++	}
++	default:
++		return -ENOTTY;
++	}
++}
++
++static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
++				size_t count, loff_t *ppos)
++{
++	return -EINVAL;
++}
++
++static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
++				 size_t count, loff_t *ppos)
++{
++	return -EINVAL;
++}
++
++static int vfio_fsl_mc_mmap(void *device_data, struct vm_area_struct *vma)
++{
++	return -EINVAL;
++}
++
++static const struct vfio_device_ops vfio_fsl_mc_ops = {
++	.name		= "vfio-fsl-mc",
++	.open		= vfio_fsl_mc_open,
++	.release	= vfio_fsl_mc_release,
++	.ioctl		= vfio_fsl_mc_ioctl,
++	.read		= vfio_fsl_mc_read,
++	.write		= vfio_fsl_mc_write,
++	.mmap		= vfio_fsl_mc_mmap,
++};
++
++static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
++{
++	struct iommu_group *group;
++	struct vfio_fsl_mc_device *vdev;
++	struct device *dev = &mc_dev->dev;
++	int ret;
++
++	group = vfio_iommu_group_get(dev);
++	if (!group) {
++		dev_err(dev, "%s: VFIO: No IOMMU group\n", __func__);
++		return -EINVAL;
++	}
++
++	vdev = devm_kzalloc(dev, sizeof(*vdev), GFP_KERNEL);
++	if (!vdev) {
++		vfio_iommu_group_put(group, dev);
++		return -ENOMEM;
++	}
++
++	vdev->mc_dev = mc_dev;
++
++	ret = vfio_add_group_dev(dev, &vfio_fsl_mc_ops, vdev);
++	if (ret) {
++		dev_err(dev, "%s: Failed to add to vfio group\n", __func__);
++		vfio_iommu_group_put(group, dev);
++		return ret;
++	}
++
++	return ret;
++}
++
++static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
++{
++	struct vfio_fsl_mc_device *vdev;
++	struct device *dev = &mc_dev->dev;
++
++	vdev = vfio_del_group_dev(dev);
++	if (!vdev)
++		return -EINVAL;
++
++	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
++
++	return 0;
++}
++
++/*
++ * vfio-fsl_mc is a meta-driver, so use driver_override interface to
++ * bind a fsl_mc container with this driver and match_id_table is NULL.
++ */
++static struct fsl_mc_driver vfio_fsl_mc_driver = {
++	.probe		= vfio_fsl_mc_probe,
++	.remove		= vfio_fsl_mc_remove,
++	.match_id_table = NULL,
++	.driver	= {
++		.name	= "vfio-fsl-mc",
++		.owner	= THIS_MODULE,
++	},
++};
++
++static int __init vfio_fsl_mc_driver_init(void)
++{
++	return fsl_mc_driver_register(&vfio_fsl_mc_driver);
++}
++
++static void __exit vfio_fsl_mc_driver_exit(void)
++{
++	fsl_mc_driver_unregister(&vfio_fsl_mc_driver);
++}
++
++module_init(vfio_fsl_mc_driver_init);
++module_exit(vfio_fsl_mc_driver_exit);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("VFIO for FSL-MC devices - User Level meta-driver");
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+new file mode 100644
+index 000000000000..e79cc116f6b8
+--- /dev/null
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright 2013-2016 Freescale Semiconductor Inc.
++ * Copyright 2016,2019-2020 NXP
++ */
++
++#ifndef VFIO_FSL_MC_PRIVATE_H
++#define VFIO_FSL_MC_PRIVATE_H
++
++struct vfio_fsl_mc_device {
++	struct fsl_mc_device		*mc_dev;
++};
++
++#endif /* VFIO_FSL_MC_PRIVATE_H */
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 015516bcfaa3..45ee6f64a5a1 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -201,6 +201,7 @@ struct vfio_device_info {
+ #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)	/* vfio-amba device */
+ #define VFIO_DEVICE_FLAGS_CCW	(1 << 4)	/* vfio-ccw device */
+ #define VFIO_DEVICE_FLAGS_AP	(1 << 5)	/* vfio-ap device */
++#define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
+ 	__u32	num_regions;	/* Max region index + 1 */
+ 	__u32	num_irqs;	/* Max IRQ index + 1 */
+ };
+-- 
+2.17.1
+
