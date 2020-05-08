@@ -2,131 +2,195 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9C8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E85C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF7A120725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D156B20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 06:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588918428;
-	bh=uCwWcJtdd6frbTmuQHsfeyWV4UFkvt8omeOoYW4xCgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p/nqsv1HMiTiRnvIZx6vSugZpSLTt+pQeZmm7iOWYrqL+oXkr7FodP3xUFvJYXVjF
-	 Ie9BtE0h1P3ShiwlLGaDVuEAyavVWelQpQ6vNPeo30toThxhMRli7l/Xy+1uYEVgTB
-	 gNpkheWYwtLs7OWPYTT44NvFNewn+kHcUHpTjZms=
+	s=default; t=1588918812;
+	bh=I3X2enS2OqLjtPhgnubWwOb3w5o44g1ByLACf1WhlIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kiH2/VMSh6MY6jZdctUpNI1e+Ia4Cj15+tj370fHWmwRVeMJhTLZUBA9xLPO5AoP6
+	 lRK3dLWUPjCVipqh6Kr+96VGurH63ze4mKMKgLft/3eqtHrqOOEK7AT6AhQYTwIHs+
+	 va6cQn9l3lGwjAeo3mrQLDTLUVCyJhI2Cs0TRx08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHGNs (ORCPT
+        id S1726817AbgEHGTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 02:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46778 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 02:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgEHGNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 02:13:47 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.45.37])
+        id S1726009AbgEHGTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 02:19:50 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D859D20725;
-        Fri,  8 May 2020 06:13:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 240ED20708;
+        Fri,  8 May 2020 06:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588918427;
-        bh=uCwWcJtdd6frbTmuQHsfeyWV4UFkvt8omeOoYW4xCgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LG3tfk9mmM/1S/YbIMZGdW6aCFUXl9zNJJG276APD1xb9AO8nNU+P/HZzdGs1yiTI
-         7lNK31RSFKqgSbBBAtzao9Tgv6yaS7BIFJho+Q3xaTgK1SkzXfcWnVZU8Js6et5jn1
-         8nsBxjciu3v7wBG3lcCndg1Xdr3FPGJ/e3nhsdpI=
-Date:   Fri, 8 May 2020 11:43:37 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org, jhugo@codeaurora.org
-Subject: Re: [PATCH v6 6/8] bus: mhi: core: Return appropriate error codes
- for AMSS load failure
-Message-ID: <20200508061337.GB2696@Mani-XPS-13-9360>
-References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
- <1588718832-4891-7-git-send-email-bbhatt@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588718832-4891-7-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        s=default; t=1588918789;
+        bh=I3X2enS2OqLjtPhgnubWwOb3w5o44g1ByLACf1WhlIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YsO4UX1c8zXM/aL4ShYW8RFh9OLHwnW3x5vIG+sRyAgFflcXgoUH9kMgEb2LONKNT
+         Avr6AK+zZd6BCfYvV8FqDWKXUZLdJ9VsAQfOTaQYJBZt/QBOL8nztYq70Rhdb63PwZ
+         SDHMHj0bDctVaeF7WH7g0Zx4BbL4amt7pg753Ujo=
+Date:   Fri, 8 May 2020 15:19:42 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 33/36] x86,tracing: Robustify
+ ftrace_nmi_enter()
+Message-Id: <20200508151942.c6bfdb20ee94858c9d147f07@kernel.org>
+In-Reply-To: <20200505134101.340485295@linutronix.de>
+References: <20200505131602.633487962@linutronix.de>
+        <20200505134101.340485295@linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 03:47:10PM -0700, Bhaumik Bhatt wrote:
-> When loading AMSS firmware using BHIe protocol, return -ETIMEDOUT if no
-> response is received within the timeout or return -EIO in case of a
-> protocol returned failure or an MHI error state.
+On Tue, 05 May 2020 15:16:35 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>   ftrace_nmi_enter()
+>      trace_hwlat_callback()
+>        trace_clock_local()
+>          sched_clock()
+>            paravirt_sched_clock()
+>            native_sched_clock()
+> 
+> All must not be traced or kprobed, it will be called from do_debug()
+> before the kprobe handler.
+> 
+
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+
+
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > ---
->  drivers/bus/mhi/core/boot.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
+>  arch/x86/include/asm/paravirt.h |    2 +-
+>  arch/x86/kernel/tsc.c           |    4 ++--
+>  include/linux/ftrace_irq.h      |    4 ++--
+>  kernel/trace/trace_clock.c      |    3 ++-
+>  kernel/trace/trace_hwlat.c      |    2 +-
+>  5 files changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-> index 17c636b..05627fe 100644
-> --- a/drivers/bus/mhi/core/boot.c
-> +++ b/drivers/bus/mhi/core/boot.c
-> @@ -176,6 +176,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
->  	void __iomem *base = mhi_cntrl->bhie;
->  	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
->  	u32 tx_status, sequence_id;
-> +	int ret;
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -17,7 +17,7 @@
+>  #include <linux/cpumask.h>
+>  #include <asm/frame.h>
 >  
->  	read_lock_bh(pm_lock);
->  	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-> @@ -198,19 +199,19 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
->  	read_unlock_bh(pm_lock);
+> -static inline unsigned long long paravirt_sched_clock(void)
+> +static __always_inline unsigned long long paravirt_sched_clock(void)
+>  {
+>  	return PVOP_CALL0(unsigned long long, time.sched_clock);
+>  }
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -207,7 +207,7 @@ static void __init cyc2ns_init_secondary
+>  /*
+>   * Scheduler clock - returns current time in nanosec units.
+>   */
+> -u64 native_sched_clock(void)
+> +noinstr u64 native_sched_clock(void)
+>  {
+>  	if (static_branch_likely(&__use_tsc)) {
+>  		u64 tsc_now = rdtsc();
+> @@ -240,7 +240,7 @@ u64 native_sched_clock_from_tsc(u64 tsc)
+>  /* We need to define a real function for sched_clock, to override the
+>     weak default version */
+>  #ifdef CONFIG_PARAVIRT
+> -unsigned long long sched_clock(void)
+> +noinstr unsigned long long sched_clock(void)
+>  {
+>  	return paravirt_sched_clock();
+>  }
+> --- a/include/linux/ftrace_irq.h
+> +++ b/include/linux/ftrace_irq.h
+> @@ -7,7 +7,7 @@ extern bool trace_hwlat_callback_enabled
+>  extern void trace_hwlat_callback(bool enter);
+>  #endif
 >  
->  	/* Wait for the image download to complete */
-> -	wait_event_timeout(mhi_cntrl->state_event,
-> -			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-> -			   mhi_read_reg_field(mhi_cntrl, base,
-> -					      BHIE_TXVECSTATUS_OFFS,
-> -					      BHIE_TXVECSTATUS_STATUS_BMSK,
-> -					      BHIE_TXVECSTATUS_STATUS_SHFT,
-> -					      &tx_status) || tx_status,
-> -			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
-> -
-> -	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
-> +	ret = wait_event_timeout(mhi_cntrl->state_event,
-> +				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-> +				 mhi_read_reg_field(mhi_cntrl, base,
-> +						    BHIE_TXVECSTATUS_OFFS,
-> +						   BHIE_TXVECSTATUS_STATUS_BMSK,
-> +						   BHIE_TXVECSTATUS_STATUS_SHFT,
-
-If you want to prevent some parameters to be within 80 characters that is fine
-but do it for all to look uniform:
-
-                              mhi_read_reg_field(mhi_cntrl, base,
-                                                BHIE_TXVECSTATUS_OFFS,
-                                                BHIE_TXVECSTATUS_STATUS_BMSK,
-                                                BHIE_TXVECSTATUS_STATUS_SHFT,
-						&tx_status) || tx_status,
-
-Thanks,
-Mani
-
-> +						    &tx_status) || tx_status,
-> +				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
-> +	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-> +	    tx_status != BHIE_TXVECSTATUS_STATUS_XFER_COMPL)
->  		return -EIO;
->  
-> -	return (tx_status == BHIE_TXVECSTATUS_STATUS_XFER_COMPL) ? 0 : -EIO;
-> +	return (!ret) ? -ETIMEDOUT : 0;
+> -static inline void ftrace_nmi_enter(void)
+> +static __always_inline void ftrace_nmi_enter(void)
+>  {
+>  #ifdef CONFIG_HWLAT_TRACER
+>  	if (trace_hwlat_callback_enabled)
+> @@ -15,7 +15,7 @@ static inline void ftrace_nmi_enter(void
+>  #endif
 >  }
 >  
->  static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> -static inline void ftrace_nmi_exit(void)
+> +static __always_inline void ftrace_nmi_exit(void)
+>  {
+>  #ifdef CONFIG_HWLAT_TRACER
+>  	if (trace_hwlat_callback_enabled)
+> --- a/kernel/trace/trace_clock.c
+> +++ b/kernel/trace/trace_clock.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/ktime.h>
+>  #include <linux/trace_clock.h>
+> +#include <linux/kprobes.h>
+>  
+>  /*
+>   * trace_clock_local(): the simplest and least coherent tracing clock.
+> @@ -29,7 +30,7 @@
+>   * Useful for tracing that does not cross to other CPUs nor
+>   * does it go through idle events.
+>   */
+> -u64 notrace trace_clock_local(void)
+> +u64 noinstr trace_clock_local(void)
+>  {
+>  	u64 clock;
+>  
+> --- a/kernel/trace/trace_hwlat.c
+> +++ b/kernel/trace/trace_hwlat.c
+> @@ -139,7 +139,7 @@ static void trace_hwlat_sample(struct hw
+>  #define init_time(a, b)	(a = b)
+>  #define time_u64(a)	a
+>  
+> -void trace_hwlat_callback(bool enter)
+> +noinstr void trace_hwlat_callback(bool enter)
+>  {
+>  	if (smp_processor_id() != nmi_cpu)
+>  		return;
 > 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
