@@ -2,162 +2,138 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18822C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A96C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED48A24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489C824954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j/zivjws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgEHXmw (ORCPT
+        id S1728392AbgEHXnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:42:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:17091 "EHLO mga06.intel.com"
+        Fri, 8 May 2020 19:43:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50160 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHXmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:42:52 -0400
-IronPort-SDR: N1qLSIEcX3pL1QrST5JWXhgBLnX3W9KTfL4VG3+2gXGh8rZLs/S+Z/XJLKuuz1Xx4tVgLHL+Xl
- Cso0znK7GDIw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 16:42:51 -0700
-IronPort-SDR: l2dLsW7OKFIG0wnBNsYWcdCMmMV0Gd5AbYxu+G0Ad8jqt0UCCXuPkFvAZDF7kYR3n9bA4pmczL
- 7Y/wf+sMLRHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="285636172"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 08 May 2020 16:42:50 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jXCdm-000AcC-2j; Sat, 09 May 2020 07:42:50 +0800
-Date:   Sat, 09 May 2020 07:42:38 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 825613e73129f5806f10f67674af21ad0218a5f3
-Message-ID: <5eb5ee6e.7gUWB0mUswHrVK9n%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727778AbgEHXnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 19:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VieCsnbAAH7ShY/le63Gu8FMcfhJPUddj2RQTmeSZkc=; b=j/zivjwsfKTO3NJdPZ1Xkc0NMS
+        stqHbu/mibnqlxCUPiEvYElq+cYGn7gXuzGJw8Y9noaxxexZeAkB30T8zy8Z9okui8vzzlQnoI2ED
+        VVZhLcyi4vETgL05SKfKuVbO4i618JeaQGJTGls8WuwreVQWM7bmWTAJ+PcHMuUyctZU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jXCdt-001R9J-5t; Sat, 09 May 2020 01:42:57 +0200
+Date:   Sat, 9 May 2020 01:42:57 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+Message-ID: <20200508234257.GA338317@lunn.ch>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+ <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+ <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
+ <20200508181301.GF298574@lunn.ch>
+ <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
+ <20200508202722.GI298574@lunn.ch>
+ <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 825613e73129f5806f10f67674af21ad0218a5f3  rcu-tasks: Convert sleeps to idle priority
+On Fri, May 08, 2020 at 05:48:33PM -0500, Jeremy Linton wrote:
+> Hi,
+> 
+> On 5/8/20 3:27 PM, Andrew Lunn wrote:
+> > > > There is a very small number of devices where the vendor messed up,
+> > > > and did not put valid contents in the ID registers. In such cases, we
+> > > > can read the IDs from device tree. These are then used in exactly the
+> > > > same way as if they were read from the device.
+> > > > 
+> > > 
+> > > Is that the case here?
+> > 
+> > Sorry, I don't understand the question?
+> 
+> I was asking in general, does this machine report the ID's correctly.
 
-elapsed time: 480m
+Very likely, it does.
 
-configs tested: 95
-configs skipped: 1
+> The embedded single mac:mdio per nic case seems like the normal case, and
+> most of the existing ACPI described devices are setup that way.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Somebody in this thread pointed to ACPI patches for the
+MACCHIATOBin. If i remember the hardware correctly, it has 4 Ethernet
+interfaces, and two MDIO bus masters. One of the bus masters can only
+do C22 and the other can only do C45. It is expected that the busses
+are shared, not a nice one to one mapping.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-parisc                              defconfig
-parisc                            allnoconfig
-s390                                defconfig
-nds32                               defconfig
-powerpc                             defconfig
-ia64                             allmodconfig
-alpha                               defconfig
-arc                              allyesconfig
-ia64                                defconfig
-riscv                             allnoconfig
-um                                allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-microblaze                       allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200508
-i386                 randconfig-a004-20200508
-i386                 randconfig-a003-20200508
-i386                 randconfig-a002-20200508
-i386                 randconfig-a001-20200508
-i386                 randconfig-a006-20200508
-x86_64               randconfig-a014-20200508
-x86_64               randconfig-a012-20200508
-x86_64               randconfig-a016-20200508
-i386                 randconfig-a012-20200508
-i386                 randconfig-a014-20200508
-i386                 randconfig-a016-20200508
-i386                 randconfig-a011-20200508
-i386                 randconfig-a013-20200508
-i386                 randconfig-a015-20200508
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> But at the same time, that shifts the c22/45 question to the nic
+> driver, where use of a DSD property before instantiating/probing
+> MDIO isn't really a problem if needed.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+This in fact does not help you. The MAC driver has no idea what PHY is
+connected to it. The MAC does not know if it is C22 or C45. It uses
+the phylib abstraction which hides all this. Even if you assume 1:1,
+use phy_find_first(), it will not find a C45 PHY because without
+knowing there is a C45 PHY, we don't scan for it. And we should expect
+C45 PHYs to become more popular in the next few years.
+
+> In fact this embedded nic/mac/mdio/phy 1:1:1 case, is likely a requirement
+> for passthrough into a generic VM, otherwise someone has to create a virtual
+> mdio, and pass the phy in for the nic/mac.
+> 
+> AFAIK, NXP's part avoids this despite having a shared MDIO, because the phy
+> state never leaves the mgmt side of the picture. It monitors the state and
+> then feeds that back into their nic mgmt complex rather than using it
+> directly.
+
+That is the other model. Don't use Linux to drive the PHY, use
+firmware in the MAC. A number of MACs do that, but it has the usual
+problems of firmware. It limits you on your choice of PHYs, bugs in
+the firmware cannot be fixed by the community, no sharing of drivers
+because firmware is generally proprietary, no 'for free features'
+because somebody else added features to the linux PHY driver etc.  But
+it will make ACPI support simple, this whole discussion goes away, no
+ACPI needed at all.
+
+   Andrew
