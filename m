@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF6DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167C7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D559C206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1D4206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944012;
-	bh=Vt1E6h/8teG4la10Aa3CVwgcn7EGyQmMix7SnCqlbhE=;
+	s=default; t=1588944018;
+	bh=nvbuz3/DPXst33UH5bth9F+uJ1+egb9BKR0QfaRwYqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHCNW19MPwpf3+UwRPp5ohFmta98xjtMwaZAJRTcTT1p2QJ8F/9CWK2F2bZgYXY+U
-	 tVckPK2nm9TBLO8UGqYUvcVlG9o0BmqmjbZA2VyrJWCRRpOHfawyMlj+jjeaDeWWu+
-	 cqFhLGP2OhUE19rpx+Aynd5QIpvQj0d5iuLoMzTM=
+	b=fd+3pc2W4Wkd5u7gTk0RLGSai9G41MePgayjtwefsqY1GXrqbz5PCQRB/gROqe7Sf
+	 t0R079+hEFL2n4Lvp18E2TsPc5NmnsVCL8WcPb1xG1GqJeFy8zMVSrygXXt4JMOXXE
+	 m2NOwYT/itLfXH2bR8Sb71kYSmPDUYaJ0qc6Z9RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgEHNUL (ORCPT
+        id S1729251AbgEHNUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728785AbgEHMlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:08 -0400
+        id S1728776AbgEHMlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD0721835;
-        Fri,  8 May 2020 12:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C1724971;
+        Fri,  8 May 2020 12:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941667;
-        bh=Vt1E6h/8teG4la10Aa3CVwgcn7EGyQmMix7SnCqlbhE=;
+        s=default; t=1588941663;
+        bh=nvbuz3/DPXst33UH5bth9F+uJ1+egb9BKR0QfaRwYqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EO44OASlGEMo1nrLY/Gx2KuRZ69UZzk6JIuy5b7eiAhTbvIB6Hl//KjkfGWMhaXZQ
-         NysiCySniG8nI42Gr8OgZIL6ukEPYVQIeW9gPXTPCDeMEchgzralw9s2szZj1urPLZ
-         KHWtcoDxHXiBYBrI2ySgHv0wnacOdq7OzqoKj7/8=
+        b=egEXr6MreXy8R/wSzTfaSW6/FkfgiXbggYaeASOOk1e8LOxiUBt07B/PToV22j1BV
+         3YSTqMVol2BYPy5U4aMVLNC8LUAYzc7pHdANrMKDt6Kjxt0p4JWbrV6wlS3jU9mEDW
+         tiMN/6iK1bcqpqlkL//jEGJxqJ0R7eM63IRfF/z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 124/312] xfrm_user: propagate sec ctx allocation errors
-Date:   Fri,  8 May 2020 14:31:55 +0200
-Message-Id: <20200508123133.193869720@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 122/312] Input: edt-ft5x06 - fix setting gain, offset, and threshold via device tree
+Date:   Fri,  8 May 2020 14:31:53 +0200
+Message-Id: <20200508123133.030897998@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,47 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Krause <minipli@googlemail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-commit 2f30ea5090cbc57ea573cdc66421264b3de3fb0a upstream.
+commit dc262dfaaeda7617ae0b15b5ce1252a6cd102b19 upstream.
 
-When we fail to attach the security context in xfrm_state_construct()
-we'll return 0 as error value which, in turn, will wrongly claim success
-to userland when, in fact, we won't be adding / updating the XFRM state.
+A recent patch broke parsing the gain, offset, and threshold parameters
+from device tree. Instead of setting the cached values and writing them
+to the correct registers during probe, it would write the values from DT
+into the register address variables and never write them to the chip
+during normal operation.
 
-This is a regression introduced by commit fd21150a0fe1 ("[XFRM] netlink:
-Inline attach_encap_tmpl(), attach_sec_ctx(), and attach_one_addr()").
-
-Fix it by propagating the error returned by security_xfrm_state_alloc()
-in this case.
-
-Fixes: fd21150a0fe1 ("[XFRM] netlink: Inline attach_encap_tmpl()...")
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Cc: Thomas Graf <tgraf@suug.ch>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 2e23b7a96372 ("Input: edt-ft5x06 - use generic properties API")
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_user.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/edt-ft5x06.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -609,9 +609,12 @@ static struct xfrm_state *xfrm_state_con
- 	if (err)
- 		goto error;
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -822,16 +822,22 @@ static void edt_ft5x06_ts_get_defaults(s
+ 	int error;
  
--	if (attrs[XFRMA_SEC_CTX] &&
--	    security_xfrm_state_alloc(x, nla_data(attrs[XFRMA_SEC_CTX])))
--		goto error;
-+	if (attrs[XFRMA_SEC_CTX]) {
-+		err = security_xfrm_state_alloc(x,
-+						nla_data(attrs[XFRMA_SEC_CTX]));
-+		if (err)
-+			goto error;
+ 	error = device_property_read_u32(dev, "threshold", &val);
+-	if (!error)
+-		reg_addr->reg_threshold = val;
++	if (!error) {
++		edt_ft5x06_register_write(tsdata, reg_addr->reg_threshold, val);
++		tsdata->threshold = val;
 +	}
  
- 	if ((err = xfrm_alloc_replay_state_esn(&x->replay_esn, &x->preplay_esn,
- 					       attrs[XFRMA_REPLAY_ESN_VAL])))
+ 	error = device_property_read_u32(dev, "gain", &val);
+-	if (!error)
+-		reg_addr->reg_gain = val;
++	if (!error) {
++		edt_ft5x06_register_write(tsdata, reg_addr->reg_gain, val);
++		tsdata->gain = val;
++	}
+ 
+ 	error = device_property_read_u32(dev, "offset", &val);
+-	if (!error)
+-		reg_addr->reg_offset = val;
++	if (!error) {
++		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset, val);
++		tsdata->offset = val;
++	}
+ }
+ 
+ static void
 
 
