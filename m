@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14B5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52AAC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76740206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B504E206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942807;
-	bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
+	s=default; t=1588942811;
+	bh=8zk+QF+qhgskiuTgcQ5ftCBfM2M46oQfz0+/HdbgpwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAWY6uMwRHdEL3MynlTRUr1I6BZ5OuphDECCbik94K+sF7HyQXAZPKNzafKUuGE0v
-	 WEnfFgm6OaUh0i9ZrPZx6KTWcAckC40EHxn53dCo7Gtyppe7WTAjN/IcjXSls1ndNd
-	 sQK5mVJlsTQe6np0EiiPRCaBRwJJ8jFqmfcoM0v8=
+	b=JcHYd/rF06lD15qeLV+5zrPMIv1OKh25rR4gFWYrNwmbC6FO1aWPtKj88CYzdjo1Y
+	 kD+2+KtsKMs6OSLrRakjWMeehGHv46puKBYsm/SdwBqpjaAoJcrtzgA57roF8GRLe0
+	 085N5rbBF51mGuxAihAvTXvgpjAUFBrbdDDwddJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgEHNAG (ORCPT
+        id S1730055AbgEHNAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbgEHMwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:37 -0400
+        id S1729946AbgEHMwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7409A24958;
-        Fri,  8 May 2020 12:52:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC1E24953;
+        Fri,  8 May 2020 12:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942356;
-        bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
+        s=default; t=1588942354;
+        bh=8zk+QF+qhgskiuTgcQ5ftCBfM2M46oQfz0+/HdbgpwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGqMxVwtOxYARGbNyhHy0Qnd8v1e6zkwZqBulCm90cAVTS1N6Iw7E5L8+Hq+2TDkp
-         7QOsHSMsz9BtSOp89mLDAvI8g5MGjd6c5JGvUpLen5wVGt2xc163DNFvZphKE1xLjC
-         UvCc0GolqdRuRDOsHxblx9P1oJBkFKpiMpBvThX0=
+        b=UUy6s3VctjlOmN73IZlV2wzYkggoY8ZIF3nk8g0sKMtOo4Y4IA7mARLF8bP6UgFvK
+         F51AUWrTtQZazDWH1mC9Usu0u7JDSfrPuSl68sITOedAYmRoEReOh6nmT+Al6RcklK
+         DNB2TyiDeDzZYpJZiq26i4tGjBZEo6MhKGWa3quY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 13/50] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-Date:   Fri,  8 May 2020 14:35:19 +0200
-Message-Id: <20200508123045.281825712@linuxfoundation.org>
+Subject: [PATCH 5.4 12/50] ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+Date:   Fri,  8 May 2020 14:35:18 +0200
+Message-Id: <20200508123045.135492487@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -64,45 +64,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Matthias Blankertz <matthias.blankertz@cetitec.com>
 
-[ Upstream commit b94e164759b82d0c1c80d4b1c8f12c9bee83f11d ]
+[ Upstream commit a09fb3f28a60ba3e928a1fa94b0456780800299d ]
 
-The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
-sdata[0..3] inputs of the HDMI output block. The upper half of the
-register contains four blocks of 4 bits, with the most significant
-controlling the sdata3 line and the least significant the sdata0 line.
-
-The shift calculation has an off-by-one error, causing the parent SSI to
-be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
-As the parent SSI transmits the stereo L/R channels, and the HDMI core
-expects it on the sdata0 line, this causes no audio to be output when
-playing stereo audio on a multichannel capable HDMI out, and
-multichannel audio has permutated channels.
-
-Fix the shift calculation to map the parent SSI to sdata0, the first
-child to sdata1 etc.
+The parent SSI of a multi-SSI setup must be fully setup, started and
+stopped since it is also part of the playback/capture setup. So only
+skip the SSI (as per commit 203cdf51f288 ("ASoC: rsnd: SSI parent cares
+SWSP bit") and commit 597b046f0d99 ("ASoC: rsnd: control SSICR::EN
+correctly")) if the SSI is parent outside of a multi-SSI setup.
 
 Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
 Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
+Link: https://lore.kernel.org/r/20200415141017.384017-2-matthias.blankertz@cetitec.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssiu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sh/rcar/ssi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
-index f35d882118874..9c7c3e7539c93 100644
---- a/sound/soc/sh/rcar/ssiu.c
-+++ b/sound/soc/sh/rcar/ssiu.c
-@@ -221,7 +221,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
- 			i;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index fc5d089868dfc..d51fb3a394486 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -407,7 +407,7 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	 * We shouldn't exchange SWSP after running.
+ 	 * This means, parent needs to care it.
+ 	 */
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		goto init_end;
  
- 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
--			shift	= (i * 4) + 16;
-+			shift	= (i * 4) + 20;
- 			val	= (val & ~(0xF << shift)) |
- 				rsnd_mod_id(pos) << shift;
- 		}
+ 	if (rsnd_io_is_play(io))
+@@ -559,7 +559,7 @@ static int rsnd_ssi_start(struct rsnd_mod *mod,
+ 	 * EN is for data output.
+ 	 * SSI parent EN is not needed.
+ 	 */
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	ssi->cr_en = EN;
+@@ -582,7 +582,7 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	cr  =	ssi->cr_own	|
+@@ -620,7 +620,7 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
 -- 
 2.20.1
 
