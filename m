@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6208C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29A8C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B585A24958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CD4218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942240;
-	bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
+	s=default; t=1588942244;
+	bh=2TuD1BdNfL17dvqExBVMYhhTKHsJwV5yIeNj/xAlBi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=od1296JN/yYEbycD6rLs4TZOmkzcePuEbXBeGwicieTZkWzxrd7s3bc/EJSU6XyhO
-	 WMaCEhljEuPdDH9T4+0eYAoJSHAUHh6DX7Lq1tXybDmF2JtWpCN1GsZj2qFSofWo3F
-	 3DFFUNuTPg4tcDy8cE/AxOzXbpt5VRxL1HalarBU=
+	b=NcsDm1EPZBDUpnUVlb1LZN7WHXelNvVGrUTjgLn3YcJTBQcPMEVeKZt0yho2a4aGZ
+	 EzXiOqGfXx4C5WAr7BqJ2mgjFuxfYfIo9DNWvYVF+oq+MY1tUa6M1gOxnRvY8iw3BB
+	 2jgOIdFbD5lZaH0WBwA2jBewOB3BWu9GvxdjYHRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgEHMuk (ORCPT
+        id S1729572AbgEHMun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:50:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729825AbgEHMuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:10 -0400
+        id S1728908AbgEHMuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17EE7218AC;
-        Fri,  8 May 2020 12:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 352A424958;
+        Fri,  8 May 2020 12:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942210;
-        bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
+        s=default; t=1588942220;
+        bh=2TuD1BdNfL17dvqExBVMYhhTKHsJwV5yIeNj/xAlBi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTGkCnKU39smYNmKlZfCZXS8RRzr9oiLFYMQVrZCqLyCb5RR5kPp9k2byqfeVuw5L
-         t9sET6xWT7s3fbDoM8a6ejHY8QZ3PwAEyo0U3hc/K6tnH34vEugbabwgpLlvgUbSyV
-         QpTxA9DoisSyD8KhHo3Y2bYkZRxZA1nsOLEdfQhM=
+        b=FtdpS/t2MaUJNL96UIVWZ2aedc1zEW6Xwrg9gOrAHXvyTK7CPlzKBXdNFB4elUbpq
+         SoJyQ67z6kUa6brxxRWv1IHEVng9THWZLErGSbl/y8bcYM9O6JA5Btu50ZxnHO9kHv
+         CNGgiY8PIyb/BFQOMdslOg9XO3OTBOQnm4/jyooM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Beraud <julien.beraud@orolia.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/22] net: stmmac: Fix sub-second increment
-Date:   Fri,  8 May 2020 14:35:22 +0200
-Message-Id: <20200508123035.160984554@linuxfoundation.org>
+Subject: [PATCH 4.14 14/22] net: dsa: b53: Rework ARL bin logic
+Date:   Fri,  8 May 2020 14:35:26 +0200
+Message-Id: <20200508123035.644487204@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
@@ -60,76 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Beraud <julien.beraud@orolia.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
+[ Upstream commit 6344dbde6a27d10d16246d734b968f84887841e2 ]
 
-In fine adjustement mode, which is the current default, the sub-second
-    increment register is the number of nanoseconds that will be added to
-    the clock when the accumulator overflows. At each clock cycle, the
-    value of the addend register is added to the accumulator.
-    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
-    frequency of the ptp clock actually is.
-    The adjustment is then done on the addend register, only incrementing
-    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
-    (addend = 2^32 * 50MHz/ptp_clock_rate).
-    This causes the following issues :
-    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
-      the addend value calculation will overflow and the default
-      addend value will be set to 0, causing the clock to not work at
-      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
-    - The resolution of the timestamping clock is limited to 20ns while it
-      is not needed, thus limiting the accuracy of the timestamping to
-      20ns.
+When asking the ARL to read a MAC address, we will get a number of bins
+returned in a single read. Out of those bins, there can essentially be 3
+states:
 
-    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
-    It will allow to reach the minimum possible frequency for
-    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
-    sub-second-increment to a higher value. For instance, for 25MHz, it
-    gives ssinc = 80ns and default_addend = 2^31.
-    It will also allow to use a lower value for sub-second-increment, thus
-    improving the timestamping accuracy with frequencies higher than
-    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
-    2^31.
+- all bins are full, we have no space left, and we can either replace an
+  existing address or return that full condition
 
-v1->v2:
- - Remove modifications to the calculation of default addend, which broke
- compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
- is not an integer.
- - Modify description according to discussions.
+- the MAC address was found, then we need to return its bin index and
+  modify that one, and only that one
 
-Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+- the MAC address was not found and we have a least one bin free, we use
+  that bin index location then
+
+The code would unfortunately fail on all counts.
+
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 30 ++++++++++++++++++++++++++----
+ drivers/net/dsa/b53/b53_regs.h   |  3 +++
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-index 41d528fbebb41..ccf7381c8baec 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-@@ -36,12 +36,16 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
- 	unsigned long data;
- 	u32 reg_value;
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 434e6dced6b7f..274d369151107 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1094,6 +1094,7 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 			u16 vid, struct b53_arl_entry *ent, u8 *idx,
+ 			bool is_valid)
+ {
++	DECLARE_BITMAP(free_bins, B53_ARLTBL_MAX_BIN_ENTRIES);
+ 	unsigned int i;
+ 	int ret;
  
--	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
--	 *	formula = (1/ptp_clock) * 1000000000
--	 * where ptp_clock is 50MHz if fine method is used to update system
-+	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
-+	 * increment to twice the number of nanoseconds of a clock cycle.
-+	 * The calculation of the default_addend value by the caller will set it
-+	 * to mid-range = 2^31 when the remainder of this division is zero,
-+	 * which will make the accumulator overflow once every 2 ptp_clock
-+	 * cycles, adding twice the number of nanoseconds of a clock cycle :
-+	 * 2000000000ULL / ptp_clock.
- 	 */
- 	if (value & PTP_TCR_TSCFUPDT)
--		data = (1000000000ULL / 50000000);
-+		data = (2000000000ULL / ptp_clock);
- 	else
- 		data = (1000000000ULL / ptp_clock);
+@@ -1101,6 +1102,8 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 	if (ret)
+ 		return ret;
  
++	bitmap_zero(free_bins, dev->num_arl_entries);
++
+ 	/* Read the bins */
+ 	for (i = 0; i < dev->num_arl_entries; i++) {
+ 		u64 mac_vid;
+@@ -1112,13 +1115,21 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 			   B53_ARLTBL_DATA_ENTRY(i), &fwd_entry);
+ 		b53_arl_to_entry(ent, mac_vid, fwd_entry);
+ 
+-		if (!(fwd_entry & ARLTBL_VALID))
++		if (!(fwd_entry & ARLTBL_VALID)) {
++			set_bit(i, free_bins);
+ 			continue;
++		}
+ 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
+ 			continue;
+ 		*idx = i;
++		return 0;
+ 	}
+ 
++	if (bitmap_weight(free_bins, dev->num_arl_entries) == 0)
++		return -ENOSPC;
++
++	*idx = find_first_bit(free_bins, dev->num_arl_entries);
++
+ 	return -ENOENT;
+ }
+ 
+@@ -1148,10 +1159,21 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 	if (op)
+ 		return ret;
+ 
+-	/* We could not find a matching MAC, so reset to a new entry */
+-	if (ret) {
++	switch (ret) {
++	case -ENOSPC:
++		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
++			addr, vid);
++		return is_valid ? ret : 0;
++	case -ENOENT:
++		/* We could not find a matching MAC, so reset to a new entry */
++		dev_dbg(dev->dev, "{%pM,%.4d} not found, using idx: %d\n",
++			addr, vid, idx);
+ 		fwd_entry = 0;
+-		idx = 1;
++		break;
++	default:
++		dev_dbg(dev->dev, "{%pM,%.4d} found, using idx: %d\n",
++			addr, vid, idx);
++		break;
+ 	}
+ 
+ 	memset(&ent, 0, sizeof(ent));
+diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
+index 1b2a337d673dd..247aef92b7594 100644
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -313,6 +313,9 @@
+ #define   ARLTBL_STATIC			BIT(15)
+ #define   ARLTBL_VALID			BIT(16)
+ 
++/* Maximum number of bin entries in the ARL for all switches */
++#define B53_ARLTBL_MAX_BIN_ENTRIES	4
++
+ /* ARL Search Control Register (8 bit) */
+ #define B53_ARL_SRCH_CTL		0x50
+ #define B53_ARL_SRCH_CTL_25		0x20
 -- 
 2.20.1
 
