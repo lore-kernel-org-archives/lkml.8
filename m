@@ -4,207 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4FCC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6115EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76DD020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4165220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgEHOlQ (ORCPT
+        id S1728364AbgEHOl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbgEHOky (ORCPT
+        Fri, 8 May 2020 10:41:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:38571 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728216AbgEHOlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:40:54 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B19CC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:40:54 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CA62245B; Fri,  8 May 2020 16:40:50 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: [RFC PATCH 3/7] mm/ioremap: Track which page-table levels were modified
-Date:   Fri,  8 May 2020 16:40:39 +0200
-Message-Id: <20200508144043.13893-4-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508144043.13893-1-joro@8bytes.org>
-References: <20200508144043.13893-1-joro@8bytes.org>
+        Fri, 8 May 2020 10:41:13 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mr9OA-1ikEYX0EAI-00oG15; Fri, 08 May 2020 16:40:51 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Ben Skeggs <bskeggs@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] nouveau: fix dependencies for DEVICE_PRIVATE
+Date:   Fri,  8 May 2020 16:40:09 +0200
+Message-Id: <20200508144017.3501418-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200508144017.3501418-1-arnd@arndb.de>
+References: <20200508144017.3501418-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:JWVQOgOnHysetYBnSk3CKrV5svFn5O5bRyqndsTcxkwhAVFX33K
+ 8QbP8gDLWPxaMFNAgd7F0Cl5FkzbK7UMEJIFy0zMaVqeRYEiRnApjKD442XntX1liV7tU8u
+ +v58YzETQ9SV2Hp+cHqKt2yBzRbfWwCIKA6DW0+yHZ5CaJ628eVpggV+QV31QJGmJnChH1i
+ vbw4Va8hrFgS/CW9ROAkg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VzDQJ1Yexdc=:rlZgpEK/dFkEh64B04UQUI
+ g+x10OM+ECzQzdguOSFhigUHOMdlbZFiI08PVo16y3npp77DmEsUma/AvaHcceM2m5b3I2o7L
+ TNCu82db3goJxFTWsXeuL1ZexwTp0gb5JWPrscj83fsTSOZ/18VLYpONC2FctsWw9C/ZTKzgS
+ K0HbBohnOvCR3/SHRUv1n1sX17ZLm6sZ7onWo54A55647knTetrzKq+aimZ3A3fEN/f1JRi2q
+ Fz7PefVUE5BFdLOZfKP5PVlfwCyFKD6ePO31sczeohRvfZrfip4z6j5azwY53UD8A2la9VDMl
+ yQ+zJZVhiTIEPExvx2yHPt8Gb4vD9nklM6omlVYpu0t7d4EINmaSrURvpa8jZGeYVMzuniupd
+ GCC0Ui4hsMVN4O+BGGp4mzzSTdHxZNuUpUfZalKuY98GENhMiAjkN8T1/WrzIzIlYLjdGtodz
+ i4ar0/wiV5tIOczUPF0P9sKJGaDYgVsNGNmzm403LzNNJzt1oxw6UMUJE4iRQ1Akef7DSocGP
+ TPO/xZ/dimwT8pDNNP6hqgqxRCEPgk43rCb1CWF2rYxdcoPcQLVLwDgWV1VH9AhMabNUbojSm
+ G8HmBR+fcLs6jSPX8Ls6tidrpGP6nsyMSNMLDV8lfryssOazCoAdn2ZG4RZJ1/o5BEegZ8I9B
+ 80CzFDRI32YAgnT9uC1xB8szTuFOrz1fc+/kgtYCqSk3qr4O9buMmeCmRGHuM+5J8UOGznTD8
+ 0YZ3ZZkh/Y2ymPOhW2NNuVL+0rXAFSSaH49WsYDVcyPjUerW4YuaddC4lv6dBUSeTDyQY4nLK
+ NV8OCikn7NeFF6Uk7/uPXIkQYE5CSkZ9+DUpSoA+hw2rOqe68k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+CONFIG_DEVICE_PRIVATE cannot be selected in configurations
+without ZONE_DEVICE:
 
-Track at which levels in the page-table entries were modified by
-ioremap_page_range(). After the page-table has been modified, use that
-information do decide whether the new arch_sync_kernel_mappings()
-needs to be called. The iounmap path re-uses vunmap(), which has
-already been taken care of.
+WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
+  Depends on [n]: ZONE_DEVICE [=n]
+  Selected by [y]:
+  - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && DRM_NOUVEAU [=y] && MMU [=y] && STAGING [=y]
+kernel/resource.c:1653:28: error: use of undeclared identifier 'PA_SECTION_SHIFT'
+        size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+                                  ^
+kernel/resource.c:1654:48: error: use of undeclared identifier 'MAX_PHYSMEM_BITS'
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Add a dependency for Nouveau to avoid broken randconfig builds.
+
+Fixes: d2c63df2242e ("mm/hmm: make CONFIG_DEVICE_PRIVATE into a select")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- lib/ioremap.c | 46 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/nouveau/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/ioremap.c b/lib/ioremap.c
-index 3f0e18543de8..ad485f08173b 100644
---- a/lib/ioremap.c
-+++ b/lib/ioremap.c
-@@ -61,13 +61,14 @@ static inline int ioremap_pmd_enabled(void) { return 0; }
- #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
- 
- static int ioremap_pte_range(pmd_t *pmd, unsigned long addr,
--		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
-+		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
-+		pgtbl_mod_mask *mask)
- {
- 	pte_t *pte;
- 	u64 pfn;
- 
- 	pfn = phys_addr >> PAGE_SHIFT;
--	pte = pte_alloc_kernel(pmd, addr);
-+	pte = pte_alloc_kernel_track(pmd, addr, mask);
- 	if (!pte)
- 		return -ENOMEM;
- 	do {
-@@ -75,6 +76,7 @@ static int ioremap_pte_range(pmd_t *pmd, unsigned long addr,
- 		set_pte_at(&init_mm, addr, pte, pfn_pte(pfn, prot));
- 		pfn++;
- 	} while (pte++, addr += PAGE_SIZE, addr != end);
-+	*mask |= PGTBL_PTE_MODIFIED;
- 	return 0;
- }
- 
-@@ -101,21 +103,24 @@ static int ioremap_try_huge_pmd(pmd_t *pmd, unsigned long addr,
- }
- 
- static inline int ioremap_pmd_range(pud_t *pud, unsigned long addr,
--		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
-+		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
-+		pgtbl_mod_mask *mask)
- {
- 	pmd_t *pmd;
- 	unsigned long next;
- 
--	pmd = pmd_alloc(&init_mm, pud, addr);
-+	pmd = pmd_alloc_track(&init_mm, pud, addr, mask);
- 	if (!pmd)
- 		return -ENOMEM;
- 	do {
- 		next = pmd_addr_end(addr, end);
- 
--		if (ioremap_try_huge_pmd(pmd, addr, next, phys_addr, prot))
-+		if (ioremap_try_huge_pmd(pmd, addr, next, phys_addr, prot)) {
-+			*mask |= PGTBL_PMD_MODIFIED;
- 			continue;
-+		}
- 
--		if (ioremap_pte_range(pmd, addr, next, phys_addr, prot))
-+		if (ioremap_pte_range(pmd, addr, next, phys_addr, prot, mask))
- 			return -ENOMEM;
- 	} while (pmd++, phys_addr += (next - addr), addr = next, addr != end);
- 	return 0;
-@@ -144,21 +149,24 @@ static int ioremap_try_huge_pud(pud_t *pud, unsigned long addr,
- }
- 
- static inline int ioremap_pud_range(p4d_t *p4d, unsigned long addr,
--		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
-+		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
-+		pgtbl_mod_mask *mask)
- {
- 	pud_t *pud;
- 	unsigned long next;
- 
--	pud = pud_alloc(&init_mm, p4d, addr);
-+	pud = pud_alloc_track(&init_mm, p4d, addr, mask);
- 	if (!pud)
- 		return -ENOMEM;
- 	do {
- 		next = pud_addr_end(addr, end);
- 
--		if (ioremap_try_huge_pud(pud, addr, next, phys_addr, prot))
-+		if (ioremap_try_huge_pud(pud, addr, next, phys_addr, prot)) {
-+			*mask |= PGTBL_PUD_MODIFIED;
- 			continue;
-+		}
- 
--		if (ioremap_pmd_range(pud, addr, next, phys_addr, prot))
-+		if (ioremap_pmd_range(pud, addr, next, phys_addr, prot, mask))
- 			return -ENOMEM;
- 	} while (pud++, phys_addr += (next - addr), addr = next, addr != end);
- 	return 0;
-@@ -187,21 +195,24 @@ static int ioremap_try_huge_p4d(p4d_t *p4d, unsigned long addr,
- }
- 
- static inline int ioremap_p4d_range(pgd_t *pgd, unsigned long addr,
--		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
-+		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
-+		pgtbl_mod_mask *mask)
- {
- 	p4d_t *p4d;
- 	unsigned long next;
- 
--	p4d = p4d_alloc(&init_mm, pgd, addr);
-+	p4d = p4d_alloc_track(&init_mm, pgd, addr, mask);
- 	if (!p4d)
- 		return -ENOMEM;
- 	do {
- 		next = p4d_addr_end(addr, end);
- 
--		if (ioremap_try_huge_p4d(p4d, addr, next, phys_addr, prot))
-+		if (ioremap_try_huge_p4d(p4d, addr, next, phys_addr, prot)) {
-+			*mask |= PGTBL_P4D_MODIFIED;
- 			continue;
-+		}
- 
--		if (ioremap_pud_range(p4d, addr, next, phys_addr, prot))
-+		if (ioremap_pud_range(p4d, addr, next, phys_addr, prot, mask))
- 			return -ENOMEM;
- 	} while (p4d++, phys_addr += (next - addr), addr = next, addr != end);
- 	return 0;
-@@ -214,6 +225,7 @@ int ioremap_page_range(unsigned long addr,
- 	unsigned long start;
- 	unsigned long next;
- 	int err;
-+	pgtbl_mod_mask mask = 0;
- 
- 	might_sleep();
- 	BUG_ON(addr >= end);
-@@ -222,13 +234,17 @@ int ioremap_page_range(unsigned long addr,
- 	pgd = pgd_offset_k(addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot);
-+		err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot,
-+					&mask);
- 		if (err)
- 			break;
- 	} while (pgd++, phys_addr += (next - addr), addr = next, addr != end);
- 
- 	flush_cache_vmap(start, end);
- 
-+	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-+		arch_sync_kernel_mappings(start, end);
-+
- 	return err;
- }
- 
+diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+index af5793f3e7c2..996ec5475908 100644
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -87,6 +87,7 @@ config DRM_NOUVEAU_BACKLIGHT
+ config DRM_NOUVEAU_SVM
+ 	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+ 	depends on DRM_NOUVEAU
++	depends on ZONE_DEVICE
+ 	depends on MMU
+ 	depends on STAGING
+ 	select DEVICE_PRIVATE
 -- 
-2.17.1
+2.26.0
 
