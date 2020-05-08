@@ -2,214 +2,105 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA387C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F451C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8665E214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1C0206D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Pr21jVrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgEHUN4 (ORCPT
+        id S1727789AbgEHUR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:13:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:7963 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEHUN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:13:56 -0400
-IronPort-SDR: m8pdf0NzRfqVhIDIaDg4rXGUdKPxdGllyuTG/G7o5uopK2LA1pkfdFnlWP1gWGVU7D/71cZ8HO
- DhCOa6UnNawA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 13:13:55 -0700
-IronPort-SDR: y4g5nsyjWS+5oiCxcwofr7ePTc8VpZ3E/YSVNyyNDQETMLm2mu8rOOzmegxmmgVNxTxok7MUcZ
- 7WxS+kd03CAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="249853292"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2020 13:13:55 -0700
-Date:   Fri, 8 May 2020 13:13:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jon Cargille <jcargill@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>
-Subject: Re: [PATCH] kvm: x86 mmu: avoid mmu_page_hash lookup for
- direct_map-only VM
-Message-ID: <20200508201355.GS27052@linux.intel.com>
-References: <20200508182425.69249-1-jcargill@google.com>
+        Fri, 8 May 2020 16:17:58 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10680 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHUR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 16:17:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb5bdf10002>; Fri, 08 May 2020 13:15:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 08 May 2020 13:17:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 08 May 2020 13:17:57 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 May
+ 2020 20:17:55 +0000
+Subject: Re: [PATCH 0/6] nouveau/hmm: add support for mapping large pages
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
+ <20200508195910.GR16070@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <72422dca-e025-002a-4748-addfb392ffc4@nvidia.com>
+Date:   Fri, 8 May 2020 13:17:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508182425.69249-1-jcargill@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200508195910.GR16070@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588968945; bh=8jcsi4sJ0Pz47G8/hEwIzoPu3XxA14OTXYwj9QRfX24=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Pr21jVrrgr9jJISs9J/SRiq2m3DGnibSCaEEZDmlT7luXd5ZFr5PM0PbV3Yny8kBU
+         yDd6p9TZ5LhE/wbeHZjo8fasld6sR0Eam/ANmo9q9fs2rbELV+7BT47tj36fmRJbNS
+         iv3HVy3Pu69jZ0+VJU0xrmngP5RNaZJh4wwXFnbYtZn0qWiR/af3oYU2cs7uolRbO4
+         MLI0r7aCVoqtn9cO2/O7BuNXmGsZ8hFvvNn0tcQ80tHbgUry8z1h8TBPqkWi9i0PCv
+         cjI4QM1txTgijGOMI9hNFI8fvw/iC985yksq/X4uGCD1ImP/7Fx7enUOgA3fgWBBVf
+         2H1QfoRFhYVPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:24:25AM -0700, Jon Cargille wrote:
-> From: Peter Feiner <pfeiner@google.com>
+
+On 5/8/20 12:59 PM, Matthew Wilcox wrote:
+> On Fri, May 08, 2020 at 12:20:03PM -0700, Ralph Campbell wrote:
+>> hmm_range_fault() returns an array of page frame numbers and flags for
+>> how the pages are mapped in the requested process' page tables. The PFN
+>> can be used to get the struct page with hmm_pfn_to_page() and the page size
+>> order can be determined with compound_order(page) but if the page is larger
+>> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+>> using a larger page size. To be fully general, hmm_range_fault() would need
+>> to return the mapping size to handle cases like a 1GB compound page being
+>> mapped with 2MB PMD entries. However, the most common case is the mapping
+>> size the same as the underlying compound page size.
+>> This series adds a new output flag to indicate this so that callers know it
+>> is safe to use a large device page table mapping if one is available.
+>> Nouveau and the HMM tests are updated to use the new flag.
 > 
-> Optimization for avoiding lookups in mmu_page_hash. When there's a
-> single direct root, a shadow page has at most one parent SPTE
-> (non-root SPs have exactly one; the root has none). Thus, if an SPTE
-> is non-present, it can be linked to a newly allocated SP without
-> first checking if the SP already exists.
-
-Some mechanical comments below.  I'll think through the actual logic next
-week, my brain needs to be primed anytime the MMU is involved :-)
-
-> This optimization has proven significant in batch large SP shattering
-> where the hash lookup accounted for 95% of the overhead.
+> This explanation doesn't make any sense.  It doesn't matter how somebody
+> else has it mapped; if it's a PMD-sized page, you can map it with a
+> 2MB mapping.
 > 
-> Signed-off-by: Peter Feiner <pfeiner@google.com>
-> Signed-off-by: Jon Cargille <jcargill@google.com>
-> Reviewed-by: Jim Mattson <jmattson@google.com>
-> 
-> ---
->  arch/x86/include/asm/kvm_host.h | 13 ++++++++
->  arch/x86/kvm/mmu/mmu.c          | 55 +++++++++++++++++++--------------
->  2 files changed, 45 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index a239a297be33..9b70d764b626 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -913,6 +913,19 @@ struct kvm_arch {
->  	struct kvm_page_track_notifier_node mmu_sp_tracker;
->  	struct kvm_page_track_notifier_head track_notifier_head;
->  
-> +	/*
-> +	 * Optimization for avoiding lookups in mmu_page_hash. When there's a
-> +	 * single direct root, a shadow page has at most one parent SPTE
-> +	 * (non-root SPs have exactly one; the root has none). Thus, if an SPTE
-> +	 * is non-present, it can be linked to a newly allocated SP without
-> +	 * first checking if the SP already exists.
-> +	 *
-> +	 * False initially because there are no indirect roots.
-> +	 *
-> +	 * Guarded by mmu_lock.
-> +	 */
-> +	bool shadow_page_may_have_multiple_parents;
 
-Why make this a one-way bool?  Wouldn't it be better to let this transition
-back to '0' once all nested guests go away?
-
-And maybe a shorter name that reflects what it tracks instead of how its
-used, e.g. has_indirect_mmu or indirect_mmu_count.
-
-> +
->  	struct list_head assigned_dev_head;
->  	struct iommu_domain *iommu_domain;
->  	bool iommu_noncoherent;
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index e618472c572b..d94552b0ed77 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -2499,35 +2499,40 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
->  		quadrant &= (1 << ((PT32_PT_BITS - PT64_PT_BITS) * level)) - 1;
->  		role.quadrant = quadrant;
->  	}
-> -	for_each_valid_sp(vcpu->kvm, sp, gfn) {
-> -		if (sp->gfn != gfn) {
-> -			collisions++;
-> -			continue;
-> -		}
->  
-> -		if (!need_sync && sp->unsync)
-> -			need_sync = true;
-> +	if (vcpu->kvm->arch.shadow_page_may_have_multiple_parents ||
-> +	    level == vcpu->arch.mmu->root_level) {
-
-Might be worth a goto to preserve the for-loop.
-
-> +		for_each_valid_sp(vcpu->kvm, sp, gfn) {
-> +			if (sp->gfn != gfn) {
-> +				collisions++;
-> +				continue;
-> +			}
->  
-> -		if (sp->role.word != role.word)
-> -			continue;
-> +			if (!need_sync && sp->unsync)
-> +				need_sync = true;
->  
-> -		if (sp->unsync) {
-> -			/* The page is good, but __kvm_sync_page might still end
-> -			 * up zapping it.  If so, break in order to rebuild it.
-> -			 */
-> -			if (!__kvm_sync_page(vcpu, sp, &invalid_list))
-> -				break;
-> +			if (sp->role.word != role.word)
-> +				continue;
->  
-> -			WARN_ON(!list_empty(&invalid_list));
-> -			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> -		}
-> +			if (sp->unsync) {
-> +				/* The page is good, but __kvm_sync_page might
-> +				 * still end up zapping it.  If so, break in
-> +				 * order to rebuild it.
-> +				 */
-> +				if (!__kvm_sync_page(vcpu, sp, &invalid_list))
-> +					break;
->  
-> -		if (sp->unsync_children)
-> -			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> +				WARN_ON(!list_empty(&invalid_list));
-> +				kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> +			}
->  
-> -		__clear_sp_write_flooding_count(sp);
-> -		trace_kvm_mmu_get_page(sp, false);
-> -		goto out;
-> +			if (sp->unsync_children)
-> +				kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> +
-> +			__clear_sp_write_flooding_count(sp);
-> +			trace_kvm_mmu_get_page(sp, false);
-> +			goto out;
-> +		}
->  	}
->  
->  	++vcpu->kvm->stat.mmu_cache_miss;
-> @@ -3735,6 +3740,10 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
->  	gfn_t root_gfn, root_pgd;
->  	int i;
->  
-> +	spin_lock(&vcpu->kvm->mmu_lock);
-> +	vcpu->kvm->arch.shadow_page_may_have_multiple_parents = true;
-> +	spin_unlock(&vcpu->kvm->mmu_lock);
-
-Taking the lock every time is unnecessary, even if this is changed to a
-refcount type variable, e.g.
-
-	if (!has_indirect_mmu) {
-		lock_and_set
-	}
-
-or
-
-	if (atomic_inc_return(&indirect_mmu_count) == 1)
-		lock_and_unlock;
-
-	
-> +
->  	root_pgd = vcpu->arch.mmu->get_guest_pgd(vcpu);
->  	root_gfn = root_pgd >> PAGE_SHIFT;
->  
-> -- 
-> 2.26.2.303.gf8c07b1a785-goog
-> 
+Sure, the I/O will work OK, but is it safe?
+Copy on write isn't an issue? splitting a PMD in one process due to
+mprotect of a shared page will cause other process' page tables to be split
+the same way?
+Recall that these are system memory pages that could be THPs, shmem, hugetlbfs,
+mmap shared file pages, etc.
