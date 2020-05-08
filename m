@@ -2,52 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28A7C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D43C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A08F8206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6805B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942994;
-	bh=qMWxE2EfYOhqlgoLvRG1U4MWq/4ftK5fTVTdxu9bbNw=;
+	s=default; t=1588943001;
+	bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQ0WzKH/QRre0+jG0njs8U2eTm6O2CEyMbFAN7WSFtTW+Melvx/6kMxJFS54NhwnZ
-	 36uNwZ+uHLNOyHKnDKaFYmC0UtUrqQrP2GzyuVjTyvjY/qRPgueztxl3cQi0/GAqDt
-	 mypEuYM8TS3I9ElPwD/HYW6+au0sbLKzFDL6/5A4=
+	b=noSYgy3NUE1xLq8VBJbpGEOW7e4OzQDtQEsTHAi5AkB8/syy/v7YLQDbg3/7wSvEr
+	 ZbN0/guqbTfOZzDc0DDlvxsE5Qe24pUx/koGYeQqCAhC4wfeu11uKOy6CrcMv6ZCZy
+	 6MwD/N21dyNOvkBWW0//grOitJ9KF2wr7AltAePc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgEHNDF (ORCPT
+        id S1727104AbgEHNDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58582 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729553AbgEHMud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:33 -0400
+        id S1728507AbgEHMuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524C624959;
-        Fri,  8 May 2020 12:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BED2221473;
+        Fri,  8 May 2020 12:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942232;
-        bh=qMWxE2EfYOhqlgoLvRG1U4MWq/4ftK5fTVTdxu9bbNw=;
+        s=default; t=1588942218;
+        bh=gwwltBoEbues8SEU545brQ4mqhSyAnYy0hmSd/ji+j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR5QQBIgH9po7yMWs3pcfTflE+YXXo8dtWSxSyxsdAy28+spS5oQthNvV9etCZFsj
-         LJUAsRcdx0DVvtsziorKzxQGidAXTkSy6vLCOdj0SQ8EWbSi37NhLD/PfdG58FB1KS
-         9/fLWCj5He9bMXsP5GCH+cGHvm6s5qHrOc3C4wEU=
+        b=EXoTijNvkrzENB0xm91WxbijP+fMI2x4fIULcRZpwyHCxxrrI5c4SUK9eA4MmopU/
+         fNUb9xzdS7D0r7MFl+dMJS6HDVxFDlWc+u8sxmZuR7tLVDI8tss9ZSkAIbbf5IMQok
+         lAtWNcIv9llStOlfSBLk2j+WdoED84MVTqdf+TYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <tom.zanussi@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        =?UTF-8?q?Andress=20Kuo=20 ?= <Andress.Kuo@mediatek.com>
-Subject: [PATCH 4.14 19/22] tracing: Reverse the order of trace_types_lock and event_mutex
-Date:   Fri,  8 May 2020 14:35:31 +0200
-Message-Id: <20200508123036.277013811@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 13/22] scripts/config: allow colons in option strings for sed
+Date:   Fri,  8 May 2020 14:35:25 +0200
+Message-Id: <20200508123035.508402529@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
 References: <20200508123033.915895060@linuxfoundation.org>
@@ -60,196 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
 
-commit 12ecef0cb12102d8c034770173d2d1363cb97d52 upstream.
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-In order to make future changes where we need to call
-tracing_set_clock() from within an event command, the order of
-trace_types_lock and event_mutex must be reversed, as the event command
-will hold event_mutex and the trace_types_lock is taken from within
-tracing_set_clock().
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-Link: http://lkml.kernel.org/r/20170921162249.0dde3dca@gandalf.local.home
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
 
-Requested-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andress Kuo (郭孟修) <Andress.Kuo@mediatek.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c        |    5 +++++
- kernel/trace/trace_events.c |   31 +++++++++++++++----------------
- 2 files changed, 20 insertions(+), 16 deletions(-)
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7720,6 +7720,7 @@ static int instance_mkdir(const char *na
- 	struct trace_array *tr;
- 	int ret;
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
  
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
  
- 	ret = -EEXIST;
-@@ -7775,6 +7776,7 @@ static int instance_mkdir(const char *na
- 	list_add(&tr->list, &ftrace_trace_arrays);
- 
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	return 0;
- 
-@@ -7786,6 +7788,7 @@ static int instance_mkdir(const char *na
- 
-  out_unlock:
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	return ret;
- 
-@@ -7798,6 +7801,7 @@ static int instance_rmdir(const char *na
- 	int ret;
- 	int i;
- 
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = -ENODEV;
-@@ -7843,6 +7847,7 @@ static int instance_rmdir(const char *na
- 
-  out_unlock:
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	return ret;
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
  }
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1403,8 +1403,8 @@ static int subsystem_open(struct inode *
- 		return -ENODEV;
- 
- 	/* Make sure the system still exists */
--	mutex_lock(&trace_types_lock);
- 	mutex_lock(&event_mutex);
-+	mutex_lock(&trace_types_lock);
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		list_for_each_entry(dir, &tr->systems, list) {
- 			if (dir == inode->i_private) {
-@@ -1418,8 +1418,8 @@ static int subsystem_open(struct inode *
- 		}
- 	}
-  exit_loop:
--	mutex_unlock(&event_mutex);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	if (!system)
- 		return -ENODEV;
-@@ -2305,15 +2305,15 @@ static void __add_event_to_tracers(struc
- int trace_add_event_call(struct trace_event_call *call)
- {
- 	int ret;
--	mutex_lock(&trace_types_lock);
- 	mutex_lock(&event_mutex);
-+	mutex_lock(&trace_types_lock);
- 
- 	ret = __register_event(call, NULL);
- 	if (ret >= 0)
- 		__add_event_to_tracers(call);
- 
--	mutex_unlock(&event_mutex);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 	return ret;
- }
- 
-@@ -2367,13 +2367,13 @@ int trace_remove_event_call(struct trace
- {
- 	int ret;
- 
--	mutex_lock(&trace_types_lock);
- 	mutex_lock(&event_mutex);
-+	mutex_lock(&trace_types_lock);
- 	down_write(&trace_event_sem);
- 	ret = probe_remove_event_call(call);
- 	up_write(&trace_event_sem);
--	mutex_unlock(&event_mutex);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	return ret;
- }
-@@ -2435,8 +2435,8 @@ static int trace_module_notify(struct no
- {
- 	struct module *mod = data;
- 
--	mutex_lock(&trace_types_lock);
- 	mutex_lock(&event_mutex);
-+	mutex_lock(&trace_types_lock);
- 	switch (val) {
- 	case MODULE_STATE_COMING:
- 		trace_module_add_events(mod);
-@@ -2445,8 +2445,8 @@ static int trace_module_notify(struct no
- 		trace_module_remove_events(mod);
- 		break;
- 	}
--	mutex_unlock(&event_mutex);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	return 0;
- }
-@@ -2961,24 +2961,24 @@ create_event_toplevel_files(struct dentr
-  * creates the event hierachry in the @parent/events directory.
-  *
-  * Returns 0 on success.
-+ *
-+ * Must be called with event_mutex held.
-  */
- int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr)
- {
- 	int ret;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
- 
- 	ret = create_event_toplevel_files(parent, tr);
- 	if (ret)
--		goto out_unlock;
-+		goto out;
- 
- 	down_write(&trace_event_sem);
- 	__trace_add_event_dirs(tr);
- 	up_write(&trace_event_sem);
- 
-- out_unlock:
--	mutex_unlock(&event_mutex);
--
-+ out:
- 	return ret;
- }
- 
-@@ -3007,9 +3007,10 @@ early_event_add_tracer(struct dentry *pa
- 	return ret;
- }
- 
-+/* Must be called with event_mutex held */
- int event_trace_del_tracer(struct trace_array *tr)
- {
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
- 
- 	/* Disable any event triggers and associated soft-disabled events */
- 	clear_event_triggers(tr);
-@@ -3030,8 +3031,6 @@ int event_trace_del_tracer(struct trace_
- 
- 	tr->event_dir = NULL;
- 
--	mutex_unlock(&event_mutex);
--
- 	return 0;
- }
- 
+-- 
+2.20.1
+
 
 
