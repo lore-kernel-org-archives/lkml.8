@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667CAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E483C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3567221BE5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2AB24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941427;
-	bh=K5TzdsmWxJBMOOlBOozO1w9/j3b1gDPq9drqvpDnfSo=;
+	s=default; t=1588941432;
+	bh=pfASahavKa16Lvl68B6Op42wIy+UUATPo81BC8/T67M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLuu4Ldt6LiJBFHPrKbV54aPHde6HF4H1TOz8XCLEHfMuDCVE3Y8U1KwDmEOOll0d
-	 WbVESWzTGQBlzgYGWyGwcdXXlbUmn++hggfF5iB5IlxcY4wGxL3+uIGaJFIbK1sJnu
-	 gWb2qZStWv2cp0o0BsLAYaevdMiHG+k0BQ/z5J/0=
+	b=ATlzHE4+Rxxk5RdUzxy7Bdcs85joDJUjnaOZRpTGeKgLUQ8HWQGxGKws6X2ySmTBC
+	 hWGIjshVtmkIPNHI++0UJDWYXwZbQLeym4kd1lZpuJAo/VfyV5Ua0c453Fo2PhJvnc
+	 HmG1yJ8dCMIn5BbTwVmBOj9bHl7D9ibbMQfzoWWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgEHMhG (ORCPT
+        id S1728031AbgEHMhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:37:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgEHMg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:36:57 -0400
+        id S1727994AbgEHMhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:37:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9E9215A4;
-        Fri,  8 May 2020 12:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21E7207DD;
+        Fri,  8 May 2020 12:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941417;
-        bh=K5TzdsmWxJBMOOlBOozO1w9/j3b1gDPq9drqvpDnfSo=;
+        s=default; t=1588941427;
+        bh=pfASahavKa16Lvl68B6Op42wIy+UUATPo81BC8/T67M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XRDvtWZI5Wfv4QQA8OxhJ+nEADmrplkS1FpAHFcdcRqQUrkzLd2MkXUS7eTdtEWI5
-         ilijjNpUAWdCTp9XrM6+4aBzeExRkrmYbSID1tupU4C9l3WrAV0RkqzbJufJoC4T48
-         CTsXjQKj0J1oMcRNjLByI3hJSGNYgUffVl9UjVlw=
+        b=HSxgoUjUxwxxXY4jPcgK+wkjssOnMPyXckgnLsqpFMWj2N6peXL3ccgk6IFSs0yww
+         2P10El7tXp37GVPsYiCieGkoPw4Z2AtjjI7nSMcvrHIlFIp0CshDBBu63UX4VeQ+d8
+         zvhT3ZPb9DtlRZZwn8CE8nmZZB4ylbMrazYHN7S4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.4 008/312] usb: gadget: udc: core: dont starve DMA resources
-Date:   Fri,  8 May 2020 14:29:59 +0200
-Message-Id: <20200508123125.099449494@linuxfoundation.org>
+        stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
+        Leonid Yegoshin <leonid.yegoshin@imgtec.com>,
+        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 028/312] MIPS: c-r4k: Fix protected_writeback_scache_line for EVA
+Date:   Fri,  8 May 2020 14:30:19 +0200
+Message-Id: <20200508123126.462083642@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -58,31 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: James Hogan <james.hogan@imgtec.com>
 
-commit 23fd537c9508fb6e3b93ddf23982f51afc087781 upstream.
+commit 0758b116b4080d9a2a2a715bec6eee2cbd828215 upstream.
 
-Always unmap all SG entries as required by DMA API
+The protected_writeback_scache_line() function is used by
+local_r4k_flush_cache_sigtramp() to flush an FPU delay slot emulation
+trampoline on the userland stack from the caches so it is visible to
+subsequent instruction fetches.
 
-Fixes: a698908d3b3b ("usb: gadget: add generic map/unmap request utilities")
-Cc: <stable@vger.kernel.org> # v3.4+
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Commit de8974e3f76c ("MIPS: asm: r4kcache: Add EVA cache flushing
+functions") updated some protected_ cache flush functions to use EVA
+CACHEE instructions via protected_cachee_op(), and commit 83fd43449baa
+("MIPS: r4kcache: Add EVA case for protected_writeback_dcache_line") did
+the same thing for protected_writeback_dcache_line(), but
+protected_writeback_scache_line() never got updated. Lets fix that now
+to flush the right user address from the secondary cache rather than
+some arbitrary kernel unmapped address.
+
+This issue was spotted through code inspection, and it seems unlikely to
+be possible to hit this in practice. It theoretically affect EVA kernels
+on EVA capable cores with an L2 cache, where the icache fetches straight
+from RAM (cpu_icache_snoops_remote_store == 0), running a hard float
+userland with FPU disabled (nofpu). That both Malta and Boston platforms
+override cpu_icache_snoops_remote_store to 1 suggests that all MIPS
+cores fetch instructions into icache straight from L2 rather than RAM.
+
+Fixes: de8974e3f76c ("MIPS: asm: r4kcache: Add EVA cache flushing functions")
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Leonid Yegoshin <leonid.yegoshin@imgtec.com>
+Cc: linux-mips@linux-mips.org
+Patchwork: https://patchwork.linux-mips.org/patch/13800/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/udc-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/r4kcache.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/gadget/udc/udc-core.c
-+++ b/drivers/usb/gadget/udc/udc-core.c
-@@ -97,7 +97,7 @@ void usb_gadget_unmap_request(struct usb
- 		return;
+--- a/arch/mips/include/asm/r4kcache.h
++++ b/arch/mips/include/asm/r4kcache.h
+@@ -210,7 +210,11 @@ static inline void protected_writeback_d
  
- 	if (req->num_mapped_sgs) {
--		dma_unmap_sg(gadget->dev.parent, req->sg, req->num_mapped_sgs,
-+		dma_unmap_sg(gadget->dev.parent, req->sg, req->num_sgs,
- 				is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
+ static inline void protected_writeback_scache_line(unsigned long addr)
+ {
++#ifdef CONFIG_EVA
++	protected_cachee_op(Hit_Writeback_Inv_SD, addr);
++#else
+ 	protected_cache_op(Hit_Writeback_Inv_SD, addr);
++#endif
+ }
  
- 		req->num_mapped_sgs = 0;
+ /*
 
 
