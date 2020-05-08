@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8375C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8017C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB8224963
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEF224953
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942285;
-	bh=2aLTZKLe+wSFrXeOLh7dOkpeYDowF5ZnL0QybDV3ROM=;
+	s=default; t=1588942291;
+	bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aax4+ncJwhoQvi1FdbgkPrjpD/oyy5vInoJ0QKbWDRxqcqojbfuq2qj+PgX3yShIH
-	 DKBfXy3Am6TKg2J7jbvkYtIUXbOMHNKoUWFDnlEhsoDUHv7NfAj69JKNJZ0z/69b1i
-	 1PlkDMSgu7m2Ek9ZjMyHUFYpL/Me5rBO/fIyFqIw=
+	b=ONzfUoq7hlPZI6KqfzgCPnBwHXx8oXLtIMh+XUUwQqqoQkMhTmUWJcQyXmjLBYiYw
+	 ykpvfJdbo5ilOybrtCStmWirMR7yl6jOA7ojLSGxPPJV50WBI/YjhMjZ9tbSy7blIG
+	 g8j6KVseddYIXvApGcgVPAS5iQgs4rGxW20sJXL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgEHMvY (ORCPT
+        id S1729363AbgEHMvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:51:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbgEHMvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:20 -0400
+        id S1729900AbgEHMvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C046C24963;
-        Fri,  8 May 2020 12:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4536F24953;
+        Fri,  8 May 2020 12:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942280;
-        bh=2aLTZKLe+wSFrXeOLh7dOkpeYDowF5ZnL0QybDV3ROM=;
+        s=default; t=1588942282;
+        bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liQY0kpQZsLXbL5UlXZZoMxx8F2EvVFytMRWVLycZ1BKjaocSBCizQ+kPDcOf4RtY
-         KYVPobsPD8un/xsnjfmEFhvGJWuZFIZmaQzMOPsZla/3TiLbdXn4dFvtAEXUYP8Gyf
-         03FhPOx3Cxx/znvMdCWn4X0MKmDDV0HeGlYeZ+1E=
+        b=vbzVeR19TGNBOup/y7cAJLCfh1To+yLZuF5qUC6c4SCYRdnKxQDen3EMeFiV2//gZ
+         ER3WlYoaVicltjeMRt+guBDgtoXpVgi9sd96lot5BMt2734vfiwihxeZSAPWxPyW5z
+         BNOE95xOw7lGhWP1h/TAX7dOwLCtSYuUd5Qknx5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/32] ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-Date:   Fri,  8 May 2020 14:35:28 +0200
-Message-Id: <20200508123036.783836165@linuxfoundation.org>
+Subject: [PATCH 4.19 16/32] cifs: protect updating server->dstaddr with a spinlock
+Date:   Fri,  8 May 2020 14:35:29 +0200
+Message-Id: <20200508123036.981881820@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -62,50 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 54cb6221688660670a2e430892d7f4e6370263b8 ]
+[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
 
-Fix the rsnd_ssi_stop function to skip disabling the individual SSIs of
-a multi-SSI setup, as the actual stop is performed by rsnd_ssiu_stop_gen2
-- the same logic as in rsnd_ssi_start. The attempt to disable these SSIs
-was harmless, but caused a "status check failed" message to be printed
-for every SSI in the multi-SSI setup.
-The disabling of interrupts is still performed, as they are enabled for
-all SSIs in rsnd_ssi_init, but care is taken to not accidentally set the
-EN bit for an SSI where it was not set by rsnd_ssi_start.
+We use a spinlock while we are reading and accessing the destination address for a server.
+We need to also use this spinlock to protect when we are modifying this address from
+reconn_set_ipaddr().
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200417153017.1744454-3-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index d5f663bb965f1..a6cf2ac223e42 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -566,10 +566,16 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
- 	 * Capture:  It might not receave data. Do nothing
- 	 */
- 	if (rsnd_io_is_play(io)) {
--		rsnd_mod_write(mod, SSICR, cr | EN);
-+		rsnd_mod_write(mod, SSICR, cr | ssi->cr_en);
- 		rsnd_ssi_status_check(mod, DIRQ);
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 975f800b9dd4d..9e569d60c636b 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -353,8 +353,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
+ 		return rc;
  	}
  
-+	/* In multi-SSI mode, stop is performed by setting ssi0129 in
-+	 * SSI_CONTROL to 0 (in rsnd_ssio_stop_gen2). Do nothing here.
-+	 */
-+	if (rsnd_ssi_multi_slaves_runtime(io))
-+		return 0;
-+
- 	/*
- 	 * disable SSI,
- 	 * and, wait idle state
++	spin_lock(&cifs_tcp_ses_lock);
+ 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
+ 				  strlen(ipaddr));
++	spin_unlock(&cifs_tcp_ses_lock);
+ 	kfree(ipaddr);
+ 
+ 	return !rc ? -1 : 0;
 -- 
 2.20.1
 
