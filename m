@@ -2,59 +2,58 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3302C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4D3C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A500524959
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FB824967
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942358;
-	bh=jWot4m4mxpf9/pZ5DNn1nyy/ItK9M0Sdv4/SH8DJw+8=;
+	s=default; t=1588942360;
+	bh=LNu0u4m1TpX1W4ZZjSTKvd48EX1thU7V29jKjQvWTMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MK26WPl0mH7m0e5zLRQGc9z9WyyIV/qfISs2bRapTXjGNSL4W2lpakE62wdjCM6vH
-	 WoPOg3aDYEobNy1IjikK5eXw1WMx4l95mli/gvL0w3JDWC/6s3EvvK7K8Qen7za9x8
-	 WaZKA/nK/nlBy0AO52yOaxz4fAvcBWVAfWp4CbqM=
+	b=BLbEWwIqpu+6G0qk/u9M1/hc5ylOHW2wwUnhmaDofCUrheoI4fNBe41F5VRSd0Iji
+	 FgfVqKkCMGpT3ZAi9NQxrKa0HP5Q+2E+8NHpEeJkn8noF1xcH2lq7+qf3dbSsqPrG4
+	 qhFcYyIWLvZBMvhnFVtFSF7b6j92xiJhyONJrUV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgEHMwi (ORCPT
+        id S1729985AbgEHMwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgEHMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:28 -0400
+        id S1729961AbgEHMwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:52:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE69924959;
-        Fri,  8 May 2020 12:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C4E624953;
+        Fri,  8 May 2020 12:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942347;
-        bh=jWot4m4mxpf9/pZ5DNn1nyy/ItK9M0Sdv4/SH8DJw+8=;
+        s=default; t=1588942349;
+        bh=LNu0u4m1TpX1W4ZZjSTKvd48EX1thU7V29jKjQvWTMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+3vSl2ZiRfgg1m3X2h+n6ZqAzlFlZSki2j562QUzIvNsAf8SK153ykWURnTwRxO1
-         fHNvjetb6pRktQtd18GK0EZfpHSKPl3XXYzf+N0qt13L5kxqMCTTLkH3P4i/x0c85k
-         fbHS002Un7q5ACYsEwhGYHEYzjURJPVfTpM7RiRE=
+        b=AEkXkFBsDq3s6iMAV5jTl5UPsQddpJLW9eJoOs2CcIPflWD36gB6lNxdklURNxVt9
+         IXfjLaUrd0ORIfKsHsQDBDFAq0HwzYaLlDP3LckqajDoVKLRD6w1cxyRJPaRt9PkGS
+         YBE7rEBNDHxCD1AoAZ8Tfaoi9ra4NHu7xeEBZfIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jia He <justin.he@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH 5.4 01/50] vhost: vsock: kick send_pkt worker once device is started
-Date:   Fri,  8 May 2020 14:35:07 +0200
-Message-Id: <20200508123043.374747222@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 10/50] ASoC: topology: Fix endianness issue
+Date:   Fri,  8 May 2020 14:35:16 +0200
+Message-Id: <20200508123044.840286096@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,72 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia He <justin.he@arm.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
+[ Upstream commit 26d87881590fd55ccdd8f829498d7b3033f81990 ]
 
-Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
-The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
-connecting from the client side. The vhost vsock client tries to connect
-an initializing virtio vsock server.
+As done in already existing cases, we should use le32_to_cpu macro while
+accessing hdr->magic. Found with sparse.
 
-The abnormal flow looks like:
-host-userspace           vhost vsock                       guest vsock
-==============           ===========                       ============
-connect()     -------->  vhost_transport_send_pkt_work()   initializing
-   |                     vq->private_data==NULL
-   |                     will not be queued
-   V
-schedule_timeout(2s)
-                         vhost_vsock_start()  <---------   device ready
-                         set vq->private_data
-
-wait for 2s and failed
-connect() again          vq->private_data!=NULL         recv connecting pkt
-
-Details:
-1. Host userspace sends a connect pkt, at that time, guest vsock is under
-   initializing, hence the vhost_vsock_start has not been called. So
-   vq->private_data==NULL, and the pkt is not been queued to send to guest
-2. Then it sleeps for 2s
-3. After guest vsock finishes initializing, vq->private_data is set
-4. When host userspace wakes up after 2s, send connecting pkt again,
-   everything is fine.
-
-As suggested by Stefano Garzarella, this fixes it by additional kicking the
-send_pkt worker in vhost_vsock_start once the virtio device is started. This
-makes the pending pkt sent again.
-
-After this patch, kata-runtime (with vsock enabled) boot time is reduced
-from 3s to 1s on a ThunderX2 arm64 server.
-
-[1] https://github.com/kata-containers/runtime/issues/1917
-
-Reported-by: Ning Bo <n.b@live.com>
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jia He <justin.he@arm.com>
-Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20200415162435.31859-2-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/soc-topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -500,6 +500,11 @@ static int vhost_vsock_start(struct vhos
- 		mutex_unlock(&vq->mutex);
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 2d4a5a3058c41..65c91abb9462f 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2559,7 +2559,7 @@ static int soc_valid_header(struct soc_tplg *tplg,
  	}
  
-+	/* Some packets may have been queued before the device was started,
-+	 * let's kick the send worker to send them.
-+	 */
-+	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
-+
- 	mutex_unlock(&vsock->dev.mutex);
- 	return 0;
- 
+ 	/* big endian firmware objects not supported atm */
+-	if (hdr->magic == SOC_TPLG_MAGIC_BIG_ENDIAN) {
++	if (le32_to_cpu(hdr->magic) == SOC_TPLG_MAGIC_BIG_ENDIAN) {
+ 		dev_err(tplg->dev,
+ 			"ASoC: pass %d big endian not supported header got %x at offset 0x%lx size 0x%zx.\n",
+ 			tplg->pass, hdr->magic,
+-- 
+2.20.1
+
 
 
