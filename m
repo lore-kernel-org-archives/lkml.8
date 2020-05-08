@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327CCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD9DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A13A24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72248206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943954;
-	bh=By2JmhjE01mA3fKG5s6nmrpHeVl/zfw3Km+eUHLMTpE=;
+	s=default; t=1588943961;
+	bh=umPbEYMIhzfcDyFvmPVUvgjO5yt1/0HqmvIq/Nw+3fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKi0GuNE/1A65BjyFgPd6vAOePT5Nmf4Ryvm2bB47XZ8y2WrBAhgAligkUWTvuq0d
-	 NYXuS2CciwrcTwyI6EJqfQElBEtNG4nZwB5L9BS6hfsiuzieCoL71RVealiWq+TwDW
-	 NfOkS3Pfpi98/UHfxifodngmzpEqeX/KHzlNnNlg=
+	b=G+vJsQWYJByr2lH4pT70sP5DVbfo+D4G5oQWKNNmcUUSfs7bcjrsLKpEcTc1C+too
+	 VTB1ZKoHxhXP911+GEJQhy9DRS3HcRQXdAC++U7GcR5MN8YHb/HDOKSM61Zxg6M8Tm
+	 i/iYtJ61dB2qjsiqLQ+37i4ZrQDekArXhJHtGpyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgEHNTN (ORCPT
+        id S1729404AbgEHNTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:19:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbgEHMm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:29 -0400
+        id S1728935AbgEHMmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:42:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487812495F;
-        Fri,  8 May 2020 12:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F7A24971;
+        Fri,  8 May 2020 12:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941748;
-        bh=By2JmhjE01mA3fKG5s6nmrpHeVl/zfw3Km+eUHLMTpE=;
+        s=default; t=1588941741;
+        bh=umPbEYMIhzfcDyFvmPVUvgjO5yt1/0HqmvIq/Nw+3fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ctn9SJ/i+z25REoVUT6axUReKT9YwlpNEzgvzHK38DD5/7Oew10GyEu+1HOjFONri
-         a0X8OPlewohehGF6Cp+n9svQZ5Qr9vYLbSu5S+zoICTSWVII42eudHcvhj6yWcHkkN
-         5wJUxIdsrzXnKrUf38asjfoh2S3bBVBu/oAaaPpY=
+        b=FvW04gvVip5nKO6jXMFWBNeVwtuM8f55iWEqDwsyJlLtr2zqknw4qAlrN7l9otdc0
+         qdOZqwqNZ8f6ef1HryOk9Z9va6H6hIWpwyhscYapg2bob4K9ZPYVwbc32zJGKVIy9f
+         gJSRdfQcF3kLoKT0hnZd4svwU97uOnfO2LRSNoKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 157/312] net: dsa: slave: fix of-node leak and phy priority
-Date:   Fri,  8 May 2020 14:32:28 +0200
-Message-Id: <20200508123135.498900615@linuxfoundation.org>
+Subject: [PATCH 4.4 154/312] net: phy: bcm7xxx: Fix shadow mode 2 disabling
+Date:   Fri,  8 May 2020 14:32:25 +0200
+Message-Id: <20200508123135.292978579@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,62 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 0d8f3c67151faaa80e332c254372dca58fb2a9d4 upstream.
+commit 50d899808d33a5b0aa82be23e824119944042689 upstream.
 
-Make sure to drop the reference taken by of_parse_phandle() before
-returning from dsa_slave_phy_setup().
+The clear and set masks in the call to phy_set_clr_bits() called from
+bcm7xxx_config_init() are inverted. We need to fix this by swapping the two
+arguments, that is, set 0 bits, but clear the shade mode 2 enable bit.
 
-Note that this also modifies the PHY priority so that any fixed-link
-node is only parsed when no phy-handle is given, which is in accordance
-with the common scheme for this.
-
-Fixes: 0d8bcdd383b8 ("net: dsa: allow for more complex PHY setups")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: b560a58c45c66 ("net: phy: add Broadcom BCM7xxx internal PHY driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/dsa/slave.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/phy/bcm7xxx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1031,7 +1031,7 @@ static int dsa_slave_phy_setup(struct ds
- 	p->phy_interface = mode;
+--- a/drivers/net/phy/bcm7xxx.c
++++ b/drivers/net/phy/bcm7xxx.c
+@@ -270,7 +270,7 @@ static int bcm7xxx_config_init(struct ph
+ 	phy_write(phydev, MII_BCM7XXX_100TX_FALSE_CAR, 0x7555);
  
- 	phy_dn = of_parse_phandle(port_dn, "phy-handle", 0);
--	if (of_phy_is_fixed_link(port_dn)) {
-+	if (!phy_dn && of_phy_is_fixed_link(port_dn)) {
- 		/* In the case of a fixed PHY, the DT node associated
- 		 * to the fixed PHY is the Port DT node
- 		 */
-@@ -1041,7 +1041,7 @@ static int dsa_slave_phy_setup(struct ds
- 			return ret;
- 		}
- 		phy_is_fixed = true;
--		phy_dn = port_dn;
-+		phy_dn = of_node_get(port_dn);
- 	}
+ 	/* reset shadow mode 2 */
+-	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, MII_BCM7XXX_SHD_MODE_2, 0);
++	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0, MII_BCM7XXX_SHD_MODE_2);
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (ds->drv->get_phy_flags)
-@@ -1060,6 +1060,7 @@ static int dsa_slave_phy_setup(struct ds
- 			ret = dsa_slave_phy_connect(p, slave_dev, phy_id);
- 			if (ret) {
- 				netdev_err(slave_dev, "failed to connect to phy%d: %d\n", phy_id, ret);
-+				of_node_put(phy_dn);
- 				return ret;
- 			}
- 		} else {
-@@ -1068,6 +1069,8 @@ static int dsa_slave_phy_setup(struct ds
- 						phy_flags,
- 						p->phy_interface);
- 		}
-+
-+		of_node_put(phy_dn);
- 	}
- 
- 	if (p->phy && phy_is_fixed)
 
 
