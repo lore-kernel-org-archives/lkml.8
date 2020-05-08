@@ -2,186 +2,118 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB33CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806C9C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A3C2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/C4GNJ3"
+	by mail.kernel.org (Postfix) with ESMTP id 63C74218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588959850;
+	bh=4UYeO0qyEtD4knQ5iIGMA1jOB8Onqgq8lqWUo7oBasw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JleRMsNDDyW1sZrN5bvJc+xNLo0wdzZGJEeVcnW8uUwu2w8VlV7k64IyqzW4yVmvz
+	 sI/7ZwjGm8klmDvR0kmpUGKMV6V3BZpYnR38YG0j4Y80aXDHghzJGV2nWGn0e97CUA
+	 Ipn6UimejM2Z//yaOUY8HMXKRBvzHTTRZU0UBqmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgEHRms (ORCPT
+        id S1727111AbgEHRoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726746AbgEHRms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:42:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7889EC061A0C;
-        Fri,  8 May 2020 10:42:47 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so1300372pfw.13;
-        Fri, 08 May 2020 10:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A5et1zZ9ENnf4f4ExVYxu4DsWfEOIYFmzS6JlsqdSxQ=;
-        b=l/C4GNJ3nNPV4iPlRSBjrRjkLIjMInNHVIvFMuosEmJQL8ArDg3Xy+Wf/tM9NudJMM
-         WMn5YWxTvEWsc4YFtbQhNc4w/elFLk3OLRoNsCAkFXaZ6k8Snpv0I6b1ImelpM6iNbGH
-         wP6xKd9+twYQfKkyigZEobng1qTEBEaVi9eEXuHfPP9DXCr6yo/WjVhQRu/DmyoYjWlM
-         ZzxUJfoy+z+/lStg1XKfWTYdTDZWNhYTE/H1jFs+1BlgkJoWfdYe+rm0869/RNgoRH6U
-         qmQKU69BfHtX5gVThGx/mfZCc8Fi3vjMPBBDj0/fJ22n/ERk3lf4g+UcDI0InwlmoJZ7
-         bOdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A5et1zZ9ENnf4f4ExVYxu4DsWfEOIYFmzS6JlsqdSxQ=;
-        b=IOXoQmBUaMvgoeOGS9tMfIxKRt17f5xgaiQ1k9KJ4n9E3jINqzcQQtRsGoBrNN7RJ/
-         kNHfnanQh5i2OQ4K9ihiqNS/wg4UjibjurXJV14gnyj4PWAPg3PGMrGfeAsvZqlFBPDa
-         gHv36HSdGsHwWHcMgUiol1PLvEM9PTQrF1ln8xgPujcazFxHxqQojZZwuPL59DSdPjlv
-         D8stM9cSnVY5rDkkW52QltEePS8F4EonjqlQZHsyTF6P2Dp7DpnFLCSg6HIXry+RHaHm
-         7XGajl5vQgl6c4Pz07TgecpvhfwnNnFmPf5L3dNat9Z1pZie2l2CeL8qaHq+s6vxPRvi
-         z8HA==
-X-Gm-Message-State: AGi0PubZv4/EbFDmBvuVlssEcztJu0p1ZZZ6aRdK/R1+QVC/sddSLZlI
-        E6VGqFdE/TGBscNew0Uk+lWVyzNN
-X-Google-Smtp-Source: APiQypL+WvgRAksIUXHpgaPkLk6pu44dhlSk1kZJviYXqVOsaWKakNitDPrszlfF0QG6Lx4DeP5d6w==
-X-Received: by 2002:a63:6f07:: with SMTP id k7mr3222068pgc.274.1588959766367;
-        Fri, 08 May 2020 10:42:46 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a19sm2476134pfd.91.2020.05.08.10.42.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 10:42:45 -0700 (PDT)
-Subject: Re: [PATCH net v2] net: bcmgenet: Clear ID_MODE_DIS in
- EXT_RGMII_OOB_CTRL when not needed
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stefan Wahren <wahrenst@gmx.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200225131159.26602-1-nsaenzjulienne@suse.de>
- <cf07fae3-bd8f-a645-0007-a317832c51c1@samsung.com>
- <CGME20200507100347eucas1p2bad4d58e4eb23e8abd22b43f872fc865@eucas1p2.samsung.com>
- <a3df217d-f35c-9d74-4069-d47dee89173e@samsung.com>
- <09f9fdff-867f-687f-e5af-a4f82a75e105@gmail.com>
- <bff2b7b6-22c8-7624-d31b-5b2a9425b11c@samsung.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <5f3d64c8-5b02-d697-c214-fb14bcff99ac@gmail.com>
-Date:   Fri, 8 May 2020 10:42:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Fri, 8 May 2020 13:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgEHRoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 13:44:09 -0400
+Received: from earth.universe (dyndsl-037-138-187-059.ewe-ip-backbone.de [37.138.187.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1FDB208CA;
+        Fri,  8 May 2020 17:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588959848;
+        bh=4UYeO0qyEtD4knQ5iIGMA1jOB8Onqgq8lqWUo7oBasw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O0OG+NGYN1jtt6d0KABKC2oxJnu/6Z0z/iodf/dOBShz9MCQ/DkhN51CBDecEx8/t
+         imK0yeelRD/3vED8wnlEo2bZ1e+ozX9QfmOOf6hydokt9ZQgsOZ9eITIlh4ywemrJH
+         h3ZRg5sa1cvw07kxjEBOX2mtKPv+9NVhz8cvOayI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 639E23C08C6; Fri,  8 May 2020 19:44:06 +0200 (CEST)
+Date:   Fri, 8 May 2020 19:44:06 +0200
+From:   "sre@kernel.org" <sre@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v12 09/11] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200508174406.s7ijef67roaoutkx@earth.universe>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+ <6d2f82459c5331fa7d27f41e6645a55cc1e44837.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+ <7a6c4afc9caf5437567c520d5f50ecf540d1c303.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <bff2b7b6-22c8-7624-d31b-5b2a9425b11c@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n2n64qp3gm6ara7d"
+Content-Disposition: inline
+In-Reply-To: <7a6c4afc9caf5437567c520d5f50ecf540d1c303.camel@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--n2n64qp3gm6ara7d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/2020 11:38 PM, Marek Szyprowski wrote:
-> Hi Florian,
-> 
-> On 07.05.2020 17:54, Florian Fainelli wrote:
->> On 5/7/2020 3:03 AM, Marek Szyprowski wrote:
->>> On 07.05.2020 11:46, Marek Szyprowski wrote:
->>>> On 25.02.2020 14:11, Nicolas Saenz Julienne wrote:
->>>>> Outdated Raspberry Pi 4 firmware might configure the external PHY as
->>>>> rgmii although the kernel currently sets it as rgmii-rxid. This makes
->>>>> connections unreliable as ID_MODE_DIS is left enabled. To avoid this,
->>>>> explicitly clear that bit whenever we don't need it.
->>>>>
->>>>> Fixes: da38802211cc ("net: bcmgenet: Add RGMII_RXID support")
->>>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> I've finally bisected the network issue I have on my RPi4 used for
->>>> testing mainline builds. The bisect pointed to this patch. Once it got
->>>> applied in v5.7-rc1, the networking is broken on my RPi4 in ARM32bit
->>>> mode and kernel compiled from bcm2835_defconfig. I'm using u-boot to
->>>> tftp zImage/dtb/initrd there. After reverting this patch network is
->>>> working fine again. The strange thing is that networking works fine if
->>>> kernel is compiled from multi_v7_defconfig but I don't see any obvious
->>>> difference there.
->>>>
->>>> I'm not sure if u-boot is responsible for this break, but kernel
->>>> definitely should be able to properly reset the hardware to the valid
->>>> state.
->>>>
->>>> ...
->>> Okay, I've played a bit more with this and found that enabling
->>> CONFIG_BROADCOM_PHY fixes this network issue. I wonder if Genet driver
->>> should simply select CONFIG_BROADCOM_PHY the same way as it selects
->>> CONFIG_BCM7XXX_PHY.
->> Historically GENET has been deployed with an internal PHY and this is
->> still 90% of the GENET users out there on classic Broadcom STB
->> platforms, not counting the 2711. For external PHYs, there is a variety
->> of options here, so selecting CONFIG_BROADCOM_PHY would be just one of
->> the possibilities, I would rather fix this with the bcm2835_defconfig
->> and multi_v7_defconfig update. Would that work for you?
-> 
-> Frankly I was surprised that the Genet driver successfully probed and 
-> registered eth0 even when no proper PHY driver was available in the 
-> system. It even reported the link status change, but then didn't 
-> transfer any packets. I expected at least a runtime check and error or 
-> warning if proper PHY is not available.
+Hi,
 
+On Fri, May 08, 2020 at 03:59:18PM +0000, Vaittinen, Matti wrote:
+> On Fri, 2020-05-08 at 18:50 +0300, Matti Vaittinen wrote:
+> > The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+> > secondary battery intended to be used in space-constraint equipment
+> > such
+> > as Low profile Notebook PC, Tablets and other applications. BD99954
+> > provides a Dual-source Battery Charger, two port BC1.2 detection and
+> > a
+> > Battery Monitor.
+> >=20
+> > Support ROHM BD99954 Charger IC.
+> >=20
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>=20
+> Huh. I shouldn't do work at the Friday evenings... It seems I did
+> accidentally send this patch twice. Hopefully it does not mess up the
+> series for you - I'd rather not resend this anymore... Please let me
+> know if I should do some corrective actions.
 
-> If this is really not possible, I would still advise to select proper potential PHY drivers, so users 
-> won't be confused.
+My mail system automatically drops mails with same Message-IDs :)
 
-It is possible to issue a warning if we find ourselves running on a
-BCM2711 SoC and we end-up using the Generic PHY driver, much like what
-r8169 does (for similar reasons):
+-- Sebastian
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=f32593773549
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=0c2006b29e5f62784c70209e71da7876267e0e2d
+--n2n64qp3gm6ara7d
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> The Genet driver already selects CONFIG_BCM7XXX_PHY. How common is it? 
+-----BEGIN PGP SIGNATURE-----
 
-GENET is a roughly 15 years old Ethernet controller that has evolved and
-is still being integrated into new chips, so we have probably hundreds
-of millions of devices out there.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl61mlMACgkQ2O7X88g7
++pqhvg//WO/Jg8dJ5AymeVFgGWRbClG2POO3n0bcU9wHFcA3nz/oMjprXvB+AKmx
++gQ8Ilr8a6TOaRSfiQbTmY5M4ylRicrTv5+0yNTT9t4Uw4W2xror4pmlhhxTyc9F
+MK/2RBQkLoGo8uOs9eLp2DMA8z6YVMdhT9Q1y5Me5jQloOHtA8Hn7pcxgVwGj2uT
+SEmwKpBP0uoMhhxVer8hoTG8Xv27elpx0mC/vmxfOSRbaWIs60xrk1f4X8N4P+nn
+7O2p+PT4W7LMOcEAcnSFD/SJe2Adtb46V6F646DhZFCG2w6+sllBt7yN1uVD9TtU
+z0D8Y846dBtAcJ+XczzFwInssYrTr98QxEXBFRtW36IcmoSdjaANs3KMfyqupG90
+wijpueDSN7TlQ4G4aO0z9f24p5fv08TkzrY1EyHG3w9M4o4ncQV0OjWN50TpRrRY
+hNSa4e0/6kUCM2ium62IYqd7MQmeBmkFJnh0Y3XEB6kSlk/YVyRdsms9QupE3Pdn
+MOpEQJvwhFnFuUzUPiRR/IpOb1vqLUN31ankZNDza5AeK/g78iMQ9jEoVxNzAQIK
+F+0bm0dTrab6kU/8DA0X5RwPnjF730SsK2puRSgeP4oy0bk8k2Egnsq7m37ZHQY/
+jr08qOAdb1XgtpeCPKok5HpFHKjoWbK3vv7gtXP5hjTOzQPkVIA=
+=qAKx
+-----END PGP SIGNATURE-----
 
-> Would it really hurt do the same for CONFIG_BROADCOM_PHY? I expect that 
-> 2711 will be quite popular SoC with it soon.
-
-My problem with a select BROADCOM_PHY is that it will make it impossible
-for me to deselect the Broadcom PHY driver. We have probably about a
-hundred or so reference boards with a variety of external PHYs some
-Broadcom and we have managed to get them all working out of the box with
-the Generic PHY driver. If I cannot deselect the Broadcom PHY driver
-there will be RGMII regressions (much like the one you reported) which I
-really have no interest in solving when it can be avoided.
-
-Does the following work for you:
-
-diff --git a/drivers/net/ethernet/broadcom/Kconfig
-b/drivers/net/ethernet/broadcom/Kconfig
-index 53055ce5dfd6..8a70b9152f7c 100644
---- a/drivers/net/ethernet/broadcom/Kconfig
-+++ b/drivers/net/ethernet/broadcom/Kconfig
-@@ -69,6 +69,7 @@ config BCMGENET
-        select BCM7XXX_PHY
-        select MDIO_BCM_UNIMAC
-        select DIMLIB
-+       imply BROADCOM_PHY if ARCH_BCM2835
-        help
-          This driver supports the built-in Ethernet MACs found in the
-          Broadcom BCM7xxx Set Top Box family chipset.
-
--- 
-Florian
+--n2n64qp3gm6ara7d--
