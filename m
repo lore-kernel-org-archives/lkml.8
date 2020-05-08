@@ -2,112 +2,104 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BD8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1594C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF5924973
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ipvEwuKk"
+	by mail.kernel.org (Postfix) with ESMTP id DC61E24973
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgEHNGw (ORCPT
+        id S1730627AbgEHNGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:06:52 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:19785 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgEHNGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:06:49 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49JVw708X9z5r;
-        Fri,  8 May 2020 15:06:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588943207; bh=uppDoyhwlbwoyrRyepfixLOhrOgshs3uGHxuVJsNsE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ipvEwuKk28Ab/CTNLUDVA6Vz6zgEN5GKDk6xoLAUtz3jtRh8yvdWBqsHpesbqCbsp
-         n1GVnZ+jRZstbrJJP+hnqPbsmKCTO+fqSgGHeyMvGxd3UBQxYOca1YhOodHadvLQaQ
-         4ZZqkOMUneH6YYbLrilKwQRNpw7wm+hJmryvwn5sGHIT/MExBe5s2Utxze0kqSxGkM
-         eZJxlESvUO/912pO/5vsYPebYFd4/jal15oTZ4rgtbb62TM9H0Jdxn/uzRFraDHNG3
-         Jf+Ie7ilo4znZGEZTPx/t9MYXXb555a51vIWIeVmgUSrLVK1HJgqufr+NPXMiF4xVb
-         vrYOGo8zXNjsQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 8 May 2020 15:06:43 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cb710: Replace zero-length array with flexible-array
-Message-ID: <20200508130643.GA9591@qmqm.qmqm.pl>
-References: <20200507185224.GA14209@embeddedor>
+        Fri, 8 May 2020 09:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730218AbgEHNFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:05:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2071C05BD43;
+        Fri,  8 May 2020 06:05:34 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jX2gw-0007ok-PP; Fri, 08 May 2020 15:05:26 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7BDDE1C086C;
+        Fri,  8 May 2020 15:05:09 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:05:09 -0000
+From:   "tip-bot2 for Zou Wei" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf report: Fix warning assignment of 0/1 to bool variable
+Cc:     Hulk Robot <hulkci@huawei.com>, Zou Wei <zou_wei@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
+References: <1587904683-3510-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200507185224.GA14209@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158894310940.8414.67849098696704188.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:52:24PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  include/linux/cb710.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/cb710.h b/include/linux/cb710.h
-> index 60de3fedd3a7..405657a9a0d5 100644
-> --- a/include/linux/cb710.h
-> +++ b/include/linux/cb710.h
-> @@ -36,7 +36,7 @@ struct cb710_chip {
->  	unsigned		slot_mask;
->  	unsigned		slots;
->  	spinlock_t		irq_lock;
-> -	struct cb710_slot	slot[0];
-> +	struct cb710_slot	slot[];
->  };
->  
->  /* NOTE: cb710_chip.slots is modified only during device init/exit and
-> 
+The following commit has been merged into the perf/core branch of tip:
 
-Acked-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+Commit-ID:     6fa9c3e779b89612c56f8ee0096b2252d906357a
+Gitweb:        https://git.kernel.org/tip/6fa9c3e779b89612c56f8ee0096b2252d906357a
+Author:        Zou Wei <zou_wei@huawei.com>
+AuthorDate:    Sun, 26 Apr 2020 20:38:03 +08:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 30 Apr 2020 10:48:33 -03:00
+
+perf report: Fix warning assignment of 0/1 to bool variable
+
+Fixes coccicheck warning:
+
+  tools/perf/builtin-report.c:1403:2-34: WARNING: Assignment of 0/1 to bool variable
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/1587904683-3510-1-git-send-email-zou_wei@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-report.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 0c32767..7da1342 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1413,7 +1413,7 @@ repeat:
+ 	}
+ 	if (branch_call_mode) {
+ 		callchain_param.key = CCKEY_ADDRESS;
+-		callchain_param.branch_callstack = 1;
++		callchain_param.branch_callstack = true;
+ 		symbol_conf.use_callchain = true;
+ 		callchain_register_param(&callchain_param);
+ 		if (sort_order == NULL)
