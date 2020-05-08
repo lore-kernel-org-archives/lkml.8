@@ -2,152 +2,220 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389A2C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A65C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B41D21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19721206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X3fKeXz0"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="dk7U8xDg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgEHR22 (ORCPT
+        id S1727887AbgEHR26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgEHR22 (ORCPT
+        Fri, 8 May 2020 13:28:58 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17722 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726825AbgEHR25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:28:28 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8CBC061A0C;
-        Fri,  8 May 2020 10:28:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=g4OHAWvJdqq6ZyHT3haATGWFoBehw1iX6Se1BPujZ5g=; b=X3fKeXz0aEWgnYZ/Wm4BaBo1tL
-        moKbBLt4taCmsmtYyM2Yx6r+CjDsEWHxqyqVpRKoS5tKH/n/krHkdYmb2H1pnfFS6y4W64zDg/bBK
-        rrndiu9vYtN7Vm4wsGustbbx77srZUdf41YupjbgdP3P4GNE8woSDcJzU2TE1KyHnPy8I4sVyHrk9
-        aZp2bg4CmY/ibFRkPoTOELO0MD1sp3SR7vq2xUXk7d7l1PfcpyVv6Zt+jy4G4Y7ndD7mwCMp6ohUh
-        qdC2jo5Mzvnb84/90rUiS0cD4JnrjJPhKyup2/69WOMWtTRlSlMI40IkOBi7YDEemoeBhDcCLJwEY
-        LXL5bvFw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX6nN-0002cH-NI; Fri, 08 May 2020 17:28:21 +0000
-Subject: Re: mmotm 2020-05-05-15-28 uploaded (objtool warning)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20200505222922.jajHT3b4j%akpm@linux-foundation.org>
- <36dc367a-f647-4ee8-a327-d1c3457a7940@infradead.org>
- <20200508103830.GZ5298@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <73dd7a8c-87a4-695d-6f3b-ddde337c0747@infradead.org>
-Date:   Fri, 8 May 2020 10:28:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 13:28:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1588958908; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=GAZYMCwEX6Ta3VOF8gLOTnkXSnfC9NYk5BnySQRKU1221ge5QEim75BZLU3ZQlIcfCRUIkfYr/ZSuwWtJlT0b1WWs4Iykx36Do2MkZH6vvv3/I7rhbKcLJ9m2PKKXHcHtTSdNp0LwsnT/R0XhTSi0uVViOKW2gQ5NbFxKbqyGDA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1588958908; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=4lyVxh+3G0rTYVCcipn3Y5SgXllyr4eDc6eiR7gUy7g=; 
+        b=NdptlRstKDYgbhQSotyvFFDVpbMCqx6fBRDmz9F8xaGI4xmNdYcBqZYDKC3VNQDjdYLUAj/QFdqzdi9nRwUq2ZDDbDxwDlM+PsVqR1zyL/iqnuAhPin89qG/gMPCITB+VwIkHZs/Ic9ozEnESUJeVaP6BS0RhVQnH4y6F2GMm3A=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588958908;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=4lyVxh+3G0rTYVCcipn3Y5SgXllyr4eDc6eiR7gUy7g=;
+        b=dk7U8xDgEzi4JR9eNw+mgnzl6aQYbzn1y9MUfy8ISYV3EecZ9ataENObc3nbD7xO
+        UyNI7cVL5LdtycpFL7mc2JjaQqqzuvF2PF5i+oyCcTTBK/oTT2B6/i5xjkBLAiKURnw
+        UA/R3SSbPYU1RYtAFbEjPS5EaDAYhbWZCKCA4kvw=
+Received: from [127.0.0.1] (114.87.80.20 [114.87.80.20]) by mx.zoho.com.cn
+        with SMTPS id 1588958906815418.26657766614665; Sat, 9 May 2020 01:28:26 +0800 (CST)
+Date:   Sat, 09 May 2020 01:28:24 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     maz@kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] PCI: Add Loongson PCI Controller support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200508171730.GA77036@bjorn-Precision-5520>
+References: <20200508171730.GA77036@bjorn-Precision-5520>
+Message-ID: <2C23FC3E-6BBF-47EB-8EE6-89EAC5A28104@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508103830.GZ5298@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 3:38 AM, Peter Zijlstra wrote:
-> On Tue, May 05, 2020 at 10:40:43PM -0700, Randy Dunlap wrote:
->> On 5/5/20 3:29 PM, akpm@linux-foundation.org wrote:
->>> The mm-of-the-moment snapshot 2020-05-05-15-28 has been uploaded to
->>>
->>>    http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> mmotm-readme.txt says
->>>
->>> README for mm-of-the-moment:
->>>
->>> http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>> more than once a week.
->>>
->>
->>
->> on x86_64:
->>
->> arch/x86/hyperv/hv_apic.o: warning: objtool: hv_apic_write()+0x25: alternative modifies stack
-> 
-> Wheee... this seems to have cured it for me.
-> 
-> ---
-> Subject: objtool: Allow no-op CFI ops in alternatives
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri May 8 12:34:33 CEST 2020
-> 
-> Randy reported a false-positive: "alternative modifies stack".
-> 
-> What happens is that:
-> 
-> 	alternative_io("movl %0, %P1", "xchgl %0, %P1", X86_BUG_11AP,
->  13d:   89 9d 00 d0 7f ff       mov    %ebx,-0x803000(%rbp)
-> 
-> decodes to an instruction with CFI-ops because it modifies RBP.
-> However, due to this being a !frame-pointer build, that should not in
-> fact change the CFI state.
-> 
-> So instead of dis-allowing any CFI-op, verify the op would've actually
-> changed the CFI state.
-> 
-> Fixes: 7117f16bf460 ("objtool: Fix ORC vs alternatives")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  tools/objtool/check.c |   11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2078,17 +2078,18 @@ static int handle_insn_ops(struct instru
->  	struct stack_op *op;
->  
->  	list_for_each_entry(op, &insn->stack_ops, list) {
-> +		struct cfi_state old_cfi = state->cfi;
->  		int res;
->  
-> -		if (insn->alt_group) {
-> -			WARN_FUNC("alternative modifies stack", insn->sec, insn->offset);
-> -			return -1;
-> -		}
-> -
->  		res = update_cfi_state(insn, &state->cfi, op);
->  		if (res)
->  			return res;
->  
-> +		if (insn->alt_group && memcmp(&state->cfi, &old_cfi, sizeof(struct cfi_state))) {
-> +			WARN_FUNC("alternative modifies stack", insn->sec, insn->offset);
-> +			return -1;
-> +		}
-> +
->  		if (op->dest.type == OP_DEST_PUSHF) {
->  			if (!state->uaccess_stack) {
->  				state->uaccess_stack = 1;
-> 
 
 
--- 
-~Randy
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=889=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:=
+17:30, Bjorn Helgaas <helgaas@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On Fri, May 08, 2020 at 07:34:02PM +0800, Jiaxun Yang wrote:
+>> This controller can be found on Loongson-2K SoC, Loongson-3
+>> systems with RS780E/LS7A PCH=2E
+>>=20
+>> The RS780E part of code was previously located at
+>> arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
+>> driver implementation=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>
+>> +static void system_bus_quirk(struct pci_dev *pdev)
+>> +{
+>> +	u16 tmp;
+>> +
+>> +	/*=20
+>> +	 * System buses on Loongson system contain garbage in BARs
+>> +	 * but their decoding need to be enabled to ensure devices
+>> +	 * under system buses are reachable=2E In most cases it should
+>> +	 * be done by the firmware=2E
+>
+>This isn't a very satisfying explanation because devices that have
+>decoding enabled can interfere with other devices in the system, and I
+>can't tell whether that's a problem here=2E
+>
+>What happens when you turn on MEM/IO decoding below?  Does the device
+>decode any address space?  How do we know what it is?  Is it related
+>to the BAR contents?
+>
+>I'm a little dubious about the need for the PCI_COMMAND write because
+>the previous version didn't do it (since it incorrectly wrote to
+>PCI_STATUS), and I assume that version worked=2E
+
+Hi,
+Sorry, but that's all I can tell from the chips manual as I'm not a employ=
+ee
+of the vendor=2E
+
+My assumption is these BAR contains the address of those system components
+that already configured by firmware and we shouldn't touch it=2E
+
+In fact according to my tests if we let Kernel probe these BAR then the
+system will hang immediately=2E
+
+Chip manual suggested OS to ensure decoding is enabled
+so I'm doing like this=2E But without this system can also work=2E
+
+Do you think I should drop it until figure out what was it actually doing?
+
+>
+>> +	pdev->mmio_always_on =3D 1;
+>> +	pdev->non_compliant_bars =3D 1;
+>> +	/* Enable MEM & IO Decoding */
+>> +	pci_read_config_word(pdev, PCI_COMMAND, &tmp);
+>> +	tmp |=3D PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
+>> +	pci_write_config_word(pdev, PCI_COMMAND, tmp);
+>
+>
+>> +}
+>> +
+>
+>Omit this blank line=2E
+
+Ack
+
+>
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>> +			DEV_LS2K_APB, system_bus_quirk);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>> +			DEV_LS7A_CONF, system_bus_quirk);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>> +			DEV_LS7A_LPC, system_bus_quirk);
+>> +
+>> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+>> +{
+>> +	struct pci_bus *bus =3D dev->bus;
+>> +	struct pci_dev *bridge;
+>> +	static const struct pci_device_id bridge_devids[] =3D {
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+>> +		{ 0, },
+>> +	};
+>> +
+>> +
+>
+>Remove one of these blank lines=2E
+
+Ack
+
+>
+>> +	/* look for the matching bridge */
+>> +	while (!pci_is_root_bus(bus)) {
+>> +		bridge =3D bus->self;
+>> +		bus =3D bus->parent;
+>> +		/*
+>> +		 * Some Loongson PCIe ports have a h/w limitation of
+>> +		 * 256 bytes maximum read request size=2E They can't handle
+>> +		 * anything larger than this=2E So force this limit on
+>> +		 * any devices attached under these ports=2E
+>> +		 */
+>> +		if (pci_match_id(bridge_devids, bridge)) {
+>> +			if (pcie_get_readrq(dev) > 256) {
+>> +				pci_info(dev, "limiting MRRS to 256\n");
+>> +				pcie_set_readrq(dev, 256);
+>> +			}
+>> +			break;
+>> +		}
+>> +	}
+>> +}
+>> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+>
+>> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int d=
+evfn,
+>> +			       int where)
+>> +{
+>> +	unsigned char busnum =3D bus->number;
+>> +	struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
+>> +	struct loongson_pci *priv =3D  pci_host_bridge_priv(bridge);
+>> +
+>> +	/*
+>> +	 * Do not read more than one device on the bus other than
+>> +	 * the host bridge=2E
+>
+>s/host bridge/root bus/ ?
+>
+>IIUC, the test below assumes the root bus is bus 0, which is not
+>necessarily the case=2E  Many other =2E*_map_bus() implementations have
+>similar tests for devices on the root bus:
+
+Ack
+
+>
+>  al_pcie_map_bus(=2E=2E=2E)
+>  {
+>    if (bus->number =3D=3D cfg->busr=2Estart) {
+>
+>> +	if (priv->flags & FLAG_DEV_FIX && bus->primary !=3D 0 &&
+>> +		PCI_SLOT(devfn) > 0)
+>> +		return NULL;
+
+Thanks!
+
+--=20
+Jiaxun Yang
