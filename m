@@ -2,176 +2,96 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE74C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD85C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF51C24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588963018;
-	bh=D17AFI7pYbsvU9GFb/dq0mZOFq039Ptb04fuFyUz4B8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=npl7vesaHPZXhs6hJ60s7ZA9udEtmBxYqvtvqbCxYm0WuFi9uAIl9cONBuqY0AIrS
-	 pnyRqVIPrnabGb2HY+oX7jL3nkRdkllBDEDPtyx5fBwAIoS97gfF3YLGlhI3Foi0Rd
-	 LvAr+X4drsVUdYwBBDMBbnVcNk6a6VkpTeEjB/oc=
+	by mail.kernel.org (Postfix) with ESMTP id 96D562173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WiGbvW0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgEHSg6 (ORCPT
+        id S1727095AbgEHSjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHSg5 (ORCPT
+        Fri, 8 May 2020 14:39:07 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50359 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726756AbgEHSjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:36:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840EFC061A0C;
-        Fri,  8 May 2020 11:36:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x10so1112721plr.4;
-        Fri, 08 May 2020 11:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DI4jr073qlq2kMXmJOvGcOhiGeUasYxQR1ZwT0O6BJc=;
-        b=e9phhNfqFy4SUFWgk2EkceTCIXKBpoo+T6gbLnaezV4G1B1/6lGhJ9ZcLZnuIelgrn
-         Ql4cXp0/PLMBEjmnbd2PNYpKCM9yzKGC3CymbAKLYUct+zd+y/b8iq4Ky/HQZw9RQrIY
-         xsTziG+UJ7AhftkBwChU8kc9ifBpNVlPOuwtpKv1eySwSaFBPFq5dJ4usA5J2F/H+v6m
-         vktpsEvHDUu22Sy7Bu5cLx4TwMhNuNvPG0WBDsdtsVacNNxZmnxGqbJerhxm+TOunoDS
-         2wKFP/FJdInr5l49rJI1sh1qd9ISmsRyxCk2BCLIMDZe6Ql6K/PqU2ITpyvLxqk5XBUL
-         Ta6Q==
+        Fri, 8 May 2020 14:39:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588963146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QXBRgjOwY+dvVSQ4b8KNQAdFl7K/2dDkBF+n7DPUAd0=;
+        b=WiGbvW0TvJ6dluOdscrBrtG2f3+Riy0AQPpI/7iX8F16sItwh2aGu9eeZKCQSEv0R8jz7P
+        347IpP9eKcj2Bo3sBlJbnd87H47p/tQx7wdQKe2ec+BGA4zHAGJzMgdb21A2VNFRDqcZyX
+        RUs8kXC+2oWv5mFWDJJWO8aJ3m3fP7I=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-EW0JgO7pP1WJc6dJSdfcYw-1; Fri, 08 May 2020 14:39:04 -0400
+X-MC-Unique: EW0JgO7pP1WJc6dJSdfcYw-1
+Received: by mail-qt1-f197.google.com with SMTP id n22so2913851qtp.15
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:39:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=DI4jr073qlq2kMXmJOvGcOhiGeUasYxQR1ZwT0O6BJc=;
-        b=f6isCfWSyi9Kd4YVT5ux2+p7P+3FTj0DMqMYbIfio4asllNRa7tcKjvzXx+U8/iaKY
-         yAsaoUgUIeSo0+ifG0w+yJ9+PtolSMjVhPzy3+kx1SIaCutexxjVvT/ONVznlEhNiRjq
-         OFDbAbMYc8vnmyfV3Jxrq8X8myjfV3FMF7op1kiV225oSV3UhKHzzlq+eoNavbou+0LJ
-         BSNm86J1MdFTjzqPKNtE0wmC0FAcfkKQIiH6txVgiHyCw/IdqKtIgpUj9UZwrMXoTuxb
-         pIDX06UtRp+WBDj0TQaTWxfGMC4A6pHuAL8AqCJihhTDrO1NTjqlwmfZgKkmoxUann1t
-         AguA==
-X-Gm-Message-State: AGi0PuYN7iVy8wRS+hAfzL5a7qJeLo8K2D5gmUnWm5gzf48+ecil3FKx
-        gZPv32iOO6277oJUUFJcWuw=
-X-Google-Smtp-Source: APiQypKgW5Qc0p3xd2HpZcE+oAgc4345/KXJgo5T1enrKQgtp+/zxkhsCUo1kw0ffKngWDoRgVGTKw==
-X-Received: by 2002:a17:902:4c:: with SMTP id 70mr3617494pla.336.1588963016739;
-        Fri, 08 May 2020 11:36:56 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id mn1sm2880315pjb.24.2020.05.08.11.36.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QXBRgjOwY+dvVSQ4b8KNQAdFl7K/2dDkBF+n7DPUAd0=;
+        b=fTqS7AxLG9CJ0oQnbz2xp5hjfEf/x9NfGntuDR2fONMdZk0CKJA2nGVVcIStwW7TFJ
+         Sy8NWbhd51s5jDzgFtbwBEG1+XHXEhsT7K0/U+0WfoGTKcBggkpsx3/sW28WWC6VZzRG
+         cl3zMFiBiuBIk/J2JWyCP439JGekOQteoWB7pa84EmclOWyaVKrRYGx3ZtiUi0J8aRCt
+         jERUC/eVR/yOVrnzZCUKlncMuJ8jjrDlEefKqqUpN2Ih3ZzLpmwRhz/9xTRLTZQOcs06
+         M8lNTCVechCyIk2sDuRVqkMAoPVAWGxeGTqJ7+l5rbH4HluWzCDaOX9zNo8YdLEZgRBZ
+         4kig==
+X-Gm-Message-State: AGi0PuYgkYfX2rXSjuUwzjX0Rndi+01fGQFRmWIUMiSB5vxEmc8PdkCe
+        FF+N8X945PbWxIaTdanua8ZloA8yPY10XATLXIQzlx9idKxo8QYjNRu0QQloZMKGMQOfUbXCpIV
+        omn8v6hmZmKA20IWkc0gk9DV1
+X-Received: by 2002:a37:8186:: with SMTP id c128mr4175549qkd.455.1588963143839;
+        Fri, 08 May 2020 11:39:03 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLAr9Bm1koeUWkBXdivXMQD24n6jI17gBz0LpLaBEJYM0Mlc3/QNdh4XtLoIYudJtbnYdNUSQ==
+X-Received: by 2002:a37:8186:: with SMTP id c128mr4175527qkd.455.1588963143546;
+        Fri, 08 May 2020 11:39:03 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id i4sm1719360qkh.66.2020.05.08.11.39.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 11:36:55 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:36:53 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        Christian Brauner <christian@brauner.io>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
-Message-ID: <20200508183653.GB125527@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-6-minchan@kernel.org>
- <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz>
- <20200311004251.GB87930@google.com>
+        Fri, 08 May 2020 11:39:02 -0700 (PDT)
+Date:   Fri, 8 May 2020 14:39:01 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, jgg@ziepe.ca
+Subject: Re: [PATCH v2 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200508183901.GC228260@xz-x1>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871568480.15589.17339878308143043906.stgit@gimli.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200311004251.GB87930@google.com>
+In-Reply-To: <158871568480.15589.17339878308143043906.stgit@gimli.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 05:42:51PM -0700, Minchan Kim wrote:
-> On Fri, Mar 06, 2020 at 12:14:19PM +0100, Vlastimil Babka wrote:
-> > On 3/2/20 8:36 PM, Minchan Kim wrote:
-> > > There is a demand[1] to support pid as well pidfd for process_madvise
-> > > to reduce unnecessary syscall to get pidfd if the user has control of
-> > > the target process(ie, they could guarantee the process is not gone
-> > > or pid is not reused).
-> > > 
-> > > This patch aims for supporting both options like waitid(2). So, the
-> > > syscall is currently,
-> > > 
-> > > 	int process_madvise(int which, pid_t pid, void *addr,
-> > > 		size_t length, int advise, unsigned long flag);
-> > 
-> > This is again halfway between kernel and userspace description, so if we stick
-> > to userspace then it's:
-> > 
-> >  	int process_madvise(idtype_t idtype, id_t id, void *addr,
-> >  		size_t length, int advice, unsigned long flags);
+On Tue, May 05, 2020 at 03:54:44PM -0600, Alex Williamson wrote:
+> With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> the range being faulted into the vma.  Add support to manually provide
+> that, in the same way as done on KVM with hva_to_pfn_remapped().
 > 
-> Yub.
-> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-Hi Andrew,
+And since after the discussion...
 
-Per Vlastimil's request, I changed "which and advise" with "idtype and
-advice" in function prototype of description.
-Could you replace the part in the description? Code is never changed.
+Reviewed-by: Peter Xu <peterx@redhat.com>
 
-Thanks.
+Thanks,
 
-From f11cfd023746ae67b89f2d84d960706ba6c5c911 Mon Sep 17 00:00:00 2001
-From: Minchan Kim <minchan@kernel.org>
-Date: Wed, 6 May 2020 13:54:40 +0000
-Subject: [PATCH] mm/madvise: support both pid and pidfd for process_madvise
+-- 
+Peter Xu
 
-There is a demand[1] to support pid as well pidfd for process_madvise to
-reduce unnecessary syscall to get pidfd if the user has control of the
-target process(ie, they could guarantee the process is not gone or pid is
-not reused).
-
-This patch aims for supporting both options like waitid(2).  So, the
-syscall is currently,
-
-        int process_madvise(idtype_t idtype, id_t id, void *addr,
-                size_t length, int advice, unsigned long flags);
-
-@which is actually idtype_t for userspace libray and currently, it
-supports P_PID and P_PIDFD.
-
-[1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-
-Link: http://lkml.kernel.org/r/20200302193630.68771-6-minchan@kernel.org
-Signed-off-by: Minchan Kim <minchan@kernel.org>
-Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Brauner <christian@brauner.io>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Brian Geffon <bgeffon@google.com>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: John Dias <joaodias@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oleksandr Natalenko <oleksandr@redhat.com>
-Cc: Sandeep Patil <sspatil@google.com>
-Cc: SeongJae Park <sj38.park@gmail.com>
-Cc: SeongJae Park <sjpark@amazon.de>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Sonny Rao <sonnyrao@google.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: <linux-man@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
