@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A73C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62849C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E4F206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36234206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943975;
-	bh=UvijrepgSM9bTTBiI9Swq+Upxzh2Ou3oIRDUNq7ka3E=;
+	s=default; t=1588943979;
+	bh=yShE1avA9kFy3YW+Z3J90wWk1PSiq10EV6ZLta9UE6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRXNQGzSgugCEuF3jMGFaZMUG8d0SBBs0/T/uTrv9gaKnKit054FjAPvcMdoZb1+8
-	 5RefyPZz0b9bM0IhHE/MnSaKAIvmhep2PMSUVYzqS1WyaD1a+hnDjp3wtm4Z67C+7K
-	 uR1XmVjiCtC2oQBOlrlaz3/9JRn7LbU6a3q9bBJE=
+	b=PYHBAWqvSPSeqOMJAO4SUJghTApXoO5FzRPBmUx9HF5EHwpn6i/vHEaCLsk8AuG8h
+	 vWXfwBuvybrd8+Ljfc4M8a7cALpwUmVlhSH2C0iBB3t8oOQwHMzUaoEYEnzj0F2eAW
+	 7goWHiWQIsKh6UcPy214LwWNt/GgtHex4qY+Ef5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgEHMlt (ORCPT
+        id S1729970AbgEHNTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbgEHMlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:45 -0400
+        id S1728867AbgEHMlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9229E21835;
-        Fri,  8 May 2020 12:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD7124970;
+        Fri,  8 May 2020 12:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941705;
-        bh=UvijrepgSM9bTTBiI9Swq+Upxzh2Ou3oIRDUNq7ka3E=;
+        s=default; t=1588941709;
+        bh=yShE1avA9kFy3YW+Z3J90wWk1PSiq10EV6ZLta9UE6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gbQzel4AxT2OmXaGiuaMniVav1rUJZVHU5BUksLHHz4L8qVqosp+C0PCxt6ugMPOK
-         /Loe2iE9wy8QEoa11ytuv2W+G89RMtcfXyXZRV8duLgyX/96opB6+rY0i7MiBuqBXc
-         xyc3mv9cmQxT9BXykDmTKNoB75HWxDwGUHcEJ3tk=
+        b=HaI9vS1EUFYgQ2CEJy6R/gu281eC7PGMNc3LkiX8MiQdqy5hUDTCN31Wkb9vx9y4I
+         /2dmzzgdzHN9dK9nlSzBsH/E4oZlkP4jUzf+zwMlaGSZl15hB7QQkoEbpbG8DPNGlN
+         tw/8SKtATJWto4sLXhpJgSr4y65Gd9GNte6PLmyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
+        stable@vger.kernel.org, Chuanxiao Dong <chuanxiao.dong@intel.com>,
+        Pawel Wodkowski <pawelx.wodkowski@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.4 138/312] mmc: sdhci: restore behavior when setting VDD via external regulator
-Date:   Fri,  8 May 2020 14:32:09 +0200
-Message-Id: <20200508123134.198259687@linuxfoundation.org>
+Subject: [PATCH 4.4 140/312] mmc: debugfs: correct wrong voltage value
+Date:   Fri,  8 May 2020 14:32:11 +0200
+Message-Id: <20200508123134.331025180@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,79 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <jszhang@marvell.com>
+From: Chuanxiao Dong <chuanxiao.dong@intel.com>
 
-commit 918f4cbd4340ddd1eb389cd8efa3b07ac74ec4c0 upstream.
+commit 0036e74686344f1051afc3107740140abfd03616 upstream.
 
-After commit 52221610dd84 ("mmc: sdhci: Improve external VDD regulator
-support"), for the VDD is supplied via external regulators, we ignore
-the code to convert a VDD voltage request into one of the standard
-SDHCI voltage levels, then program it in the SDHCI_POWER_CONTROL. This
-brings two issues:
+Correct the wrong voltage value shown in debugfs for mmc/sd/sdio.
 
-1. SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON quirk isn't handled properly any
-more.
-
-2. What's more, once SDHCI_POWER_ON bit is set, some controllers such
-as the sdhci-pxav3 used in marvell berlin SoCs require the voltage
-levels programming in the SDHCI_POWER_CONTROL register, even the VDD
-is supplied by external regulator. So the host in marvell berlin SoCs
-still works fine after the commit. However, commit 3cbc6123a93d ("mmc:
-sdhci: Set SDHCI_POWER_ON with external vmmc") sets the SDHCI_POWER_ON
-bit, this would make the host in marvell berlin SoCs won't work any
-more with external vmmc.
-
-This patch restores the behavior when setting VDD through external
-regulator by moving the call of mmc_regulator_set_ocr() to the end
-of sdhci_set_power() function.
-
-After this patch, the sdcard on Marvell Berlin SoC boards work again.
-
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-Fixes: 52221610dd84 ("mmc: sdhci: Improve external VDD ...")
-Reviewed-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Signed-off-by: Chuanxiao Dong <chuanxiao.dong@intel.com>
+Signed-off-by: Pawel Wodkowski <pawelx.wodkowski@intel.com>
+Fixes: 42cd95a0603e ("mmc: core: debugfs: Add signal_voltage to ios dump")
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci.c |   19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/mmc/core/debugfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1290,19 +1290,6 @@ static void sdhci_set_power(struct sdhci
- 	struct mmc_host *mmc = host->mmc;
- 	u8 pwr = 0;
- 
--	if (!IS_ERR(mmc->supply.vmmc)) {
--		spin_unlock_irq(&host->lock);
--		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
--		spin_lock_irq(&host->lock);
--
--		if (mode != MMC_POWER_OFF)
--			sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
--		else
--			sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
--
--		return;
--	}
--
- 	if (mode != MMC_POWER_OFF) {
- 		switch (1 << vdd) {
- 		case MMC_VDD_165_195:
-@@ -1363,6 +1350,12 @@ static void sdhci_set_power(struct sdhci
- 		if (host->quirks & SDHCI_QUIRK_DELAY_AFTER_POWER)
- 			mdelay(10);
+--- a/drivers/mmc/core/debugfs.c
++++ b/drivers/mmc/core/debugfs.c
+@@ -170,7 +170,7 @@ static int mmc_ios_show(struct seq_file
+ 		str = "invalid";
+ 		break;
  	}
-+
-+	if (!IS_ERR(mmc->supply.vmmc)) {
-+		spin_unlock_irq(&host->lock);
-+		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
-+		spin_lock_irq(&host->lock);
-+	}
- }
+-	seq_printf(s, "signal voltage:\t%u (%s)\n", ios->chip_select, str);
++	seq_printf(s, "signal voltage:\t%u (%s)\n", ios->signal_voltage, str);
  
- /*****************************************************************************\
+ 	switch (ios->drv_type) {
+ 	case MMC_SET_DRIVER_TYPE_A:
 
 
