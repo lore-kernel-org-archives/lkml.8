@@ -2,141 +2,114 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC662C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB748C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9316A21841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B711C2184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QwAYtLtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgEHPrL (ORCPT
+        id S1728359AbgEHPrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:47:11 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35070 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbgEHPrJ (ORCPT
+        Fri, 8 May 2020 11:47:18 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41223 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727051AbgEHPrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:47:09 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x73so1791408lfa.2;
-        Fri, 08 May 2020 08:47:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KprKeb/h9kjW27OoSf2ZZ4Ya0v6rQT0g3k0Y7DumGOM=;
-        b=W8JBZwKyvLMp+6zKoGup3yCa2Rn+91vUGmkVfdLrAtu7xhv0/CJhCPVYOR05at8pT7
-         4KN5kCjl8CSWAJeOBN/HoFMIOXzVtJJvf1MpUt7Du+SmpRpUAEIuB1A1QXC8p+Ru70o8
-         zH4XB1mqGr6Rf0rZoviQaabQDRsWlVIUjtYMaKXmxwfRsoa6WX1ojt8TWIMUH/7Ol3Ev
-         AiT3hfSH7b7e0nt3E8bVUU7CD2KmKmtpAjA5LCT+2MDdI9i7XsVr1xALwnR+ixaMSkJE
-         Ufl/R7DVuYdo134JxkRc9QNrsNiImR/64HPvBUZqcEW/h1jbYKwV2Cd/MYkSAct2pMV+
-         jpUg==
-X-Gm-Message-State: AOAM532dOb4EN4AabgnOZow190MxVMStvYaymbhDVad6gnxM/VBJih6g
-        /cKXYzrdR2zXwMpDFQDUIao=
-X-Google-Smtp-Source: ABdhPJyw3eaAIaBHlqv5KOfFTa+kblr0g4XntOwjG+KOrla1cyRAtkv99AWHwllLf1nfkqQPzKk6lQ==
-X-Received: by 2002:a19:7d02:: with SMTP id y2mr2274606lfc.146.1588952825594;
-        Fri, 08 May 2020 08:47:05 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id p13sm1447163ljg.103.2020.05.08.08.47.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:47:04 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:46:17 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 06/11] dt-bindings: battery: add new battery parameters
-Message-ID: <6cfb1a37acc763143927b9541744b7bb66fbd2d8.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:47:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588952836;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Mrqq8bocBIcn8N6pk0yrIvKuTZiVjG74AykFdJPm0U=;
+        b=QwAYtLtXYnLfYLGXdnOTZJkPvlLciAJdKX1tYfmg9LlU8Y6OI4QOy7P4rE2uHGT7INXkrL
+        n3Ty5TSEZh1qP0k2cxdilxXn0Ct/p+Amdu457vB+hWe24u7OUoHkKSGcJ817nsq5ZDZ0o3
+        uJcgyd4wb5TK08rcpATLTzI40Ylqrgo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-mC4Qyy3fPDSzUiaZr6VNew-1; Fri, 08 May 2020 11:47:14 -0400
+X-MC-Unique: mC4Qyy3fPDSzUiaZr6VNew-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 189F418FE861;
+        Fri,  8 May 2020 15:47:12 +0000 (UTC)
+Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9B43691F9;
+        Fri,  8 May 2020 15:47:06 +0000 (UTC)
+Date:   Fri, 8 May 2020 10:47:04 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
+Message-ID: <20200508154704.6njw5wfsain7p3ev@treble>
+References: <20200501202849.647891881@infradead.org>
+ <20200501202944.593400184@infradead.org>
+ <20200506172455.ho5em2mtzn7qqfjl@treble>
+ <20200508152730.GB3344@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200508152730.GB3344@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add:
+On Fri, May 08, 2020 at 05:27:30PM +0200, Peter Zijlstra wrote:
+> On Wed, May 06, 2020 at 12:24:55PM -0500, Josh Poimboeuf wrote:
+> 
+> > On that note, what do you think about tweaking the naming from
+> > 
+> >   DEFINE_STATIC_COND_CALL(name, typename);
+> >   static_cond_call(name)(args...);
+> > 
+> > to
+> > 
+> >   DEFINE_STATIC_CALL_NO_FUNC(name, typename);
+> >   static_call_if_func(name)(args...);
+> > 
+> > ?
+> > 
+> > Seems clearer to me.  They're still STATIC_CALLs, so it seems logical to
+> > keep those two words together.  And NO_FUNC clarifies the initialized
+> > value.
+> > 
+> > Similarly RETTRAMP could be ARCH_DEFINE_STATIC_CALL_NO_FUNC.
+> 
+> So I dislike static_call_if_func(), that's so much typing. Also, I
+> prefer ARCH_*_RETTRAMP as it clearly describes what the thing is.
+> 
+> How is something like this? 
 
- - trickle-charge-current-microamp:
+I like DEFINE_STATIC_CALL_NULL.  I also like the new comment.
 
-Some chargers have 3 charging stages. First one when battery is almost
-empty is often called as trickle-charge. Last state when battery has been
-"woken up" is usually called as fast-charge. In addition to this some
-chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-pre-charge. Some batteries can benefit from this 3-phase charging
-[citation needed].
+And if you're calling it
 
-Introduce trickle-charge-current-microamp so that batteries can give
-charging current limit for all three states.
+  DEFINE_STATIC_CALL_NULL
 
- - precharge-upper-limit-microvolt:
+then it seems like
 
-When battery voltage has reached certain limit we change from
-trickle-charge to next charging state (pre-charge for BD99954). Allow
-battery to specify this limit.
+  ARCH_DEFINE_STATIC_CALL_NULL
 
- - re-charge-voltage-microvolt:
+would be the logical name rather than RETTRAMP?
 
-Allow giving a battery specific voltage limit for chargers which can
-automatically re-start charging when battery has discharghed down to
-this limit.
-
-- over-voltage-threshold-microvolt
-
-Allow specifying voltage threshold after which the battery is assumed to
-be faulty.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 3049cf88bdcf..5e29595edd74 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
- behavior should a replacement that changes the battery type occur
- without a corresponding update to the dtb.
- 
-+Please note that not all charger drivers respect all of the properties.
-+
- Required Properties:
-  - compatible: Must be "simple-battery"
- 
- Optional Properties:
-+ - over-voltage-threshold-microvolt: battery over-voltage limit
-+ - re-charge-voltage-microvolt: limit to automatically start charging again
-  - voltage-min-design-microvolt: drained battery voltage
-  - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-+ - trickle-charge-current-microamp: current for trickle-charge phase
-  - precharge-current-microamp: current for pre-charge phase
-+ - precharge-upper-limit-microvolt: limit when to change to constant charging
-  - charge-term-current-microamp: current for charge termination phase
-  - constant-charge-current-max-microamp: maximum constant input current
-  - constant-charge-voltage-max-microvolt: maximum constant input voltage
--- 
-2.21.0
-
+Still not crazy about static_cond_call(), though I think at least
+changing it to static_call_cond() would be better for namespacing
+reasons.
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Josh
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
