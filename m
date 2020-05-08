@@ -2,203 +2,124 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB562C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F02C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979E5208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA45D20736
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:21:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvpvLe2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEHHV2 (ORCPT
+        id S1727899AbgEHHVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 8 May 2020 03:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727861AbgEHHV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 03:21:28 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56784 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbgEHHUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:20:48 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E2EB41A1427;
-        Fri,  8 May 2020 09:20:45 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D62191A1412;
-        Fri,  8 May 2020 09:20:45 +0200 (CEST)
-Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 558EA204BD;
-        Fri,  8 May 2020 09:20:45 +0200 (CEST)
-From:   Diana Craciun <diana.craciun@oss.nxp.com>
-To:     alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com,
-        bharatb.linux@gmail.com, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v2 4/9] vfio/fsl-mc: Implement VFIO_DEVICE_GET_REGION_INFO ioctl call
-Date:   Fri,  8 May 2020 10:20:34 +0300
-Message-Id: <20200508072039.18146-5-diana.craciun@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6428CC05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 00:21:28 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id c2so445112ybi.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 00:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ghSLWmPTjJa1N7MEynHoO3xq1duNAQVUBZp+ZfGFuUE=;
+        b=PvpvLe2fjNxojvQSID9SqgyPUOOpkTHnRBJ4bKWtgUvCTb1sqFaHRGvTkaAOfucQjA
+         ybn2zA/+aGvjSF4YEBRK4zlBdZgfmQkmyM4ZU3TyWAaRapPBD0eDc56ti633wmr/mj9K
+         MuJ8LzN2rwCYRWSQKAMPomnzvvD7JgBZXstlRUzd8Vzszd7okoFqLSk8KypFJqtizd88
+         dG9jgLNAVqgfGbfG+eUDUgSJWFovkUxrMBRo9lw9N7zehkqs0JGQ6XZzqlwx5oEVT1VG
+         YxfnyfGAt/Rv+yVKMWjChUJJrrJtJzv9ZNfbjBdMrTI0JuN5jnfKCG7M4Hx84OXWOG60
+         m1qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ghSLWmPTjJa1N7MEynHoO3xq1duNAQVUBZp+ZfGFuUE=;
+        b=gGeu5k8i6DGS1QB8O0PRYQ8qgiAznJKnanI365nLu+GjTOz0QANXyLyoe18xdF8mRU
+         R4eSJZiM+w3HIYNJJZ8hhG+HCrYG8JzD0+rdhpD2k87AMgxaiBe4d6vl3ofKz+xcW/EP
+         R3M58OKueuzhjJwvMusvJR2LuP6zrRQatnMMvWEzjSAL+G6ZiA0WpL2D1zkWFx7qVu9n
+         OAfZyd6OR+i800ebh/arzbBB2OcjFsGZMgv9JRgUeR2uEjudahbFckWO2ITfB6Qlqk2D
+         +VPByxsGwEuDwS2/U2jX9m8x5gt/9YNwe6ibdKW6+AHpPzlPogWrC52h8Ge1Iwl6uKSX
+         2LXw==
+X-Gm-Message-State: AGi0PuZzHFQY4SEV2SEVpsFxGJmBXct2+c6/PPBayw0u2lMas6s+bmBf
+        +PxZqrND5z8lQykiCFERYZcpxFgipWDcsasdHuqBDg==
+X-Google-Smtp-Source: APiQypJ4LfbqVmL56J7m3SlKiNGelvh5pQdV/+Uielt+V3/tJezOCmC5ry3w7km1U2msTfPMA+0Jm8HumNdz8jGZrS4=
+X-Received: by 2002:a05:6902:4ee:: with SMTP id w14mr1110079ybs.383.1588922487266;
+ Fri, 08 May 2020 00:21:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508063954.256593-1-irogers@google.com> <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYT5FfDt2oqctHC6dXNmwg5gaaNcFu1StObuYk-jKocLQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 8 May 2020 00:21:16 -0700
+Message-ID: <CAP-5=fU-QxfdkQoHP=Ksqeb9gPTE4xYcgEcp9Ej6trZpkCDvPA@mail.gmail.com>
+Subject: Re: [PATCH] libbpf hashmap: fix undefined behavior in hash_bits
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose to userspace information about the memory regions.
+On Fri, May 8, 2020 at 12:12 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, May 7, 2020 at 11:40 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > If bits is 0, the case when the map is empty, then the >> is the size of
+> > the register which is undefined behavior - on x86 it is the same as a
+> > shift by 0. Fix by handling the 0 case explicitly.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+>
+> No need. The only case when bits can be 0 is when hashmap is
+> completely empty (no elements have ever been added yet). In that case,
+> it doesn't matter what value hash_bits() returns,
+> hashmap__for_each_key_entry/hashmap__for_each_key_entry_safe will
+> behave correctly, because map->buckets will be NULL.
 
-Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
----
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 77 ++++++++++++++++++++++-
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h | 19 ++++++
- 2 files changed, 95 insertions(+), 1 deletion(-)
+Agreed. Unfortunately the LLVM undefined behavior sanitizer (I've not
+tested with GCC to the same extent) will cause an exit when it sees >>
+64 regardless of whether the value is used or not. It'd be possible to
+#ifdef this code on whether a sanitizer was present.
 
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index 8a4d3203b176..c162fa27c02c 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -17,16 +17,72 @@
- 
- static struct fsl_mc_driver vfio_fsl_mc_driver;
- 
-+static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
-+{
-+	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+	int count = mc_dev->obj_desc.region_count;
-+	int i;
-+
-+	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
-+				GFP_KERNEL);
-+	if (!vdev->regions)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < count; i++) {
-+		struct resource *res = &mc_dev->regions[i];
-+
-+		vdev->regions[i].addr = res->start;
-+		vdev->regions[i].size = PAGE_ALIGN((resource_size(res)));
-+		vdev->regions[i].flags = 0;
-+	}
-+
-+	vdev->num_regions = mc_dev->obj_desc.region_count;
-+	return 0;
-+}
-+
-+static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
-+{
-+	vdev->num_regions = 0;
-+	kfree(vdev->regions);
-+}
-+
- static int vfio_fsl_mc_open(void *device_data)
- {
-+	struct vfio_fsl_mc_device *vdev = device_data;
-+	int ret;
-+
- 	if (!try_module_get(THIS_MODULE))
- 		return -ENODEV;
- 
-+	mutex_lock(&vdev->driver_lock);
-+	if (!vdev->refcnt) {
-+		ret = vfio_fsl_mc_regions_init(vdev);
-+		if (ret)
-+			goto err_reg_init;
-+	}
-+	vdev->refcnt++;
-+
-+	mutex_unlock(&vdev->driver_lock);
-+
- 	return 0;
-+
-+err_reg_init:
-+	mutex_unlock(&vdev->driver_lock);
-+	module_put(THIS_MODULE);
-+	return ret;
- }
- 
- static void vfio_fsl_mc_release(void *device_data)
- {
-+	struct vfio_fsl_mc_device *vdev = device_data;
-+
-+	mutex_lock(&vdev->driver_lock);
-+
-+	if (!(--vdev->refcnt))
-+		vfio_fsl_mc_regions_cleanup(vdev);
-+
-+	mutex_unlock(&vdev->driver_lock);
-+
- 	module_put(THIS_MODULE);
- }
- 
-@@ -59,7 +115,25 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
- 	}
- 	case VFIO_DEVICE_GET_REGION_INFO:
- 	{
--		return -ENOTTY;
-+		struct vfio_region_info info;
-+
-+		minsz = offsetofend(struct vfio_region_info, offset);
-+
-+		if (copy_from_user(&info, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (info.argsz < minsz)
-+			return -EINVAL;
-+
-+		if (info.index >= vdev->num_regions)
-+			return -EINVAL;
-+
-+		/* map offset to the physical address  */
-+		info.offset = VFIO_FSL_MC_INDEX_TO_OFFSET(info.index);
-+		info.size = vdev->regions[info.index].size;
-+		info.flags = vdev->regions[info.index].flags;
-+
-+		return copy_to_user((void __user *)arg, &info, minsz);
- 	}
- 	case VFIO_DEVICE_GET_IRQ_INFO:
- 	{
-@@ -201,6 +275,7 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
- 		vfio_iommu_group_put(group, dev);
- 		return ret;
- 	}
-+	mutex_init(&vdev->driver_lock);
- 
- 	return ret;
- }
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-index 37d61eaa58c8..818dfd3df4db 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -7,9 +7,28 @@
- #ifndef VFIO_FSL_MC_PRIVATE_H
- #define VFIO_FSL_MC_PRIVATE_H
- 
-+#define VFIO_FSL_MC_OFFSET_SHIFT    40
-+#define VFIO_FSL_MC_OFFSET_MASK (((u64)(1) << VFIO_FSL_MC_OFFSET_SHIFT) - 1)
-+
-+#define VFIO_FSL_MC_OFFSET_TO_INDEX(off) ((off) >> VFIO_FSL_MC_OFFSET_SHIFT)
-+
-+#define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
-+	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
-+
-+struct vfio_fsl_mc_region {
-+	u32			flags;
-+	u32			type;
-+	u64			addr;
-+	resource_size_t		size;
-+};
-+
- struct vfio_fsl_mc_device {
- 	struct fsl_mc_device		*mc_dev;
- 	struct notifier_block        nb;
-+	int				refcnt;
-+	u32				num_regions;
-+	struct vfio_fsl_mc_region	*regions;
-+	struct mutex driver_lock;
- };
- 
- #endif /* VFIO_FSL_MC_PRIVATE_H */
--- 
-2.17.1
+Thanks,
+Ian
 
+> >  tools/lib/bpf/hashmap.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/lib/bpf/hashmap.h b/tools/lib/bpf/hashmap.h
+> > index d5ef212a55ba..781db653d16c 100644
+> > --- a/tools/lib/bpf/hashmap.h
+> > +++ b/tools/lib/bpf/hashmap.h
+> > @@ -19,6 +19,8 @@
+> >  static inline size_t hash_bits(size_t h, int bits)
+> >  {
+> >         /* shuffle bits and return requested number of upper bits */
+> > +       if (bits == 0)
+> > +               return 0;
+> >         return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
+> >  }
+> >
+> > --
+> > 2.26.2.645.ge9eca65c58-goog
+> >
