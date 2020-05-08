@@ -2,56 +2,54 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CE7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711C2C54E4B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C5120720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C8520870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942901;
-	bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
+	s=default; t=1588942904;
+	bh=FUdsD2vebhAd1eNJ+Evte29+cETCgh/IN/PwJdEDKaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GMSvQDi1ipZ/2dBS0ZG8aU/Z2m4FqcVNQbfsmQkZ6pJbBJxH8npxZFCCgxqZaCi48
-	 WfRAzaI5U58WU/qvhyYds77wMvb/USHjng75a1KNRPTLSLst6ONpzMonoMQK5g9eCY
-	 miOEkJh2UoFC2ajjweVw+Xo1qwQZi0tsRUuBAujI=
+	b=QXigLhkLB+xxn17pg4hH0oYa0ZuJX2b5mPVw/bHO2EeQY58W/PD5ABZajAd4J7M5f
+	 pXCLo8VMgmFg7Bp2AbW6BvkPt59iX6pL1S0lQNQNRHW/Dx5PK1rR3z3o2u0zWYYm90
+	 4FNd4cQmrtdhorLhlHDjivtKDFbxZZ2srCcA1TQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgEHNBk (ORCPT
+        id S1728982AbgEHMvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbgEHMvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:51:47 -0400
+        id S1728823AbgEHMvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:51:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB41724953;
-        Fri,  8 May 2020 12:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC03624958;
+        Fri,  8 May 2020 12:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942307;
-        bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
+        s=default; t=1588942290;
+        bh=FUdsD2vebhAd1eNJ+Evte29+cETCgh/IN/PwJdEDKaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jd0x0rb3IySeW5YMtM5NP7ZhJQaHB5j9tT+NB/v17sJLdT4xPgD/Lx8o31lCCP4mU
-         FIERpiUXWQC+pWJGQh7UTuZxQe0cp1lgZ5rfHb9YlgKkJJWp6u2vfxvBaBNtrj7NL6
-         AIjdFzzh9+EuKEiWtHhy8k0O3QQIfrnSI/jnGeo0=
+        b=X9iQO2lYdr+zQZc3r2IdliC1EaZ5Dg4E0pnj1n6f9omon50XoM2cp1I4zlkbn9i+d
+         z63KNlVbnd180nl4frv9ZF+bFnIs4XepO591uo2BGmMkA11DsYHQXvlqWMYOEI4sCG
+         xk8n+KuxcKL39iZf39VGUoDTd7LwZyBnmaJ8O9ZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/32] ASoC: topology: Check return value of pcm_new_ver
-Date:   Fri,  8 May 2020 14:35:16 +0200
-Message-Id: <20200508123035.259081294@linuxfoundation.org>
+Subject: [PATCH 4.19 19/32] lib/mpi: Fix building for powerpc with clang
+Date:   Fri,  8 May 2020 14:35:32 +0200
+Message-Id: <20200508123037.476030370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
 References: <20200508123034.886699170@linuxfoundation.org>
@@ -64,38 +62,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit b3677fc3d68dd942c92de52f0bd9dd8b472a40e6 ]
+[ Upstream commit 5990cdee689c6885b27c6d969a3d58b09002b0bc ]
 
-Function pcm_new_ver can fail, so we should check it's return value and
-handle possible error.
+0day reports over and over on an powerpc randconfig with clang:
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200327204729.397-6-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
+inline asm context requiring an l-value: remove the cast or build with
+-fheinous-gnu-extensions
+
+Remove the superfluous casts, which have been done previously for x86
+and arm32 in commit dea632cadd12 ("lib/mpi: fix build with clang") and
+commit 7b7c1df2883d ("lib/mpi/longlong.h: fix building with 32-bit
+x86").
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/991
+Link: https://lore.kernel.org/r/20200413195041.24064-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/mpi/longlong.h | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 756dd23031063..2c6598e07dde3 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1923,7 +1923,9 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
- 			_pcm = pcm;
- 		} else {
- 			abi_match = false;
--			pcm_new_ver(tplg, pcm, &_pcm);
-+			ret = pcm_new_ver(tplg, pcm, &_pcm);
-+			if (ret < 0)
-+				return ret;
- 		}
- 
- 		/* create the FE DAIs and DAI links */
+diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+index 08c60d10747fd..e01b705556aa6 100644
+--- a/lib/mpi/longlong.h
++++ b/lib/mpi/longlong.h
+@@ -756,22 +756,22 @@ do {									\
+ do { \
+ 	if (__builtin_constant_p(bh) && (bh) == 0) \
+ 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"%r" ((USItype)(al)), \
+ 		"rI" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+ 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"%r" ((USItype)(al)), \
+ 		"rI" ((USItype)(bl))); \
+ 	else \
+ 		__asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"r" ((USItype)(bh)), \
+ 		"%r" ((USItype)(al)), \
+@@ -781,36 +781,36 @@ do { \
+ do { \
+ 	if (__builtin_constant_p(ah) && (ah) == 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(ah) && (ah) == ~(USItype) 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else \
+ 		__asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+@@ -821,7 +821,7 @@ do { \
+ do { \
+ 	USItype __m0 = (m0), __m1 = (m1); \
+ 	__asm__ ("mulhwu %0,%1,%2" \
+-	: "=r" ((USItype) ph) \
++	: "=r" (ph) \
+ 	: "%r" (__m0), \
+ 	"r" (__m1)); \
+ 	(pl) = __m0 * __m1; \
 -- 
 2.20.1
 
