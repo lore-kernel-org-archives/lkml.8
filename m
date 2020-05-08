@@ -2,89 +2,86 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6CCC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F5AC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F66E20725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A84120663
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgEHBtS (ORCPT
+        id S1726627AbgEHBxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgEHBtS (ORCPT
+        Thu, 7 May 2020 21:53:43 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:16490 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgEHBxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:49:18 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BF0C05BD43;
-        Thu,  7 May 2020 18:49:17 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8FB641192EEAE;
-        Thu,  7 May 2020 18:49:17 -0700 (PDT)
-Date:   Thu, 07 May 2020 18:49:16 -0700 (PDT)
-Message-Id: <20200507.184916.273108688700388097.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sparc64: Replace zero-length array with flexible-array
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200507192302.GA16402@embeddedor>
-References: <20200507192302.GA16402@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 18:49:17 -0700 (PDT)
+        Thu, 7 May 2020 21:53:43 -0400
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id B95D91A2142;
+        Fri,  8 May 2020 09:53:07 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AKEA*wCFCDjDmtJ1Hlm3L4pz.3.1588902787737.Hmail.bernard@vivo.com>
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        =?UTF-8?Q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+        Shashank Sharma <shashank.sharma@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6W1BBVENIXSBkcml2ZXJzL3ZpZGVvOiBjbGVhbnVwIGNvZGluZyBzdHlsZSBpbiB2aWRlbyBhIGJpdA==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <20200427080530.3234-1-bernard@vivo.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 8 May 2020 09:53:07 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Fri, 8 May 2020 09:53:07 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VKTU9LS0tLSE9ISElJQ1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT0xJSk5OSElIN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6MD46UQw4PTg*ET8WDzFKMxcWSDdPCwFVSFVKTkNDQktJTENMQktDVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBT0xLSDcG
+X-HM-Tid: 0a71f1fc7b0993b4kuwsb95d91a2142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Thu, 7 May 2020 14:23:02 -0500
-
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Applied, thank you.
+CkZyb206IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KRGF0ZTogMjAyMC0wNC0yNyAx
+NjowNToyMwpUbzogIEJhcnRsb21pZWogWm9sbmllcmtpZXdpY3ogPGIuem9sbmllcmtpZUBzYW1z
+dW5nLmNvbT4sVW1hIFNoYW5rYXIgPHVtYS5zaGFua2FyQGludGVsLmNvbT4sIlZpbGxlIFN5cmrD
+pGzDpCIgPHZpbGxlLnN5cmphbGFAbGludXguaW50ZWwuY29tPixTaGFzaGFuayBTaGFybWEgPHNo
+YXNoYW5rLnNoYXJtYUBpbnRlbC5jb20+LExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbT4sRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5j
+aD4sQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29tPixkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnLGxpbnV4LWZiZGV2QHZnZXIua2VybmVsLm9yZyxsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnCkNjOiAgb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20KU3ViamVjdDogW1BBVENI
+XSBkcml2ZXJzL3ZpZGVvOiBjbGVhbnVwIGNvZGluZyBzdHlsZSBpbiB2aWRlbyBhIGJpdD5FbGlt
+aW5hdGUgdGhlIG1hZ2ljIG51bWJlcnMsIGFkZCB2ZW5kZXIgaW5mb2ZyYW1lIHNpemUgbWFjcm8K
+Pmxpa2Ugb3RoZXIgaGRtaSBtb2R1bGVzLgo+Cj5TaWduZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8g
+PGJlcm5hcmRAdml2by5jb20+Cj4tLS0KPiBkcml2ZXJzL3ZpZGVvL2hkbWkuYyB8IDIgKy0KPiBp
+bmNsdWRlL2xpbnV4L2hkbWkuaCB8IDEgKwo+IDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25z
+KCspLCAxIGRlbGV0aW9uKC0pCj4KPmRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2hkbWkuYyBi
+L2RyaXZlcnMvdmlkZW8vaGRtaS5jCj5pbmRleCA4NTZhOGM0ZTg0YTIuLmY2OTMwNzZmMmU1ZiAx
+MDA2NDQKPi0tLSBhL2RyaXZlcnMvdmlkZW8vaGRtaS5jCj4rKysgYi9kcml2ZXJzL3ZpZGVvL2hk
+bWkuYwo+QEAgLTQ5NSw3ICs0OTUsNyBAQCBpbnQgaGRtaV92ZW5kb3JfaW5mb2ZyYW1lX2luaXQo
+c3RydWN0IGhkbWlfdmVuZG9yX2luZm9mcmFtZSAqZnJhbWUpCj4gCSAqIHZhbHVlCj4gCSAqLwo+
+IAlmcmFtZS0+czNkX3N0cnVjdCA9IEhETUlfM0RfU1RSVUNUVVJFX0lOVkFMSUQ7Cj4tCWZyYW1l
+LT5sZW5ndGggPSA0Owo+KwlmcmFtZS0+bGVuZ3RoID0gSERNSV9WRU5ET1JfSU5GT0ZSQU1FX1NJ
+WkU7Cj4gCj4gCXJldHVybiAwOwo+IH0KPmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2hkbWku
+aCBiL2luY2x1ZGUvbGludXgvaGRtaS5oCj5pbmRleCA5NjEzZDc5NmNmYjEuLmZmMjVhZWI5NWVl
+NCAxMDA2NDQKPi0tLSBhL2luY2x1ZGUvbGludXgvaGRtaS5oCj4rKysgYi9pbmNsdWRlL2xpbnV4
+L2hkbWkuaAo+QEAgLTU3LDYgKzU3LDcgQEAgZW51bSBoZG1pX2luZm9mcmFtZV90eXBlIHsKPiAj
+ZGVmaW5lIEhETUlfU1BEX0lORk9GUkFNRV9TSVpFICAgIDI1Cj4gI2RlZmluZSBIRE1JX0FVRElP
+X0lORk9GUkFNRV9TSVpFICAxMAo+ICNkZWZpbmUgSERNSV9EUk1fSU5GT0ZSQU1FX1NJWkUgICAg
+MjYKPisjZGVmaW5lIEhETUlfVkVORE9SX0lORk9GUkFNRV9TSVpFICA0Cj4gCj4gI2RlZmluZSBI
+RE1JX0lORk9GUkFNRV9TSVpFKHR5cGUpCVwKPiAJKEhETUlfSU5GT0ZSQU1FX0hFQURFUl9TSVpF
+ICsgSERNSV8gIyMgdHlwZSAjIyBfSU5GT0ZSQU1FX1NJWkUpCj4tLSAKPjIuMjYuMgo+Cg0KDQo=
