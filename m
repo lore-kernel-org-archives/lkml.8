@@ -2,106 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676BCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B37C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1C5207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16A7208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588940864;
+	bh=z72KGP4WVzdG3za1SOqq2xLe7T4UfIwD2UbdEEE5Vio=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kJdwmxR8RLqCTaU3EZvTvvf7sBPz4sEMD32a39bj2chAp6KMDJTHdqmiEeZ4LJAwz
+	 Olo2fsu3R7J5ntZauumqS/MBWo8XW1Nccd4iLqYRRttb2kYElvb9UsdCfYYGPQYIZB
+	 uK6UIqP3Lr4FSZG95PayHmN0pPeO25BaxdJiZnKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgEHM0i (ORCPT
+        id S1727051AbgEHM1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726638AbgEHM0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:26:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03FFC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 05:26:37 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jX25J-0004sf-3y; Fri, 08 May 2020 14:26:33 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1FA61101175; Fri,  8 May 2020 14:26:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org
-Subject: Re: [RFC][PATCH 3/3] x86/entry, ORC: Teach objtool/unwind_orc about stack irq swizzles
-In-Reply-To: <20200508101209.GY5298@hirez.programming.kicks-ass.net>
-References: <20200507161020.783541450@infradead.org> <20200507161828.801097834@infradead.org> <20200507173809.GK5298@hirez.programming.kicks-ass.net> <20200507183048.rlf2bgj4cf2g4jy6@treble> <878si3e8v2.fsf@nanos.tec.linutronix.de> <20200508101209.GY5298@hirez.programming.kicks-ass.net>
-Date:   Fri, 08 May 2020 14:26:32 +0200
-Message-ID: <87sggak3yf.fsf@nanos.tec.linutronix.de>
+        Fri, 8 May 2020 08:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgEHM1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:27:43 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA755208D6;
+        Fri,  8 May 2020 12:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588940862;
+        bh=z72KGP4WVzdG3za1SOqq2xLe7T4UfIwD2UbdEEE5Vio=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HqnoFPp5WCG5pj+Y0irs27Lc0uw1y7JCvcaRw6DEchBUCkcv52MNnFMoPQzio+KcH
+         03V8iKl/IvuZ3srzYC2uxGawv3NVZ3MeoEmwvHljAjYcKCP6aNdxvcWup+8MUxxTx6
+         al9AudZtAphFJai6IhPUp/m0oWO1/pFcuZqm/jAw=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jX26P-00Aaju-5v; Fri, 08 May 2020 13:27:41 +0100
+Date:   Fri, 8 May 2020 13:27:40 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: Query regarding pseudo nmi support on GIC V3 and request_nmi()
+Message-ID: <20200508132740.2d645ea2@why>
+In-Reply-To: <2f41b2e8-925e-3869-da39-fd4ab28ca1b1@codeaurora.org>
+References: <2a0d5719-b2c7-1287-e0b5-2dd8b1072e49@codeaurora.org>
+        <87ftca1z9k.wl-maz@kernel.org>
+        <2f41b2e8-925e-3869-da39-fd4ab28ca1b1@codeaurora.org>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: neeraju@codeaurora.org, julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+On Fri, 8 May 2020 16:36:42 +0530
+Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 
-> On Thu, May 07, 2020 at 11:24:49PM +0200, Thomas Gleixner wrote:
->> But over our IRC conversation I came up with a 3rd variant:
->> 
->>   For most of the vectors the indirect call overhead is just noise, so
->>   we can run them through the ASM switcher, but for the resched IPI
->>   we can just use a separate direct call stub in ASM.
->
-> Are we sure the rat-poison crap is noise for all the other system
-> vectors? I suppose it is for most since they'll do indirect calls
-> themselves anyway, right?
+> Hi Marc,
+> 
+> On 5/8/2020 4:15 PM, Marc Zyngier wrote:
+> > On Thu, 07 May 2020 17:06:19 +0100,
+> > Neeraj Upadhyay <neeraju@codeaurora.org> wrote:  
+> >>
+> >> Hi,
+> >>
+> >> I have one query regarding pseudo NMI support on GIC v3; from what I
+> >> could understand, GIC v3 supports pseudo NMI setup for SPIs and PPIs.
+> >> However the request_nmi() in irq framework requires NMI to be per cpu
+> >> interrupt source (it checks for IRQF_PERCPU). Can you please help
+> >> understand this part, how SPIs can be configured as NMIs, if there is
+> >> a per cpu interrupt source restriction?  
+> > 
+> > Let me answer your question by another question: what is the semantic
+> > of a NMI if you can't associate it with a particular CPU?
+> >  
+> 
+> I was actually thinking of a use case, where, we have a watchdog
+> interrupt (which is a SPI), which is used for detecting software
+> hangs and cause device reset; If that interrupt's current cpu
+> affinity is on a core, where interrupts are disabled, we won't be
+> able to serve it; so, we need to group that interrupt as an fiq; 
 
-We have different categories:
+Linux doesn't use Group-0 interrupts, as they are strictly secure
+(unless your SoC doesn't have EL3, which I doubt).
 
- 1) Uninteresting
+> I was thinking, if its feasible to mark that interrupt as pseudo NMI
+> and route it to EL1 as irq. However, looks like that is not the
+> semantic of a NMI and we would need something like pseudo NMI ipi for
+> this.
 
-    SPURIOUS_APIC_VECTOR, ERROR_APIC_VECTOR, THERMAL_APIC_VECTOR,
-    THRESHOLD_APIC_VECTOR, REBOOT_VECTOR, DEFERRED_ERROR_VECTOR
+Sending a NMI IPI from another NMI handler? Even once I've added these,
+there is no way this will work for that particular scenario. Just look
+at the restrictions we impose on NMIs.
 
- 2) Indirect call poisoned
-
-    LOCAL_TIMER_VECTOR
-    X86_PLATFORM_IPI_VECTOR
-    IRQ_WORK_VECTOR
-    HYPERV_STIMER0_VECTOR
-    HYPERVISOR_CALLBACK_VECTOR
-    POSTED_INTERRUPT_WAKEUP_VECTOR.
-    CALL_FUNCTION_VECTOR
-    CALL_FUNCTION_SINGLE_VECTOR
-    
- 3) Quick
-
-    RESCHEDULE_VECTOR
-
-    POSTED_INTR_VECTOR
-    POSTED_INTR_NESTED_VECTOR
-
-        These two postit ones are weird because they are both empty and
-        just increment different irq counts.
-
-    HYPERV_REENLIGHTENMENT_VECTOR
-
-        schedules delayed work, i,e. arms a timer which should be
-        straight forward, but does it matter?
-
- 4) Others
-
-    UV_BAU_MESSAGE - The TLB flushes are probably more expensive than
-                     ratpoutine
-
-Hmm?
+Frankly, if all you need to do is to reset the SoC, use EL3 firmware.
+That is what it is for.
 
 Thanks,
 
-        tglx
+	M.
+-- 
+Jazz is not dead. It just smells funny...
