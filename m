@@ -2,126 +2,182 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B30CC54E4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDDFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6469F206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C14F24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgEHKxr (ORCPT
+        id S1727926AbgEHKyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:53:47 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41862 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgEHKxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:53:46 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9DE98030779;
-        Fri,  8 May 2020 10:53:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id k_ka0vsYUEeH; Fri,  8 May 2020 13:53:37 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 6/6] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
-Date:   Fri, 8 May 2020 13:53:04 +0300
-Message-ID: <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 8 May 2020 06:54:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:14356 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbgEHKyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:54:13 -0400
+IronPort-SDR: O6QlClkhZYPFBw9s7YfYOOVPYbRMOcTYAoPt8m3gcws6ZbYT7b5aSU0vdcEAu93Q4K1a641n+E
+ GfDszH6jZJYA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 03:54:11 -0700
+IronPort-SDR: CA7gJTH3lUJ69SSEFGjJQa+cCHIHDvI87CRz4eqyRq1T34fYKozBur+E58VMr/Yf3cC8j3qeIj
+ v15opxaLgGrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
+   d="scan'208";a="407992467"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 03:54:11 -0700
+Received: from [10.249.224.104] (abudanko-mobl.ccr.corp.intel.com [10.249.224.104])
+        by linux.intel.com (Postfix) with ESMTP id A9E9A5805B4;
+        Fri,  8 May 2020 03:54:09 -0700 (PDT)
+Subject: [PATCH v3 9/9] perf record: introduce --ctl-fd[-ack] options
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fae71acb-350f-be18-3e35-a2c66ff38430@linux.intel.com>
+Date:   Fri, 8 May 2020 13:54:07 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Full multi-block transfers functionality is enabled in DW DMA
-controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
-can be executed only if hardcode channel x LLP register feature isn't
-enabled, which can be switched on at the IP core synthesis for
-optimization. If it's enabled then the LLP register is hardcoded to
-zero, so the blocks chaining based on the LLPs is unsupported.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
+from command line. Extend perf-record.txt file with --ctl-fd[-ack]
+options description. Document possible usage model introduced by
+--ctl-fd[-ack] options by providing example bash shell script.
 
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
+ tools/perf/Documentation/perf-record.txt | 39 ++++++++++++++++++++++++
+ tools/perf/builtin-record.c              |  9 ++++++
+ tools/perf/util/record.h                 |  2 ++
+ 3 files changed, 50 insertions(+)
 
-Changelog v2:
-- Rearrange SoBs.
-- Add comment about why hardware accelerated LLP list support depends
-  on both MBLK_EN and HC_LLP configs setting.
-- Use explicit bits state comparison operator.
----
- drivers/dma/dw/core.c | 11 ++++++++++-
- drivers/dma/dw/regs.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 5b76ccc857fd..3179d45df662 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1180,8 +1180,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 			 */
- 			dwc->block_size =
- 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index c2c4ce7ccee2..5c012cfe68a4 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -614,6 +614,45 @@ appended unit character - B/K/M/G
+ 	The number of threads to run when synthesizing events for existing processes.
+ 	By default, the number of threads equals 1.
+ 
++--ctl-fd::
++--ctl-fd-ack::
++Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
++'disable': disable events. Optionally send control command completion ('ack') to fd-ack
++descriptor to synchronize with the controlling process. Example of bash shell script
++to enable and disable events during measurements:
 +
-+			/*
-+			 * According to the DW DMA databook the true scatter-
-+			 * gether LLPs aren't available if either multi-block
-+			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
-+			 * LLP register is hard-coded to zeros
-+			 * (CHx_HC_LLP == 1).
-+			 */
- 			dwc->nollp =
--				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-+				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
-+				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
- 			dwc->max_burst =
- 				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
- 		} else {
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index f581d4809b71..a8af19d0eabd 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -126,6 +126,7 @@ struct dw_dma_regs {
++#!/bin/bash
++
++ctl_dir=/tmp/
++
++ctl_fifo=${ctl_dir}perf_ctl.fifo
++test -p ${ctl_fifo} && unlink ${ctl_fifo}
++mkfifo ${ctl_fifo}
++exec {ctl_fd}<>${ctl_fifo}
++
++ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
++test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
++mkfifo ${ctl_ack_fifo}
++exec {ctl_fd_ack}<>${ctl_ack_fifo}
++
++perf record -D -1 -e cpu-cycles -a                        \
++            --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
++            -- sleep 30 &
++perf_pid=$!
++
++sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
++sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
++
++exec {ctl_fd_ack}>&-
++unlink ${ctl_ack_fifo}
++
++exec {ctl_fd}>&-
++unlink ${ctl_fifo}
++
++wait -n ${perf_pid}
++exit $?
++
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 3ed352508b83..252d86b34e0e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1704,6 +1704,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		perf_evlist__start_workload(rec->evlist);
+ 	}
  
- /* Bitfields in DWC_PARAMS */
- #define DWC_PARAMS_MSIZE	16		/* max group transaction size */
-+#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
- #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
++	evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack);
++
+ 	if (opts->initial_delay) {
+ 		pr_info(EVLIST_DISABLED_MSG);
+ 		if (opts->initial_delay > 0) {
+@@ -1850,6 +1852,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__synthesize_workload(rec, true);
  
- /* bursts size */
+ out_child:
++	evlist__finalize_ctlfd(rec->evlist);
+ 	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
+@@ -2331,6 +2334,8 @@ static struct record record = {
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
+ 		.nr_threads_synthesize = 1,
++		.ctl_fd              = -1,
++		.ctl_fd_ack          = -1,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -2526,6 +2531,10 @@ static struct option __record_options[] = {
+ 	OPT_UINTEGER(0, "num-thread-synthesize",
+ 		     &record.opts.nr_threads_synthesize,
+ 		     "number of threads to run for event synthesis"),
++	OPT_INTEGER(0, "ctl-fd", &record.opts.ctl_fd,
++		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
++	OPT_INTEGER(0, "ctl-fd-ack", &record.opts.ctl_fd_ack,
++		    "Send control command completion ('ack') to fd ack descriptor"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 96a73bbd8cd4..da18aeca3623 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -69,6 +69,8 @@ struct record_opts {
+ 	int	      mmap_flush;
+ 	unsigned int  comp_level;
+ 	unsigned int  nr_threads_synthesize;
++	int	      ctl_fd;
++	int	      ctl_fd_ack;
+ };
+ 
+ extern const char * const *record_usage;
 -- 
-2.25.1
+2.24.1
 
