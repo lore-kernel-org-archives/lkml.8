@@ -7,137 +7,172 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05957C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C347C47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D3821582
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431D32173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 20:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BzwRTp8/"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UzoCHcnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEHU7J (ORCPT
+        id S1727867AbgEHU7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 16:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
+        Fri, 8 May 2020 16:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgEHU7J (ORCPT
+        with ESMTP id S1727828AbgEHU7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 16:59:09 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3326C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:59:08 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c64so3201279qkf.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:59:08 -0700 (PDT)
+        Fri, 8 May 2020 16:59:15 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2689EC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 13:59:15 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id b18so9632841oic.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 13:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=qinORr0SG7+11njGJ/ss7smA7LMvIKvcYCz/jRR8lPQ=;
-        b=BzwRTp8/rzv8F0T2+rEdndgXdruIJ5jfa5qOyBo5ITWnod+C9DkmRjeFJU9yNgG1Ri
-         PV2cd2sDwWDHt1oWL19KugIzj0H7DF4DI7a4CMnMPaesS7XTDfSQ8ddaSlwU/u/S3/cM
-         zqIjNQ+q4kWOmOQ4oxSj+Gn7dSHh9eC2ZAmxYYQLWo5USDX+TWqKbLAFN/G/0YOh0lBF
-         9KRUCD1w7DryfpcJR/AvHbdDpq+rYxRNDg20EIfHb4YiPX2wPSUMV9LLL2H5p2mfnxBF
-         Hzr4vJuWcu5B1D/oBBu+ZQ5BBft1aWtC4GF+U2g3M6SuvMm9g0sAq87WHErHRbJ008wU
-         SshQ==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JvQWomvjxRLudQWRCaB9megG2fXdC0dsqrE9wIO6QIg=;
+        b=UzoCHcnW0VeddBNAXca5ePUWKDqO4F5IKcddt+7x2DPPr5wW20lpdInECrtT3H1iq4
+         KchnkNi2mevHqKxSjitcQY6w/pz2vX/CqsvJ0y4w1UezxkAI4Gy4SCZS2mGwDFDEL33p
+         9ej4GLctnLkeHfH7cseZZkPYJS/WcYjvU2k8c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=qinORr0SG7+11njGJ/ss7smA7LMvIKvcYCz/jRR8lPQ=;
-        b=pgdaTVsh1qxoZJuMb5MBCER3NEIATGmdkLQbOQdU/1JX88OX3yHp+t+tcDf0TQz6dc
-         IR6yYHt8ZnTB3Sre1AyciJkwm+TYImng6U7WRmOotPo5mw6EL/SiNkC/F5yNnRH38VoJ
-         Q2QzyenJ4fYTdrniu9hwe+00G9I36DSf0WXqtCXSEPHndDDFgEvyGe4/n4AkozKQnVR7
-         Jguxj4uuurWXlLsOG8OYsWmXOMa7VUvZCX3tBpXMbWcWIyDTOwCioj6HvoTu4JUtd5tE
-         dOa2gQlkIQzY2VB+qXIDjk4JpPPcpwRLjupHrCmnwhEPApwbwa0zzMH2Kwfew0Ivbpnj
-         mtMQ==
-X-Gm-Message-State: AGi0PuZZzPaKTNBHrMFK6Ydf5DDEoNidEEsl3GqtscStycbIFwp7s7VR
-        /e6PsQh9Z23UDR/Vu5MSRzK+eQ==
-X-Google-Smtp-Source: APiQypIKl3lbcuMPL2YuKLhovD4LMRHKkU6ZYkoYYmNPSSaeLoyJY6sk31pUFQISZVOJjMx/wi3ZMw==
-X-Received: by 2002:a05:620a:13a7:: with SMTP id m7mr2699887qki.498.1588971547831;
-        Fri, 08 May 2020 13:59:07 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 206sm2058974qki.48.2020.05.08.13.59.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 13:59:07 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in
- osq_lock
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <1581429255-12542-1-git-send-email-cai@lca.pw>
-Date:   Fri, 8 May 2020 16:59:05 -0400
-Cc:     Will Deacon <will@kernel.org>, Elver Marco <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <2C8BF141-5384-475F-B713-6D473557C65C@lca.pw>
-References: <1581429255-12542-1-git-send-email-cai@lca.pw>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JvQWomvjxRLudQWRCaB9megG2fXdC0dsqrE9wIO6QIg=;
+        b=VWcpZFQNq/ZIXa5tB1cWXiS8qSctyUOFyfesMmoQkAFEZ/qjQCW6+n1rSD3PVvQRFW
+         FeEfE++S5aiJ4nan5RHVi+qzEgPy0aUMBe2jNfALKKQNYeMwDGSESOHzyLDQyvn4UxCc
+         iJjoof2VcbvvOHAOCy5TArHBEdCSiU7aDEdbp1bVBOLmOU+BmUtOik2sN6Ls14XKTwNX
+         5fh3qmbK8WZku4pHJdlIjvF09OWcFhhD7fffnMSeV7wxa5sXBJlFZK5m7LqSyv8XbvHM
+         31AI+fIMYX6ZytmPFugG3G6+uwNbYViYifOqKUxvNMfqRgw+uQh1suRUTmq8UhEs63yl
+         CsMw==
+X-Gm-Message-State: AGi0PuYYdWNaoYJ9LpzaM+hUWrxUEcw/boXslcjU0osDcFO1XLsurRrY
+        UnPmk4GZZGy5MFxyccuWzLDz7WROTQW1XITgA9vA+w==
+X-Google-Smtp-Source: APiQypLAu0p1Krm7EdSF7szPOyo3xTBi08s9nDniaTs/XUU/hUlKs8JR8+zGu/R5I2zr21JRDg9KubXRs4AnLxBrUgg=
+X-Received: by 2002:aca:2113:: with SMTP id 19mr3361674oiz.128.1588971554521;
+ Fri, 08 May 2020 13:59:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508204751.155488-1-lyude@redhat.com> <20200508204751.155488-4-lyude@redhat.com>
+In-Reply-To: <20200508204751.155488-4-lyude@redhat.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 8 May 2020 22:59:03 +0200
+Message-ID: <CAKMK7uGEssowz-9jX1LP4=eRNTuxN_k4MLfrGqG3szjQE=Gonw@mail.gmail.com>
+Subject: Re: [RFC v4 03/12] drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Nouveau Dev <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 8, 2020 at 10:48 PM Lyude Paul <lyude@redhat.com> wrote:
+>
+> Since we'll be allocating resources for kthread_create_worker() in the
+> next commit (which could fail and require us to clean up the mess),
+> let's simplify the cleanup process a bit by registering a
+> drm_vblank_init_release() action for each drm_vblank_crtc so they're
+> still cleaned up if we fail to initialize one of them.
+>
+> Changes since v3:
+> * Use drmm_add_action_or_reset() - Daniel Vetter
+>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-> On Feb 11, 2020, at 8:54 AM, Qian Cai <cai@lca.pw> wrote:
-> 
-> prev->next could be accessed concurrently as noticed by KCSAN,
-> 
-> write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
->  osq_lock+0x25f/0x350
->  osq_wait_next at kernel/locking/osq_lock.c:79
->  (inlined by) osq_lock at kernel/locking/osq_lock.c:185
->  rwsem_optimistic_spin
->  <snip>
-> 
-> read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
->  osq_lock+0x196/0x350
->  osq_lock at kernel/locking/osq_lock.c:157
->  rwsem_optimistic_spin
->  <snip>
-> 
-> Since the write only stores NULL to prev->next and the read tests if
-> prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
-> shattered, the code is still working correctly. Thus, mark it as an
-> intentional data race using the data_race() macro.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+I think the other patches need a brain that's less in w/e mode :-)
 
-Hmm, this patch has been dropped from linux-next from some reasons.
-
-Paul, can you pick this up along with KCSAN fixes?
-
-https://lore.kernel.org/lkml/1581429255-12542-1-git-send-email-cai@lca.pw/
+Cheers, Daniel
 
 > ---
-> 
-> v2: insert some code comments.
-> 
-> kernel/locking/osq_lock.c | 6 +++++-
-> 1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> index 1f7734949ac8..f733bcd99e8a 100644
-> --- a/kernel/locking/osq_lock.c
-> +++ b/kernel/locking/osq_lock.c
-> @@ -154,7 +154,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
-> 	 */
-> 
-> 	for (;;) {
-> -		if (prev->next == node &&
-> +		/*
-> +		 * cpu_relax() below implies a compiler barrier which would
-> +		 * prevent this comparison being optimized away.
-> +		 */
-> +		if (data_race(prev->next == node) &&
-> 		    cmpxchg(&prev->next, node, NULL) == node)
-> 			break;
-> 
-> -- 
-> 1.8.3.1
-> 
+>  drivers/gpu/drm/drm_vblank.c | 23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> index 758bf74e1cab..a4a9013584e2 100644
+> --- a/drivers/gpu/drm/drm_vblank.c
+> +++ b/drivers/gpu/drm/drm_vblank.c
+> @@ -491,16 +491,12 @@ static void vblank_disable_fn(struct timer_list *t)
+>
+>  static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+>  {
+> -       unsigned int pipe;
+> -
+> -       for (pipe =3D 0; pipe < dev->num_crtcs; pipe++) {
+> -               struct drm_vblank_crtc *vblank =3D &dev->vblank[pipe];
+> +       struct drm_vblank_crtc *vblank =3D ptr;
+>
+> -               WARN_ON(READ_ONCE(vblank->enabled) &&
+> -                       drm_core_check_feature(dev, DRIVER_MODESET));
+> +       WARN_ON(READ_ONCE(vblank->enabled) &&
+> +               drm_core_check_feature(dev, DRIVER_MODESET));
+>
+> -               del_timer_sync(&vblank->disable_timer);
+> -       }
+> +       del_timer_sync(&vblank->disable_timer);
+>  }
+>
+>  /**
+> @@ -510,7 +506,7 @@ static void drm_vblank_init_release(struct drm_device=
+ *dev, void *ptr)
+>   *
+>   * This function initializes vblank support for @num_crtcs display pipel=
+ines.
+>   * Cleanup is handled automatically through a cleanup function added wit=
+h
+> - * drmm_add_action().
+> + * drmm_add_action_or_reset().
+>   *
+>   * Returns:
+>   * Zero on success or a negative error code on failure.
+> @@ -529,10 +525,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned=
+ int num_crtcs)
+>
+>         dev->num_crtcs =3D num_crtcs;
+>
+> -       ret =3D drmm_add_action(dev, drm_vblank_init_release, NULL);
+> -       if (ret)
+> -               return ret;
+> -
+>         for (i =3D 0; i < num_crtcs; i++) {
+>                 struct drm_vblank_crtc *vblank =3D &dev->vblank[i];
+>
+> @@ -541,6 +533,11 @@ int drm_vblank_init(struct drm_device *dev, unsigned=
+ int num_crtcs)
+>                 init_waitqueue_head(&vblank->queue);
+>                 timer_setup(&vblank->disable_timer, vblank_disable_fn, 0)=
+;
+>                 seqlock_init(&vblank->seqlock);
+> +
+> +               ret =3D drmm_add_action_or_reset(dev, drm_vblank_init_rel=
+ease,
+> +                                              vblank);
+> +               if (ret)
+> +                       return ret;
+>         }
+>
+>         DRM_INFO("Supports vblank timestamp caching Rev 2 (21.10.2013).\n=
+");
+> --
+> 2.25.4
+>
 
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
