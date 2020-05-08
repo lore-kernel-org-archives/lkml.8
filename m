@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29C0C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B5C2496D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B1424968
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941554;
-	bh=ms3FREfyZi9NtI4y72lyzMZ3+AJnRMj4Cp5dTvwD+FY=;
+	s=default; t=1588941563;
+	bh=NducT023nwiNoUlVzfNfhqduldpolUNeS4mDLwt4BWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6WW4NUBuIN/upIllA0nFcVD4rM8Jgwxb/Zl9svufzqu4ZtvrP2/MI9muPA46KIs5
-	 dggcCPU+M0gA/Mrm8TmxQ0lxdAePi2Ko1Caa1AyWs5OZhTT9haTPwXaXyD2+3pmi51
-	 O06HePg4WPVMw4tdriq2/1qfo1QF/ULsZcpt9WdA=
+	b=V5e145GKP4KKwl/0BUyLwY0laQaLGIhWGn9DZV8wf/U043EH22DniYuJKbWAqyWSJ
+	 v/gasJSyovcXIcfz9WxCT6yGnSx0uNNqYJcMTPjOntOX6BXyp0VTZnGoS/XUOKOyT1
+	 uNTUI2Chh5/OUawq9QHavtnl78Kk4FIKXvjqazVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgEHMjM (ORCPT
+        id S1727893AbgEHMjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57380 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbgEHMjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:07 -0400
+        id S1728552AbgEHMjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD5812496A;
-        Fri,  8 May 2020 12:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4653A2495F;
+        Fri,  8 May 2020 12:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941546;
-        bh=ms3FREfyZi9NtI4y72lyzMZ3+AJnRMj4Cp5dTvwD+FY=;
+        s=default; t=1588941548;
+        bh=NducT023nwiNoUlVzfNfhqduldpolUNeS4mDLwt4BWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evkH0eOHrYJbID5CWpyNbgDzwn3WGn6hfieZnYbADtB8XkyAjTkYKwCahxceynCWj
-         HBCh16DzzgHtkXeniFacQ0nmMpeHmFU9/tdCkkBjnbyZ00OKQG9KcXN1zVjhA1v21P
-         wjLU5+TZE3SISS/rYVsu+ADYAwVWaHvfoTNk2A44=
+        b=X8QH/JJ4UemFGebGg07mvPrpIo9XFSllLYXXNaDNQk8atYNE9jEOaQRbHSqAmHPZP
+         02oBMNfjVAhSO3RaTasU9O6X95WjUHxuSQWcpZsqzHhYsglZXT4o2Fc4MPHbK+250Z
+         qtL9cpFWrhpCoBp329TI6/PpzHjuXI282MYYelAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rana Shahout <ranas@mellanox.com>,
+        stable@vger.kernel.org, Majd Dibbiny <majd@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 076/312] net/mlx5e: Fix MLX5E_100BASE_T define
-Date:   Fri,  8 May 2020 14:31:07 +0200
-Message-Id: <20200508123129.872051428@linuxfoundation.org>
+Subject: [PATCH 4.4 077/312] net/mlx5: Fix the size of modify QP mailbox
+Date:   Fri,  8 May 2020 14:31:08 +0200
+Message-Id: <20200508123129.938048967@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,52 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rana Shahout <ranas@mellanox.com>
+From: Majd Dibbiny <majd@mellanox.com>
 
-commit 6e4c21894673baabdbef03c3ac2458a28246128b upstream.
+commit 418f8399a8bedf376ec13eb01088f04a76ebdd6f upstream.
 
-Bit 25 of eth_proto_capability in PTYS register is
-1000Base-TT and not 100Base-T.
+Add 16 reserved bytes at the end of mlx5_modify_qp_mbox_in to
+match the hardware spec definition.
 
-Fixes: f62b8bb8f2d3 ('net/mlx5: Extend mlx5_core to
-support ConnectX-4 Ethernet functionality')
-Signed-off-by: Rana Shahout <ranas@mellanox.com>
+Fixes: e126ba97dba9 ('mlx5: Add driver for Mellanox Connect-IB adapters')
+Signed-off-by: Majd Dibbiny <majd@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h         |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/mlx5/qp.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -543,7 +543,7 @@ enum mlx5e_link_mode {
- 	MLX5E_100GBASE_KR4	 = 22,
- 	MLX5E_100GBASE_LR4	 = 23,
- 	MLX5E_100BASE_TX	 = 24,
--	MLX5E_100BASE_T		 = 25,
-+	MLX5E_1000BASE_T	 = 25,
- 	MLX5E_10GBASE_T		 = 26,
- 	MLX5E_25GBASE_CR	 = 27,
- 	MLX5E_25GBASE_KR	 = 28,
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -138,10 +138,10 @@ static const struct {
- 	[MLX5E_100BASE_TX]   = {
- 		.speed      = 100,
- 	},
--	[MLX5E_100BASE_T]    = {
--		.supported  = SUPPORTED_100baseT_Full,
--		.advertised = ADVERTISED_100baseT_Full,
--		.speed      = 100,
-+	[MLX5E_1000BASE_T]    = {
-+		.supported  = SUPPORTED_1000baseT_Full,
-+		.advertised = ADVERTISED_1000baseT_Full,
-+		.speed      = 1000,
- 	},
- 	[MLX5E_10GBASE_T]    = {
- 		.supported  = SUPPORTED_10000baseT_Full,
+--- a/include/linux/mlx5/qp.h
++++ b/include/linux/mlx5/qp.h
+@@ -539,6 +539,7 @@ struct mlx5_modify_qp_mbox_in {
+ 	__be32			optparam;
+ 	u8			rsvd1[4];
+ 	struct mlx5_qp_context	ctx;
++	u8			rsvd2[16];
+ };
+ 
+ struct mlx5_modify_qp_mbox_out {
 
 
