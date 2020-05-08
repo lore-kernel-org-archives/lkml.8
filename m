@@ -2,104 +2,85 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4D1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AA4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C8D208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC7020870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:12:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IALsoFlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEHKKx (ORCPT
+        id S1726817AbgEHKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:10:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:56515 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgEHKKw (ORCPT
+        Fri, 8 May 2020 06:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgEHKMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:10:52 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MjPYI-1irriC0HE2-00kyVw; Fri, 08 May 2020 12:10:50 +0200
-Received: by mail-qt1-f181.google.com with SMTP id x12so768596qts.9;
-        Fri, 08 May 2020 03:10:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PubM1AJMs2SPzyREk1dNDm+Ef132FiQbX3qxneCk/+n8pwUXM/1B
-        /NCWZJreM5ihguzXpz/DaSDEkiNR55Y10MPCzx8=
-X-Google-Smtp-Source: APiQypIExSSlqA8yisz6W2ZLVMPQ/wADq+SWrAtp8zPZ88mwmRPwDsgp08zt9Fp0MCbGchCGJqbxIfTbLpDmW0GLnAY=
-X-Received: by 2002:ac8:2bce:: with SMTP id n14mr2162626qtn.18.1588932648766;
- Fri, 08 May 2020 03:10:48 -0700 (PDT)
+        Fri, 8 May 2020 06:12:32 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C8AC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=R9lBog4QwyyUN2dMY8gMVLm+VAmVFFjpkamhWWZmK+8=; b=IALsoFlbh7+AEmeiGBQPVqG+GV
+        5MPENByL3nWip53KQ4DnR7YepgNA5wA+QW8lHqy1NanzfGQB1jNBWIyVIpTCqJXLa1F9BPZY1GmQc
+        iau3/5yltWKj8j+JAjfJkVg9DXwMhHgJqcas2VexN8f+3I9vtHwi8NjU0tn7hmUjZaHuqKZmGfwg7
+        4iTdMwOr0/Zg+fZYy7xG4wJGpbnOeyLbK/pajw7IbqwRAepurE3ai4Six1pKFCmzx/quVCT9I+fx5
+        p5oSJRNWJ1+valpWQKyzoTO7dR2DLYJXJKxDodc3YGlqpLe9FoJeQRQzXRLl7hfjSnXGc+yChgimt
+        7aok8oYQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWzzI-0006Ff-3a; Fri, 08 May 2020 10:12:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 67322301DFC;
+        Fri,  8 May 2020 12:12:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 52997201C228D; Fri,  8 May 2020 12:12:09 +0200 (CEST)
+Date:   Fri, 8 May 2020 12:12:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org
+Subject: Re: [RFC][PATCH 3/3] x86/entry, ORC: Teach objtool/unwind_orc about
+ stack irq swizzles
+Message-ID: <20200508101209.GY5298@hirez.programming.kicks-ass.net>
+References: <20200507161020.783541450@infradead.org>
+ <20200507161828.801097834@infradead.org>
+ <20200507173809.GK5298@hirez.programming.kicks-ass.net>
+ <20200507183048.rlf2bgj4cf2g4jy6@treble>
+ <878si3e8v2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200508095914.20509-1-grygorii.strashko@ti.com>
-In-Reply-To: <20200508095914.20509-1-grygorii.strashko@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 8 May 2020 12:10:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
-Message-ID: <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
-Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
- TI_CPTS_MOD workaround
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+qrP48GYxWtsysT2SpoHntkSQ4zxwhAWRpqIiuLA9lj+qKiLLvF
- 7K2NZFCXh9TEslfE98abhA93G+YP2CAYgvW5CQSXWaFhydtbdGyHpZqloKPsSleDbc1ULJL
- kxfuR9A645lLHahWvsUoOuCJ7UEvM6z/QgJSuNn2HvBukic1DJjfT9ZrzcMyly2EygNY/NB
- H+BBvitw01j3BDekVWuhA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EPX1zmu9EZs=:b66kWz7wlyXK8CaGzsC5R1
- OIJTXQHxeIZjq9yFwdzgGaAYvKFtHDJMCyTkNvM2Z4lGddGAzWjUwuimCudzObZlYmXXd/vEM
- cj+wcjVNLKTDljX7LhMayi7QgmZOJOqflSlPu8fVkL4iue4+X86SMe7O+fYyEB7orCaXhbtkd
- ukKIngEA/BB62XP5L+osCwcTnoSsDzYPBVCf5Me4hAVhSi0TX27tl7VfsQD/OG02ZaW7dbrJ9
- YZHS0V7S9VWxFRfSDQxUnxTHzrL/MjyNPTzTH3O9fLE5IdXs+OaxbcaaiHSxjDSvpUk+34/di
- WtIoJfl6VG6EySx7jlI4t5WAC65VC0DlH/7h3cvpK7EtTa4DkfGuE/0O3soZdKT1hZeBl1FaL
- wDl9qLUVzP7YUNhXO0iMtBeQ8Wt9GQcV7q9eXMbefuB52mAtbvUGY6ASfSpsCp8LhzvBoFV8q
- zz+XppeWGE2MQHAHscK9mNnRnJ/clKjjfibr2zVgUkaguTNhxuQDGSRMiHXFNxkdtDmUaA2Pz
- +cNiRJclP/3EUxjK1+9czlk966qDK1gVJcfx/yT+DP/DSa7FPkjik81Cn+99vrsiDR0j/aQnO
- OYGmLYBeBdnsRxBauMO+yubSuwQ+W94NdX2u8NCK0ypGQTOFdlgv+TMscQUY7slnZjdi1vw7j
- Q6ixFZ+c9NpkfkMiW85Nv+GmQQKy9GFJ7x8y9x29PmQwNQZOWFhrwVT8f9YiAIimtBumgv+ZG
- 6jUYkH6h4MznC1xflf0+Vjl4+56yTRma/BaAHqZ80isUc6OkhBPszNGwdmDBUgr7m9dKAlWUi
- pEkf3zMa+MxDoMVtCGkvkLf7DXcGozFP66hNJBA8I1nnCHXJgU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878si3e8v2.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> From: Clay McClure <clay@daemons.net>
->
-> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
-> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
-> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
-> form:
->
-> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
-> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
->  ...
->
-> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
-> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
-> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
-> functions) _is_ enabled. So we end up compiling calls to functions that
-> don't exist, resulting in the linker errors.
->
-> This patch fixes build errors and restores previous behavior by:
->  - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
->  - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
+On Thu, May 07, 2020 at 11:24:49PM +0200, Thomas Gleixner wrote:
+> But over our IRC conversation I came up with a 3rd variant:
+> 
+>   For most of the vectors the indirect call overhead is just noise, so
+>   we can run them through the ASM switcher, but for the resched IPI
+>   we can just use a separate direct call stub in ASM.
 
-I don't understand what IS_REACHABLE() is needed for once all the other
-changes are in place. I'd hope we can avoid that. Do you still see
-failures without
-that or is it just a precaution. I can do some randconfig testing on your patch
-to see what else might be needed to avoid IS_REACHABLE().
+Are we sure the rat-poison crap is noise for all the other system
+vectors? I suppose it is for most since they'll do indirect calls
+themselves anyway, right?
 
-        Arnd
+> I can live with that. I might have to pay up for Peter's headaches to
+> teach objtool, but that's a different story. Let me check how many beers
+> he owes me first ...
+
+We're going to be so massively drunk if we ever settle that :-) For now
+I'll just have to live with knowing more about the unwinders.
