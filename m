@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F194C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC04C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D6724957
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2567624956
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943623;
-	bh=pnh/ll8ERzz4v1Jqn1vEW7QrDYbv7ESzpKqHvw/5Nlw=;
+	s=default; t=1588943625;
+	bh=SCLdLovrLVRUd93rAlaRm+4XPG7UJBYmcHAxAVBWmBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GobC6XhYzdZi+4up8YQqjiBAcho1QRe3B/bdJT7/WVZKsHmxsIvoMsmeQJYS0OBL8
-	 ClxgQB3qwbuG3es4ttHlA9FcHIm+j6VJPkVTGjtDxkyIAXgjz6YdQS3WERiSswWfGI
-	 PzEes/YKzreQGbIPFBMAnMGA9bB0kIkp430UAvDI=
+	b=Mf41pPjZNIQDnEG/N5g/zs+mWu1DTVXOzwkEilToVt2WE4VOOv+qMLfD5K0zahB5m
+	 yNZwYqzGY42pMLNQVZjzzaHlHwLkOYilPTO+D9HDAS3Unww78uEasCTS5KwnHLwWNa
+	 LsI1k9W5QNB3Zb6/d6y3tcNommag0AL4AH3l9u/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgEHMri (ORCPT
+        id S1729563AbgEHMri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 8 May 2020 08:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729560AbgEHMrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:37 -0400
+        id S1729550AbgEHMrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0873224969;
-        Fri,  8 May 2020 12:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0F8921473;
+        Fri,  8 May 2020 12:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942056;
-        bh=pnh/ll8ERzz4v1Jqn1vEW7QrDYbv7ESzpKqHvw/5Nlw=;
+        s=default; t=1588942051;
+        bh=SCLdLovrLVRUd93rAlaRm+4XPG7UJBYmcHAxAVBWmBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cx2lucbFz2mGl0rSFfOwj7rUIR/Mz4Rm8Nel+ZJL2jdjw52AsgExKo2QNVYrIVSj7
-         z497+N3MtHOLQiRnrWA8teAbTuyp4Hg4H+7GAqTkWj6hf1pwJPqZ+nV53so5/H7g9H
-         XTbK3adbYl2ZvdF77RKm2StKughz+JeYfVlRRfoY=
+        b=eSFGQI0AbJ3AwD0xAhrsICqS7daKdfv0uvufer5AC4XUFnqkN9uYUx+MNJ2G12rMx
+         VS3hk5pYj7/qtKZ2LE5Z+ucx48WB1ispCL7KmiBhN3xD7GiB/GA2EMTllLbU4obOLs
+         DqZ9SCgvtspZWCQxM3k6mYs2HZAh7oLXdF/qE9HQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Eugenia Emantayev <eugenia@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 272/312] bnxt: add a missing rcu synchronization
-Date:   Fri,  8 May 2020 14:34:23 +0200
-Message-Id: <20200508123143.565452279@linuxfoundation.org>
+Subject: [PATCH 4.4 237/312] mlx4: do not call napi_schedule() without care
+Date:   Fri,  8 May 2020 14:33:48 +0200
+Message-Id: <20200508123141.092527537@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,35 +64,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-commit e5f6f564fd191d365fcd775c06a732a488205588 upstream.
+commit 8cf699ec849f4ca1413cea01289bd7d37dbcc626 upstream.
 
-Add a missing synchronize_net() call to avoid potential use after free,
-since we explicitly call napi_hash_del() to factorize the RCU grace
-period.
+Disable BH around the call to napi_schedule() to avoid following warning
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+[   52.095499] NOHZ: local_softirq_pending 08
+[   52.421291] NOHZ: local_softirq_pending 08
+[   52.608313] NOHZ: local_softirq_pending 08
+
+Fixes: 8d59de8f7bb3 ("net/mlx4_en: Process all completions in RX rings after port goes up")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Michael Chan <michael.chan@broadcom.com>
-Acked-by: Michael Chan <michael.chan@broadcom.com>
+Cc: Erez Shitrit <erezsh@mellanox.com>
+Cc: Eugenia Emantayev <eugenia@mellanox.com>
+Cc: Tariq Toukan <tariqt@mellanox.com>
+Acked-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/en_netdev.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -4250,6 +4250,10 @@ static void bnxt_del_napi(struct bnxt *b
- 		napi_hash_del(&bnapi->napi);
- 		netif_napi_del(&bnapi->napi);
- 	}
-+	/* We called napi_hash_del() before netif_napi_del(), we need
-+	 * to respect an RCU grace period before freeing napi structures.
-+	 */
-+	synchronize_net();
- }
+--- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
+@@ -1724,8 +1724,11 @@ int mlx4_en_start_port(struct net_device
+ 	/* Process all completions if exist to prevent
+ 	 * the queues freezing if they are full
+ 	 */
+-	for (i = 0; i < priv->rx_ring_num; i++)
++	for (i = 0; i < priv->rx_ring_num; i++) {
++		local_bh_disable();
+ 		napi_schedule(&priv->rx_cq[i]->napi);
++		local_bh_enable();
++	}
  
- static void bnxt_init_napi(struct bnxt *bp)
+ 	netif_tx_start_all_queues(dev);
+ 	netif_device_attach(dev);
 
 
