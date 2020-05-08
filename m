@@ -2,128 +2,171 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F020C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC4C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAE420A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588933334;
-	bh=0zdzBynO1wxpltbyCDGMW3LJkzChWsD2F3DXAG0KVvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R6ZYFADtRVUR27Envp554HNJLFWB7CZeDFTrZzw5N+MqfAFEb6DDQeIp+9sxQHiks
-	 mQ/PJFDTz/+OqZdL+NELfEXE+6G9+fFCFiAeYbDpfVflgulROWTIBgdpKYzSOEhnUF
-	 xWoHf4E8GRAfB45njaPYVROv6c6YYcmdUnyjzJ2A=
+	by mail.kernel.org (Postfix) with ESMTP id C339720A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n/5n/GKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHKWN (ORCPT
+        id S1727067AbgEHKWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgEHKWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:22:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 06:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgEHKWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:22:24 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE45C05BD43;
+        Fri,  8 May 2020 03:22:23 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DBA208D6;
-        Fri,  8 May 2020 10:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588933332;
-        bh=0zdzBynO1wxpltbyCDGMW3LJkzChWsD2F3DXAG0KVvs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1LorngV4QwrEbOgNnfaULvNuCzhPnLImq+CL9GgvYjaScTv/v1pQTz7r67TRzncGC
-         wnJoT6sRoiyLNpqXUsZhDchHJZhmOrP9iYVSr4QGjPFiXMC9pKtsJLpWVNmXG/oO6d
-         mOSP6xhcQ5fR9Zdxi+tbEjHDtt1EygyINhUb5aEo=
-Date:   Fri, 8 May 2020 11:22:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JRGN5tpbz9sRf;
+        Fri,  8 May 2020 20:22:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588933341;
+        bh=0eP6U+NWK0xCwg5huvpFDX9P9MaHXUOvW79JeY6HvRY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=n/5n/GKGGCsZdI4upKuvZCEou+MpCKkdSqV1mA54dEnbVlIOuyiOs2AX+tcp5exdc
+         401m+LJkSJnKtyYCGWlSIo/KHDG7v/c8JLGreZmYB5u5vVNVdF5ZwKDUao26RGhEZJ
+         /OqrgHyyZyLuXrM8CuQrp9HnjN8UjSi7qFhrVu2QnkyI7hOpvvRwwyvoVMuisTGel7
+         EpY3Kb9ek0KflnY6UvkRjspUgU+ebzSpKm+BuUMjAgqxkA3Zp2zJrHKaWPXm9I1Bw1
+         SryKvC/JcdX/D45TFPwTiUegqxIxuGlrRwoKmfjqRYFcNEiyvK/o3QBKQP+KC6SxFt
+         YDhohpfhqPEUA==
+Date:   Fri, 8 May 2020 20:22:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200508102210.GC4820@sirena.org.uk>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
- <20200508101541.e3yxaocuilaiyutg@mobilestation>
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: linux-next: manual merge of the akpm-current tree with the hmm tree
+Message-ID: <20200508202217.4e5b9442@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+nBD6E3TurpgldQp"
-Content-Disposition: inline
-In-Reply-To: <20200508101541.e3yxaocuilaiyutg@mobilestation>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/iOmcVrOf7YhC3l4oDlRuo/9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/iOmcVrOf7YhC3l4oDlRuo/9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---+nBD6E3TurpgldQp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi all,
 
-On Fri, May 08, 2020 at 01:15:41PM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-> > > slave device. Taking into account the peculiarities of the controller
-> > > registers and physically mapped SPI flash access, very limited resources
-> > > and seeing the normal usecase of the controller is to access an external
-> > > SPI-nor flash, we decided to create a dedicated SPI driver for it.
+  tools/testing/selftests/vm/Makefile
 
-> > It seems a lot of code.
-> > Why can't you use spi-dw-mmio.c et al.?
+between commit:
 
-> I said above why. Even though the registers set is similar It's too specific
-> to be integrated into the generic DW SSI driver.
+  b0d449922eb8 ("mm/hmm/test: add selftests for HMM")
 
-Can you be more specific about the issues?  From what you wrote it
-sounded like the main thing was chip select handling.
+from the hmm tree and commit:
 
-> > > The driver provides callbacks for native messages-based SPI interface,
-> > > SPI-memory and direct mapping read operations. Due to not having any
-> > > asynchronous signaling interface provided by the core we have no choice
+  3a07caa68f66 ("selftests: vm: pkeys: fix multilib builds for x86")
 
-What do you mean by "asynchronous signaling interface provided by the
-core" here?
+from the akpm-current tree.
 
---+nBD6E3TurpgldQp
-Content-Type: application/pgp-signature; name="signature.asc"
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/vm/Makefile
+index c6eb5305a0f6,d7eae41be628..000000000000
+--- a/tools/testing/selftests/vm/Makefile
++++ b/tools/testing/selftests/vm/Makefile
+@@@ -34,8 -58,55 +59,57 @@@ TEST_FILES :=3D test_vmalloc.s
+  KSFT_KHDR_INSTALL :=3D 1
+  include ../lib.mk
+ =20
++ ifeq ($(ARCH),x86_64)
++ BINARIES_32 :=3D $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
++ BINARIES_64 :=3D $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
++=20
++ define gen-target-rule-32
++ $(1) $(1)_32: $(OUTPUT)/$(1)_32
++ .PHONY: $(1) $(1)_32
++ endef
++=20
++ define gen-target-rule-64
++ $(1) $(1)_64: $(OUTPUT)/$(1)_64
++ .PHONY: $(1) $(1)_64
++ endef
++=20
++ ifeq ($(CAN_BUILD_I386),1)
++ $(BINARIES_32): CFLAGS +=3D -m32
++ $(BINARIES_32): LDLIBS +=3D -lrt -ldl -lm
++ $(BINARIES_32): %_32: %.c
++ 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(notdir $^) $(LDLIBS) -o $@
++ $(foreach t,$(TARGETS),$(eval $(call gen-target-rule-32,$(t))))
++ endif
++=20
++ ifeq ($(CAN_BUILD_X86_64),1)
++ $(BINARIES_64): CFLAGS +=3D -m64
++ $(BINARIES_64): LDLIBS +=3D -lrt -ldl
++ $(BINARIES_64): %_64: %.c
++ 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(notdir $^) $(LDLIBS) -o $@
++ $(foreach t,$(TARGETS),$(eval $(call gen-target-rule-64,$(t))))
++ endif
++=20
++ # x86_64 users should be encouraged to install 32-bit libraries
++ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
++ all: warn_32bit_failure
++=20
++ warn_32bit_failure:
++ 	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;		\
++ 	echo  "environment. This will reduce test coverage of 64-bit" 2>&1;	\
++ 	echo  "kernels. If you are using a Debian-like distribution," 2>&1;	\
++ 	echo  "try:"; 2>&1;							\
++ 	echo  "";								\
++ 	echo  "  apt-get install gcc-multilib libc6-i386 libc6-dev-i386";	\
++ 	echo  "";								\
++ 	echo  "If you are using a Fedora-like distribution, try:";		\
++ 	echo  "";								\
++ 	echo  "  yum install glibc-devel.*i686";				\
++ 	exit 0;
++ endif
++ endif
++=20
+ +$(OUTPUT)/hmm-tests: LDLIBS +=3D -lhugetlbfs -lpthread
+ +
+  $(OUTPUT)/userfaultfd: LDLIBS +=3D -lpthread
+ =20
+  $(OUTPUT)/mlock-random-test: LDLIBS +=3D -lcap
+
+--Sig_/iOmcVrOf7YhC3l4oDlRuo/9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61MtEACgkQJNaLcl1U
-h9BbBAf+Jl9EnhQJquSLhnymjo26KCwHkpt/NEN6OKsKTLYfqL6Emy6SUPmqzpdM
-AUxNE0209CAMHG/ThduAVeKtICEoc5aek/HHkit5GcPze80sUzY2xRTLvNtVFp2S
-DcYhPtO+n422dQo/pp4T7LOBp+9o/oLkw3laGi8PL2zqGu7JOMOaEt8Zxsr1V5OV
-UrtTzdDW6ztfatRY/p1Re4Uy+pDS6fPEgfHKxImaZSeoLSbhLc07y3R6QOtChd+p
-Kk3L9eoLS90IjB9xTHjgASfmLKE+15kuoRfH0w3bU3ldRRUVlfckYXxKklZBVRO4
-KnZnpFoa6wjOYpoPbHLv5cpFOXKpPw==
-=5r9D
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl61MtkACgkQAVBC80lX
+0Gw3qgf+ORbO3azVXtR8qyfH3XIufSQI+LSOmdlh6sLbHMSrZTaQF/dww/JzxYjt
+2O6dkaT77oYyk0rELeL1H3NG/BRCZqZrbf4MmOn8DjgrBLjEEr/jbBn3d79Xs57z
+PiheQC95xeWrQsW5YwWv/AjSHEJRCUfjZx7YZY01Q1ResrhqVRuiROI9G6zIPg8L
+hgbv4z9A8BDeOlyVqqN18nAA2oT+a9I0GN+8dCqQI+dwobs8u5vozIn2HLEctAlZ
+sVISSdQt8buVd1q50CEFdovstbgVoBC7Jh+IHLOhOQZ7DaiuWwGoU2Y8g/C+q3RD
+wWQkJWZPcX4kVZ2kh1WsYCqkxfGFZA==
+=O108
 -----END PGP SIGNATURE-----
 
---+nBD6E3TurpgldQp--
+--Sig_/iOmcVrOf7YhC3l4oDlRuo/9--
