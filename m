@@ -2,122 +2,90 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF703C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D6C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6EDF20725
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxLwCwC8"
+	by mail.kernel.org (Postfix) with ESMTP id 77EDB20725
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEHB5U (ORCPT
+        id S1727076AbgEHB5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43518 "EHLO
+        Thu, 7 May 2020 21:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726701AbgEHB5T (ORCPT
+        by vger.kernel.org with ESMTP id S1726627AbgEHB5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:57:19 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89957C05BD43;
-        Thu,  7 May 2020 18:57:19 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id f82so7228095ilh.8;
-        Thu, 07 May 2020 18:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+69UJCHoe33EYwKtcLPJBKj4jo21jYdcKYJIlnvd2X8=;
-        b=HxLwCwC8TRx/pKBzQSsc2fiNwMwDc9+bgoY7gJqpJTyWUYCEYxLSNXjYBMU1WlMMU1
-         109Uro6fOh3DUUSImAi1lOYUPpmgHp20jHMZKrX/FmKUO1+CkjNUtV7Ju/1BOvwEJTR2
-         Evsp+jKx8u/4qxSbQncZ0RtkPFVJ1E0wdtsRYjaXhh0HHuNs0aL0bL0G/Inace3dcL3C
-         MH4xy3WeTngVzK7YrwKUf9d1WT6IEhsHHJ2GYtQUZE1noaxK8YyVi6A168uohdV5b6/t
-         UadQyk5VJ4yeGpXeDkjHfgnfhAnkkavDKvHRTJvXmv9RA/R0POqqu+hSmbX3yHjMHf5w
-         6RvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+69UJCHoe33EYwKtcLPJBKj4jo21jYdcKYJIlnvd2X8=;
-        b=Fc3sdkmC4eor9G1jJrCGnn5Jd9MIOf8FhVwa/ECFKlzc+FUFovyw5jywiZvuFwph8i
-         sLzhzW773SI8ARdwZkNoVbNuMcHKCC8AMs8sxWB9MsydEjTCZ3i/hOy75cbZUAB938Dr
-         39lcNtJDedTZ9uJ4Q57kx2sRPhNU+OYN+tBjE06hE+Lwn4kZfgYGB4HEGJXiBbNDPS8m
-         80Sd1mDTPfC6RMB6qoQVAj9B7OhE2ZCoW72yNtc1FzhqUQ3zw0YQWoeN7oLo1gWyUF70
-         K6w+8oKg2DD1ow5UdlLqTmO+wYrabHutOgxsZBkclpmBdCJjrng9XsVPgyz1vuTr3AA2
-         NzAQ==
-X-Gm-Message-State: AGi0PuY6nZpzGRcaj/BU0JHJ+LIiySa+MF3iXe9bI3fbP1gmUslJajCh
-        rklpZlnPJlvI4LH2wdVmTqV3ARVJ+NlDhI9J0Q==
-X-Google-Smtp-Source: APiQypJWgXolt6buxgHn27fREaAUO11sgbKKU6WxrPa7V4fVSJ37lIGvSJS8RzOTTePKUgZ+xK4d0el86IGIGtmBvx8=
-X-Received: by 2002:a05:6e02:d0c:: with SMTP id g12mr245188ilj.27.1588903038948;
- Thu, 07 May 2020 18:57:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505174423.199985-1-ndesaulniers@google.com>
- <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com> <20200507113422.GA3762@hirez.programming.kicks-ass.net>
- <CAMzpN2hXUYvLuTA63N56ef4DEzyWXt_uVVq6PV0r8YQT-YN42g@mail.gmail.com>
- <CAKwvOd=a3MR7osKBpbq=d41ieo7G9FtOp5Kok5por1P5ZS9s4g@mail.gmail.com> <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
-In-Reply-To: <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 7 May 2020 21:57:07 -0400
-Message-ID: <CAMzpN2gu4stkRKTsMTVxyzckO3SMhfA+dmCnSu6-aMg5QAA_JQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: bitops: fix build regression
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 May 2020 21:57:30 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249E9C05BD43;
+        Thu,  7 May 2020 18:57:30 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DF5A71192EECA;
+        Thu,  7 May 2020 18:57:29 -0700 (PDT)
+Date:   Thu, 07 May 2020 18:57:29 -0700 (PDT)
+Message-Id: <20200507.185729.1624205043764238245.davem@davemloft.net>
+To:     gustavoars@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: atarilance: Replace zero-length array with
+ flexible-array
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200507190133.GA15348@embeddedor>
+References: <20200507190133.GA15348@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 18:57:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 6:29 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> On Thu, May 7, 2020 at 12:19 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Thu, May 7, 2020 at 7:00 AM Brian Gerst <brgerst@gmail.com> wrote:
-> > >
-> > > This change will make sparse happy and allow these cleanups:
-> > > #define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
-> >
-> > yep, this is more elegant, IMO.  Will send a v3 later with this
-> > change.  Looking at the uses of CONST_MASK, I noticed
-> > arch_change_bit() currently has the (u8) cast from commit
-> > 838e8bb71dc0c ("x86: Implement change_bit with immediate operand as
-> > "lock xorb""), so that instance can get cleaned up with the above
-> > suggestion.
->
-> Oh, we need the cast to be the final operation.  The binary AND and
-> XOR in 2 of the 3 uses of CONST_MASK implicitly promote the operands
-> of the binary operand to int, so the type of the evaluated
-> subexpression is int.
-> https://wiki.sei.cmu.edu/confluence/display/c/EXP14-C.+Beware+of+integer+promotion+when+performing+bitwise+operations+on+integer+types+smaller+than+int
-> So I think this version (v2) is most precise fix, and would be better
-> than defining more macros or (worse) using metaprogramming.
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Thu, 7 May 2020 14:01:33 -0500
 
-One last suggestion.  Add the "b" modifier to the mask operand: "orb
-%b1, %0".  That forces the compiler to use the 8-bit register name
-instead of trying to deduce the width from the input.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
---
-Brian Gerst
+Applied to net-next.
