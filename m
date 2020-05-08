@@ -2,151 +2,92 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A1EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2404C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 934A7218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588973486;
-	bh=1RunAbg9yPDYcIM2xk1zX+QnL3l50+9M4joa5kazxcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eYS5W2j0hlJv8vsE2CqFoDh5xE4fQJ4tl9Nuor/ooW13od/0AtCh6zLjmc1iWHcuw
-	 aabmBBEbituC8Juuqll3grjWg79u4y15GIAMgXTMzP+oIx1BKKzuBQ9FlGNUchAnzK
-	 8bZxMuQlBdVz3MuEzDhRE9VTsTXXt2Jn0ht9Bo/s=
+	by mail.kernel.org (Postfix) with ESMTP id B64E221974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgEHVb0 (ORCPT
+        id S1728027AbgEHVb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 8 May 2020 17:31:28 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56509 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgEHVb0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 17:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgEHVbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:31:25 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8209621582;
-        Fri,  8 May 2020 21:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588973484;
-        bh=1RunAbg9yPDYcIM2xk1zX+QnL3l50+9M4joa5kazxcQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r9Vj0PpLCl4w8rRHSw6AblX5YPetgOMvn5t6JQ5/rEm7JUBJrmpi1CyYoP5xoRqba
-         3Q4zQfJRZSRhDwhiY9MiZ5bpO2u/uhKq8OpBRiXIyFowLSlXFdmtiUUTg5OVqC0tmq
-         aORagheluEp71miwtnayZtAR6zHS/gEUfFz6rSZc=
-Received: by pali.im (Postfix)
-        id 73C0A7F5; Fri,  8 May 2020 23:31:22 +0200 (CEST)
-Date:   Fri, 8 May 2020 23:31:22 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Missing CLOCK_BOOTTIME_RAW?
-Message-ID: <20200508213122.f7srcd2gnduamtvs@pali>
-References: <20200508201859.vlffp4fomw2fr4qc@pali>
- <878si2jg6q.fsf@nanos.tec.linutronix.de>
+Received: from mail-lj1-f173.google.com ([209.85.208.173]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MuDPf-1jGAvx2wCD-00uWaB; Fri, 08 May 2020 23:31:24 +0200
+Received: by mail-lj1-f173.google.com with SMTP id w20so3211984ljj.0;
+        Fri, 08 May 2020 14:31:24 -0700 (PDT)
+X-Gm-Message-State: AOAM5314kEMRbua6F9Dp298D9kLMnoxisOhK8qdBfJg6X3LJml7hJrx9
+        0TKfCMJurVnxnmj8uofZClrSpOqTCCOjouz5lds=
+X-Google-Smtp-Source: ABdhPJyHg8MtU3S0jmVPS8JYIXj9GjAxbHvNtdVIUL9iInah4pcLMe5RRVXMZsvDNN4rp4NQeWT9GblGkhSDIDK95LU=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr3009771lji.73.1588973484186;
+ Fri, 08 May 2020 14:31:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <878si2jg6q.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
+References: <20200505135402.29356-1-arnd@arndb.de> <20200506051200.GA831492@ubuntu-s3-xlarge-x86>
+In-Reply-To: <20200506051200.GA831492@ubuntu-s3-xlarge-x86>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 8 May 2020 23:31:07 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
+Message-ID: <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
+Subject: Re: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Sterba <dsterba@suse.com>,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        Eric Biggers <ebiggers@google.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:EmKph5npPCxYfI9u4L95ryvsW+6lyiFtMKlS8HVYY6z+rUBPWtI
+ zui8CXtU1O92hlJJqkdTxouXBaNmOqBP5OIyJ/njdbWSGYVecC0kSFyAU05+OZwJt58Nvl/
+ 6RctLkG0SyoYWaoLNoDwk83tsZHxvsD2mWfKmK6np9aeLAhDb50pQEq95yCBvNdNC4FRFI7
+ NYT82E0GHY8rrdpkyV8Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fFsY7uQ7Lyw=:zgU2rXSehQPUjvUaH3nmrV
+ aQb3NESTf2Sruw/FeQ4G812+gCyNxLauSPrZu8I3iCCxLIUiF2GPwjShfTDZJNdRpXiFaMas9
+ 6lySvC6ISiUVAJdGPlQw747S44XVPZ13AarzMkFzu9RA0qwdXOSootwbZUNVDJB6lIQ0ATSld
+ gAFUTSco0dpcaWnylPrWCfWSj3v8F41m1nlsnqQJfmh8PlhUS2dQA7nBw4bSLdfl8abUZWDcG
+ ryoYXGXhWjnBSy65UInouNcLhGW1ViWsqV8vIYlAalwp6au1hkeyPTRJnvZO43T9koDmw/PLt
+ fycDE6gQVByhbDmE33L7hDqBPzwye0sTYod/4ZvqvNODYYr7107D7ThMBIy5ceg0FbqwN6fky
+ 0G//oiRguIWlQsnLqxUUZ0VMbf/irE+xlVnpJfyZrCV4pzO7D6guxVCf21RJFt9L0t9q/0Gu+
+ 4aTECpe2tDo35oh7EgjE4xFL1bRYwZZl0RcBjc8c1kX0TXn0v6t7fiERhFA5MBBkc9a6tjzYZ
+ PwwJrgAjx9VTh5suWxSl8uSJXsCuADDKm0DCLn4GfYBo88EWJD2+CXmAQe8cx0MUBEsHUFrxh
+ IlYFSrWVRef5Lzm0++VLN/lZWhYVztN+mReCq6rpZKOTU14FwiMaYHQGwuDgwBS1BJLF1ulA2
+ p/a+6WChYnqp45PjNwA+PU+FtvmDka0kb00lKz3+OtU4QcnovnsXVZwG2zDDsof5aqEpp7vVK
+ eoWdIwIPY+hI8AREc4SqlsKCP9Tys+FR5P714R2wUQMHVHY34A+Hty6invFtHYGHtg1VCi1ZW
+ 2GBUb4zQNQBdE467UVK48XNyz2OcT68Zwcik/u9pvqa9L/+zIs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 08 May 2020 22:59:57 Thomas Gleixner wrote:
-> Pali,
-> 
-> Pali Rohár <pali@kernel.org> writes:
-> 
-> > I'm looking at clocks which are provided by kernel for userspace
-> > applications via clock_gettime() syscall and I think that there is
-> > missing clock variant CLOCK_BOOTTIME_RAW.
-> >
-> > If userspace application wants to measure time difference between two
-> > events then I think all of available clocks CLOCK_REALTIME,
-> > CLOCK_MONOTONIC, CLOCK_MONOTONIC_RAW and CLOCK_BOOTTIME have some issues
-> > for such task.
-> ...
-> > CLOCK_BOOTTIME is affected by NTP jumps but provides correct time
-> > difference when system was suspended during measurement.
-> 
-> What do you mean with NTP jumps?
-> 
-> Neither CLOCK_BOOTTIME nor CLOCK_MONOTONIC jump. They are frequency
-> corrected when NTP, PTP or PPS are in use. The frequency correction is
-> incremental an smothed. They really don't jump and they give you proper
-> time in nanoseconds which is as close to the real nanoseconds as it
-> gets.
+On Wed, May 6, 2020 at 7:12 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> > -
+> > +#ifdef CONFIG_CC_IS_CLANG
+>
+> Given your comment in the bug:
+>
+> "The code is written to assume no loops are unrolled"
+>
+> Does it make sense to make this unconditional and take compiler
+> heuristics out of it?
+>
+> > +#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
+> > +#endif
+> >       for (i = 0; i < 8; ++i)
+> >               S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
 
-Hello! I should have been more precise about it. CLOCK_BOOTTIME and
-CLOCK_MONOTONIC do not jump but I understood that they are affected by
-adjtime(). So these clocks may tick faster or slower than real time. NTP
-daemon when see that CLOCK_REALTIME is incorrect, it may speed up or
-slow down its ticking. And this is affected also by CLOCK_BOOTTIME and
-CLOCK_MONOTONIC, right?
+No, that would not work, as gcc does not support this pragma.
 
-> CLOCK_MONOTONIC_RAW converts some assumed clock frequency into something
-> which looks like time. But it's raw and subject to drift. The only
-> reason why it's exposed is because NTP/PTP need it to calculate the
-> frequency difference between the hardware counter and the master clock.
-
-  CLOCK_MONOTONIC_RAW
-      Similar to CLOCK_MONOTONIC, but provides access to a raw
-      hardware-based time that is not subject to NTP adjustments or the
-      incremental adjustments performed by adjtime(3).
-
-I understood it that it is like CLOCK_MONOTONIC but is not affected by
-adjtime() which is used by NTP daemon to slow down or speed up system
-clock to synchronize it (when system clock is incorrect).
-
-So I thought that this clock is better for time differences as measured
-time would not be affected when NTP daemon speeded up system clock via
-adjtime().
-
-You wrote that this clock is subject to drifts. What exactly may happen
-with CLOCK_MONOTONIC_RAW?
-
-> > So for me it looks like that there is missing CLOCK_BOOTTIME_RAW clock
-> > which would not be affected by NTP jumps (like CLOCK_MONOTONIC_RAW) and
-> > also would not be affected by system suspend (like CLOCK_BOOTTIME).
-> >
-> > Please correct me if I'm wrong in some of my above assumptions. It is
-> > how I understood documentation for clock_gettime() function from Linux
-> > manpage.
-> 
-> I don't know how you read jumps into this:
-> 
->   CLOCK_MONOTONIC
-> 
->    Clock that cannot be set and represents monotonic time since some
->    unspecified starting point.  This clock is not affected by
->    discontinuous jumps in the system time (e.g., if the system
->    administrator manually changes the clock), but is affected by the
->    incremental adjustments performed by adjtime(3) and NTP.
-
-Sorry, by jump I mean that clock may be adjusted (even smoothed
-adjustment).
-
-> And CLOCK_BOOTTIME is the same except that it accounts time in suspend
-> while MONOTONIC stops in suspend.
-> 
-> > Is there any reason why kernel does not provide such CLOCK_BOOTTIME_RAW
-> > clock for userspace applications which would be interested in measuring
-> > time difference which occurred between two events?
-> 
-> Nobody needs it and there is even no guarantee that it can be
-> reconstructed on resume.
-> 
-> If you want accurate time deltas then use either CLOCK_MONOTONIC or
-> CLOCK_BOOTTIME depending on your interest in suspend time.
-> 
-> Thanks,
-> 
->         tglx
+        Arnd
