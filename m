@@ -2,57 +2,59 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4D2C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F07C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAE824958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A882496A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942472;
-	bh=nfiwwpDz/de7q+n6W8S3wgYmXpKZ5Q6kBvbCxOI4mBQ=;
+	s=default; t=1588942477;
+	bh=5M9/i+sHmIz8sIvRvyAC4vBnfJk2Ljuv92Rsyc2GraY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOgAu50n/p1qXDsuoh+Lv4vp27w1+DcAnzf+ZLNGL2mczrNKwwyQ0VreICL5cOWVW
-	 LbU+vBghjMKeJjVC69kZmE2fl8IT6qApdNu90MK3LPAQC5+2TWABmfp0CHHnm5b/UI
-	 6oKk4+IWl5b2ZMUuxNf03+KVEl0qmjmcKiZSD2NA=
+	b=t4DIxzcyM01CTIEQNPv6qra9IIwfv6Ajk/Tgvje1seI4cRVmmtJvPN4AOab/hq0QE
+	 /aUJsFFHrMqgn97M3+7ESP/BY2BKIrvIGIJ5pq7NGIr0vMPdIlVd1QSGPxAxOUMu6X
+	 m4mXr/WnMyIHH+YhNGpJOYKDP+/0s5yljiCp5UbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgEHMyb (ORCPT
+        id S1730227AbgEHMyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36750 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgEHMy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:27 -0400
+        id S1730218AbgEHMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF822054F;
-        Fri,  8 May 2020 12:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC4E724958;
+        Fri,  8 May 2020 12:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942465;
-        bh=nfiwwpDz/de7q+n6W8S3wgYmXpKZ5Q6kBvbCxOI4mBQ=;
+        s=default; t=1588942473;
+        bh=5M9/i+sHmIz8sIvRvyAC4vBnfJk2Ljuv92Rsyc2GraY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lA0GXtmhCX/5RDV581hrr9H0OWDfGRjMIGYgu4xu+sMJRw5ybBJZCX16nRi3ezN2k
-         +rbjSCdDjMXH3zPLDqkK8NLFOMr0pD27ewNHF4y+VaT9YSpiqc7ouvBVu5fPKeN62J
-         SbHs4MtwiMGUvs0ZxfQf+Beky4+JqF5KBWWonzSE=
+        b=UkZuAPeEkdPbt1IwvzJTDI2Bjw3li3dFw6Aipu/CWbpnNV0PjdHbJNyQxfWiGLkgo
+         mi5BXYz4aFc/leDecxmN3lporc0k63RqGLkzjLgOwpeBxEytUE98OwbPzR9frwozT0
+         2A2sJRr9TZaCQwWVRNb8/ewr6SJXckwhIWkzQO/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heidi Fahim <heidifahim@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 33/50] Revert "software node: Simplify software_node_release() function"
-Date:   Fri,  8 May 2020 14:35:39 +0200
-Message-Id: <20200508123048.021195543@linuxfoundation.org>
+        stable@vger.kernel.org, Ning Bo <n.b@live.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jia He <justin.he@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.6 01/49] vhost: vsock: kick send_pkt worker once device is started
+Date:   Fri,  8 May 2020 14:35:18 +0200
+Message-Id: <20200508123043.013091973@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
-References: <20200508123043.085296641@linuxfoundation.org>
+In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
+References: <20200508123042.775047422@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,92 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Jia He <justin.he@arm.com>
 
-commit 7589238a8cf37331607c3222a64ac3140b29532d upstream.
+commit 0b841030625cde5f784dd62aec72d6a766faae70 upstream.
 
-This reverts commit 3df85a1ae51f6b256982fe9d17c2dc5bfb4cc402.
+Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+connecting from the client side. The vhost vsock client tries to connect
+an initializing virtio vsock server.
 
-The reverted commit says "It's possible to release the node ID
-immediately when fwnode_remove_software_node() is called, no need to
-wait for software_node_release() with that." However, releasing the node
-ID before waiting for software_node_release() to be called causes the
-node ID to be released before the kobject and the underlying sysfs
-entry; this means there is a period of time where a sysfs entry exists
-that is associated with an unallocated node ID.
+The abnormal flow looks like:
+host-userspace           vhost vsock                       guest vsock
+==============           ===========                       ============
+connect()     -------->  vhost_transport_send_pkt_work()   initializing
+   |                     vq->private_data==NULL
+   |                     will not be queued
+   V
+schedule_timeout(2s)
+                         vhost_vsock_start()  <---------   device ready
+                         set vq->private_data
 
-Once consequence of this is that there is a race condition where it is
-possible to call fwnode_create_software_node() with no parent node
-specified (NULL) and have it fail with -EEXIST because the node ID that
-was assigned is still associated with a stale sysfs entry that hasn't
-been cleaned up yet.
+wait for 2s and failed
+connect() again          vq->private_data!=NULL         recv connecting pkt
 
-Although it is difficult to reproduce this race condition under normal
-conditions, it can be deterministically reproduced with the following
-minconfig on UML:
+Details:
+1. Host userspace sends a connect pkt, at that time, guest vsock is under
+   initializing, hence the vhost_vsock_start has not been called. So
+   vq->private_data==NULL, and the pkt is not been queued to send to guest
+2. Then it sleeps for 2s
+3. After guest vsock finishes initializing, vq->private_data is set
+4. When host userspace wakes up after 2s, send connecting pkt again,
+   everything is fine.
 
-CONFIG_KUNIT_DRIVER_PE_TEST=y
-CONFIG_DEBUG_KERNEL=y
-CONFIG_DEBUG_OBJECTS=y
-CONFIG_DEBUG_OBJECTS_TIMERS=y
-CONFIG_DEBUG_KOBJECT_RELEASE=y
-CONFIG_KUNIT=y
+As suggested by Stefano Garzarella, this fixes it by additional kicking the
+send_pkt worker in vhost_vsock_start once the virtio device is started. This
+makes the pending pkt sent again.
 
-Running the tests with this configuration causes the following failure:
+After this patch, kata-runtime (with vsock enabled) boot time is reduced
+from 3s to 1s on a ThunderX2 arm64 server.
 
-<snip>
-kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 400)
-	ok 1 - pe_test_uints
-sysfs: cannot create duplicate filename '/kernel/software_nodes/node0'
-CPU: 0 PID: 28 Comm: kunit_try_catch Not tainted 5.6.0-rc3-next-20200227 #14
-<snip>
-kobject_add_internal failed for node0 with -EEXIST, don't try to register things with the same name in the same directory.
-kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 100)
-	# pe_test_uint_arrays: ASSERTION FAILED at drivers/base/test/property-entry-test.c:123
-	Expected node is not error, but is: -17
-	not ok 2 - pe_test_uint_arrays
-<snip>
+[1] https://github.com/kata-containers/runtime/issues/1917
 
-Reported-by: Heidi Fahim <heidifahim@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: Ning Bo <n.b@live.com>
+Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+Link: https://lore.kernel.org/r/20200501043840.186557-1-justin.he@arm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/swnode.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/vhost/vsock.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -679,6 +679,13 @@ static void software_node_release(struct
- {
- 	struct swnode *swnode = kobj_to_swnode(kobj);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -543,6 +543,11 @@ static int vhost_vsock_start(struct vhos
+ 		mutex_unlock(&vq->mutex);
+ 	}
  
-+	if (swnode->parent) {
-+		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
-+		list_del(&swnode->entry);
-+	} else {
-+		ida_simple_remove(&swnode_root_ids, swnode->id);
-+	}
++	/* Some packets may have been queued before the device was started,
++	 * let's kick the send worker to send them.
++	 */
++	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
 +
- 	if (swnode->allocated) {
- 		property_entries_free(swnode->node->properties);
- 		kfree(swnode->node);
-@@ -844,13 +851,6 @@ void fwnode_remove_software_node(struct
- 	if (!swnode)
- 		return;
+ 	mutex_unlock(&vsock->dev.mutex);
+ 	return 0;
  
--	if (swnode->parent) {
--		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
--		list_del(&swnode->entry);
--	} else {
--		ida_simple_remove(&swnode_root_ids, swnode->id);
--	}
--
- 	kobject_put(&swnode->kobj);
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
 
 
