@@ -2,458 +2,312 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B6C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60956C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46DE2192A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:33:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0dNh/IWj"
+	by mail.kernel.org (Postfix) with ESMTP id 38C9B2192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588962810;
+	bh=U8CGuW3hoJK354GFI7hAKroqCpyk1s51RqpDDYRkoD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i1iBpvucAMQwIK9g4rKSOZjzwmX8+l+fHlbN0uP6D7mshL8EWzr1d45FOJyjKB+D/
+	 i1aX3u0A/TdkTTOed/CwjJXTWa1bu1rJhp08gYCkNoDaJ2qpw0T0E6nx2/qjKCgfmt
+	 PH5FrdazyVsKzfyOTsLMz+zgwLT/g7LN7KENOtD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgEHSdW (ORCPT
+        id S1728188AbgEHSd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:33:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
+        Fri, 8 May 2020 14:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727857AbgEHScV (ORCPT
+        by vger.kernel.org with ESMTP id S1727857AbgEHSdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:32:21 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBBDC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:32:21 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b188so2619578qkd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:32:21 -0700 (PDT)
+        Fri, 8 May 2020 14:33:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87647C061A0C;
+        Fri,  8 May 2020 11:33:24 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id e6so4655923pjt.4;
+        Fri, 08 May 2020 11:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+wiSpoRwEYHspeJR8Gv0Gu4T5Xv9UOTe+wucWrpXt8k=;
-        b=0dNh/IWjZhFeTttoqMZV3YkHGhFdx1nKm+z7iXFYwNPsE4TgXsSlPwNl2kG1f3JNT5
-         B80FQ1DT4047uhoF2ZBWq4o7SPVd3kgFtcKcxEImqkNDQt+DWx4KyZQcIFngsTOnhKpj
-         dHb0jE/VejcpqnB3aOM3cUpil9G2W/fjOIzZHFlh+LBDAxMs1XgHnw+s91McJM32p5BQ
-         lbekYEKAng1XPr9ZUs48f+qrUjZ5IgiXu+lQzYTkgVZMA5gl1TqO0l1pTDq32iDA5KT+
-         O8UToaKQsPLT316j4fCDASk1nFCQSWQxBr5Bo7ySM+Tmc8L7czbQ09L16kx70+rVrOLC
-         A1zw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ooZGrU/pnbIoyJLUF18yRkK3wWAFFjEYvg7xmQiEw+8=;
+        b=MVNHBnA41kiJe781ksiv/qXuTfCI/U6/T7PmMZvUMQdBMCcFIi0wYRKD4e7lbJlPAB
+         SlsWK/alRrE3at2tjtFl4NX974OBFYke4eRvaTimRkqTrP+TWhkA96sweLnHTzOhF9zo
+         I0JdlZ6T2qGK6a8XL67khBup/xQ8iwpRxxSwCHstz39aJNHsG96D9zJLPsINWgNVMcd+
+         iacjcHu7yEa/926cccyS+dBTY31tKsEXw8fRQX41yVgDzp4K42Q1TXqoMHajTNn1P7cb
+         FM0EX9hMUVnmpm5cKlDXFNS7Hq4nV0q5gs3MSxyYg5W2clcxHSeWTt5qX3AWCoF8ij5s
+         58oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+wiSpoRwEYHspeJR8Gv0Gu4T5Xv9UOTe+wucWrpXt8k=;
-        b=nm9hwnYw4TH8WR/UJF23bh8wSrtObXsDEft6z/vsYLQnYumprv33/ZzneruJ917M+F
-         Nf0U7dmX9VbWLOk3OP2z6C2Zxq3AYvWMLNz+MHdKB1j1sRaALoyhnE+Rvnt+ESXeox+H
-         TqmQ6DWXyORoIOz5v/DwBs7pVeTefR62ERdTxvY/6mXG2Y6295rU8BbcysQlnQ7Mb8ZM
-         KVfmC2o8gAwYUTf/DJ0I5KHtVqFWb71peNa5H5a1tU0AxPFVQvaoJNC+6apSttq3MjFl
-         +/Tc8KjgPeQxNV5OyIA5wPOf0fdOrRGCpQ2LJdBiKUTbjCciIHNsec69r8wpN1kgVl95
-         SOYg==
-X-Gm-Message-State: AGi0PuYhIFFYeuOrKmjF9lxK/dP49ZU9iEEy3u12CocoRHuMXbRxBVSn
-        JIBRciYNk84aPy8wqmpWd00gFkrZS8w=
-X-Google-Smtp-Source: APiQypJr8oSNAvojFc450AFWzLENI5Fu1W8Y2ox6Ymn2F1xsXhkMoaouTGdOD7X1EY8wxHXT02wEJA==
-X-Received: by 2002:a05:620a:1591:: with SMTP id d17mr4375296qkk.349.1588962740752;
-        Fri, 08 May 2020 11:32:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id a29sm1867816qka.90.2020.05.08.11.32.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ooZGrU/pnbIoyJLUF18yRkK3wWAFFjEYvg7xmQiEw+8=;
+        b=Kb8fpCkZwH6LlLqTUQUydK0DY5K7aNI8SuZH8vT2bAfnH5F9BJbp9FAn7039guWGkx
+         8MIQv6tzLihvHiEaft7lkbIBRbdEGAJF3NSe5dS1jJ2xN/HVBaDkAdIUt805XYqoUaEa
+         ZhiNJ+eigwcjtsdu29u9Myq1qnDd54nQDvXV/yQjrFZQzRtZFzjtE/G6sYmdPqbHtvck
+         PO6rtAKfSTBiIo58hwrEv62xZU3wuTeQ6rKZekNapt0E+1MlTlW/abbQErXBL07RxzYc
+         hN61NkBj1cvxZBSEBHflQlohQVgjpJUTrlN02V03WCo3bitv58NE7zALAvwsazcwKd8Q
+         uuRA==
+X-Gm-Message-State: AGi0PuZx/HEQLIw/z39TIFRnjtHzvaQMEBrqnTs8te/Hpq6BUFqMa0aE
+        7Ngn3Cll8NaxKFlSNF2dqMQ=
+X-Google-Smtp-Source: APiQypIztmEMg0o3LVAhuv2fbTJmjLUIa6rJWtkMdrBM28HhydSU2zvxHk4uRqK1oRhgORW/tx1OHg==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr7605881pjb.107.1588962803820;
+        Fri, 08 May 2020 11:33:23 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id gm3sm2947977pjb.49.2020.05.08.11.33.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 11:32:20 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
+        Fri, 08 May 2020 11:33:22 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:33:20 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
         Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 05/19] mm: memcontrol: convert page cache to a new mem_cgroup_charge() API
-Date:   Fri,  8 May 2020 14:30:52 -0400
-Message-Id: <20200508183105.225460-6-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508183105.225460-1-hannes@cmpxchg.org>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
+Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
+Message-ID: <20200508183320.GA125527@google.com>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-3-minchan@kernel.org>
+ <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
+ <20200310222008.GB72963@google.com>
+ <07109fb3-dcf3-0252-4515-7e476fadc259@suse.cz>
+ <20200312202339.GB68817@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312202339.GB68817@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The try/commit/cancel protocol that memcg uses dates back to when
-pages used to be uncharged upon removal from the page cache, and thus
-couldn't be committed before the insertion had succeeded. Nowadays,
-pages are uncharged when they are physically freed; it doesn't matter
-whether the insertion was successful or not. For the page cache, the
-transaction dance has become unnecessary.
+On Thu, Mar 12, 2020 at 01:23:39PM -0700, Minchan Kim wrote:
+> On Thu, Mar 12, 2020 at 01:40:26PM +0100, Vlastimil Babka wrote:
+> > On 3/10/20 11:20 PM, Minchan Kim wrote:
+> > > On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
+> > >> On 3/2/20 8:36 PM, Minchan Kim wrote:
+> > >> > There is usecase that System Management Software(SMS) want to give
+> > >> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > >> > in the case of Android, it is the ActivityManagerService.
+> > >> > 
+> > >> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > >> 
+> > >> You mean MADV_DONTNEED?
+> > > 
+> > > Mean to DONT_NEED's future version.
+> > 
+> > What's that exactly?
+> 
+> For zapping timing point of view, dontneed acts immediately so it's very
+> strong hint. However, MADV_COLD and MADV_PAGEOUT does lazily depending
+> on the future. For example, the page never discarded if it's touched
+> before the tail of LRU. If other process which shared the page has
+> touched the page, never paging out.
+> 
+> > 
+> > >> 
+> > >> > required to make the reclaim decision is not known to the app.
+> > >> 
+> > >> This seems to be mixing up the differences between MADV_DONTNEED and
+> > >> COLD/PAGEOUT and self-imposed vs external memory hints?
+> > > 
+> > > Sorry, I don't understand what you want here.
+> > 
+> > You say that process_madvise(MADV_[COLD|PAGEEOUT]) is similar to
+> > madvise(MADV_WONTNEED) but the difference is that the information
+> > required to make the reclaim decision is not known to the app.
+> > 
+> > I see two differences. One is madvise vs process_madvise, which is explained by
+> > "reclaim decision is not known to the app."
+> > The other is MADV_WONTNEED vs MADV_[COLD|PAGEEOUT], which is... I'm not sure
+> > until you say what's "DONT_NEED's future version" :D
+> > 
+> > Anyway I assume this part is from the versions where the new COLD and PAGEOUT
+> > flags were introduced together with external memory hinting API?
+> 
+> Exactly. Maybe it would be better to remove the part once we merged the
+> COLD and PAGEOUT now.
+> 
+> Thanks for the review, Vlastimil!
 
-Introduce a mem_cgroup_charge() function that simply charges a newly
-allocated page to a cgroup and sets up page->mem_cgroup in one single
-step. If the insertion fails, the caller doesn't have to do anything
-but free/put the page.
+Hi Andrew,
 
-Then switch the page cache over to this new API.
+Per Vlastimil's review, I removed unnecessary part and changed syscall
+argument name "advise and flag" to "advice and flags" in description.
 
-Subsequent patches will also convert anon pages, but it needs a bit
-more prep work. Right now, memcg depends on page->mapping being
-already set up at the time of charging, so that it can maintain its
-own MEMCG_CACHE and MEMCG_RSS counters. For anon, page->mapping is set
-under the same pte lock under which the page is publishd, so a single
-charge point that can block doesn't work there just yet.
+Could you replace the description with this one? Code part is same so
+no need to be changed.
 
-The following prep patches will replace the private memcg counters
-with the generic vmstat counters, thus removing the page->mapping
-dependency, then complete the transition to the new single-point
-charge API and delete the old transactional scheme.
+Thanks.
 
-v2: leave shmem swapcache when charging fails to avoid double IO (Joonsoo)
+From fdb29014c84aebcca4737de735993e87d43ebbbf Mon Sep 17 00:00:00 2001
+From: Minchan Kim <minchan@kernel.org>
+Date: Wed, 6 May 2020 13:54:39 +0000
+Subject: [PATCH] mm/madvise: introduce process_madvise() syscall: an external
+ memory hinting API
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
----
- include/linux/memcontrol.h | 10 +++++
- mm/filemap.c               | 24 +++++------
- mm/memcontrol.c            | 29 ++++++++++++-
- mm/shmem.c                 | 88 ++++++++++++++++----------------------
- 4 files changed, 85 insertions(+), 66 deletions(-)
+There is usecase that System Management Software(SMS) want to give a
+memory hint like MADV_[COLD|PAGEEOUT] to other processes and in the case
+of Android, it is the ActivityManagerService.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 30292d57c8af..57339514d960 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -379,6 +379,10 @@ int mem_cgroup_try_charge_delay(struct page *page, struct mm_struct *mm,
- void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
- 			      bool lrucare);
- void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg);
-+
-+int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
-+		      bool lrucare);
-+
- void mem_cgroup_uncharge(struct page *page);
- void mem_cgroup_uncharge_list(struct list_head *page_list);
- 
-@@ -893,6 +897,12 @@ static inline void mem_cgroup_cancel_charge(struct page *page,
- {
- }
- 
-+static inline int mem_cgroup_charge(struct page *page, struct mm_struct *mm,
-+				    gfp_t gfp_mask, bool lrucare)
-+{
-+	return 0;
-+}
-+
- static inline void mem_cgroup_uncharge(struct page *page)
- {
- }
-diff --git a/mm/filemap.c b/mm/filemap.c
-index ce200386736c..ee9882509566 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -832,7 +832,6 @@ static int __add_to_page_cache_locked(struct page *page,
- {
- 	XA_STATE(xas, &mapping->i_pages, offset);
- 	int huge = PageHuge(page);
--	struct mem_cgroup *memcg;
- 	int error;
- 	void *old;
- 
-@@ -840,17 +839,16 @@ static int __add_to_page_cache_locked(struct page *page,
- 	VM_BUG_ON_PAGE(PageSwapBacked(page), page);
- 	mapping_set_update(&xas, mapping);
- 
--	if (!huge) {
--		error = mem_cgroup_try_charge(page, current->mm,
--					      gfp_mask, &memcg);
--		if (error)
--			return error;
--	}
--
- 	get_page(page);
- 	page->mapping = mapping;
- 	page->index = offset;
- 
-+	if (!huge) {
-+		error = mem_cgroup_charge(page, current->mm, gfp_mask, false);
-+		if (error)
-+			goto error;
-+	}
-+
- 	do {
- 		xas_lock_irq(&xas);
- 		old = xas_load(&xas);
-@@ -874,20 +872,18 @@ static int __add_to_page_cache_locked(struct page *page,
- 		xas_unlock_irq(&xas);
- 	} while (xas_nomem(&xas, gfp_mask & GFP_RECLAIM_MASK));
- 
--	if (xas_error(&xas))
-+	if (xas_error(&xas)) {
-+		error = xas_error(&xas);
- 		goto error;
-+	}
- 
--	if (!huge)
--		mem_cgroup_commit_charge(page, memcg, false);
- 	trace_mm_filemap_add_to_page_cache(page);
- 	return 0;
- error:
- 	page->mapping = NULL;
- 	/* Leave page->index set: truncation relies upon it */
--	if (!huge)
--		mem_cgroup_cancel_charge(page, memcg);
- 	put_page(page);
--	return xas_error(&xas);
-+	return error;
- }
- ALLOW_ERROR_INJECTION(__add_to_page_cache_locked, ERRNO);
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 8188d462d7ce..1d45a09b334f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6578,6 +6578,33 @@ void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg)
- 	cancel_charge(memcg, nr_pages);
- }
- 
-+/**
-+ * mem_cgroup_charge - charge a newly allocated page to a cgroup
-+ * @page: page to charge
-+ * @mm: mm context of the victim
-+ * @gfp_mask: reclaim mode
-+ * @lrucare: page might be on the LRU already
-+ *
-+ * Try to charge @page to the memcg that @mm belongs to, reclaiming
-+ * pages according to @gfp_mask if necessary.
-+ *
-+ * Returns 0 on success. Otherwise, an error code is returned.
-+ */
-+int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
-+		      bool lrucare)
-+{
-+	struct mem_cgroup *memcg;
-+	int ret;
-+
-+	VM_BUG_ON_PAGE(!page->mapping, page);
-+
-+	ret = mem_cgroup_try_charge(page, mm, gfp_mask, &memcg);
-+	if (ret)
-+		return ret;
-+	mem_cgroup_commit_charge(page, memcg, lrucare);
-+	return 0;
-+}
-+
- struct uncharge_gather {
- 	struct mem_cgroup *memcg;
- 	unsigned long pgpgout;
-@@ -6625,8 +6652,6 @@ static void uncharge_batch(const struct uncharge_gather *ug)
- static void uncharge_page(struct page *page, struct uncharge_gather *ug)
- {
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
--	VM_BUG_ON_PAGE(page_count(page) && !is_zone_device_page(page) &&
--			!PageHWPoison(page) , page);
- 
- 	if (!page->mem_cgroup)
- 		return;
-diff --git a/mm/shmem.c b/mm/shmem.c
-index d505b6cce4ab..afd5a057ebb7 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -605,11 +605,13 @@ static inline bool is_huge_enabled(struct shmem_sb_info *sbinfo)
-  */
- static int shmem_add_to_page_cache(struct page *page,
- 				   struct address_space *mapping,
--				   pgoff_t index, void *expected, gfp_t gfp)
-+				   pgoff_t index, void *expected, gfp_t gfp,
-+				   struct mm_struct *charge_mm)
- {
- 	XA_STATE_ORDER(xas, &mapping->i_pages, index, compound_order(page));
- 	unsigned long i = 0;
- 	unsigned long nr = compound_nr(page);
-+	int error;
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 	VM_BUG_ON_PAGE(index != round_down(index, nr), page);
-@@ -621,12 +623,22 @@ static int shmem_add_to_page_cache(struct page *page,
- 	page->mapping = mapping;
- 	page->index = index;
- 
-+	error = mem_cgroup_charge(page, charge_mm, gfp, PageSwapCache(page));
-+	if (error) {
-+		if (!PageSwapCache(page) && PageTransHuge(page)) {
-+			count_vm_event(THP_FILE_FALLBACK);
-+			count_vm_event(THP_FILE_FALLBACK_CHARGE);
-+		}
-+		goto error;
-+	}
-+	cgroup_throttle_swaprate(page, gfp);
-+
- 	do {
- 		void *entry;
- 		xas_lock_irq(&xas);
- 		entry = xas_find_conflict(&xas);
- 		if (entry != expected)
--			xas_set_err(&xas, -EEXIST);
-+			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
- 		xas_create_range(&xas);
- 		if (xas_error(&xas))
- 			goto unlock;
-@@ -648,12 +660,15 @@ static int shmem_add_to_page_cache(struct page *page,
- 	} while (xas_nomem(&xas, gfp));
- 
- 	if (xas_error(&xas)) {
--		page->mapping = NULL;
--		page_ref_sub(page, nr);
--		return xas_error(&xas);
-+		error = xas_error(&xas);
-+		goto error;
- 	}
- 
- 	return 0;
-+error:
-+	page->mapping = NULL;
-+	page_ref_sub(page, nr);
-+	return error;
- }
- 
- /*
-@@ -1619,7 +1634,6 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
- 	struct address_space *mapping = inode->i_mapping;
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	struct mm_struct *charge_mm = vma ? vma->vm_mm : current->mm;
--	struct mem_cgroup *memcg;
- 	struct page *page;
- 	swp_entry_t swap;
- 	int error;
-@@ -1664,29 +1678,23 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
- 			goto failed;
- 	}
- 
--	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg);
--	if (!error) {
--		error = shmem_add_to_page_cache(page, mapping, index,
--						swp_to_radix_entry(swap), gfp);
-+	error = shmem_add_to_page_cache(page, mapping, index,
-+					swp_to_radix_entry(swap), gfp,
-+					charge_mm);
-+	if (error) {
- 		/*
--		 * We already confirmed swap under page lock, and make
--		 * no memory allocation here, so usually no possibility
--		 * of error; but free_swap_and_cache() only trylocks a
--		 * page, so it is just possible that the entry has been
--		 * truncated or holepunched since swap was confirmed.
-+		 * We already confirmed swap under page lock, but
-+		 * free_swap_and_cache() only trylocks a page, so it
-+		 * is just possible that the entry has been truncated
-+		 * or holepunched since swap was confirmed.
- 		 * shmem_undo_range() will have done some of the
- 		 * unaccounting, now delete_from_swap_cache() will do
- 		 * the rest.
- 		 */
--		if (error) {
--			mem_cgroup_cancel_charge(page, memcg);
-+		if (error == -ENOENT)
- 			delete_from_swap_cache(page);
--		}
--	}
--	if (error)
- 		goto failed;
--
--	mem_cgroup_commit_charge(page, memcg, true);
-+	}
- 
- 	spin_lock_irq(&info->lock);
- 	info->swapped--;
-@@ -1733,7 +1741,6 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	struct shmem_sb_info *sbinfo;
- 	struct mm_struct *charge_mm;
--	struct mem_cgroup *memcg;
- 	struct page *page;
- 	enum sgp_type sgp_huge = sgp;
- 	pgoff_t hindex = index;
-@@ -1858,21 +1865,11 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 	if (sgp == SGP_WRITE)
- 		__SetPageReferenced(page);
- 
--	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg);
--	if (error) {
--		if (PageTransHuge(page)) {
--			count_vm_event(THP_FILE_FALLBACK);
--			count_vm_event(THP_FILE_FALLBACK_CHARGE);
--		}
--		goto unacct;
--	}
- 	error = shmem_add_to_page_cache(page, mapping, hindex,
--					NULL, gfp & GFP_RECLAIM_MASK);
--	if (error) {
--		mem_cgroup_cancel_charge(page, memcg);
-+					NULL, gfp & GFP_RECLAIM_MASK,
-+					charge_mm);
-+	if (error)
- 		goto unacct;
--	}
--	mem_cgroup_commit_charge(page, memcg, false);
- 	lru_cache_add_anon(page);
- 
- 	spin_lock_irq(&info->lock);
-@@ -2310,7 +2307,6 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
- 	struct address_space *mapping = inode->i_mapping;
- 	gfp_t gfp = mapping_gfp_mask(mapping);
- 	pgoff_t pgoff = linear_page_index(dst_vma, dst_addr);
--	struct mem_cgroup *memcg;
- 	spinlock_t *ptl;
- 	void *page_kaddr;
- 	struct page *page;
-@@ -2360,16 +2356,10 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
- 	if (unlikely(offset >= max_off))
- 		goto out_release;
- 
--	ret = mem_cgroup_try_charge_delay(page, dst_mm, gfp, &memcg);
--	if (ret)
--		goto out_release;
--
- 	ret = shmem_add_to_page_cache(page, mapping, pgoff, NULL,
--						gfp & GFP_RECLAIM_MASK);
-+				      gfp & GFP_RECLAIM_MASK, dst_mm);
- 	if (ret)
--		goto out_release_uncharge;
--
--	mem_cgroup_commit_charge(page, memcg, false);
-+		goto out_release;
- 
- 	_dst_pte = mk_pte(page, dst_vma->vm_page_prot);
- 	if (dst_vma->vm_flags & VM_WRITE)
-@@ -2390,11 +2380,11 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
- 	ret = -EFAULT;
- 	max_off = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
- 	if (unlikely(offset >= max_off))
--		goto out_release_uncharge_unlock;
-+		goto out_release_unlock;
- 
- 	ret = -EEXIST;
- 	if (!pte_none(*dst_pte))
--		goto out_release_uncharge_unlock;
-+		goto out_release_unlock;
- 
- 	lru_cache_add_anon(page);
- 
-@@ -2415,12 +2405,10 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
- 	ret = 0;
- out:
- 	return ret;
--out_release_uncharge_unlock:
-+out_release_unlock:
- 	pte_unmap_unlock(dst_pte, ptl);
- 	ClearPageDirty(page);
- 	delete_from_page_cache(page);
--out_release_uncharge:
--	mem_cgroup_cancel_charge(page, memcg);
- out_release:
- 	unlock_page(page);
- 	put_page(page);
--- 
-2.26.2
+The information required to make the reclaim decision is not known to
+the app. Instead, it is known to the centralized userspace
+daemon(ActivityManagerService), and that daemon must be able to initiate
+reclaim on its own without any app involvement.
 
+To solve the issue, this patch introduces a new syscall process_madvise(2). 
+It uses pidfd of an external process to give the hint.
+
+ int process_madvise(int pidfd, void *addr, size_t length, int advice,
+			unsigned long flags);
+
+Since it could affect other process's address range, only privileged
+process(CAP_SYS_PTRACE) or something else(e.g., being the same UID) gives
+it the right to ptrace the process could use it successfully.  The flag
+argument is reserved for future use if we need to extend the API.
+
+I think supporting all hints madvise has/will supported/support to
+process_madvise is rather risky.  Because we are not sure all hints make
+sense from external process and implementation for the hint may rely on
+the caller being in the current context so it could be error-prone.  Thus,
+I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+
+If someone want to add other hints, we could hear hear the usecase and
+review it for each hint.  It's safer for maintenance rather than
+introducing a buggy syscall but hard to fix it later.
+
+Q.1 - Why does any external entity have better knowledge?
+
+Quote from Sandeep
+
+"For Android, every application (including the special SystemServer) are
+forked from Zygote.  The reason of course is to share as many libraries
+and classes between the two as possible to benefit from the preloading
+during boot.
+
+After applications start, (almost) all of the APIs end up calling into
+this SystemServer process over IPC (binder) and back to the application.
+
+In a fully running system, the SystemServer monitors every single process
+periodically to calculate their PSS / RSS and also decides which process
+is "important" to the user for interactivity.
+
+So, because of how these processes start _and_ the fact that the
+SystemServer is looping to monitor each process, it does tend to *know*
+which address range of the application is not used / useful.
+
+Besides, we can never rely on applications to clean things up themselves.
+We've had the "hey app1, the system is low on memory, please trim your
+memory usage down" notifications for a long time[1].  They rely on
+applications honoring the broadcasts and very few do.
+
+So, if we want to avoid the inevitable killing of the application and
+restarting it, some way to be able to tell the OS about unimportant memory
+in these applications will be useful.
+
+- ssp
+
+Q.2 - How to guarantee the race(i.e., object validation) between when
+giving a hint from an external process and get the hint from the target
+process?
+
+process_madvise operates on the target process's address space as it
+exists at the instant that process_madvise is called.  If the space target
+process can run between the time the process_madvise process inspects the
+target process address space and the time that process_madvise is actually
+called, process_madvise may operate on memory regions that the calling
+process does not expect.  It's the responsibility of the process calling
+process_madvise to close this race condition.  For example, the calling
+process can suspend the target process with ptrace, SIGSTOP, or the
+freezer cgroup so that it doesn't have an opportunity to change its own
+address space before process_madvise is called.  Another option is to
+operate on memory regions that the caller knows a priori will be unchanged
+in the target process.  Yet another option is to accept the race for
+certain process_madvise calls after reasoning that mistargeting will do no
+harm.  The suggested API itself does not provide synchronization.  It also
+apply other APIs like move_pages, process_vm_write.
+
+The race isn't really a problem though.  Why is it so wrong to require
+that callers do their own synchronization in some manner?  Nobody objects
+to write(2) merely because it's possible for two processes to open the
+same file and clobber each other's writes --- instead, we tell people to
+use flock or something.  Think about mmap.  It never guarantees newly
+allocated address space is still valid when the user tries to access it
+because other threads could unmap the memory right before.  That's where
+we need synchronization by using other API or design from userside.  It
+shouldn't be part of API itself.  If someone needs more fine-grained
+synchronization rather than process level, there were two ideas suggested
+- cookie[2] and anon-fd[3].  Both are applicable via using last reserved
+argument of the API but I don't think it's necessary right now since we
+have already ways to prevent the race so don't want to add additional
+complexity with more fine-grained optimization model.
+
+To make the API extend, it reserved an unsigned long as last argument so
+we could support it in future if someone really needs it.
+
+Q.3 - Why doesn't ptrace work?
+
+Injecting an madvise in the target process using ptrace would not work for
+us because such injected madvise would have to be executed by the target
+process, which means that process would have to be runnable and that
+creates the risk of the abovementioned race and hinting a wrong VMA.
+Furthermore, we want to act the hint in caller's context, not the
+callee's, because the callee is usually limited in cpuset/cgroups or even
+freezed state so they can't act by themselves quick enough, which causes
+more thrashing/kill.  It doesn't work if the target process are
+ptraced(e.g., strace, debugger, minidump) because a process can have at
+most one ptracer.
+
+[1] https://developer.android.com/topic/performance/memory"
+
+[2] process_getinfo for getting the cookie which is updated whenever
+    vma of process address layout are changed - Daniel Colascione -
+    https://lore.kernel.org/lkml/20190520035254.57579-1-minchan@kernel.org/T/#m7694416fd179b2066a2c62b5b139b14e3894e224
+
+[3] anonymous fd which is used for the object(i.e., address range)
+    validation - Michal Hocko -
+    https://lore.kernel.org/lkml/20200120112722.GY18451@dhcp22.suse.cz/
+
+Link: http://lkml.kernel.org/r/20200302193630.68771-3-minchan@kernel.org
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Brian Geffon <bgeffon@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: John Dias <joaodias@google.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksandr Natalenko <oleksandr@redhat.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: SeongJae Park <sj38.park@gmail.com>
+Cc: SeongJae Park <sjpark@amazon.de>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Sonny Rao <sonnyrao@google.com>
+Cc: Tim Murray <timmurray@google.com>
+Cc: <linux-man@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
