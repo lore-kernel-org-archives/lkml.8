@@ -2,185 +2,122 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C394C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232F2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0406720870
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A5F20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:47:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N7rbAGxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgEHFqt (ORCPT
+        id S1726883AbgEHFrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
+        Fri, 8 May 2020 01:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgEHFqt (ORCPT
+        with ESMTP id S1725865AbgEHFrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:46:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E64C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:46:48 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jWvqP-0007iP-3D; Fri, 08 May 2020 07:46:45 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jWvqO-0003zb-Fq; Fri, 08 May 2020 07:46:44 +0200
-Date:   Fri, 8 May 2020 07:46:44 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Pali =?iso-8859-15?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, kernel@pengutronix.de
-Subject: Re: [PATCH v2] libata: Fix retrieving of active qcs
-Message-ID: <20200508054644.GJ5877@pengutronix.de>
-References: <20191213080408.27032-1-s.hauer@pengutronix.de>
- <20191225181840.ooo6mw5rffghbmu2@pali>
- <20200106081605.ffjz7xy6e24rfcgx@pengutronix.de>
- <20200127111630.bqqzhj57tzt7geds@pali>
- <20200127112428.sdfxvlqdox5efzcb@pengutronix.de>
- <20200503214627.gerb3ipcwek2h3h7@pali>
+        Fri, 8 May 2020 01:47:11 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B13DCC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:47:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f8so256986plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ktBlo73Jw5CNcN/vgvXAmN9qqf3G71SadtNeIh5UVH4=;
+        b=N7rbAGxHd1xFlmkvpJrFn0ZRApCwnO1j7WiuFU8e+kb3V5wpBpZvedwpGwP3Tsj4rS
+         +USqVD5/1YvlwcW9irIFGnnpEolkOgUSVlwg40HK7jfYWt4GqX2SuiPu40QxIZuyHub/
+         GMVgMfV9IFsRfoIx4M+wGQ7+7P+KBm4rp8eYk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ktBlo73Jw5CNcN/vgvXAmN9qqf3G71SadtNeIh5UVH4=;
+        b=Y3LsP5c0emy7g/0JGT4HbpAlcThZ/0wK05BOdspyp4L1bvQ8Vq+4gRQMPyxzQVJQZ/
+         gPJTjVmzZOBL031KLw9HZLS2zblkLz8RCmgUffzy1qGYPoNaRtu7cHYNo8ueNxoclHQ+
+         PWEMFpKkIQ3HBL8TENV58r63L5VMtZFoQAnGjs6QftDggyKuaw7RXQqp5lKI0rEJ0vjf
+         EJCkLelTtwi0No97x3QxnuHFntfo3A67NToYAOikjDvINYRWzn5PLjzUY7gtsrf8OT8s
+         SVxn+pK2jwRsLyfZ7zPkBxLqUrY6D92Dgn9+Wf72JKex0HEfhtkpOwT4EME20ERaGjgG
+         SDFw==
+X-Gm-Message-State: AGi0PuYE0HGr/FXfeFQCu3MroPK81hLpPXZ51SlHvdLNA9bJaxKHKy3V
+        pFqyMH7KBC2aYkKdARqhV8oNxQ==
+X-Google-Smtp-Source: APiQypKeyu+9J0AZJ39edu4kWajGpktWn2BdzoMIWDoDZqCwqp/BDYP/gtakVb8IzNIpE09DU4gT6w==
+X-Received: by 2002:a17:90a:69e1:: with SMTP id s88mr4240516pjj.199.1588916831215;
+        Thu, 07 May 2020 22:47:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 67sm591198pfx.108.2020.05.07.22.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 22:47:10 -0700 (PDT)
+Date:   Thu, 7 May 2020 22:47:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
+        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, daniel.vetter@ffwll.ch,
+        will@kernel.org, mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] taint: add module firmware crash taint support
+Message-ID: <202005072244.F2E0286@keescook>
+References: <20200508021438.4373-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200503214627.gerb3ipcwek2h3h7@pali>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:38:54 up 78 days, 13:09, 81 users,  load average: 0.04, 0.11,
- 0.13
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200508021438.4373-1-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 11:46:27PM +0200, Pali Rohár wrote:
-> On Monday 27 January 2020 12:24:28 Sascha Hauer wrote:
-> > On Mon, Jan 27, 2020 at 12:16:30PM +0100, Pali Rohár wrote:
-> > > On Monday 06 January 2020 09:16:05 Sascha Hauer wrote:
-> > > > On Wed, Dec 25, 2019 at 07:18:40PM +0100, Pali Rohár wrote:
-> > > > > Hello Sascha!
-> > > > > 
-> > > > > On Friday 13 December 2019 09:04:08 Sascha Hauer wrote:
-> > > > > > ata_qc_complete_multiple() is called with a mask of the still active
-> > > > > > tags.
-> > > > > > 
-> > > > > > mv_sata doesn't have this information directly and instead calculates
-> > > > > > the still active tags from the started tags (ap->qc_active) and the
-> > > > > > finished tags as (ap->qc_active ^ done_mask)
-> > > > > > 
-> > > > > > Since 28361c40368 the hw_tag and tag are no longer the same and the
-> > > > > > equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
-> > > > > > initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
-> > > > > > started and this will be in done_mask on completion. ap->qc_active ^
-> > > > > > done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
-> > > > > > the internal tag will never be reported as completed.
-> > > > > > 
-> > > > > > This is fixed by introducing ata_qc_get_active() which returns the
-> > > > > > active hardware tags and calling it where appropriate.
-> > > > > > 
-> > > > > > This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
-> > > > > > problem. There is another case in sata_nv that most likely needs fixing
-> > > > > > as well, but this looks a little different, so I wasn't confident enough
-> > > > > > to change that.
-> > > > > 
-> > > > > I can confirm that sata_nv.ko does not work in 4.18 (and new) kernel
-> > > > > version correctly. More details are in email:
-> > > > > 
-> > > > > https://lore.kernel.org/linux-ide/20191225180824.bql2o5whougii4ch@pali/T/
-> > > > > 
-> > > > > I tried this patch and it fixed above problems with sata_nv.ko. It just
-> > > > > needs small modification (see below).
-> > > > > 
-> > > > > So you can add my:
-> > > > > 
-> > > > > Tested-by: Pali Rohár <pali.rohar@gmail.com>
-> > > > > 
-> > > > > And I hope that patch would be backported to 4.18 and 4.19 stable
-> > > > > branches soon as distributions kernels are broken for machines with
-> > > > > these nvidia sata controllers.
-> > > > > 
-> > > > > Anyway, what is that another case in sata_nv which needs to be fixed
-> > > > > too?
-> > > > 
-> > > > It's in nv_swncq_sdbfis(). Here we have:
-> > > > 
-> > > > 	sactive = readl(pp->sactive_block);
-> > > > 	done_mask = pp->qc_active ^ sactive;
-> > > > 
-> > > > 	pp->qc_active &= ~done_mask;
-> > > > 	pp->dhfis_bits &= ~done_mask;
-> > > > 	pp->dmafis_bits &= ~done_mask;
-> > > > 	pp->sdbfis_bits |= done_mask;
-> > > > 	ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> > > > 
-> > > > Sascha
-> > > 
-> > > Ok. Are you going to fix also this case?
-> > 
-> > As said, this one looks slightly different than the others and I would
-> > prefer if somebody could fix it who actually has a hardware and can test
-> > it.
+On Fri, May 08, 2020 at 02:14:38AM +0000, Luis Chamberlain wrote:
+> Device driver firmware can crash, and sometimes, this can leave your
+> system in a state which makes the device or subsystem completely
+> useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
+> of scraping some magical words from the kernel log, which is driver
+> specific, is much easier. So instead provide a helper which lets drivers
+> annotate this.
 > 
-> Well, I have hardware and could test changes. But I'm not really sure
-> that I understand this part of code. So it would be better if somebody
-> else with better knowledge prepares patches I could test them. But
-> currently during coronavirus I have only remote ssh access, so boot,
-> modify/compile/reboot process is quite slower.
+> Once this happens, scrapers can easily scrape modules taint flags.
+> This will taint both the kernel and respective calling module.
+> 
+> The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
+> this fact should in no way shape or form affect lockdep. This taint
+> is device driver specific.
+> 
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+> 
+> Below is the full diff stat of manual inspection throughout the kernel
+> when this happens. My methodology is to just scrape for "crash" and
+> then study the driver a bit to see if indeed it seems like that the
+> firmware crashes there. In *many* cases there is even infrastructure
+> for this, so this is sometimes clearly obvious. Some other times it
+> required a bit of deciphering.
+> 
+> The diff stat below is what I have so far, however the patch below
+> only includes the drivers that start with Q, as they were a source of
+> inspiration for this, and to make this RFC easier to read.
+> 
+> If this seems sensible, I can follow up with the kernel helper first,
+> and then tackle each subsystem independently.
+> 
+> I purposely skipped review of remoteproc and virtualization. That should
+> require its own separate careful review and considerations.
 
-Ok, here we go. Compile tested only.
-
-Regards,
- Sascha
-
-------------------------------8<-----------------------------------
-
-From fcdcfa9e7a4ee4faf411de1df4f3c4e12c78545c Mon Sep 17 00:00:00 2001
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Fri, 8 May 2020 07:28:19 +0200
-Subject: [PATCH] ata: sata_nv: Fix retrieving of active qcs
-
-ata_qc_complete_multiple() has to be called with the tags physically
-active, that is the hw tag is at bit 0. ap->qc_active has the same tag
-at bit ATA_TAG_INTERNAL instead, so call ata_qc_get_active() to fix that
-up. This is done in the vein of 8385d756e114 ("libata: Fix retrieving of
-active qcs").
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/ata/sata_nv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/ata/sata_nv.c b/drivers/ata/sata_nv.c
-index eb9dc14e5147..20190f66ced9 100644
---- a/drivers/ata/sata_nv.c
-+++ b/drivers/ata/sata_nv.c
-@@ -2100,7 +2100,7 @@ static int nv_swncq_sdbfis(struct ata_port *ap)
- 	pp->dhfis_bits &= ~done_mask;
- 	pp->dmafis_bits &= ~done_mask;
- 	pp->sdbfis_bits |= done_mask;
--	ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-+	ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
- 
- 	if (!ap->qc_active) {
- 		DPRINTK("over\n");
--- 
-2.26.2
+This all seems reasonable to me. You might need to break these up into
+per-maintainer patches to get appropriate review. Perhaps land the
+infrastructure and some initial patches via netdev and in the next
+release send patches for DRM, media, etc?
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Kees Cook
