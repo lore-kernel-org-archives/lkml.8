@@ -2,62 +2,68 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3ACC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EFDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7412A21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18535206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588954507;
+	bh=Y9tcAAdWfL8gvCesCTdtnaTDOP1FBSNgszQcEKo+2Zs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ElYXgMMjlyAyoBuKakmad3+7XPZne4Z5hchG8lv9hTCbyik6ITR6aylT18JRYWOkd
+	 LY7dxKqKjGECwChliRmWH9ljDptUeP+T3EBig9cAKz0pdMbw3Y/qSzxVNZ55XVwtjZ
+	 8iY9WPDaxd+KvmryqOaJrkMisC+5qDd3QwW/BATE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgEHQOl (ORCPT
+        id S1728277AbgEHQPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38482 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 12:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbgEHQOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:14:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29F0E206B9;
-        Fri,  8 May 2020 16:14:40 +0000 (UTC)
-Date:   Fri, 8 May 2020 12:14:38 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some
- kconfigs
-Message-ID: <20200508121438.21f36ecf@gandalf.local.home>
-In-Reply-To: <20200508140047.rln4iogroxw7esxa@mail.google.com>
-References: <20200503001141.9647-1-changbin.du@gmail.com>
-        <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
-        <20200507091807.0a789fbd@gandalf.local.home>
-        <20200508140047.rln4iogroxw7esxa@mail.google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726922AbgEHQPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:15:05 -0400
+Subject: Re: [GIT PULL] USB driver fixes for 5.7-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588954505;
+        bh=Y9tcAAdWfL8gvCesCTdtnaTDOP1FBSNgszQcEKo+2Zs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XsHOPyMFa60vqt5Rd2TlvNZGBYx4tdycLekP3t35rMgu6PG+OldQuuj+xNmmwJncu
+         gohFL05i/84rza1eSkujAVOHvH+PpUzZnF3TJdPndAjdETnsT8uoULlWLkJxRupTXN
+         9lVymYRSz454BkWFnVJhcB0bBtfdpVHOBK7RPpl4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200508141718.GA324234@kroah.com>
+References: <20200508141718.GA324234@kroah.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200508141718.GA324234@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.7-rc5
+X-PR-Tracked-Commit-Id: 91edf63d5022bd0464788ffb4acc3d5febbaf81d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0a0b96b2e27d75c74e254abf8efe17628aa427ad
+Message-Id: <158895450503.20886.4380026790674395783.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 May 2020 16:15:05 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 22:00:47 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
+The pull request you sent on Fri, 8 May 2020 16:17:18 +0200:
 
-> > I agree that spaces look better.
-> >  
-> I am okay with space. But what about ":" which is used by shell PATH and many
-> others?
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.7-rc5
 
-I'm OK with a ':'
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0a0b96b2e27d75c74e254abf8efe17628aa427ad
 
--- Steve
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
