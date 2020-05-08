@@ -2,91 +2,229 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10061C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED24EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5182083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zbWum2G0"
+	by mail.kernel.org (Postfix) with ESMTP id D80AB20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgEHOlG (ORCPT
+        id S1728309AbgEHOlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:41:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40152 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbgEHOk4 (ORCPT
+        Fri, 8 May 2020 10:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEHOky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:40:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048Ebnqo151224;
-        Fri, 8 May 2020 14:40:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=9Pd6sdzTLPNAE5lKGbzkZBJdj4O3PQMJ6IPM7eKBgG0=;
- b=zbWum2G0ONLEDe7HujZ8RBdWshb1C66Kikq4kBZLWK8MnHDZeaeAWVUKi69rxnM2H5fF
- Pp2l5cdPtT+ceGsDz8gE/TLnApl3ov1kZekOJwZETwF3KnIHUBj8ry8oS5/KOiyO7qKb
- JcZchFi6mTiicfnWuz5J27g+0+geKdvynDn/UJ+w9YDOahr1KYecK+2x95ElNdueXBHM
- uhSxQbaP90ziupWiHQjPj3nrg4lr3gKPBbe3ariNHs/42VAQ/4MZyczzF7dVDy3BLKHl
- IUu+XWX3qOYHbspSdU78fuF3wj1oTOjUnMcENgblh0Hxm4FUDPXD8uUZ6h1v5+xomvpr ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30vtewub88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 14:40:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048Eap0a190858;
-        Fri, 8 May 2020 14:40:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30vtegvcrh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 14:40:19 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 048EeHOB002292;
-        Fri, 8 May 2020 14:40:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 May 2020 07:40:16 -0700
-Date:   Fri, 8 May 2020 17:40:09 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        Markus.Elfring@web.de, rostedt@goodmis.org,
-        kernel-janitors@vger.kernel.org, Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Subject: Re: [PATCH v4] tools/bootconfig: fix resource leak in apply_xbc()
-Message-ID: <20200508144009.GQ1992@kadam>
-References: <bdda096b-9f8a-dacb-9f89-9077d1288ad7@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdda096b-9f8a-dacb-9f89-9077d1288ad7@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- phishscore=0 mlxlogscore=899 bulkscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005080130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=946
- malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080130
+        Fri, 8 May 2020 10:40:54 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4644EC05BD0A
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 07:40:54 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 6C5F34F2; Fri,  8 May 2020 16:40:51 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: [RFC PATCH 6/7] mm: Remove vmalloc_sync_(un)mappings()
+Date:   Fri,  8 May 2020 16:40:42 +0200
+Message-Id: <20200508144043.13893-7-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508144043.13893-1-joro@8bytes.org>
+References: <20200508144043.13893-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good thanks!
+From: Joerg Roedel <jroedel@suse.de>
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+These functions are not needed anymore because the vmalloc and ioremap
+mappings are now synchronized when they are created or teared down.
 
-regards,
-dan carpenter
+Remove all callers and function definitions.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/mm/fault.c      | 37 -------------------------------------
+ drivers/acpi/apei/ghes.c |  6 ------
+ include/linux/vmalloc.h  |  2 --
+ kernel/notifier.c        |  1 -
+ mm/nommu.c               | 12 ------------
+ mm/vmalloc.c             | 21 ---------------------
+ 6 files changed, 79 deletions(-)
+
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index edeb2adaf31f..255fc631b042 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -214,26 +214,6 @@ void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
+ 	}
+ }
+ 
+-static void vmalloc_sync(void)
+-{
+-	unsigned long address;
+-
+-	if (SHARED_KERNEL_PMD)
+-		return;
+-
+-	arch_sync_kernel_mappings(VMALLOC_START, VMALLOC_END);
+-}
+-
+-void vmalloc_sync_mappings(void)
+-{
+-	vmalloc_sync();
+-}
+-
+-void vmalloc_sync_unmappings(void)
+-{
+-	vmalloc_sync();
+-}
+-
+ /*
+  * 32-bit:
+  *
+@@ -336,23 +316,6 @@ static void dump_pagetable(unsigned long address)
+ 
+ #else /* CONFIG_X86_64: */
+ 
+-void vmalloc_sync_mappings(void)
+-{
+-	/*
+-	 * 64-bit mappings might allocate new p4d/pud pages
+-	 * that need to be propagated to all tasks' PGDs.
+-	 */
+-	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
+-}
+-
+-void vmalloc_sync_unmappings(void)
+-{
+-	/*
+-	 * Unmappings never allocate or free p4d/pud pages.
+-	 * No work is required here.
+-	 */
+-}
+-
+ /*
+  * 64-bit:
+  *
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 24c9642e8fc7..aabe9c5ee515 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -167,12 +167,6 @@ int ghes_estatus_pool_init(int num_ghes)
+ 	if (!addr)
+ 		goto err_pool_alloc;
+ 
+-	/*
+-	 * New allocation must be visible in all pgd before it can be found by
+-	 * an NMI allocating from the pool.
+-	 */
+-	vmalloc_sync_mappings();
+-
+ 	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ 	if (rc)
+ 		goto err_pool_add;
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index eb364000cb03..9063cdeb15bb 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -141,8 +141,6 @@ extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
+ 
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+-void vmalloc_sync_mappings(void);
+-void vmalloc_sync_unmappings(void);
+ 
+ /*
+  * Architectures can set this mask to a combination of PGTBL_P?D_MODIFIED values
+diff --git a/kernel/notifier.c b/kernel/notifier.c
+index 5989bbb93039..84c987dfbe03 100644
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -519,7 +519,6 @@ NOKPROBE_SYMBOL(notify_die);
+ 
+ int register_die_notifier(struct notifier_block *nb)
+ {
+-	vmalloc_sync_mappings();
+ 	return atomic_notifier_chain_register(&die_chain, nb);
+ }
+ EXPORT_SYMBOL_GPL(register_die_notifier);
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 318df4e236c9..b4267e1471f3 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -369,18 +369,6 @@ void vm_unmap_aliases(void)
+ }
+ EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+ 
+-/*
+- * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
+- * chose not to have one.
+- */
+-void __weak vmalloc_sync_mappings(void)
+-{
+-}
+-
+-void __weak vmalloc_sync_unmappings(void)
+-{
+-}
+-
+ struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes)
+ {
+ 	BUG();
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 184f5a556cf7..901540e4773b 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1332,12 +1332,6 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
+ 	if (unlikely(valist == NULL))
+ 		return false;
+ 
+-	/*
+-	 * First make sure the mappings are removed from all page-tables
+-	 * before they are freed.
+-	 */
+-	vmalloc_sync_unmappings();
+-
+ 	/*
+ 	 * TODO: to calculate a flush range without looping.
+ 	 * The list can be up to lazy_max_pages() elements.
+@@ -3177,21 +3171,6 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ }
+ EXPORT_SYMBOL(remap_vmalloc_range);
+ 
+-/*
+- * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
+- * not to have one.
+- *
+- * The purpose of this function is to make sure the vmalloc area
+- * mappings are identical in all page-tables in the system.
+- */
+-void __weak vmalloc_sync_mappings(void)
+-{
+-}
+-
+-void __weak vmalloc_sync_unmappings(void)
+-{
+-}
+-
+ static int f(pte_t *pte, unsigned long addr, void *data)
+ {
+ 	pte_t ***p = data;
+-- 
+2.17.1
 
