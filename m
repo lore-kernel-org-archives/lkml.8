@@ -2,65 +2,79 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C0C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC6421473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6016821473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgEHLzT (ORCPT
+        id S1727792AbgEHLzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:55:19 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49588 "EHLO loongson.cn"
+        Fri, 8 May 2020 07:55:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4354 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727076AbgEHLzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:55:18 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX92ZSLVebikyAA--.9S2;
-        Fri, 08 May 2020 19:55:05 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 0/3] MIPS: Loongson: Fix some issues of cpu_hwmon.c
-Date:   Fri,  8 May 2020 19:55:01 +0800
-Message-Id: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxX92ZSLVebikyAA--.9S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
-        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
-        CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-        c2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfU12NuDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1727777AbgEHLzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:55:22 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EF558C8FB18C28E54B87;
+        Fri,  8 May 2020 19:55:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 8 May 2020 19:55:12 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <hch@lst.de>, <sagi@grimberg.me>, <chaitanya.kulkarni@wdc.com>
+CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH -next] nvmet: replace kstrndup() with kmemdup_nul()
+Date:   Fri, 8 May 2020 19:59:06 +0800
+Message-ID: <20200508115906.165223-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tiezhu Yang (3):
-  MIPS: Loongson: Cleanup cpu_hwmon.c
-  MIPS: Loongson: Add hwmon support for generic CPU
-  MIPS: Loongson: Add log before power off due to high temperature
+It is more efficient to use kmemdup_nul() if the size is known exactly.
 
- drivers/platform/mips/cpu_hwmon.c | 38 ++++++++++++++++++++++----------------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+The doc in kernel:
+"Note: Use kmemdup_nul() instead if the size is known exactly."
 
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/nvme/target/configfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index 58cabd7b6fc5..9894668a40e7 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -327,7 +327,7 @@ static ssize_t nvmet_ns_device_path_store(struct config_item *item,
+ 
+ 	kfree(ns->device_path);
+ 	ret = -ENOMEM;
+-	ns->device_path = kstrndup(page, len, GFP_KERNEL);
++	ns->device_path = kmemdup_nul(page, len, GFP_KERNEL);
+ 	if (!ns->device_path)
+ 		goto out_unlock;
+ 
+@@ -963,7 +963,7 @@ static ssize_t nvmet_subsys_attr_model_store(struct config_item *item,
+ 			return -EINVAL;
+ 	}
+ 
+-	new_model_number = kstrndup(page, len, GFP_KERNEL);
++	new_model_number = kmemdup_nul(page, len, GFP_KERNEL);
+ 	if (!new_model_number)
+ 		return -ENOMEM;
+ 
 -- 
-2.1.0
+2.20.1
 
