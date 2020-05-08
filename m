@@ -2,98 +2,95 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D17CC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EBEC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D9521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BD92173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KfLsY8G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgEHOwQ (ORCPT
+        id S1728181AbgEHOwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:52:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:49654 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbgEHOwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:52:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BF8F1FB;
-        Fri,  8 May 2020 07:52:15 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 048B93F305;
-        Fri,  8 May 2020 07:52:11 -0700 (PDT)
-References: <20200507181012.29791-1-qperret@google.com> <jhjftcbtoo6.mognet@arm.com> <20200508131508.GB10541@google.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sudeep.holla@arm.com, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, fweisbec@gmail.com, tkjos@google.com,
-        kernel-team@android.com, Ionela Voinescu <ionela.voinescu@arm.com>
-Subject: Re: [PATCH 00/14] Modularize schedutil
-In-reply-to: <20200508131508.GB10541@google.com>
-Date:   Fri, 08 May 2020 15:52:07 +0100
-Message-ID: <jhjeerutr6w.mognet@arm.com>
+        Fri, 8 May 2020 10:52:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53528 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbgEHOwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:52:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EnS7G066839;
+        Fri, 8 May 2020 14:51:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=H53MWy6dhP3UdGhQsVHvIU1qakOi+iDSoSFMC+dgrvs=;
+ b=KfLsY8G0zHjnTr9Fba5pSDHbZNgaB3jQUv3bF0bm+60uJ88JModvJ6vqfx/6NsU5Pcgj
+ gNE3Qply8HfD+euxqH5tuIm3rA+T6K1Lz8PZJghoL2tfBAoyczl5pLOSzvISrUlU8wf5
+ fIg0qZIQklSTxSVCCuZl3i1bNoV3goqzi+57Se8/FJdsPQU2AJJ2FxGaxHpBCVCUm7yD
+ hH5aDOR3i9SKGPdtd+4NkY9JS0edCkTUiD2YjX4zz8M60ZhDfF7PbOw1Oqcx58qggxjY
+ PXRZ1E+LKk82dzk7NXgFzVV2HaGFkf+kpegH4Z3SbnGaHChcvzi7JUlcT9M1GV8x0xfa Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30vtepkcy3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:51:45 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EkvhN050162;
+        Fri, 8 May 2020 14:51:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30vtdnr041-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 14:51:45 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 048EpftU026800;
+        Fri, 8 May 2020 14:51:41 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 May 2020 07:51:41 -0700
+Date:   Fri, 8 May 2020 17:51:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        Markus.Elfring@web.de, rostedt@goodmis.org,
+        kernel-janitors@vger.kernel.org, Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+Subject: Re: [PATCH v4] tools/bootconfig: fix resource leak in apply_xbc()
+Message-ID: <20200508145133.GG9365@kadam>
+References: <bdda096b-9f8a-dacb-9f89-9077d1288ad7@huawei.com>
+ <20200508144009.GQ1992@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508144009.GQ1992@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 mlxlogscore=785 bulkscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=846 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005080132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 08, 2020 at 05:40:09PM +0300, Dan Carpenter wrote:
+> Looks good thanks!
+> 
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-On 08/05/20 14:15, Quentin Perret wrote:
-> Hey Valentin,
->
-> On Thursday 07 May 2020 at 22:34:17 (+0100), Valentin Schneider wrote:
->> I'm curious; why would some Android device not want to roll with schedutil?
->>
->> When it comes to dynamic policies (i.e. forget performance / powersave, and
->> put userspace in a corner), I'd be willing to take a stand and say you
->> should only really be using schedutil nowadays - alignment with the
->> scheduler, uclamp, yadda yadda.
->>
->> AFAIA the only schedutil-related quirk we oughta fix for arm/arm64 is that
->> arch_scale_freq_invariant() thingie, and FWIW I'm hoping to get something
->> regarding this out sometime soonish. After that, I'd actually want to make
->> schedutil the default governor for arm/arm64.
->
-> As in setting CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL=y in the arm64
-> defconfig? If so, you have my Acked-by already :)
->
+I was also absolutely fine with the v3 patch as well.
 
-I'm actually thinking of making it the unconditional default for arm/arm64
-in cpufreq's Kconfig, following what has been recently done for
-intel_pstate.
+regards,
+dan carpenter
 
->> I'm not opiniated on the modularization, but if you can, could you please
->> share some more details as to why schedutil cannot fulfill its role of holy
->> messiah of governors for GKI?
->
-> I guess I answered some of that in the other thread with Peter, but all
-> in all I'm definitely not trying to make an argument that schedutil
-> isn't good enough here. I'm trying to say that mandating it in *GKI* is
-> just likely to cause unnecessary friction, and trust me there is already
-> enough of that with other topics.
-
-Right, I appreciate it must be an "interesting" tug of war. My own opinion
-has also already been expanded in the rest of the thread; i.e. we should
-strive to make schedutil good enough that folks don't feel like they still
-need to use ondemand/whatever frankengov. That said, even without GKI, I
-get that making some vendors change their already tested-and-tuned setup is
-an obstacle course in and of itself.
-
-> Giving the option of having sugov as a
-> module doesn't prevent us from making it a default for a few arches, so
-> I think there is ground for an agreement!
->
-> Cheers,
-> Quentin
