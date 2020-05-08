@@ -2,230 +2,104 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA8C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4574BC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FF720708
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1219120870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588934724;
+	bh=WdRe9mFMH+MwGQROhSO9uud8y8TlpMsCgvbEDkfz00c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q3xT8UNqNmdIVkUPe0v7nU/GBnuCkg/RY43zP/5TfnuScSGm4ihtV+YSdocpt0mIy
+	 ZkPnOObCN7jnRa20pzOvmkMX6sO3iGhSHDFuiHCXuN82gTV9VTjyTJPgBnfBQsF5g9
+	 YEe5Jr9TVcQs5ONL6pkcA2Om4klBgO9RRcTY1yAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgEHKnZ (ORCPT
+        id S1726864AbgEHKpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:43:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:34692 "EHLO mga17.intel.com"
+        Fri, 8 May 2020 06:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgEHKnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:43:24 -0400
-IronPort-SDR: Xz/ftpmeKR2I66BL+JGKpK4smwFV2kkYyNOJvB1NCt3tuuJBzKQziHqPxvlnX/avYm4rLA4i0c
- jHsalOd4a7tw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 03:43:09 -0700
-IronPort-SDR: kg7jVpFcfQmmRv945Rym0gR4ekT4x39ImOVoY1i7Cj6NMgW9V17u3XjQDjLx7+qLcW9/UQwn8W
- GObG28m/U6zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="435641438"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 08 May 2020 03:43:08 -0700
-Received: from [10.249.224.104] (abudanko-mobl.ccr.corp.intel.com [10.249.224.104])
-        by linux.intel.com (Postfix) with ESMTP id E9723580695;
-        Fri,  8 May 2020 03:43:05 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3 0/9] perf: support enable and disable commands in stat and
- record modes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <0b63e751-5c45-3311-d930-15f1ebe72601@linux.intel.com>
-Date:   Fri, 8 May 2020 13:43:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726325AbgEHKpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 06:45:22 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720B420870;
+        Fri,  8 May 2020 10:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588934722;
+        bh=WdRe9mFMH+MwGQROhSO9uud8y8TlpMsCgvbEDkfz00c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mKhKGqb60I7GBv1Wig9nzvzXREPjEEn5a2eWFiWmuF7sUGGZirnA2khX2F4V9wLur
+         Phwq4fMdvW7kjKKSARnQoQjEbXPV27Ui9OYuUv+T28xXq65FFurVom8GzFHBQHXHUx
+         szoNcHOG1Db3T/ihZG3pk/hDROQYuOFEDKAuMF5k=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jX0VM-00AYzB-MZ; Fri, 08 May 2020 11:45:20 +0100
+Date:   Fri, 08 May 2020 11:45:11 +0100
+Message-ID: <87ftca1z9k.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: Query regarding pseudo nmi support on GIC V3 and request_nmi()
+In-Reply-To: <2a0d5719-b2c7-1287-e0b5-2dd8b1072e49@codeaurora.org>
+References: <2a0d5719-b2c7-1287-e0b5-2dd8b1072e49@codeaurora.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: neeraju@codeaurora.org, julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 07 May 2020 17:06:19 +0100,
+Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+> 
+> Hi,
+> 
+> I have one query regarding pseudo NMI support on GIC v3; from what I
+> could understand, GIC v3 supports pseudo NMI setup for SPIs and PPIs.
+> However the request_nmi() in irq framework requires NMI to be per cpu
+> interrupt source (it checks for IRQF_PERCPU). Can you please help
+> understand this part, how SPIs can be configured as NMIs, if there is
+> a per cpu interrupt source restriction?
 
-Changes in v3:
-- renamed functions and types from perf_evlist_ to evlist_ to avoid
-  clash with libperf code;
-- supported commands to be strings of variable length consisting of
-  command name and also possibly including command specific data;
-- merged docs update with the code changes;
-- updated docs for -D,--delay=-1 option for stat and record modes;
+Let me answer your question by another question: what is the semantic
+of a NMI if you can't associate it with a particular CPU?
 
-v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
+We use pseudo-NMI to be able to profile (or detect lockups) within
+sections where normal interrupts cannot fire. If the interrupt can
+end-up on a random CPU (with an unrelated PMU or one that hasn't
+locked up), what have we achieved? Only confusion.
 
-Changes in v2:
-- renamed resume and pause commands to enable and disable ones, renamed
-  CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
-  to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
-  ioctl;
-- factored out event handling loop into a handle_events() for stat mode;
-- separated -D,--delay=-1 into separate patches for stat and record modes;
+The whole point is that NMIs have to be tied to a given CPU. For
+SGI/PPI, this is guaranteed by construction. For SPIs, this means that
+the affinity cannot be changed from userspace. IRQF_PERCPU doesn't
+mean much in this context as we don't "broadcast" interrupts, but is
+an indication to the core kernel that the same interrupt cannot be
+taken on another CPU.
 
-v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
+The short of it is that NMIs are only for per-CPU sources. For SPIs,
+that's for PMUs that use SPIs instead of PPIs. Don't use it for
+anything else.
 
-repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+Thanks,
 
-The patch set implements handling of 'start disabled', 'enable' and 'disable'
-external control commands which can be provided for stat and record modes
-of the tool from an external controlling process. 'start disabled' command
-can be used to postpone enabling of events in the beginning of a monitoring
-session. 'enable' and 'disable' commands can be used to enable and disable
-events correspondingly any time after the start of the session.
-
-The 'start disabled', 'enable' and 'disable' external control commands can be
-used to focus measurement on specially selected time intervals of workload
-execution. Focused measurement reduces tool intrusion and influence on
-workload behavior, reduces distortion and amount of collected and stored
-data, mitigates data accuracy loss because measurement and data capturing
-happen only during intervals of interest.
-
-A controlling process can be a bash shell script [1], native executable or
-any other language program that can directly work with file descriptors,
-e.g. pipes [2], and spawn a process, specially the tool one.
-
--D,--delay <val> option is extended with -1 value to skip events enabling
-in the beginning of a monitoring session ('start disabled' command). --ctl-fd
-and --ctl-fd-ack command line options are introduced to provide the tool
-with a pair of file descriptors to listen to control commands and reply to
-the controlling process on the completion of received commands.
-
-The tool reads control command message from ctl-fd descriptor, handles the
-command and optionally replies acknowledgement message to fd-ack descriptor,
-if it is specified on the command line. 'enable' command is recognized as 'enable'
-string message and 'disable' command is recognized as 'disable' string message
-both received from ctl-fd descriptor. Completion message is 'ack\n' and
-sent to fd-ack descriptor.
-
-example bash script demonstrating simple use case:
-
-#!/bin/bash
-
-ctl_dir=/tmp/
-
-ctl_fifo=${ctl_dir}perf_ctl.fifo
-test -p ${ctl_fifo} && unlink ${ctl_fifo}
-mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
-
-ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
-
-perf stat -D -1 -e cpu-cycles -a -I 1000                \
-          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-          -- sleep 40 &
-perf_pid=$!
-
-sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
-sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
-
-exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
-exec {ctl_fd}>&- && unlink ${ctl_fifo}
-
-wait -n ${perf_pid}
-exit $?
-
-
-Script output:
-
-[root@host acme] example
-Events disabled
-#           time             counts unit events
-     1.001101062      <not counted>      cpu-cycles                                                  
-     2.002994944      <not counted>      cpu-cycles                                                  
-     3.004864340      <not counted>      cpu-cycles                                                  
-     4.006727177      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(ack)
-     4.993808464          3,124,246      cpu-cycles                                                  
-     5.008597004          3,325,624      cpu-cycles                                                  
-     6.010387483         83,472,992      cpu-cycles                                                  
-     7.012266598         55,877,621      cpu-cycles                                                  
-     8.014175695         97,892,729      cpu-cycles                                                  
-     9.016056093         68,461,242      cpu-cycles                                                  
-    10.017937507         55,449,643      cpu-cycles                                                  
-    11.019830154         68,938,167      cpu-cycles                                                  
-    12.021719952         55,164,101      cpu-cycles                                                  
-    13.023627550         70,535,720      cpu-cycles                                                  
-    14.025580995         53,240,125      cpu-cycles                                                  
-disabled(ack)
-    14.997518260         53,558,068      cpu-cycles                                                  
-Events disabled
-    15.027216416      <not counted>      cpu-cycles                                                  
-    16.029052729      <not counted>      cpu-cycles                                                  
-    17.030904762      <not counted>      cpu-cycles                                                  
-    18.032073424      <not counted>      cpu-cycles                                                  
-    19.033805074      <not counted>      cpu-cycles                                                  
-Events enabled
-enabled(ack)
-    20.001279097          3,021,022      cpu-cycles                                                  
-    20.035044381          6,434,367      cpu-cycles                                                  
-    21.036923813         89,358,251      cpu-cycles                                                  
-    22.038825169         72,516,351      cpu-cycles                                                  
-#           time             counts unit events
-    23.040715596         55,046,157      cpu-cycles                                                  
-    24.042643757         78,128,649      cpu-cycles                                                  
-    25.044558535         61,052,428      cpu-cycles                                                  
-    26.046452785         62,142,806      cpu-cycles                                                  
-    27.048353021         74,477,971      cpu-cycles                                                  
-    28.050241286         61,001,623      cpu-cycles                                                  
-    29.052149961         61,653,502      cpu-cycles                                                  
-disabled(ack)
-    30.004980264         82,729,640      cpu-cycles                                                  
-Events disabled
-    30.053516176      <not counted>      cpu-cycles                                                  
-    31.055348366      <not counted>      cpu-cycles                                                  
-    32.057202097      <not counted>      cpu-cycles                                                  
-    33.059040702      <not counted>      cpu-cycles                                                  
-    34.060843288      <not counted>      cpu-cycles                                                  
-    35.000888624      <not counted>      cpu-cycles                                                  
-[root@host acme]# 
-
-[1] http://man7.org/linux/man-pages/man1/bash.1.html
-[2] http://man7.org/linux/man-pages/man2/pipe.2.html
-
----
-Alexey Budankov (9):
-  perf evlist: introduce control file descriptors
-  perf evlist: implement control command handling functions
-  perf stat: factor out event handling loop into a function
-  perf stat: extend -D,--delay option with -1 value
-  perf stat: implement control commands handling
-  perf stat: introduce --ctl-fd[-ack] options
-  perf record: extend -D,--delay option with -1 value
-  perf record: implement control commands handling
-  perf record: introduce --ctl-fd[-ack] options
-
- tools/perf/Documentation/perf-record.txt |  44 +++++++-
- tools/perf/Documentation/perf-stat.txt   |  45 +++++++-
- tools/perf/builtin-record.c              |  39 ++++++-
- tools/perf/builtin-stat.c                | 137 ++++++++++++++++-------
- tools/perf/builtin-trace.c               |   2 +-
- tools/perf/util/evlist.c                 | 131 ++++++++++++++++++++++
- tools/perf/util/evlist.h                 |  24 ++++
- tools/perf/util/record.h                 |   4 +-
- tools/perf/util/stat.h                   |   4 +-
- 9 files changed, 379 insertions(+), 51 deletions(-)
+	M.
 
 -- 
-2.24.1
-
+Without deviation from the norm, progress is not possible.
