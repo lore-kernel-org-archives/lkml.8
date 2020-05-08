@@ -2,109 +2,61 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D6FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D526C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0677208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CEA3208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RmPbrrz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgEHJWR (ORCPT
+        id S1726811AbgEHJW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:22:17 -0400
-Received: from outbound-smtp18.blacknight.com ([46.22.139.245]:58387 "EHLO
-        outbound-smtp18.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725379AbgEHJWR (ORCPT
+        Fri, 8 May 2020 05:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgEHJWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:22:17 -0400
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp18.blacknight.com (Postfix) with ESMTPS id B00DC1C39C2
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 10:22:15 +0100 (IST)
-Received: (qmail 2053 invoked from network); 8 May 2020 09:22:15 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 May 2020 09:22:15 -0000
-Date:   Fri, 8 May 2020 10:22:12 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jirka Hladky <jhladky@redhat.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200508092212.GE3758@techsingularity.net>
-References: <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
- <20200312214736.GA3818@techsingularity.net>
- <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
- <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net>
- <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net>
- <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net>
- <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+        Fri, 8 May 2020 05:22:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0C8C05BD43;
+        Fri,  8 May 2020 02:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=AKGiii+IEqZ9gOggsApEG4tziI6/WJ3l0tT79BlKIwg=; b=RmPbrrz6Kk0e6owaqjS+q2eHbU
+        G5BKQrZTgzS+1A3FFzmk3b7wy4DTLWkQd8a7NAuzT8d8t14rR1vTvys767YOwnPVrGwqgrtuE+vyX
+        YaxjCyrnZtyyrQ1/6nJ8rhvBdFhERzYQjcrxS0L0bx8HWNmofhBq5k6fjzMIL78fTlIAejMv8n9vW
+        HNWb1r/s9cojIFQwCUsY6eONwjWH0xupnhlBHcOdOzRL4cvHlagNARHeQ2qr+9IYpnKc8kgThYFXO
+        1u4Mym4f3mrlfPIReyhTB4vp3yD8s4Tj3iC8R84YnlaKZFTivOFjQbyPOH6doWYfEp/V7qE3w8GNu
+        YpFgMDdA==;
+Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jWzD6-0008IN-P0; Fri, 08 May 2020 09:22:25 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: clean up kernel_{read,write} & friends
+Date:   Fri,  8 May 2020 11:22:11 +0200
+Message-Id: <20200508092222.2097-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 06:29:44PM +0200, Jirka Hladky wrote:
-> Hi Mel,
-> 
-> we are not targeting just OMP applications. We see the performance
-> degradation also for other workloads, like SPECjbb2005 and
-> SPECjvm2008. Even worse, it also affects a higher number of threads.
-> For example, comparing 5.7.0-0.rc2 against 5.6 kernel, on 4 NUMA
-> server with 2x AMD 7351 CPU, we see performance degradation 22% for 32
-> threads (the system has 64 CPUs in total). We observe this degradation
-> only when we run a single SPECjbb binary. When running 4 SPECjbb
-> binaries in parallel, there is no change in performance between 5.6
-> and 5.7.
-> 
+Hi Al,
 
-Minimally I suggest confirming that it's really due to
-adjust_numa_imbalance() by making the function a no-op and retesting.
-I have found odd artifacts with it but I'm unsure how to proceed without
-causing problems elsehwere.
-
-For example, netperf on localhost in some cases reported a regression
-when the client and server were running on the same node. The problem
-appears to be that netserver completes its work faster when running
-local and goes idle more regularly. The cost of going idle and waking up
-builds up and a lower throughput is reported but I'm not sure if gaming
-an artifact like that is a good idea.
-
-> That's why we are asking for the kernel tunable, which we would add to
-> the tuned profile. We don't expect users to change this frequently but
-> rather to set the performance profile once based on the purpose of the
-> server.
-> 
-> If you could prepare a patch for us, we would be more than happy to
-> test it extensively. Based on the results, we can then evaluate if
-> it's the way to go. Thoughts?
-> 
-
-I would suggest simply disabling that function first to ensure that is
-really what is causing problems for you.
-
--- 
-Mel Gorman
-SUSE Labs
+this series fixes a few issues and cleans up the helpers that read from
+or write to kernel space buffers, and ensures that we don't change the
+address limit if we are using the ->read_iter and ->write_iter methods
+that don't need the changed address limit.
