@@ -2,105 +2,100 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876AAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B01EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B98206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A607216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EfKE7YzB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J3jGZp6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgEHLdn (ORCPT
+        id S1727117AbgEHLdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:33:43 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37529 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbgEHLdm (ORCPT
+        Fri, 8 May 2020 07:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726767AbgEHLdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:33:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588937621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jUaD54dhP6CyORHGARRRLxb30JmQ8bFTb+bifqt8BeQ=;
-        b=EfKE7YzBCND7cfz/NbWWvw8oxSMqms6d43jVkJTqU+TEvQitsCHBfCVPMWVW8m1Hr+dSM3
-        XofeIeotw2q4TTsg0AQ/X5toSu1oEl/78g+dtqunq3l3Sq5GihnSyXI6+XLChEAss83QEO
-        53EdggiOe381eV5MinPnK6ddSCmqa5c=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-AK-dIrTcMw2yIIF1LWHTgg-1; Fri, 08 May 2020 07:33:39 -0400
-X-MC-Unique: AK-dIrTcMw2yIIF1LWHTgg-1
-Received: by mail-wm1-f72.google.com with SMTP id o11so2794174wme.8
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 04:33:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jUaD54dhP6CyORHGARRRLxb30JmQ8bFTb+bifqt8BeQ=;
-        b=fMTG0pK26DJcAoUoIjHLGA13Hdq+9wEu8opQahISnObFk0RWuqpV0+L7zTd/pd2NUZ
-         PSzCp88Kg1zPRjSy9UlHH/mLEN4sv5zvr4k7cnb38ywn1Am7HqYUyN6P2XkJZWHG+l8e
-         SZk+W7c2cZ4AjO7oiAq8Hwe1EmerBTKKTme03S/ssmfOzkRJuCs+45hVNeIJiUdgKKD0
-         wYUDels8vA+wllh8GIQ6qo/zoP2si6Tu3AS8oOOHh+w87NMpo45U26hzv/VItkmWJlLZ
-         aOsJtevV9TAFC7zKmeFVtwb6UE6+v43Ys7nNGExRlmiPkK9pd1WaV6ww3fDfjL1+wrN1
-         pKqA==
-X-Gm-Message-State: AGi0PuYDSlofH86IEiOJfqJMNaN/BuldTe1Vssvs4ZiSY7l0Yp7QyLwW
-        evsPYj70P7Z7THFwo+I2hnx4gAm/D4aNeP5WzU0csitMUNfzo1f1cs4/3ilpzYmRtRRns6cSrRT
-        N+T6B8z6+Ko2LrF388gOkqu5o
-X-Received: by 2002:adf:e38b:: with SMTP id e11mr2468109wrm.343.1588937618193;
-        Fri, 08 May 2020 04:33:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLhHfuD+UO7MNp5uy7H5OQHsM6tcVMk7aOaRwpc+SNq3kBZBfJlJcoYssuDF78Ba63ydoy3TQ==
-X-Received: by 2002:adf:e38b:: with SMTP id e11mr2468092wrm.343.1588937618007;
-        Fri, 08 May 2020 04:33:38 -0700 (PDT)
-Received: from localhost ([2001:470:5b39:28:1273:be38:bc73:5c36])
-        by smtp.gmail.com with ESMTPSA id w83sm13378751wmb.37.2020.05.08.04.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 04:33:37 -0700 (PDT)
-Date:   Fri, 8 May 2020 13:33:36 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-Message-ID: <20200508113336.2vdfdnc6tqyx4pu6@butterfly.localdomain>
-References: <20200507224530.2993316-1-Jason@zx2c4.com>
- <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
- <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
+        Fri, 8 May 2020 07:33:54 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6140C05BD43;
+        Fri,  8 May 2020 04:33:53 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JSrt4fsnz9sSk;
+        Fri,  8 May 2020 21:33:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588937630;
+        bh=0xqfZ1XFKDGcsB0zATyzVUinG1S09MtuCSZIDM88C8Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=J3jGZp6VSJUUsXho151X8crqcpxENApHUIkCROrK9BiClpNIeOSnGaUj8UqNqJcBE
+         4mafrxhYDRAcoDb8dk9Y26FzELtyspp7v92ERHP8/lOdN4nsEa2LSNDOmS5toajtcL
+         sn9RkNGnkv5P9eIickyrTyfdhFf0YH3o+63W95TvG9hf8Jwxcc1f4vt0iV/aHBIPQz
+         MeM9EpghrJWBGUAal55rWPe4604OYvS6hr5asOm7FI3WqMqplscJhMkhqBanmqsBrg
+         Q3vtk++VbuoIxvLxpIKeI58yFouDFu2UEe0AG8MrmmlJnpH3x0qPoM3dwLji+kIKxz
+         QoZHkt1mHyO9w==
+Date:   Fri, 8 May 2020 21:33:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Ewan D. Milne" <emilne@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the scsi-fixes tree
+Message-ID: <20200508213348.16bbbd79@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/YppXb9YSisJG7RmP4yGOXBQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 05:21:47AM -0600, Jason A. Donenfeld wrote:
-> > Should we untangle -O3 from depending on ARC first maybe?
-> 
-> Oh, hah, good point. Yes, I'll do that for a v2, but will wait another
-> day for feedback first.
+--Sig_/YppXb9YSisJG7RmP4yGOXBQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Just keep in mind that my previous attempt [1] failed because of too
-many false positive warnings despite -O3 really uncovered a couple of
-bugs in the codebase.
+Hi all,
 
-Lets hope your attempt will be more successfull. I'll happily offer my
-review tag ;).
+In commit
 
-Also Cc'ing Andrew who (IIRC) tried to took my sumbission and Arnd who
-tried to clean up the mess afterwards.
+  0f3b2f3fb5dc ("scsi: qla2xxx: Do not log message when reading port speed =
+via sysfs")
 
-[1] https://lore.kernel.org/lkml/20191211104619.114557-1-oleksandr@redhat.com/
+Fixes tag
 
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
+  Fixes: 4910b524ac9 ("scsi: qla2xxx: Add support for setting port speed")
 
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YppXb9YSisJG7RmP4yGOXBQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl61Q5wACgkQAVBC80lX
+0GxgqAf8DNQFfKxaym3gWsjq1FGJcq2Vqq6+Llho+aJ3kE/C/Oau6QbfVW92pL/9
+noHlg+/aYniJOKIgxgG+a9++rDkujFtSQ+ythbwDR6LeAXLIXVBRWcdGCNH53JJh
+qdg3HfJinqipcEslMbntSBke2oTqlks6SVcO3tuV5VIkDISTN7II2TLCogmflvNC
+bFIRcYNVY8rPCmrTPMtlz2YHac1NSGXKbJjLIoXY3Ae9WOYIE8d07qUeH2rFIr6o
+8PaYZ7HWX4Er/yTBLvdnOKQIC9RhNy4/KMsV8DdjKcGHK04FIeL+DJ0Fua5qK82W
+LCfPF+2oqAPBpye8517yx6FqKo6stw==
+=G92p
+-----END PGP SIGNATURE-----
+
+--Sig_/YppXb9YSisJG7RmP4yGOXBQ--
