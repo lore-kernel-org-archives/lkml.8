@@ -2,150 +2,173 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76687C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C517C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD3F2192A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD4E20735
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 03:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ws3HSrFp"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hivsNr5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEHDw5 (ORCPT
+        id S1726946AbgEHDyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 23:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEHDw4 (ORCPT
+        Thu, 7 May 2020 23:54:47 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:49914 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEHDyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 23:52:56 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EF8C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 20:52:56 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id g2so285979vsb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 20:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AofEIL6YwXkUVr1SNl6pGav5cBT+5klZGSSb4tIGh2s=;
-        b=Ws3HSrFplgBdKEF0d6Ef/CDW5EwS0mXz/l1DIcB7Yh88VTMzo5MJ1/iiMYqJgvjIps
-         jZg+hxl63XPpkntjE6T09riZ2WW1K61v5WIqxg3xsIhYwQxmE9xabjYObXdDyEBG0BhN
-         8VAe1as355JZIKEi5T6z7jcGg7UCgngipOJMay+JgSZzBvvfdm/Y/HE6PGURFLejYcae
-         Qtj8iGyb6pngMMlDtfEwrZ0/7V8aPDpDm/HfLafQRWixtrEN1tg7Y1xjHAfOIXjAfH69
-         mCETeiAkyA5W7hcljWLKKIu1/rag+QSkJSJ+/oMXE9NhCaqWtxFh2DTEV+zJZmpiIx2X
-         Jxzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AofEIL6YwXkUVr1SNl6pGav5cBT+5klZGSSb4tIGh2s=;
-        b=LdWoJNDLHJuIkABPgTkPzvZt/JA5VubsYqd/+Lg4XWsaZ/NE8mnd8E3htKYnx7pV0K
-         8NPmLZ7hxqn4LhTzuRQ6BUdSGdCwWzLEPE9FIaMOR1jaSzGk5PjwMyDOLQSNnl1oNXcx
-         hpOd4f60M3MyMUy3cVKg0mlmgyTSVKDjpPvGIHLaJLggZaCX7sABD9tuK4YbRoJWnyx9
-         EpJbPQY10TxSxiOYGezGtstyGF0XeMwwk3MwaShX0e+9+bvhsOE6tCr747Na03FOBIhe
-         +P4O+C6bpM1zuxmUKkhBQvFw5paauZogtCey/Y9Gu/5EQA6WZTity6+8bc+ra9my3etj
-         BbuA==
-X-Gm-Message-State: AGi0PuZZn1jiJAlPFxhgv/x5mR9IrCXn43BjaPB40wIkQmrZrSCuE9+3
-        iidsL2ge0LTx3oTVtJ8WY0Bn0q6WGmW0Z18Ee6g60w==
-X-Google-Smtp-Source: APiQypK0VwJrY4iB2MHXq8SKZlSKQAWMfhS/ZAicl7WYe0F28/ri1drVF8Qs2B+UBwYxgSQnt7BKpD8v0MZ88ZPq2H4=
-X-Received: by 2002:a67:302:: with SMTP id 2mr347325vsd.165.1588909975527;
- Thu, 07 May 2020 20:52:55 -0700 (PDT)
+        Thu, 7 May 2020 23:54:46 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200508035443epoutp018fa8eb6fa2693ba03288d3df7ef88c75~M8U1lvh2A1081410814epoutp017
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 03:54:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200508035443epoutp018fa8eb6fa2693ba03288d3df7ef88c75~M8U1lvh2A1081410814epoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588910083;
+        bh=F962LpSrFOl3x1UqKVgw8NIpqI4eBnKTQnStyDbMIiU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=hivsNr5lFveg12lfH2F0F9EFy02h0KDxHJv6DZDRNKEOFAuuFyqWzywjbENSLBSAN
+         Rwvh0CdqL7DVz9osk54bYdgLUs1lifUaSeaLU69MoRRhALCrC3z4h9nAB2PDOqokiY
+         rF0k0ijA2qOgn1Iqk33qNkw/acG2866i0RLxM95o=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200508035442epcas1p3077679ccbe91f54e6c87f08fd38f7ba1~M8U1D0jw42074720747epcas1p3j;
+        Fri,  8 May 2020 03:54:42 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49JGg43gk2zMqYkj; Fri,  8 May
+        2020 03:54:40 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F5.F9.04402.008D4BE5; Fri,  8 May 2020 12:54:40 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200508035438epcas1p12d02b9a9ac102e68b74bdd62ce9d390a~M8UxmMiTp0145501455epcas1p14;
+        Fri,  8 May 2020 03:54:38 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200508035438epsmtrp22236cf07c6ebe21b7c0b72292534dfee~M8UxlWPia2412024120epsmtrp2X;
+        Fri,  8 May 2020 03:54:38 +0000 (GMT)
+X-AuditID: b6c32a35-753ff70000001132-73-5eb4d8008b39
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.DC.18461.EF7D4BE5; Fri,  8 May 2020 12:54:38 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200508035438epsmtip2b574f3494727385bbd41c8aa15358639~M8UxVCku41898718987epsmtip2A;
+        Fri,  8 May 2020 03:54:38 +0000 (GMT)
+Subject: Re: [PATCH v2] PM / devfreq: tegra: Add Dmitry as a maintainer
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <921abb5e-8c12-db8b-b345-fbe49080dc1c@samsung.com>
+Date:   Fri, 8 May 2020 13:04:35 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
- <CAPDyKFrY0ApUCNL4gVHRc2FRcYaS0PKr_P4a18RUZHxcVceVWg@mail.gmail.com> <CAFBinCAhLiunUvw+BAHnv3XVmmU=Wxs1i=WLAAFL5=Hn0RPOvQ@mail.gmail.com>
-In-Reply-To: <CAFBinCAhLiunUvw+BAHnv3XVmmU=Wxs1i=WLAAFL5=Hn0RPOvQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 8 May 2020 05:52:18 +0200
-Message-ID: <CAPDyKFqO8D-UUvq3Ebtnp73xfD_0kaWBq=75wvFL=4xbK5Zj-g@mail.gmail.com>
-Subject: Re: [PATCH] mmc: meson-mx-sdio: trigger a soft reset after a timeout
- or CRC error
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tobias Baumann <017623705678@o2online.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200402221723.6064-1-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDHfT22W6D6rKJjjYirH4SEwlqLq1KioWqjRjHGixhwhRWQHptu
+        qdcH8YhVIioRNTYVFWOi4hWpAjWEWIxK8ArEEzEaUDzxQI1EQbtsjXz7zbz5z/WGlGvPEToy
+        3+7inHbWShERiisNcfqEQY/9mUmerTFM5Zd2xGz3ViiYO1s/qJiWgI9gukuuI2bXNy/BtG45
+        RTC3m5qVTE+gXDFDban1tqksJdu6CIv/gUdh2eM/gyzdl2LSlRkFKXkcm8M5Yzl7tiMn355r
+        ouYtzkrLMiYn0Qn0VGYKFWtnbZyJMs9PT5idbw01RMW6WWthyJXOCgKVmJridBS6uNg8h+Ay
+        URyfY+Wn8nqBtQmF9lx9tsM2jU5KmmQMBa4qyGu7cUPJt0auD5T3qIpQg7oYqUnAk6G4r1cl
+        shbXILhXpCtGESH+iuDlvkPhhx8IDvaZ/wkaf5YppaA6BG/OtoaNTwjKOz0hgySH4Tmw96hJ
+        9A/HvxHcb21Wimo5XgENtZUykQkcD/VvHhMiD8Hj4MHPdiSyBqdCxeWgTMyjwBPAtzdVdEfj
+        pdB4ZXs4ZCg0Hu5QiKzGRvB7PofTj4SnHUdlEo+F6o8+udgD4NMk9H3wyaQJzHD7WrVS4mHw
+        7qZfJbEOurvqCIk3wenG64Qk3onAX38/LDBA/cn9/c3JcRxcCCRK7nFQ++sIkgoPhq7vu/v3
+        AFgDO3dopZDx0PKiLdzCKDjh2UXsQ5R3wDjeASN4B4zg/V/sGFKcQSM4XrDlcgLN0wP/+hLq
+        P9V4Yw0quzs/iDCJqCgN86UqU6tk3cIGWxABKaeGa0rX+zO1mhx2w0bO6chyFlo5IYiMoWWX
+        ynXR2Y7Q4dtdWbRxksFgYCbTyUaapkZqDjyyZmpxLuviCjiO55z/dDJSrStCTWMj/zyJPsIv
+        OEfXOF73zWxR97g3H5qlNXdGZSS625akLSq9zByvfFFSXF0Vk2A+75uoW8G9ndPhL3P39iYu
+        fzcr3ZTyNrn0T0SHvn3h3JX44WpDlT4Y3CisjRr98Rk/ffW6TfXvIzW3np+4umN3VXNdxpjg
+        sozAK/lFTdOadWklcZRCyGPpeLlTYP8Cpg/OkcADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJXvff9S1xBp9mm1qs/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZnDl9idXi5655LA6cHjtn3WX36G1+x+ax5Wo7
+        i0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBl3D12jLXgNnfFrnk/2RsYD3N2MXJySAiYSJz8
+        MYW1i5GLQ0hgN6PEkt2X2CESkhLTLh5l7mLkALKFJQ4fLoaoecsoMaP7MBtIXFjAXaJ/vi1I
+        XESggUmiddEyJpBeZoFIiZ65W9ggGjoYJa7N2wyWYBPQktj/4gYbiM0voChx9cdjRhCbV8BO
+        YtHWQ0wgQ1kEVCTm9NuBhEUFwiR2LnnMBFEiKHFy5hMWEJtTwFRiS/sHVohd6hJ/5l1ihrDF
+        JW49mQ91g7zE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtc
+        mpeul5yfu4kRHGFamjsYt6/6oHeIkYmD8RCjBAezkgjvxIotcUK8KYmVValF+fFFpTmpxYcY
+        pTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFwSjUwnT4Sdicg7kIMwySVOdoyFw77avyb+niB
+        9pV0Vr8fBRMtDm3wT/v7f8OS//FT5/faZe6VNJKzqa7p31D+96bjehYtlULDZdGP59e5btQU
+        vPHolFjnSZfVvx83S3jeY6tx2NPVpmLR8/Tx/uDdCps9Zu4vfHJyI0drbs/UmK/Zif2Tuu4w
+        zNmRabvKvsV7xqeYGJlT5ZGrouekzsowexlpxr2L9dbX/twE7cNzdl/lPtR2Zql8jMuKr6+f
+        y0++/MlLsdhoupdc82njLU9WTdKdciTq0SWOW05GKhvr4/04o62rGT+/XFNy3XPGVcajCjc2
+        hthL1zw4OadxwqV5eeoveOwmNDqZ/ZTq71V4WpWwTImlOCPRUIu5qDgRAKmLcc4fAwAA
+X-CMS-MailID: 20200508035438epcas1p12d02b9a9ac102e68b74bdd62ce9d390a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200402222006epcas1p4027cd509b32ba2d2bdf90e9e84cf4bec
+References: <CGME20200402222006epcas1p4027cd509b32ba2d2bdf90e9e84cf4bec@epcas1p4.samsung.com>
+        <20200402221723.6064-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 at 23:14, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Ulf,
->
-> On Thu, May 7, 2020 at 11:29 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Mon, 4 May 2020 at 00:28, Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> > >
-> > > The vendor driver (from the 3.10 kernel) triggers a soft reset every
-> > > time before starting a new command. While this fixes a problem where
-> > > SDIO cards are not detected at all (because all commands simply
-> > > timed out) this hurts SD card read performance a bit (in my tests
-> > > between 10% to 20%).
-> > >
-> > > Trigger a soft reset after we got a CRC error or if the previous command
-> > > timed out (just like the vendor driver from the same 3.10 kernel for the
-> > > newer SDHC controller IP does). This fixes detection of SDIO cards and
-> > > doesn't hurt SD card read performance at the same time.
-> > >
-> > > With this patch the initialization of an RTL8723BS SDIO card looks like
-> > > this:
-> > >   req done (CMD52): -110: 00000000 00000000 00000000 00000000
-> > >   clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
-> > >   starting CMD0 arg 00000000 flags 000000c0
-> > >   req done (CMD0): 0: 00000000 00000000 00000000 00000000
-> > >   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
-> > >   starting CMD8 arg 000001aa flags 000002f5
-> > >   req done (CMD8): -110: 00000000 00000000 00000000 00000000
-> > >   starting CMD5 arg 00000000 flags 000002e1
-> > >   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-> > >   starting CMD5 arg 00200000 flags 000002e1
-> > >   req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-> > >   starting CMD3 arg 00000000 flags 00000075
-> > >   req done (CMD3): 0: 00010000 00000000 00000000 00000000
-> > >   starting CMD7 arg 00010000 flags 00000015
-> > >   req done (CMD7): 0: 00001e00 00000000 00000000 00000000
-> > >   starting CMD52 arg 00000000 flags 00000195
-> > >   req done (CMD52): 0: 00001032 00000000 00000000 00000000
-> > >   [... more CMD52 omitted ...]
-> > >   clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-> > >   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-> > >   starting CMD52 arg 00000e00 flags 00000195
-> > >   req done (CMD52): 0: 00001000 00000000 00000000 00000000
-> > >   starting CMD52 arg 80000e02 flags 00000195
-> > >   req done (CMD52): 0: 00001002 00000000 00000000 00000000
-> > >   clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
-> > >   starting CMD52 arg 00020000 flags 00000195
-> > >   req done (CMD52): 0: 00001007 00000000 00000000 00000000
-> > >   [... more CMD52 omitted ...]
-> > >   new high speed SDIO card at address 0001
-> > >
-> > > Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > > ---
-> > > Ulf, I consider this non-critical because as long as the meson-mx-sdhc
-> > > driver is not merged we only have one MMC driver for these platforms.
-> > > I don't know anybody to prefer SDIO wifi over SD card access, so this
-> > > can go into -next (in my option at least).
-> > >
-> >
-> > Alright, applied for next, thanks!
-> thank you for taking this patch!
->
-> I received a confirmation (off-list) saying that this patch works as it should.
-> Tobias was not Cc'ed on the original mail so he gave me to permission
-> (again, off-list - he's Cc'ed now) to add his:
-> Tested-by: Tobias Baumann <017623705678@o2online.de>
+Hi Rafael,
 
-I will add it next time I rebase my branch, probably on Monday, thanks!
+Could you please apply it to linux-pm directly?
 
-Kind regards
-Uffe
+I think that it is better to be applied directly
+for preventing the possible merge conflict of MAINTAINERS file.
+
+Best Regards,
+Chanwoo Choi
+
+On 4/3/20 7:17 AM, Dmitry Osipenko wrote:
+> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+> want to help keep them working and evolving in the future.
+> 
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> 
+> Changelog:
+> 
+> v2: - Addressed review comments made by Chanwoo Choi to v1 by correcting
+>       git's address, making this patch standalone and adding Rafael Wysocki
+>       to the list of email recipients.
+> 
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 245a96316636..0a694e20ea19 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10922,6 +10922,15 @@ F:	include/linux/memblock.h
+>  F:	mm/memblock.c
+>  F:	Documentation/core-api/boot-time-mm.rst
+>  
+> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
+> +M:	Dmitry Osipenko <digetx@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +L:	linux-tegra@vger.kernel.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+> +S:	Maintained
+> +F:	drivers/devfreq/tegra20-devfreq.c
+> +F:	drivers/devfreq/tegra30-devfreq.c
+> +
+>  MEMORY MANAGEMENT
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  L:	linux-mm@kvack.org
+> 
