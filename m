@@ -2,102 +2,157 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DA5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD89C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FB82192A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9BD24953
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PkJiY+3y"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Es4bHoTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgEHSbP (ORCPT
+        id S1727084AbgEHScN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
+        Fri, 8 May 2020 14:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHSbO (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgEHScN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:31:14 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1155C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:31:14 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l25so1245107pgc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:31:14 -0700 (PDT)
+        Fri, 8 May 2020 14:32:13 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2F5C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:32:12 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id b1so1355666qtt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=pY+mOo2Ik3rWYLJPySMCfrE7K/NG/f57s6xPPFkwDCg=;
-        b=PkJiY+3yDvfK1RMaphrVSJxAZpHPlVI96LEh2eF2DJK/y+VeUnFxraKDe7pkx2MuAA
-         +cUITO2x/tJ7OBopd14bySnct6EKLJ3S0kFLbGGBTTtIos4FeYvFuzsNhG6LywDUEijZ
-         MHedNbeyfE6eQ7j566t3oabeyBFhxHBGzyVUHnpMPdWonR03zIenUbDZj6QKdyKKMRDl
-         xMIgEN1Cgv0PeI1K3qh50jsX5jkm5nkvUY9tRFUhN4UCCwxYLlDPhZ22/7pJRqk2K7cT
-         c2CmPEWmMskfAjI6jWPYfQyl6ATM3UYK3zt28fKbe9omD0Su07J+GsklQlpC52qEvxjK
-         xxfg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tzWVqUZtLwqxtxfWgFUyBr2nPkF3oxF3sVG4yWWQyv0=;
+        b=Es4bHoTBFJW5deY/BPRm1w9FSHwlvLmnWbWr+JMeXV7lwHag/PJFMjSaaSHRkttda9
+         ZBGMCqHHpexqozMp7joxpOR/FUBqY4fzUJeehlqLgHU0RSat1rj9Q+Xtcmcvp/Xucdmv
+         EnHLzezIGvS2TdqxgQDzPqk6rWL/2RluSz8ZmEOU+wRKHuUmU8j/94jtvQvm3nrbytof
+         CdDhhdVB5sBwTOP033+p/Ezivg7PnuZbXkMxxaA96tDTehDT8E1FkIS2v56S5APkj/yu
+         qL5aCzZbbv0Y8ZY71fsPZmTIfK34i9XIhBcwDrRYYPwGqqTYiLOaoXXXHrj+OeSpZIhe
+         IWgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=pY+mOo2Ik3rWYLJPySMCfrE7K/NG/f57s6xPPFkwDCg=;
-        b=t5ij8q4XMebCFOqA/CfItFjAWYpajSjYyTm7sBzNMXqKA0anfgkemqlC89UM9zKuAA
-         iVaXyFN6oe/VYtOafLvSvIOLS7PglLuzoDnQBMoW5Hy+GtFyHwyZIjU/qsT1hwaJ5t41
-         D5JAJRl+xGVHuwMUb4uvbiAwFP/dKaUplGTT0FaDcrpm84PRzJq620a2HmwTKnSh0E7D
-         l17O2LQ/GdbO1E5v6s+E4sSsDibvzpB7lnHWXQgBIII0AOiLuHteL+1CrDzhxgmMHlCz
-         9AdJnTZnsL5BNg8OZylb21H8M2gjOorkaQ2HQcQAsmJP5Z3UntbkV+SBMKCRKZuyyhkX
-         cvzw==
-X-Gm-Message-State: AGi0PubDxmQ/RmzadxBWMAP9Ihh5ZqXp6wAkYHkIOGIq0HLwjRVbh1Cj
-        PgTCI1WJFxakZvn5bgf+bENibg==
-X-Google-Smtp-Source: APiQypJ1g8NDV78SKY142EWfkEa8+kvMzzernl5mLgqHih9spEDfMFhunr2OUyji/1PmP4qP5WrvNw==
-X-Received: by 2002:a62:7656:: with SMTP id r83mr4109824pfc.71.1588962673869;
-        Fri, 08 May 2020 11:31:13 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id j7sm2407521pfi.160.2020.05.08.11.31.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tzWVqUZtLwqxtxfWgFUyBr2nPkF3oxF3sVG4yWWQyv0=;
+        b=Pq1v2FBiY0MGlhIqicuL/shLvjYVUm9RvEMp0wQt2DN/5ehZfyLfMquqIPgnty5iPN
+         KEdiGT5xDyiBAVhx2TBVedibvurAkLa3KKHthtxjPlpZBWnB2IaZ5l48S7ReAXdSzpt9
+         OJUqc1AYpTUliy97CO0KNCHUFYdeGzPO7Q69IfMyBrQsHUGEteSQ0lSS8sz+mNWibJlM
+         TsFEx9WLIGf1fVepclq/ldI9yt7GaixuHcU+1gMCfYUxGmZJjqSIjQwfKR71HmYXtZhf
+         jXkyY6VnDT7gpDmoc4X2MqVHx4oW5L3PYdvjrJJR1oeSjBpNViIcb6JTBxgrBeLCUhA2
+         hLyA==
+X-Gm-Message-State: AGi0PuZHHY/nkjVzx8sl4donl6au6j+GrZKXwlq9G9sKbGwoYuOIVwOD
+        glUTVyBu4FFuKa35JTvlSGnkUw==
+X-Google-Smtp-Source: APiQypK7dhstJxBjZrfbvoGmymSVIQmOETHJ+bsToYQ1IK0kyvr9w+WXx+4CHsQzZKydtugQ2QbLDg==
+X-Received: by 2002:ac8:2a70:: with SMTP id l45mr4578616qtl.232.1588962731840;
+        Fri, 08 May 2020 11:32:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id g6sm2118974qtc.52.2020.05.08.11.32.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 11:31:13 -0700 (PDT)
-Date:   Fri, 8 May 2020 11:31:12 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-In-Reply-To: <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
-References: <20200507215946.22589-1-gpiccoli@canonical.com> <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org> <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Fri, 08 May 2020 11:32:11 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH 00/19 V2] mm: memcontrol: charge swapin pages on instantiation
+Date:   Fri,  8 May 2020 14:30:47 -0400
+Message-Id: <20200508183105.225460-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020, Guilherme G. Piccoli wrote:
+This patch series reworks memcg to charge swapin pages directly at
+swapin time, rather than at fault time, which may be much later, or
+not happen at all.
 
-> Well...you can think that the problem we are trying to solve was more
-> like...admin forgot if they triggered or not the compaction hehe
-> So, counting on the user to keep track of it is what I'd like to
-> avoid. And thinking about drop_caches (that have an indication when
-> triggered) makes me think this indeed does make sense for compaction
-> too.
-> Cheers,
-> 
+Changes in version 2:
+- prevent double charges on pre-allocated hugepages in khugepaged
+- leave shmem swapcache when charging fails to avoid double IO (Joonsoo)
+- fix temporary accounting bug by switching rmap<->commit (Joonsoo)
+- fix double swap charge bug in cgroup1/cgroup2 code gating
+- simplify swapin error checking (Joonsoo)
+- mm: memcontrol: document the new swap control behavior (Alex)
+- review tags
 
-It doesn't make sense because it's only being done here for the entire 
-system, there are also per-node sysfs triggers so you could do something 
-like iterate over the nodemask of all nodes with memory and trigger 
-compaction manually and then nothing is emitted to the kernel log.
+The delayed swapin charging scheme we have right now causes problems:
 
-There is new statsfs support that Red Hat is proposing that can be used 
-for things like this.  It currently only supports KVM statistics but 
-adding MM statistics is something that would be a natural extension and 
-avoids polluting both the kernel log and /proc/vmstat.
+- Alex's per-cgroup lru_lock patches rely on pages that have been
+  isolated from the LRU to have a stable page->mem_cgroup; otherwise
+  the lock may change underneath him. Swapcache pages are charged only
+  after they are added to the LRU, and charging doesn't follow the LRU
+  isolation protocol.
+
+- Joonsoo's anon workingset patches need a suitable LRU at the time
+  the page enters the swap cache and displaces the non-resident
+  info. But the correct LRU is only available after charging.
+
+- It's a containment hole / DoS vector. Users can trigger arbitrarily
+  large swap readahead using MADV_WILLNEED. The memory is never
+  charged unless somebody actually touches it.
+
+- It complicates the page->mem_cgroup stabilization rules
+
+In order to charge pages directly at swapin time, the memcg code base
+needs to be prepared, and several overdue cleanups become a necessity:
+
+To charge pages at swapin time, we need to always have cgroup
+ownership tracking of swap records. We also cannot rely on
+page->mapping to tell apart page types at charge time, because that's
+only set up during a page fault.
+
+To eliminate the page->mapping dependency, memcg needs to ditch its
+private page type counters (MEMCG_CACHE, MEMCG_RSS, NR_SHMEM) in favor
+of the generic vmstat counters and accounting sites, such as
+NR_FILE_PAGES, NR_ANON_MAPPED etc.
+
+To switch to generic vmstat counters, the charge sequence must be
+adjusted such that page->mem_cgroup is set up by the time these
+counters are modified.
+
+The series is structured as follows:
+
+1. Bug fixes
+2. Decoupling charging from rmap
+3. Swap controller integration into memcg
+4. Direct swapin charging
+
+Based on v5.7-rc3-mmots-2020-05-01-20-14.
+
+ Documentation/admin-guide/cgroup-v1/memory.rst |  19 +-
+ include/linux/memcontrol.h                     |  53 +--
+ include/linux/mm.h                             |   4 +-
+ include/linux/swap.h                           |   6 +-
+ init/Kconfig                                   |  17 +-
+ kernel/events/uprobes.c                        |  10 +-
+ mm/filemap.c                                   |  43 +--
+ mm/huge_memory.c                               |  13 +-
+ mm/khugepaged.c                                |  29 +-
+ mm/memcontrol.c                                | 449 +++++++----------------
+ mm/memory.c                                    |  51 +--
+ mm/migrate.c                                   |  20 +-
+ mm/rmap.c                                      |  53 +--
+ mm/shmem.c                                     | 108 +++---
+ mm/swap_cgroup.c                               |   6 -
+ mm/swap_state.c                                |  89 ++---
+ mm/swapfile.c                                  |  25 +-
+ mm/userfaultfd.c                               |   5 +-
+ 18 files changed, 367 insertions(+), 633 deletions(-)
