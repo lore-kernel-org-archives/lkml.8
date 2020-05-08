@@ -2,119 +2,170 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40936C54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B822EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218F5218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E016218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rc2NnMQ8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSRXMR3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgEHSFd (ORCPT
+        id S1727882AbgEHSGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
+        Fri, 8 May 2020 14:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726756AbgEHSFc (ORCPT
+        by vger.kernel.org with ESMTP id S1726746AbgEHSGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:05:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FB6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=nyAA7ZTVc4aZn+bjOblYi38TtJYlXgpSZoJBwcqY22Y=; b=rc2NnMQ8j2utR98+DOQ0CUlBYi
-        mFVzAYNOeRfPkoSRsFPHE5n1BbmfbIPvhIxw55GPk+AoHS3DgsmFAbJH6/mf9hh/85wbckCWtSVRK
-        hVcv+ct0Dc7wpekLPm05Rjm6/PNrGJCvawZ0j91uAgS4JqfwfsGSDLC0bjoK87EZCkSwV4qymg1DW
-        Y7Jw0vpKOaRM0ULwyJPgiXAmWp7kbdhMfR9ZKOvGm+sFPpxehJNCuXPgFuSzBTlrzEKRbkDCnM4RG
-        r0M39mKYZvD93SUoB39oDdd2y3iFzl/ZC90/Zc7tmw6H4hn5ex+DpIZ6AUgpMox+iCPXJK1EoXuGh
-        yAvOJspg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX7NL-00019L-Ee; Fri, 08 May 2020 18:05:31 +0000
-Subject: Re: [PATCH 1/2] HMM: test: fix CONFIG_DEVICE_PRIVATE dependencies
-To:     Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Fri, 8 May 2020 14:06:14 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96C7C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:06:13 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id l19so2878836qki.14
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=+Seq80qMnpV5lUbkXBM+vOtEwBiiBytr6Pd0tsbHxHk=;
+        b=KSRXMR3dtf6i0Vu/WYcKhtiHWNQwjnJES99Zqdgjpv5uFksyP4Xk6V2OA0wJDJMbMu
+         3HIFWvbtn7v60z/jkWEgIYf0uKnr4CDYlvgLZe3P9hBrtzo4fJN7S8ahrQB60zGy9WAH
+         zD3QOn46FYuOP8xrnlGAO9LlDm8+hBhqDswgY5HPArWF6rALtrjxJKST0ItTbRCpo0pg
+         YXs4W1B7GLOnZtBk97bfUW3xI2syxucVA3tBgf0ef2TvmrDqpcOQV+L7GhgmLiT41An/
+         mhuRr+IfwGzTZIEzvP7wUQpI/zXZLAlnfode2nHSt6X5rzr7HW1bMqvPo/t+SRdyTcS+
+         AJRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=+Seq80qMnpV5lUbkXBM+vOtEwBiiBytr6Pd0tsbHxHk=;
+        b=bpxy1tOXcfDq9sSohFZzyU1APkH/KRjQGtdwbjkrd7gB12MlnnS6BR6AKH/QWIckZi
+         LgEqHx5fatWWBd5sP4K7NS39ZSosq08AmANwrmCk/NLX3IMZcqK/0btoNSCdPUeXTNBw
+         vOfRUR3xdBbZKy7ZT8tc0bvblm9RKm4c0qrKLAJ9ykqeaqXM1lRK/EixOM7lr3qtgUIl
+         mh6IPnRg994TFFqRIQMSyFgjTj/lskrByYy4Xz9lanC+bRPQToAXFxuUvZeYJAsvYBMn
+         8yYlIgXj0w0EhrQ/LrjiWHAw7/LJftv0tPsANISrTQ5l8YmxCcZAXJjE7mebqVHd0akP
+         1axg==
+X-Gm-Message-State: AGi0PuYMDGff9PEe+T6oZGqxvo+DR2tuQ4HX9GLhuEaOeqNW+lHiQtE4
+        bdJA2g0OCcnzfYi5ggdQ9Wc+JUWaWS8KehzuOes=
+X-Google-Smtp-Source: APiQypIsgbDhDgIf6srlp2D5JZEGmR+qOgu3pjYhtLDbb5bdP2dLggJYkT/YyY7UkdtoSD+4td/VmRmSnvpjfgXAZ5E=
+X-Received: by 2002:a0c:b601:: with SMTP id f1mr3695594qve.99.1588961172818;
+ Fri, 08 May 2020 11:06:12 -0700 (PDT)
+Date:   Fri,  8 May 2020 11:05:48 -0700
+In-Reply-To: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
+Message-Id: <20200508180549.212957-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH v3] x86: bitops: fix build regression
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200508144017.3501418-1-arnd@arndb.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3f55d763-9017-16e5-5765-75634c0c0c0c@infradead.org>
-Date:   Fri, 8 May 2020 11:05:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200508144017.3501418-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 7:40 AM, Arnd Bergmann wrote:
-> One cannot select DEVICE_PRIVATE when its dependencies are disabled:
-> 
-> WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
->   Depends on [n]: ZONE_DEVICE [=n]
->   Selected by [m]:
->   - TEST_HMM [=m] && RUNTIME_TESTING_MENU [=y] && TRANSPARENT_HUGEPAGE [=y]
-> lib/test_hmm.c:480:8: error: implicit declaration of function 'memremap_pages' [-Werror,-Wimplicit-function-declaration]
->         ptr = memremap_pages(&devmem->pagemap, numa_node_id());
->               ^
-> lib/test_hmm.c:480:8: note: did you mean 'memcmp_pages'?
-> include/linux/mm.h:3082:12: note: 'memcmp_pages' declared here
-> extern int memcmp_pages(struct page *page1, struct page *page2);
->            ^
-> lib/test_hmm.c:480:6: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Werror,-Wint-conversion]
->         ptr = memremap_pages(&devmem->pagemap, numa_node_id());
->             ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> lib/test_hmm.c:1089:4: error: implicit declaration of function 'memunmap_pages' [-Werror,-Wimplicit-function-declaration]
->                         memunmap_pages(&devmem->pagemap);
-> 
-> Add a dependency from CONFIG_TEST_HMM to ZONE_DEVICE, to disallow
-> those broken configurations.
-> 
-> Fixes: 5d5e54be8a1e ("mm/hmm/test: add selftest driver for HMM")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+It turns out that if your config tickles __builtin_constant_p via
+differences in choices to inline or not, these statements produce
+invalid assembly:
 
-Thanks.
+$ cat foo.c
+long a(long b, long c) {
+  asm("orb\t%1, %0" : "+q"(c): "r"(b));
+  return c;
+}
+$ gcc foo.c
+foo.c: Assembler messages:
+foo.c:2: Error: `%rax' not allowed with `orb'
 
-> ---
->  lib/Kconfig.debug | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index d9885fa37cc0..63667d62c9d8 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2262,6 +2262,7 @@ config TEST_MEMINIT
->  config TEST_HMM
->  	tristate "Test HMM (Heterogeneous Memory Management)"
->  	depends on TRANSPARENT_HUGEPAGE
-> +	depends on ZONE_DEVICE
->  	select DEVICE_PRIVATE
->  	select HMM_MIRROR
->  	select MMU_NOTIFIER
-> 
+Use the `%b` "x86 Operand Modifier" to instead force register allocation
+to select a lower-8-bit GPR operand.
 
+The "q" constraint only has meaning on -m32 otherwise is treated as
+"r". Not all GPRs have low-8-bit aliases for -m32.
 
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/961
+Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
+Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
+Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Suggested-by: Brian Gerst <brgerst@gmail.com>
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V2 -> V3:
+* use `%b` "x86 Operand Modifier" instead of bitwise op then cast.
+* reword commit message.
+* add Brian and HPA suggested by tags
+* drop Nathan & Sedat Tested by/reviewed by tags (new patch is different
+  enough).
+
+Changes V1 -> V2:
+* change authorship/signed-off-by to Ilie
+* add Nathan's Tested by/reviewed by
+* update commit message slightly with info sent to HPA.
+
+ arch/x86/include/asm/bitops.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index b392571c1f1d..03e24286e4eb 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -52,9 +52,9 @@ static __always_inline void
+ arch_set_bit(long nr, volatile unsigned long *addr)
+ {
+ 	if (__builtin_constant_p(nr)) {
+-		asm volatile(LOCK_PREFIX "orb %1,%0"
++		asm volatile(LOCK_PREFIX "orb %b1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" (CONST_MASK(nr) & 0xff)
++			: "iq" (CONST_MASK(nr))
+ 			: "memory");
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+@@ -72,9 +72,9 @@ static __always_inline void
+ arch_clear_bit(long nr, volatile unsigned long *addr)
+ {
+ 	if (__builtin_constant_p(nr)) {
+-		asm volatile(LOCK_PREFIX "andb %1,%0"
++		asm volatile(LOCK_PREFIX "andb %b1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" (CONST_MASK(nr) ^ 0xff));
++			: "iq" (~CONST_MASK(nr)));
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
 -- 
-~Randy
+2.26.2.645.ge9eca65c58-goog
+
