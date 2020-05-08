@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879DFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1DDC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6487F218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B072496F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942592;
-	bh=SD7T60NTWAwj0y0ioejAXYqLHyACuAREGqmS+ToUxjE=;
+	s=default; t=1588942595;
+	bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUxLVBUxW5rdVrzTWX9usa6MgiRX5xTt7I5hQspmW7Zefkwo394e6svKFgWSWte14
-	 efwGngaGkSKvuXHi/ErB4ab6vTW8i55Cj72LgPTSod/1a67gcSnIjdX0MIK8HpBjbh
-	 4scbD6+I7Am6FWKQxNHXLISx0rWTMWGV+QbPV1Ck=
+	b=S8XsTky59qFs11AFD/UxTV614GLFKXcDC3DMHjjqeMFoas3ZBpsRGsq+lI2W/bOY4
+	 7sEsEaStVwXsqv/h6OD5k2WDsH7Dt58o1I4AS/Nbl4yooi/Z8PEScp7RKo/J8e9z8j
+	 0cj/oJZVimkJqoqOk5eA6FqfArVldy+z7iYaewxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbgEHM4b (ORCPT
+        id S1730463AbgEHM4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgEHM42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:56:28 -0400
+        id S1730443AbgEHM4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:56:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE75218AC;
-        Fri,  8 May 2020 12:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F58218AC;
+        Fri,  8 May 2020 12:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942587;
-        bh=SD7T60NTWAwj0y0ioejAXYqLHyACuAREGqmS+ToUxjE=;
+        s=default; t=1588942589;
+        bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBsi8w7ca60Z6nW9ITB1tfSLgrTSVSxai2xaIdMkttjly4lsJb8fsB3P8lJJbzMkw
-         Q9N4NIuljcU8s2KG8xnX0OIR1QsunaJq+MTlT+zAzl/mfLIyPKT6GLVqm9ElWkz84h
-         kyNSGIdHmHxZSd2gfL5fW7+GMfNygGgb7NJAcgiU=
+        b=P3DMEQZKaMjlmXQx4fDN8H7p3S62cK8xGdgLgaqGBMuhKZFmnSn8rQQaR/fMr/C5c
+         3XJAW7hcd9Ak0KPxzbNT5le70zr7dLTRFh33ErOkQ79TZx9kXvBWVEwCHOx04vqgTg
+         IcvXtISp1jJcXWo0i240/kuy5EcswC7hwiDCDSb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Julien Beraud <julien.beraud@orolia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 26/49] net: stmmac: fix enabling socfpgas ptp_ref_clock
-Date:   Fri,  8 May 2020 14:35:43 +0200
-Message-Id: <20200508123046.754664307@linuxfoundation.org>
+Subject: [PATCH 5.6 27/49] net: stmmac: Fix sub-second increment
+Date:   Fri,  8 May 2020 14:35:44 +0200
+Message-Id: <20200508123046.871859506@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -62,53 +62,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julien Beraud <julien.beraud@orolia.com>
 
-[ Upstream commit 15ce30609d1e88d42fb1cd948f453e6d5f188249 ]
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-There are 2 registers to write to enable a ptp ref clock coming from the
-fpga.
-One that enables the usage of the clock from the fpga for emac0 and emac1
-as a ptp ref clock, and the other to allow signals from the fpga to reach
-emac0 and emac1.
-Currently, if the dwmac-socfpga has phymode set to PHY_INTERFACE_MODE_MII,
-PHY_INTERFACE_MODE_GMII, or PHY_INTERFACE_MODE_SGMII, both registers will
-be written and the ptp ref clock will be set as coming from the fpga.
-Separate the 2 register writes to only enable signals from the fpga to
-reach emac0 or emac1 when ptp ref clock is not coming from the fpga.
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
+
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
+
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
 
 Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index fa32cd5b418ef..70d41783329dd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -291,16 +291,19 @@ static int socfpga_gen5_set_phy_mode(struct socfpga_dwmac *dwmac)
- 	    phymode == PHY_INTERFACE_MODE_MII ||
- 	    phymode == PHY_INTERFACE_MODE_GMII ||
- 	    phymode == PHY_INTERFACE_MODE_SGMII) {
--		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
- 		regmap_read(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
- 			    &module);
- 		module |= (SYSMGR_FPGAGRP_MODULE_EMAC << (reg_shift / 2));
- 		regmap_write(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
- 			     module);
--	} else {
--		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2));
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 0201596225592..e5d9007c8090b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -26,12 +26,16 @@ static void config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
  
-+	if (dwmac->f2h_ptp_ref_clk)
-+		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
-+	else
-+		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK <<
-+			  (reg_shift / 2));
-+
- 	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
  
- 	/* Deassert reset for the phy configuration to be sampled by
 -- 
 2.20.1
 
