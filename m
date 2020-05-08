@@ -2,210 +2,128 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C76DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E916C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5A0207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941332;
-	bh=pALps1Jxm/+WOhQxg8hNkKb98br61bdG69sV4vDTzzc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=G3/A4J/vJEjT0rUT6EYzjnUX3sJqUjGTXns4XHJmyWTg79Bbk5VOGZK9axjhgh9b2
-	 69HZh1tsIVpbHFWV0VtSvhSYjM1IU44PteEH39s3l4oR9K16oH7VYeYtGq8wDlJ2mP
-	 0WTpEN8hdrgfwYFV3otAwRJEPeD8Ew2L+EVgTiHU=
+	by mail.kernel.org (Postfix) with ESMTP id 1F53D207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NBCfqeKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgEHMfb (ORCPT
+        id S1727105AbgEHMgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726616AbgEHMfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:35:30 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE8AC05BD43;
-        Fri,  8 May 2020 05:35:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so429926ljp.4;
-        Fri, 08 May 2020 05:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=71j6PMRO3vVpRcVHQ+g+fJbWnjsKtLz5FDZRpYbeeK8=;
-        b=tUWQeYARS4BEfMt1TTgN71TJ1Ksnk5T7uMRPVcYKyhA9yTWNuzH14mt/1ju4/2WgLS
-         b1oGaW517E8BRXHtASVU3CtT4eIw9x7lG5x9+jaSniyfUMtMhv2iocA6ho2nRXTfDqZo
-         Y5Nbb4/q6TBxX4ezIB86poffH9bCEhp3VvgrrwGP/gn9LFNx2jVuQoLfvjOSpWtfUJmJ
-         oup+kMx5pDf0Y86dglBhOEXzfEDaoCGCj3OttCjet8wLmcRZwLt1YYgbGzhxN0OHIluh
-         BkdlcVZpYsUb1Esyuo+pTvjfEMlURRsR1g9GySepXqPoWUE8QL7hhOZNc5lgXvtQkz3g
-         j0EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=71j6PMRO3vVpRcVHQ+g+fJbWnjsKtLz5FDZRpYbeeK8=;
-        b=mS8D8FKGfQmZGfsnmpU2leN3jO/KEMz+dGcEWlMv7CgvBAx/3govULClb6n1/3urbs
-         xUJJ/ZMuXuu612K8p30Q1AGSOj9khDFoAMQiZJF+yeuiX4kS4PmNNk4rnu9bm2oPvV8Z
-         SHtDjW1kBMZLb/stPtrwB3Afp40/5SOwNAkjQyz0qkHxGKWpfESZ2tZgFe7nJecBqeAO
-         aJ3NcSnaH3k1cl0F6Txzq0nLGkU/ScSnBM1ml0TkMYkaExyx1kYunMZjbmlD6PVyjMJd
-         98cIflgUwiA4QK/e8SoQAVouWn0oU+r+zU976vIazcv8vyTug67rkkXBYDijVH6N1aO5
-         1suQ==
-X-Gm-Message-State: AOAM5313GAk8ZE6ZgHLU846zu5G6uvUyqaSoPRBJlo5GWw8oARpQgjO4
-        sZ0q8PmVBYTsL66iUK7m1vJsWSVl+tA=
-X-Google-Smtp-Source: ABdhPJxsv7NTezQmck9qlgIe5r3q6ecB/xo+T0lF2eq4Eu2MIUjdpMOJFVlge4LwafjYuN2i6rQIiA==
-X-Received: by 2002:a2e:9258:: with SMTP id v24mr1557337ljg.109.1588941328356;
-        Fri, 08 May 2020 05:35:28 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id s7sm1107753lfb.40.2020.05.08.05.35.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 May 2020 05:35:27 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Jun Li <lijun.kernel@gmail.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-In-Reply-To: <CAKgpwJVU9m6G8PRdray2fGCp_peOU9C-ZAVKTk7pmSdq6z4NiA@mail.gmail.com>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com> <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com> <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <CALAqxLVXauXP0r4Hv2Axa4PNf_F9wp644peYV06bdsPtMKGmLA@mail.gmail.com> <CAKgpwJU7VDx90STE7bhx9VZ5p1jtqCyyLavmhXfpaicyDAYt_g@mail.gmail.com> <CAKgpwJVU9m6G8PRdray2fGCp_peOU9C-ZAVKTk7pmSdq6z4NiA@mail.gmail.com>
-Date:   Fri, 08 May 2020 15:35:23 +0300
-Message-ID: <87eerumwok.fsf@kernel.org>
+        Fri, 8 May 2020 08:36:01 -0400
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:41825
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726638AbgEHMgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:36:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=byOy4nNXzzym2wte2W4DwzuO7Ed3L+xD1Hw5sKtB0n5OgwPLxWFKKLI6SbsXcwIfL5isF0QGwQ5EtXRJeEWhIIbSTE2CRuQhg2TREabCzzvCAos3a9PzYetDXigGBW2vo6Cz1y/2wqQq/w2BgLQIJM3Gr+WhHZcyU5RaMD3JbcD4K4lNHRsto8v1m5digXjMLoMhyDq1LIU0F1B7P5vEqVcAdevIR/rlvh2uT2EPXNrV7jITiFmnSyhBCxR+2QkGb590ErcIYInsXwYV+9Zyg2goIpqTzgXMwf6oXIRAmXIHexzDOvIe81Esd0ljFQlY+1v6h6Gn9zjp9YgL81wt/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OX6eeVGsCLrPWw5UHdJNnZbK1EOBt2ZxCSO9BYDeLPk=;
+ b=SGzrJgT6icFiZr74uHRSur7XZ3KZOVyuZ7StcMquh4MlBo0u+/yIbwberAGwcH5tsVlMHD3nSzRUvOh6B8+mfNHb/JbVWeGXSwIyqCcVcAprhqwV47GelQVugeu4+qCF2Brg75wZKmzggcQ1YyZBd2vasjcxioWxj39H2TiEVMKD1CtwuntmfHMPoXNEvwgrbtiRGCWA7aHQN0qKMJDbb4MAspxNGGHfF+/Z6kDz+Xj6oKaGnBKY9AVc8k/uUHdGTcrKXe/UNvHl/z2TyJJQZHhBlWQuS6r1eAAtKNdgD9Hb6h961P1ttCnhX7beElaVBHmd2CgzlNQzAoTvBx02wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OX6eeVGsCLrPWw5UHdJNnZbK1EOBt2ZxCSO9BYDeLPk=;
+ b=NBCfqeKX8BErc7xzGwpCStI7k0HmSyO9bFdHh2TlegE7k2MqIjmjjlF+rK+UqKS8/4lx6l/eeJftkbKh4i+qHQMt32+W7QEiB+bRrZrgglJkYTYoErPEo4UV4Bt7c58j00NIBtwCDn892JpDXkcEnAXXTgEJ4ZeBpqsZpwcm3EI=
+Authentication-Results: canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5885.eurprd05.prod.outlook.com (2603:10a6:803:df::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Fri, 8 May
+ 2020 12:35:54 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2979.030; Fri, 8 May 2020
+ 12:35:54 +0000
+Date:   Fri, 8 May 2020 09:35:50 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: linux-next: manual merge of the net-next tree with the rdma tree
+Message-ID: <20200508123550.GG19158@mellanox.com>
+References: <20200508131851.5818d84d@canb.auug.org.au>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508131851.5818d84d@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0041.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0041.namprd02.prod.outlook.com (2603:10b6:207:3d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Fri, 8 May 2020 12:35:53 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jX2EI-0004B5-VQ; Fri, 08 May 2020 09:35:50 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 473f9d80-0781-4851-f6d3-08d7f34c595f
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5885:|VI1PR05MB5885:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB58853B27F0577E5A6A89C98CCFA20@VI1PR05MB5885.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CSD9FqAAErIFdemMc5k1y2PM2aibslsiB8LAc3U2jRSsIPkqAKJBj57E0SVHLrBTuUN0kTZIEENND+Wje3L8Rr75fRrqdgGiTrcZeg3ZlCWLqTlzslzyiuGzMjSGP0NO0R/igJgTaXvOT+0abCZ+iDoNCXPY2exNQsHnWGdzwe32yk65J7NImNHvjmcsvBBUHJjzWpeexm0jEMOnhewcFFCFzkyplHWBjbc2vjHD5SEyyHX1e71Ck1p9irF2Y7FJMW9YkqqGgC1XiZUNcZAob2sL+s0tZeVLm+fmFYMwSpnBXo4nerpdg8dFYun+FjuGiavS2916TiUI6x2yhyEBaiMwuQ8tV5SMNhuLvdK3naO0hyJJU/TrdMfUl5hVrGE/hapC1CXeQo+xFkaA6XfkB5PnlWmqDYwnFbKyDnUCXovqnIV/HWyGXGi0wqwYtgmYvDXFahXP6eLuakOJV4vuvyQ9Fpz9UhDInbPQ8CCIdUo2cHeh4bcb3u43CoTqglOFg8WVq+rZqPpRYGM19U2Eo4WVY9u/wWLnHTPhA9w9Zoo9RjDw7CX8mDj4Sw4uWKt9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(33430700001)(83300400001)(33440700001)(52116002)(2616005)(83310400001)(186003)(33656002)(1076003)(36756003)(83290400001)(83320400001)(83280400001)(66556008)(66476007)(66946007)(8676002)(4744005)(86362001)(478600001)(4326008)(110136005)(8936002)(6636002)(9746002)(54906003)(5660300002)(9786002)(2906002)(107886003)(316002)(26005)(24400500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Y1+Y74E4RYB5817VSPQQeV4sOi2UgT5hUHf6hcmSAN4yqwN307TPlipnzD8MUzncQuEubYUAA5FohAlr5UjDt32eWL/qUhojKCOAQgdA+juzgxgLkCCIAkNbAtF/nXWk0sjKZbxStrIkUFu0q/Oci1e+a7yQozsvxf1Ig94Gt0WRfAa9nqsmakpNov/WxseGvTxlN/8ohFOJv9WHIngcer6i3cwGhsNXlbBBxdb59eXvNy9dB41Mu/lbt+aA9DOvcXIDoKpPJRHgMFvPRQ8BycI3XBAl0x1/wYStGX74O6IH5+VIlRnBOkhLt9XDCoaKFAjjnGtmJIlvimDphxazkJaP4bJaBMqdjv7Bmrw9mCnXKaIkjLbWC9sFQG9iaztGwuGLGU8Q4eesdl9hBXwHu9MIILVU25q2XanPr4qUzOST+nsHgGaCJSGNYeLwsVDodCXDtxtuHzqcOYSBhJF+F7ySZkc4KA/EXp8qdfHSp68ZwHlmPg60uwKCfnKv7HRx
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 473f9d80-0781-4851-f6d3-08d7f34c595f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 12:35:54.1808
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2Jp72NXjOioH2OcH3669Czvtc6aey0wG1OzwVmZ6DyWk1Sjgml34lwUkxk50Gq+6PjpHPwaq+ZjS8k/RrXk2Zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5885
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 08, 2020 at 01:18:51PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the net-next tree got a conflict in:
+> 
+>   drivers/net/bonding/bond_main.c
+> 
+> between commits:
+> 
+>   ed7d4f023b1a ("bonding: Rename slave_arr to usable_slaves")
+>   c071d91d2a89 ("bonding: Add helper function to get the xmit slave based on hash")
+>   29d5bbccb3a1 ("bonding: Add helper function to get the xmit slave in rr mode")
+> 
+> from the rdma and mlx5-next trees and commit:
+> 
+>   ae46f184bc1f ("bonding: propagate transmit status")
+> 
+> from the net-next tree.
 
+Saeed? These patches in the shared branch were supposed to be a PR to
+net-net? I see it hasn't happened yet and now we have conflicts?? 
 
-Hi,
-
-Jun Li <lijun.kernel@gmail.com> writes:
-> Jun Li <lijun.kernel@gmail.com> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=E6=97=
-=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=8811:08=E5=86=99=E9=81=93=EF=BC=9A
->>
->> John Stultz <john.stultz@linaro.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=887=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:27=E5=86=99=E9=81=93=EF=BC=
-=9A
->> >
->> > On Wed, May 6, 2020 at 2:00 AM Jun Li <lijun.kernel@gmail.com> wrote:
->> > > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=
-=8830=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=
-=EF=BC=9A
->> > > > On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wr=
-ote:
->> > > > > John Stultz <john.stultz@linaro.org> writes:
->> > > > > > From: Yu Chen <chenyu56@huawei.com>
->> > > > > >
->> > > > > > It needs more time for the device controller to clear the CmdA=
-ct of
->> > > > > > DEPCMD on Hisilicon Kirin Soc.
->> > > > >
->> > > > > Why does it need more time? Why is it so that no other platform =
-needs
->> > > > > more time, only this one? And which command, specifically, causes
->> > > > > problem?
->> > >
->> > > Sorry for my back to this so late.
->> > >
->> > > This change is required on my dwc3 based HW too, I gave a check
->> > > and the reason is suspend_clk is used in case the PIPE phy is at P3,
->> > > this slow clock makes my EP command below timeout.
->> > >
->> > > dwc3_gadget_ep_cmd: ep0out: cmd 'Set Endpoint Configuration' [401]
->> > > params 00001000 00000500 00000000 --> status: Timed Out
->> > >
->> > > Success case takes about 400us to complete, see below trace(44.286278
->> > > - 44.285897 =3D 0.000381):
->> > >
->> > > configfs_acm.sh-822   [000] d..1    44.285896: dwc3_writel: addr
->> > > 000000006d59aae1 value 00000401
->> > > configfs_acm.sh-822   [000] d..1    44.285897: dwc3_readl: addr
->> > > 000000006d59aae1 value 00000401
->> > > ... ...
->> > > configfs_acm.sh-822   [000] d..1    44.286278: dwc3_readl: addr
->> > > 000000006d59aae1 value 00000001
->> > > configfs_acm.sh-822   [000] d..1    44.286279: dwc3_gadget_ep_cmd:
->> > > ep0out: cmd 'Set Endpoint Configuration' [401] params 00001000
->> > > 00000500 00000000 --> status: Successful
->> > >
->> > > Hi John,
->> > >
->> > > Do you still have this problem? if yes, What's the value of
->> > > USBLNKST[21:18] when the timeout happens?
->> >
->> > Sorry. As I mentioned, I was working to upstream a patchset that I
->> > hadn't created, so the context I had was limited. As I couldn't
->> > reproduce an issue without the change on the device I had, I figured
->> > it would be best to drop it.
->>
->> That was fine.
->> >
->> > However, as you have some analysis and rational for why such a change
->> > would be needed, I don't have an objection to it. Do you want to
->> > resubmit the patch with your explanation and detailed log above in the
->> > commit message?
->>
->> Sure, I will resubmit the patch with my explanation added in commit mess=
-age.
->
-> Hi John
->
-> A second think of this, I feel use readl_poll_timeout_atomic() to wait by=
- time
-> is more proper here, so I create a new patch to address this also other
-> registers polling, see below patch with you CCed:
->
-> https://patchwork.kernel.org/patch/11536081/
-
-Fixing a bug has nothing to do with using
-readl_poll_timeout_atomic(). Please don't mix things as it just makes
-review time consuming.
-
-Let's find out what the bug is all about, only then should we consider
-moving over to readl_poll_timeout_atomic().
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl61UgsACgkQzL64meEa
-mQbuBA//dEmweQ1Dhcmw8Sut1NUrlcQMQrzZdVo9W36wzV03PjQ8ycIqdiuQ8e+i
-ZzlTZJkLVkHTICp7ksAcTwma7rJummOyXjuI9niBE7B/zkRB13bYZh7kQ2NgNoPj
-+vDa5e050OsrpWyzIP1k64jAtz7KReUMRuIQtMxl1xYDuVxjWjXe91Z71R4BDIza
-QQET0+jPqyinzXEhsC1Gh9yuoyyzfzU+XQjWoa5m70S9RFvH3FPv0Y8LXBWCb9lN
-7++e7RUKzlOlGu973kXWgH8sN9dxxFjxZQnY3wELfirDDN0+9/bpJfFg0lYW9mHH
-UNtPcYD7TPXGfzz2wxM0MO3AOi17HXJ6mdG2DlDcJ9Desw1wn2GXt46mJoRODG3o
-7qnrkp7zBs59MnTomBmgAoF3L2eylMCDCKmn9feaJy85FJDB3a0b5hgUpcegwbF6
-JG9iff08jmIrfawITlFsbUVhA2hLL9YYj903JxoU7NEyoqdwXZzjY7Jd4Jz3QW4N
-9myaG5DiJ+zFglnj83awlH1rBAoPwfKZ1Ojv57zGBDHWpjKT+3LoJ/gtE6eEv0Kk
-Vzb9Na1D3dCBD0x4SVdiYAf9yocFsQqkjZnjlxu4X8LzZC7eYM7aV9vS7+FpTuxe
-58u16XtqKkFuq5EYWcNIZVlJYPyo6KOlMatddTVO+cvzkLDrEsc=
-=0L/w
------END PGP SIGNATURE-----
---=-=-=--
+Jason
