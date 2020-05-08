@@ -2,59 +2,97 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26687C54E7F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 774A521841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F0F21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:37:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GEun4DGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgEHPh1 (ORCPT
+        id S1727851AbgEHPhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgEHPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:37:11 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98B1424953;
-        Fri,  8 May 2020 15:37:08 +0000 (UTC)
-Date:   Fri, 8 May 2020 11:37:07 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] taint: add module firmware crash taint support
-Message-ID: <20200508113707.3af3fce7@gandalf.local.home>
-In-Reply-To: <20200508021438.4373-1-mcgrof@kernel.org>
-References: <20200508021438.4373-1-mcgrof@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 8 May 2020 11:37:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbgEHPhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:37:05 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D447C061A0C;
+        Fri,  8 May 2020 08:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=o2cUHvSZE2EbFXmmDO+7qFHMKjG62hLvo4GWWJeNlEI=; b=GEun4DGRcmfYQBOvAkSWSKBi8k
+        hyxwpEVsIDW42KAYGD2IG0DBW+naURQPn+t9000Tcky8+RFVAtsEdZQX53snjhIgZGF1c63t/IYif
+        RvEWHwHOScnhB1KsKDEJS554BZrnYNEgfwKy8iUVdPkSRAHRXakiHI2Hm9rO+gNqibOnH05EqkW4U
+        QbC29MaYTQ8PfMqDDc+fnAEXz4DIo1+rtG6TFmnP7+0r0O5H3HP9m74GFinmTv/XezxrDk4NZk9q+
+        xjD/XRPYCLfIpl8OCBt3vIyiGgdyGXi2kJrYnLXrIhyv6HxtF6+9PEkeWLESGyC4ENeK7Kl9FUULM
+        yItqzyPQ==;
+Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX53h-0004R3-4P; Fri, 08 May 2020 15:37:05 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH 10/12] drm_syncobj: use __anon_inode_getfd
+Date:   Fri,  8 May 2020 17:36:32 +0200
+Message-Id: <20200508153634.249933-11-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508153634.249933-1-hch@lst.de>
+References: <20200508153634.249933-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 May 2020 02:14:38 +0000
-Luis Chamberlain <mcgrof@kernel.org> wrote:
+Use __anon_inode_getfd instead of opencoding the logic using
+get_unused_fd_flags + anon_inode_getfile.
 
-> The new helper module_firmware_crashed() uses LOCKDEP_STILL_OK as
-> this fact should in no way shape or form affect lockdep. This taint
-> is device driver specific.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/gpu/drm/drm_syncobj.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Looks fine to me.
+diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
+index 42d46414f7679..b69a7be34e8c7 100644
+--- a/drivers/gpu/drm/drm_syncobj.c
++++ b/drivers/gpu/drm/drm_syncobj.c
+@@ -581,18 +581,11 @@ int drm_syncobj_get_fd(struct drm_syncobj *syncobj, int *p_fd)
+ 	struct file *file;
+ 	int fd;
+ 
+-	fd = get_unused_fd_flags(O_CLOEXEC);
++	fd = __anon_inode_getfd("syncobj_file", &drm_syncobj_file_fops,
++			syncobj, O_CLOEXEC, &file);
+ 	if (fd < 0)
+ 		return fd;
+ 
+-	file = anon_inode_getfile("syncobj_file",
+-				  &drm_syncobj_file_fops,
+-				  syncobj, 0);
+-	if (IS_ERR(file)) {
+-		put_unused_fd(fd);
+-		return PTR_ERR(file);
+-	}
+-
+ 	drm_syncobj_get(syncobj);
+ 	fd_install(fd, file);
+ 
+-- 
+2.26.2
 
--- Steve
