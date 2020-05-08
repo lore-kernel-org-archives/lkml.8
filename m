@@ -2,315 +2,182 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680F1C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB251C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5049E21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9169C24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKFEz8+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgEHPjJ (ORCPT
+        id S1728244AbgEHPkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:39:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38983 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgEHPjJ (ORCPT
+        Fri, 8 May 2020 11:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbgEHPkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:39:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id u6so2135317ljl.6;
-        Fri, 08 May 2020 08:39:06 -0700 (PDT)
+        Fri, 8 May 2020 11:40:25 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B1EC061A0C;
+        Fri,  8 May 2020 08:40:24 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l3so1545121edq.13;
+        Fri, 08 May 2020 08:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vTGeP2mp0atDffBVvlfE/CUFeNMcpq4/+i7t1uiSUiI=;
+        b=IKFEz8+THuTorI7NlDH5c3C3yFpz7Wp3L7N5cVUbojS9576edfURlOf6OM+yy+QuQT
+         mVA5Vdgba14Ry91YmN6JwLM1gn0w1pu0rrfpbR4qP21ndJ/XNa+8ena97TLS2i0vfqsX
+         Kd2ROKOcq5rpb7QacY25zzFb3hxAFnk4jBVDL0Mkv8+qk7v46TMWCvLSKbbV98ir/UYf
+         nbF/U88u4HhwzDS5rwVtpY1oxN5e2R/XuMx9R75jFea2kN2B4aeU2PpmsNoeMsF//vRD
+         /KMJCk7J++sWzHapIKMCgt6oR06Nn7Axr+7q6sDY5vNlTSo7+iXaGc+fy0Jt4lNEEhnj
+         B2Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bZGhc0X6CANrUZcST5h5hth4ZWVIz1cOCp8CtQaTIqM=;
-        b=QvJA9RBjtLKzDlyjAV1n4rCjNwxJJwyhG+I1YOzeFs3JmfClGgb9UUN5b6SwuUmSBA
-         JiMrKon44CCYSPQ3hnSNjTgcWZ9W/F/qkcoallQMBhkkHgs6xo5vUhUeX5rpMmdETX5Q
-         BfeLDfmBoU9Q6wNxnCm5AhwdPsYtOzePGGtBqTlPk5oQbwkb9KQJlmhkjsfyF3Hn8KYZ
-         iT75trPM7k8eTxLc3TKmRXYrI0eOGw91dZ3SBzzR1WyBZh3RwFIVXf2s2ROCE3X6kITF
-         nwqj6tqcu2A+1KNbkgE7cXLhpM1Z7kGGaqtll5UO7dlakmUgKdKCzvWIwx/1jkaEkTNz
-         WRLg==
-X-Gm-Message-State: AOAM532mGZefYWgBjjZvJ4375srkr+//hfLS0DK4JLK+SEv6CWTx6oHR
-        lWxBnAjQ/jO04wlvB+eLTnQ=
-X-Google-Smtp-Source: ABdhPJyQ6XtdnSoUwK9wR1Fcg5qOYj25iTGLAg6uuGeaPyzvP2oa5Yi/zCIlif8+jwcVHKKO1CLtMA==
-X-Received: by 2002:a2e:7e04:: with SMTP id z4mr2208787ljc.50.1588952345613;
-        Fri, 08 May 2020 08:39:05 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id f4sm1447502ljm.11.2020.05.08.08.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:39:04 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:38:17 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 00/11] Support ROHM BD99954 charger IC
-Message-ID: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vTGeP2mp0atDffBVvlfE/CUFeNMcpq4/+i7t1uiSUiI=;
+        b=dvn7NrdhxnjAORujMXXH/vlO87vmqo4g2wRjRjr5DWuL4c7cFiugoKEwclsgQ5N3Ld
+         xkdciO2yTag16ypJZE9n5+z8x77ynhkWi0Y+/Xc0dk2r1FAa+2C9fGnaspwlMhvWE/A9
+         RZfMGK9iucB5M8oIP4lu2p4C4DzwdS0ep03cQkBodQCiMRH5uxSYnf3whxSYq0u0IFd6
+         oQ3FF1cBZ9li4aY6hONDxGCxzllBRZoe77RJOuykLsckZRuhLMZOespyHCkTta2yW/3o
+         YjmfiLyZPtOoXg2bqVV9fgb+0JbknbnMNOfEL4+GlpJuuWaHENhG8hT3knt9Esy1+zG6
+         I1tg==
+X-Gm-Message-State: AGi0Pua5LqV3gmfPRgls4semBSYkfs5E9bMpvjYFJ9JOm5KshGDlcrXZ
+        ioZXi2+rjNj4eka8KryRYE/pdH0CXMbfLvTzOhY=
+X-Google-Smtp-Source: APiQypJgh+CSGsfjzbXUm6WLw6LglrPUjAcB8Mgfr8b/68JEMJuXWKPusr9zT3nPNaofdDHN9sNzFo+HI6KN9O5ICtk=
+X-Received: by 2002:a50:ef18:: with SMTP id m24mr2577526eds.281.1588952423627;
+ Fri, 08 May 2020 08:40:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+ <b491e02ad790a437115fdeab6b21bc48@codeaurora.org> <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+ <20200507125357.GA31783@willie-the-truck> <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+In-Reply-To: <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 8 May 2020 08:40:40 -0700
+Message-ID: <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+To:     Will Deacon <will@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please note that this series should be applied to two trees. Patches
-1-4 (or 1-5 as suggested by Sebastian) should go to regulator tree.
-Perhaps Mark can provide an immutable branch to Sebastian? Rest of the
-patches can then go to power-supply tree.
+On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
+> > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
+> > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> > > > > Add stall implementation hook to enable stalling
+> > > > > faults on QCOM platforms which supports it without
+> > > > > causing any kind of hardware mishaps. Without this
+> > > > > on QCOM platforms, GPU faults can cause unrelated
+> > > > > GPU memory accesses to return zeroes. This has the
+> > > > > unfortunate result of command-stream reads from CP
+> > > > > getting invalid data, causing a cascade of fail.
+> > >
+> > > I think this came up before, but something about this rationale doesn't add
+> > > up - we're not *using* stalls at all, we're still terminating faulting
+> > > transactions unconditionally; we're just using CFCFG to terminate them with
+> > > a slight delay, rather than immediately. It's really not clear how or why
+> > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
+> > > (or even a documented workaround for something), or might things start
+> > > blowing up again if any other behaviour subtly changes? I'm not dead set
+> > > against adding this, but I'd *really* like to have a lot more confidence in
+> > > it.
+> >
+> > Rob mentioned something about the "bus returning zeroes" before, but I agree
+> > that we need more information so that we can reason about this and maintain
+> > the code as the driver continues to change. That needs to be a comment in
+> > the driver, and I don't think "but android seems to work" is a good enough
+> > justification. There was some interaction with HUPCF as well.
+>
+> The issue is that there are multiple parallel memory accesses
+> happening at the same time, for example CP (the cmdstream processor)
+> will be reading ahead and setting things up for the next draw or
+> compute grid, in parallel with some memory accesses from the shader
+> which could trigger a fault.  (And with faults triggered by something
+> in the shader, there are *many* shader threads running in parallel so
+> those tend to generate a big number of faults at the same time.)
+>
+> We need either CFCFG or HUPCF, otherwise what I have observed is that
+> while the fault happens, CP's memory access will start returning
+> zero's instead of valid cmdstream data, which triggers a GPU hang.  I
+> can't say whether this is something unique to qcom's implementation of
+> the smmu spec or not.
+>
+> *Often* a fault is the result of the usermode gl/vk/cl driver bug,
+> although I don't think that is an argument against fixing this in the
+> smmu driver.. I've been carrying around a local patch to set HUPCF for
+> *years* because debugging usermode driver issues is so much harder
+> without.  But there are some APIs where faults can be caused by the
+> user's app on top of the usermode driver.
+>
 
-Support ROHM BD99954 Battery Management IC
+Also, I'll add to that, a big wish of mine is to have stall with the
+ability to resume later from a wq context.  That would enable me to
+hook in the gpu crash dump handling for faults, which would make
+debugging these sorts of issues much easier.  I think I posted a
+prototype of this quite some time back, which would schedule a worker
+on the first fault (since there are cases where you see 1000's of
+faults at once), which grabbed some information about the currently
+executing submit and some gpu registers to indicate *where* in the
+submit (a single submit could have 100's or 1000's of draws), and then
+resumed the iommu cb.
 
-ROHM BD99954 is a Battery Management IC for 1-4 cell Lithium-Ion
-secondary battery. BD99954 is intended to be used in space-constraint
-equipment such as Low profile Notebook PC, Tablets and other
-applications.
+(This would ofc eventually be useful for svm type things.. I expect
+we'll eventually care about that too.)
 
-Series extracts a "linear ranges" helper out of the regulator
-framework. Linear ranges helper is intended to help converting
-real-world values to register values when conversion is linear. I
-suspect this is useful also for power subsystem and possibly for clk.
+BR,
+-R
 
-Current implementation does not support inversely proportional ranges
-but adding support for that could be helpful.
-
-This version of series introduces new battry DT binding entries and
-adds the parsing in power_supply_get_battery_info().
-
-Changelog v12:
- - Added missing KConfig dependency from linear_ranges_test to
-   linear_ranges lib. Thanks to Mark for pointing it out.
-
-Changelog v11:
- - Rebased on top of v5.7-rc4
-
-Changelog v10:
- - Add patch 11 which removes the "default n" from power/supply KConfig
-   (Please just drop from series if you disagree)
- - Fix the regulator_linear_ranges added to qcom_smd-regulator.c at
-   v5.7-rc1
- - Minor styling to BD70528 power/supply driver as suggested by Andy
-
-Changelog v9:
- General:
-   - rebased on top of v5.7-rc1
-   - re-ordered patches as suggested by Sebastian Reichel
-   - added few acks
- BD99954 driver:
-   - Moved bd99954-charger.h to drivers/power/supply
-   - fixed a typo from print
-   - used devm_add_action_or_reset and removed remove callback
-
-Changelog v8:
- Linear ranges
-   - small improvements suggested by Andy Shevchenko, no functional changes
-
-Changelog v7:
- General:
-   - rebased on top of v5.6
- bd99954 driver:
-   - fixed bunch of styling issues spotted by Andy Shevchenko
-   - dropped ACPI table as ACPI properties are not supported at this
-     version of driver.
-   - added few acks
-
-Changelog v6:
- generic:
-   - rebased on top of 5.6-rc7.
- linear ranges:
-   - moved to lib as requested by Greg KH
-   - EXPORT_SYMBOL => EXPORT_SYMBOL_GPL
-   - licence GPL-2.0, not later
-   - added KUnit test for linear ranges
-
-Changelog v5:
- generic:
-   - rebased on top of 5.6-rc6.
- DT-bindings:
-   - Dropped -charger extension from compatible and removed wildcard x.
- regulators:
-   - squashed the regulator changes in one patch.
- power-supply KConfig:
-   - fixed indentiation
-   - dropped unnecessary 'default N' from BD99954.
-
-Changelog v4:
- generic:
-   - rebase and drop RFC.
- DT-bindings:
-   - add I2C node address-cells and size-cells to fix yaml check errors
-   - uncomment multipleOf:
- bd70528:
-   - add patch which renames driver internal linear_range struct to
-     avoid collision when regulator/driver.h (which gets included from
-     rohm generic header) introduces the linear_range struct.
- regulators:
-   - rebase to v5.6-rc2 and convert also the two newly introduced
-     drivers to use linear_range struct instead of
-     regulator_linear_range.
- linear_ranges:
-   - Fix kerneldoc.
-
-Changelog RFC-v3:
- DT-bindings:
-   - fix the BD99954 binding (the *-microvolt Vs. *-microvolts issue is
-     still there. Not sure which one is correct)
-   - renabe tricklecharge-* binding to trickle-charge-* as suggested by
-     Rob.
- - drop the linear-ranges helper which was written for BD70528 and
-   extract the linear-range code from regulator framework instead.
- - refactor regulator framework to utilize extracted linear-ranges
-   code.
- - change the struct regulator_linear_range to linear_range from
-   regulator drivers.
- - refactor BD70528 to use regulator framework originated
-   linear-ranges code.
- - change BD99954 to use linear-ranges code from regulator framework
-
-Changelog RFC-v2:
- DT-bindings:
-   - Used the battery parameters described in battery.txt
-   - Added few new parameters to battery.txt
-   - Added ASCII art charging profile chart for BD99954 to explain
-     states and limits.
- Linear ranges:
-   - Fixed division by zero error from linear-ranges code if step 0 is
-     used.
- Power-supply core:
-   - Added parsing of new battery parameters.
- BD99954 driver:
-   - converted to use battery parameters from battery node
-   - Added step 0 ranges for reg values which do not change voltage
-   - added dt-node to psy-config
-
-Patch 1:
-	Linear ranges helpers
-Patch 2:
-	Test for linear ranges helpers
-Patch 3:
-	Rename driver internal struct linear_range from bd70528-power
-Patch 4:
-	Use linear-ranges helpers in regulator framework and
-	convert regulator drivers to use new linear_range struct.
-Patch 5:
-	Use linear-ranges helpers in bd70528 driver
-Patch 6:
-	DT binding docs for the new battery parameters
-Patch 7:
-	Parsing of new battery parameters
-Patch 8:
-	BD99954 charger DT binding docs
-Patch 9:
-	ROHM BD99954 charger IC driver
-Patch 10:
-	Fix Kconfig help text indentiation for other entries as well.
-Patch 11:
-	Fix Kconfig by removing the "default n".
-
----
-
-Matti Vaittinen (11):
-  lib: add linear ranges helpers
-  lib/test_linear_ranges: add a test for the 'linear_ranges'
-  power: supply: bd70528: rename linear_range to avoid collision
-  regulator: use linear_ranges helper
-  power: supply: bd70528: use linear ranges
-  dt-bindings: battery: add new battery parameters
-  power: supply: add battery parameters
-  dt_bindings: ROHM BD99954 Charger
-  power: supply: Support ROHM bd99954 charger
-  power: supply: Fix Kconfig help text indentiation
-  power: supply: KConfig cleanup default n
-
- .../bindings/power/supply/battery.txt         |    6 +
- .../bindings/power/supply/rohm,bd99954.yaml   |  155 +++
- drivers/power/supply/Kconfig                  |   36 +-
- drivers/power/supply/Makefile                 |    1 +
- drivers/power/supply/bd70528-charger.c        |  140 +-
- drivers/power/supply/bd99954-charger.c        | 1142 +++++++++++++++++
- drivers/power/supply/bd99954-charger.h        | 1075 ++++++++++++++++
- drivers/power/supply/power_supply_core.c      |    8 +
- drivers/regulator/88pg86x.c                   |    4 +-
- drivers/regulator/88pm800-regulator.c         |    4 +-
- drivers/regulator/Kconfig                     |    1 +
- drivers/regulator/act8865-regulator.c         |    4 +-
- drivers/regulator/act8945a-regulator.c        |    2 +-
- drivers/regulator/arizona-ldo1.c              |    2 +-
- drivers/regulator/arizona-micsupp.c           |    4 +-
- drivers/regulator/as3711-regulator.c          |    6 +-
- drivers/regulator/as3722-regulator.c          |    4 +-
- drivers/regulator/axp20x-regulator.c          |   16 +-
- drivers/regulator/bcm590xx-regulator.c        |    8 +-
- drivers/regulator/bd70528-regulator.c         |    8 +-
- drivers/regulator/bd71828-regulator.c         |   10 +-
- drivers/regulator/bd718x7-regulator.c         |   26 +-
- drivers/regulator/da903x.c                    |    2 +-
- drivers/regulator/helpers.c                   |  130 +-
- drivers/regulator/hi6421-regulator.c          |    4 +-
- drivers/regulator/lochnagar-regulator.c       |    4 +-
- drivers/regulator/lp873x-regulator.c          |    4 +-
- drivers/regulator/lp87565-regulator.c         |    2 +-
- drivers/regulator/lp8788-buck.c               |    2 +-
- drivers/regulator/max77650-regulator.c        |    2 +-
- drivers/regulator/mcp16502.c                  |    4 +-
- drivers/regulator/mp8859.c                    |    2 +-
- drivers/regulator/mt6323-regulator.c          |    6 +-
- drivers/regulator/mt6358-regulator.c          |    8 +-
- drivers/regulator/mt6380-regulator.c          |    6 +-
- drivers/regulator/mt6397-regulator.c          |    6 +-
- drivers/regulator/palmas-regulator.c          |    4 +-
- drivers/regulator/qcom-rpmh-regulator.c       |    2 +-
- drivers/regulator/qcom_rpm-regulator.c        |   14 +-
- drivers/regulator/qcom_smd-regulator.c        |   78 +-
- drivers/regulator/rk808-regulator.c           |   10 +-
- drivers/regulator/s2mps11.c                   |   14 +-
- drivers/regulator/sky81452-regulator.c        |    2 +-
- drivers/regulator/stpmic1_regulator.c         |   18 +-
- drivers/regulator/tps65086-regulator.c        |   10 +-
- drivers/regulator/tps65217-regulator.c        |    4 +-
- drivers/regulator/tps65218-regulator.c        |    6 +-
- drivers/regulator/tps65912-regulator.c        |    4 +-
- drivers/regulator/twl-regulator.c             |    4 +-
- drivers/regulator/twl6030-regulator.c         |    2 +-
- drivers/regulator/wm831x-dcdc.c               |    2 +-
- drivers/regulator/wm831x-ldo.c                |    4 +-
- drivers/regulator/wm8350-regulator.c          |    2 +-
- drivers/regulator/wm8400-regulator.c          |    2 +-
- include/linux/linear_range.h                  |   48 +
- include/linux/power_supply.h                  |    4 +
- include/linux/regulator/driver.h              |   27 +-
- lib/Kconfig                                   |    3 +
- lib/Kconfig.debug                             |   12 +
- lib/Makefile                                  |    2 +
- lib/linear_ranges.c                           |  241 ++++
- lib/test_linear_ranges.c                      |  228 ++++
- 62 files changed, 3229 insertions(+), 362 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
- create mode 100644 drivers/power/supply/bd99954-charger.c
- create mode 100644 drivers/power/supply/bd99954-charger.h
- create mode 100644 include/linux/linear_range.h
- create mode 100644 lib/linear_ranges.c
- create mode 100644 lib/test_linear_ranges.c
-
-
-base-commit: 0e698dfa282211e414076f9dc7e83c1c288314fd
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+>
+> BR,
+> -R
+>
+> >
+> > As a template, I'd suggest:
+> >
+> > > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > > > index 8d1cd54d82a6..d5134e0d5cce 100644
+> > > > > --- a/drivers/iommu/arm-smmu.h
+> > > > > +++ b/drivers/iommu/arm-smmu.h
+> > > > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
+> > > > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
+> > > > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+> > > > >               int status);
+> >
+> > /*
+> >  * Stall transactions on a context fault, where they will be terminated
+> >  * in response to the resulting IRQ rather than immediately. This should
+> >  * pretty much always be set to "false" as stalling can introduce the
+> >  * potential for deadlock in most SoCs, however it is needed on Qualcomm
+> >  * XXXX because YYYY.
+> >  */
+> >
+> > > > > +    bool stall;
+> >
+> > Hmm, the more I think about this, the more I think this is an erratum
+> > workaround in disguise, in which case this could be better named...
+> >
+> > Will
