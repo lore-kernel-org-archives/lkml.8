@@ -2,64 +2,57 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A872CC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6208C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8783921473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B585A24958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942221;
-	bh=tDgb4ZhqgTRX4pFltIIphvpJ1LIqmMkqkCzl3AR9tCU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zssfcY2anX1KfgGhXyvTYmNQcf1P9moeBmoRtz1ZOIUTpQoiGwc58xa5zqbthi3sQ
-	 xp4G77EQTUgwZaPnAljP+Ndmm7fgvYTeeSWnE0HYRYtFEmJwILj4jQQ7Ie27PRDZFk
-	 pQ8DJEDfvcK2Xj39JL1P9JWiITIGUJmFEbsXXBhg=
+	s=default; t=1588942240;
+	bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=od1296JN/yYEbycD6rLs4TZOmkzcePuEbXBeGwicieTZkWzxrd7s3bc/EJSU6XyhO
+	 WMaCEhljEuPdDH9T4+0eYAoJSHAUHh6DX7Lq1tXybDmF2JtWpCN1GsZj2qFSofWo3F
+	 3DFFUNuTPg4tcDy8cE/AxOzXbpt5VRxL1HalarBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgEHMuS (ORCPT
+        id S1728165AbgEHMuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbgEHMuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:50:06 -0400
+        id S1729825AbgEHMuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10A8524953;
-        Fri,  8 May 2020 12:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17EE7218AC;
+        Fri,  8 May 2020 12:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942205;
-        bh=tDgb4ZhqgTRX4pFltIIphvpJ1LIqmMkqkCzl3AR9tCU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eHiGacgwJ7dRMKrYqc3egS+1xqGdBtKrQSE19AZt8YZ1TyBqPetDtF3XuXjgt+r7K
-         r3U57g3P3u+lOjFTE4ozEOAebBIxdmEcJcNLL2ur2Mhnot/uTL3lVk04ce4nWnIaHc
-         reXfRbxS8yImDdOCY9rOJvHQh4/6bnlXYv2ZKgZc=
+        s=default; t=1588942210;
+        bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qTGkCnKU39smYNmKlZfCZXS8RRzr9oiLFYMQVrZCqLyCb5RR5kPp9k2byqfeVuw5L
+         t9sET6xWT7s3fbDoM8a6ejHY8QZ3PwAEyo0U3hc/K6tnH34vEugbabwgpLlvgUbSyV
+         QpTxA9DoisSyD8KhHo3Y2bYkZRxZA1nsOLEdfQhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/18] 4.9.223-rc1 review
-Date:   Fri,  8 May 2020 14:35:03 +0200
-Message-Id: <20200508123030.497793118@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Beraud <julien.beraud@orolia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 10/22] net: stmmac: Fix sub-second increment
+Date:   Fri,  8 May 2020 14:35:22 +0200
+Message-Id: <20200508123035.160984554@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
+References: <20200508123033.915895060@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.223-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.223-rc1
-X-KernelTest-Deadline: 2020-05-10T12:30+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,116 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.223 release.
-There are 18 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Julien Beraud <julien.beraud@orolia.com>
 
-Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-Anything received after that time might be too late.
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.223-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
 
-thanks,
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
 
-greg k-h
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
 
--------------
-Pseudo-Shortlog of commits:
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.223-rc1
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 41d528fbebb41..ccf7381c8baec 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -36,12 +36,16 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
+ 
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
+ 
+-- 
+2.20.1
 
-Thomas Pedersen <thomas@adapt-ip.com>
-    mac80211: add ieee80211_is_any_nullfunc()
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda: Match both PCI ID and SSID for driver blacklist
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-
-Marcin Nowakowski <marcin.nowakowski@imgtec.com>
-    MIPS: perf: Remove incorrect odd/even counter handling for I6400
-
-Chuck Lever <chuck.lever@oracle.com>
-    xprtrdma: Fix backchannel allocation of extra rpcrdma_reps
-
-Doug Berger <opendmb@gmail.com>
-    net: systemport: suppress warnings on failed Rx SKB allocations
-
-Doug Berger <opendmb@gmail.com>
-    net: bcmgenet: suppress warnings on failed Rx SKB allocations
-
-Nathan Chancellor <natechancellor@gmail.com>
-    lib/mpi: Fix building for powerpc with clang
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: b53: Rework ARL bin logic
-
-Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-    scripts/config: allow colons in option strings for sed
-
-Ronnie Sahlberg <lsahlber@redhat.com>
-    cifs: protect updating server->dstaddr with a spinlock
-
-Julien Beraud <julien.beraud@orolia.com>
-    net: stmmac: Fix sub-second increment
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    wimax/i2400m: Fix potential urb refcnt leak
-
-Sebastian Reichel <sebastian.reichel@collabora.com>
-    ASoC: sgtl5000: Fix VAG power-on handling
-
-Tyler Hicks <tyhicks@linux.microsoft.com>
-    selftests/ipc: Fix test failure seen after initial test run
-
-YueHaibing <yuehaibing@huawei.com>
-    iio:ad7797: Use correct attribute_group
-
-Alexey Kardashevskiy <aik@ozlabs.ru>
-    powerpc/pci/of: Parse unassigned resources
-
-Jia He <justin.he@arm.com>
-    vhost: vsock: kick send_pkt worker once device is started
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +--
- arch/mips/kernel/perf_event_mipsxx.c               |  6 +++-
- arch/powerpc/kernel/pci_of_scan.c                  | 12 ++++++--
- drivers/iio/adc/ad7793.c                           |  2 +-
- drivers/net/dsa/b53/b53_common.c                   | 30 ++++++++++++++++---
- drivers/net/dsa/b53/b53_regs.h                     |  3 ++
- drivers/net/ethernet/broadcom/bcmsysport.c         |  3 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  3 +-
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  | 12 +++++---
- drivers/net/wimax/i2400m/usb-fw.c                  |  1 +
- drivers/vhost/vsock.c                              |  5 ++++
- fs/cifs/connect.c                                  |  2 ++
- include/linux/ieee80211.h                          |  9 ++++++
- lib/mpi/longlong.h                                 | 34 +++++++++++-----------
- net/mac80211/mlme.c                                |  2 +-
- net/mac80211/rx.c                                  |  8 ++---
- net/mac80211/status.c                              |  5 ++--
- net/mac80211/tx.c                                  |  2 +-
- net/sctp/sm_make_chunk.c                           |  6 +++-
- net/sunrpc/xprtrdma/backchannel.c                  | 12 ++------
- net/sunrpc/xprtrdma/verbs.c                        | 34 +++++++++++++---------
- net/sunrpc/xprtrdma/xprt_rdma.h                    |  2 +-
- scripts/config                                     |  5 +++-
- sound/pci/hda/hda_intel.c                          |  9 +++---
- sound/soc/codecs/sgtl5000.c                        | 34 ++++++++++++++++++++++
- sound/soc/codecs/sgtl5000.h                        |  1 +
- tools/testing/selftests/ipc/msgque.c               |  2 +-
- 27 files changed, 173 insertions(+), 75 deletions(-)
 
 
