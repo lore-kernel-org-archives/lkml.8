@@ -2,129 +2,108 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7726C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F77C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF00320A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1+g9B8h"
+	by mail.kernel.org (Postfix) with ESMTP id CE9E5208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 10:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEHKOI (ORCPT
+        id S1727032AbgEHKPB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 06:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHKOH (ORCPT
+        Fri, 8 May 2020 06:15:01 -0400
+Received: from relay-2.mailobj.net ([213.182.54.5]:57668 "EHLO
+        relay-2.mailobj.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgEHKPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 06:14:07 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98AAC05BD43;
-        Fri,  8 May 2020 03:14:06 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id q10so932228ile.0;
-        Fri, 08 May 2020 03:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jhA1BBa4NsPm3rIlgXZArVumo+yjVGMobhO6ZOoqYRs=;
-        b=j1+g9B8h+aRkZjugMpLxA77lzkdbkqgnmjbB326bQLFMbMMd3h/8DNaT/QoBwKLtfh
-         KXpX36Yy+zI/n0HpXpFGOWA0k7mrQdoDUKEq69HVNbU3UwDWJ0hS31NrGkc9wMdmB/b7
-         pS/6Ujeo1Mm76OIaW9za3ve0FETBb43Cx4wq1Xnh8IXlUt6gVMu80FYn2pl+QT3peryP
-         nnWFGNLcYbPYw+43q0rG/P/d0Ui+zNYXhsHr3zjTrnw8EDDxz6DCNLAd4GYDrlDm9O4n
-         I2Cs/jhDWfBsWy1PFXrs50xEVXbNx1KP6Kg8De55qosONq/NkdeeFwL3EUcwj4V8I+Vp
-         nkQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jhA1BBa4NsPm3rIlgXZArVumo+yjVGMobhO6ZOoqYRs=;
-        b=MM1R5bW35pZvWKAwgqi91nFGrU9ghgGwuOmLUQ72zKI4JuoqDwMkIKL4/j0e148fhl
-         feezUmD20709OnHtpKsXVSP/aPNhdq2jd2DWWjwLP/JA1isNxm+wAkhbRqFoyqi5xhqu
-         5GmNMrjxWaOpi0Nvpuaqkr9hCpw4PszVx6IxB43bDjT/Sfe6VWLlYEQWTNMoEZTA9WTe
-         ta9LZDvjwgf8GIe/nrCg6DtW7Ra65TvS8gFVt/eVCy7r63IdhHeZb3O31FN/9GHipfbb
-         1azgoamxQNfyjMmlSPnrQYzNV3TJ0Gb+Sl1dsltEs0w7KJjt1I7sjVIr5kUOhXvazQ4Z
-         gPpQ==
-X-Gm-Message-State: AGi0PubgcSEeR9YqOIPRQi9xA9VeyuSi+hI0JjDEoprc7fyvUFeUyQGp
-        Sd4olGMdTQ8dXjRaNyUmoZEh1fZufE6GvGGVkGdwt2LP
-X-Google-Smtp-Source: APiQypIrWPSTx9U/IY+i09/JOejnZGX4BIxq4JUPLFLlBVnEgrKehCVn3ZZpq8559VWoZAjN5PEwfwz56bqv3fQil3M=
-X-Received: by 2002:a92:d2c1:: with SMTP id w1mr1787919ilg.96.1588932846340;
- Fri, 08 May 2020 03:14:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585733475-5222-1-git-send-email-chakragithub@gmail.com>
- <CAJfpegtk=pbLgBzM92tRq8UMUh+vxcDcwLL77iAcv=Mxw3r4Lw@mail.gmail.com>
- <CAH7=fosGV3AOcU9tG0AK3EJ2yTXZL3KGfsuVUA5gMBjC4Nn-WQ@mail.gmail.com>
- <CAH7=fosz9KDSBN86+7OxYTLJWUSdUSkeLZR5Y0YyM6=GE0BdOw@mail.gmail.com> <CAJfpegvWBHootLiE_zsw35G6Ee387V=Da_wCzaV9NhZQVDKYGg@mail.gmail.com>
-In-Reply-To: <CAJfpegvWBHootLiE_zsw35G6Ee387V=Da_wCzaV9NhZQVDKYGg@mail.gmail.com>
-From:   Chakra Divi <chakragithub@gmail.com>
-Date:   Fri, 8 May 2020 15:43:54 +0530
-Message-ID: <CAH7=fosn3fnNBkKzHNBSvoQh+Gjpi2J0mZ3rRENitMmFmpHcUw@mail.gmail.com>
-Subject: Re: [PATCH] fuse:rely on fuse_perm for exec when no mode bits set
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 8 May 2020 06:15:00 -0400
+X-Greylist: delayed 513 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 06:14:59 EDT
+Received: from v-1.localdomain (v-1.in.mailobj.net [192.168.90.191])
+        by relay-2.mailobj.net (Postfix) with SMTP id 9444E1260;
+        Fri,  8 May 2020 12:06:24 +0200 (CEST)
+Received: by ip-25.net-c.com [213.182.54.25] with ESMTP
+        Fri,  8 May 2020 12:06:54 +0200 (CEST)
+X-EA-Auth: JUxpYiSKTpkM9V+rU9V0BU8epqnXhebRD8yjIF7jR1pZKnJA2GA5WdqvQBqCGcWMtdmrVddBC9U8ArbU/gIAaADoMi9lxTmxhCg4+3N3sF0=
+Message-ID: <f9413ee5ca2fb0d85015f8b5988cbc61418e50f0.camel@mailoo.org>
+Subject: Re: [PATCH v3 0/2] Add Qualcomm MSM8939 GCC binding and driver
+From:   Vincent Knecht <vincent.knecht@mailoo.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        Konrad Dybcio <konradybcio@gmail.com>
+Date:   Fri, 08 May 2020 12:06:23 +0200
+In-Reply-To: <90cda746-2caa-cb79-9304-17a97886f1fc@linaro.org>
+References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+         <e9d181a9-938c-a69b-8325-2aabeefd0934@nexus-software.ie>
+         <90cda746-2caa-cb79-9304-17a97886f1fc@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 1:51 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Mon, Apr 27, 2020 at 3:46 PM Chakra Divi <chakragithub@gmail.com> wrote:
-> >
-> > On Tue, Apr 21, 2020 at 4:21 PM Chakra Divi <chakragithub@gmail.com> wrote:
-> > >
-> > > On Mon, Apr 20, 2020 at 4:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > >
-> > > > On Wed, Apr 1, 2020 at 11:31 AM Chakra Divi <chakragithub@gmail.com> wrote:
-> > > > >
-> > > > > In current code, for exec we are checking mode bits
-> > > > > for x bit set even though the fuse_perm_getattr returns
-> > > > > success. Changes in this patch avoids mode bit explicit
-> > > > > check, leaves the exec checking to fuse file system
-> > > > > in uspace.
-> > > >
-> > > > Why is this needed?
-> > >
-> > > Thanks for responding Miklos. We have an use case with our remote file
-> > > system mounted on fuse , where permissions checks will happen remotely
-> > > without the need of mode bits. In case of read, write it worked
-> > > without issues. But for executable files, we found that fuse kernel is
-> > > explicitly checking 'x' mode bit set on the file. We want this
-> > > checking also to be pushed to remote instead of kernel doing it - so
-> > > modified the kernel code to send getattr op to usespace in exec case
-> > > too.
-> >
-> > Any help on this Miklos....
->
-> I still don't understand what you are requesting.  What your patch
-> does is unconditionally allow execution, even without any 'x' bits in
-> the mode.  What does that achieve?
+Le jeudi 07 mai 2020 à 17:06 +0100, Bryan O'Donoghue a écrit :
+> On 07/05/2020 16:57, Bryan O'Donoghue wrote:
+> > On 23/04/2020 11:34, Bryan O'Donoghue wrote:
+> > > V3:
+> > > This update removes the old clock name arrays which I forgot to prune in
+> > > the previous V2.
+> > > 
+> > > git diff bod/clk-next+msm8939 bod/clk-next+msm8939-v2.1
+> > 
+> > I should have mentioned.
+> > 
+> > If you want to test this you'll need to do the following to your 
+> > msm8939.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8939.dtsi 
+> > b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+> > index 996425a70014..2d54ad7f99b6 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8939.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8939.dtsi
+> > @@ -673,6 +673,10 @@ gcc: clock-controller@1800000 {
+> >                          reg = <0x1800000 0x80000>;
+> > +                       clock-names = "xo",
+> > +                                     "sleep_clk";
+> > +                       clocks = <&xo_board>,
+> > +                                <&sleep_clk>;
+> >                  };
+> > 
+> > "xo" and "sleep_clk" names can be resolved.
+> > 
+> > ---
+> > bod
+> 
+> and this...
+> 
+> clocks {
+>      xo_board: xo_board {
+>          compatible = "fixed-clock";
+>          #clock-cells = <0>;
+>          clock-frequency = <19200000>;
+>      };
+> 
+>      sleep_clk: sleep_clk {
+>          compatible = "fixed-clock";
+>          #clock-cells = <0>;
+>          clock-frequency = <32768>;
+>      };
+> };
+> 
 
-Thanks for the help Miklos. We have a network based filesystem that
-supports acls.
-As our filesystem give granular access, we wipe out the mode bits and
-completely rely on ACLs.
+Thank you, works for me over v5.7-rc2 with an Alcatel Idol 3 (5.5").
 
-Fuse works well for all other ops (with default_permissions disabled )
- as all the checks are done at the filesystems.
-But only executables have problems because fuse kernel rejects the
-execution by doing access checks on mode bit.
-To push this check to filesystem, in the above patch - i'm relying on
-return value from fuse_perm_getattr() ignoring the mode bits.
+Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
 
-When the fuse module is asked to rely on filesystem for access checks,
-why do we need this explicit check for executables?
-I found out that it is the same issue with nfs too. Is there a reason
-for it ? Should we not push this check to filesystem ?
 
-Thanks,
-Chakra
->
-> Thanks,
-> Miklos
+
