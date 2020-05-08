@@ -2,55 +2,56 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD7CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD98FC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC8D20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50D5206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942762;
-	bh=tYCmFYG1c80BdMRSWHjwTjudD6VVh+EKEYME+PVr0eU=;
+	s=default; t=1588942765;
+	bh=nYvNC5mp3p9E42LUYjMDSuncRs7p9od0b/nf87IZNn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1t1JldSXNuB9/9P+II8wZkuOL1tCgboEvfKxL0R0hF6phAI9eJdwkxAtbXQB3bvr
-	 8cHLCVCjGvzbhCAT9RumKsVTUNS6tyJe1ewfOegBMIt2PzS9rXByn0fV/gr2xT8Dk8
-	 T/HiC/srvRtirxp7xmu34aEyD/HTVdnZOEtW6680=
+	b=mDD8z3k7qBzvHN+WGiffgpEd673rjBrUuhH+ENjVht0bw/q6Q2npri0AvPaRv5APA
+	 ci60cZOPzG850JNy+VRH5P4EbHSmADA6mQSAn6kWJzB6NplW1Ubam9JRQk6uzfnCZZ
+	 OG8DNcrkoOK446bjY2f4kKipEmE22IusoS/sSFnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgEHM7U (ORCPT
+        id S1730076AbgEHMxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbgEHMxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:32 -0400
+        id S1730064AbgEHMxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F3EA24963;
-        Fri,  8 May 2020 12:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C74ED24953;
+        Fri,  8 May 2020 12:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942411;
-        bh=tYCmFYG1c80BdMRSWHjwTjudD6VVh+EKEYME+PVr0eU=;
+        s=default; t=1588942399;
+        bh=nYvNC5mp3p9E42LUYjMDSuncRs7p9od0b/nf87IZNn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m14aK9JD+w6cN8dInbuJGDX/bfAIRjCT0yMUUBvQAQ5xk4wnaMaI2wJgbgi+Z0A50
-         rt9p4GSulmIJfMtGZxzJbdQOf9WYVW7CxZqBcJw+658jUdii4LxMpTBndzAA3IGe0p
-         Z8wVzPglusCAUJA35xq56CS3PKxJ6IQ0dhgrd6c4=
+        b=1AXzAubStcLuiGgtSsMDkY8k7mTiaL0hVQg8ZrWiFTFUpvKHZN9LGuq5509O8Hstk
+         QFzzf+YYaR9w7Rflgz0cEZWQZau1WqV/oRJ5HoS+L+rq7JGQpR8zy6O44YCAoXHmiK
+         TkTPB6EBwuHpgy2ZZOPGAQbjpQATUI735+SAsw5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Roman Gilg <subdiff@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5.4 35/50] mfd: intel-lpss: Use devm_ioremap_uc for MMIO
-Date:   Fri,  8 May 2020 14:35:41 +0200
-Message-Id: <20200508123048.223733664@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 07/50] ASoC: topology: Check return value of soc_tplg_dai_config
+Date:   Fri,  8 May 2020 14:35:13 +0200
+Message-Id: <20200508123044.352094803@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -63,49 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuowen Zhao <ztuowen@gmail.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-commit a8ff78f7f773142eb8a8befe5a95dd6858ebd635 upstream.
+[ Upstream commit dd8e871d4e560eeb8d22af82dde91457ad835a63 ]
 
-Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
-in MTRR. This will cause the system to hang during boot. If possible,
-this bug could be corrected with a firmware update.
+Function soc_tplg_dai_config can fail, check for and handle possible
+failure.
 
-This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
-by forcing the use of strongly uncachable pages for intel-lpss.
-
-The BIOS bug is present on Dell XPS 13 7390 2-in-1:
-
-[    0.001734]   5 base 4000000000 mask 6000000000 write-combining
-
-4000000000-7fffffffff : PCI Bus 0000:00
-  4000000000-400fffffff : 0000:00:02.0 (i915)
-  4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
-Cc: <stable@vger.kernel.org> # v4.19+
-Tested-by: AceLan Kao <acelan.kao@canonical.com>
-Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Roman Gilg <subdiff@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200327204729.397-7-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -384,7 +384,7 @@ int intel_lpss_probe(struct device *dev,
- 	if (!lpss)
- 		return -ENOMEM;
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 22960f5932c7f..2d4a5a3058c41 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2431,7 +2431,7 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
+ {
+ 	struct snd_soc_tplg_dai *dai;
+ 	int count;
+-	int i;
++	int i, ret;
  
--	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-+	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
- 				  LPSS_PRIV_SIZE);
- 	if (!lpss->priv)
- 		return -ENOMEM;
+ 	count = le32_to_cpu(hdr->count);
+ 
+@@ -2446,7 +2446,12 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
+ 			return -EINVAL;
+ 		}
+ 
+-		soc_tplg_dai_config(tplg, dai);
++		ret = soc_tplg_dai_config(tplg, dai);
++		if (ret < 0) {
++			dev_err(tplg->dev, "ASoC: failed to configure DAI\n");
++			return ret;
++		}
++
+ 		tplg->pos += (sizeof(*dai) + le32_to_cpu(dai->priv.size));
+ 	}
+ 
+-- 
+2.20.1
+
 
 
