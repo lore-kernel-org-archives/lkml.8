@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5D9C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB8FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04884206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356A3206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943783;
-	bh=+3sH12Mcafg+dre+feGqjGBkiQ+LF0frBeNkWn0pyhI=;
+	s=default; t=1588943791;
+	bh=AZFAajj6vGzBXFJeIq6jSaAV/h+w4Rx6RIx4LoU/HHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+cXLAMDDZkTwPyYatmgYztncLjjToNdyRyV40uHiy9WLqpaYAwflHAwqPACKURpz
-	 s5b4cO3gASpsUcvk7uA9g+Rpr1yLDObqqFMarinqFdUfh9cQNVX/SEQmkx7anx1t7I
-	 qyupst2/eUMhR9/8gNnhvkuPe4V6RzfHDRfGsoSA=
+	b=PNdIGuqWumTBy6kXJDkrRM3SOOp0X9LHFPFvxPxYBjIBQGpBOMY82IS9EHm3+FhUh
+	 ABGiBAcfRL4Zq3j7ifVOwh0Pbb6z1suHluZGmwHvp5SmcRkJh4sinx4DDhZS4lW9Uz
+	 L7VHiY5qOiumprtd5f/b7VyIhfdYnxncGdUjDm2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgEHNQW (ORCPT
+        id S1729135AbgEHNQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgEHMpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:45:15 -0400
+        id S1728881AbgEHMpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:45:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D2121473;
-        Fri,  8 May 2020 12:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCBA32145D;
+        Fri,  8 May 2020 12:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941915;
-        bh=+3sH12Mcafg+dre+feGqjGBkiQ+LF0frBeNkWn0pyhI=;
+        s=default; t=1588941905;
+        bh=AZFAajj6vGzBXFJeIq6jSaAV/h+w4Rx6RIx4LoU/HHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQWiYfXDk1lV0cqnnYQPTW7MJtpqhG0lyo6eRPNu2fyjLwR2I4l9GngdpG9fmgDHI
-         +7HlxOmAqXk+R/zx5ynZpTct5IbWE0u1fZzbk3+ixwZ7IhL5hPrHSbA0tPWOmHTKta
-         tWRXJjfeyuh0Z/67G2DVDGcou8ZQ2Rh+TwJzQ6DU=
+        b=W+v1FGjW4HWk0ttSgz2/hZlkr9C0m77nA8+6+q1j2SN4iE1uc86rit9Xq1uRXfxQQ
+         MvmHe6GA9GjnxWwi2ztfo6ZLhsNX6MR0VKMdJvSELBV/4/sOsnQbbBUiJaj0w4B4dZ
+         PPKIgP+EXbrG01MYWJgLGZgl9Ytk5qvYp5x6Z3VI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yotam Gigi <yotamg@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 222/312] mlxsw: switchx2: Fix misuse of hard_header_len
-Date:   Fri,  8 May 2020 14:33:33 +0200
-Message-Id: <20200508123140.073297562@linuxfoundation.org>
+Subject: [PATCH 4.4 218/312] net/mlx4_core: Do not access comm channel if it has not yet been initialized
+Date:   Fri,  8 May 2020 14:33:29 +0200
+Message-Id: <20200508123139.792987205@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,38 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yotam Gigi <yotamg@mellanox.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 251d41c58b765f00d73b1b4230cad256e25f2735 upstream.
+commit 81d184199e328fdad5633da139a10337327154e0 upstream.
 
-In order to specify that the mlxsw switchx2 driver needs additional
-headroom for packets, there have been use of the hard_header_len field of
-the netdevice struct.
+In the Hypervisor, there are several FW commands which are invoked
+before the comm channel is initialized (in mlx4_multi_func_init).
+These include MOD_STAT_CONFIG, QUERY_DEV_CAP, INIT_HCA, and others.
 
-This commit changes that to use needed_headroom instead, as this is the
-correct way to do that.
+If any of these commands fails, say with a timeout, the Hypervisor
+driver enters the internal error reset flow. In this flow, the driver
+attempts to notify all slaves via the comm channel that an internal error
+has occurred.
 
-Fixes: 31557f0f9755 ("mlxsw: Introduce Mellanox SwitchX-2 ASIC support")
-Signed-off-by: Yotam Gigi <yotamg@mellanox.com>
-Acked-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Since the comm channel has not yet been initialized (i.e., mapped via
+ioremap), this will cause dereferencing a NULL pointer.
+
+To fix this, do not access the comm channel in the internal error flow
+if it has not yet been initialized.
+
+Fixes: 55ad359225b2 ("net/mlx4_core: Enable device recovery flow with SRIOV")
+Fixes: ab9c17a009ee ("mlx4_core: Modify driver initialization flow to accommodate SRIOV for Ethernet")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlxsw/switchx2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/cmd.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-@@ -993,7 +993,7 @@ static int mlxsw_sx_port_create(struct m
- 	/* Each packet needs to have a Tx header (metadata) on top all other
- 	 * headers.
- 	 */
--	dev->hard_header_len += MLXSW_TXHDR_LEN;
-+	dev->needed_headroom = MLXSW_TXHDR_LEN;
+--- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
+@@ -2451,6 +2451,7 @@ err_comm_admin:
+ 	kfree(priv->mfunc.master.slave_state);
+ err_comm:
+ 	iounmap(priv->mfunc.comm);
++	priv->mfunc.comm = NULL;
+ err_vhcr:
+ 	dma_free_coherent(&dev->persist->pdev->dev, PAGE_SIZE,
+ 			  priv->mfunc.vhcr,
+@@ -2518,6 +2519,13 @@ void mlx4_report_internal_err_comm_event
+ 	int slave;
+ 	u32 slave_read;
  
- 	err = mlxsw_sx_port_module_check(mlxsw_sx_port, &usable);
- 	if (err) {
++	/* If the comm channel has not yet been initialized,
++	 * skip reporting the internal error event to all
++	 * the communication channels.
++	 */
++	if (!priv->mfunc.comm)
++		return;
++
+ 	/* Report an internal error event to all
+ 	 * communication channels.
+ 	 */
+@@ -2552,6 +2560,7 @@ void mlx4_multi_func_cleanup(struct mlx4
+ 	}
+ 
+ 	iounmap(priv->mfunc.comm);
++	priv->mfunc.comm = NULL;
+ }
+ 
+ void mlx4_cmd_cleanup(struct mlx4_dev *dev, int cleanup_mask)
 
 
