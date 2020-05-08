@@ -2,165 +2,112 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DF3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5E4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977FD21655
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8817C21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MyGvCQjf"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rSGufhOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgEHVvg (ORCPT
+        id S1728208AbgEHVvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:51:36 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34955 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728065AbgEHVvf (ORCPT
+        Fri, 8 May 2020 17:51:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728191AbgEHVvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:51:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588974693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7mj04HZ7mvvO2/7hjzPs2ixKAeuvpGcyRfUqAELX/Bo=;
-        b=MyGvCQjfOVJyL5BAib8d872h8OJ3yQzFIYPIh5VBYQLnYJAqqaKtvxTs9wrlzxfWozjffW
-        cER6l2e4MrFkS5NMzszVQg5ZQrLYYNaLjYdRT3x6hNNVPpHF+4ikOMCaU6K1Ro5O4aZHdz
-        Q06H20Xej4BUBxg6jJdGUUuq9W3RP/c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-218--enK5OAGNmq5-Li6e_6R8Q-1; Fri, 08 May 2020 17:51:31 -0400
-X-MC-Unique: -enK5OAGNmq5-Li6e_6R8Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05EDD1895A39;
-        Fri,  8 May 2020 21:51:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26F1D1E6;
-        Fri,  8 May 2020 21:51:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 4/4] NFSv4: Fix fscache cookie aux_data to ensure change_attr
- is included
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     Dave Wysochanski <dwysocha@redhat.com>, dhowells@redhat.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 08 May 2020 22:51:27 +0100
-Message-ID: <158897468722.1116213.9964942101141957205.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
-References: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Fri, 8 May 2020 17:51:41 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851D3C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:51:41 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id 59so1567816qva.13
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hKXRONb+n2QBaUWyV/lYpYzKCQdxSGuUXqvfdv5OsKY=;
+        b=rSGufhOWI5GJ6rCz1J39rS/t2dS6ZoQ36aA2y3RXn5bAZ7046RBX6rQnu8ISFEZaMD
+         MH3QH8Zj79L5MHtEygX2sQIkEpEfpHec8ju4KgtrK9eU1RZhdZ2ADOsWM9iz88vgttuh
+         lIhGIaHkK5GccMZd4UVybv9snSfren/bg4uecEExUUcmw5JEP2cbA+xbtKbRVjuz2FQ4
+         5zJAHOSx0PxNJo9D0F6/NfqJoHwOJJQB/+dObv66HynblLg5aIM6hTSAhuPo4+e/VtTq
+         KBTGSBVIHMtUAqfiBAW8agqP824GFhS2GZ9MnXXsirMXAHLSoEyNDOrCQaUbdjxmCZw+
+         Susw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hKXRONb+n2QBaUWyV/lYpYzKCQdxSGuUXqvfdv5OsKY=;
+        b=RlR8WDaVYoeLTqpN5soj4+rx8MB6i7SYLIJNzSkXNqJ5B8pq70x517zk+R5a6zbiWI
+         yY8OrOaA5Y0rvdJ3NtWqVKWCfraB09i1GoAyK4s4sVBHvZUcjg0GsdKMnCRJgq89UuzX
+         pV10HIyP1RJLQCO1LUilur0DJv/RINAwLjAE6As3IcqDRuI4dUEvRSf+nm6xcPda1zBR
+         qIRwzFDvLGSmrUMkqxCyAKZ8BZvFautuvKFy9hZSWq7ox694luBKIMZM5t0y3BZFPmGy
+         QrS3GJqAG440D+Ower95+Lhv9VkZc+RlSEXinGL7jhPtAOTI9OU4abkKoH3FVfXvogap
+         OSFQ==
+X-Gm-Message-State: AGi0PuYNkGDlqV/2LJEWPjfGJj8w42OhM4S4YDQKZGPEApTYrkZKUHl3
+        UtDxLI5wj+dhodXdLRsJl9aSyg==
+X-Google-Smtp-Source: APiQypL2QQXpmSyCMyeb86k1mqtxlrryhZ7iuR/Zzeb58Ec8aokdSWY0L39I7tQhUSNR2pzmPjJlSQ==
+X-Received: by 2002:a0c:e549:: with SMTP id n9mr4873559qvm.214.1588974700726;
+        Fri, 08 May 2020 14:51:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id g16sm2123740qkk.122.2020.05.08.14.51.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 14:51:40 -0700 (PDT)
+Date:   Fri, 8 May 2020 17:51:22 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm: swap: fix update_page_reclaim_stat for huge pages
+Message-ID: <20200508215122.GB226164@cmpxchg.org>
+References: <20200508212215.181307-1-shakeelb@google.com>
+ <20200508212215.181307-3-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508212215.181307-3-shakeelb@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+On Fri, May 08, 2020 at 02:22:15PM -0700, Shakeel Butt wrote:
+> Currently update_page_reclaim_stat() updates the lruvec.reclaim_stats
+> just once for a page irrespective if a page is huge or not. Fix that by
+> passing the hpage_nr_pages(page) to it.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
-the cookie") added the aux_data and aux_data_len to parameters to
-fscache_acquire_cookie(), and updated the callers in the NFS client.
-In the process it modified the aux_data to include the change_attr,
-but missed adding change_attr to a couple places where aux_data was
-used.  Specifically, when opening a file and the change_attr is not
-added, the following attempt to lookup an object will fail inside
-cachefiles_check_object_xattr() = -116 due to
-nfs_fscache_inode_check_aux() failing memcmp on auxdata and returning
-FSCACHE_CHECKAUX_OBSOLETE.
+https://lore.kernel.org/patchwork/patch/685703/
 
-Fix this by adding nfs_fscache_update_auxdata() to set the auxdata
-from all relevant fields in the inode, including the change_attr.
+Laughs, then cries.
 
-Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+> @@ -928,7 +928,7 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
+>  	}
+>  
+>  	if (!PageUnevictable(page))
+> -		update_page_reclaim_stat(lruvec, file, PageActive(page_tail));
+> +		update_page_reclaim_stat(lruvec, file, PageActive(page_tail), 1);
 
- fs/nfs/fscache.c |   34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+The change to __pagevec_lru_add_fn() below makes sure the tail pages
+are already accounted. This would make them count twice.
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index f51718415606..a60df88efc40 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -225,6 +225,19 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
- 	}
- }
- 
-+static void nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
-+				  struct nfs_inode *nfsi)
-+{
-+	memset(auxdata, 0, sizeof(*auxdata));
-+	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+
-+	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
-+		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-+}
-+
- /*
-  * Initialise the per-inode cache cookie pointer for an NFS inode.
-  */
-@@ -238,14 +251,7 @@ void nfs_fscache_init_inode(struct inode *inode)
- 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
- 		return;
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
--
--	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
--		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 
- 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
- 					       &nfs_fscache_inode_object_def,
-@@ -265,11 +271,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
- 
- 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 	fscache_relinquish_cookie(cookie, &auxdata, false);
- 	nfsi->fscache = NULL;
- }
-@@ -309,11 +311,7 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- 	if (!fscache_cookie_valid(cookie))
- 		return;
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 
- 	if (inode_is_open_for_write(inode)) {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
-
-
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> @@ -973,7 +973,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+>  	if (page_evictable(page)) {
+>  		lru = page_lru(page);
+>  		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
+> -					 PageActive(page));
+> +					 PageActive(page), nr_pages);
+>  		if (was_unevictable)
+>  			__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
+>  	} else {
