@@ -2,150 +2,75 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F1AC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 721F9214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524C621473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgEHPRA (ORCPT
+        id S1727084AbgEHPTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:17:00 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726627AbgEHPQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:16:59 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 16153BD9B3A15415493E;
-        Fri,  8 May 2020 16:16:58 +0100 (IST)
-Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
- 16:16:57 +0100
-Date:   Fri, 8 May 2020 16:16:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gwendal Grignou <gwendal@chromium.org>
-CC:     <enric.balletbo@collabora.com>, <jic23@kernel.org>,
-        <bleung@chromium.org>, <groeck@chromium.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] iio: Add in_illumincance vectors in different
- color spaces
-Message-ID: <20200508161635.00006cd2@Huawei.com>
-In-Reply-To: <20200506230324.139241-2-gwendal@chromium.org>
-References: <20200506230324.139241-1-gwendal@chromium.org>
-        <20200506230324.139241-2-gwendal@chromium.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 May 2020 11:19:23 -0400
+Received: from muru.com ([72.249.23.125]:53598 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbgEHPTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:19:23 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0CA3C806C;
+        Fri,  8 May 2020 15:20:11 +0000 (UTC)
+Date:   Fri, 8 May 2020 08:19:20 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: linux-next: Fixes tags need some work in the omap tree
+Message-ID: <20200508151920.GY37466@atomide.com>
+References: <20200508085320.58da9ffa@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.97]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508085320.58da9ffa@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 16:03:22 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-Illuminance in the title.  Plus I'm still arguing these
-aren't illuminance values.  
-
-The Y value is illuminance but X and Z definitely aren't.
-RGB needs to stick to intensity - like the other existing
-RGB sensors.
-
-Gah.  XYZ and IIO is a mess. 
-
-I suppose we could introduce a new type and have
-in_illumiance_raw
-in_chromacity_x_raw
-in_chromacity_z_raw but chances of anyone understanding what we
-are on about without reading wikipedia is low...
-
-Sigh.  Unless someone else chips in, I'm inclined to be lazy and rely
-on documentation to let in_illuminance_x,y,z be defined as being
-cie xyz color space measurements.
-
-It seems slighlty preferable to defining another type for these,
-though I suspect I'll regret this comment when some adds
-cie lab which was always my favourite colour space :)
-
-
-
-> Define 2 spaces for defining color coming from color sensors:
-> RGB and XYZ: Both are in lux.
-> RGB is the raw output from sensors (Red, Green and Blue channels), in
-> addition to the existing clear channel (C).
-
-> The RGBC vector goes through a matrix transformation to produce the XYZ
-> vector. Y is illumincance, and XY caries the chromaticity information.
-> The matrix is model specific, as the color sensor can be behing a glass
-> that can filter some wavelengths.
+* Stephen Rothwell <sfr@canb.auug.org.au> [200507 22:54]:
+> Hi all,
 > 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
-> New in v2.
+> In commit
 > 
->  Documentation/ABI/testing/sysfs-bus-iio | 27 +++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>   0f84d0247722 ("ARM: dts: am437x: fix networking on boards with ksz9031 phy")
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index d3e53a6d8331b..256db6e63a25e 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -1309,6 +1309,33 @@ Description:
->  		Illuminance measurement, units after application of scale
->  		and offset are lux.
->  
-> +What:		/sys/.../iio:deviceX/in_illuminance_red_raw
-> +What:		/sys/.../iio:deviceX/in_illuminance_green_raw
-> +What:		/sys/.../iio:deviceX/in_illuminance_blue_raw
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Illuminance measuremed in red, green or blue channels, units
-> +		after application of scale and offset are lux.
+> Fixes tag
+> 
+>   Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> 
+> has these problem(s):
+> 
+>   - leading word 'commit' unexpected
+> 
+> In commit
+> 
+>   3a78c16f67a0 ("ARM: dts: am57xx: fix networking on boards with ksz9031 phy")
+> 
+> Fixes tag
+> 
+>   Fixes: commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> 
+> has these problem(s):
+> 
+>   - leading word 'commit' unexpected
 
-No they aren't.  Units are some magic intensity at some magic wavelength.
+Thanks for catching these, I'll fix them.
 
-> +
-> +What:		/sys/.../iio:deviceX/in_illuminance_x_raw
-> +What:		/sys/.../iio:deviceX/in_illuminance_y_raw
-> +What:		/sys/.../iio:deviceX/in_illuminance_z_raw
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		lluminance measured in the CIE 1931 color space (XYZ).
-> +		in_illuminance_y_raw is a measure of the brightness, and is
-> +		identical in_illuminance_raw.
+Regards,
 
-That is fair enough.
-
-> +		in_illuminance_x_raw and in_illuminance_z_raw carry chromacity
-> +		information.
-> +		in_illuminance_x,y,z_raw are be obtained from the sensor color
-> +		channels using color matching functions that may be device
-> +		specific.
-> +		Units after application of scale and offset are lux.
-
-True for Y, not for X and Z which don't have 'units' as such.
-
-> +		The measurments can be used to represent colors in the CIE
-> +		xyY color space
-
-XYZ
-
-> +
->  What:		/sys/.../iio:deviceX/in_intensityY_raw
->  What:		/sys/.../iio:deviceX/in_intensityY_ir_raw
->  What:		/sys/.../iio:deviceX/in_intensityY_both_raw
+Tony
 
 
