@@ -2,121 +2,130 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4420C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36370C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49A208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DF8218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XvYm4YU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgEHSTn (ORCPT
+        id S1727909AbgEHSVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:19:43 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:50449 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726817AbgEHSTn (ORCPT
+        Fri, 8 May 2020 14:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726817AbgEHSVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:19:43 -0400
-Received: (qmail 9518 invoked by uid 500); 8 May 2020 14:19:42 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 May 2020 14:19:42 -0400
-Date:   Fri, 8 May 2020 14:19:42 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-cc:     gregkh@linuxfoundation.org, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH v2] USB: host: ehci-mxc: Use the defined variable to
- simplify code
-In-Reply-To: <20200508144024.7836-1-tangbin@cmss.chinamobile.com>
-Message-ID: <Pine.LNX.4.44L0.2005081419270.7856-100000@netrider.rowland.org>
+        Fri, 8 May 2020 14:21:09 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DB6C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:21:08 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d22so1235504pgk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MtptXvN0u1ghf1Y0NDnybYTwzJTfjGhpiEoFrpWGk6w=;
+        b=XvYm4YU9Sm3v2rTT+Axc8daF7cedOutMbVgSyaMnd0oPTDfXNUp2Gc0UaMdIUc+vig
+         KdOhac9UzJ3xFpIpGpVr9XDflSzo5cA1E6jVvoqcaAYRU3/wskHtoonq/Gk7hZx/qKBR
+         PKU7DjbdQO/Ztj8KK1KZnkBElIumg6jpHubhsZ5pmDy0clOR6mJgs/YNVN9n5pgvBR8k
+         /SZkQ/aRbGjjCRYuACohkPnp3hc6hpunNcXsHyg5/P+9Nqbp5x/1/e8NQwK0yGsoSkGL
+         tvMXskWpPL4rTHPeSlY/60qFg0BUppA30OC/a/twTqsJzjOXXMjxVcogZY7G5S5GP19J
+         R4rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MtptXvN0u1ghf1Y0NDnybYTwzJTfjGhpiEoFrpWGk6w=;
+        b=nFyfDbmXkK+EHwzwHwHkPvpIcC8uL5LkfftpIEiq3EXKfbes0WF/4k7bhaCu1S6dQu
+         VHKSRRVQFq4/xPGz3uljSsJ1QwHiaWpZCJdPwrhdd/OhfbA4r1Ga/iO+8YjJnqUl7+/C
+         w3LaCvWy23PCvcNkVYQXvfxgcyQlyknHoiRL0fXmFC0JXfAJPO87K8KRDSBtrbAzKxXs
+         rJhD2r8AoKv3AiSKpMzF6SionMTbyCut21ErUNI92lXtWGmN0xlkZBIuMqfDh6gZGmxe
+         eGdYP7D19wS7H1PpW9w5hVjzM/U9Y/ADHwL9ygrZxnzIIPKQWMow0ENknisf/McevC95
+         yY3A==
+X-Gm-Message-State: AGi0Pubd73cjY64pGnoJP92kV+4PfPERBPLDQBc5VBbGQtqQy9UzKc1o
+        orCZ21GaAzey7R/ZuTg76CZqKPyhzg8ENMdzyfMstw==
+X-Google-Smtp-Source: APiQypLolAFh6mJKDfk2vX4BRKEcp2v8bPlHuZTy7nAJx6FF6ghMR0UeONzLV/qeVHYs4jgLZm3KgGj90AjOkaT4OX0=
+X-Received: by 2002:a62:146:: with SMTP id 67mr4260150pfb.169.1588962067915;
+ Fri, 08 May 2020 11:21:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20200505142408.1113763-1-arnd@arndb.de>
+In-Reply-To: <20200505142408.1113763-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 8 May 2020 11:20:56 -0700
+Message-ID: <CAKwvOdmQ8pzxGdNEJ=eG+rRFK1J4Xg6738dYvdZSqf0u0gtscw@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: ad7476: fix clang -Wpointer-bool-conversion warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020, Tang Bin wrote:
+On Tue, May 5, 2020 at 7:24 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Checking the pointer value of st->chip_info->convst_channel is pointless
+> since this this an array inside of a struct: even if st->chip_info is NULL,
+> the pointer is non-zero. Clang warns about this:
+>
+> drivers/iio/adc/ad7476.c:312:40: warning: address of array 'st->chip_info->convst_channel' will always evaluate to 'true' [-Wpointer-bool-conversion]
+>         if (st->convst_gpio && st->chip_info->convst_channel)
+>                             ~~ ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+>
+> I could not come up with a sane way to check whether the entry
+> is valid, so just remove the check and keep the behavior as it
+> is today but without the warning.
 
-> Use the defined variable "dev" to make the code cleaner. And
-> delete an extra blank line.
-> 
-> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Me too. Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>
+> Fixes: 3a6af93dd66e ("iio: adc: ad7476: Add IIO_CHAN_INFO_RAW for AD7091R")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Changes from v1:
->  - fix the subject and the code.
-> ---
+>  drivers/iio/adc/ad7476.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/adc/ad7476.c b/drivers/iio/adc/ad7476.c
+> index e9984a38fc4c..4e816d714ad2 100644
+> --- a/drivers/iio/adc/ad7476.c
+> +++ b/drivers/iio/adc/ad7476.c
+> @@ -309,7 +309,7 @@ static int ad7476_probe(struct spi_device *spi)
+>         indio_dev->num_channels = 2;
+>         indio_dev->info = &ad7476_info;
+>
+> -       if (st->convst_gpio && st->chip_info->convst_channel)
+> +       if (st->convst_gpio)
+>                 indio_dev->channels = st->chip_info->convst_channel;
+>         /* Setup default message */
+>
+> --
+> 2.26.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200505142408.1113763-1-arnd%40arndb.de.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
->  drivers/usb/host/ehci-mxc.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-> index c9f91e6c7..09e01397f 100644
-> --- a/drivers/usb/host/ehci-mxc.c
-> +++ b/drivers/usb/host/ehci-mxc.c
-> @@ -36,12 +36,12 @@ static const struct ehci_driver_overrides ehci_mxc_overrides __initconst = {
->  
->  static int ehci_mxc_drv_probe(struct platform_device *pdev)
->  {
-> -	struct mxc_usbh_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> +	struct device *dev = &pdev->dev;
-> +	struct mxc_usbh_platform_data *pdata = dev_get_platdata(dev);
->  	struct usb_hcd *hcd;
->  	struct resource *res;
->  	int irq, ret;
->  	struct ehci_mxc_priv *priv;
-> -	struct device *dev = &pdev->dev;
->  	struct ehci_hcd *ehci;
->  
->  	if (!pdata) {
-> @@ -56,7 +56,7 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	hcd->regs = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(hcd->regs)) {
->  		ret = PTR_ERR(hcd->regs);
->  		goto err_alloc;
-> @@ -69,14 +69,14 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->  	priv = (struct ehci_mxc_priv *) ehci->priv;
->  
->  	/* enable clocks */
-> -	priv->usbclk = devm_clk_get(&pdev->dev, "ipg");
-> +	priv->usbclk = devm_clk_get(dev, "ipg");
->  	if (IS_ERR(priv->usbclk)) {
->  		ret = PTR_ERR(priv->usbclk);
->  		goto err_alloc;
->  	}
->  	clk_prepare_enable(priv->usbclk);
->  
-> -	priv->ahbclk = devm_clk_get(&pdev->dev, "ahb");
-> +	priv->ahbclk = devm_clk_get(dev, "ahb");
->  	if (IS_ERR(priv->ahbclk)) {
->  		ret = PTR_ERR(priv->ahbclk);
->  		goto err_clk_ahb;
-> @@ -84,13 +84,12 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->  	clk_prepare_enable(priv->ahbclk);
->  
->  	/* "dr" device has its own clock on i.MX51 */
-> -	priv->phyclk = devm_clk_get(&pdev->dev, "phy");
-> +	priv->phyclk = devm_clk_get(dev, "phy");
->  	if (IS_ERR(priv->phyclk))
->  		priv->phyclk = NULL;
->  	if (priv->phyclk)
->  		clk_prepare_enable(priv->phyclk);
->  
-> -
->  	/* call platform specific init function */
->  	if (pdata->init) {
->  		ret = pdata->init(pdev);
-> 
 
+-- 
+Thanks,
+~Nick Desaulniers
