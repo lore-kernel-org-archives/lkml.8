@@ -2,130 +2,147 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCADC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A212C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57741249D2
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F6224999
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s7KP3XCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgEHNKi (ORCPT
+        id S1730111AbgEHNKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34620 "EHLO
+        Fri, 8 May 2020 09:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730424AbgEHNFH (ORCPT
+        by vger.kernel.org with ESMTP id S1729949AbgEHNKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:07 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D97C05BD43;
-        Fri,  8 May 2020 06:05:07 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gX-0007RR-Je; Fri, 08 May 2020 15:05:01 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3BF801C03AB;
-        Fri,  8 May 2020 15:04:54 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:54 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evsel: Rename perf_evsel__exit() to evsel__exit()
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Fri, 8 May 2020 09:10:37 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6F3C05BD43;
+        Fri,  8 May 2020 06:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=9fPfGBUeWH76iSErjKUiHDxoBdDt6EY4XksU520aETo=; b=s7KP3XCxpCx+K/Slw5SeghBHSX
+        TwDFHErvrjxjAo0LAa20vuJ5CUoqLVW2GxY6UAsl/HND70HEQnUtYP9rnoF0yCY36kJVyRG59c/mE
+        vTxDEZqi1rcZdyalffvFZVNlI3+6mQX2hNklBwG1Q46qE+VMjpG6ca9Zh4JOkAnXBGtw3hOmUceji
+        EcriRSBQmV/kbrXCWHGZ8gQjmGa8imgUaQ+Xt7ZVjUOujiO5EfWLQCo5shW8djvF0CNj54jO/NR4p
+        DNmAvxLY3gZIyOSdDO2qmu4gb4Ed/9jBxVN2yPyqJ49OdZWnisW17pdzAOdMebTsQAHOUt+mkorgl
+        N8AILqaQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jX2kw-0003No-Ks; Fri, 08 May 2020 13:09:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4404F30797E;
+        Fri,  8 May 2020 15:09:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 282C82B8D7782; Fri,  8 May 2020 15:09:31 +0200 (CEST)
+Date:   Fri, 8 May 2020 15:09:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
+        ak@linux.intel.com
+Subject: Re: [PATCH v10 08/11] KVM: x86/pmu: Add LBR feature emulation via
+ guest LBR event
+Message-ID: <20200508130931.GE5298@hirez.programming.kicks-ass.net>
+References: <20200423081412.164863-1-like.xu@linux.intel.com>
+ <20200423081412.164863-9-like.xu@linux.intel.com>
+ <20200424121626.GB20730@hirez.programming.kicks-ass.net>
+ <87abf620-d292-d997-c9be-9a5d2544f3fa@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158894309418.8414.3173530992933693381.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87abf620-d292-d997-c9be-9a5d2544f3fa@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Mon, Apr 27, 2020 at 11:16:40AM +0800, Like Xu wrote:
+> On 2020/4/24 20:16, Peter Zijlstra wrote:
 
-Commit-ID:     30f7c59124bb0ad42f74956613fc244bc4064840
-Gitweb:        https://git.kernel.org/tip/30f7c59124bb0ad42f74956613fc244bc4064840
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 29 Apr 2020 15:53:17 -03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:30 -03:00
+> > And I suppose that is why you need that horrible:
+> > needs_guest_lbr_without_counter() thing to begin with.
+> 
+> Do you suggest to use event->attr.config check to replace
+> "needs_branch_stack(event) && is_kernel_event(event) &&
+> event->attr.exclude_host" check for guest LBR event ?
 
-perf evsel: Rename perf_evsel__exit() to evsel__exit()
+That's what the BTS thing does.
 
-As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
-libperf, to whom the perf_ prefix belongs.
+> > Please allocate yourself an event from the pseudo event range:
+> > event==0x00. Currently we only have umask==3 for Fixed2 and umask==4
+> > for Fixed3, given you claim 58, which is effectively Fixed25,
+> > umask==0x1a might be appropriate.
+> 
+> OK, I assume that adding one more field ".config = 0x1a00" is
+> efficient enough for perf_event_attr to allocate guest LBR events.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/evsel.c  | 4 ++--
- tools/perf/util/evsel.h  | 2 +-
- tools/perf/util/python.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Uh what? The code is already setting .config. You just have to change it
+do another value.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index db6d2a5..11e7547 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1259,7 +1259,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
- 	}
- }
- 
--void perf_evsel__exit(struct evsel *evsel)
-+void evsel__exit(struct evsel *evsel)
- {
- 	assert(list_empty(&evsel->core.node));
- 	assert(evsel->evlist == NULL);
-@@ -1279,7 +1279,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 
- void evsel__delete(struct evsel *evsel)
- {
--	perf_evsel__exit(evsel);
-+	evsel__exit(evsel);
- 	free(evsel);
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6187dba..2facb16 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -183,7 +183,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
- struct tep_event *event_format__new(const char *sys, const char *name);
- 
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
--void perf_evsel__exit(struct evsel *evsel);
-+void evsel__exit(struct evsel *evsel);
- void evsel__delete(struct evsel *evsel);
- 
- struct callchain_param;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 83212c6..67810d3 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -801,7 +801,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
- 
- static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
- {
--	perf_evsel__exit(&pevsel->evsel);
-+	evsel__exit(&pevsel->evsel);
- 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
- }
- 
+> > Also, I suppose we need to claim 0x0000 as an error, so that other
+> > people won't try this again.
+> 
+> Does the following fix address your concern on this ?
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 2405926e2dba..32d2a3f8c51f 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -498,6 +498,9 @@ int x86_pmu_max_precise(void)
+> 
+>  int x86_pmu_hw_config(struct perf_event *event)
+>  {
+> +       if (!unlikely(event->attr.config & X86_ARCH_EVENT_MASK))
+> +               return -EINVAL;
+> +
+>         if (event->attr.precise_ip) {
+>                 int precise = x86_pmu_max_precise();
+
+That wouldn't work right for AMD. But yes, something like that.
+
+> > Also, what happens if you fail programming due to a conflicting cpu
+> > event? That pinned doesn't guarantee you'll get the event, it just means
+> > you'll error instead of getting RR.
+> > 
+> > I didn't find any code checking the event state.
+> > 
+> 
+> Error instead of RR is expected.
+> 
+> If the KVM fails programming due to a conflicting cpu event
+> the LBR registers will not be passthrough to the guest,
+> and KVM would return zero for any guest LBR records accesses
+> until the next attempt to program the guest LBR event.
+> 
+> Every time before cpu enters the non-root mode where irq is
+> disabled, the "event-> oncpu! =-1" check will be applied.
+> (more details in the comment around intel_pmu_availability_check())
+> 
+> The guests administer is supposed to know the result of guest
+> LBR records is inaccurate if someone is using LBR to record
+> guest or hypervisor on the host side.
+> 
+> Is this acceptable to you？
+> 
+> If there is anything needs to be improved, please let me know.
+
+It might be nice to emit a pr_warn() or something on the host when this
+happens. Then at least the host admin can know he wrecked things for
+which guest.
