@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3A7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9F8C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDF92496A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879242496A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941714;
-	bh=o+EBxYd1jlD/bVmEFGJm1hf05//1H6q48EMuC3VG/c8=;
+	s=default; t=1588941719;
+	bh=OMmNip9BnoLZPq0jiHGPhR04qi7HfK9veE0CbFs2HDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9QlD1fzkUJQlmsTob5hif+7AN4Su/rK4iYz7MCFO2gegq8xYqwb0kmwE8Zbc16Aa
-	 X36KpagINe2+sbT7zCwHbKGn6ptJCuJl8M4M6HThVDKfezTSq/Vvv9CfaZJ4rFuF56
-	 evdww/fC63bG4IYIJfwUyQmBpYc2qqumZ5szNIFE=
+	b=p3QtGNxozSt5HCHYHkfNjQf5vDLt/2z8HCzwhkWgcSyi7BaX7QE90yOa3JVaae5fy
+	 lolCI4vlkjClSGPccykv42/2n/v/hoveQAEv63DVFHONHusoVfRCmzRsvJfjvDfelq
+	 GZslKdZNPw47HDjYw5awScRaz4gfDJcTU5nfYsZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgEHMlw (ORCPT
+        id S1728885AbgEHMl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbgEHMln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:41:43 -0400
+        id S1728856AbgEHMls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 226AC24970;
-        Fri,  8 May 2020 12:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B9521835;
+        Fri,  8 May 2020 12:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941702;
-        bh=o+EBxYd1jlD/bVmEFGJm1hf05//1H6q48EMuC3VG/c8=;
+        s=default; t=1588941707;
+        bh=OMmNip9BnoLZPq0jiHGPhR04qi7HfK9veE0CbFs2HDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7gCdwf46XsPRe2uSvgA1AZZ/u00mo7YcUbAKbD2MWTYBLxwirBIDtGFzHRSgegvA
-         QC2RVKEvH1ZEBs9siscaYCO7OmlDDtG0V0QbU1BIFqEk3nNXhEwbNPxwfOvPI9gjFh
-         c0WlFaXmVOXM1FooN8ENjfTwAXuZHvlz7qUOGSWM=
+        b=iPSt/teeoWK07RSUf7/H0J4NQZrAXFKTSGY9bAeYWcuHWtJT2JOEkRuKUH0AiYVzS
+         TagZlDyoQOEU5nycqqWjK5OBAvrRNS0PwRVkMofU6T/K/oD9hOy8SjA+jsfldFnm7Y
+         grT5y+HG8GYMVCFUAbr+nFoOTBDOpu+kbDizg6Wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 137/312] Revert "ACPI / LPSS: allow to use specific PM domain during ->probe()"
-Date:   Fri,  8 May 2020 14:32:08 +0200
-Message-Id: <20200508123134.131597622@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 139/312] mmc: sd: limit SD card power limit according to cards capabilities
+Date:   Fri,  8 May 2020 14:32:10 +0200
+Message-Id: <20200508123134.265101036@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,49 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
 
-commit b5f88dd1d6efc472e35ca1b21a44e662c5422088 upstream.
+commit d9812780a020bcec44565b5950b2a8b31afb5545 upstream.
 
-The specific power domain can't be used in a way provided by the commit
-01ac170ba29a, i.e. pointer to platform device is a subject to change during
-unbound / bind cycle.
+The SD card specification allows cards to error out a SWITCH command
+where the requested function in a group is not supported.  The spec
+provides for a set of capabilities which indicate which functions are
+supported.
 
-This reverts commit 01ac170ba29a9903ee590e1ef2d8e6b27b49a16c.
+In the case of the power limit, requesting an unsupported power level
+via the SWITCH command fails, resulting in the power level remaining at
+the power-on default of 0.72W, even though the host and card may support
+higher powers levels.
 
-Fixes: 3df2da968744 (Revert "ACPI / LPSS: introduce a 'proxy' device to power on LPSS for DMA")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This has been seen with SanDisk 8GB cards, which support the default
+0.72W and 1.44W (200mA and 400mA) in combination with an iMX6 host,
+supporting up to 2.88W (800mA).  This currently causes us to try to set
+a power limit function value of '3' (2.88W) which the card errors out
+on, and thereby causes the power level to remain at 0.72W rather than
+the desired 1.44W.
+
+Arrange to limit the selected current limit by the capabilities reported
+by the card to avoid the SWITCH command failing.  Select the highest
+current limit that the host and card combination support.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Fixes: a39ca6ae0a08 ("mmc: core: Simplify and fix for SD switch processing")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_lpss.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/mmc/core/sd.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -704,8 +704,13 @@ static int acpi_lpss_platform_notify(str
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -337,6 +337,7 @@ static int mmc_read_switch(struct mmc_ca
+ 		card->sw_caps.sd3_bus_mode = status[13];
+ 		/* Driver Strengths supported by the card */
+ 		card->sw_caps.sd3_drv_type = status[9];
++		card->sw_caps.sd3_curr_limit = status[7] | status[6] << 8;
  	}
  
- 	switch (action) {
--	case BUS_NOTIFY_ADD_DEVICE:
-+	case BUS_NOTIFY_BOUND_DRIVER:
- 		pdev->dev.pm_domain = &acpi_lpss_pm_domain;
-+		break;
-+	case BUS_NOTIFY_UNBOUND_DRIVER:
-+		pdev->dev.pm_domain = NULL;
-+		break;
-+	case BUS_NOTIFY_ADD_DEVICE:
- 		if (pdata->dev_desc->flags & LPSS_LTR)
- 			return sysfs_create_group(&pdev->dev.kobj,
- 						  &lpss_attr_group);
-@@ -713,7 +718,6 @@ static int acpi_lpss_platform_notify(str
- 	case BUS_NOTIFY_DEL_DEVICE:
- 		if (pdata->dev_desc->flags & LPSS_LTR)
- 			sysfs_remove_group(&pdev->dev.kobj, &lpss_attr_group);
--		pdev->dev.pm_domain = NULL;
- 		break;
- 	default:
- 		break;
+ out:
+@@ -553,14 +554,25 @@ static int sd_set_current_limit(struct m
+ 	 * when we set current limit to 200ma, the card will draw 200ma, and
+ 	 * when we set current limit to 400/600/800ma, the card will draw its
+ 	 * maximum 300ma from the host.
++	 *
++	 * The above is incorrect: if we try to set a current limit that is
++	 * not supported by the card, the card can rightfully error out the
++	 * attempt, and remain at the default current limit.  This results
++	 * in a 300mA card being limited to 200mA even though the host
++	 * supports 800mA. Failures seen with SanDisk 8GB UHS cards with
++	 * an iMX6 host. --rmk
+ 	 */
+-	if (max_current >= 800)
++	if (max_current >= 800 &&
++	    card->sw_caps.sd3_curr_limit & SD_MAX_CURRENT_800)
+ 		current_limit = SD_SET_CURRENT_LIMIT_800;
+-	else if (max_current >= 600)
++	else if (max_current >= 600 &&
++		 card->sw_caps.sd3_curr_limit & SD_MAX_CURRENT_600)
+ 		current_limit = SD_SET_CURRENT_LIMIT_600;
+-	else if (max_current >= 400)
++	else if (max_current >= 400 &&
++		 card->sw_caps.sd3_curr_limit & SD_MAX_CURRENT_400)
+ 		current_limit = SD_SET_CURRENT_LIMIT_400;
+-	else if (max_current >= 200)
++	else if (max_current >= 200 &&
++		 card->sw_caps.sd3_curr_limit & SD_MAX_CURRENT_200)
+ 		current_limit = SD_SET_CURRENT_LIMIT_200;
+ 
+ 	if (current_limit != SD_SET_CURRENT_NO_CHANGE) {
 
 
