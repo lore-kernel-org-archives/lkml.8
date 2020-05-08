@@ -2,103 +2,69 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFBDC54E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80325C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0457F2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:21:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NucDWMIH"
+	by mail.kernel.org (Postfix) with ESMTP id 6410C208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgEHBVa (ORCPT
+        id S1726683AbgEHB1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726495AbgEHBVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:21:30 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995C0C05BD43;
-        Thu,  7 May 2020 18:21:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JCGC0TrHz9sSk;
-        Fri,  8 May 2020 11:21:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588900885;
-        bh=fn1FAITXWrHoD5p0YkLk4NDvgXCTxZCopaiWSoAE24M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NucDWMIHzyEWKhv2Jpz5V57pCJSGVwKFECNyZ49I5pY1ukFXmrdSaz/00q2KpJDbG
-         EWLv3FYAKffEQaBXd+sOR9qlvTBznRmAqjavXEhcZjrKMl21SATXigYcr4tbNlyzQh
-         LO51vcA7p09iXpAntaH3rroJpzap350FUwdpbwPhGyiGuMajhFMQvdhcwTjZk4XvX6
-         G0uZxVdYMDn1xLuA7ffyANP3YNjHI4Dm3OcCE7Iyy/sdLK4IVaRP0dKDCAajrN0BVY
-         oKN7dnuctm+yzNgINA/ovWbnsNKaMaQHaqsWKxt52evUDbcrR1oWWSEzL2otnQG0AY
-         Py7s4KqVpoUUA==
-Date:   Fri, 8 May 2020 11:21:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     madhuparnabhowmik10@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        paulmck@kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] integrity: evm: Fix RCU list related warnings.
-Message-ID: <20200508112121.6f665d74@canb.auug.org.au>
-In-Reply-To: <1588897421.5685.152.camel@linux.ibm.com>
-References: <20200430160205.17798-1-madhuparnabhowmik10@gmail.com>
-        <20200508101402.267ca0f2@canb.auug.org.au>
-        <1588897421.5685.152.camel@linux.ibm.com>
+        Thu, 7 May 2020 21:27:47 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2496 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726495AbgEHB1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:27:47 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 7D3239F43958117D2E91;
+        Fri,  8 May 2020 09:27:44 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 8 May 2020 09:27:07 +0800
+Received: from [10.173.219.71] (10.173.219.71) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 8 May 2020 09:27:07 +0800
+Subject: Re: [PATCH net] hinic: fix a bug of ndo_stop
+To:     David Miller <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>
+References: <20200507043222.15522-1-luobin9@huawei.com>
+ <20200507.180030.809804789667183990.davem@davemloft.net>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <7aff0fa9-3ffe-4c23-40bc-bab09202ee31@huawei.com>
+Date:   Fri, 8 May 2020 09:27:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.D+o4SMW3l1UQxFqbqJwcNG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200507.180030.809804789667183990.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.173.219.71]
+X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.D+o4SMW3l1UQxFqbqJwcNG
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+All right，will fix.
 
-Hi Mimi,
-
-On Thu, 07 May 2020 20:23:41 -0400 Mimi Zohar <zohar@linux.ibm.com> wrote:
+On 2020/5/8 9:00, David Miller wrote:
+> From: Luo bin <luobin9@huawei.com>
+> Date: Thu, 7 May 2020 04:32:22 +0000
 >
-> Sorry for the delay in pushing this and other fixes to the next-
-> integrity branch. =C2=A0It's in my next-integrity-testing branch.
-
-OK, thanks.
-
-> This isn't a bug per-se, just annotating the reason for the lack of
-> locking.
-
-Yes, but these warnings stop the syzbot's testing in its tracks :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.D+o4SMW3l1UQxFqbqJwcNG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl60tBEACgkQAVBC80lX
-0Gy1kQf7BffVVaIpxbElKwALAau8rs7TlHqdions0ViHqWb9XbhY3sNQ1phj1nt5
-QORcaLptQ5HmVAVz227Gdg15fnkJPeHg0/w5rUHyzV7f8PePzYE9wZGVvOik+9Sg
-1d1QxHj8AHnRM+Ag+zCc7erThznlgkSKnMOWHonbV73Li9C9aGYE9jTE3L7rFcuh
-b1AN0cliyojwb4E9bIbadn3fSUXivHKR0kHFcx5OFLZmsimBVjMYI19tZQm1RslG
-HYHdEDBG2uGLgVRF6O53nj4FMTVNHJuMNa/gSJU/FgZIF5vAGnSuEE6od7LhT++3
-+/bdVfFcjwWMKQ447SfxBZXwlos1Mg==
-=FC49
------END PGP SIGNATURE-----
-
---Sig_/.D+o4SMW3l1UQxFqbqJwcNG--
+>> +	ulong timeo;
+> Please fully spell out "unsigned long" for this type.
+>
+> The same problem exists in your net-next patch submission as well.
+>
+> Thank you.
+> .
