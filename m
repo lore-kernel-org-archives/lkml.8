@@ -2,76 +2,70 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA37FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C048C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8F7C208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFE7208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588905905;
+	bh=jbzlnIkQDf+mSuSI4o/HjVxh4ISuq+Bo4gJsQYBzwm4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=si27BRqWCBUJLZ86n+Na7IsyHQgqh8wYeb7xDh3245YGvxrqzZngPGgMvOlhW7Yw+
+	 dU3VdwaBiz+8UxxAkurGgxOlvwQbuntQf+7Ie1yD87kUWeFCjMd4eYcUxZO/eeLyMK
+	 rGGG6g8al7gO9sYchLjxbRzatd/UT0/a/JztkRP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgEHCdI (ORCPT
+        id S1726689AbgEHCpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:33:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24675 "EHLO mga03.intel.com"
+        Thu, 7 May 2020 22:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgEHCdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:33:07 -0400
-IronPort-SDR: JpiOjZMAx1VEWhrhxW4tw7+sd4lWd6sXOwmh6NGR9JE5J9gupi4oAS2DjX7mpO6TmqZnxc+26x
- 8loIe/BBEdzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:33:07 -0700
-IronPort-SDR: VkCetOwwKVpAsN2JwLOJxdE/61ZHx0CBjsTOcR3Tgjurdg2otwHp/i5NsiTDtVcojYr1Dlv98H
- ZZNBXjGAHwnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="278805860"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 19:33:07 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 652CE580609;
-        Thu,  7 May 2020 19:33:07 -0700 (PDT)
-Message-ID: <9c46a0be9c6d2097df1523711b33b0b7094a5ce4.camel@linux.intel.com>
-Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Telemetry capability driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Thu, 07 May 2020 19:33:07 -0700
-In-Reply-To: <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-2-david.e.box@linux.intel.com>
-         <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726509AbgEHCpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 22:45:04 -0400
+Subject: Re: [GIT PULL] security: Fix the default value of
+ fs_context_parse_param hook
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588905904;
+        bh=jbzlnIkQDf+mSuSI4o/HjVxh4ISuq+Bo4gJsQYBzwm4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=iNvAuJlVihS3un/C6oOekG+567upSrHPiWTkhroxIFUNJavvThl/z0kITLwjKsVUR
+         WhhsnPfGu+Y55ML+tpd9CJl2zloRZHDtSPwIVwW0E8wur0s7nIZ5c9RZe+W7vBZ0iw
+         4CA/VxIi80ceBjjDPJCRd0mz05QJqIJjfz8KTWIw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <alpine.LRH.2.21.2005080942390.15191@namei.org>
+References: <alpine.LRH.2.21.2005080942390.15191@namei.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <alpine.LRH.2.21.2005080942390.15191@namei.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
+ for-v5.7
+X-PR-Tracked-Commit-Id: 54261af473be4c5481f6196064445d2945f2bdab
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 79dede78c0573618e3137d3d8cbf78c84e25fabd
+Message-Id: <158890590444.28720.16406974480455612819.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 May 2020 02:45:04 +0000
+To:     James Morris <jmorris@namei.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, KP Singh <kpsingh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 16:49 +0300, Andy Shevchenko wrote:
-> ...
-> 
-> > +       /* TODO: replace with device properties??? */
-> 
-> So, please, fulfill. swnode I guess is what you are looking for.
+The pull request you sent on Fri, 8 May 2020 09:45:11 +1000 (AEST):
 
-I kept the platform data in v2 because swnode properties doesn't look
-like a good fit. We are only passing information that was read from the
-pci device. It is not hard coded, platform specific data.
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git for-v5.7
 
-David
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/79dede78c0573618e3137d3d8cbf78c84e25fabd
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
