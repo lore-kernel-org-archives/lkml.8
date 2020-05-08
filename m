@@ -6,34 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D85C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E132D24955
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4082424955
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgEHOHz (ORCPT
+        id S1727953AbgEHOI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:07:55 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4306 "EHLO huawei.com"
+        Fri, 8 May 2020 10:08:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4307 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726736AbgEHOHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:07:54 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A85A628D4C6CB04BA175;
-        Fri,  8 May 2020 22:07:48 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
- 22:07:39 +0800
+        id S1727882AbgEHOI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:08:27 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 827FE8275CCD21E11AD5;
+        Fri,  8 May 2020 22:08:17 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 22:08:10 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <rostedt@goodmis.org>, <mingo@redhat.com>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <svens@linux.ibm.com>
-CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] s390: Remove two unused inline functions
-Date:   Fri, 8 May 2020 22:07:24 +0800
-Message-ID: <20200508140724.11324-1-yuehaibing@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <hpa@zytor.com>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] x86/ioapic: Remove unused inline function mp_init_irq_at_boot
+Date:   Fri, 8 May 2020 22:08:08 +0800
+Message-ID: <20200508140808.49428-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,41 +42,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 657480d9c015 ("s390: support KPROBES_ON_FTRACE")
-left behind this, remove it.
+There's no callers in-tree anymore since commit
+ef9e56d894ea ("x86/ioapic: Remove obsolete post hotplug update")
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/s390/kernel/ftrace.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-index 4cd9b1ada834..44e01dd1e624 100644
---- a/arch/s390/kernel/ftrace.c
-+++ b/arch/s390/kernel/ftrace.c
-@@ -72,22 +72,6 @@ static inline void ftrace_generate_orig_insn(struct ftrace_insn *insn)
- #endif
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 913c88617848..ce61e3e7d399 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -154,19 +154,6 @@ static inline bool mp_is_legacy_irq(int irq)
+ 	return irq >= 0 && irq < nr_legacy_irqs();
  }
  
--static inline void ftrace_generate_kprobe_nop_insn(struct ftrace_insn *insn)
+-/*
+- * Initialize all legacy IRQs and all pins on the first IOAPIC
+- * if we have legacy interrupt controller. Kernel boot option "pirq="
+- * may rely on non-legacy pins on the first IOAPIC.
+- */
+-static inline int mp_init_irq_at_boot(int ioapic, int irq)
 -{
--#ifdef CONFIG_KPROBES
--	insn->opc = BREAKPOINT_INSTRUCTION;
--	insn->disp = KPROBE_ON_FTRACE_NOP;
--#endif
+-	if (!nr_legacy_irqs())
+-		return 0;
+-
+-	return ioapic == 0 || mp_is_legacy_irq(irq);
 -}
 -
--static inline void ftrace_generate_kprobe_call_insn(struct ftrace_insn *insn)
--{
--#ifdef CONFIG_KPROBES
--	insn->opc = BREAKPOINT_INSTRUCTION;
--	insn->disp = KPROBE_ON_FTRACE_CALL;
--#endif
--}
--
- int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 		       unsigned long addr)
+ static inline struct irq_domain *mp_ioapic_irqdomain(int ioapic)
  {
+ 	return ioapics[ioapic].irqdomain;
 -- 
 2.17.1
 
