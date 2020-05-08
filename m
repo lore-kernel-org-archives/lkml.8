@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD15C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A732AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBC824967
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CE224987
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944058;
-	bh=bPJQOBYFz72cyScOmZGaPjhKKwZqNevqPmf1/x101CU=;
+	s=default; t=1588944064;
+	bh=9qbft4kDNoCKCrZE+chhA1A4VuP0bMF+RQz7OOYlRIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyeLypkR36CEb1gU5WK6wIZ1/yP9jkqNwVEGP/RBqu1FHQrP9VmtreS9LohWO2ZUe
-	 jFwV5BieSDs9EvY5KX1LKLoCeJOV5gefQefKC/YFDxGEpW76TTj2kOzodzEFHteRiv
-	 t2tIBAHNAQHEp55l3o9nBlWps8LgKEn8XRHCgZzc=
+	b=Y/YH1C7d/MANxXbd1pPeCIB+W34Ls/bU+Tee9Z9DcB+d3XGFz5DByikH7abJrpNGA
+	 Ph29IOnca83pSyXjfXDuPNAH1ofSUgXJZD5NASRSq9elRyh5rskO+IWpubM5yPtDMj
+	 b3I6bDm3dIMCe9Eeiy/LH41Mrb1PHOR3UVKCbcdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgEHNU5 (ORCPT
+        id S1730539AbgEHNVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34640 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbgEHMkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:43 -0400
+        id S1727786AbgEHMkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:40:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 956EC2495C;
-        Fri,  8 May 2020 12:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2586F20731;
+        Fri,  8 May 2020 12:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941643;
-        bh=bPJQOBYFz72cyScOmZGaPjhKKwZqNevqPmf1/x101CU=;
+        s=default; t=1588941640;
+        bh=9qbft4kDNoCKCrZE+chhA1A4VuP0bMF+RQz7OOYlRIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mn4lAjX/YUjs92MAvuflDwtTSesWgp4lPCBNyBFGgzq85puSV4PtprqCGA9/Hsfyr
-         senRW5TMeluEU8tID850nVXnpveb9QtSkx0CPjpnfLjeHcev2/1Gtl1GM6pAEOOtFa
-         0vD/Oqt38Y4B1aVHWc6LvcX4cEqW2wYeN848tKwc=
+        b=uIqY6XCpP3YqE+13sfl3YHo7BCOzxRIRWDgrvl4w1Fqcc5kQCkklGSO2cySPzad6z
+         ELIHLvNLb7sz7nsdxIG7/gGd0DJisE0yzoVT5+YRqjdRyrK4//PORZVhusk6P2tYCx
+         p57/2egAn/Y7+4Ym0hBSWke/+UB6c6pJfYKpvcog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Sven Eckelmann <sven@open-mesh.com>,
         Marek Lindner <mareklindner@neomailbox.ch>,
-        Sven Eckelmann <sven@narfation.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 115/312] batman-adv: replace WARN with rate limited output on non-existing VLAN
-Date:   Fri,  8 May 2020 14:31:46 +0200
-Message-Id: <20200508123132.563259344@linuxfoundation.org>
+        Antonio Quartulli <a@unstable.cc>
+Subject: [PATCH 4.4 114/312] batman-adv: Fix lockdep annotation of batadv_tlv_container_remove
+Date:   Fri,  8 May 2020 14:31:45 +0200
+Message-Id: <20200508123132.495114406@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,46 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Wunderlich <sw@simonwunderlich.de>
+From: Sven Eckelmann <sven@open-mesh.com>
 
-commit 0b3dd7dfb81ad8af53791ea2bb64b83bac1b7d32 upstream.
+commit 008a374487070a391c12aa39288fd8511f822cab upstream.
 
-If a VLAN tagged frame is received and the corresponding VLAN is not
-configured on the soft interface, it will splat a WARN on every packet
-received. This is a quite annoying behaviour for some scenarios, e.g. if
-bat0 is bridged with eth0, and there are arbitrary VLAN tagged frames
-from Ethernet coming in without having any VLAN configuration on bat0.
+The function handles tlv containers and not tlv handlers. Thus the
+lockdep_assert_held has to check for the container_list lock.
 
-The code should probably create vlan objects on the fly and
-transparently transport these VLAN-tagged Ethernet frames, but until
-this is done, at least the WARN splat should be replaced by a rate
-limited output.
-
-Fixes: 354136bcc3c4 ("batman-adv: fix kernel crash due to missing NULL checks")
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 2c72d655b044 ("batman-adv: Annotate deleting functions with external lock via lockdep")
+Signed-off-by: Sven Eckelmann <sven@open-mesh.com>
 Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/translation-table.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/batman-adv/main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -614,8 +614,10 @@ bool batadv_tt_local_add(struct net_devi
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -747,7 +747,7 @@ static u16 batadv_tvlv_container_list_si
+ static void batadv_tvlv_container_remove(struct batadv_priv *bat_priv,
+ 					 struct batadv_tvlv_container *tvlv)
+ {
+-	lockdep_assert_held(&bat_priv->tvlv.handler_list_lock);
++	lockdep_assert_held(&bat_priv->tvlv.container_list_lock);
  
- 	/* increase the refcounter of the related vlan */
- 	vlan = batadv_softif_vlan_get(bat_priv, vid);
--	if (WARN(!vlan, "adding TT local entry %pM to non-existent VLAN %d",
--		 addr, BATADV_PRINT_VID(vid))) {
-+	if (!vlan) {
-+		net_ratelimited_function(batadv_info, soft_iface,
-+					 "adding TT local entry %pM to non-existent VLAN %d\n",
-+					 addr, BATADV_PRINT_VID(vid));
- 		kfree(tt_local);
- 		tt_local = NULL;
- 		goto out;
+ 	if (!tvlv)
+ 		return;
 
 
