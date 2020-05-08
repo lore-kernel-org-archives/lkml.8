@@ -7,69 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8F8C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4A8C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97B924970
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E4224970
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgEHNIS convert rfc822-to-8bit (ORCPT
+        id S1729201AbgEHNIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:08:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
+        Fri, 8 May 2020 09:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730220AbgEHNFk (ORCPT
+        by vger.kernel.org with ESMTP id S1730095AbgEHNFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:40 -0400
+        Fri, 8 May 2020 09:05:38 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35A9C05BD43;
-        Fri,  8 May 2020 06:05:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D99BC05BD43;
+        Fri,  8 May 2020 06:05:38 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gw-0007kZ-7D; Fri, 08 May 2020 15:05:26 +0200
+        id 1jX2h0-0007mF-5k; Fri, 08 May 2020 15:05:30 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 878B01C04CF;
-        Fri,  8 May 2020 15:05:07 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:05:07 -0000
-From:   "tip-bot2 for Kajol Jain" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1BBCC1C086B;
+        Fri,  8 May 2020 15:05:09 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:05:09 -0000
+From:   "tip-bot2 for Shaokun Zhang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf vendor events power9: Add hv_24x7 socket/chip
- level metric events
-Cc:     Kajol Jain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Subject: [tip: perf/core] perf pmu: Fix function name in comment, its
+ get_cpuid_str(), not get_cpustr()
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-8-kjain@linux.ibm.com>
-References: <20200401203340.31402-8-kjain@linux.ibm.com>
+In-Reply-To: <1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com>
+References: <1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
-Message-ID: <158894310749.8414.11283761812599365513.tip-bot2@tip-bot2>
+Message-ID: <158894310905.8414.6733430940907489227.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -80,90 +61,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     354575c00d61c174e0ff070f56cf3cdbe6d23f9e
-Gitweb:        https://git.kernel.org/tip/354575c00d61c174e0ff070f56cf3cdbe6d23f9e
-Author:        Kajol Jain <kjain@linux.ibm.com>
-AuthorDate:    Thu, 02 Apr 2020 02:03:40 +05:30
+Commit-ID:     454a8be0cff954f18729964317b40ef2c3031364
+Gitweb:        https://git.kernel.org/tip/454a8be0cff954f18729964317b40ef2c3031364
+Author:        Shaokun Zhang <zhangshaokun@hisilicon.com>
+AuthorDate:    Wed, 29 Apr 2020 14:33:12 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 30 Apr 2020 10:48:33 -03:00
 
-perf vendor events power9: Add hv_24x7 socket/chip level metric events
+perf pmu: Fix function name in comment, its get_cpuid_str(), not get_cpustr()
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
+get_cpuid_str() is used in tools/perf/arch/xxx/util/header.c,
+fix the name in comment.
 
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
-
-Result:
-
-power9 platform:
-
-  command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
-
-     1.000096188          0.9           0.3
-     2.000285720          0.5           0.1
-     3.000424990          0.4           0.1
-
-  command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-
-     1.000097981          2.3           2.3
-     2.000291713          2.3           2.3
-     3.000421719          2.3           2.3
-     4.000550912          2.3           2.3
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-8-kjain@linux.ibm.com
+Link: http://lore.kernel.org/lkml/1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json | 19 +++++++-
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+ tools/perf/pmu-events/pmu-events.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 0000000..c121e52
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 53e76d5..c8f306b 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -26,7 +26,7 @@ struct pmu_event {
+  * Map a CPU to its table of PMU events. The CPU is identified by the
+  * cpuid field, which is an arch-specific identifier for the CPU.
+  * The identifier specified in tools/perf/pmu-events/arch/xxx/mapfile
+- * must match the get_cpustr() in tools/perf/arch/xxx/util/header.c)
++ * must match the get_cpuid_str() in tools/perf/arch/xxx/util/header.c)
+  *
+  * The  cpuid can contain any character other than the comma.
+  */
