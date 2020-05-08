@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B244DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8BCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD48221F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A5B221F7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942002;
-	bh=bVwiLSdWxPWSAr8o/F56IA3nZH0r+W5kByTgzuaespU=;
+	s=default; t=1588942008;
+	bh=/edro/A+J2bMGGxVR6fLVLDN4sc4mxIDHGqvWM8I/S8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZc2Uusihur7+o9fXJHFtF1zCx7AYfSVi++VeexmtlWJmX6PoVM5kjK0l36TGxwxX
-	 E7Zgj7rfBBjQovMSm9uNI/aU4t8smVGLt8XPREpSkJUYEgOjMMgSSFttCcAgk/eaIT
-	 Mt8Cp8ertDhSMmicUuGOoo5YOkleehcIVUIadFnE=
+	b=zqMLUGOK13yrXVUJq2yM06deb1KrLn/hAg23gf4hSYlv3K8BU316ValV4NjilTfTt
+	 RWgU1oJDFNXm4XGIGE5oiJv5YAi+6bBZB7ytM+8gPiduv/9/sdgjo79DEVb9fvdpZB
+	 lfAwUU6hcRgP/VTOzA1Dq++MerctVd70LIC0yhhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgEHMql (ORCPT
+        id S1728669AbgEHMqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbgEHMqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:46:34 -0400
+        id S1728753AbgEHMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:46:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A33C21473;
-        Fri,  8 May 2020 12:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864FB2145D;
+        Fri,  8 May 2020 12:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941993;
-        bh=bVwiLSdWxPWSAr8o/F56IA3nZH0r+W5kByTgzuaespU=;
+        s=default; t=1588941996;
+        bh=/edro/A+J2bMGGxVR6fLVLDN4sc4mxIDHGqvWM8I/S8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrL7L2oQmmSM0O7jZYdvwY7SLNI9nUUyk3ZTgenjHYmt9zuaXMASd+Aag8cdfW6gv
-         POrkosuhpXAx/Y5CSJNPZpzGzh8kfA5Ob2L2f1QOHECZ8wITwsoVo6ocCG82boT6Mo
-         U1O4OhA+WjCHmiwFab2I40oZ0Fvkz/5IMlzIwoaE=
+        b=ez8iCmy4CytBzCoZG2+9NkRh4LlzcRYTApuPieH4LFuJ7NBbt3K2qFaMvns7njjGo
+         8n76hHgvkrgxbtmQpDRh8JYEj+6I9wJnLkpnZu3tc16Iq8FIOtRWYbQJDtqK9vK5JH
+         ZrLEIcLlQzVrEahX92S+rXQnyYCP3iXT/ptaTNTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 254/312] gre: do not assign header_ops in collect metadata mode
-Date:   Fri,  8 May 2020 14:34:05 +0200
-Message-Id: <20200508123142.269598976@linuxfoundation.org>
+Subject: [PATCH 4.4 255/312] gre: build header correctly for collect metadata tunnels
+Date:   Fri,  8 May 2020 14:34:06 +0200
+Message-Id: <20200508123142.335957456@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,54 +63,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Benc <jbenc@redhat.com>
 
-commit a64b04d86d14c81f50f68e102f79ef301e3d0a0e upstream.
+commit 2090714e1d6e80979dd6926be22b0de9ca432273 upstream.
 
-In ipgre mode (i.e. not gretap) with collect metadata flag set, the tunnel
-is incorrectly assumed to be mGRE in NBMA mode (see commit 6a5f44d7a048c).
-This is not the case, we're controlling the encapsulation addresses by
-lwtunnel metadata. And anyway, assigning dev->header_ops in collect metadata
-mode does not make sense.
-
-Although it would be more user firendly to reject requests that specify
-both the collect metadata flag and a remote/local IP address, this would
-break current users of gretap or introduce ugly code and differences in
-handling ipgre and gretap configuration. Keep the current behavior of
-remote/local IP address being ignored in such case.
-
-v3: Back to v1, added explanation paragraph.
-v2: Reject configuration specifying both remote/local address and collect
-    metadata flag.
+In ipgre (i.e. not gretap) + collect metadata mode, the skb was assumed to
+contain Ethernet header and was encapsulated as ETH_P_TEB. This is not the
+case, the interface is ARPHRD_IPGRE and the protocol to be used for
+encapsulation is skb->protocol.
 
 Fixes: 2e15ea390e6f4 ("ip_gre: Add support to collect tunnel metadata.")
 Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/ip_gre.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv4/ip_gre.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 --- a/net/ipv4/ip_gre.c
 +++ b/net/ipv4/ip_gre.c
-@@ -882,7 +882,7 @@ static int ipgre_tunnel_init(struct net_
- 	netif_keep_dst(dev);
- 	dev->addr_len		= 4;
- 
--	if (iph->daddr) {
-+	if (iph->daddr && !tunnel->collect_md) {
- #ifdef CONFIG_NET_IPGRE_BROADCAST
- 		if (ipv4_is_multicast(iph->daddr)) {
- 			if (!iph->saddr)
-@@ -891,8 +891,9 @@ static int ipgre_tunnel_init(struct net_
- 			dev->header_ops = &ipgre_header_ops;
- 		}
- #endif
--	} else
-+	} else if (!tunnel->collect_md) {
- 		dev->header_ops = &ipgre_header_ops;
-+	}
- 
- 	return ip_tunnel_init(dev);
+@@ -520,7 +520,8 @@ static struct rtable *gre_get_rt(struct
+ 	return ip_route_output_key(net, fl);
  }
+ 
+-static void gre_fb_xmit(struct sk_buff *skb, struct net_device *dev)
++static void gre_fb_xmit(struct sk_buff *skb, struct net_device *dev,
++			__be16 proto)
+ {
+ 	struct ip_tunnel_info *tun_info;
+ 	const struct ip_tunnel_key *key;
+@@ -563,7 +564,7 @@ static void gre_fb_xmit(struct sk_buff *
+ 	}
+ 
+ 	flags = tun_info->key.tun_flags & (TUNNEL_CSUM | TUNNEL_KEY);
+-	build_header(skb, tunnel_hlen, flags, htons(ETH_P_TEB),
++	build_header(skb, tunnel_hlen, flags, proto,
+ 		     tunnel_id_to_key(tun_info->key.tun_id), 0);
+ 
+ 	df = key->tun_flags & TUNNEL_DONT_FRAGMENT ?  htons(IP_DF) : 0;
+@@ -605,7 +606,7 @@ static netdev_tx_t ipgre_xmit(struct sk_
+ 	const struct iphdr *tnl_params;
+ 
+ 	if (tunnel->collect_md) {
+-		gre_fb_xmit(skb, dev);
++		gre_fb_xmit(skb, dev, skb->protocol);
+ 		return NETDEV_TX_OK;
+ 	}
+ 
+@@ -649,7 +650,7 @@ static netdev_tx_t gre_tap_xmit(struct s
+ 	struct ip_tunnel *tunnel = netdev_priv(dev);
+ 
+ 	if (tunnel->collect_md) {
+-		gre_fb_xmit(skb, dev);
++		gre_fb_xmit(skb, dev, htons(ETH_P_TEB));
+ 		return NETDEV_TX_OK;
+ 	}
+ 
 
 
