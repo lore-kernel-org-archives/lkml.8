@@ -2,54 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E35CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EA1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703C321473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA8F218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942172;
-	bh=d4tZJ1lNOOitCep9qPpvmUw7f2lXt1ujH7SYD/ecmjE=;
+	s=default; t=1588942175;
+	bh=Hl1LxDpnfMYnR22dTbVNhRHjrc+J+pqClyoq8nfljSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsvWNJv1zJ+kgepxOuz/AqCLtLp2WTApYBnNT3BBjfo6TvBZnEBFaQ3pMT4ufZvAA
-	 xMzsvRq66jsqeGaAMGT42NkVUFFQReZBAmUCFRopjK8BXI52PJciYgtYJE9dugveaP
-	 22tttdyXHfVm4fn0h6lnH3Arye1SBTLBC1+ZJZZk=
+	b=W8NUu+8jiIbWzh4tCoKIrb+YxrtnHHr8XzR5Do02IcBaswvAuu0klHMlquxWaBsUQ
+	 5QvPtK9yq6ZCetpW4HppO5HWFi1CUCYp6tNFThvMEvK8NsV7fPvlDxs3fNa3tDoGDq
+	 Ku7FJSimcWFQvtPWagj76/aOl1csZzwETFDHmIfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgEHMta (ORCPT
+        id S1729315AbgEHMte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729733AbgEHMt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:49:26 -0400
+        id S1729751AbgEHMtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:49:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6229421582;
-        Fri,  8 May 2020 12:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458B521473;
+        Fri,  8 May 2020 12:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942165;
-        bh=d4tZJ1lNOOitCep9qPpvmUw7f2lXt1ujH7SYD/ecmjE=;
+        s=default; t=1588942170;
+        bh=Hl1LxDpnfMYnR22dTbVNhRHjrc+J+pqClyoq8nfljSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEspxyk5CLzywM8qpB571+C8elUvLSnLy4RnbHmVIaSsN6XJ17xCDbWUgc66Bfv7A
-         Q6ZdPltxFj0uEQuZyZN5/eST07V3qItW+BX7ArYxltbyn6thJ/jZ8xXKIZ3IrlyK8r
-         DxyOcS9jriXpvu5QNdPBKtl7m317fMtAqECjmdyA=
+        b=JngP224gWiYOxuEeV/wLTAohkOqUzyELVnUKnPsLAaewvGbxFT/Y4B3pzKVow+Rg6
+         UrlJ21MfVV6JynVD8Gq0BdPSruPgBLCQpZlFktIoJLMApICg5yQNfHWB7FHigQ++Wp
+         hXwMgVhVXkD86xnhSCWdkk66ytiJ/YP7qlQDIv50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/18] lib/mpi: Fix building for powerpc with clang
-Date:   Fri,  8 May 2020 14:35:14 +0200
-Message-Id: <20200508123033.324538586@linuxfoundation.org>
+Subject: [PATCH 4.9 13/18] net: systemport: suppress warnings on failed Rx SKB allocations
+Date:   Fri,  8 May 2020 14:35:16 +0200
+Message-Id: <20200508123033.662294858@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
 References: <20200508123030.497793118@linuxfoundation.org>
@@ -62,123 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 5990cdee689c6885b27c6d969a3d58b09002b0bc ]
+[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
 
-0day reports over and over on an powerpc randconfig with clang:
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
-lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast or build with
--fheinous-gnu-extensions
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
 
-Remove the superfluous casts, which have been done previously for x86
-and arm32 in commit dea632cadd12 ("lib/mpi: fix build with clang") and
-commit 7b7c1df2883d ("lib/mpi/longlong.h: fix building with 32-bit
-x86").
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://github.com/ClangBuiltLinux/linux/issues/991
-Link: https://lore.kernel.org/r/20200413195041.24064-1-natechancellor@gmail.com
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/mpi/longlong.h | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index 0f64fcee4ccd1..8f383cca6bb1f 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -756,22 +756,22 @@ do {									\
- do { \
- 	if (__builtin_constant_p(bh) && (bh) == 0) \
- 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "%r" ((USItype)(ah)), \
- 		"%r" ((USItype)(al)), \
- 		"rI" ((USItype)(bl))); \
- 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
- 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "%r" ((USItype)(ah)), \
- 		"%r" ((USItype)(al)), \
- 		"rI" ((USItype)(bl))); \
- 	else \
- 		__asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "%r" ((USItype)(ah)), \
- 		"r" ((USItype)(bh)), \
- 		"%r" ((USItype)(al)), \
-@@ -781,36 +781,36 @@ do { \
- do { \
- 	if (__builtin_constant_p(ah) && (ah) == 0) \
- 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "r" ((USItype)(bh)), \
- 		"rI" ((USItype)(al)), \
- 		"r" ((USItype)(bl))); \
- 	else if (__builtin_constant_p(ah) && (ah) == ~(USItype) 0) \
- 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "r" ((USItype)(bh)), \
- 		"rI" ((USItype)(al)), \
- 		"r" ((USItype)(bl))); \
- 	else if (__builtin_constant_p(bh) && (bh) == 0) \
- 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "r" ((USItype)(ah)), \
- 		"rI" ((USItype)(al)), \
- 		"r" ((USItype)(bl))); \
- 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
- 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "r" ((USItype)(ah)), \
- 		"rI" ((USItype)(al)), \
- 		"r" ((USItype)(bl))); \
- 	else \
- 		__asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2" \
--		: "=r" ((USItype)(sh)), \
--		"=&r" ((USItype)(sl)) \
-+		: "=r" (sh), \
-+		"=&r" (sl) \
- 		: "r" ((USItype)(ah)), \
- 		"r" ((USItype)(bh)), \
- 		"rI" ((USItype)(al)), \
-@@ -821,7 +821,7 @@ do { \
- do { \
- 	USItype __m0 = (m0), __m1 = (m1); \
- 	__asm__ ("mulhwu %0,%1,%2" \
--	: "=r" ((USItype) ph) \
-+	: "=r" (ph) \
- 	: "%r" (__m0), \
- 	"r" (__m1)); \
- 	(pl) = __m0 * __m1; \
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -504,7 +504,8 @@ static struct sk_buff *bcm_sysport_rx_re
+ 	dma_addr_t mapping;
+ 
+ 	/* Allocate a new SKB for a new packet */
+-	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
++	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
 
 
