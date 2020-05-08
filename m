@@ -2,51 +2,52 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24373C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4376CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05AEC2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13333218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942576;
-	bh=Csp5h1hgf1S3ua2/VysYZTa8FI/66G7UbmdGD2yrFQA=;
+	s=default; t=1588942579;
+	bh=O5FR41JTbKq16AdmkKYLVI7ggdGMxpluv76/vMSoG50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4CkmgObI3DJGEVkz4DT9Is24Nvn1uW+bfcTjnXITHvnTxVQNRA4Mha0tZWR4ApgS
-	 BZSiewneAWmknawl7Y7CkuX7qUgD1gwjr4V2kLhfKHnAbazvxflHuAxZI0SB1s+iAB
-	 PLLVuTl2gjZ0X7/IRLeiUEyn0cYkMOmy8LRr3asg=
+	b=059Egn4SJjwnQo4jhCbdhxPdIbuqGqrfUKz+T6QI960bqG+zyKPuyWHXVCzBLoQh1
+	 cSvEGLJiOho4Dfma9HbtXdEymk2p4qgCLfP0y+MwnTRV7Jo8w/BZ5vRUM5ckD/Xlcy
+	 ITmAkVZzaOXjZw7ByXsrQ0vZY9E37CdxMwNYCDqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgEHM4O (ORCPT
+        id S1729869AbgEHM4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730411AbgEHM4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:56:10 -0400
+        id S1730162AbgEHM4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:56:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662CD218AC;
-        Fri,  8 May 2020 12:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 627C7218AC;
+        Fri,  8 May 2020 12:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942569;
-        bh=Csp5h1hgf1S3ua2/VysYZTa8FI/66G7UbmdGD2yrFQA=;
+        s=default; t=1588942574;
+        bh=O5FR41JTbKq16AdmkKYLVI7ggdGMxpluv76/vMSoG50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=okSb4De8LieRJXv1DUrLYkz4mlZhRaFDq3W1OYGlRkh3ZG2vk8qXsv3s6zIYCjgzd
-         LFw9+0/njm8GackrcCbED8WCzbK0coePLD+afg6OBGR6tZ++dfVR+MQ3Sv2VQUhOOF
-         UBkUUxQ4Zyj7kiatgYzfOZtiXDJjbcrXkukEvBFM=
+        b=M0/l1NSDxDO7Yz3wV1azycuAj/oyFK+4vXJLt5gLcmQdymM/DPgTVE+eGfiKJ8FAB
+         PYPAcY6l2w71lhKJXjzSuG4r+YI0HK5xpVvHtLZKUXhSO16nNKyoQV3hihTTYa0dua
+         PJ8Xqttq5P4AvBi1j3woyxka7bZ46+bM+AnPoM2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.6 47/49] mac80211: add ieee80211_is_any_nullfunc()
-Date:   Fri,  8 May 2020 14:36:04 +0200
-Message-Id: <20200508123049.347809511@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 22/49] remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
+Date:   Fri,  8 May 2020 14:35:39 +0200
+Message-Id: <20200508123046.099775269@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -59,128 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@adapt-ip.com>
+From: Alex Elder <elder@linaro.org>
 
-commit 30b2f0be23fb40e58d0ad2caf8702c2a44cda2e1 upstream.
+[ Upstream commit 13c060b50a341dd60303e5264d12108b5747f200 ]
 
-commit 08a5bdde3812 ("mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED")
-Fixed a bug where we failed to take into account a
-nullfunc frame can be either non-QoS or QoS. It turns out
-there is at least one more bug in
-ieee80211_sta_tx_notify(), introduced in
-commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing"),
-where we forgot to check for the QoS variant and so
-assumed the QoS nullfunc frame never went out
+If looking up the DT "firmware-name" property fails in q6v6_probe(),
+the function returns without freeing the remoteproc structure
+that has been allocated.  Fix this by jumping to the free_rproc
+label, which takes care of this.
 
-Fix this by adding a helper ieee80211_is_any_nullfunc()
-which consolidates the check for non-QoS and QoS nullfunc
-frames. Replace existing compound conditionals and add a
-couple more missing checks for QoS variant.
-
-Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
-Link: https://lore.kernel.org/r/20200114055940.18502-3-thomas@adapt-ip.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alex Elder <elder@linaro.org>
+Link: https://lore.kernel.org/r/20200403175005.17130-3-elder@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ieee80211.h |    9 +++++++++
- net/mac80211/mlme.c       |    2 +-
- net/mac80211/rx.c         |    8 +++-----
- net/mac80211/status.c     |    5 ++---
- net/mac80211/tx.c         |    2 +-
- 5 files changed, 16 insertions(+), 10 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -620,6 +620,15 @@ static inline bool ieee80211_is_qos_null
- }
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 0b1d737b0e97d..8844fc56c5f6d 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1607,7 +1607,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
+ 					    1, &qproc->hexagon_mdt_image);
+ 	if (ret < 0 && ret != -EINVAL)
+-		return ret;
++		goto free_rproc;
  
- /**
-+ * ieee80211_is_any_nullfunc - check if frame is regular or QoS nullfunc frame
-+ * @fc: frame control bytes in little-endian byteorder
-+ */
-+static inline bool ieee80211_is_any_nullfunc(__le16 fc)
-+{
-+	return (ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc));
-+}
-+
-+/**
-  * ieee80211_is_bufferable_mmpdu - check if frame is bufferable MMPDU
-  * @fc: frame control field in little-endian byteorder
-  */
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2460,7 +2460,7 @@ void ieee80211_sta_tx_notify(struct ieee
- 	if (!ieee80211_is_data(hdr->frame_control))
- 	    return;
+ 	platform_set_drvdata(pdev, qproc);
  
--	if (ieee80211_is_nullfunc(hdr->frame_control) &&
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control) &&
- 	    sdata->u.mgd.probe_send_count > 0) {
- 		if (ack)
- 			ieee80211_sta_reset_conn_monitor(sdata);
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -1450,8 +1450,7 @@ ieee80211_rx_h_check_dup(struct ieee8021
- 		return RX_CONTINUE;
- 
- 	if (ieee80211_is_ctl(hdr->frame_control) ||
--	    ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control) ||
-+	    ieee80211_is_any_nullfunc(hdr->frame_control) ||
- 	    is_multicast_ether_addr(hdr->addr1))
- 		return RX_CONTINUE;
- 
-@@ -1838,8 +1837,7 @@ ieee80211_rx_h_sta_process(struct ieee80
- 	 * Drop (qos-)data::nullfunc frames silently, since they
- 	 * are used only to control station power saving mode.
- 	 */
--	if (ieee80211_is_nullfunc(hdr->frame_control) ||
--	    ieee80211_is_qos_nullfunc(hdr->frame_control)) {
-+	if (ieee80211_is_any_nullfunc(hdr->frame_control)) {
- 		I802_DEBUG_INC(rx->local->rx_handlers_drop_nullfunc);
- 
- 		/*
-@@ -2319,7 +2317,7 @@ static int ieee80211_drop_unencrypted(st
- 
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
--		     !ieee80211_is_nullfunc(fc) &&
-+		     !ieee80211_is_any_nullfunc(fc) &&
- 		     ieee80211_is_data(fc) && rx->key))
- 		return -EACCES;
- 
---- a/net/mac80211/status.c
-+++ b/net/mac80211/status.c
-@@ -643,8 +643,7 @@ static void ieee80211_report_ack_skb(str
- 		rcu_read_lock();
- 		sdata = ieee80211_sdata_from_skb(local, skb);
- 		if (sdata) {
--			if (ieee80211_is_nullfunc(hdr->frame_control) ||
--			    ieee80211_is_qos_nullfunc(hdr->frame_control))
-+			if (ieee80211_is_any_nullfunc(hdr->frame_control))
- 				cfg80211_probe_status(sdata->dev, hdr->addr1,
- 						      cookie, acked,
- 						      info->status.ack_signal,
-@@ -1056,7 +1055,7 @@ static void __ieee80211_tx_status(struct
- 			I802_DEBUG_INC(local->dot11FailedCount);
- 	}
- 
--	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
-+	if (ieee80211_is_any_nullfunc(fc) &&
- 	    ieee80211_has_pm(fc) &&
- 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
- 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -297,7 +297,7 @@ ieee80211_tx_h_check_assoc(struct ieee80
- 	if (unlikely(test_bit(SCAN_SW_SCANNING, &tx->local->scanning)) &&
- 	    test_bit(SDATA_STATE_OFFCHANNEL, &tx->sdata->state) &&
- 	    !ieee80211_is_probe_req(hdr->frame_control) &&
--	    !ieee80211_is_nullfunc(hdr->frame_control))
-+	    !ieee80211_is_any_nullfunc(hdr->frame_control))
- 		/*
- 		 * When software scanning only nullfunc frames (to notify
- 		 * the sleep state to the AP) and probe requests (for the
+-- 
+2.20.1
+
 
 
