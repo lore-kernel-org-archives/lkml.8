@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DE2C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3CCC47255
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E3E217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD1C21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588971762;
-	bh=y3FP7YDdmJObHtYuLlASoDfQ6AYJiXDdMFXW8X469gU=;
+	s=default; t=1588971819;
+	bh=pfu8cwd9Mnmh9wwYakprq15dAD5AtNJSX5L+uHwmI58=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=N7KP6X21g8LtzHqFIYRRVXXGrGgwFtGEPOk8rMgubKZnCciHlMbVMV5tgAqljHTm+
-	 ooSNuhsYYwcCrBzq3jUmPwse7wP2xvRGyVLBLEIfajQ75vfDdpan5UiJp+WRQFYvAn
-	 6ZlZ93OH8SOQIYEfSvW+KmATnA+e5hgP5HxXTUTQ=
+	b=TrA2mFHiL2TaPpYl+0o4TTd0sLyyNkYJPvnyrNOO0w8oTEahOwGJlBFe9cgN5EUQd
+	 PiYvey2QFOzNfynmC1OyBhn+qVNTgA9pqDMKj0Xa3m5dpuFMqvtBmcRW3mH3Zjusdz
+	 zHNZ4RaTY7hDPS+s6t86jirXueOgquvidqusYfUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEHVCm (ORCPT
+        id S1727940AbgEHVDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 17:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgEHVCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:02:41 -0400
+        id S1726883AbgEHVDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:03:38 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2361E2173E;
-        Fri,  8 May 2020 21:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F52206B8;
+        Fri,  8 May 2020 21:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588971760;
-        bh=y3FP7YDdmJObHtYuLlASoDfQ6AYJiXDdMFXW8X469gU=;
+        s=default; t=1588971818;
+        bh=pfu8cwd9Mnmh9wwYakprq15dAD5AtNJSX5L+uHwmI58=;
         h=Date:From:To:Cc:Subject:From;
-        b=ICO4guylj57FjvVLT+yGfZuLeZo88/jGrEjq1XnHFgVJ9EH7tg/kK00lvAwmK8a2f
-         J0szkaa+NY9Qi7TTpM+QkYYrDc4NzdYGxCoxoJ0L7YAxcjydZ4KHd3olXdIV3HXgAQ
-         D6U5gDWY8VE6fQkwxbyNbBVY3WTqkSclf58EAV+g=
-Date:   Fri, 8 May 2020 16:07:07 -0500
+        b=00MwkRBPLeUh1u1MuDYSlhMpmye5mAA2D+5XxoMuGjwsOYMv0k9SU/+kCbpCzlb7W
+         /YAIUcMX7Nq1U1qhY/3i5AmHdMBpfO/CpMSWlGfstCMkR2zr6t4v2rynzUH8hNdT0X
+         J4X/QgAiRGCLaQwfSd0qBnwTsu/OTwXh0lngm8lE=
+Date:   Fri, 8 May 2020 16:08:05 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
         Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
+Subject: [PATCH] firmware: qcom_scm-legacy: Replace zero-length array with
  flexible-array
-Message-ID: <20200508210707.GA24136@embeddedor>
+Message-ID: <20200508210805.GA24170@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -99,22 +96,22 @@ This issue was found with the help of Coccinelle.
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/qcom/bam_dma.c | 2 +-
+ drivers/firmware/qcom_scm-legacy.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index ef73f65224b1..5a08dd0d3388 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -74,7 +74,7 @@ struct bam_async_desc {
- 	struct list_head desc_node;
- 	enum dma_transfer_direction dir;
- 	size_t length;
--	struct bam_desc_hw desc[0];
-+	struct bam_desc_hw desc[];
+diff --git a/drivers/firmware/qcom_scm-legacy.c b/drivers/firmware/qcom_scm-legacy.c
+index 8532e7c78ef7..eba6b60bfb61 100644
+--- a/drivers/firmware/qcom_scm-legacy.c
++++ b/drivers/firmware/qcom_scm-legacy.c
+@@ -56,7 +56,7 @@ struct scm_legacy_command {
+ 	__le32 buf_offset;
+ 	__le32 resp_hdr_offset;
+ 	__le32 id;
+-	__le32 buf[0];
++	__le32 buf[];
  };
  
- enum bam_reg {
+ /**
 -- 
 2.26.2
 
