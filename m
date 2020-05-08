@@ -2,124 +2,280 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B093DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF35C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D27E24958
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m6+WB7dk"
+	by mail.kernel.org (Postfix) with ESMTP id C6249208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgEHNrE (ORCPT
+        id S1728528AbgEHNrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
+        Fri, 8 May 2020 09:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728389AbgEHNrC (ORCPT
+        by vger.kernel.org with ESMTP id S1728359AbgEHNqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:47:02 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02A3C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:47:01 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so1929542wrx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
-        b=m6+WB7dkD5OY5SUi5lv4lAQ0mBcKHk146e1QwqFyiJLMV7m2seti2PPWrL7Mtg7jPO
-         fXjmH/Vnwq/PvdNM4rnRQR2Tdqjfrj3LFUvE//ja5RmUll82j+lwt5OjJNUex+3tSuvB
-         vdD4nx5w3ghYDD5wcoyKT9xS1a8iGCzZbYjXujuK8CbZnH5rGkqLhUfHhQC2/gQThxjY
-         noNtQ/LLD6fvKiZkWu0yqgqC2AfhxNQmPFSnGMZNEjjDAEFNrPpG9xyYEcjTe4HXV4OU
-         iv5bKD2VV9yDVTDx2E3g6Hze2Njrn0R7oUPj520tNshk0RmsY+buEld6wKdQOZL7oXfA
-         vJbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ie6+UuDf+byXPXqX2PqIi5x7CCl0W8NA5IcDm5qQXXA=;
-        b=dcz5gsAk9qNPJbNCnNIIeXpYRthX2POUzs/kb4WVYfMhiPTQPbZWBmLXLQg5BlpgVN
-         UdRM3mnvbCzLQRC/CbfndQE6Suuwqxt+9mKUe1DHot5X8nBBf01JBWQz0hEZtZHnxFoq
-         uxv2cg8jYzuw+i/jJsQhu8EGjvZcA9TU9haqMbxEeXL5/p4YQg35P7CUt4kIhzFyGh90
-         /RXIqwFMmEtLTQkvx9ytBxsjkImpbg1RhCFU9re59/xHPVHo748virAXNlUsmPzJCrp3
-         69REFeVTBlla7FA9pUxv/9d6N27JhbYVkdg/3XupQq2AD4W7XYLB7d8F2vILfm2L7YP3
-         toPQ==
-X-Gm-Message-State: AGi0Pua9L1syEKnDqBtvhXKqlXpANqL/b3psQ2+uYrX3s8JzzrWV6J5f
-        IIHqZTxdG+ZW0V9uK7VdwsOmkoLeJQCti2zR
-X-Google-Smtp-Source: APiQypIPzHLCqcPpkTXMRiOcVbMkzFJd/j8pltNsJ1oUqIBWiQl4ZEevMtSVlfhwuPrcT/Rvkqk3Xg==
-X-Received: by 2002:a5d:6b86:: with SMTP id n6mr3018508wrx.113.1588945620266;
-        Fri, 08 May 2020 06:47:00 -0700 (PDT)
-Received: from lmecxl0524.home (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
-        by smtp.gmail.com with ESMTPSA id p7sm3189464wrf.31.2020.05.08.06.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 06:46:59 -0700 (PDT)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org, fabrice.gasnier@st.com,
-        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org, srinivas.kandagatla@linaro.org,
-        Etienne Carriere <etienne.carriere@st.com>
-Subject: [PATCH] dt-bindings: nvmem: stm32: new property for data access
-Date:   Fri,  8 May 2020 15:45:27 +0200
-Message-Id: <20200508134527.26555-1-etienne.carriere@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 8 May 2020 09:46:44 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02CFC05BD43;
+        Fri,  8 May 2020 06:46:44 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jX3Kr-0001nn-NM; Fri, 08 May 2020 15:46:41 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 268571C04CD;
+        Fri,  8 May 2020 15:46:36 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:46:36 -0000
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/kcsan] kcsan: Update API documentation in kcsan-checks.h
+Cc:     Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+Message-ID: <158894559607.8414.2896424559533886809.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+The following commit has been merged into the locking/kcsan branch of tip:
 
-Introduce boolean property st,non-secure-otp for OTP data located
-in a factory programmed area that only secure firmware can access
-by default and that shall be reachable from the non-secure world.
+Commit-ID:     1443b8c9e712ef8914a2cab9ae7ce133229ed96c
+Gitweb:        https://git.kernel.org/tip/1443b8c9e712ef8914a2cab9ae7ce133229ed96c
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Thu, 05 Mar 2020 15:21:09 +01:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Wed, 25 Mar 2020 09:56:00 -07:00
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+kcsan: Update API documentation in kcsan-checks.h
+
+Update the API documentation for ASSERT_EXCLUSIVE_* macros and make them
+generate readable documentation for the code examples.
+
+All @variable short summaries were missing ':', which was updated for
+the whole file.
+
+Tested with "make htmldocs".
+
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ include/linux/kcsan-checks.h | 98 +++++++++++++++++++++--------------
+ 1 file changed, 61 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-index d84deb4774a4..c11c99f085d7 100644
---- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-@@ -24,6 +24,18 @@ properties:
-       - st,stm32f4-otp
-       - st,stm32mp15-bsec
+diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
+index 8f9f6e2..3cd8bb0 100644
+--- a/include/linux/kcsan-checks.h
++++ b/include/linux/kcsan-checks.h
+@@ -26,9 +26,9 @@
+ /**
+  * __kcsan_check_access - check generic access for races
+  *
+- * @ptr address of access
+- * @size size of access
+- * @type access type modifier
++ * @ptr: address of access
++ * @size: size of access
++ * @type: access type modifier
+  */
+ void __kcsan_check_access(const volatile void *ptr, size_t size, int type);
  
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      st,non-secure-otp:
-+        description: |
-+          This property explicits a factory programmed area that both secure
-+          and non-secure worlds can access. It is needed when, by default, the
-+          related area can only be reached by the secure world.
-+        type: boolean
-+
- required:
-   - "#address-cells"
-   - "#size-cells"
-@@ -41,6 +53,11 @@ examples:
-       calib@22c {
-         reg = <0x22c 0x2>;
-       };
-+
-+      mac_addr@e4 {
-+        reg = <0xe4 0x8>;
-+        st,non-secure-otp;
-+      };
-     };
+@@ -64,7 +64,7 @@ void kcsan_flat_atomic_end(void);
+  * Force treating the next n memory accesses for the current context as atomic
+  * operations.
+  *
+- * @n number of following memory accesses to treat as atomic.
++ * @n: number of following memory accesses to treat as atomic.
+  */
+ void kcsan_atomic_next(int n);
  
- ...
--- 
-2.17.1
-
+@@ -74,7 +74,7 @@ void kcsan_atomic_next(int n);
+  * Set the access mask for all accesses for the current context if non-zero.
+  * Only value changes to bits set in the mask will be reported.
+  *
+- * @mask bitmask
++ * @mask: bitmask
+  */
+ void kcsan_set_access_mask(unsigned long mask);
+ 
+@@ -106,16 +106,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+ /**
+  * __kcsan_check_read - check regular read access for races
+  *
+- * @ptr address of access
+- * @size size of access
++ * @ptr: address of access
++ * @size: size of access
+  */
+ #define __kcsan_check_read(ptr, size) __kcsan_check_access(ptr, size, 0)
+ 
+ /**
+  * __kcsan_check_write - check regular write access for races
+  *
+- * @ptr address of access
+- * @size size of access
++ * @ptr: address of access
++ * @size: size of access
+  */
+ #define __kcsan_check_write(ptr, size)                                         \
+ 	__kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
+@@ -123,16 +123,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+ /**
+  * kcsan_check_read - check regular read access for races
+  *
+- * @ptr address of access
+- * @size size of access
++ * @ptr: address of access
++ * @size: size of access
+  */
+ #define kcsan_check_read(ptr, size) kcsan_check_access(ptr, size, 0)
+ 
+ /**
+  * kcsan_check_write - check regular write access for races
+  *
+- * @ptr address of access
+- * @size size of access
++ * @ptr: address of access
++ * @size: size of access
+  */
+ #define kcsan_check_write(ptr, size)                                           \
+ 	kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
+@@ -158,14 +158,26 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+  * allowed. This assertion can be used to specify properties of concurrent code,
+  * where violation cannot be detected as a normal data race.
+  *
+- * For example, if a per-CPU variable is only meant to be written by a single
+- * CPU, but may be read from other CPUs; in this case, reads and writes must be
+- * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
+- * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
+- * race condition. Using this macro allows specifying this property in the code
+- * and catch such bugs.
++ * For example, if we only have a single writer, but multiple concurrent
++ * readers, to avoid data races, all these accesses must be marked; even
++ * concurrent marked writes racing with the single writer are bugs.
++ * Unfortunately, due to being marked, they are no longer data races. For cases
++ * like these, we can use the macro as follows:
+  *
+- * @var variable to assert on
++ * .. code-block:: c
++ *
++ *	void writer(void) {
++ *		spin_lock(&update_foo_lock);
++ *		ASSERT_EXCLUSIVE_WRITER(shared_foo);
++ *		WRITE_ONCE(shared_foo, ...);
++ *		spin_unlock(&update_foo_lock);
++ *	}
++ *	void reader(void) {
++ *		// update_foo_lock does not need to be held!
++ *		... = READ_ONCE(shared_foo);
++ *	}
++ *
++ * @var: variable to assert on
+  */
+ #define ASSERT_EXCLUSIVE_WRITER(var)                                           \
+ 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
+@@ -177,16 +189,22 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+  * writers). This assertion can be used to specify properties of concurrent
+  * code, where violation cannot be detected as a normal data race.
+  *
+- * For example, in a reference-counting algorithm where exclusive access is
+- * expected after the refcount reaches 0. We can check that this property
+- * actually holds as follows:
++ * For example, where exclusive access is expected after determining no other
++ * users of an object are left, but the object is not actually freed. We can
++ * check that this property actually holds as follows:
++ *
++ * .. code-block:: c
+  *
+  *	if (refcount_dec_and_test(&obj->refcnt)) {
+  *		ASSERT_EXCLUSIVE_ACCESS(*obj);
+- *		safely_dispose_of(obj);
++ *		do_some_cleanup(obj);
++ *		release_for_reuse(obj);
+  *	}
+  *
+- * @var variable to assert on
++ * Note: For cases where the object is freed, `KASAN <kasan.html>`_ is a better
++ * fit to detect use-after-free bugs.
++ *
++ * @var: variable to assert on
+  */
+ #define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
+ 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
+@@ -200,7 +218,7 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+  * concurrent readers are permitted. This assertion captures more detailed
+  * bit-level properties, compared to the other (word granularity) assertions.
+  * Only the bits set in @mask are checked for concurrent modifications, while
+- * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~@mask bits
++ * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~mask bits
+  * are ignored.
+  *
+  * Use this for variables, where some bits must not be modified concurrently,
+@@ -210,17 +228,21 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+  * but other bits may still be modified concurrently. A reader may wish to
+  * assert that this is true as follows:
+  *
++ * .. code-block:: c
++ *
+  *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
+  *	foo = (READ_ONCE(flags) & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
+  *
+- *   Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is
+- *   assumed to access the masked bits only, and KCSAN optimistically assumes it
+- *   is therefore safe, even in the presence of data races, and marking it with
+- *   READ_ONCE() is optional from KCSAN's point-of-view. We caution, however,
+- *   that it may still be advisable to do so, since we cannot reason about all
+- *   compiler optimizations when it comes to bit manipulations (on the reader
+- *   and writer side). If you are sure nothing can go wrong, we can write the
+- *   above simply as:
++ * Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is assumed
++ * to access the masked bits only, and KCSAN optimistically assumes it is
++ * therefore safe, even in the presence of data races, and marking it with
++ * READ_ONCE() is optional from KCSAN's point-of-view. We caution, however, that
++ * it may still be advisable to do so, since we cannot reason about all compiler
++ * optimizations when it comes to bit manipulations (on the reader and writer
++ * side). If you are sure nothing can go wrong, we can write the above simply
++ * as:
++ *
++ * .. code-block:: c
+  *
+  *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
+  *	foo = (flags & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
+@@ -230,15 +252,17 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+  * be modified concurrently. Writers, where other bits may change concurrently,
+  * could use the assertion as follows:
+  *
++ * .. code-block:: c
++ *
+  *	spin_lock(&foo_lock);
+  *	ASSERT_EXCLUSIVE_BITS(flags, FOO_MASK);
+- *	old_flags = READ_ONCE(flags);
++ *	old_flags = flags;
+  *	new_flags = (old_flags & ~FOO_MASK) | (new_foo << FOO_SHIFT);
+  *	if (cmpxchg(&flags, old_flags, new_flags) != old_flags) { ... }
+  *	spin_unlock(&foo_lock);
+  *
+- * @var variable to assert on
+- * @mask only check for modifications to bits set in @mask
++ * @var: variable to assert on
++ * @mask: only check for modifications to bits set in @mask
+  */
+ #define ASSERT_EXCLUSIVE_BITS(var, mask)                                       \
+ 	do {                                                                   \
