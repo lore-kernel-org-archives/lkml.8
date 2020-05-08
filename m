@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C9C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12107C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D0521835
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DC424970
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941505;
-	bh=3KB/8lPwoZMw72b3N2MrQizpZ5wvF7S6jVFfMLPhnZ0=;
+	s=default; t=1588941508;
+	bh=kKDJUoQUsayzk17hvv6RnM+MZYFe9lffBNiYBJ4kAy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=okBphMy3We7sVwftfQ51CuakmF9xP0qIU3+tT3YLi2/MFhfRgJhs54ar3szJx31NA
-	 mFJLy5yiwFH9lanY5FqsBT0bSmo6XeRJFBY4gRpu3+dPNqQSujZTYayOvkFsPDCHQ3
-	 K6JRLAkDB8fhumzyya4x87VJL+JScrMgdJ4xK7t8=
+	b=N2PeRj8U75pJbmmp03QCcd3hNvSaT6txCds8Y3Sp34XUbh4uXUCMads8oJ3Hkt42X
+	 AA8qFcgqHIgkw7zGXc+H02FoBQsKkqtN7KwIP1hQ44/ZF5/ZxQ1OaUeGktFCNsk6in
+	 +s5e+QyxWDUJpksKdY2j+MCvmQ5cwgFyxJCnZ1+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgEHMiY (ORCPT
+        id S1727095AbgEHMi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbgEHMiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:12 -0400
+        id S1728307AbgEHMiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23DEE218AC;
-        Fri,  8 May 2020 12:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BCA24953;
+        Fri,  8 May 2020 12:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941491;
-        bh=3KB/8lPwoZMw72b3N2MrQizpZ5wvF7S6jVFfMLPhnZ0=;
+        s=default; t=1588941494;
+        bh=kKDJUoQUsayzk17hvv6RnM+MZYFe9lffBNiYBJ4kAy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cf9ne06ILTyA82myOWhwCiwR1lDEPG/b3EaTT0mhtY2dBsnh85NkJU6E8WFCfnnvL
-         qvCZ9xG+14ZvQAeqMV5abFmt8JRxjPABkrM2yEfDB32fl1/Y0Gbgf7TjT4NhYgqAvp
-         KPErmrUJqOb2WN/7VBkM7t7o5oPrddxDtKSkV3jQ=
+        b=aS458TUeNixAjkLj1WK0e8dNxq5OAYR6ava/3SpmKF3zUtb27/B6Wgq7sbYkYoBC9
+         ulL59hAIhAL6Imo4qEyRqAP6Lo8XUzhMgdNkKdZrFn+Htd0plFR7RvqVkYlBl/a+AK
+         sJYTBmL57zjypj2esklOw+gzZaMnvuNqk0NYNomI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>
-Subject: [PATCH 4.4 052/312] xfrm: fix crash in XFRM_MSG_GETSA netlink handler
-Date:   Fri,  8 May 2020 14:30:43 +0200
-Message-Id: <20200508123128.210437137@linuxfoundation.org>
+        stable@vger.kernel.org, chunfan chen <jeffc@marvell.com>,
+        Amitkumar Karwar <akarwar@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 053/312] mwifiex: fix IBSS data path issue.
+Date:   Fri,  8 May 2020 14:30:44 +0200
+Message-Id: <20200508123128.286982579@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,58 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+From: chunfan chen <jeffc@marvell.com>
 
-commit 1ba5bf993c6a3142e18e68ea6452b347f9cb5635 upstream.
+commit dc386ce76dedaeeaaf006fceb6ed8cf2e20ff026 upstream.
 
-If we hit any of the error conditions inside xfrm_dump_sa(), then
-xfrm_state_walk_init() never gets called. However, we still call
-xfrm_state_walk_done() from xfrm_dump_sa_done(), which will crash
-because the state walk was never initialized properly.
+The port_open flag is not applicable for IBSS mode. IBSS data
+path was broken when port_open flag was introduced.
+This patch fixes the problem by correcting the checks.
 
-We can fix this by setting cb->args[0] only after we've processed the
-first element and checking this before calling xfrm_state_walk_done().
-
-Fixes: d3623099d3 ("ipsec: add support of limited SA dump")
-Cc: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 5c8946330abfa4c ("mwifiex: enable traffic only when port is open")
+Signed-off-by: chunfan chen <jeffc@marvell.com>
+Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_user.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mwifiex/sta_event.c |   10 ++++++----
+ drivers/net/wireless/mwifiex/wmm.c       |    6 ++++--
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -923,7 +923,8 @@ static int xfrm_dump_sa_done(struct netl
- 	struct sock *sk = cb->skb->sk;
- 	struct net *net = sock_net(sk);
+--- a/drivers/net/wireless/mwifiex/sta_event.c
++++ b/drivers/net/wireless/mwifiex/sta_event.c
+@@ -607,11 +607,13 @@ int mwifiex_process_sta_event(struct mwi
  
--	xfrm_state_walk_done(walk, net);
-+	if (cb->args[0])
-+		xfrm_state_walk_done(walk, net);
- 	return 0;
- }
+ 	case EVENT_PS_AWAKE:
+ 		mwifiex_dbg(adapter, EVENT, "info: EVENT: AWAKE\n");
+-		if (!adapter->pps_uapsd_mode && priv->port_open &&
++		if (!adapter->pps_uapsd_mode &&
++		    (priv->port_open ||
++		     (priv->bss_mode == NL80211_IFTYPE_ADHOC)) &&
+ 		    priv->media_connected && adapter->sleep_period.period) {
+-				adapter->pps_uapsd_mode = true;
+-				mwifiex_dbg(adapter, EVENT,
+-					    "event: PPS/UAPSD mode activated\n");
++			adapter->pps_uapsd_mode = true;
++			mwifiex_dbg(adapter, EVENT,
++				    "event: PPS/UAPSD mode activated\n");
+ 		}
+ 		adapter->tx_lock_flag = false;
+ 		if (adapter->pps_uapsd_mode && adapter->gen_null_pkt) {
+--- a/drivers/net/wireless/mwifiex/wmm.c
++++ b/drivers/net/wireless/mwifiex/wmm.c
+@@ -475,7 +475,8 @@ mwifiex_wmm_lists_empty(struct mwifiex_a
+ 		priv = adapter->priv[i];
+ 		if (!priv)
+ 			continue;
+-		if (!priv->port_open)
++		if (!priv->port_open &&
++		    (priv->bss_mode != NL80211_IFTYPE_ADHOC))
+ 			continue;
+ 		if (adapter->if_ops.is_port_ready &&
+ 		    !adapter->if_ops.is_port_ready(priv))
+@@ -1109,7 +1110,8 @@ mwifiex_wmm_get_highest_priolist_ptr(str
  
-@@ -948,8 +949,6 @@ static int xfrm_dump_sa(struct sk_buff *
- 		u8 proto = 0;
- 		int err;
+ 			priv_tmp = adapter->bss_prio_tbl[j].bss_prio_cur->priv;
  
--		cb->args[0] = 1;
--
- 		err = nlmsg_parse(cb->nlh, 0, attrs, XFRMA_MAX,
- 				  xfrma_policy);
- 		if (err < 0)
-@@ -966,6 +965,7 @@ static int xfrm_dump_sa(struct sk_buff *
- 			proto = nla_get_u8(attrs[XFRMA_PROTO]);
+-			if (!priv_tmp->port_open ||
++			if (((priv_tmp->bss_mode != NL80211_IFTYPE_ADHOC) &&
++			     !priv_tmp->port_open) ||
+ 			    (atomic_read(&priv_tmp->wmm.tx_pkts_queued) == 0))
+ 				continue;
  
- 		xfrm_state_walk_init(walk, proto, filter);
-+		cb->args[0] = 1;
- 	}
- 
- 	(void) xfrm_state_walk(net, walk, dump_one_state, &info);
 
 
