@@ -2,54 +2,52 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8EFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A78C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A8924954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5797821835
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941528;
-	bh=4RRrK7MglMPlDjzWMyuZn/iF6F0PRJ7h/i9OJjOr3GE=;
+	s=default; t=1588941535;
+	bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dd/tN1Cx7+FjoZj0AAMRNJdD0iMp/E9HhMhkNinXKo5AFE+2EBVH1hV6Kkd0Ocung
-	 b66uRCUfVOGAXIpkE8aMsSUZP8vVz4DoIj0Rra+OT+P28j+4y0qU7Mp1gevAxCTY3x
-	 Wfnbm/xJdMzwzis9UDLcJW6O72gVQl6FHSSgYgvY=
+	b=Dyaa1/nXDobNa81nMko9pH6B3TN6Fyf6wIEdKeDIA0zO5Ym8mEzMOaJ3AdHRM+mVA
+	 mA+lSoOpGG1M4DT4L9UD8FcJ69e/s6OfW9HCrFlY5jRWNocuAdsrlJVSVNMGRbM2dU
+	 m2oYp21ZcG6Qpz/4rBRUgEpNksoPT+RtCj17plHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgEHMir (ORCPT
+        id S1728491AbgEHMiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbgEHMik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:40 -0400
+        id S1728479AbgEHMit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A882495F;
-        Fri,  8 May 2020 12:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BCE2495F;
+        Fri,  8 May 2020 12:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941518;
-        bh=4RRrK7MglMPlDjzWMyuZn/iF6F0PRJ7h/i9OJjOr3GE=;
+        s=default; t=1588941529;
+        bh=dH39vX1jFQ/TFkb+BTCWZyIAmD9Vcg+f2I8YszPGVZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1P2KxEuuZJCt7TSyJYbmZdxUZhpbrAU0Ejopw2DgDY4IobmM2vg6vcGavVh1uqUw
-         3E5wz4D90VZ/YFOFivEZVh9KtV077TiSOrlP2pRJJySQA2IDY2MVstqUzsEtQzHLGn
-         NAg8CxAlQEK3Cn00AzkhSblkdqAzvTXjtZVCXrlI=
+        b=mzUFFMlHhbVwyZ17tHLluL05vAdum7e9jA6gse5WBFK4xpYwvrGlu3CnVJS4fgO6r
+         joiCkPYfDBZP45akVXnPO+7FFG3noKAwS9MxOQzKb3rttl8oJZgO9dFz2OcAUriCry
+         1lgJFJNr+ocW3GqW4IjZioDE4aW8ZcqUglMtsL14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
-        kvm@vger.kernel.org
-Subject: [PATCH 4.4 026/312] MIPS: KVM: Fix translation of MFC0 ErrCtl
-Date:   Fri,  8 May 2020 14:30:17 +0200
-Message-Id: <20200508123126.325941201@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 069/312] powerpc/pci/of: Parse unassigned resources
+Date:   Fri,  8 May 2020 14:31:00 +0200
+Message-Id: <20200508123129.400872881@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,44 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hogan <james.hogan@imgtec.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit 66ffc50c480e7ab6ad5642f47276435a8873c31a upstream.
+commit dead1c845dbe97e0061dae2017eaf3bd8f8f06ee upstream.
 
-The MIPS KVM dynamic translation is meant to translate "MFC0 rt, ErrCtl"
-instructions into "ADD rt, zero, zero" to zero the destination register,
-however the rt register number was copied into rt of the ADD instruction
-encoding, which is the 2nd source operand. This results in "ADD zero,
-zero, rt" which is a no-op, so only the first execution of each such
-MFC0 from ErrCtl will actually read 0.
+The pseries platform uses the PCI_PROBE_DEVTREE method of PCI probing
+which reads "assigned-addresses" of every PCI device and initializes
+the device resources. However if the property is missing or zero sized,
+then there is no fallback of any kind and the PCI resources remain
+undiscovered, i.e. pdev->resource[] array remains empty.
 
-Fix the shift to put the rt from the MFC0 encoding into the rd field of
-the ADD.
+This adds a fallback which parses the "reg" property in pretty much same
+way except it marks resources as "unset" which later make Linux assign
+those resources proper addresses.
 
-Fixes: 50c8308538dc ("KVM/MIPS32: Binary patching of select privileged instructions.")
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: kvm@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This has an effect when:
+1. a hypervisor failed to assign any resource for a device;
+2. /chosen/linux,pci-probe-only=0 is in the DT so the system may try
+assigning a resource.
+Neither is likely to happen under PowerVM.
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kvm/dyntrans.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/pci_of_scan.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/arch/mips/kvm/dyntrans.c
-+++ b/arch/mips/kvm/dyntrans.c
-@@ -82,7 +82,7 @@ int kvm_mips_trans_mfc0(uint32_t inst, u
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -82,10 +82,16 @@ static void of_pci_parse_addrs(struct de
+ 	const __be32 *addrs;
+ 	u32 i;
+ 	int proplen;
++	bool mark_unset = false;
  
- 	if ((rd == MIPS_CP0_ERRCTL) && (sel == 0)) {
- 		mfc0_inst = CLEAR_TEMPLATE;
--		mfc0_inst |= ((rt & 0x1f) << 16);
-+		mfc0_inst |= ((rt & 0x1f) << 11);
- 	} else {
- 		mfc0_inst = LW_TEMPLATE;
- 		mfc0_inst |= ((rt & 0x1f) << 16);
+ 	addrs = of_get_property(node, "assigned-addresses", &proplen);
+-	if (!addrs)
+-		return;
++	if (!addrs || !proplen) {
++		addrs = of_get_property(node, "reg", &proplen);
++		if (!addrs || !proplen)
++			return;
++		mark_unset = true;
++	}
++
+ 	pr_debug("    parse addresses (%d bytes) @ %p\n", proplen, addrs);
+ 	for (; proplen >= 20; proplen -= 20, addrs += 5) {
+ 		flags = pci_parse_of_flags(of_read_number(addrs, 1), 0);
+@@ -110,6 +116,8 @@ static void of_pci_parse_addrs(struct de
+ 			continue;
+ 		}
+ 		res->flags = flags;
++		if (mark_unset)
++			res->flags |= IORESOURCE_UNSET;
+ 		res->name = pci_name(dev);
+ 		region.start = base;
+ 		region.end = base + size - 1;
 
 
