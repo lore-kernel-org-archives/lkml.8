@@ -2,74 +2,77 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5CC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62192C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F690208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CA8208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHBaY (ORCPT
+        id S1726906AbgEHBbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:30:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3904 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726514AbgEHBaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:30:24 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3388588B7CDE53CE7966;
-        Fri,  8 May 2020 09:29:03 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 8 May 2020 09:28:54 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <kvalo@codeaurora.org>
-CC:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
-        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
-        <wright.feng@cypress.com>, <linux-wireless@vger.kernel.org>,
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] brcmfmac: make non-global functions static
-Date:   Fri, 8 May 2020 09:32:49 +0800
-Message-ID: <20200508013249.95196-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 May 2020 21:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgEHBbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:31:05 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296EF208CA;
+        Fri,  8 May 2020 01:31:03 +0000 (UTC)
+Date:   Thu, 7 May 2020 21:31:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 2 01/18] x86/entry/64: Move non entry code into
+ .text section
+Message-ID: <20200507213100.034f877f@oasis.local.home>
+In-Reply-To: <20200505134340.227579223@linutronix.de>
+References: <20200505134112.272268764@linutronix.de>
+        <20200505134340.227579223@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:2206:5:
-	warning: symbol 'brcmf_p2p_get_conn_idx' was not declared. Should it be static?
+On Tue, 05 May 2020 15:41:13 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -12,7 +12,7 @@
+>  #include <asm/frame.h>
+>  
+>  	.code64
+> -	.section .entry.text, "ax"
+> +	.section .text, "ax"
+>  
+>  #ifdef CONFIG_FRAME_POINTER
+>  /* Save parent and function stack frames (rip and rbp) */
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-index e32c24a2670d..2a2440031357 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
-@@ -2203,7 +2203,7 @@ static struct wireless_dev *brcmf_p2p_create_p2pdev(struct brcmf_p2p_info *p2p,
- 	return ERR_PTR(err);
- }
- 
--int brcmf_p2p_get_conn_idx(struct brcmf_cfg80211_info *cfg)
-+static int brcmf_p2p_get_conn_idx(struct brcmf_cfg80211_info *cfg)
- {
- 	int i;
- 	struct brcmf_if *ifp = netdev_priv(cfg_to_ndev(cfg));
--- 
-2.20.1
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
+-- Steve
