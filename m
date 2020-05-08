@@ -2,104 +2,103 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD69C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58DFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7133824954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQ6SSAW5"
+	by mail.kernel.org (Postfix) with ESMTP id AC2782173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588953699;
+	bh=e/q+X2llUESDXjknVyD37ZTb95TJ/m5mQMoLaK/Zq5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bLImo8CsTTEmLo1xDkrIBiiHiehprfqwJnCIrJi9mEd8WQ8HeTI9h5xRyU8V7uJhe
+	 XaT5efDATtqQAWQis9xUSO+ma85MmWoOz29rp9KEhHG0ygDUlAU+jwKVJIL/wdmz09
+	 MaojYZ/PxWFDYX9C2Kh0ShngZ4uU3sKWreuQchDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgEHQBd (ORCPT
+        id S1728038AbgEHQBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:01:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33170 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726906AbgEHQBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:01:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588953691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5LkMQAQyCyRsGiygZwM0QwLTkw6iqVkAYQ2dn3WWLSk=;
-        b=KQ6SSAW5l89NPzkjnsm842JDFKd0Vxm9oz35fFhZeF8AjAh4DVBVxha8doNbZRLrfuc/+R
-        +ONcWSUUDeJm2KJ45JKcHOAuZ5EkUK9xgOaPTmfpG/5F9iuIddbmpb8SvPdUCSJ68umAPp
-        4/g2FpP0GYaYqOkygkLnkzDCqqx9IKA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-WIhy7G_8NaWGf6v478Z7tg-1; Fri, 08 May 2020 12:01:28 -0400
-X-MC-Unique: WIhy7G_8NaWGf6v478Z7tg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 8 May 2020 12:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbgEHQBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:01:37 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39E8684B8A4;
-        Fri,  8 May 2020 16:01:26 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 544516AD13;
-        Fri,  8 May 2020 16:01:24 +0000 (UTC)
-Date:   Fri, 8 May 2020 11:01:22 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
-        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject: Re: mmotm 2020-05-05-15-28 uploaded (objtool warning)
-Message-ID: <20200508160122.hsqb25lzhd2xkisv@treble>
-References: <20200505222922.jajHT3b4j%akpm@linux-foundation.org>
- <36dc367a-f647-4ee8-a327-d1c3457a7940@infradead.org>
- <20200508103830.GZ5298@hirez.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id BF1F220725;
+        Fri,  8 May 2020 16:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588953697;
+        bh=e/q+X2llUESDXjknVyD37ZTb95TJ/m5mQMoLaK/Zq5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bu0EOWe3AR5ZE9lofciPSHX8kg17gXFgLXHZhP4cxL90fG3kmEzp+KGkypxpQoBTN
+         bzC20fYQBpgzPgI1cLZUbWrFU4R3x94Z/QlASK96dd66zk6hRxh6oiTi1gDVNRnH36
+         BSvVZlEPlc8DxFjnegGZxnsM/oOWQsPny7P98ZDc=
+Date:   Fri, 8 May 2020 11:06:04 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200508160604.GA23375@embeddedor>
+References: <20200507040912.GA31382@embeddedor>
+ <202005071058.A2234694ED@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508103830.GZ5298@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <202005071058.A2234694ED@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:38:30PM +0200, Peter Zijlstra wrote:
-> Subject: objtool: Allow no-op CFI ops in alternatives
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri May 8 12:34:33 CEST 2020
+On Thu, May 07, 2020 at 11:02:18AM -0700, Kees Cook wrote:
+> On Wed, May 06, 2020 at 11:09:12PM -0500, Gustavo A. R. Silva wrote:
+> > As mentioned above: "Flexible array members have incomplete type, and
+> > so the sizeof operator may not be applied. As a quirk of the original
+> > implementation of zero-length arrays, sizeof evaluates to zero."[1] So,
+> > the sizeof(flexible-array) can be safely removed to fix the error above.
 > 
-> Randy reported a false-positive: "alternative modifies stack".
+> As in "sizeof(event_header->event) always evaluated to 0, so removing it
+> has no effect".
 > 
-> What happens is that:
+
+Thanks for this.  I wanted to make a more general statement, but I'll
+update the changelog text. :)
+
+> > [...]
+> > diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
+> > index e741b1157525..351a2989b3c6 100644
+> > --- a/drivers/char/tpm/eventlog/tpm2.c
+> > +++ b/drivers/char/tpm/eventlog/tpm2.c
+> > @@ -51,8 +51,7 @@ static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
+> >  	int i;
+> >  
+> >  	event_header = addr;
+> > -	size = sizeof(struct tcg_pcr_event) - sizeof(event_header->event)
+> > -		+ event_header->event_size;
+> > +	size = sizeof(*event_header) + event_header->event_size;
 > 
-> 	alternative_io("movl %0, %P1", "xchgl %0, %P1", X86_BUG_11AP,
->  13d:   89 9d 00 d0 7f ff       mov    %ebx,-0x803000(%rbp)
+> That said, I think it would be better to stick to the struct_size()
+> idiom for dealing with flexible arrays here:
 > 
-> decodes to an instruction with CFI-ops because it modifies RBP.
-> However, due to this being a !frame-pointer build, that should not in
-> fact change the CFI state.
+> 	size = struct_size(event_header, event, event_size);
 > 
-> So instead of dis-allowing any CFI-op, verify the op would've actually
-> changed the CFI state.
-> 
-> Fixes: 7117f16bf460 ("objtool: Fix ORC vs alternatives")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-It helps to put an example of the fixed warning in the commit log, like:
+Yep, I agree. I'll add this and send v2, shortly.
 
-This fixes the following warning:
-
-  arch/x86/hyperv/hv_apic.o: warning: objtool: hv_apic_write()+0x25: alternative modifies stack
-
-Otherwise it looks good.
-
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-
--- 
-Josh
+Thanks
+--
+Gustavo
 
