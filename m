@@ -2,234 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACA8C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830ECC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D4E2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64479206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 01:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qJ72SvLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEHBml (ORCPT
+        id S1726946AbgEHBnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 21:42:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:48829 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgEHBmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 21:42:40 -0400
-IronPort-SDR: kPv0nNBnfnJRqW8dVPBW2xXTHXd7scxBUGFf8j7o69zZLyUq4odpo+ZCvrLbGjbBnneVTguovI
- GvuY1qIO+5yA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 18:42:40 -0700
-IronPort-SDR: 6GpZO+gW4OH6LS1UMq12TtONG1C91mHtsFKgYYmsktsvd1pIW662D2u/nmBWnfmoD8iXQ8UScS
- pXAz4jP+jOEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="278794707"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 18:42:37 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        ashok.raj@intel.com, Liu Yi L <yi.l.liu@intel.com>,
-        kevin.tian@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] iommu/vt-d: Disable non-recoverable fault
- processing before unbind
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
- <20200507005534.3080-4-baolu.lu@linux.intel.com>
- <20200507095522.3863b197@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f282cb12-3bda-44c9-d8dc-6074aa251cf1@linux.intel.com>
-Date:   Fri, 8 May 2020 09:39:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 7 May 2020 21:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726509AbgEHBnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 21:43:43 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A290C05BD43;
+        Thu,  7 May 2020 18:43:43 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JClw4J0pz9sRY;
+        Fri,  8 May 2020 11:43:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588902221;
+        bh=1wLoxkkY9YL7HHfDN3xPSDGcQoGfNr7wJukvvyf1oa4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qJ72SvLFl47rBhtq2X7x6/EFJScJP9TYDPssBU0kNDfkDo4gPKG0uoCPcdnH9aqdo
+         tG0XHLX/R5WfymPB8DOnaH72919jMUlRElJqK8gNBfdy3VBMH18XQ059AuN0+5ovnp
+         em+dC5DoIhB0fHJoUotMPkwU8zK1SlWWz9cxRpx/NDHygrUcfn01BjG2RAfZS+ztQc
+         mUKn8BI5hwmk3PwiACQSszKhChn/jX6cmYYdBx5wef/4avUsZmEvjLAkrnz2i69Ab7
+         29if27k0DE5R0I/gqKinvuYaoL47d4P6L7XnRRsKnws7/Kfm0xSxGYzRnYKPP09d0P
+         z5IE3iPvyVnsA==
+Date:   Fri, 8 May 2020 11:43:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200508114338.02d2b843@canb.auug.org.au>
+In-Reply-To: <20200507221721.0330271c@canb.auug.org.au>
+References: <20200507221721.0330271c@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200507095522.3863b197@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/gWV6hIMcFCsa=dV2OB6P/I.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 12:55 AM, Jacob Pan wrote:
-> On Thu,  7 May 2020 08:55:32 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> When a PASID is used for SVA by the device, it's possible that the
->> PASID entry is cleared before the device flushes all ongoing DMA
->> requests. The IOMMU should ignore the non-recoverable faults caused
->> by these requests.
-> Perhaps be more specific, only untranslated requests causes UR.
+--Sig_/gWV6hIMcFCsa=dV2OB6P/I.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes. Sure!
+Hi all,
 
-> 
->> Intel VT-d provides such function through the FPD
->> bit of the PASID entry. This sets FPD bit when PASID entry is cleared
->> in the mm notifier and clear it when the pasid is unbound.
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel-iommu.c |  4 ++--
->>   drivers/iommu/intel-pasid.c | 26 +++++++++++++++++++++-----
->>   drivers/iommu/intel-pasid.h |  3 ++-
->>   drivers/iommu/intel-svm.c   |  9 ++++++---
->>   4 files changed, 31 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index d1866c0905b1..7811422b5a68 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -5352,7 +5352,7 @@ static void __dmar_remove_one_dev_info(struct
->> device_domain_info *info) if (info->dev) {
->>   		if (dev_is_pci(info->dev) && sm_supported(iommu))
->>   			intel_pasid_tear_down_entry(iommu, info->dev,
->> -					PASID_RID2PASID);
->> +					PASID_RID2PASID, false);
->>   
->>   		iommu_disable_dev_iotlb(info);
->>   		domain_context_clear(iommu, info->dev);
->> @@ -5587,7 +5587,7 @@ static void aux_domain_remove_dev(struct
->> dmar_domain *domain, auxiliary_unlink_device(domain, dev);
->>   
->>   	spin_lock(&iommu->lock);
->> -	intel_pasid_tear_down_entry(iommu, dev,
->> domain->default_pasid);
->> +	intel_pasid_tear_down_entry(iommu, dev,
->> domain->default_pasid, false); domain_detach_iommu(domain, iommu);
->>   	spin_unlock(&iommu->lock);
->>   
->> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
->> index 7969e3dac2ad..11aef6c12972 100644
->> --- a/drivers/iommu/intel-pasid.c
->> +++ b/drivers/iommu/intel-pasid.c
->> @@ -292,7 +292,20 @@ static inline void pasid_clear_entry(struct
->> pasid_entry *pe) WRITE_ONCE(pe->val[7], 0);
->>   }
->>   
->> -static void intel_pasid_clear_entry(struct device *dev, int pasid)
->> +static inline void pasid_clear_entry_with_fpd(struct pasid_entry *pe)
->> +{
->> +	WRITE_ONCE(pe->val[0], PASID_PTE_FPD);
->> +	WRITE_ONCE(pe->val[1], 0);
->> +	WRITE_ONCE(pe->val[2], 0);
->> +	WRITE_ONCE(pe->val[3], 0);
->> +	WRITE_ONCE(pe->val[4], 0);
->> +	WRITE_ONCE(pe->val[5], 0);
->> +	WRITE_ONCE(pe->val[6], 0);
->> +	WRITE_ONCE(pe->val[7], 0);
->> +}
->> +
->> +static void
->> +intel_pasid_clear_entry(struct device *dev, int pasid, bool
->> pf_ignore) {
->>   	struct pasid_entry *pe;
->>   
->> @@ -300,7 +313,10 @@ static void intel_pasid_clear_entry(struct
->> device *dev, int pasid) if (WARN_ON(!pe))
->>   		return;
->>   
->> -	pasid_clear_entry(pe);
->> +	if (pf_ignore)
->> +		pasid_clear_entry_with_fpd(pe);
->> +	else
->> +		pasid_clear_entry(pe);
->>   }
->>   
->>   static inline void pasid_set_bits(u64 *ptr, u64 mask, u64 bits)
->> @@ -533,8 +549,8 @@ devtlb_invalidation_with_pasid(struct intel_iommu
->> *iommu, qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 -
->> VTD_PAGE_SHIFT); }
->>   
->> -void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
->> -				 struct device *dev, int pasid)
->> +void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct
->> device *dev,
->> +				 int pasid, bool pf_ignore)
->>   {
->>   	struct pasid_entry *pte;
->>   	u16 did;
->> @@ -544,7 +560,7 @@ void intel_pasid_tear_down_entry(struct
->> intel_iommu *iommu, return;
->>   
->>   	did = pasid_get_domain_id(pte);
->> -	intel_pasid_clear_entry(dev, pasid);
->> +	intel_pasid_clear_entry(dev, pasid, pf_ignore);
->>   
->>   	if (!ecap_coherent(iommu->ecap))
->>   		clflush_cache_range(pte, sizeof(*pte));
->> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
->> index a41b09b3ffde..e6dd95ffe381 100644
->> --- a/drivers/iommu/intel-pasid.h
->> +++ b/drivers/iommu/intel-pasid.h
->> @@ -15,6 +15,7 @@
->>   #define PASID_MAX			0x100000
->>   #define PASID_PTE_MASK			0x3F
->>   #define PASID_PTE_PRESENT		1
->> +#define PASID_PTE_FPD			2
->>   #define PDE_PFN_MASK			PAGE_MASK
->>   #define PASID_PDE_SHIFT			6
->>   #define MAX_NR_PASID_BITS		20
->> @@ -120,7 +121,7 @@ int intel_pasid_setup_nested(struct intel_iommu
->> *iommu, struct iommu_gpasid_bind_data_vtd *pasid_data,
->>   			     struct dmar_domain *domain, int
->> addr_width); void intel_pasid_tear_down_entry(struct intel_iommu
->> *iommu,
->> -				 struct device *dev, int pasid);
->> +				 struct device *dev, int pasid, bool
->> pf_ignore); int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned
->> int *pasid); void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
->> int pasid); #endif /* __INTEL_PASID_H */
->> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
->> index 83dc4319f661..9561ba59a170 100644
->> --- a/drivers/iommu/intel-svm.c
->> +++ b/drivers/iommu/intel-svm.c
->> @@ -207,7 +207,8 @@ static void intel_mm_release(struct mmu_notifier
->> *mn, struct mm_struct *mm) */
->>   	rcu_read_lock();
->>   	list_for_each_entry_rcu(sdev, &svm->devs, list) {
->> -		intel_pasid_tear_down_entry(svm->iommu, sdev->dev,
->> svm->pasid);
->> +		intel_pasid_tear_down_entry(svm->iommu, sdev->dev,
->> +					    svm->pasid, true);
->>   		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   	}
->>   	rcu_read_unlock();
->> @@ -400,7 +401,8 @@ int intel_svm_unbind_gpasid(struct device *dev,
->> int pasid) sdev->users--;
->>   		if (!sdev->users) {
->>   			list_del_rcu(&sdev->list);
->> -			intel_pasid_tear_down_entry(iommu, dev,
->> svm->pasid);
->> +			intel_pasid_tear_down_entry(iommu, dev,
->> +						    svm->pasid,
->> false); intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   			/* TODO: Drain in flight PRQ for the PASID
->> since it
->>   			 * may get reused soon, we don't want to
->> @@ -643,7 +645,8 @@ int intel_svm_unbind_mm(struct device *dev, int
->> pasid)
->>   			 * to use. We have a *shared* PASID table,
->> because it's
->>   			 * large and has to be physically
->> contiguous. So it's
->>   			 * hard to be as defensive as we might like.
->> */
->> -			intel_pasid_tear_down_entry(iommu, dev,
->> svm->pasid);
->> +			intel_pasid_tear_down_entry(iommu, dev,
->> +						    svm->pasid,
->> false); intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>   			kfree_rcu(sdev, rcu);
->>   
-> Reviewed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> 
+On Thu, 7 May 2020 22:17:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the akpm-current tree, today's linux-next build (arm
+> collie_defconfig and many others) failed like this:
+>=20
+> arch/arm/mm/dma-mapping.c: In function 'dma_cache_maint_page':
+> arch/arm/mm/dma-mapping.c:892:6: error: implicit declaration of function =
+'kunmap_high' [-Werror=3Dimplicit-function-declaration]
+>       kunmap_high(page);
+>       ^
+> arch/arm/mm/flush.c: In function '__flush_dcache_page':
+> arch/arm/mm/flush.c:221:6: error: implicit declaration of function 'kunma=
+p_high' [-Werror=3Dimplicit-function-declaration]
+>       kunmap_high(page + i);
+>       ^
+>=20
+> Caused by commit
+>=20
+>   6b66ab470b4d ("arch/kunmap: remove duplicate kunmap implementations")
+>=20
+> kunmap_high() is now only declared when CONFIG_HIGHMEM is defined.
 
-Best regards,
-baolu
+Is there anything that can be done quickly about this as it broke a
+large number of builds ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gWV6hIMcFCsa=dV2OB6P/I.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl60uUoACgkQAVBC80lX
+0GyOuAgAkfoqA2UzIk5jra5cPLhHMe8/Ug0E3/DxEX/uFHLBQ9wRytAT8SM1Ty0O
+ssm13c5YtZOHfOeWFvyh746gw9QcXB8ORUdeeW1/bbtoFRwq/kptP0RRP9mHz+RA
+rAHaT/DDYsHB+JRKkjyJYk4Y4uy4L+9B0wBA6wRlIqs+c6PPPom9gbayk+kD0nLd
+I3bVjDPCYbov5w1y1K0pzXCalg2XNsaKEHT8Zqtf7QA4eoNTGQX/2unOdTMAFWrJ
+bfjnnIoNzzReNB+w0dYD5XOE0Tf1CiwUsjZ8kVR0Jla9cwmBst/liRylTkV1QtV+
+dDMn35nM00Tz09aVVCWKnTNxbiPEvA==
+=P9ww
+-----END PGP SIGNATURE-----
+
+--Sig_/gWV6hIMcFCsa=dV2OB6P/I.--
