@@ -2,87 +2,170 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3BCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88BBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51C9208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jTat2N4z"
+	by mail.kernel.org (Postfix) with ESMTP id 8765F208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgEHQ0K (ORCPT
+        id S1727890AbgEHQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgEHQ0K (ORCPT
+        Fri, 8 May 2020 12:26:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgEHQ0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:26:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799DDC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 09:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eOXwZu6jGxF28/fjq4ri8nUXwqrvhi607Z+SSxjQJFs=; b=jTat2N4zBBs5R8ZNjqJ51Jzk+n
-        nUw7KQs7wHetj7+78AD7fXlyEz4PMoGdSXlr5HuXa24GFMesWyaagH5Wo62q8Xt149nMuCUKGDlL4
-        wof7+yDNbtqMhHouGy72z4b8UolWUz+2bC+PijY65DGHkZlFZDvSvhVN9N1g0eaWIbBG2Qj4v03uh
-        2AqjxUHCiEZrkuzLwTCjH0atYIru9OoC4AzES6xussgr2ysgiNEaachVqeGj6jwcYU1W1NjmzD6ye
-        kk8nSOYH+ZCmw5NefnQZT6wySXX0P841OdxN6WYWCALTY9Z8XjBtA24VFCydapD9JVhsu/xT7PmH3
-        v18dOSIQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jX5p9-0002tG-1v; Fri, 08 May 2020 16:26:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8EC9630018B;
-        Fri,  8 May 2020 18:26:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6F0EB29C8A723; Fri,  8 May 2020 18:26:04 +0200 (CEST)
-Date:   Fri, 8 May 2020 18:26:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: objtool warning breaks build for fs/dlm/lock.o
-Message-ID: <20200508162604.GE3344@hirez.programming.kicks-ass.net>
-References: <CAK8P3a0QkqyA2wq_EbA+oWrLGgVdQwpBvb+G0aKyz60BOLs6fg@mail.gmail.com>
- <20200507232941.jccuywl56bppxfyp@treble>
- <CAK8P3a0pY+tu=3hvWTZVwD7nbA7UhaaCGWbBVba0eDuNcpt2Sg@mail.gmail.com>
- <20200508095509.GX5298@hirez.programming.kicks-ass.net>
- <20200508161750.bl5c7wh36gh6gcvp@treble>
+        Fri, 8 May 2020 12:26:34 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 7F0B72A31EB
+Message-ID: <b2160325f5b9bae5b437a37069db926d2a464e8d.camel@collabora.com>
+Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Date:   Fri, 08 May 2020 13:26:21 -0300
+In-Reply-To: <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
+References: <20200505134110.3435-1-ezequiel@collabora.com>
+         <20200505134110.3435-4-ezequiel@collabora.com>
+         <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508161750.bl5c7wh36gh6gcvp@treble>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:17:50AM -0500, Josh Poimboeuf wrote:
-> On Fri, May 08, 2020 at 11:55:09AM +0200, Peter Zijlstra wrote:
-> > On Fri, May 08, 2020 at 11:27:39AM +0200, Arnd Bergmann wrote:
+On Fri, 2020-05-08 at 12:34 +0200, Hans Verkuil wrote:
+> On 05/05/2020 15:41, Ezequiel Garcia wrote:
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
 > > 
-> > > Right, makes sense. It would be nice though to have a way of intentionally
-> > > turning all objtool warnings into errors. I do my randconfig tests
-> > > with '-Werror'
-> > > at the moment in order to catch all new warnings, but this does not catch
-> > > objtool errors at the moment. For now, this is probably the right thing to do,
-> > > as there are a couple of warnings that I have no patches for, but at some point
-> > > I would prefer to trap immediately when a new warning pops up.
+> > The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
+> > a backend for this new format.
 > > 
-> > Completely untested, and I'm 100% unsure of the Makefile change, but
-> > something like so, then?
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/rkvdec/Makefile     |    2 +-
+> >  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
+> >  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
+> >  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
+> >  4 files changed, 1637 insertions(+), 4 deletions(-)
+> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
+> > 
+> > diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
+> > index c08fed0a39f9..cb86b429cfaa 100644
+> > --- a/drivers/staging/media/rkvdec/Makefile
+> > +++ b/drivers/staging/media/rkvdec/Makefile
+> > @@ -1,3 +1,3 @@
+> >  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
+> >  
+> > -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
+> > +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
+> > new file mode 100644
+> > index 000000000000..37d0ea4e3570
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
+> > @@ -0,0 +1,1577 @@
 > 
-> Mostly looks good, but it only errors out on fatal errors, right?  For
-> -Werror (and what Arnd is asking about) should it also return error on
-> "warnings > 0"?
+> <snip>
+> 
+> > +static void init_inter_probs(struct rkvdec_ctx *ctx,
+> > +			     const struct rkvdec_vp9_run *run)
+> > +{
+> > +	const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
+> > +	struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
+> > +	struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
+> > +	struct rkvdec_vp9_inter_frame_probs *rkprobs;
+> > +	const struct v4l2_vp9_probabilities *probs;
+> > +	unsigned int i, j, k;
+> > +
+> > +	rkprobs = &tbl->probs.inter;
+> > +	dec_params = run->decode_params;
+> > +	probs = &dec_params->probs;
+> > +
+> > +	/*
+> > +	 * inter probs
+> > +	 * 151 x 128 bits, aligned to 152 x 128 bits
+> > +	 * inter only
+> > +	 * intra_y_mode & inter_block info 6 x 128 bits
+> > +	 */
+> > +
+> > +	memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
+> > +	memcpy(rkprobs->comp_mode, probs->comp_mode,
+> > +	       sizeof(rkprobs->comp_mode));
+> > +	memcpy(rkprobs->comp_ref, probs->comp_ref,
+> > +	       sizeof(rkprobs->comp_ref));
+> > +	memcpy(rkprobs->single_ref, probs->single_ref,
+> > +	       sizeof(rkprobs->single_ref));
+> > +	memcpy(rkprobs->inter_mode, probs->inter_mode,
+> > +	       sizeof(rkprobs->inter_mode));
+> > +	memcpy(rkprobs->interp_filter, probs->interp_filter,
+> > +	       sizeof(rkprobs->interp_filter));
+> > +
+> > +	/* 128 x 128 bits coeff related */
+> > +	for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
+> > +		for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
+> > +			for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
+> > +				write_coeff_plane(probs->coef[i][j][k],
+> > +						  rkprobs->coef[k][i][j]);
+> > +		}
+> > +	}
+> > +
+> > +	/* intra uv mode 6 x 128 */
+> > +	memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
+> > +	       sizeof(rkprobs->uv_mode_0_2));
+> > +	memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
+> > +	       sizeof(rkprobs->uv_mode_3_5));
+> > +	memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
+> > +	       sizeof(rkprobs->uv_mode_6_8));
+> > +	memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
+> > +	       sizeof(rkprobs->uv_mode_9));
+> > +
+> > +	/* mv related 6 x 128 */
+> > +	memcpy(rkprobs->mv.joint, probs->mv.joint,
+> > +	       sizeof(rkprobs->mv.joint));
+> > +	memcpy(rkprobs->mv.sign, probs->mv.sign,
+> > +	       sizeof(rkprobs->mv.sign));
+> > +	memcpy(rkprobs->mv.class, probs->mv.class,
+> > +	       sizeof(rkprobs->mv.class));
+> > +	memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
+> > +	       sizeof(rkprobs->mv.class0_bit));
+> > +	memcpy(rkprobs->mv.bits, probs->mv.bits,
+> > +	       sizeof(rkprobs->mv.bits));
+> > +	memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
+> > +	       sizeof(rkprobs->mv.class0_fr));
+> > +	memcpy(rkprobs->mv.fr, probs->mv.fr,
+> > +	       sizeof(rkprobs->mv.fr));
+> > +	memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
+> > +	       sizeof(rkprobs->mv.class0_hp));
+> > +	memcpy(rkprobs->mv.hp, probs->mv.hp,
+> > +	       sizeof(rkprobs->mv.hp));
+> 
+> Can't you just do: 'rkprobs->mv = probs->mv'?
+> 
 
-Oh, good point. Extra knob or just: if (error && ret) return -1 ?
+I think I'd like to keep this as-is.
+
+Having the memcpy makes it explicit that we are copying
+these structs around. While the assignment would
+bring type checking, it can be misleading for readers.
+
+Thanks,
+Ezequiel
+
