@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5210DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9073C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E5C249A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8907024999
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943597;
-	bh=q/kmPP6Ir4VfmUIesUjXrG4U/OMe+JwNA/OYDHF2O+k=;
+	s=default; t=1588943603;
+	bh=WnmcXTXsiT6QBqU7y2rKUaAHDFDo3K4E7Fg5YW5WJIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwfdhJUFxNPiD6hUcYcB/zLFfZGcqE6PVVWc1A53YdfZ540YocUN2cHYC56EYup4s
-	 T0w4P0h2TkxpHbYYvW4Tcy1p2FuzU74h4fCHA2uf/YODKqQOYwOS7gKlnX2OW7KozN
-	 LHGezJsdaGWYVloRvaxiFyKduyMiLHT+ZUyWSS7o=
+	b=Au1EkayxEvS9uRZzHIQo6wCFayM1q9+WNuyGHEz7yeHQErOr/ELn6gyuGvGfY4UTL
+	 ceJ/slpE9jvf3LwZ8XrBDzEJ/rlxgi/eNZjVqApII1KZ1RN9PleZvBWK/eiEq4L3X2
+	 zgj6Ud5wM0o+jaSqhTXUsbPUGojvb5oYuHG8kudU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgEHNNP (ORCPT
+        id S1730509AbgEHNNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728740AbgEHMsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:12 -0400
+        id S1729618AbgEHMsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13723221F7;
-        Fri,  8 May 2020 12:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F732145D;
+        Fri,  8 May 2020 12:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942091;
-        bh=q/kmPP6Ir4VfmUIesUjXrG4U/OMe+JwNA/OYDHF2O+k=;
+        s=default; t=1588942081;
+        bh=WnmcXTXsiT6QBqU7y2rKUaAHDFDo3K4E7Fg5YW5WJIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZ+bVTDM+oE1Tzo4t79GpQ9VDSc+/54e3RKe0KJSeN4VKaz166MHlZvNveDzawRUP
-         YRSJihFXbVxi6nDWarJvQnh52PhZjnJIR+fGdwzNvPDUJynqin9ilXgez5iCDC08Zj
-         2DKffR2GcIxZ02UR7CsoKbG8leTqbKZ36u66zgm4=
+        b=klN4SmQZnuJF3Gt5pkp9YxGUUArkVF3UM1+cHskDD7LbetphspmN0x4E+choELnTd
+         EyyDpkbnGG5kYdBqGSmv4Jo71gGSBy1VIrx0sJw9KD+LJ4JK8Pb00UDe+/2oYyhBG0
+         v043nZOD0jpcBUIkhz596/HuldcuX6bMRfAoCxTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Graf <tgraf@suug.ch>,
-        Pravin B Shelar <pshelar@nicira.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 293/312] ovs/vxlan: fix rtnl notifications on iface deletion
-Date:   Fri,  8 May 2020 14:34:44 +0200
-Message-Id: <20200508123144.977180322@linuxfoundation.org>
+Subject: [PATCH 4.4 290/312] mvpp2: use correct size for memset
+Date:   Fri,  8 May 2020 14:34:41 +0200
+Message-Id: <20200508123144.777181962@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,103 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit cf5da330bbdd0c06b05c525a3d1d58ccd82c87a6 upstream.
+commit e8f967c3d88489fc1562a31d4e44d905ac1d3aff upstream.
 
-The function vxlan_dev_create() (only used by ovs) never calls
-rtnl_configure_link(). The consequence is that dev->rtnl_link_state is
-never set to RTNL_LINK_INITIALIZED.
-During the deletion phase, the function rollback_registered_many() sends
-a RTM_DELLINK only if dev->rtnl_link_state is set to RTNL_LINK_INITIALIZED.
+gcc-7 detects a short memset in mvpp2, introduced in the original
+merge of the driver:
 
-Note that the function vxlan_dev_create() is moved after the rtnl stuff so
-that vxlan_dellink() can be called in this function.
+drivers/net/ethernet/marvell/mvpp2.c: In function 'mvpp2_cls_init':
+drivers/net/ethernet/marvell/mvpp2.c:3296:2: error: 'memset' used with length equal to number of elements without multiplication by element size [-Werror=memset-elt-size]
 
-Fixes: dcc38c033b32 ("openvswitch: Re-add CONFIG_OPENVSWITCH_VXLAN")
-CC: Thomas Graf <tgraf@suug.ch>
-CC: Pravin B Shelar <pshelar@nicira.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+The result seems to be that we write uninitialized data into the
+flow table registers, although we did not get any warning about
+that uninitialized data usage.
+
+Using sizeof() lets us initialize then entire array instead.
+
+Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/vxlan.c |   58 ++++++++++++++++++++++++++++++----------------------
- 1 file changed, 34 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2927,30 +2927,6 @@ static int vxlan_dev_configure(struct ne
- 	return 0;
- }
+--- a/drivers/net/ethernet/marvell/mvpp2.c
++++ b/drivers/net/ethernet/marvell/mvpp2.c
+@@ -3305,7 +3305,7 @@ static void mvpp2_cls_init(struct mvpp2
+ 	mvpp2_write(priv, MVPP2_CLS_MODE_REG, MVPP2_CLS_MODE_ACTIVE_MASK);
  
--struct net_device *vxlan_dev_create(struct net *net, const char *name,
--				    u8 name_assign_type, struct vxlan_config *conf)
--{
--	struct nlattr *tb[IFLA_MAX+1];
--	struct net_device *dev;
--	int err;
--
--	memset(&tb, 0, sizeof(tb));
--
--	dev = rtnl_create_link(net, name, name_assign_type,
--			       &vxlan_link_ops, tb);
--	if (IS_ERR(dev))
--		return dev;
--
--	err = vxlan_dev_configure(net, dev, conf);
--	if (err < 0) {
--		free_netdev(dev);
--		return ERR_PTR(err);
--	}
--
--	return dev;
--}
--EXPORT_SYMBOL_GPL(vxlan_dev_create);
--
- static int vxlan_newlink(struct net *src_net, struct net_device *dev,
- 			 struct nlattr *tb[], struct nlattr *data[])
- {
-@@ -3218,6 +3194,40 @@ static struct rtnl_link_ops vxlan_link_o
- 	.get_link_net	= vxlan_get_link_net,
- };
- 
-+struct net_device *vxlan_dev_create(struct net *net, const char *name,
-+				    u8 name_assign_type,
-+				    struct vxlan_config *conf)
-+{
-+	struct nlattr *tb[IFLA_MAX + 1];
-+	struct net_device *dev;
-+	int err;
-+
-+	memset(&tb, 0, sizeof(tb));
-+
-+	dev = rtnl_create_link(net, name, name_assign_type,
-+			       &vxlan_link_ops, tb);
-+	if (IS_ERR(dev))
-+		return dev;
-+
-+	err = vxlan_dev_configure(net, dev, conf);
-+	if (err < 0) {
-+		free_netdev(dev);
-+		return ERR_PTR(err);
-+	}
-+
-+	err = rtnl_configure_link(dev, NULL);
-+	if (err < 0) {
-+		LIST_HEAD(list_kill);
-+
-+		vxlan_dellink(dev, &list_kill);
-+		unregister_netdevice_many(&list_kill);
-+		return ERR_PTR(err);
-+	}
-+
-+	return dev;
-+}
-+EXPORT_SYMBOL_GPL(vxlan_dev_create);
-+
- static void vxlan_handle_lowerdev_unregister(struct vxlan_net *vn,
- 					     struct net_device *dev)
- {
+ 	/* Clear classifier flow table */
+-	memset(&fe.data, 0, MVPP2_CLS_FLOWS_TBL_DATA_WORDS);
++	memset(&fe.data, 0, sizeof(fe.data));
+ 	for (index = 0; index < MVPP2_CLS_FLOWS_TBL_SIZE; index++) {
+ 		fe.index = index;
+ 		mvpp2_cls_flow_write(priv, &fe);
 
 
