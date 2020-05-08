@@ -2,164 +2,131 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFC8C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4621BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9839206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDv0SpIu"
+	by mail.kernel.org (Postfix) with ESMTP id 22FBF24954
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588944029;
+	bh=pS2MkzUVTHGK2IXgWPKz/863sTdQ694vuAWFOZaRb2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X5skgch5N8+GIYm4e82BJCXQveuOvdwQBAO0+Hz5KOlagL4Xu9i7VoQI+eIdi6IYq
+	 ZtxeONI5oHWU9h5ATCsZvP8RMZ9ILRJgUjq+hd/XPCwl+eJXfvuZPbwu4EZrd6D7X9
+	 uVnmqlnpaqbpxblNsIcMrPsoJdMQbaTN7D35Ef4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEHNUX (ORCPT
+        id S1728999AbgEHNU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728785AbgEHNUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:20:18 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FA9C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:20:17 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z22so1403239lfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=u8FtxFi4ImqEzH02SMGCC236F+wFyRG7A3MxBfNg3s0=;
-        b=TDv0SpIue2QxC7unchMyXqFEK8r7oapDU9UBp2j4+t89IjjwDhQ9qDfD/biu9wffz/
-         X/1a3inPWoDwY1clp/1T+oBVdWqJZ0vdETgFdpn9yzLujGSd/hFaxmxywBtPJaIC1v5h
-         Etft4Tv4neM1WItafES7bps9WHiT650OzbBU7j4H3+TCbyj4IjYoS8y5JLI/BhQf/XuO
-         XkvAYhEJevE1urfEdGghqrPEdsH5GkJfAWoQtq8WMY2XlM7opp/qOK6oJz/+HL8PIF/P
-         jpXppeorxhB7qC1MUhdO0lhhW8e/V7oVkzwI2ZnOpQQeRdN3hrBtzxSfBGhL9aNpV+sR
-         H79Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u8FtxFi4ImqEzH02SMGCC236F+wFyRG7A3MxBfNg3s0=;
-        b=o4DsFE22DgxMFRdVYgx1XmmR2DQFTUIQ7Xvw9yhSB7WePOmnU0/V90j8ncfw230SDV
-         4KXIkBUQ55Df73oV/zXmU/qrEEmNv4ZO96rLzgipKLVTrC7cpkDdqSO9bxZYagOShOBG
-         HT9oPeyD3lWfgJjznw8XT+iqGoWq8jbtB3RTu1EtjdGe9ig9r1Z1iVKCwYRIrVZRFEBJ
-         RPj3QoflajBt9olO8VYYvi2jQO7wbdmna4z0WGl5iC+ewvPr70Ra6FtGYUWVjt3dsW9b
-         drjgACnUT219SrIoTQ0rrC6EHAKHIIVPzLqQ9zP7yDW12mutDXcmXJLPGYsxg7DgNtjD
-         UYHA==
-X-Gm-Message-State: AOAM530q7yK4Z9uGhAyIF4ZH/C1sspducVSe6hnJiXTEfRfUEgUFspyX
-        MOL7MUygwT/Rw7KtELAVVIBfrnw8qfave6GY9uv2VvdjrXwdjQ==
-X-Google-Smtp-Source: ABdhPJxVBwaJ7zK9WTEeKLTQ0XSgK/4I/baCCn4iGk3YjLC+G05WM2jnBd/mLDOXbcka8Elh8IXAtcRZnSPrfdy7ARI=
-X-Received: by 2002:ac2:4436:: with SMTP id w22mr1844442lfl.55.1588944015621;
- Fri, 08 May 2020 06:20:15 -0700 (PDT)
+        Fri, 8 May 2020 09:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728174AbgEHMlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2401F20731;
+        Fri,  8 May 2020 12:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588941660;
+        bh=pS2MkzUVTHGK2IXgWPKz/863sTdQ694vuAWFOZaRb2E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bgfk6fMiHAYviya0YvyS/+iLE2gn134lixM5PugEiM2hrHr9Ilbj6v3MinsDEbfzj
+         6p2qr2SNjEzhpwjAkgtVmuQKLYWFGO+cRDf+OVBKWIg8NagIBAaxedUfl3Xc0aHsmq
+         pZ0MJrJrL8FP5r5yAyszTnICSBw9cUkTqSGvIJVI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Honggang Li <honli@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 4.4 104/312] RDMA/cxgb3: device driver frees DMA memory with different size
+Date:   Fri,  8 May 2020 14:31:35 +0200
+Message-Id: <20200508123131.823296116@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
+References: <20200508123124.574959822@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200508123043.085296641@linuxfoundation.org> <20200508123048.730720753@linuxfoundation.org>
-In-Reply-To: <20200508123048.730720753@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 8 May 2020 18:50:02 +0530
-Message-ID: <CA+G9fYvdD3dhMhGL5=nfT+7xTEdD36zUtceF2fROPF4OQQZbLQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 40/50] dma-direct: exclude dma_direct_map_resource
- from the min_low_pfn check
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>, m.szyprowski@samsung.com
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 18:23, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Christoph Hellwig <hch@lst.de>
->
-> commit 68a33b1794665ba8a1d1ef1d3bfcc7c587d380a6 upstream.
->
-> The valid memory address check in dma_capable only makes sense when mappi=
-ng
-> normal memory, not when using dma_map_resource to map a device resource.
-> Add a new boolean argument to dma_capable to exclude that check for the
-> dma_map_resource case.
->
-> Fixes: b12d66278dd6 ("dma-direct: check for overflows on 32 bit DMA addre=
-sses")
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-<trim>
->
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -327,7 +327,7 @@ static inline bool dma_direct_possible(s
->                 size_t size)
->  {
->         return swiotlb_force !=3D SWIOTLB_FORCE &&
-> -               dma_capable(dev, dma_addr, size);
-> +               dma_capable(dev, dma_addr, size, true);
+From: Honggang Li <honli@redhat.com>
 
-While building kernel Image for arm architecture the following error notice=
-d
-on stale-rc 5.4 kernel branch.
+commit 0de4cbb3dddca35ecd06b95918f38439c9c6401f upstream.
 
- # make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm
-CROSS_COMPILE=3Darm-linux-gnueabihf- HOSTCC=3Dgcc CC=3D"sccache
-arm-linux-gnueabihf-gcc" O=3Dbuild zImage
- #
- ../kernel/dma/direct.c: In function =E2=80=98dma_direct_possible=E2=80=99:
- ../kernel/dma/direct.c:330:3: error: too many arguments to function
-=E2=80=98dma_capable=E2=80=99
-   330 |   dma_capable(dev, dma_addr, size, true);
-       |   ^~~~~~~~~~~
- In file included from ../include/linux/dma-direct.h:12,
-                  from ../kernel/dma/direct.c:10:
- ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
-    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-addr, size_t size)
-       |                    ^~~~~~~~~~~
- In file included from ../include/linux/init.h:5,
-                  from ../include/linux/memblock.h:12,
-                  from ../kernel/dma/direct.c:7:
- ../kernel/dma/direct.c: In function =E2=80=98dma_direct_map_resource=E2=80=
-=99:
- ../kernel/dma/direct.c:379:16: error: too many arguments to function
-=E2=80=98dma_capable=E2=80=99
-   379 |  if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
-       |                ^~~~~~~~~~~
- ../include/linux/compiler.h:78:42: note: in definition of macro =E2=80=98u=
-nlikely=E2=80=99
-    78 | # define unlikely(x) __builtin_expect(!!(x), 0)
-       |                                          ^
- In file included from ../include/linux/dma-direct.h:12,
-                  from ../kernel/dma/direct.c:10:
- ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
-    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-addr, size_t size)
-       |                    ^~~~~~~~~~~
- make[3]: *** [../scripts/Makefile.build:266: kernel/dma/direct.o] Error 1
- In file included from ../include/linux/string.h:6,
-                  from ../include/linux/dma-mapping.h:6,
-                  from ../include/linux/dma-direct.h:5,
-                  from ../kernel/dma/swiotlb.c:24:
- ../kernel/dma/swiotlb.c: In function =E2=80=98swiotlb_map=E2=80=99:
- ../kernel/dma/swiotlb.c:681:16: error: too many arguments to function
-=E2=80=98dma_capable=E2=80=99
-   681 |  if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
-       |                ^~~~~~~~~~~
- ../include/linux/compiler.h:78:42: note: in definition of macro =E2=80=98u=
-nlikely=E2=80=99
-    78 | # define unlikely(x) __builtin_expect(!!(x), 0)
-       |                                          ^
- In file included from ../include/linux/dma-direct.h:12,
-                  from ../kernel/dma/swiotlb.c:24:
- ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
-    17 | static inline bool dma_capable(struct device *dev, dma_addr_t
-addr, size_t size)
-       |                    ^~~~~~~~~~~
+[  598.852037] ------------[ cut here ]------------
+[  598.856698] WARNING: at lib/dma-debug.c:887 check_unmap+0xf8/0x920()
+[  598.863079] cxgb3 0000:01:00.0: DMA-API: device driver frees DMA memory with different size [device address=0x0000000003310000] [map size=17 bytes] [unmap size=16 bytes]
+[  598.878265] Modules linked in: xprtrdma ib_isert iscsi_target_mod ib_iser libiscsi scsi_transport_iscsi ib_srpt target_core_mod ib_srp scsi_transport_srp scsi_tgt ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm ib_sa ib_mad kvm_amd kvm ipmi_devintf ipmi_ssif dcdbas pcspkr ipmi_si sg ipmi_msghandler acpi_power_meter amd64_edac_mod shpchp edac_core sp5100_tco k10temp edac_mce_amd i2c_piix4 acpi_cpufreq nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic crct10dif_common ata_generic iw_cxgb3 pata_acpi ib_core ib_addr mgag200 syscopyarea sysfillrect sysimgblt i2c_algo_bit drm_kms_helper ttm pata_atiixp drm ahci libahci serio_raw i2c_core cxgb3 libata bnx2 mdio dm_mirror dm_region_hash dm_log dm_mod
+[  598.946822] CPU: 3 PID: 11820 Comm: cmtime Not tainted 3.10.0-327.el7.x86_64.debug #1
+[  598.954681] Hardware name: Dell Inc. PowerEdge R415/0GXH08, BIOS 2.0.2 10/22/2012
+[  598.962193]  ffff8808077479a8 000000000381a432 ffff880807747960 ffffffff81700918
+[  598.969663]  ffff880807747998 ffffffff8108b6c0 ffff880807747a80 ffff8808063f55c0
+[  598.977132]  ffffffff833ca850 0000000000000282 ffff88080b1bb800 ffff880807747a00
+[  598.984602] Call Trace:
+[  598.987062]  [<ffffffff81700918>] dump_stack+0x19/0x1b
+[  598.992224]  [<ffffffff8108b6c0>] warn_slowpath_common+0x70/0xb0
+[  598.998254]  [<ffffffff8108b75c>] warn_slowpath_fmt+0x5c/0x80
+[  599.004033]  [<ffffffff813903b8>] check_unmap+0xf8/0x920
+[  599.009369]  [<ffffffff81025959>] ? sched_clock+0x9/0x10
+[  599.014702]  [<ffffffff81390cee>] debug_dma_free_coherent+0x7e/0xa0
+[  599.021008]  [<ffffffffa01ece2c>] cxio_destroy_cq+0xcc/0x160 [iw_cxgb3]
+[  599.027654]  [<ffffffffa01e8da0>] iwch_destroy_cq+0xf0/0x140 [iw_cxgb3]
+[  599.034307]  [<ffffffffa01c4bfe>] ib_destroy_cq+0x1e/0x30 [ib_core]
+[  599.040601]  [<ffffffffa04ff2d2>] ib_uverbs_close+0x302/0x4d0 [ib_uverbs]
+[  599.047417]  [<ffffffff812335a2>] __fput+0x102/0x310
+[  599.052401]  [<ffffffff8123388e>] ____fput+0xe/0x10
+[  599.057297]  [<ffffffff810bbde4>] task_work_run+0xb4/0xe0
+[  599.062719]  [<ffffffff81092a84>] do_exit+0x304/0xc60
+[  599.067789]  [<ffffffff81025905>] ? native_sched_clock+0x35/0x80
+[  599.073820]  [<ffffffff81025959>] ? sched_clock+0x9/0x10
+[  599.079153]  [<ffffffff8170a49c>] ? _raw_spin_unlock_irq+0x2c/0x50
+[  599.085358]  [<ffffffff8109346c>] do_group_exit+0x4c/0xc0
+[  599.090779]  [<ffffffff810a8661>] get_signal_to_deliver+0x2e1/0x960
+[  599.097071]  [<ffffffff8101c497>] do_signal+0x57/0x6e0
+[  599.102229]  [<ffffffff81714bd1>] ? sysret_signal+0x5/0x4e
+[  599.107738]  [<ffffffff8101cb7f>] do_notify_resume+0x5f/0xb0
+[  599.113418]  [<ffffffff81714e7d>] int_signal+0x12/0x17
+[  599.118576] ---[ end trace 1e4653102e7e7019 ]---
+[  599.123211] Mapped at:
+[  599.125577]  [<ffffffff8138ed8b>] debug_dma_alloc_coherent+0x2b/0x80
+[  599.131968]  [<ffffffffa01ec862>] cxio_create_cq+0xf2/0x1f0 [iw_cxgb3]
+[  599.139920]  [<ffffffffa01e9c05>] iwch_create_cq+0x105/0x4e0 [iw_cxgb3]
+[  599.147895]  [<ffffffffa0500584>] create_cq.constprop.14+0x184/0x2e0 [ib_uverbs]
+[  599.156649]  [<ffffffffa05027fb>] ib_uverbs_create_cq+0x10b/0x140 [ib_uverbs]
+
+Fixes: b955150ea784 ('RDMA/cxgb3: When a user QP is marked in error, also mark the CQs in error')
+Signed-off-by: Honggang Li <honli@redhat.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Steve Wise <swise@opengridcomputing.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/hw/cxgb3/cxio_hal.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/infiniband/hw/cxgb3/cxio_hal.c
++++ b/drivers/infiniband/hw/cxgb3/cxio_hal.c
+@@ -327,7 +327,7 @@ int cxio_destroy_cq(struct cxio_rdev *rd
+ 	kfree(cq->sw_queue);
+ 	dma_free_coherent(&(rdev_p->rnic_info.pdev->dev),
+ 			  (1UL << (cq->size_log2))
+-			  * sizeof(struct t3_cqe), cq->queue,
++			  * sizeof(struct t3_cqe) + 1, cq->queue,
+ 			  dma_unmap_addr(cq, mapping));
+ 	cxio_hal_put_cqid(rdev_p->rscp, cq->cqid);
+ 	return err;
+
+
