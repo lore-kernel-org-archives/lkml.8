@@ -2,158 +2,97 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D950C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C132C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68DEF21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRjxfmZX"
+	by mail.kernel.org (Postfix) with ESMTP id 548C6217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588972259;
+	bh=qqkVr4kTP0XXZVP5xFbn1niXGfNe06721rm6KoYrYkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vHtAC1g6lJQXYCxUDEzu5bvzo2BDOKarIl+adMC4DcYf38f/0u+rFwcU63+t6ugak
+	 9/ov+Xju/Uepgh8yR256VMHzoelq4hs5oNHeZd2H7afKe4a4SGz+GGqli6eX8CNI5i
+	 jn8ANG6hQsKfHybpdKTlITFxy5u/J1TUbp5VNvow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEHVKo (ORCPT
+        id S1728109AbgEHVK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgEHVKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:10:43 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4F1C061A0C;
-        Fri,  8 May 2020 14:10:43 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a5so4858832pjh.2;
-        Fri, 08 May 2020 14:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i526L9szJtNPgWaUy9PbrhKFBUtftq3gPNzk/WhdMPo=;
-        b=tRjxfmZXEgKltxumbRotfh9GzHfRCeEX0E3N7b2gja1iPMloLceUG3a7eyh+DbHpQH
-         Cb8wfigBPgh0vvycE26hdVEgiGMBjI1UT9gIODTW5+FLq04oMzLGnnqLqYjfDUAHcJBX
-         7JoX3VG+0fnr07zd2oOVBQ0EIzH8JfKUExMilGm9BHU7cLvCYk/6TiXrH6ztjC6tdcEC
-         /XcwpTx5i00n6KBKb95Kkjgm1962UKw/jJHXB43Ol7rlfaa0u3X+I0MBGuMqfS83lRX5
-         DzhRlw4oSsS5AEoUneVtroy4DQCXTTJ70jdMT7DEdsZAxqVdenvhumKlq0xfVIH59gn5
-         VEvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=i526L9szJtNPgWaUy9PbrhKFBUtftq3gPNzk/WhdMPo=;
-        b=Xth0VR363CsDQmy7Fj2+9oN8Ms+w7DQZacb0uAixBD2/9ceSWW3f4ykTzol6SS/hm9
-         bk07tOF+P9iirHQqo6jvkjpEs7WYuxgupkwfbdrx0LHshEYXdWWZ4zbSLBlLjvpj38FC
-         nYpD+VgboO/o0DX0ncWMrNcnGppWihSt8ev7BoQnlPmHsEuJqC11F+MNDeO+ezFyRKBr
-         qG4xOQnprhbSE4dbHS+aYLkgIzGNSPkNmPPVqMUDv6ah4LWso5HlU5+4Ht9RAtUMbnAK
-         9Awv/UIqELezu4W3IDiEpL0Sqy/qCNieisE+epFqxoosduOf25ahstvAtiqKmw+4WLgD
-         L3fw==
-X-Gm-Message-State: AGi0PuaHH7GAPKWzfzOP8fmPMd1h9rt6aRgxLB9ZGAbdTNjbe/Aww1hE
-        tTOZG/svEevRoCRCMLrV610Rn8iR
-X-Google-Smtp-Source: APiQypIm7aSLJcYyNIRSPehvYhkHbHbDJkl6hl2E2HrMkL/hmeW+XR6+k+Sw0YHWQRvfO+bwEZImAw==
-X-Received: by 2002:a17:902:9a41:: with SMTP id x1mr4035748plv.4.1588972242723;
-        Fri, 08 May 2020 14:10:42 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f26sm2692220pfn.183.2020.05.08.14.10.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 14:10:42 -0700 (PDT)
-Subject: Re: [PATCH 4.4 000/308] 4.4.223-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200508142854.087405740@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <ada628d9-fd10-acd4-94fe-cdcf1caf43fc@roeck-us.net>
-Date:   Fri, 8 May 2020 14:10:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 8 May 2020 17:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgEHVK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:10:58 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DCB2173E;
+        Fri,  8 May 2020 21:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588972257;
+        bh=qqkVr4kTP0XXZVP5xFbn1niXGfNe06721rm6KoYrYkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qOzEFrdYz4YFcUHf49CJNi5f+sr73JPUOQI3aOAdobR3CsvYuEjo+/oWD/KiOaP8z
+         IuVw3ckU8nlAcMVQNCd4/X77zD3VtuOZzCvnHHTbk6C96q6/E3yH/6rD3Mxwm42C2B
+         tHqidnAS9xxjOGCQAVjSPsEha1GnutMIYT5rtV1k=
+Date:   Fri, 8 May 2020 16:15:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] audit: mark expected switch fall-through
+Message-ID: <20200508211525.GE23375@embeddedor>
+References: <20190212204600.GA24049@embeddedor>
+ <CAHC9VhQfru298ZbEDwEqj0+YRAYoAGhAVHEtSo3KBW1kKLputw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508142854.087405740@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhQfru298ZbEDwEqj0+YRAYoAGhAVHEtSo3KBW1kKLputw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 7:32 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.223 release.
-> There are 308 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Feb 12, 2019 at 08:19:44PM -0500, Paul Moore wrote:
+> On Tue, Feb 12, 2019 at 3:46 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+> > In preparation to enabling -Wimplicit-fallthrough, mark switch
+> > cases where we are expecting to fall through.
+> >
+> > This patch fixes the following warning:
+> >
+> > kernel/auditfilter.c: In function ‘audit_krule_to_data’:
+> > kernel/auditfilter.c:668:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >     if (krule->pflags & AUDIT_LOGINUID_LEGACY && !f->val) {
+> >        ^
+> > kernel/auditfilter.c:674:3: note: here
+> >    default:
+> >    ^~~~~~~
+> >
+> > Warning level 3 was used: -Wimplicit-fallthrough=3
+> >
+> > Notice that, in this particular case, the code comment is modified
+> > in accordance with what GCC is expecting to find.
+> >
+> > This patch is part of the ongoing efforts to enable
+> > -Wimplicit-fallthrough.
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > ---
+> >  kernel/auditfilter.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Responses should be made by Sun, 10 May 2020 14:26:28 +0000.
-> Anything received after that time might be too late.
+> Merged into audit/next, thanks.
 > 
 
-Build results:
-	total: 169 pass: 156 fail: 13
-Failed builds:
-	<all mips>
-Qemu test results:
-	total: 332 pass: 272 fail: 60
-Failed tests:
-	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:mem256:imx6ul-14x14-evk:initrd
-	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:sd:mem256:imx6ul-14x14-evk:rootfs
-	arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:usb1:mem256:imx6ul-14x14-evk:rootfs
-	<all mips>
+Thanks, Paul.
 
-Bisecting the arm boot failure points to commit 9b86858f37d682 ("regulator:
-Try to resolve regulators supplies on registration"). Reverting this commit fixes
-the problem.
-
-The mips build failure is caused by commit d0e89dd815b712 ("MIPS: math-emu:
-Fix m{add,sub}.s shifts"). It removes the define of SPXSRSXn, but that define
-is still used in v4.4.y. Reverting the offending patch fixes the problem.
-
-Guenter
+--
+Gustavo
