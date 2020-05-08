@@ -2,170 +2,66 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88BBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C307C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8765F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385BD21655
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgEHQ0e (ORCPT
+        id S1727945AbgEHQ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:26:34 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgEHQ0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:26:34 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 7F0B72A31EB
-Message-ID: <b2160325f5b9bae5b437a37069db926d2a464e8d.camel@collabora.com>
-Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Fri, 08 May 2020 13:26:21 -0300
-In-Reply-To: <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-4-ezequiel@collabora.com>
-         <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Fri, 8 May 2020 12:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbgEHQ1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:27:06 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C114208CA;
+        Fri,  8 May 2020 16:27:05 +0000 (UTC)
+Date:   Fri, 8 May 2020 12:27:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Re: [PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external
+ modules
+Message-ID: <20200508122703.6ee5cae0@gandalf.local.home>
+In-Reply-To: <20200508160935.GB19436@zn.tnic>
+References: <20200508104922.72565-1-vaibhav@linux.ibm.com>
+        <20200508104922.72565-3-vaibhav@linux.ibm.com>
+        <20200508113100.GA19436@zn.tnic>
+        <87blmy8wm8.fsf@linux.ibm.com>
+        <20200508160935.GB19436@zn.tnic>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-08 at 12:34 +0200, Hans Verkuil wrote:
-> On 05/05/2020 15:41, Ezequiel Garcia wrote:
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > 
-> > The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
-> > a backend for this new format.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/rkvdec/Makefile     |    2 +-
-> >  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
-> >  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
-> >  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
-> >  4 files changed, 1637 insertions(+), 4 deletions(-)
-> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > 
-> > diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
-> > index c08fed0a39f9..cb86b429cfaa 100644
-> > --- a/drivers/staging/media/rkvdec/Makefile
-> > +++ b/drivers/staging/media/rkvdec/Makefile
-> > @@ -1,3 +1,3 @@
-> >  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
-> >  
-> > -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
-> > +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > new file mode 100644
-> > index 000000000000..37d0ea4e3570
-> > --- /dev/null
-> > +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > @@ -0,0 +1,1577 @@
-> 
-> <snip>
-> 
-> > +static void init_inter_probs(struct rkvdec_ctx *ctx,
-> > +			     const struct rkvdec_vp9_run *run)
-> > +{
-> > +	const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
-> > +	struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
-> > +	struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
-> > +	struct rkvdec_vp9_inter_frame_probs *rkprobs;
-> > +	const struct v4l2_vp9_probabilities *probs;
-> > +	unsigned int i, j, k;
-> > +
-> > +	rkprobs = &tbl->probs.inter;
-> > +	dec_params = run->decode_params;
-> > +	probs = &dec_params->probs;
-> > +
-> > +	/*
-> > +	 * inter probs
-> > +	 * 151 x 128 bits, aligned to 152 x 128 bits
-> > +	 * inter only
-> > +	 * intra_y_mode & inter_block info 6 x 128 bits
-> > +	 */
-> > +
-> > +	memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
-> > +	memcpy(rkprobs->comp_mode, probs->comp_mode,
-> > +	       sizeof(rkprobs->comp_mode));
-> > +	memcpy(rkprobs->comp_ref, probs->comp_ref,
-> > +	       sizeof(rkprobs->comp_ref));
-> > +	memcpy(rkprobs->single_ref, probs->single_ref,
-> > +	       sizeof(rkprobs->single_ref));
-> > +	memcpy(rkprobs->inter_mode, probs->inter_mode,
-> > +	       sizeof(rkprobs->inter_mode));
-> > +	memcpy(rkprobs->interp_filter, probs->interp_filter,
-> > +	       sizeof(rkprobs->interp_filter));
-> > +
-> > +	/* 128 x 128 bits coeff related */
-> > +	for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
-> > +		for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
-> > +			for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
-> > +				write_coeff_plane(probs->coef[i][j][k],
-> > +						  rkprobs->coef[k][i][j]);
-> > +		}
-> > +	}
-> > +
-> > +	/* intra uv mode 6 x 128 */
-> > +	memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
-> > +	       sizeof(rkprobs->uv_mode_0_2));
-> > +	memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
-> > +	       sizeof(rkprobs->uv_mode_3_5));
-> > +	memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
-> > +	       sizeof(rkprobs->uv_mode_6_8));
-> > +	memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
-> > +	       sizeof(rkprobs->uv_mode_9));
-> > +
-> > +	/* mv related 6 x 128 */
-> > +	memcpy(rkprobs->mv.joint, probs->mv.joint,
-> > +	       sizeof(rkprobs->mv.joint));
-> > +	memcpy(rkprobs->mv.sign, probs->mv.sign,
-> > +	       sizeof(rkprobs->mv.sign));
-> > +	memcpy(rkprobs->mv.class, probs->mv.class,
-> > +	       sizeof(rkprobs->mv.class));
-> > +	memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
-> > +	       sizeof(rkprobs->mv.class0_bit));
-> > +	memcpy(rkprobs->mv.bits, probs->mv.bits,
-> > +	       sizeof(rkprobs->mv.bits));
-> > +	memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
-> > +	       sizeof(rkprobs->mv.class0_fr));
-> > +	memcpy(rkprobs->mv.fr, probs->mv.fr,
-> > +	       sizeof(rkprobs->mv.fr));
-> > +	memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
-> > +	       sizeof(rkprobs->mv.class0_hp));
-> > +	memcpy(rkprobs->mv.hp, probs->mv.hp,
-> > +	       sizeof(rkprobs->mv.hp));
-> 
-> Can't you just do: 'rkprobs->mv = probs->mv'?
-> 
+On Fri, 8 May 2020 18:09:35 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-I think I'd like to keep this as-is.
+> On Fri, May 08, 2020 at 05:30:31PM +0530, Vaibhav Jain wrote:
+> > I am referring to Kernel Loadable Modules with MODULE_LICENSE("GPL")
+> > here.  
+> 
+> And what does "external" refer to? Because if it is out-of-tree, we
+> don't export symbols for out-of-tree modules.
 
-Having the memcpy makes it explicit that we are copying
-these structs around. While the assignment would
-bring type checking, it can be misleading for readers.
+I've always wondered about this. Why not?
 
-Thanks,
-Ezequiel
-
+-- Steve
