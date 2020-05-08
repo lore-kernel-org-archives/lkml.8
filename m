@@ -2,110 +2,126 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EA2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49337C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35C8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942849;
-	bh=ecwnxAIpDp2gYLaZOYa/8bW7oSyzWdgnsCQup0zBE6Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8/zcNVRpJU4naKXwvQBDaKe9NfIfrTD8K4ZItQWFsLLh7FRwIIhz3JnNHVx5mIJi
-	 dm1WHsB2pxvdhilD7byNSS0TpmmpjylzV4LGPPaFUSWRgNFbWJNLQvZe2WtGK9TvPj
-	 /W7l4rkSD84HAmXs1SEibChWCrMjc85Dr7twmWaM=
+	by mail.kernel.org (Postfix) with ESMTP id 25CB4206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:00:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKmcD7Lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgEHNAp (ORCPT
+        id S1730282AbgEHNAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgEHMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:52:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EABF024963;
-        Fri,  8 May 2020 12:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942332;
-        bh=ecwnxAIpDp2gYLaZOYa/8bW7oSyzWdgnsCQup0zBE6Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/+G5qDBVYevPa3rZuQYrpWl/vpEat39dbO6pNFI5Zh7C8SnJ/yyGBkn2IhEl7LQu
-         em5SZOFfQ1UvBPH6hTy9AZlhCoCVhQ1PIQEgfqeiN5Ww8+z0cXwbxSpPwL2D/WX0uD
-         jhU1CbpPPiQucRTDz88StNy/Cs5YNv7LhReHxGLU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 28/32] ALSA: hda: Match both PCI ID and SSID for driver blacklist
-Date:   Fri,  8 May 2020 14:35:41 +0200
-Message-Id: <20200508123039.019764517@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
-References: <20200508123034.886699170@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 May 2020 09:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730200AbgEHNAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:00:44 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267F4C05BD43;
+        Fri,  8 May 2020 06:00:44 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w2so1221447edx.4;
+        Fri, 08 May 2020 06:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UNr+F8apfDkpAFTpO6sFiBGjB6K7z8TvBITdy9tuPt8=;
+        b=DKmcD7LfBgTggHbWeEZ2mMx9ocC4GWT2Jq2oInpgnjocOYyMKyO2Qe+a3N2wfcnyv/
+         VbrJM0dXV1B/XTG6MrWuiqlDafHsw0Sv24765TJ9Cf2qJO0/YNzvxwPHJdyXW0dW0G1c
+         djCucTwC0qPpQZgIHNiT3cnJy/uI0d9PvK5xPoR3kN4iAwieic5za5bG1Lj4uHOzq/Za
+         UAhDon2ZUqawnDP/AouY2DvVCnq2Qh4HIoUc9NK0D7h5c+je/Y5H5UZrRBZ0tZRtQf/x
+         DDQ0mGcuKcO/HRyDQ2Mudv3YUjAK++dXvYiCBtq/cTOoseLbZedG5T1Ue/D88z0cokeu
+         t9dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UNr+F8apfDkpAFTpO6sFiBGjB6K7z8TvBITdy9tuPt8=;
+        b=hLrLgWsa6J1+xutzoQAKN5/XFhMEUbx5AQAwZZdFAvjk0G2dKMvGFpM7BtsOTGzlTg
+         fYUe5V8T9gkAY7AOtraMizXzBl1oWmmM/VpKCQOirp+F1OSZcGdl/CvXHDcrksNgbcrE
+         D18Xbkp0n37c/Sq3+T0pfod5GUkAnquB5rjmbNFqVKFjPAlhA6Qoy+D6iunTVHRis2lS
+         QYmXBLMKXkn/S0IqiMHbwIm3C75qICJdtetWcqNLBaL2y00KaK+djPOosnIBg11m2ziQ
+         vwihOJ7YoGZbxNdmFlsqnosroVkHcKBIPDtv59nFik1hn7m4BHmh2o3qXArubwj/j++U
+         yQTw==
+X-Gm-Message-State: AGi0PuabkXspaTGdpUn8pYL/9vpFVMVuerSjMc+HnKV2uSBhiKZm3JB8
+        nZ/TEsSGBmyv9xbEw44x3WlhaKf/Y7fX1TVss+pvGfCo
+X-Google-Smtp-Source: APiQypKno/Iywb79VTpCN3AA0UaOSPNgwwHas3Fsn84KPhzEmB1NfTgm9AhfEUxZaKRrx0Jii6MldZ8JuVpF38uL6LY=
+X-Received: by 2002:a05:6402:6c4:: with SMTP id n4mr2101038edy.368.1588942842669;
+ Fri, 08 May 2020 06:00:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1588939255-58038-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1588939255-58038-1-git-send-email-zou_wei@huawei.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 8 May 2020 16:00:31 +0300
+Message-ID: <CA+h21hryj+b3wm8JNGW8V9gpF11D6AjdEmhq0FAdunQkPQFFcw@mail.gmail.com>
+Subject: Re: [PATCH -next] net: dsa: sja1105: remove set but not used variable 'prev_time'
+To:     Samuel Zou <zou_wei@huawei.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+Hi Samuel,
 
-commit 977dfef40c8996b69afe23a9094d184049efb7bb upstream.
+On Fri, 8 May 2020 at 14:55, Samuel Zou <zou_wei@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/net/dsa/sja1105/sja1105_vl.c:468:6: warning: variable =E2=80=98pr=
+ev_time=E2=80=99 set but not used [-Wunused-but-set-variable]
+>   u32 prev_time =3D 0;
+>       ^~~~~~~~~
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+> ---
 
-The commit 3c6fd1f07ed0 ("ALSA: hda: Add driver blacklist") added a
-new blacklist for the devices that are known to have empty codecs, and
-one of the entries was ASUS ROG Zenith II (PCI SSID 1043:874f).
-However, it turned out that the very same PCI SSID is used for the
-previous model that does have the valid HD-audio codecs and the change
-broke the sound on it.
+Thank you for the patch!
 
-Since the empty codec problem appear on the certain AMD platform (PCI
-ID 1022:1487), this patch changes the blacklist matching to both PCI
-ID and SSID using pci_match_id().  Also, the entry that was removed by
-the previous fix for ASUS ROG Zenigh II is re-added.
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Link: https://lore.kernel.org/r/20200424061222.19792-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/pci/hda/hda_intel.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2214,9 +2214,10 @@ static const struct hdac_io_ops pci_hda_
-  * some HD-audio PCI entries are exposed without any codecs, and such devices
-  * should be ignored from the beginning.
-  */
--static const struct snd_pci_quirk driver_blacklist[] = {
--	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
--	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+static const struct pci_device_id driver_blacklist[] = {
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
-+	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
- 	{}
- };
- 
-@@ -2239,7 +2240,7 @@ static int azx_probe(struct pci_dev *pci
- 	bool schedule_probe;
- 	int err;
- 
--	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+	if (pci_match_id(driver_blacklist, pci)) {
- 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
- 		return -ENODEV;
- 	}
-
-
+>  drivers/net/dsa/sja1105/sja1105_vl.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja11=
+05/sja1105_vl.c
+> index b52f1af..aa9b0b9 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_vl.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_vl.c
+> @@ -465,7 +465,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_ga=
+ting_config *gating_cfg,
+>         struct sja1105_gate_entry *last_e;
+>         struct sja1105_gate_entry *e;
+>         struct list_head *prev;
+> -       u32 prev_time =3D 0;
+>
+>         list_for_each_entry(e, &gating_cfg->entries, list) {
+>                 struct sja1105_gate_entry *p;
+> @@ -476,7 +475,6 @@ sja1105_gating_cfg_time_to_interval(struct sja1105_ga=
+ting_config *gating_cfg,
+>                         continue;
+>
+>                 p =3D list_entry(prev, struct sja1105_gate_entry, list);
+> -               prev_time =3D e->interval;
+>                 p->interval =3D e->interval - p->interval;
+>         }
+>         last_e =3D list_last_entry(&gating_cfg->entries,
+> --
+> 2.6.2
+>
