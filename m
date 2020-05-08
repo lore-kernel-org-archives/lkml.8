@@ -2,130 +2,128 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36370C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75502C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DF8218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XvYm4YU9"
+	by mail.kernel.org (Postfix) with ESMTP id 5736B2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588962108;
+	bh=K7bOXT9tJXY8xr3fjd6JTN9LeoL9rfZSag3DkkfemO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OrLYLaZDcwtCdE/CveMLNwaVsavP9lp8+TsXIapSrwH17blCsWlEJldAyhrT/1DzE
+	 Pc/rhl+AXbLz3Zp6TH9wqk2IusQa3FssJF+S8q6w2LGQRwEE/uAspC4+uL9/sN9zx7
+	 PPT7ko8GD+lQlY86CF7+NVk4OCjHYE9B7W1uEQJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgEHSVJ (ORCPT
+        id S1727915AbgEHSVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55914 "EHLO
+        Fri, 8 May 2020 14:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726817AbgEHSVJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726817AbgEHSVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:21:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DB6C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:21:08 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d22so1235504pgk.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:21:08 -0700 (PDT)
+        Fri, 8 May 2020 14:21:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D3BC061A0C;
+        Fri,  8 May 2020 11:21:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d22so1236105pgk.3;
+        Fri, 08 May 2020 11:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MtptXvN0u1ghf1Y0NDnybYTwzJTfjGhpiEoFrpWGk6w=;
-        b=XvYm4YU9Sm3v2rTT+Axc8daF7cedOutMbVgSyaMnd0oPTDfXNUp2Gc0UaMdIUc+vig
-         KdOhac9UzJ3xFpIpGpVr9XDflSzo5cA1E6jVvoqcaAYRU3/wskHtoonq/Gk7hZx/qKBR
-         PKU7DjbdQO/Ztj8KK1KZnkBElIumg6jpHubhsZ5pmDy0clOR6mJgs/YNVN9n5pgvBR8k
-         /SZkQ/aRbGjjCRYuACohkPnp3hc6hpunNcXsHyg5/P+9Nqbp5x/1/e8NQwK0yGsoSkGL
-         tvMXskWpPL4rTHPeSlY/60qFg0BUppA30OC/a/twTqsJzjOXXMjxVcogZY7G5S5GP19J
-         R4rw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gV/o9nW1NZlOEYAKRGRfdUGcdnKxPdO6FjHvoQSmtS8=;
+        b=Fho/vCig3jvc0rFGu22IQlVl0LbUgnslTrEacpTD1DxEbw4rblrrsfiwtfEvDCFkt3
+         eL2bJ8UcwqXj8KZ6VxlgZwqxHze8iuf1gMPR1O0o6SCnDBDnvpE24//uqJE7XLFhKQIP
+         OG9SlLp3PMTT9+tCdEeQFKiFPaIJsY4pcCMj3ZeeLatNX6nmXX2ih/k8EWHWSc6vwArH
+         QzBbqr/bUS9StnHBf1q/zAV0hyXHk6+uX/Fg5fnVEO+XPTXtJYd2Rw6wWi+m0PrRexhv
+         xphOHgxD2mSpxPoRUuzbrZSuonrvtaG/nvzgCAoYgh2LmmnlRA0kO+PRrDbAvYhGDiuu
+         0Cug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MtptXvN0u1ghf1Y0NDnybYTwzJTfjGhpiEoFrpWGk6w=;
-        b=nFyfDbmXkK+EHwzwHwHkPvpIcC8uL5LkfftpIEiq3EXKfbes0WF/4k7bhaCu1S6dQu
-         VHKSRRVQFq4/xPGz3uljSsJ1QwHiaWpZCJdPwrhdd/OhfbA4r1Ga/iO+8YjJnqUl7+/C
-         w3LaCvWy23PCvcNkVYQXvfxgcyQlyknHoiRL0fXmFC0JXfAJPO87K8KRDSBtrbAzKxXs
-         rJhD2r8AoKv3AiSKpMzF6SionMTbyCut21ErUNI92lXtWGmN0xlkZBIuMqfDh6gZGmxe
-         eGdYP7D19wS7H1PpW9w5hVjzM/U9Y/ADHwL9ygrZxnzIIPKQWMow0ENknisf/McevC95
-         yY3A==
-X-Gm-Message-State: AGi0Pubd73cjY64pGnoJP92kV+4PfPERBPLDQBc5VBbGQtqQy9UzKc1o
-        orCZ21GaAzey7R/ZuTg76CZqKPyhzg8ENMdzyfMstw==
-X-Google-Smtp-Source: APiQypLolAFh6mJKDfk2vX4BRKEcp2v8bPlHuZTy7nAJx6FF6ghMR0UeONzLV/qeVHYs4jgLZm3KgGj90AjOkaT4OX0=
-X-Received: by 2002:a62:146:: with SMTP id 67mr4260150pfb.169.1588962067915;
- Fri, 08 May 2020 11:21:07 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=gV/o9nW1NZlOEYAKRGRfdUGcdnKxPdO6FjHvoQSmtS8=;
+        b=UTRPlDhvwkvYFowCGhxCxi/6Ekm5MQfb83Yimr94CCNz4vOCIWDUcTDfOPsi8Km7j9
+         T2mRPHu1R0sIXB5mjI7jS8nqe743ZrW4MDvkLkSR1bmpSj8wdyXAzr4GD8v/oJ8bd4oO
+         TQ3Zf6PIwh9+atwfBLStBgsV5WnY8s7Vq6ir3NSU8EdfSlrBwZ9263UrRYQhx0pxmZKT
+         vdiELMc46eTtRs9We2MyynOUN4X4tZzkVfgw4WA5cZcMtxRX8YBX7T5904wd61fHjwv/
+         ryyJozQpNTWj1NGstlNHS6yP0DkpLCI6LucHQlJPIy98wTfoWsJt5dMUTRN4UrD1TLOv
+         iYsw==
+X-Gm-Message-State: AGi0PuZPZbbiy5cxUQY3d8CM1He3pW/ZkmjQyzKt755Iehlzej4BK0Qu
+        SVxdUUivLPKT2SbQGBSXfeY=
+X-Google-Smtp-Source: APiQypKFXwPLf4reDS9wBZw91ohMCcZQpLOa4hDF/CkXvGYds+TKhWq/NPgguH9tO5AmSyf1JFBi8w==
+X-Received: by 2002:a63:1f62:: with SMTP id q34mr3131580pgm.197.1588962106785;
+        Fri, 08 May 2020 11:21:46 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id u8sm2875545pjy.16.2020.05.08.11.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 11:21:45 -0700 (PDT)
+Date:   Fri, 8 May 2020 11:21:43 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v7 1/7] mm: pass task and mm to do_madvise
+Message-ID: <20200508182143.GA101195@google.com>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-2-minchan@kernel.org>
+ <2a767d50-4034-da8c-c40c-280e0dda910e@suse.cz>
 MIME-Version: 1.0
-References: <20200505142408.1113763-1-arnd@arndb.de>
-In-Reply-To: <20200505142408.1113763-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 8 May 2020 11:20:56 -0700
-Message-ID: <CAKwvOdmQ8pzxGdNEJ=eG+rRFK1J4Xg6738dYvdZSqf0u0gtscw@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7476: fix clang -Wpointer-bool-conversion warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a767d50-4034-da8c-c40c-280e0dda910e@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:24 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Checking the pointer value of st->chip_info->convst_channel is pointless
-> since this this an array inside of a struct: even if st->chip_info is NULL,
-> the pointer is non-zero. Clang warns about this:
->
-> drivers/iio/adc/ad7476.c:312:40: warning: address of array 'st->chip_info->convst_channel' will always evaluate to 'true' [-Wpointer-bool-conversion]
->         if (st->convst_gpio && st->chip_info->convst_channel)
->                             ~~ ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
->
-> I could not come up with a sane way to check whether the entry
-> is valid, so just remove the check and keep the behavior as it
-> is today but without the warning.
+On Thu, Mar 05, 2020 at 04:48:12PM +0100, Vlastimil Babka wrote:
+> On 3/2/20 8:36 PM, Minchan Kim wrote:
+> > In upcoming patches, do_madvise will be called from external process
+> > context so we shouldn't asssume "current" is always hinted process's
+> > task_struct.
+> 
+> 
+> > Furthermore, we couldn't access mm_struct via task->mm
+> > once it's verified by access_mm which will be introduced in next
+> > patch[1].
+> 
+> I would suggest to replace with:
+> 
+> Furthermore, we must not access mm_struct via task->mm, but obtain it via
+> access_mm() once (in the following patch) and only use that pointer [1], so pass
+> it to do_madvise() as well. Note the vma->vm_mm pointers are safe, so we can use
+> them further down the call stack.
+> 
+> > And let's pass *current* and current->mm as arguments of
+> > do_madvise so it shouldn't change existing behavior but prepare
+> > next patch to make review easy.
+> > 
+> > Note: io_madvise pass NULL as target_task argument of do_madvise
+> > because it couldn't know who is target.
+> 
+>              can't
 
-Me too. Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Andrew already picked up your suggestion except "can't" part. I don't
+think it's enough to resend fix it so I will leave it as-is.
 
->
-> Fixes: 3a6af93dd66e ("iio: adc: ad7476: Add IIO_CHAN_INFO_RAW for AD7091R")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/iio/adc/ad7476.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/adc/ad7476.c b/drivers/iio/adc/ad7476.c
-> index e9984a38fc4c..4e816d714ad2 100644
-> --- a/drivers/iio/adc/ad7476.c
-> +++ b/drivers/iio/adc/ad7476.c
-> @@ -309,7 +309,7 @@ static int ad7476_probe(struct spi_device *spi)
->         indio_dev->num_channels = 2;
->         indio_dev->info = &ad7476_info;
->
-> -       if (st->convst_gpio && st->chip_info->convst_channel)
-> +       if (st->convst_gpio)
->                 indio_dev->channels = st->chip_info->convst_channel;
->         /* Setup default message */
->
-> --
-> 2.26.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200505142408.1113763-1-arnd%40arndb.de.
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
