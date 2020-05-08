@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BF7C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CDAC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A6621BE5
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C2D21BE5
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941386;
-	bh=Ywg1sC8gAyR7OaVDWrOl3FM7ITijrisGnDgIQ63V4M4=;
+	s=default; t=1588941387;
+	bh=tcgZXyYJLW2CvBxvw8LEQKfAFWzcUcs5rilOxYRENjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xb7681GvKMuBRBf+fq3HBv32yNQEonPtckQMsv8eRy0DrdWF9IShjm6apxCO0a3gT
-	 WVRb9PAo2oGLoKVsfCW377vJ0ZsHjqqNEtoqvIWSaFw2yWoiwsK3ZYcVyrTgeVaYRN
-	 029032IBdU9dH3FXpAmXGYuNxss/cBvzh75MT6Dk=
+	b=mjAuS82+8GQyvBaxyJ+V/nF4OBh1FeMcltbkzeKtFz1CVYJF/ntN+iLNnGK2ZC61A
+	 7A1kQkV+QaoZlm70OQwIdl5ZnPAPUAQ3qjo6USSNZ6ZfQPm9hFUylGyBiCE+JlURdh
+	 NE4swl0BitfC1pXBGJNkU31G+TUbhiICdYg6HQHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgEHMgZ (ORCPT
+        id S1727786AbgEHMg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:36:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49426 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:36:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgEHMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:36:22 -0400
+        id S1727124AbgEHMgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:36:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25E7207DD;
-        Fri,  8 May 2020 12:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2073821473;
+        Fri,  8 May 2020 12:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941382;
-        bh=Ywg1sC8gAyR7OaVDWrOl3FM7ITijrisGnDgIQ63V4M4=;
+        s=default; t=1588941384;
+        bh=tcgZXyYJLW2CvBxvw8LEQKfAFWzcUcs5rilOxYRENjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnn7x+UvN+PeC7yjSMvbjAXMK3pdoCnKxfJwVnWWykfrl/i8hNG4f8g5wjFy34TYi
-         KoHUUnqZaSSLmWYWnkfhTY8uMsjmDHgTSI+hMoGWPaZ75QmIfCaJjNfu4IexPdEl3u
-         tG1AoV9XN3byMhPownycGAKBw8Y+BdWxnpdikFJM=
+        b=KyVUiq2KGxtLXXUE2fDBZXX+hDoYJyVm4blVk0JkhWqMDIEHrHK9yEEo3brwema9o
+         cO/IShOPCPL56L5WFWBLN/SCiVjlczLJrTil1wFN/IkiIj0wEIsnOpvTzpni3UJLqG
+         Aj2DwF+k/8+Oxv2sQmDYxmKOqcr43Dm9ZWJ+KqsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
-        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Subject: [PATCH 4.4 010/312] MIPS: ptrace: Drop cp0_tcstatus from regoffset_table[]
-Date:   Fri,  8 May 2020 14:30:01 +0200
-Message-Id: <20200508123125.237435709@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        john@phrozen.org, cernekee@gmail.com, jogo@openwrt.org,
+        jaedon.shin@gmail.com, jfraser@broadcom.com, pgynther@google.com,
+        dragan.stancevic@gmail.com, linux-mips@linux-mips.org,
+        Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 011/312] MIPS: BMIPS: Fix PRID_IMP_BMIPS5000 masking for BMIPS5200
+Date:   Fri,  8 May 2020 14:30:02 +0200
+Message-Id: <20200508123125.303734179@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,37 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hogan <james.hogan@imgtec.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 555fae60b2bbb2d6282d82c5321d3adfa85b22ae upstream.
+commit cbbda6e7c9c3e4532bd70a73ff9d5e6655c894dc upstream.
 
-The cp0_tcstatus member of struct pt_regs was removed along with the
-rest of SMTC in v3.16, commit b633648c5ad3 ("MIPS: MT: Remove SMTC
-support"), however recent uprobes support in v4.3 added back a reference
-to it in the regoffset_table[] in ptrace.c. Remove it.
+BMIPS5000 have a PrID value of 0x5A00 and BMIPS5200 have a PrID value of
+0x5B00, which, masked with 0x5A00, returns 0x5A00. Update all conditionals on
+the PrID to cover both variants since we are going to need this to enable
+BMIPS5200 SMP. The existing check, masking with 0xFF00 would not cover
+BMIPS5200 at all.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Fixes: 40e084a506eb ("MIPS: Add uprobes support.")
+Fixes: 68e6a78373a6d ("MIPS: BMIPS: Add PRId for BMIPS5200 (Whirlwind)")
+Fixes: 6465460c92a85 ("MIPS: BMIPS: change compile time checks to runtime checks")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: john@phrozen.org
+Cc: cernekee@gmail.com
+Cc: jogo@openwrt.org
+Cc: jaedon.shin@gmail.com
+Cc: jfraser@broadcom.com
+Cc: pgynther@google.com
+Cc: dragan.stancevic@gmail.com
 Cc: linux-mips@linux-mips.org
-Patchwork: https://patchwork.linux-mips.org/patch/11920/
+Patchwork: https://patchwork.linux-mips.org/patch/12279/
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/ptrace.c |    3 ---
- 1 file changed, 3 deletions(-)
+ arch/mips/kernel/bmips_vec.S |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/arch/mips/kernel/ptrace.c
-+++ b/arch/mips/kernel/ptrace.c
-@@ -670,9 +670,6 @@ static const struct pt_regs_offset regof
- 	REG_OFFSET_NAME(c0_badvaddr, cp0_badvaddr),
- 	REG_OFFSET_NAME(c0_cause, cp0_cause),
- 	REG_OFFSET_NAME(c0_epc, cp0_epc),
--#ifdef CONFIG_MIPS_MT_SMTC
--	REG_OFFSET_NAME(c0_tcstatus, cp0_tcstatus),
--#endif
- #ifdef CONFIG_CPU_CAVIUM_OCTEON
- 	REG_OFFSET_NAME(mpl0, mpl[0]),
- 	REG_OFFSET_NAME(mpl1, mpl[1]),
+--- a/arch/mips/kernel/bmips_vec.S
++++ b/arch/mips/kernel/bmips_vec.S
+@@ -93,7 +93,8 @@ NESTED(bmips_reset_nmi_vec, PT_SIZE, sp)
+ #if defined(CONFIG_CPU_BMIPS5000)
+ 	mfc0	k0, CP0_PRID
+ 	li	k1, PRID_IMP_BMIPS5000
+-	andi	k0, 0xff00
++	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
++	andi	k0, PRID_IMP_BMIPS5000
+ 	bne	k0, k1, 1f
+ 
+ 	/* if we're not on core 0, this must be the SMP boot signal */
+@@ -166,10 +167,12 @@ bmips_smp_entry:
+ 2:
+ #endif /* CONFIG_CPU_BMIPS4350 || CONFIG_CPU_BMIPS4380 */
+ #if defined(CONFIG_CPU_BMIPS5000)
+-	/* set exception vector base */
++	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
+ 	li	k1, PRID_IMP_BMIPS5000
++	andi	k0, PRID_IMP_BMIPS5000
+ 	bne	k0, k1, 3f
+ 
++	/* set exception vector base */
+ 	la	k0, ebase
+ 	lw	k0, 0(k0)
+ 	mtc0	k0, $15, 1
+@@ -263,6 +266,8 @@ LEAF(bmips_enable_xks01)
+ #endif /* CONFIG_CPU_BMIPS4380 */
+ #if defined(CONFIG_CPU_BMIPS5000)
+ 	li	t1, PRID_IMP_BMIPS5000
++	/* mask with PRID_IMP_BMIPS5000 to cover both variants */
++	andi	t2, PRID_IMP_BMIPS5000
+ 	bne	t2, t1, 2f
+ 
+ 	mfc0	t0, $22, 5
 
 
