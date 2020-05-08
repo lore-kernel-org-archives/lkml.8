@@ -2,137 +2,135 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370CFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D0CC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1306C24970
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91EA24973
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="T3eYU+ne"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eSNLHz0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgEHNHH (ORCPT
+        id S1730661AbgEHNHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 8 May 2020 09:07:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39138 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729472AbgEHNHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 09:07:07 -0400
-Received: from mout.web.de ([212.227.17.12]:44349 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbgEHNHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:07:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588943173;
-        bh=IchlK3MqS+7/2Jq7h0H+ek/8N0WfpAh6R3bv1mvSmU8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=T3eYU+necfQB2VdfTn9hzozuTZsmTtnm6aE8E+jdjQM8itLBp4j+7F/XMyZgOgmUv
-         kkeapphU/5q9qdR08nM9DTpZh/whqrENlNpnonkQJm9xiADGyfMf/44CyH37gGzF06
-         1D+j3qaSE3sDJEgH6y9bcnOSyWM7KKf1vfnHRnno=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.146.138]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LtFQN-1j9DP41AWB-012pz1; Fri, 08
- May 2020 15:06:13 +0200
-Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
- <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
- <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
- <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
- <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
- <20200508090053.430d28d7@gandalf.local.home>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0d7ee4cb-5d26-3c20-4e19-ef57c29a74b4@web.de>
-Date:   Fri, 8 May 2020 15:06:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048D6vGc082832;
+        Fri, 8 May 2020 08:06:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588943217;
+        bh=u2mvYMRrFerGW2wl1QCxHV1orEWryyhjOCrVBc6sKOU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=eSNLHz0dvEr0b+XTqR5qDNsGIzQyLZUHNm6KXPiFykSXesosekROV+VgLL1MagaGv
+         PHU7HCVEkPXC4gad6dZ6Ywcl1btVQfnzWCaOebLpMmWxGlx8uhHjF2lIp0s2/4GPEQ
+         nSVyVzEV9Av4hql+iViHeadY3rcKR0iKZ4SWku48=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 048D6v38103741
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 May 2020 08:06:57 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 08:06:56 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 08:06:56 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048D6kYm018673;
+        Fri, 8 May 2020 08:06:54 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kishon@ti.com>
+Subject: [PATCH v3 2/4] PCI: cadence: Remove "cdns,max-outbound-regions" DT property
+Date:   Fri, 8 May 2020 18:36:44 +0530
+Message-ID: <20200508130646.23939-3-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508130646.23939-1-kishon@ti.com>
+References: <20200508130646.23939-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508090053.430d28d7@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:xVJ54ITxrkOnvUyQy7xU3+d/K1NAf3jH2TTBeqlZaL6N63eGAHa
- ZzVWAZaOvnARGhw9JrgH0D15G9bO3Vrn1S/NlVdUm/9RWqHuIlNKKqr9oiFPMpkXKPXjcNu
- DdtMJjQAI7AK9FS56XRtI2ypHDi1o5hXrJei+4yK0VJKLMszYi745o7BKhNfoHbNUpBwdl/
- kk03zQau4NtHwpah5OVBg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PMwlhQ7L2SA=:K8Ty3g2Gqsfc+uMhuqat32
- LgwYaiJer867+rcNQMoZWgkU1B8vuxYhJTsAOcd4mRcdfL3AEbWMAlFNxoOeiv/z3ItUsVGgF
- 3s6SLcaZ9olv8Gx9uqPKlzBsp7WTUl717aJRsLsFv2gEiMI17yAuv99M0e+wyrBX6VApIO+iX
- nnCfLJH4b4OfmEPwBYM0WeGEmHZYYgZa1TBkIz80RZBlV9wdRPq4a1tIIh/7PAzYHqQPcM8Aj
- K8h18SU9tAf4W75QpiAdK7NFWPLodt/U2lxE0ZngHY/4PWtUpM6oxDwshdA2WjdlJyPpP+rbL
- BtSF6sWSSU9SL1oHz+pXiUcEK6JqoB7HMjv6FAikwSWLqrlgCXFJcWjIC2YTCGq4jpiq+pQ+j
- lJPB8LHmhUAUaGPLZRZf1IVAvTP7g0ne/mED8pklyH9CbIrOpiqLmdJnfJwfxXdVFHElBa3rf
- qZFUTug9Qi73SQbEJdG/DXia4KKAouO6HNYeNsf/v2DIITN6SBwnVWW5E9fVSvCmd1hnPcf48
- vV7NAHsRVrNG4xSjGcDyebeGhd6Q5nHjU+qB1C1DNn5NERfpDGHHUDpqTFTR4HUuTuLF9t47E
- qARbpLNWSXHFlqGjfRQ9yx8A9x4pqEt9IyfZqPd/B2BkfydxEKTQnCG68cKSffAT+owITUjp8
- OypCI5vR4vfvXWkeEdc8aOo/lpsM1PHULp+2ZrlviV89TbkfVe7nyTq7O0t3/JS6uZWuNDISP
- F99Mj4L85s1fqQeObgoVnVZZJBOkRGnazA8Al5XnFlGarpBw6ebDrAL9L0B8mvJ9c6X9tDZNq
- ZJSbkLEIMWUXyJK9exQ9NAHyMc5SlLNO33pix12fj3XolYG6cDFE/6RHWONY2Z3xUo/ybdFwI
- fsyFr6Ioj7VCcns/Dd1x+aofJKHOaOznAFwbzx6NqIlbGHEpO7NHtf20GCZP1n3UobqafeRa9
- kivwpu7gG6V31dHJmh6FhNi3kM9oeXI9h9lYBGK6Gr52+L+EhG3aqs5oVjhpTShThGUIe2e2M
- D8GNVHgG6qzg3tSiUJNawZX/8ceybk3Z1UY6sNzuTRu6/COhKAq41JSUpHYErCeFpee6AmgiJ
- KXaUc9SNYpqBuDlYA2i/ZpfrIsKBSx3ry7aPnm4r42r+qV7YstoC0Z+nBM+dBiYI6gU9K+C0l
- jzztaw2SfUFzO/32TBkqs099KtEyx0ilFDzLYflkg45gbbaDq6x467gTFve+Q2uk+xIFAtEUg
- k4U/cwFmMBrQ+X7ir
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Markus please stop! Your suggestions are just your preferences that are not
-> required for the kernel.
+"cdns,max-outbound-regions" device tree property provides the
+maximum number of outbound regions supported by the Host PCIe
+controller. However the outbound regions are configured based
+on what is populated in the "ranges" DT property.
 
-Do our imaginations and expectations differ for a good commit message?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=79dede78c0573618e3137d3d8cbf78c84e25fabd#n102
+Avoid using two properties for configuring outbound regions and
+use only "ranges" property instead.
 
-Regards,
-Markus
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Tom Joseph <tjoseph@cadence.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
+ drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
+ 2 files changed, 8 deletions(-)
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 597b61e6cc4b..079692aa4da1 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -146,9 +146,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	for_each_of_pci_range(&parser, &range) {
+ 		bool is_io;
+ 
+-		if (r >= rc->max_regions)
+-			break;
+-
+ 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+ 			is_io = false;
+ 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+@@ -242,9 +239,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	pcie = &rc->pcie;
+ 	pcie->is_rc = true;
+ 
+-	rc->max_regions = 32;
+-	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+-
+ 	rc->no_bar_nbits = 32;
+ 	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+ 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index ecb159dba6f6..cf1afd85c2f5 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -266,7 +266,6 @@ struct cdns_pcie {
+  * @bus_range: first/last buses behind the PCIe host controller
+  * @cfg_base: IO mapped window to access the PCI configuration space of a
+  *            single function at a time
+- * @max_regions: maximum number of regions supported by the hardware
+  * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
+  *                translation (nbits sets into the "no BAR match" register)
+  * @vendor_id: PCI vendor ID
+@@ -277,7 +276,6 @@ struct cdns_pcie_rc {
+ 	struct resource		*cfg_res;
+ 	struct resource		*bus_range;
+ 	void __iomem		*cfg_base;
+-	u32			max_regions;
+ 	u32			no_bar_nbits;
+ 	u16			vendor_id;
+ 	u16			device_id;
+-- 
+2.17.1
+
