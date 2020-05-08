@@ -2,120 +2,218 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F38DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B1C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41FF2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E7YUpOfG"
+	by mail.kernel.org (Postfix) with ESMTP id 58E7221841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588949201;
+	bh=2sJ/3yDz2mDmjR8ffxdDFq5JitVXlv2S2l/8CgRo+rM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zdnYIruXU5lStXt4hm7Zy3u6dg8i6immjxAHW2e8TMgFd5E8BEflzEAinFvPvaiC7
+	 WOp7Eq4kodubXR4VKKB0duyvvHBsbcrzDUH5yeP1CmphZUuSlsR0rf7BudurI+UCv/
+	 TxxCOmYiGT4gC6F0drxIeSeD1+FZPJJTdNRBIY7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgEHOqU (ORCPT
+        id S1728035AbgEHOqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:46:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgEHOqT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:46:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EhgYt060805;
-        Fri, 8 May 2020 14:45:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=mBsJBO8AIHjfSjv3iPsT+zmmyIaT3vU/FP/YdVrrvSA=;
- b=E7YUpOfGLEDqJ0uMKlRI9FGlL2K/xojah3OPtoBtuE5lRvLgjSGAAzkyvzYmyUSmsy/p
- 7xr2ERQyS70wY+kWe4PeG34MWzfey0lWEXEezE9Q2iu870nl+mrVb1E003fDA5gGRVKh
- AqvJKRXsdZNbwrLIppkX1ksaESCMtutsJBZ9zrnjjrhuxGnVeTXlTVfhEC1ubhFLInYe
- 6DV1bTW25YJJxLDsadsDTeZ77TVgtgky0N/UJxJt9qZgSdiykIsTKeSF/C84YuCjzQVW
- F8UCQZ+sroMqDc1px8PXsiFQWEFMQnLGgZLBkEQMfTpCJjnpe074sPZ8PJCWW3tzzbQE LQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30vtepkbsh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 14:45:38 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048EgvNo040482;
-        Fri, 8 May 2020 14:45:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30vtdnqmvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 May 2020 14:45:38 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 048EjZKg032026;
-        Fri, 8 May 2020 14:45:35 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 May 2020 07:45:34 -0700
-Date:   Fri, 8 May 2020 17:45:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Subject: Re: [v3] tools/bootconfig: fix resource leak in apply_xbc()
-Message-ID: <20200508144527.GR1992@kadam>
-References: <3569aa33-8963-966d-9247-ec79b3b3d56d@huawei.com>
- <5e2c3348-f346-e3f2-9c7c-5c4135f9b38c@web.de>
- <559edb00-a03b-747e-8ba7-1f16285deefb@huawei.com>
- <65057e82-8002-4ec4-b714-25ac8d05cb68@web.de>
- <938cd0e9-d96b-766c-cfbc-4f0b73d97cd4@huawei.com>
- <20200508090053.430d28d7@gandalf.local.home>
+        Fri, 8 May 2020 10:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbgEHOqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:46:39 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF695216FD;
+        Fri,  8 May 2020 14:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588949198;
+        bh=2sJ/3yDz2mDmjR8ffxdDFq5JitVXlv2S2l/8CgRo+rM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cfTDms3OZBMtmPJkbjka686bD2X0sZEBN1p1vV2fAKxQJlkHEnVjM4nadK09wkrVv
+         PgX/tNFkVeCXOJx988f044QrDkHRNxMRV7Qujlo1vihwC8lgBKqRh48hCGjiydlhLK
+         yl3CC30zm/trgcxtTX+7eoDrrTAa86h2VlE+DLaI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A32593522B1D; Fri,  8 May 2020 07:46:38 -0700 (PDT)
+Date:   Fri, 8 May 2020 07:46:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
+ fast/inefficient GP mode
+Message-ID: <20200508144638.GF2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
+ <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
+ <20200507170006.GA155220@cmpxchg.org>
+ <20200507170903.GR2869@paulmck-ThinkPad-P72>
+ <20200507183102.GB155220@cmpxchg.org>
+ <20200507190905.GX2869@paulmck-ThinkPad-P72>
+ <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508090053.430d28d7@gandalf.local.home>
+In-Reply-To: <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005080131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9614 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
- impostorscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2005080131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 09:00:53AM -0400, Steven Rostedt wrote:
-> On Fri, 8 May 2020 19:42:56 +0800
-> Yunfeng Ye <yeyunfeng@huawei.com> wrote:
-> 
-> > On 2020/5/8 19:30, Markus Elfring wrote:
-> > >> this change can fix the warning of tools.  
+On Fri, May 08, 2020 at 12:00:28PM +0300, Konstantin Khlebnikov wrote:
+> On 07/05/2020 22.09, Paul E. McKenney wrote:
+> > On Thu, May 07, 2020 at 02:31:02PM -0400, Johannes Weiner wrote:
+> > > On Thu, May 07, 2020 at 10:09:03AM -0700, Paul E. McKenney wrote:
+> > > > On Thu, May 07, 2020 at 01:00:06PM -0400, Johannes Weiner wrote:
+> > > > > On Wed, May 06, 2020 at 05:55:35PM -0700, Andrew Morton wrote:
+> > > > > > On Wed, 6 May 2020 17:42:40 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > > > > > 
+> > > > > > > This commit adds a shrinker so as to inform RCU when memory is scarce.
+> > > > > > > RCU responds by shifting into the same fast and inefficient mode that is
+> > > > > > > used in the presence of excessive numbers of RCU callbacks.  RCU remains
+> > > > > > > in this state for one-tenth of a second, though this time window can be
+> > > > > > > extended by another call to the shrinker.
+> > > > > 
+> > > > > We may be able to use shrinkers here, but merely being invoked does
+> > > > > not carry a reliable distress signal.
+> > > > > 
+> > > > > Shrinkers get invoked whenever vmscan runs. It's a useful indicator
+> > > > > for when to age an auxiliary LRU list - test references, clear and
+> > > > > rotate or reclaim stale entries. The urgency, and what can and cannot
+> > > > > be considered "stale", is encoded in the callback frequency and scan
+> > > > > counts, and meant to be relative to the VM's own rate of aging: "I've
+> > > > > tested X percent of mine for recent use, now you go and test the same
+> > > > > share of your pool." It doesn't translate well to other
+> > > > > interpretations of the callbacks, although people have tried.
+> > > > 
+> > > > Would it make sense for RCU to interpret two invocations within (say)
+> > > > 100ms of each other as indicating urgency?  (Hey, I had to ask!)
 > > > 
-> > > Would you like to point any specific source code analysis tools out
-> > > for this issue?
-> > > (Can a corresponding attribution become relevant for a clearer
-> > > change description?)
-> > >   
-> > The tools we used is not for open source. it point out some error description like
-> > "Memory leak: data" and "Resource leak: fd" in tools/bootconfig/main.c.
+> > > It's the perfect number for one combination of CPU, storage device,
+> > > and shrinker implementation :-)
 > > 
-> > Can I only description:
-> >   "Memory and resource leak is found by a static code analysis tools" ? thanks.
+> > Woo-hoo!!!
+> > 
+> > But is that one combination actually in use anywhere?  ;-)
+> > 
+> > > > > > > If it proves feasible, a later commit might add a function call directly
+> > > > > > > indicating the end of the period of scarce memory.
+> > > > > > 
+> > > > > > (Cc David Chinner, who often has opinions on shrinkers ;))
+> > > > > > 
+> > > > > > It's a bit abusive of the intent of the slab shrinkers, but I don't
+> > > > > > immediately see a problem with it.  Always returning 0 from
+> > > > > > ->scan_objects might cause a problem in some situations(?).
+> > > > > > 
+> > > > > > Perhaps we should have a formal "system getting low on memory, please
+> > > > > > do something" notification API.
+> > > > > 
+> > > > > It's tricky to find a useful definition of what low on memory
+> > > > > means. In the past we've used sc->priority cutoffs, the vmpressure
+> > > > > interface (reclaimed/scanned - reclaim efficiency cutoffs), oom
+> > > > > notifiers (another reclaim efficiency cutoff). But none of these
+> > > > > reliably capture "distress", and they vary highly between different
+> > > > > hardware setups. It can be hard to trigger OOM itself on fast IO
+> > > > > devices, even when the machine is way past useful (where useful is
+> > > > > somewhat subjective to the user). Userspace OOM implementations that
+> > > > > consider userspace health (also subjective) are getting more common.
+> > > > > 
+> > > > > > How significant is this?  How much memory can RCU consume?
+> > > > > 
+> > > > > I think if rcu can end up consuming a significant share of memory, one
+> > > > > way that may work would be to do proper shrinker integration and track
+> > > > > the age of its objects relative to the age of other allocations in the
+> > > > > system. I.e. toss them all on a clock list with "new" bits and shrink
+> > > > > them at VM velocity. If the shrinker sees objects with new bit set,
+> > > > > clear and rotate. If it sees objects without them, we know rcu_heads
+> > > > > outlive cache pages etc. and should probably cycle faster too.
+> > > > 
+> > > > It would be easy for RCU to pass back (or otherwise use) the age of the
+> > > > current grace period, if that would help.
+> > > > 
+> > > > Tracking the age of individual callbacks is out of the question due to
+> > > > memory overhead, but RCU could approximate this via statistical sampling.
+> > > > Comparing this to grace-period durations could give information as to
+> > > > whether making grace periods go faster would be helpful.
+> > > 
+> > > That makes sense.
+> > > 
+> > > So RCU knows the time and the VM knows the amount of memory. Either
+> > > RCU needs to figure out its memory component to be able to translate
+> > > shrinker input to age, or the VM needs to learn about time to be able
+> > > to say: I'm currently scanning memory older than timestamp X.
+> > > 
+> > > The latter would also require sampling in the VM. Nose goes. :-)
+> > 
+> > Sounds about right.  ;-)
+> > 
+> > Does reclaim have any notion of having continuously scanned for
+> > longer than some amount of time?  Or could RCU reasonably deduce this?
+> > For example, if RCU noticed that reclaim had been scanning for longer than
+> > (say) five grace periods, RCU might decide to speed things up.
+> > 
+> > But on the other hand, with slow disks, reclaim might go on for tens of
+> > seconds even without much in the way of memory pressure, mightn't it?
+> > 
+> > I suppose that another indicator would be recent NULL returns from
+> > allocators.  But that indicator flashes a bit later than one would like,
+> > doesn't it?  And has false positives when allocators are invoked from
+> > atomic contexts, no doubt.  And no doubt similar for sleeping more than
+> > a certain length of time in an allocator.
+> > 
+> > > There actually is prior art for teaching reclaim about time:
+> > > https://lore.kernel.org/linux-mm/20130430110214.22179.26139.stgit@zurg/
+> > > 
+> > > CCing Konstantin. I'm curious how widely this ended up being used and
+> > > how reliably it worked.
+> > 
+> > Looking forward to hearing of any results!
 > 
-> Markus please stop! Your suggestions are just your preferences that are not
-> required for the kernel.
+> Well, that was some experiment about automatic steering memory pressure
+> between containers. LRU timings from milestones itself worked pretty well.
+> Remaining engine were more robust than mainline cgroups these days.
+> Memory becomes much cheaper - I hope nobody want's overcommit it that badly anymore.
 > 
-> Yunfeng, your v2 was fine and has already landed in Linus's tree. Feel free
-> to ignore Markus's suggestions in the future.
+> It seems modern MM has plenty signals about memory pressure.
+> Kswapsd should have enough knowledge to switch gears in RCU.
 
-There was actually a bug in v2.  It exits with a non-zero instead of
-zero on success so it will mess up people's scripts.
+Easy for me to provide "start fast and inefficient mode" and "stop fast
+and inefficient mode" APIs for MM to call!
 
-regards,
-dan carpenter
+How about rcu_mempressure_start() and rcu_mempressure_end()?  I would
+expect them not to nest (as in if you need them to nest, please let
+me know).  I would not expect these to be invoked all that often (as in
+if you do need them to be fast and scalable, please let me know).
+
+RCU would then be in fast/inefficient mode if either MM told it to be
+or if RCU had detected callback overload on at least one CPU.
+
+Seem reasonable?
+
+							Thanx, Paul
+
+> > > > But, yes, it would be better to have an elusive unambiguous indication
+> > > > of distress.  ;-)
+> > > 
+> > > I agree. Preferably something more practical than a dialogue box
+> > > asking the user on how well things are going for them :-)
+> > 
+> > Indeed, that dialog box should be especially useful for things like
+> > light bulbs running Linux.  ;-)
+> > 
+> > 							Thanx, Paul
+> > 
