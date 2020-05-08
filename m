@@ -2,176 +2,136 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78177C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B39C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5BE20731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941590;
-	bh=Ma4PKiBBIHWZ9Wop04IcE8ZOfnFHrAuW2aab4kSchMk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVeGroFn3VIhoBiWsoHrRbedhS0h7ocyT2SuS52xy758sE8eZqyqubNDXgMmJaXP3
-	 7G6B30VpBCyfDRpc8IHezOKvDCiW9yYwQab+x8n1ka91W1ku3nC9bshZ5QEYC6JDxL
-	 27i0CPPk2yX1QwNxNstnPK3daf4pU7M4sxCoxGE8=
+	by mail.kernel.org (Postfix) with ESMTP id B62C020731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q8bW54E6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgEHMjs (ORCPT
+        id S1727991AbgEHMjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgEHMj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:39:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 May 2020 08:39:53 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:48918 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727892AbgEHMj0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:39:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588941565; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=u9iyFqCAnEb5sRsmgCcPsnxpILU9p4HopBIb8TR6T9U=; b=Q8bW54E6vQvwRAlG1bSTW/aRIjiK7lJIiK99LxBerZE2GUAR3uwgzpjBTWi4seBd/kv9hAd1
+ a63RnGB2iwJLdaFfoqXBEweqQD4d9QidWSlPYcYp2xkH6g01cLrE2/bcer1LZYeX4Tu4CUyS
+ jTL8RYpBT8JpjsE02BQbN8apyaI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb552ea.7fbc5ef3b8f0-smtp-out-n05;
+ Fri, 08 May 2020 12:39:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 964EEC44795; Fri,  8 May 2020 12:39:05 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [49.204.184.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53DD120731;
-        Fri,  8 May 2020 12:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941568;
-        bh=Ma4PKiBBIHWZ9Wop04IcE8ZOfnFHrAuW2aab4kSchMk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ecnPkqOr/62XXzaMGiLmnkHKacxZqHzb9rxDY6WFF8ak7P/JcUIAUmHnd+tlFTe5t
-         WpoHG4Lzo0aubLAoldCVuGHXRNpukgxqkWdVbYBJg16Q51isohbHvz3eYhALocZJUo
-         CLoqBwXXgOneM2aMDNenmemMKfO+FrxaRHTYMwj8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 084/312] net/mlx5: Add timeout handle to commands with callback
-Date:   Fri,  8 May 2020 14:31:15 +0200
-Message-Id: <20200508123130.457457744@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
-References: <20200508123124.574959822@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: neeraju)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9CBD6C433BA;
+        Fri,  8 May 2020 12:39:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9CBD6C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: Query regarding pseudo nmi support on GIC V3 and request_nmi()
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org
+References: <2a0d5719-b2c7-1287-e0b5-2dd8b1072e49@codeaurora.org>
+ <87ftca1z9k.wl-maz@kernel.org>
+ <2f41b2e8-925e-3869-da39-fd4ab28ca1b1@codeaurora.org>
+ <20200508132740.2d645ea2@why>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <27ecf3b0-4bb4-e89d-2ca9-3828cdcb2834@codeaurora.org>
+Date:   Fri, 8 May 2020 18:09:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200508132740.2d645ea2@why>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohamad Haj Yahia <mohamad@mellanox.com>
+Hi Marc,
 
-commit 65ee67084589c1783a74b4a4a5db38d7264ec8b5 upstream.
+On 5/8/2020 5:57 PM, Marc Zyngier wrote:
+> On Fri, 8 May 2020 16:36:42 +0530
+> Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+> 
+>> Hi Marc,
+>>
+>> On 5/8/2020 4:15 PM, Marc Zyngier wrote:
+>>> On Thu, 07 May 2020 17:06:19 +0100,
+>>> Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> I have one query regarding pseudo NMI support on GIC v3; from what I
+>>>> could understand, GIC v3 supports pseudo NMI setup for SPIs and PPIs.
+>>>> However the request_nmi() in irq framework requires NMI to be per cpu
+>>>> interrupt source (it checks for IRQF_PERCPU). Can you please help
+>>>> understand this part, how SPIs can be configured as NMIs, if there is
+>>>> a per cpu interrupt source restriction?
+>>>
+>>> Let me answer your question by another question: what is the semantic
+>>> of a NMI if you can't associate it with a particular CPU?
+>>>   
+>>
+>> I was actually thinking of a use case, where, we have a watchdog
+>> interrupt (which is a SPI), which is used for detecting software
+>> hangs and cause device reset; If that interrupt's current cpu
+>> affinity is on a core, where interrupts are disabled, we won't be
+>> able to serve it; so, we need to group that interrupt as an fiq;
+> 
+> Linux doesn't use Group-0 interrupts, as they are strictly secure
+> (unless your SoC doesn't have EL3, which I doubt).
 
-The current implementation does not handle timeout in case of command
-with callback request, and this can lead to deadlock if the command
-doesn't get fw response.
-Add delayed callback timeout work before posting the command to fw.
-In case of real fw command completion we will cancel the delayed work.
-In case of fw command timeout the callback timeout handler will be
-called and it will simulate fw completion with timeout error.
+Yes, we handle that watchdog interrupt as a Group-0 interrupt, which is 
+handled as fiq in EL3.
 
-Fixes: e126ba97dba9 ('mlx5: Add driver for Mellanox Connect-IB adapters')
-Signed-off-by: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+>> I was thinking, if its feasible to mark that interrupt as pseudo NMI
+>> and route it to EL1 as irq. However, looks like that is not the
+>> semantic of a NMI and we would need something like pseudo NMI ipi for
+>> this.
+> 
+> Sending a NMI IPI from another NMI handler? Even once I've added these,
+> there is no way this will work for that particular scenario. Just look
+> at the restrictions we impose on NMIs.
+> 
 
----
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   38 +++++++++++++++++++++-----
- include/linux/mlx5/driver.h                   |    1 
- 2 files changed, 32 insertions(+), 7 deletions(-)
+Sending a pseudo NMI IPI (to EL1) from fiq handler (which runs in EL3); 
+I will check, but do you think, that might not work?
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -634,11 +634,36 @@ static void free_msg(struct mlx5_core_de
- static void mlx5_free_cmd_msg(struct mlx5_core_dev *dev,
- 			      struct mlx5_cmd_msg *msg);
- 
-+static u16 msg_to_opcode(struct mlx5_cmd_msg *in)
-+{
-+	struct mlx5_inbox_hdr *hdr = (struct mlx5_inbox_hdr *)(in->first.data);
-+
-+	return be16_to_cpu(hdr->opcode);
-+}
-+
-+static void cb_timeout_handler(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = container_of(work, struct delayed_work,
-+						  work);
-+	struct mlx5_cmd_work_ent *ent = container_of(dwork,
-+						     struct mlx5_cmd_work_ent,
-+						     cb_timeout_work);
-+	struct mlx5_core_dev *dev = container_of(ent->cmd, struct mlx5_core_dev,
-+						 cmd);
-+
-+	ent->ret = -ETIMEDOUT;
-+	mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
-+		       mlx5_command_str(msg_to_opcode(ent->in)),
-+		       msg_to_opcode(ent->in));
-+	mlx5_cmd_comp_handler(dev, 1UL << ent->idx);
-+}
-+
- static void cmd_work_handler(struct work_struct *work)
- {
- 	struct mlx5_cmd_work_ent *ent = container_of(work, struct mlx5_cmd_work_ent, work);
- 	struct mlx5_cmd *cmd = ent->cmd;
- 	struct mlx5_core_dev *dev = container_of(cmd, struct mlx5_core_dev, cmd);
-+	unsigned long cb_timeout = msecs_to_jiffies(MLX5_CMD_TIMEOUT_MSEC);
- 	struct mlx5_cmd_layout *lay;
- 	struct semaphore *sem;
- 	unsigned long flags;
-@@ -691,6 +716,9 @@ static void cmd_work_handler(struct work
- 	ent->ts1 = ktime_get_ns();
- 	cmd_mode = cmd->mode;
- 
-+	if (ent->callback)
-+		schedule_delayed_work(&ent->cb_timeout_work, cb_timeout);
-+
- 	/* ring doorbell after the descriptor is valid */
- 	mlx5_core_dbg(dev, "writing 0x%x to command doorbell\n", 1 << ent->idx);
- 	wmb();
-@@ -735,13 +763,6 @@ static const char *deliv_status_to_str(u
- 	}
- }
- 
--static u16 msg_to_opcode(struct mlx5_cmd_msg *in)
--{
--	struct mlx5_inbox_hdr *hdr = (struct mlx5_inbox_hdr *)(in->first.data);
--
--	return be16_to_cpu(hdr->opcode);
--}
--
- static int wait_func(struct mlx5_core_dev *dev, struct mlx5_cmd_work_ent *ent)
- {
- 	unsigned long timeout = msecs_to_jiffies(MLX5_CMD_TIMEOUT_MSEC);
-@@ -808,6 +829,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
- 	if (!callback)
- 		init_completion(&ent->done);
- 
-+	INIT_DELAYED_WORK(&ent->cb_timeout_work, cb_timeout_handler);
- 	INIT_WORK(&ent->work, cmd_work_handler);
- 	if (page_queue) {
- 		cmd_work_handler(&ent->work);
-@@ -1287,6 +1309,8 @@ void mlx5_cmd_comp_handler(struct mlx5_c
- 			struct semaphore *sem;
- 
- 			ent = cmd->ent_arr[i];
-+			if (ent->callback)
-+				cancel_delayed_work(&ent->cb_timeout_work);
- 			if (ent->page_queue)
- 				sem = &cmd->pages_sem;
- 			else
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -566,6 +566,7 @@ struct mlx5_cmd_work_ent {
- 	void		       *uout;
- 	int			uout_size;
- 	mlx5_cmd_cbk_t		callback;
-+	struct delayed_work	cb_timeout_work;
- 	void		       *context;
- 	int			idx;
- 	struct completion	done;
+> Frankly, if all you need to do is to reset the SoC, use EL3 firmware.
+> That is what it is for.
+> 
 
+Before triggering SoC reset, we want to collect certain  EL1 debug 
+information like stack trace for CPUs and other debug information.
 
+> Thanks,
+> 
+> 	M.
+> 
+
+Thanks
+Neeraj
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of the Code Aurora Forum, hosted by The Linux Foundation
