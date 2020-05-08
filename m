@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A29C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE32C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD973218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2874324987
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944166;
-	bh=j9jM0Mzrvgf4FP6B636x7mc63CPHN9JBIKo3Smq40iM=;
+	s=default; t=1588944172;
+	bh=3EUQqHlhW0Waxsf+eerSa7T/QTJ4Wx2e2/bYdkjLhug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJYOxKa4otsnen++UIP7oSYCLDSNutaUXY/v2RP76cZoR2vw2n4Jp3czZBDLYU+Kw
-	 iNN81rJIl6y32cw10HvMb/xzaiam2H+EMq4Pc3xQj9h+FKUcNb/OMVocug5MmuPB+l
-	 fm1JqsU4T9JEPjR6IiEZAHwTHxGMGNWA557LmzmI=
+	b=SSrxdgEgqNcRzoB5LZ3tIUztQynGWy0oiHNEiDEAslXaIj5jyy+fouXekMbUx1wGa
+	 DvN1FzBBDoQQrfvTxvEdOkrDmxYqNoyMmwqHWr+TpCIOvQc7/AgIHdAfPyNdBIxu3C
+	 68t+Gch7yzxnFqTyNVa2T3ALKOBqbSW432Pw+8l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgEHMiv (ORCPT
+        id S1728869AbgEHNWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbgEHMir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:47 -0400
+        id S1728452AbgEHMio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20FC724973;
-        Fri,  8 May 2020 12:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6702D2496E;
+        Fri,  8 May 2020 12:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941526;
-        bh=j9jM0Mzrvgf4FP6B636x7mc63CPHN9JBIKo3Smq40iM=;
+        s=default; t=1588941523;
+        bh=3EUQqHlhW0Waxsf+eerSa7T/QTJ4Wx2e2/bYdkjLhug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jkTYkrfoTKmns5Zbo++oXwkFyt9xZj0qYn3waV4xK1xRvY5Ed0RrK/nXEzTSp9BYm
-         M4IJlhLyEOrtBI2EHsM/gJYr+zAo/kOZuF47ge9Waldrkh3IWo5SEydblQKM/favEz
-         947awLbIfeY8KMWNqaEGjMpXnQwRl2JtS5r9E63s=
+        b=Ze1HhdryUY2n1oXBoaCJzlPmtv95f4zuD8nLfT1aQsGdMgxqcBfUgD0X7vZpXggyR
+         ClTHyMoyGXuBVkzDCMvUu3ZAYA5tHSKlZT+fEJngheHe1xZ3fFg8PhWsA4lJ1j6jeu
+         CNWae3BctYX9QVB9qIC8e+oVqJ/gtjOJrjAIiY/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arjan van de Ven <arjan@linux.intel.com>
-Subject: [PATCH 4.4 060/312] PCI: Supply CPU physical address (not bus address) to iomem_is_exclusive()
-Date:   Fri,  8 May 2020 14:30:51 +0200
-Message-Id: <20200508123128.776388929@linuxfoundation.org>
+        stable@vger.kernel.org, James Hogan <james.hogan@imgtec.com>,
+        "Steven J. Hill" <sjhill@realitydiluted.com>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Subject: [PATCH 4.4 018/312] MIPS: Fix HTW config on XPA kernel without LPA enabled
+Date:   Fri,  8 May 2020 14:30:09 +0200
+Message-Id: <20200508123125.770053528@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,57 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: James Hogan <james.hogan@imgtec.com>
 
-commit ca620723d4ff9ea7ed484eab46264c3af871b9ae upstream.
+commit 14bc241443e126c62fcbf571b7d4c79740debc58 upstream.
 
-iomem_is_exclusive() requires a CPU physical address, but on some arches we
-supplied a PCI bus address instead.
+The hardware page table walker (HTW) configuration is broken on XPA
+kernels where XPA couldn't be enabled (either nohtw or the hardware
+doesn't support it). This is because the PWSize.PTEW field (PTE width)
+was only set to 8 bytes (an extra shift of 1) in config_htw_params() if
+PageGrain.ELPA (enable large physical addressing) is set. On an XPA
+kernel though the size of PTEs is fixed at 8 bytes regardless of whether
+XPA could actually be enabled.
 
-On most arches, pci_resource_to_user(res) returns "res->start", which is a
-CPU physical address.  But on microblaze, mips, powerpc, and sparc, it
-returns the PCI bus address corresponding to "res->start".
+Fix the initialisation of this field based on sizeof(pte_t) instead.
 
-The result is that pci_mmap_resource() may fail when it shouldn't (if the
-bus address happens to match an existing resource), or it may succeed when
-it should fail (if the resource is exclusive but the bus address doesn't
-match it).
-
-Call iomem_is_exclusive() with "res->start", which is always a CPU physical
-address, not the result of pci_resource_to_user().
-
-Fixes: e8de1481fd71 ("resource: allow MMIO exclusivity for device drivers")
-Suggested-by: Yinghai Lu <yinghai@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: Arjan van de Ven <arjan@linux.intel.com>
+Fixes: c5b367835cfc ("MIPS: Add support for XPA.")
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Steven J. Hill <sjhill@realitydiluted.com>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
+Patchwork: https://patchwork.linux-mips.org/patch/13113/
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci-sysfs.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/mips/mm/tlbex.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1027,6 +1027,9 @@ static int pci_mmap_resource(struct kobj
- 	if (i >= PCI_ROM_RESOURCE)
- 		return -ENODEV;
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -2329,9 +2329,7 @@ static void config_htw_params(void)
+ 	if (CONFIG_PGTABLE_LEVELS >= 3)
+ 		pwsize |= ilog2(PTRS_PER_PMD) << MIPS_PWSIZE_MDW_SHIFT;
  
-+	if (res->flags & IORESOURCE_MEM && iomem_is_exclusive(res->start))
-+		return -EINVAL;
-+
- 	if (!pci_mmap_fits(pdev, i, vma, PCI_MMAP_SYSFS)) {
- 		WARN(1, "process \"%s\" tried to map 0x%08lx bytes at page 0x%08lx on %s BAR %d (start 0x%16Lx, size 0x%16Lx)\n",
- 			current->comm, vma->vm_end-vma->vm_start, vma->vm_pgoff,
-@@ -1043,10 +1046,6 @@ static int pci_mmap_resource(struct kobj
- 	pci_resource_to_user(pdev, i, res, &start, &end);
- 	vma->vm_pgoff += start >> PAGE_SHIFT;
- 	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
--
--	if (res->flags & IORESOURCE_MEM && iomem_is_exclusive(start))
--		return -EINVAL;
--
- 	return pci_mmap_page_range(pdev, vma, mmap_type, write_combine);
- }
+-	/* If XPA has been enabled, PTEs are 64-bit in size. */
+-	if (config_enabled(CONFIG_64BITS) || (read_c0_pagegrain() & PG_ELPA))
+-		pwsize |= 1;
++	pwsize |= ilog2(sizeof(pte_t)/4) << MIPS_PWSIZE_PTEW_SHIFT;
+ 
+ 	write_c0_pwsize(pwsize);
  
 
 
