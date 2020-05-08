@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1EEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A73C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2329D206B9
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E4F206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943971;
-	bh=p5ugadPsmhcjh23JmZonac+q3eB3bP8CBYsJAi/EQcI=;
+	s=default; t=1588943975;
+	bh=UvijrepgSM9bTTBiI9Swq+Upxzh2Ou3oIRDUNq7ka3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WU1Ng2nkJuEcP+dWlvWXN7/BEsO34g3F7HiFVUqxOxFcHPetDCdV2MtAKefv/8PxN
-	 NBcMH6iF3UOcqamEV9UxT7ooAgnYClX1TnEhJjGIT1/rchBVEDVtJumXnrVue0P28c
-	 jB5v9SGjVQr+0lbBnW/wzItoqTBbxiJx49ddgUnQ=
+	b=QRXNQGzSgugCEuF3jMGFaZMUG8d0SBBs0/T/uTrv9gaKnKit054FjAPvcMdoZb1+8
+	 5RefyPZz0b9bM0IhHE/MnSaKAIvmhep2PMSUVYzqS1WyaD1a+hnDjp3wtm4Z67C+7K
+	 uR1XmVjiCtC2oQBOlrlaz3/9JRn7LbU6a3q9bBJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgEHNTa (ORCPT
+        id S1728865AbgEHMlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38598 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbgEHMmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:42:09 -0400
+        id S1728855AbgEHMlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A6F020731;
-        Fri,  8 May 2020 12:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9229E21835;
+        Fri,  8 May 2020 12:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941728;
-        bh=p5ugadPsmhcjh23JmZonac+q3eB3bP8CBYsJAi/EQcI=;
+        s=default; t=1588941705;
+        bh=UvijrepgSM9bTTBiI9Swq+Upxzh2Ou3oIRDUNq7ka3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1vlHI8uZvK2i72PqZlDleLRB8HKnrn4AIAVkSbvvIJxQ+oBuufgNkRhtEYS8Rc6D
-         m+XwSsPUXHMh3VNQa1VmPwZQsmOT5wvrIK5o9etSEZPZFG1wILr8aDdeERIO6l3W7S
-         YNgUPdffoDgzqvhPEEOJyfT8VKK55Zf9f8VcIW2g=
+        b=gbQzel4AxT2OmXaGiuaMniVav1rUJZVHU5BUksLHHz4L8qVqosp+C0PCxt6ugMPOK
+         /Loe2iE9wy8QEoa11ytuv2W+G89RMtcfXyXZRV8duLgyX/96opB6+rY0i7MiBuqBXc
+         xyc3mv9cmQxT9BXykDmTKNoB75HWxDwGUHcEJ3tk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Davydov <vdavydov@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 110/312] net: tcp_memcontrol: properly detect ancestor socket pressure
-Date:   Fri,  8 May 2020 14:31:41 +0200
-Message-Id: <20200508123132.226278681@linuxfoundation.org>
+        stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>,
+        Ludovic Desroches <ludovic.desroches@atmel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 138/312] mmc: sdhci: restore behavior when setting VDD via external regulator
+Date:   Fri,  8 May 2020 14:32:09 +0200
+Message-Id: <20200508123134.198259687@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -62,51 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Jisheng Zhang <jszhang@marvell.com>
 
-commit 8c2c2358b236530bc2c79b4c2a447cbdbc3d96d7 upstream.
+commit 918f4cbd4340ddd1eb389cd8efa3b07ac74ec4c0 upstream.
 
-When charging socket memory, the code currently checks only the local
-page counter for excess to determine whether the memcg is under socket
-pressure.  But even if the local counter is fine, one of the ancestors
-could have breached its limit, which should also force this child to
-enter socket pressure.  This currently doesn't happen.
+After commit 52221610dd84 ("mmc: sdhci: Improve external VDD regulator
+support"), for the VDD is supplied via external regulators, we ignore
+the code to convert a VDD voltage request into one of the standard
+SDHCI voltage levels, then program it in the SDHCI_POWER_CONTROL. This
+brings two issues:
 
-Fix this by using page_counter_try_charge() first.  If that fails, it
-means that either the local counter or one of the ancestors are in
-excess of their limit, and the child should enter socket pressure.
+1. SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON quirk isn't handled properly any
+more.
 
-Fixes: 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: David S. Miller <davem@davemloft.net>
-Reviewed-by: Vladimir Davydov <vdavydov@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+2. What's more, once SDHCI_POWER_ON bit is set, some controllers such
+as the sdhci-pxav3 used in marvell berlin SoCs require the voltage
+levels programming in the SDHCI_POWER_CONTROL register, even the VDD
+is supplied by external regulator. So the host in marvell berlin SoCs
+still works fine after the commit. However, commit 3cbc6123a93d ("mmc:
+sdhci: Set SDHCI_POWER_ON with external vmmc") sets the SDHCI_POWER_ON
+bit, this would make the host in marvell berlin SoCs won't work any
+more with external vmmc.
+
+This patch restores the behavior when setting VDD through external
+regulator by moving the call of mmc_regulator_set_ocr() to the end
+of sdhci_set_power() function.
+
+After this patch, the sdcard on Marvell Berlin SoC boards work again.
+
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+Fixes: 52221610dd84 ("mmc: sdhci: Improve external VDD ...")
+Reviewed-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sock.h |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci.c |   19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1204,11 +1204,13 @@ static inline void memcg_memory_allocate
- 					      unsigned long amt,
- 					      int *parent_status)
- {
--	page_counter_charge(&prot->memory_allocated, amt);
-+	struct page_counter *counter;
-+
-+	if (page_counter_try_charge(&prot->memory_allocated, amt, &counter))
-+		return;
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1290,19 +1290,6 @@ static void sdhci_set_power(struct sdhci
+ 	struct mmc_host *mmc = host->mmc;
+ 	u8 pwr = 0;
  
--	if (page_counter_read(&prot->memory_allocated) >
--	    prot->memory_allocated.limit)
--		*parent_status = OVER_LIMIT;
-+	page_counter_charge(&prot->memory_allocated, amt);
-+	*parent_status = OVER_LIMIT;
+-	if (!IS_ERR(mmc->supply.vmmc)) {
+-		spin_unlock_irq(&host->lock);
+-		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+-		spin_lock_irq(&host->lock);
+-
+-		if (mode != MMC_POWER_OFF)
+-			sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
+-		else
+-			sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
+-
+-		return;
+-	}
+-
+ 	if (mode != MMC_POWER_OFF) {
+ 		switch (1 << vdd) {
+ 		case MMC_VDD_165_195:
+@@ -1363,6 +1350,12 @@ static void sdhci_set_power(struct sdhci
+ 		if (host->quirks & SDHCI_QUIRK_DELAY_AFTER_POWER)
+ 			mdelay(10);
+ 	}
++
++	if (!IS_ERR(mmc->supply.vmmc)) {
++		spin_unlock_irq(&host->lock);
++		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
++		spin_lock_irq(&host->lock);
++	}
  }
  
- static inline void memcg_memory_allocated_sub(struct cg_proto *prot,
+ /*****************************************************************************\
 
 
