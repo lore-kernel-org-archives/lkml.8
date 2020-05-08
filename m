@@ -2,134 +2,189 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B939EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ACBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F83C21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C49C21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CevGhA3d"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RzHyM5dG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEHRcz (ORCPT
+        id S1727084AbgEHRed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgEHRcx (ORCPT
+        Fri, 8 May 2020 13:34:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18375 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726797AbgEHRed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 13:32:53 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62700C061A0C;
-        Fri,  8 May 2020 10:32:53 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h26so1926535qtu.8;
-        Fri, 08 May 2020 10:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8u1vbu5bJ69YihL8GWipXODDQVOvMStlxTqzIrRkPUQ=;
-        b=CevGhA3drB9rx9GAhf7Jd40EnNtr3XglCd18jTPTpJsgn56s0Q9ZugmY0aQqMnSGTH
-         7aagHQfF3X78TVXApqMaxjd66mhtOXvmL/4HYUWJW/adXA8e8n5GfPBPmQNAL19OfDE5
-         LKmSVl8km7PxkynymVQEPV4lk577a7G6pryLd8OTLGPtsbCEaAV29/jnVDoGOchK+oXF
-         ADZkHhl+hkYYLZCeFVTd3IXBBgi7Vcs9qr0dwPmfQ9/ULwOPvDSa/PgxDmkfuyvSzJ6H
-         sC+yukRWl+pPdTIl3k+mflFAJ1SndgezVfhRdzQGFW2qCsOZjs94dn27Zb6+yY1dofoM
-         xFPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8u1vbu5bJ69YihL8GWipXODDQVOvMStlxTqzIrRkPUQ=;
-        b=RN422PLdjE8go6AuR72FJuTgiBzmtnpYBWzaGZYP3BNaZGF4ofuRufgeE4QXVRyFXS
-         wT6Uqp4sZb8OzRfgzSlVEHpCPSzJHK4+SX0n2pLrZTG7qjNKk0W3Rvri0CJYSilJXc/H
-         4kL8nlGnSVgj6O0wEhLFBWL3sMvvQtsNBfHfbyLPqFUpfCXSsojm9Bi/u2vKBWbxJyUZ
-         5Rbzwv+mK39nx495fsByG58gzAwTOXGSK9UwSEBZJuJ1VYo5iWkDVYK3k/kBBMfEoXM6
-         eR17In0P35gkRK9xxc8aYddKHScusjFhJYNdGmUDIIBnISNwRrS1TqFdXqG+HzTdAwDP
-         E0kA==
-X-Gm-Message-State: AGi0PuZ/W84N46cblyjD6WQwXcQ/wTq7XnqgYu3XaKJNd1Qcr0JiEJ15
-        xLZnwcQyn9sZVQX4X0JqcqDx0CoSRnww8Z3Mk1kJPgN0
-X-Google-Smtp-Source: APiQypI1ltj7u5Bq7am8qePoEo4cQ/trbraNCdyogcK0LAAg4BY0jq2I7/GsLnM1GzSePjDroYbXz+4CAgFA1/GrFDU=
-X-Received: by 2002:ac8:51d3:: with SMTP id d19mr4033765qtn.141.1588959172426;
- Fri, 08 May 2020 10:32:52 -0700 (PDT)
+        Fri, 8 May 2020 13:34:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588959272; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=YRdx5B97TVorxMXPiXfW7wmYxuXC8t3jsBBMWPO3mPk=; b=RzHyM5dG0pAj7fF5D0GKQyT2zERsO0gOJRDsTL3RKe/JPDVjU3QrWTsctkDFi03fG0YHqH8d
+ 6zSzSVRdk+3pPUOKBIC2gnY00TM3gwbSyOksVKORcJFv1a4CEYcgsN526tHqysjzwlthIlPK
+ W4fLo3/o1tegBWv/xYR1GMUrU/Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb59817.7fc768bbdfb8-smtp-out-n03;
+ Fri, 08 May 2020 17:34:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 259E7C433BA; Fri,  8 May 2020 17:34:15 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64005C433F2;
+        Fri,  8 May 2020 17:34:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64005C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v6 3/8] bus: mhi: core: Add range check for channel id
+ received in event ring
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org
+References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
+ <1588718832-4891-4-git-send-email-bbhatt@codeaurora.org>
+ <20200508054518.GA2696@Mani-XPS-13-9360>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <82e131f8-8c67-23c3-3ac2-a05eb04d50ba@codeaurora.org>
+Date:   Fri, 8 May 2020 10:34:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200508153634.249933-1-hch@lst.de> <20200508153634.249933-5-hch@lst.de>
-In-Reply-To: <20200508153634.249933-5-hch@lst.de>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 8 May 2020 10:32:41 -0700
-Message-ID: <CAEf4BzZ-gE87RVLPHGBfoNhHB+H7AnPbb7UUE7EGq8T5p_en_w@mail.gmail.com>
-Subject: Re: [PATCH 04/12] bpf: use __anon_inode_getfd
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-integrity@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200508054518.GA2696@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 8:39 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Use __anon_inode_getfd instead of opencoding the logic using
-> get_unused_fd_flags + anon_inode_getfile.  Also switch the
-> bpf_link_new_file calling conventions to match __anon_inode_getfd.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/bpf.h  |  2 +-
->  kernel/bpf/cgroup.c  |  6 +++---
->  kernel/bpf/syscall.c | 31 +++++++++----------------------
->  3 files changed, 13 insertions(+), 26 deletions(-)
->
+Hi Mani,
 
-[...]
+On 5/7/20 10:45 PM, Manivannan Sadhasivam wrote:
+> On Tue, May 05, 2020 at 03:47:07PM -0700, Bhaumik Bhatt wrote:
+>> From: Hemant Kumar <hemantk@codeaurora.org>
+>>
+>> MHI data completion handler function reads channel id from event
+>> ring element. Value is under the control of MHI devices and can be
+>> any value between 0 and 255. In order to prevent out of bound access
+>> add a bound check against the max channel supported by controller
+>> and skip processing of that event ring element.
+>>
+>> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   drivers/bus/mhi/core/main.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+>> index 605640c..e60ab21 100644
+>> --- a/drivers/bus/mhi/core/main.c
+>> +++ b/drivers/bus/mhi/core/main.c
+>> @@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>>   		case MHI_PKT_TYPE_TX_EVENT:
+>>   			chan = MHI_TRE_GET_EV_CHID(local_rp);
+>>   			mhi_chan = &mhi_cntrl->mhi_chan[chan];
+> 
+> Check should be done before this statement, isn't it?
+my bad. thanks for pointing that out.
+> 
+>> +			if (WARN_ON(chan >= mhi_cntrl->max_chan))
+>> +				goto next_event;
+>> +
+> 
+> I don't prefer using gotos for non exit paths but I don't have a better solution
+> here. But you can try to wrap 'WARN_ON' inside the 'MHI_TRE_GET_EV_CHID'
+> definition and the just use:
+Instead of moving WARN_ON to macro as it requires mhi_cntrl->max_chan to 
+compare, how about just adding WARN_ON statement above if condition like 
+this
 
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 64783da342020..cb2364e17423c 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -2307,23 +2307,10 @@ int bpf_link_new_fd(struct bpf_link *link)
->   * complicated and expensive operations and should be delayed until all the fd
->   * reservation and anon_inode creation succeeds.
->   */
+		WARN_ON(chan >= mhi_cntrl->max_chan);
+		/*
+  		 * Only process the event ring elements whose channel
+		 * ID is within the maximum supported range.
+		 */
+  		if (chan < mhi_cntrl->max_chan) {
+                       	mhi_chan = &mhi_cntrl->mhi_chan[chan];
+                        	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+                           	event_quota--;
+  		}
+  		break;
+> 
+> 			/*
+> 			 * Only process the event ring elements whose channel
+> 			 * ID is within the maximum supported range.
+> 			 */
+> 			if (chan < mhi_cntrl->max_chan) {
+>                          	mhi_chan = &mhi_cntrl->mhi_chan[chan];
+>                          	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+>                          	event_quota--;
+> 			}
+> 			break;
+> 
+> This looks more clean.
 
-The comment above explains the reason why we do want to split getting
-fd, getting file, and installing fd later. I'd like to keep it this
-way. Also, this code was refactored in bpf-next by [0] (it still uses
-get_unused_fd_flag + anon_inode_getfile + fd_install, by design).
+> 
+>>   			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+>>   			event_quota--;
+>>   			break;
+>> @@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>>   			break;
+>>   		}
+>>   
+>> +next_event:
+>>   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+>>   		local_rp = ev_ring->rp;
+>>   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+> 
+> So you want the count to get increased for skipped element also?
+yeah idea is to have total count of events processed even if channel id 
+is not correct for that event. This fix is a security fix considering 
+that the MHI device is considered as non-secured and MHI host is trying
+to continue function normally and just reporting it as warning.
 
-  [0] https://patchwork.ozlabs.org/project/netdev/patch/20200429001614.1544-3-andriin@fb.com/
+> 
+> Thanks,
+> Mani
+> 
+>> @@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>>   
+>>   		chan = MHI_TRE_GET_EV_CHID(local_rp);
+>> +		if (WARN_ON(chan >= mhi_cntrl->max_chan))
+>> +			goto next_event;
+>> +
+>>   		mhi_chan = &mhi_cntrl->mhi_chan[chan];
+>>   
+>>   		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
+>> @@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>>   			event_quota--;
+>>   		}
+>>   
+>> +next_event:
+>>   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+>>   		local_rp = ev_ring->rp;
+>>   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+Even this function has the same goto statement. For consistency i would 
+do same thing here as well. Let me know what do you think about above 
+suggestion for both functions.
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
 
-> -struct file *bpf_link_new_file(struct bpf_link *link, int *reserved_fd)
-> +int bpf_link_new_file(struct bpf_link *link, struct file **file)
->  {
-> -       struct file *file;
-> -       int fd;
-> -
-> -       fd = get_unused_fd_flags(O_CLOEXEC);
-> -       if (fd < 0)
-> -               return ERR_PTR(fd);
-> -
-> -       file = anon_inode_getfile("bpf_link", &bpf_link_fops, link, O_CLOEXEC);
-> -       if (IS_ERR(file)) {
-> -               put_unused_fd(fd);
-> -               return file;
-> -       }
-> -
-> -       *reserved_fd = fd;
-> -       return file;
-> +       return __anon_inode_getfd("bpf_link", &bpf_link_fops, link, O_CLOEXEC,
-> +                       file);
->  }
->
-
-[...]
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
