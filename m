@@ -2,394 +2,149 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDFCC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0113C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C172184D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE97218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 16:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="UPug7ezR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HxkA0/Ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgEHQ5g (ORCPT
+        id S1727838AbgEHQ6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 12:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgEHQ5f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 12:57:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E67C05BD09
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 09:57:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m24so1265649wml.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 09:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
-        b=UPug7ezRRUUHdTzqSRfoxD2Iq04xZBfodbQycTm0KgfLU4x6z6TU9TmT6ufh9kG2W+
-         loyuu1DiSpCnOt94ZBBvIo76ANg/RXeU9jr/A+Hk5+vMDVTh2utNwAqIgE22iIHIqADO
-         ASluyrzSegNku2TaY6GbVfKGfu9//p49URGrn1K15ILRiySiNHzL/mSVBRhdIiC0F9aN
-         XdVBj8oSrlVIhl4jkPKl5cGD8SYmbw0mOGGkA77hGMV9UwO2DnCvsQS6Aa2BdY5ngrUn
-         yed1HaWUXlcoNMu+qjVUYQWCjSBaaNv2T91VYVxDNfpFTQMOrn1lwMTuKgOf3M7nQ94V
-         PZ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vT+RaDMcO0E5H+TlMRiVwoNXnA2sts99E5j6V+Tg8As=;
-        b=PhhggQhGfcUky/HQB/yfKugaExrkJu6p46v6CKlpOJoYkJpk89PL8Zbt5e1YbJY+Qm
-         BL0VHhyGKt3Ek6jyxPBzbD6l6qQ7JQeMVqo6Ni8fc24ydU2I1cDTTJC/xgRZZcKBmRFV
-         f4H7IRJjT2XdbgACNARvvtkFAKwx4fwQfXQM5fcPNVG3SGUDk3jWldyeQB5FzAoodKmX
-         NYDkCU+zbDaL/6K3C3+7f0u77n/XHS0e1MFwfb7fCFK+lhPLuuO7V3Y5gqBo9Q5r9OzY
-         zUORGIkqJJ/3mW5ig+0wJ1vLqEH+NIqPk7kUqo2c6dFD3sEE2rovNMJT/7YsGSQmml6S
-         KuNA==
-X-Gm-Message-State: AGi0PuaSDaBTf3t1NbWLS+colKr6QWNYB8FS8uBQypOyNT4nxksZoy3J
-        NCxqwesoRDrSUW1q+jEHtpg8cg==
-X-Google-Smtp-Source: APiQypKna+L9sCld26+Mf5vcDVlbO1sRL+4elnUNWXQ4zRpPTP7NgoDgERq7nVdBXn2PiaNnaKdKnQ==
-X-Received: by 2002:a05:600c:201:: with SMTP id 1mr621236wmi.155.1588957053999;
-        Fri, 08 May 2020 09:57:33 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id x24sm4147295wrd.51.2020.05.08.09.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 09:57:33 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:58:21 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-Message-ID: <20200508165821.GA14555@x1>
+        Fri, 8 May 2020 12:58:01 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49151 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbgEHQ6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 12:58:01 -0400
+Received: from [IPv6:2601:646:8600:3281:8cbc:9d8:e4de:b815] ([IPv6:2601:646:8600:3281:8cbc:9d8:e4de:b815])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 048GvlYi3909245
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Fri, 8 May 2020 09:57:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 048GvlYi3909245
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020042201; t=1588957069;
+        bh=fuU7l9L9FTo19LB/f6E7H1c2FNKhZq+MrZtIfIv1AnU=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=HxkA0/Ti3YhHEIf3+Ah0hboS84JR+0TCE6dNAtPMBXL/iZHdgEoXW240oAuHMP89r
+         29AdLVLWOezF3qOV2A9Ju2JGtSJvlrrYg/qpfUKa558uT9OLRgbWkrDPG+MJ4LVmbX
+         D34OjABaLYp2+4fKxpPc9KC7SfGecMY9hws2JRC2e/hJfLBawpcnwZocSQCtmpLuxl
+         n/XJeIKPc9KJwPrA/ZDnFldbaVSFoueBnwNv7ds9bVPuL/e+MJ8t9eJHt9eN9ldSck
+         xlrOJTiqbpGmzo079CaOu5VRWKl5mTIVRta2qcMmsTxmSHuKmpOLsGrRv0Meolc1ZG
+         1o5IiUOYkZt6Q==
+Date:   Fri, 08 May 2020 09:57:40 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200508105817.207887-1-ubizjak@gmail.com>
+References: <20200508105817.207887-1-ubizjak@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86: Use RDRAND and RDSEED mnemonics in archrandom.h
+To:     Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+CC:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   hpa@zytor.com
+Message-ID: <BACCC7C6-D456-4FAF-A11B-213995FE356A@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add gpio-line-names properties to the gpio controller nodes.
-BeagleBone boards have P8 and P9 headers [0] which expose many the
-AM3358 SoC balls to stacking expansion boards called "capes", or to
-other external connections like jumper wires to a breadboard.
+On May 8, 2020 3:58:17 AM PDT, Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
+>Current minimum required version of binutils is 2=2E23,
+>which supports RDRAND and RDSEED instruction mnemonics=2E
+>
+>Replace the byte-wise specification of RDRAND and
+>RDSEED with these proper mnemonics=2E
+>
+>Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
+>CC: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
+>CC: Ingo Molnar <mingo@redhat=2Ecom>
+>CC: Thomas Gleixner <tglx@linutronix=2Ede>
+>---
+> arch/x86/include/asm/archrandom=2Eh | 26 ++++++++------------------
+> 1 file changed, 8 insertions(+), 18 deletions(-)
+>
+>diff --git a/arch/x86/include/asm/archrandom=2Eh
+>b/arch/x86/include/asm/archrandom=2Eh
+>index 7a4bb1bd4bdb=2E=2Eebc248e49549 100644
+>--- a/arch/x86/include/asm/archrandom=2Eh
+>+++ b/arch/x86/include/asm/archrandom=2Eh
+>@@ -15,16 +15,6 @@
+>=20
+> #define RDRAND_RETRY_LOOPS	10
+>=20
+>-#define RDRAND_INT	"=2Ebyte 0x0f,0xc7,0xf0"
+>-#define RDSEED_INT	"=2Ebyte 0x0f,0xc7,0xf8"
+>-#ifdef CONFIG_X86_64
+>-# define RDRAND_LONG	"=2Ebyte 0x48,0x0f,0xc7,0xf0"
+>-# define RDSEED_LONG	"=2Ebyte 0x48,0x0f,0xc7,0xf8"
+>-#else
+>-# define RDRAND_LONG	RDRAND_INT
+>-# define RDSEED_LONG	RDSEED_INT
+>-#endif
+>-
+> /* Unconditional execution of RDRAND and RDSEED */
+>=20
+> static inline bool __must_check rdrand_long(unsigned long *v)
+>@@ -32,9 +22,9 @@ static inline bool __must_check rdrand_long(unsigned
+>long *v)
+> 	bool ok;
+> 	unsigned int retry =3D RDRAND_RETRY_LOOPS;
+> 	do {
+>-		asm volatile(RDRAND_LONG
+>+		asm volatile("rdrand %[out]"
+> 			     CC_SET(c)
+>-			     : CC_OUT(c) (ok), "=3Da" (*v));
+>+			     : CC_OUT(c) (ok), [out] "=3Dr" (*v));
+> 		if (ok)
+> 			return true;
+> 	} while (--retry);
+>@@ -46,9 +36,9 @@ static inline bool __must_check rdrand_int(unsigned
+>int *v)
+> 	bool ok;
+> 	unsigned int retry =3D RDRAND_RETRY_LOOPS;
+> 	do {
+>-		asm volatile(RDRAND_INT
+>+		asm volatile("rdrand %[out]"
+> 			     CC_SET(c)
+>-			     : CC_OUT(c) (ok), "=3Da" (*v));
+>+			     : CC_OUT(c) (ok), [out] "=3Dr" (*v));
+> 		if (ok)
+> 			return true;
+> 	} while (--retry);
+>@@ -58,18 +48,18 @@ static inline bool __must_check rdrand_int(unsigned
+>int *v)
+> static inline bool __must_check rdseed_long(unsigned long *v)
+> {
+> 	bool ok;
+>-	asm volatile(RDSEED_LONG
+>+	asm volatile("rdseed %[out]"
+> 		     CC_SET(c)
+>-		     : CC_OUT(c) (ok), "=3Da" (*v));
+>+		     : CC_OUT(c) (ok), [out] "=3Dr" (*v));
+> 	return ok;
+> }
+>=20
+> static inline bool __must_check rdseed_int(unsigned int *v)
+> {
+> 	bool ok;
+>-	asm volatile(RDSEED_INT
+>+	asm volatile("rdseed %[out]"
+> 		     CC_SET(c)
+>-		     : CC_OUT(c) (ok), "=3Da" (*v));
+>+		     : CC_OUT(c) (ok), [out] "=3Dr" (*v));
+> 	return ok;
+> }
+>=20
 
-Many of the P8/P9 header pins can muxed to a gpio line.  The
-gpio-line-names describe which P8/P9 pin that line goes to and the
-default mux for that P8/P9 pin.  Some lines are not routed to the
-P8/P9 headers, but instead are dedicated to some functionality such as
-status LEDs.  The line name will indicate this.  Some line names are
-left empty as the corresponding AM3358 balls are not connected.
-
-The goal is to make it easier for a user viewing the output of gpioinfo
-to determine which P8/P9 pin is connected to a line.  The output of
-gpioinfo on a BeagleBone Black will now look like this:
-
-gpiochip0 - 32 lines:
-	line   0:   "ethernet"       unused   input  active-high
-	line   1:   "ethernet"       unused   input  active-high
-	line   2: "P9_22 spi0_sclk" unused input active-high
-	line   3: "P9_21 spi0_d0" unused input active-high
-	line   4: "P9_18 spi0_d1" unused input active-high
-	line   5: "P9_17 spi0_cs0" unused input active-high
-	line   6:    "sd card"         "cd"   input   active-low [used]
-	line   7: "P9_42A ecappwm0" unused input active-high
-	line   8: "P8_35 hdmi"       unused   input  active-high
-	line   9: "P8_33 hdmi"       unused   input  active-high
-	line  10: "P8_31 hdmi"       unused   input  active-high
-	line  11: "P8_32 hdmi"       unused   input  active-high
-	line  12: "P9_20 i2c2_sda" unused input active-high
-	line  13: "P9_19 i2c2_scl" unused input active-high
-	line  14: "P9_26 uart1_rxd" unused input active-high
-	line  15: "P9_24 uart1_txd" unused input active-high
-	line  16:   "ethernet"       unused   input  active-high
-	line  17:   "ethernet"       unused   input  active-high
-	line  18:        "usb"       unused   input  active-high
-	line  19:       "hdmi"       unused   input  active-high
-	line  20: "P9_41B gpio" unused input active-high
-	line  21:   "ethernet"       unused   input  active-high
-	line  22: "P8_19 ehrpwm2a" unused input active-high
-	line  23: "P8_13 ehrpwm2b" unused input active-high
-	line  24:      unnamed       unused   input  active-high
-	line  25:      unnamed       unused   input  active-high
-	line  26: "P8_14 gpio"       unused   input  active-high
-	line  27: "P8_17 gpio"       unused   input  active-high
-	line  28:   "ethernet"       unused   input  active-high
-	line  29:   "ethernet"       unused   input  active-high
-	line  30: "P9_11 uart4_rxd" unused input active-high
-	line  31: "P9_13 uart4_txd" unused input active-high
-gpiochip1 - 32 lines:
-	line   0: "P8_25 emmc"       unused   input  active-high
-	line   1:       "emmc"       unused   input  active-high
-	line   2:  "P8_5 emmc"       unused   input  active-high
-	line   3:  "P8_6 emmc"       unused   input  active-high
-	line   4: "P8_23 emmc"       unused   input  active-high
-	line   5: "P8_22 emmc"       unused   input  active-high
-	line   6:  "P8_3 emmc"       unused   input  active-high
-	line   7:  "P8_4 emmc"       unused   input  active-high
-	line   8:      unnamed       unused   input  active-high
-	line   9:      unnamed       unused   input  active-high
-	line  10:      unnamed       unused   input  active-high
-	line  11:      unnamed       unused   input  active-high
-	line  12: "P8_12 gpio"       unused   input  active-high
-	line  13: "P8_11 gpio"       unused   input  active-high
-	line  14: "P8_16 gpio"       unused   input  active-high
-	line  15: "P8_15 gpio"       unused   input  active-high
-	line  16: "P9_15A gpio" unused input active-high
-	line  17: "P9_23 gpio"       unused   input  active-high
-	line  18: "P9_14 ehrpwm1a" unused input active-high
-	line  19: "P9_16 ehrpwm1b" unused input active-high
-	line  20:       "emmc"       unused   input  active-high
-	line  21:   "usr0 led" "beaglebone:green:heart" output active-high [used]
-	line  22:   "usr1 led" "beaglebone:green:mmc0" output active-high [used]
-	line  23:   "usr2 led" "beaglebone:green:usr2" output active-high [used]
-	line  24:   "usr3 led" "beaglebone:green:usr3" output active-high [used]
-	line  25:       "hdmi"  "interrupt"   input  active-high [used]
-	line  26:        "usb"       unused   input  active-high
-	line  27: "hdmi audio"     "enable"  output  active-high [used]
-	line  28: "P9_12 gpio"       unused   input  active-high
-	line  29: "P8_26 gpio"       unused   input  active-high
-	line  30: "P8_21 emmc"       unused   input  active-high
-	line  31: "P8_20 emmc"       unused   input  active-high
-gpiochip2 - 32 lines:
-	line   0: "P9_15B gpio" unused input active-high
-	line   1: "P8_18 gpio"       unused   input  active-high
-	line   2:  "P8_7 gpio"       unused   input  active-high
-	line   3:  "P8_8 gpio"       unused   input  active-high
-	line   4: "P8_10 gpio"       unused   input  active-high
-	line   5:  "P8_9 gpio"       unused   input  active-high
-	line   6: "P8_45 hdmi"       unused   input  active-high
-	line   7: "P8_46 hdmi"       unused   input  active-high
-	line   8: "P8_43 hdmi"       unused   input  active-high
-	line   9: "P8_44 hdmi"       unused   input  active-high
-	line  10: "P8_41 hdmi"       unused   input  active-high
-	line  11: "P8_42 hdmi"       unused   input  active-high
-	line  12: "P8_39 hdmi"       unused   input  active-high
-	line  13: "P8_40 hdmi"       unused   input  active-high
-	line  14: "P8_37 hdmi"       unused   input  active-high
-	line  15: "P8_38 hdmi"       unused   input  active-high
-	line  16: "P8_36 hdmi"       unused   input  active-high
-	line  17: "P8_34 hdmi"       unused   input  active-high
-	line  18:   "ethernet"       unused   input  active-high
-	line  19:   "ethernet"       unused   input  active-high
-	line  20:   "ethernet"       unused   input  active-high
-	line  21:   "ethernet"       unused   input  active-high
-	line  22: "P8_27 hdmi"       unused   input  active-high
-	line  23: "P8_29 hdmi"       unused   input  active-high
-	line  24: "P8_28 hdmi"       unused   input  active-high
-	line  25: "P8_30 hdmi"       unused   input  active-high
-	line  26:       "emmc"       unused   input  active-high
-	line  27:       "emmc"       unused   input  active-high
-	line  28:       "emmc"       unused   input  active-high
-	line  29:       "emmc"       unused   input  active-high
-	line  30:       "emmc"       unused   input  active-high
-	line  31:       "emmc"       unused   input  active-high
-gpiochip3 - 32 lines:
-	line   0:   "ethernet"       unused   input  active-high
-	line   1:   "ethernet"       unused   input  active-high
-	line   2:   "ethernet"       unused   input  active-high
-	line   3:   "ethernet"       unused   input  active-high
-	line   4:   "ethernet"       unused   input  active-high
-	line   5:       "i2c0"       unused   input  active-high
-	line   6:       "i2c0"       unused   input  active-high
-	line   7:        "emu"       unused   input  active-high
-	line   8:        "emu"       unused   input  active-high
-	line   9:   "ethernet"       unused   input  active-high
-	line  10:   "ethernet"       unused   input  active-high
-	line  11:      unnamed       unused   input  active-high
-	line  12:      unnamed       unused   input  active-high
-	line  13:        "usb"       unused   input  active-high
-	line  14: "P9_31 spi1_sclk" unused input active-high
-	line  15: "P9_29 spi1_d0" unused input active-high
-	line  16: "P9_30 spi1_d1" unused input active-high
-	line  17: "P9_28 spi1_cs0" unused input active-high
-	line  18: "P9_42B ecappwm0" unused input active-high
-	line  19: "P9_27 gpio"       unused   input  active-high
-	line  20: "P9_41A gpio" unused input active-high
-	line  21: "P9_25 gpio"       unused   input  active-high
-	line  22:      unnamed       unused   input  active-high
-	line  23:      unnamed       unused   input  active-high
-	line  24:      unnamed       unused   input  active-high
-	line  25:      unnamed       unused   input  active-high
-	line  26:      unnamed       unused   input  active-high
-	line  27:      unnamed       unused   input  active-high
-	line  28:      unnamed       unused   input  active-high
-	line  29:      unnamed       unused   input  active-high
-	line  30:      unnamed       unused   input  active-high
-	line  31:      unnamed       unused   input  active-high
-
-[0] https://beagleboard.org/Support/bone101
-[1] https://beagleboard.org/capes
-
-Reviewed-by: Jason Kridner <jason@beagleboard.org>
-Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 6c9187bc0f17..defdf68edb58 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -397,3 +397,147 @@
- 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
- 	clock-names = "ext-clk", "int-clk";
- };
-+
-+&gpio0 {
-+	gpio-line-names =
-+		"ethernet",
-+		"ethernet",
-+		"P9_22 spi0_sclk",
-+		"P9_21 spi0_d0",
-+		"P9_18 spi0_d1",
-+		"P9_17 spi0_cs0",
-+		"sd card",
-+		"P9_42A ecappwm0",
-+		"P8_35 hdmi",
-+		"P8_33 hdmi",
-+		"P8_31 hdmi",
-+		"P8_32 hdmi",
-+		"P9_20 i2c2_sda",
-+		"P9_19 i2c2_scl",
-+		"P9_26 uart1_rxd",
-+		"P9_24 uart1_txd",
-+		"ethernet",
-+		"ethernet",
-+		"usb",
-+		"hdmi",
-+		"P9_41B gpio",
-+		"ethernet",
-+		"P8_19 ehrpwm2a",
-+		"P8_13 ehrpwm2b",
-+		"",
-+		"",
-+		"P8_14 gpio",
-+		"P8_17 gpio",
-+		"ethernet",
-+		"ethernet",
-+		"P9_11 uart4_rxd",
-+		"P9_13 uart4_txd";
-+};
-+
-+&gpio1 {
-+	gpio-line-names =
-+		"P8_25 emmc",
-+		"emmc",
-+		"P8_5 emmc",
-+		"P8_6 emmc",
-+		"P8_23 emmc",
-+		"P8_22 emmc",
-+		"P8_3 emmc",
-+		"P8_4 emmc",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"P8_12 gpio",
-+		"P8_11 gpio",
-+		"P8_16 gpio",
-+		"P8_15 gpio",
-+		"P9_15A gpio",
-+		"P9_23 gpio",
-+		"P9_14 ehrpwm1a",
-+		"P9_16 ehrpwm1b",
-+		"emmc",
-+		"usr0 led",
-+		"usr1 led",
-+		"usr2 led",
-+		"usr3 led",
-+		"hdmi",
-+		"usb",
-+		"hdmi audio",
-+		"P9_12 gpio",
-+		"P8_26 gpio",
-+		"P8_21 emmc",
-+		"P8_20 emmc";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"P9_15B gpio",
-+		"P8_18 gpio",
-+		"P8_7 gpio",
-+		"P8_8 gpio",
-+		"P8_10 gpio",
-+		"P8_9 gpio",
-+		"P8_45 hdmi",
-+		"P8_46 hdmi",
-+		"P8_43 hdmi",
-+		"P8_44 hdmi",
-+		"P8_41 hdmi",
-+		"P8_42 hdmi",
-+		"P8_39 hdmi",
-+		"P8_40 hdmi",
-+		"P8_37 hdmi",
-+		"P8_38 hdmi",
-+		"P8_36 hdmi",
-+		"P8_34 hdmi",
-+		"ethernet",
-+		"ethernet",
-+		"ethernet",
-+		"ethernet",
-+		"P8_27 hdmi",
-+		"P8_29 hdmi",
-+		"P8_28 hdmi",
-+		"P8_30 hdmi",
-+		"emmc",
-+		"emmc",
-+		"emmc",
-+		"emmc",
-+		"emmc",
-+		"emmc";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"ethernet",
-+		"ethernet",
-+		"ethernet",
-+		"ethernet",
-+		"ethernet",
-+		"i2c0",
-+		"i2c0",
-+		"emu",
-+		"emu",
-+		"ethernet",
-+		"ethernet",
-+		"",
-+		"",
-+		"usb",
-+		"P9_31 spi1_sclk",
-+		"P9_29 spi1_d0",
-+		"P9_30 spi1_d1",
-+		"P9_28 spi1_cs0",
-+		"P9_42B ecappwm0",
-+		"P9_27 gpio",
-+		"P9_41A gpio",
-+		"P9_25 gpio",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"",
-+		"";
-+};
--- 
-2.20.1
-
+Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
