@@ -2,286 +2,188 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14933C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF3E7208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC60207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwyyqTdT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3cc34Wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgEHImv (ORCPT
+        id S1726811AbgEHIob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:42:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60890 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726618AbgEHImt (ORCPT
+        Fri, 8 May 2020 04:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEHIoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:42:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588927367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f6TeMrGs7xjeCj9G607qVf2e66dWDywj8Qub6sAiaWA=;
-        b=hwyyqTdT3+OT8Vt/zwBsVdkwjZnxggrmy0FumX1khr2GJnMAlOoPmuW2UpsqUHUWquaWju
-        bZqIxpz9ROz0UMJe3OQkXfDDiPm2c4gNmafwOdkh6GEwwZ9iVGupVpUX+VNzTZkfyTe9Qk
-        8LCToU4sVOUPVRv9j73zfcpMrzOvCaA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-e2MKSisaOFSWnPAgNcUing-1; Fri, 08 May 2020 04:42:43 -0400
-X-MC-Unique: e2MKSisaOFSWnPAgNcUing-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C966107ACCA;
-        Fri,  8 May 2020 08:42:41 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-181.ams2.redhat.com [10.36.113.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54D1C5C1C5;
-        Fri,  8 May 2020 08:42:38 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        kexec@lists.infradead.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v4 4/4] device-dax: Add memory via add_memory_driver_managed()
-Date:   Fri,  8 May 2020 10:42:17 +0200
-Message-Id: <20200508084217.9160-5-david@redhat.com>
-In-Reply-To: <20200508084217.9160-1-david@redhat.com>
-References: <20200508084217.9160-1-david@redhat.com>
+        Fri, 8 May 2020 04:44:30 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CDAC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:44:30 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x10so441967plr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 01:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=915+QmVjKADgTrNjynlNsZzwO0kN0qHio8Yi40UhdHs=;
+        b=q3cc34Wk/hxCKxn3te8R8oTruWN9zYDe/NsB7qnilJBZ7vqfgzHHk7BedwhkqGvtXm
+         IbQ4r51kwoSpT9RD5c+5DtgY7wBd4MdjHbOBKsGntjv6DTAK/9U3Q2pzHSA1WmtEA8o2
+         wNX3FldEKlrgP3lwQY5iJ32w3/oMIWoA0a845hf8Cija+cqPgpaB2+okkcTzCZ4rW/IT
+         Lru8u09N6B/NL8/2afDpu0NnAbolB3uMAsHcXUe11D3yzl0WmevZyxiiL4CDYyb3OH8J
+         uVMbUt3WFyr3M/4Vm5ZSTWKSG2VcH+ABUW5+XJQyoyTMYQx2ZLAjgOSh8h9hsBvJ08s+
+         ccWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=915+QmVjKADgTrNjynlNsZzwO0kN0qHio8Yi40UhdHs=;
+        b=RSflOtsqnfbWvqodg52xIEO1L1Cd4ijsH9dcOybnZe+kZsfCErAmVzpPWk+jRdUuaK
+         YOvO7NCcO+MjfGU8Mnev9dpYowTVyic9zlNNx9vZb9a6iM4b+ngVINoOSh0FYj3JDnvZ
+         o9Le53WZSm1dITRY9DRu1/wZ2IvmVPZgKPMBfXsqlgE4KQ503+aG88RbD2cnHdsqJ8RH
+         GsLwykGvglhruoklCQ8xr9bs3gePAhGFiVz9u5qwvxuDz6gMreaJwNBUWYcSFhCGn/KI
+         F6Z8XAiDcETKSBuklufkiNNNvkw+jqptiBm1lYecJ81sLzf8G4hp95xvmn0SeRR05yL2
+         nPuQ==
+X-Gm-Message-State: AGi0PuazpFleS2Q4nbeZFg4cydJS3ByhEvCEoD/rVIokmb5V0giRo4GM
+        4DXViYejg2RoA4xZfdhH2wgru3JNbkw=
+X-Google-Smtp-Source: APiQypJm9P9hFI8hvKD9ynUPuoFrla7HCRuJFon7talvwRqDVolnoih7cvsiDbASXydoyO5s4xExVw==
+X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr5094842pjb.146.1588927469485;
+        Fri, 08 May 2020 01:44:29 -0700 (PDT)
+Received: from aaronlu-desktop ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id j26sm875560pgm.20.2020.05.08.01.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 01:44:28 -0700 (PDT)
+Date:   Fri, 8 May 2020 16:44:19 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH updated v2] sched/fair: core wide cfs task priority
+ comparison
+Message-ID: <20200508084419.GA120223@aaronlu-desktop>
+References: <20200414135624.GU20730@hirez.programming.kicks-ass.net>
+ <20200415033408.GA168322@ziqianlu-desktop.localdomain>
+ <20200415040741.GA169001@ziqianlu-desktop.localdomain>
+ <CANaguZAXsjD=X-bB7dvQZ3FSqLioiZU=YREHH_7JqiFsZCTxHA@mail.gmail.com>
+ <20200417094045.GA197704@ziqianlu-desktop.localdomain>
+ <20200420080759.GA224731@ziqianlu-desktop.localdomain>
+ <CANaguZDP3nyBdjLeeCZGoUoYk6Lf0HUv19N2Qxo4CpZfrjPZHA@mail.gmail.com>
+ <20200421025131.GA227300@aaronlu-desktop>
+ <20200424142443.GA263207@aaronlu-desktop>
+ <20200506143506.GH5298@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506143506.GH5298@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when adding memory, we create entries in /sys/firmware/memmap/
-as "System RAM". This will lead to kexec-tools to add that memory to the
-fixed-up initial memmap for a kexec kernel (loaded via kexec_load()). The
-memory will be considered initial System RAM by the kexec'd kernel and
-can no longer be reconfigured. This is not what happens during a real
-reboot.
+On Wed, May 06, 2020 at 04:35:06PM +0200, Peter Zijlstra wrote:
+> 
+> Sorry for being verbose; I've been procrastinating replying, and in
+> doing so the things I wanted to say kept growing.
+> 
+> On Fri, Apr 24, 2020 at 10:24:43PM +0800, Aaron Lu wrote:
+> 
+> > To make this work, the root level sched entities' vruntime of the two
+> > threads must be directly comparable. So one of the hyperthread's root
+> > cfs_rq's min_vruntime is chosen as the core wide one and all root level
+> > sched entities' vruntime is normalized against it.
+> 
+> > +/*
+> > + * This is called in stop machine context so no need to take the rq lock.
+> > + *
+> > + * Core scheduling is going to be enabled and the root level sched entities
+> > + * of both siblings will use cfs_rq->min_vruntime as the common cfs_rq
+> > + * min_vruntime, so it's necessary to normalize vruntime of existing root
+> > + * level sched entities in sibling_cfs_rq.
+> > + *
+> > + * Update of sibling_cfs_rq's min_vruntime isn't necessary as we will be
+> > + * only using cfs_rq->min_vruntime during the entire run of core scheduling.
+> > + */
+> > +void sched_core_normalize_se_vruntime(int cpu)
+> > +{
+> > +	struct cfs_rq *cfs_rq = &cpu_rq(cpu)->cfs;
+> > +	int i;
+> > +
+> > +	for_each_cpu(i, cpu_smt_mask(cpu)) {
+> > +		struct sched_entity *se, *next;
+> > +		struct cfs_rq *sibling_cfs_rq;
+> > +		s64 delta;
+> > +
+> > +		if (i == cpu)
+> > +			continue;
+> > +
+> > +		sibling_cfs_rq = &cpu_rq(i)->cfs;
+> > +		if (!sibling_cfs_rq->nr_running)
+> > +			continue;
+> > +
+> > +		delta = cfs_rq->min_vruntime - sibling_cfs_rq->min_vruntime;
+> > +		rbtree_postorder_for_each_entry_safe(se, next,
+> > +				&sibling_cfs_rq->tasks_timeline.rb_root,
+> > +				run_node) {
+> > +			se->vruntime += delta;
+> > +		}
+> > +	}
+> > +}
+> 
+> Aside from this being way to complicated for what it does -- you
+> could've saved the min_vruntime for each rq and compared them with
+> subtraction -- it is also terminally broken afaict.
+>
+> Consider any infeasible weight scenario. Take for instance two tasks,
+> each bound to their respective sibling, one with weight 1 and one with
+> weight 2. Then the lower weight task will run ahead of the higher weight
+> task without bound.
 
-Let's add our memory via add_memory_driver_managed() now, so we won't
-create entries in /sys/firmware/memmap/ and indicate the memory as
-"System RAM (kmem)" in /proc/iomem. This allows everybody (especially
-kexec-tools) to identify that this memory is special and has to be treated
-differently than ordinary (hotplugged) System RAM.
+I don't follow how this could happen. Even the lower weight task runs
+first, after some time, the higher weight task will get its turn and
+from then on, the higher weight task will get more chance to run(due to
+its higher weight and thus, slower accumulation of vruntime).
 
-Before configuring the namespace:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-33fffffff : namespace0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+We used to have the following patch as a standalone one in v4:
+sched/fair : Wake up forced idle siblings if needed
+https://lore.kernel.org/lkml/cover.1572437285.git.vpillai@digitalocean.com/T/#md22d25d0e2932d059013e9b56600d8a847b02a13
+Which originates from:
+https://lore.kernel.org/lkml/20190725143344.GD992@aaronlu/
 
-After configuring the namespace:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+And in this series, it seems to be merged in:
+[RFC PATCH 07/13] sched: Add core wide task selection and scheduling
+https://lore.kernel.org/lkml/e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com/
 
-After loading kmem before this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  150000000-33fffffff : dax0.0
-	    150000000-33fffffff : System RAM
-	3280000000-32ffffffff : PCI Bus 0000:00
+My local test shows that when two cgroup's share are both set to 1024
+and each bound to one sibling of a core, start a cpu intensive task in
+each cgroup, then the cpu intensive task will each consume 50% cpu. When
+one cgroup's share set to 512, it will consume about 33% while the other
+consumes 67%, as expected.
 
-After loading kmem after this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  150000000-33fffffff : dax0.0
-	    150000000-33fffffff : System RAM (kmem)
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-After a proper reboot:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-Within the kexec kernel before this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  150000000-33fffffff : System RAM
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-Within the kexec kernel after this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-/sys/firmware/memmap/ before this change:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-	0000000150000000-0000000340000000 (System RAM)
-
-/sys/firmware/memmap/ after a proper reboot:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-/sys/firmware/memmap/ after this change:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-kexec-tools already seem to basically ignore any System RAM that's not
-on top level when searching for areas to place kexec images - but also
-for determining crash areas to dump via kdump. Changing the resource name
-won't have an impact.
-
-Handle unloading of the driver after memory hotremove failed properly, by
-duplicating the string if necessary.
-
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/dax/dax-private.h |  1 +
- drivers/dax/kmem.c        | 28 ++++++++++++++++++++++++++--
- 2 files changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index 3107ce80e809..16850d5388ab 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -44,6 +44,7 @@ struct dax_region {
-  * @dev - device core
-  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-  * @dax_mem_res: physical address range of hotadded DAX memory
-+ * @dax_mem_name: name for hotadded DAX memory via add_memory_driver_managed()
-  */
- struct dev_dax {
- 	struct dax_region *region;
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 1e678bdf5aed..275aa5f87399 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -14,6 +14,11 @@
- #include "dax-private.h"
- #include "bus.h"
- 
-+/* Memory resource name used for add_memory_driver_managed(). */
-+static const char *kmem_name;
-+/* Set if any memory will remain added when the driver will be unloaded. */
-+static bool any_hotremove_failed;
-+
- int dev_dax_kmem_probe(struct device *dev)
- {
- 	struct dev_dax *dev_dax = to_dev_dax(dev);
-@@ -70,7 +75,12 @@ int dev_dax_kmem_probe(struct device *dev)
- 	 */
- 	new_res->flags = IORESOURCE_SYSTEM_RAM;
- 
--	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
-+	/*
-+	 * Ensure that future kexec'd kernels will not treat this as RAM
-+	 * automatically.
-+	 */
-+	rc = add_memory_driver_managed(numa_node, new_res->start,
-+				       resource_size(new_res), kmem_name);
- 	if (rc) {
- 		release_resource(new_res);
- 		kfree(new_res);
-@@ -100,6 +110,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	 */
- 	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
- 	if (rc) {
-+		any_hotremove_failed = true;
- 		dev_err(dev,
- 			"DAX region %pR cannot be hotremoved until the next reboot\n",
- 			res);
-@@ -124,6 +135,7 @@ static int dev_dax_kmem_remove(struct device *dev)
- 	 * permanently pinned as reserved by the unreleased
- 	 * request_mem_region().
- 	 */
-+	any_hotremove_failed = true;
- 	return 0;
- }
- #endif /* CONFIG_MEMORY_HOTREMOVE */
-@@ -137,12 +149,24 @@ static struct dax_device_driver device_dax_kmem_driver = {
- 
- static int __init dax_kmem_init(void)
- {
--	return dax_driver_register(&device_dax_kmem_driver);
-+	int rc;
-+
-+	/* Resource name is permanently allocated if any hotremove fails. */
-+	kmem_name = kstrdup_const("System RAM (kmem)", GFP_KERNEL);
-+	if (!kmem_name)
-+		return -ENOMEM;
-+
-+	rc = dax_driver_register(&device_dax_kmem_driver);
-+	if (rc)
-+		kfree_const(kmem_name);
-+	return rc;
- }
- 
- static void __exit dax_kmem_exit(void)
- {
- 	dax_driver_unregister(&device_dax_kmem_driver);
-+	if (!any_hotremove_failed)
-+		kfree_const(kmem_name);
- }
- 
- MODULE_AUTHOR("Intel Corporation");
--- 
-2.25.4
-
+I think the current patch works fine when 2 differently tagged tasks are
+competing CPU, but when there are 3 tasks or more, things can get less
+fair.
