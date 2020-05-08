@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D171C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FAFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 726F1221F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B742496A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942052;
-	bh=h2Dov4v0MzbMEzmv1CmMyWTLr6lrUvqmv5WvQ2wsE7g=;
+	s=default; t=1588942056;
+	bh=YWuyGgbdAjxor5TtHYvnlQ5qaNPnByagaxDiHL2EUV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DrOHyPDMBsmN0IRXCZcRYFyx/C0NWNRZseRRqHGyImLeq4v2P5sWkMd+RnQ2W7EHe
-	 P113Ppj2kA65tZV7mPMlTnDHwaaifnyqTubeCQDkQfTmM0tfRxlvn7cR/hWt7O0038
-	 0zzSv48Wdj0LIAdjWVll2jqjDSUYUXRXzk6zml8M=
+	b=ltVxIxbNP4lYiu/1eAObtW/Q0OuSCcaO7jAx2QewTLny5znlJe4ma8FLQ349hQA0O
+	 aqja2GdnDEL56L1IF0AGH2ZrABvlP3uq1bywONA+Xu70gqkFcz2+Qq6yMRtagKoGyi
+	 sHdF6WyNaqcokXBvGR0hF2aBqRDLpGc/TSjzIY1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgEHMrb (ORCPT
+        id S1729559AbgEHMre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728910AbgEHMrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:23 -0400
+        id S1729184AbgEHMr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46762145D;
-        Fri,  8 May 2020 12:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1752221F7;
+        Fri,  8 May 2020 12:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942041;
-        bh=h2Dov4v0MzbMEzmv1CmMyWTLr6lrUvqmv5WvQ2wsE7g=;
+        s=default; t=1588942046;
+        bh=YWuyGgbdAjxor5TtHYvnlQ5qaNPnByagaxDiHL2EUV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dy+BdTKHG35h963S6qimYgIHqQB5j1J9Pcz7k+EVKmRjTBlfUMi+cauF28VFDQaMU
-         DxxD6l0FP6agG2rIDN3krl5lLgCkAoyug9BFrISpHE9WRo9sGWGeUbPr1hCXxEFJhm
-         vRvDQwwPdaO2TwlsJ+Og2rWJJPAQbiaoyz/3Aaoc=
+        b=NWrIY5yk76R+PjDe/M1p+jAYrIuXeF2a0Tt9eWCc89S3954/2zqq72v6YRjSzHNjC
+         XGwMO71y7OEtbsj+qP87usK5pdJs3eutWXWA7J0zSpzpRrpvz48DUfGnSD01jXhqi7
+         XiuCHjwBNz8bM3SERBTsvnGKzdI1GmFgah/E2yh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsa@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 233/312] net: vrf: Fix dst reference counting
-Date:   Fri,  8 May 2020 14:33:44 +0200
-Message-Id: <20200508123140.815999828@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kodanev <alexey.kodanev@oracle.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 235/312] vti6: fix input path
+Date:   Fri,  8 May 2020 14:33:46 +0200
+Message-Id: <20200508123140.949604399@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,392 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsa@cumulusnetworks.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit 9ab179d83b4e31ea277a123492e419067c2f129a upstream.
+commit 63c43787d35e45562a6b5927e2edc8f4783d95b8 upstream.
 
-Vivek reported a kernel exception deleting a VRF with an active
-connection through it. The root cause is that the socket has a cached
-reference to a dst that is destroyed. Converting the dst_destroy to
-dst_release and letting proper reference counting kick in does not
-work as the dst has a reference to the device which needs to be released
-as well.
+Since commit 1625f4529957, vti6 is broken, all input packets are dropped
+(LINUX_MIB_XFRMINNOSTATES is incremented).
 
-I talked to Hannes about this at netdev and he pointed out the ipv4 and
-ipv6 dst handling has dst_ifdown for just this scenario. Rather than
-continuing with the reinvented dst wheel in VRF just remove it and
-leverage the ipv4 and ipv6 versions.
+XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 is set by vti6_rcv() before calling
+xfrm6_rcv()/xfrm6_rcv_spi(), thus we cannot set to NULL that value in
+xfrm6_rcv_spi().
 
-Fixes: 193125dbd8eb2 ("net: Introduce VRF device driver")
-Fixes: 35402e3136634 ("net: Add IPv6 support to VRF device")
+A new function xfrm6_rcv_tnl() that enables to pass a value to
+xfrm6_rcv_spi() is added, so that xfrm6_rcv() is not touched (this function
+is used in several handlers).
 
-Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+CC: Alexey Kodanev <alexey.kodanev@oracle.com>
+Fixes: 1625f4529957 ("net/xfrm_input: fix possible NULL deref of tunnel.ip6->parms.i_key")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/vrf.c       |  177 ++++--------------------------------------------
- include/net/ip6_route.h |    3 
- include/net/route.h     |    3 
- net/ipv4/route.c        |    7 +
- net/ipv6/route.c        |    7 +
- 5 files changed, 30 insertions(+), 167 deletions(-)
+ include/net/xfrm.h      |    4 +++-
+ net/ipv6/ip6_vti.c      |    4 +---
+ net/ipv6/xfrm6_input.c  |   16 +++++++++++-----
+ net/ipv6/xfrm6_tunnel.c |    2 +-
+ 4 files changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -71,41 +71,6 @@ struct pcpu_dstats {
- 	struct u64_stats_sync	syncp;
- };
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1551,8 +1551,10 @@ int xfrm4_tunnel_deregister(struct xfrm_
+ void xfrm4_local_error(struct sk_buff *skb, u32 mtu);
+ int xfrm6_extract_header(struct sk_buff *skb);
+ int xfrm6_extract_input(struct xfrm_state *x, struct sk_buff *skb);
+-int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi);
++int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi,
++		  struct ip6_tnl *t);
+ int xfrm6_transport_finish(struct sk_buff *skb, int async);
++int xfrm6_rcv_tnl(struct sk_buff *skb, struct ip6_tnl *t);
+ int xfrm6_rcv(struct sk_buff *skb);
+ int xfrm6_input_addr(struct sk_buff *skb, xfrm_address_t *daddr,
+ 		     xfrm_address_t *saddr, u8 proto);
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -324,11 +324,9 @@ static int vti6_rcv(struct sk_buff *skb)
+ 			goto discard;
+ 		}
  
--static struct dst_entry *vrf_ip_check(struct dst_entry *dst, u32 cookie)
--{
--	return dst;
--}
+-		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = t;
 -
--static int vrf_ip_local_out(struct net *net, struct sock *sk, struct sk_buff *skb)
--{
--	return ip_local_out(net, sk, skb);
--}
--
--static unsigned int vrf_v4_mtu(const struct dst_entry *dst)
--{
--	/* TO-DO: return max ethernet size? */
--	return dst->dev->mtu;
--}
--
--static void vrf_dst_destroy(struct dst_entry *dst)
--{
--	/* our dst lives forever - or until the device is closed */
--}
--
--static unsigned int vrf_default_advmss(const struct dst_entry *dst)
--{
--	return 65535 - 40;
--}
--
--static struct dst_ops vrf_dst_ops = {
--	.family		= AF_INET,
--	.local_out	= vrf_ip_local_out,
--	.check		= vrf_ip_check,
--	.mtu		= vrf_v4_mtu,
--	.destroy	= vrf_dst_destroy,
--	.default_advmss	= vrf_default_advmss,
--};
--
- /* neighbor handling is done with actual device; do not want
-  * to flip skb->dev for those ndisc packets. This really fails
-  * for multiple next protocols (e.g., NEXTHDR_HOP). But it is
-@@ -363,46 +328,6 @@ static netdev_tx_t vrf_xmit(struct sk_bu
- }
+ 		rcu_read_unlock();
  
- #if IS_ENABLED(CONFIG_IPV6)
--static struct dst_entry *vrf_ip6_check(struct dst_entry *dst, u32 cookie)
--{
--	return dst;
--}
--
--static struct dst_ops vrf_dst_ops6 = {
--	.family		= AF_INET6,
--	.local_out	= ip6_local_out,
--	.check		= vrf_ip6_check,
--	.mtu		= vrf_v4_mtu,
--	.destroy	= vrf_dst_destroy,
--	.default_advmss	= vrf_default_advmss,
--};
--
--static int init_dst_ops6_kmem_cachep(void)
--{
--	vrf_dst_ops6.kmem_cachep = kmem_cache_create("vrf_ip6_dst_cache",
--						     sizeof(struct rt6_info),
--						     0,
--						     SLAB_HWCACHE_ALIGN,
--						     NULL);
--
--	if (!vrf_dst_ops6.kmem_cachep)
--		return -ENOMEM;
--
--	return 0;
--}
--
--static void free_dst_ops6_kmem_cachep(void)
--{
--	kmem_cache_destroy(vrf_dst_ops6.kmem_cachep);
--}
--
--static int vrf_input6(struct sk_buff *skb)
--{
--	skb->dev->stats.rx_errors++;
--	kfree_skb(skb);
--	return 0;
--}
--
- /* modelled after ip6_finish_output2 */
- static int vrf_finish_output6(struct net *net, struct sock *sk,
- 			      struct sk_buff *skb)
-@@ -445,67 +370,34 @@ static int vrf_output6(struct net *net,
- 			    !(IP6CB(skb)->flags & IP6SKB_REROUTED));
- }
- 
--static void vrf_rt6_destroy(struct net_vrf *vrf)
-+static void vrf_rt6_release(struct net_vrf *vrf)
- {
--	dst_destroy(&vrf->rt6->dst);
--	free_percpu(vrf->rt6->rt6i_pcpu);
-+	dst_release(&vrf->rt6->dst);
- 	vrf->rt6 = NULL;
- }
- 
- static int vrf_rt6_create(struct net_device *dev)
- {
- 	struct net_vrf *vrf = netdev_priv(dev);
--	struct dst_entry *dst;
-+	struct net *net = dev_net(dev);
- 	struct rt6_info *rt6;
--	int cpu;
- 	int rc = -ENOMEM;
- 
--	rt6 = dst_alloc(&vrf_dst_ops6, dev, 0,
--			DST_OBSOLETE_NONE,
--			(DST_HOST | DST_NOPOLICY | DST_NOXFRM));
-+	rt6 = ip6_dst_alloc(net, dev,
-+			    DST_HOST | DST_NOPOLICY | DST_NOXFRM | DST_NOCACHE);
- 	if (!rt6)
- 		goto out;
- 
--	dst = &rt6->dst;
--
--	rt6->rt6i_pcpu = alloc_percpu_gfp(struct rt6_info *, GFP_KERNEL);
--	if (!rt6->rt6i_pcpu) {
--		dst_destroy(dst);
--		goto out;
--	}
--	for_each_possible_cpu(cpu) {
--		struct rt6_info **p = per_cpu_ptr(rt6->rt6i_pcpu, cpu);
--		*p =  NULL;
--	}
--
--	memset(dst + 1, 0, sizeof(*rt6) - sizeof(*dst));
--
--	INIT_LIST_HEAD(&rt6->rt6i_siblings);
--	INIT_LIST_HEAD(&rt6->rt6i_uncached);
--
--	rt6->dst.input	= vrf_input6;
- 	rt6->dst.output	= vrf_output6;
--
--	rt6->rt6i_table = fib6_get_table(dev_net(dev), vrf->tb_id);
--
--	atomic_set(&rt6->dst.__refcnt, 2);
--
-+	rt6->rt6i_table = fib6_get_table(net, vrf->tb_id);
-+	dst_hold(&rt6->dst);
- 	vrf->rt6 = rt6;
- 	rc = 0;
- out:
- 	return rc;
- }
- #else
--static int init_dst_ops6_kmem_cachep(void)
--{
--	return 0;
--}
--
--static void free_dst_ops6_kmem_cachep(void)
--{
--}
--
--static void vrf_rt6_destroy(struct net_vrf *vrf)
-+static void vrf_rt6_release(struct net_vrf *vrf)
- {
- }
- 
-@@ -577,11 +469,11 @@ static int vrf_output(struct net *net, s
- 			    !(IPCB(skb)->flags & IPSKB_REROUTED));
- }
- 
--static void vrf_rtable_destroy(struct net_vrf *vrf)
-+static void vrf_rtable_release(struct net_vrf *vrf)
- {
- 	struct dst_entry *dst = (struct dst_entry *)vrf->rth;
- 
--	dst_destroy(dst);
-+	dst_release(dst);
- 	vrf->rth = NULL;
- }
- 
-@@ -590,22 +482,10 @@ static struct rtable *vrf_rtable_create(
- 	struct net_vrf *vrf = netdev_priv(dev);
- 	struct rtable *rth;
- 
--	rth = dst_alloc(&vrf_dst_ops, dev, 2,
--			DST_OBSOLETE_NONE,
--			(DST_HOST | DST_NOPOLICY | DST_NOXFRM));
-+	rth = rt_dst_alloc(dev, 0, RTN_UNICAST, 1, 1, 0);
- 	if (rth) {
- 		rth->dst.output	= vrf_output;
--		rth->rt_genid	= rt_genid_ipv4(dev_net(dev));
--		rth->rt_flags	= 0;
--		rth->rt_type	= RTN_UNICAST;
--		rth->rt_is_input = 0;
--		rth->rt_iif	= 0;
--		rth->rt_pmtu	= 0;
--		rth->rt_gateway	= 0;
--		rth->rt_uses_gateway = 0;
- 		rth->rt_table_id = vrf->tb_id;
--		INIT_LIST_HEAD(&rth->rt_uncached);
--		rth->rt_uncached_list = NULL;
+-		return xfrm6_rcv(skb);
++		return xfrm6_rcv_tnl(skb, t);
  	}
+ 	rcu_read_unlock();
+ 	return -EINVAL;
+--- a/net/ipv6/xfrm6_input.c
++++ b/net/ipv6/xfrm6_input.c
+@@ -21,9 +21,10 @@ int xfrm6_extract_input(struct xfrm_stat
+ 	return xfrm6_extract_header(skb);
+ }
  
- 	return rth;
-@@ -739,8 +619,8 @@ static void vrf_dev_uninit(struct net_de
- //	struct list_head *head = &queue->all_slaves;
- //	struct slave *slave, *next;
- 
--	vrf_rtable_destroy(vrf);
--	vrf_rt6_destroy(vrf);
-+	vrf_rtable_release(vrf);
-+	vrf_rt6_release(vrf);
- 
- //	list_for_each_entry_safe(slave, next, head, list)
- //		vrf_del_slave(dev, slave->dev);
-@@ -772,7 +652,7 @@ static int vrf_dev_init(struct net_devic
- 	return 0;
- 
- out_rth:
--	vrf_rtable_destroy(vrf);
-+	vrf_rtable_release(vrf);
- out_stats:
- 	free_percpu(dev->dstats);
- 	dev->dstats = NULL;
-@@ -805,7 +685,7 @@ static struct rtable *vrf_get_rtable(con
- 		struct net_vrf *vrf = netdev_priv(dev);
- 
- 		rth = vrf->rth;
--		atomic_inc(&rth->dst.__refcnt);
-+		dst_hold(&rth->dst);
- 	}
- 
- 	return rth;
-@@ -856,7 +736,7 @@ static struct dst_entry *vrf_get_rt6_dst
- 		struct net_vrf *vrf = netdev_priv(dev);
- 
- 		rt = vrf->rt6;
--		atomic_inc(&rt->dst.__refcnt);
-+		dst_hold(&rt->dst);
- 	}
- 
- 	return (struct dst_entry *)rt;
-@@ -1003,19 +883,6 @@ static int __init vrf_init_module(void)
+-int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi)
++int xfrm6_rcv_spi(struct sk_buff *skb, int nexthdr, __be32 spi,
++		  struct ip6_tnl *t)
  {
- 	int rc;
- 
--	vrf_dst_ops.kmem_cachep =
--		kmem_cache_create("vrf_ip_dst_cache",
--				  sizeof(struct rtable), 0,
--				  SLAB_HWCACHE_ALIGN,
--				  NULL);
--
--	if (!vrf_dst_ops.kmem_cachep)
--		return -ENOMEM;
--
--	rc = init_dst_ops6_kmem_cachep();
--	if (rc != 0)
--		goto error2;
--
- 	register_netdevice_notifier(&vrf_notifier_block);
- 
- 	rc = rtnl_link_register(&vrf_link_ops);
-@@ -1026,22 +893,10 @@ static int __init vrf_init_module(void)
- 
- error:
- 	unregister_netdevice_notifier(&vrf_notifier_block);
--	free_dst_ops6_kmem_cachep();
--error2:
--	kmem_cache_destroy(vrf_dst_ops.kmem_cachep);
- 	return rc;
+-	XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = NULL;
++	XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip6 = t;
+ 	XFRM_SPI_SKB_CB(skb)->family = AF_INET6;
+ 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct ipv6hdr, daddr);
+ 	return xfrm_input(skb, nexthdr, spi, 0);
+@@ -49,13 +50,18 @@ int xfrm6_transport_finish(struct sk_buf
+ 	return -1;
  }
  
--static void __exit vrf_cleanup_module(void)
--{
--	rtnl_link_unregister(&vrf_link_ops);
--	unregister_netdevice_notifier(&vrf_notifier_block);
--	kmem_cache_destroy(vrf_dst_ops.kmem_cachep);
--	free_dst_ops6_kmem_cachep();
--}
--
- module_init(vrf_init_module);
--module_exit(vrf_cleanup_module);
- MODULE_AUTHOR("Shrijeet Mukherjee, David Ahern");
- MODULE_DESCRIPTION("Device driver to instantiate VRF domains");
- MODULE_LICENSE("GPL");
---- a/include/net/ip6_route.h
-+++ b/include/net/ip6_route.h
-@@ -103,6 +103,9 @@ void fib6_force_start_gc(struct net *net
- struct rt6_info *addrconf_dst_alloc(struct inet6_dev *idev,
- 				    const struct in6_addr *addr, bool anycast);
- 
-+struct rt6_info *ip6_dst_alloc(struct net *net, struct net_device *dev,
-+			       int flags);
-+
- /*
-  *	support functions for ND
-  *
---- a/include/net/route.h
-+++ b/include/net/route.h
-@@ -210,6 +210,9 @@ unsigned int inet_addr_type_dev_table(st
- void ip_rt_multicast_event(struct in_device *);
- int ip_rt_ioctl(struct net *, unsigned int cmd, void __user *arg);
- void ip_rt_get_source(u8 *src, struct sk_buff *skb, struct rtable *rt);
-+struct rtable *rt_dst_alloc(struct net_device *dev,
-+			     unsigned int flags, u16 type,
-+			     bool nopolicy, bool noxfrm, bool will_cache);
- 
- struct in_ifaddr;
- void fib_add_ifaddr(struct in_ifaddr *);
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1500,9 +1500,9 @@ static void rt_set_nexthop(struct rtable
- #endif
- }
- 
--static struct rtable *rt_dst_alloc(struct net_device *dev,
--				   unsigned int flags, u16 type,
--				   bool nopolicy, bool noxfrm, bool will_cache)
-+struct rtable *rt_dst_alloc(struct net_device *dev,
-+			    unsigned int flags, u16 type,
-+			    bool nopolicy, bool noxfrm, bool will_cache)
+-int xfrm6_rcv(struct sk_buff *skb)
++int xfrm6_rcv_tnl(struct sk_buff *skb, struct ip6_tnl *t)
  {
- 	struct rtable *rt;
- 
-@@ -1531,6 +1531,7 @@ static struct rtable *rt_dst_alloc(struc
- 
- 	return rt;
+ 	return xfrm6_rcv_spi(skb, skb_network_header(skb)[IP6CB(skb)->nhoff],
+-			     0);
++			     0, t);
  }
-+EXPORT_SYMBOL(rt_dst_alloc);
+-EXPORT_SYMBOL(xfrm6_rcv);
++EXPORT_SYMBOL(xfrm6_rcv_tnl);
  
- /* called in rcu_read_lock() section */
- static int ip_route_input_mc(struct sk_buff *skb, __be32 daddr, __be32 saddr,
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -339,9 +339,9 @@ static struct rt6_info *__ip6_dst_alloc(
- 	return rt;
- }
- 
--static struct rt6_info *ip6_dst_alloc(struct net *net,
--				      struct net_device *dev,
--				      int flags)
-+struct rt6_info *ip6_dst_alloc(struct net *net,
-+			       struct net_device *dev,
-+			       int flags)
++int xfrm6_rcv(struct sk_buff *skb)
++{
++	return xfrm6_rcv_tnl(skb, NULL);
++}
++EXPORT_SYMBOL(xfrm6_rcv);
+ int xfrm6_input_addr(struct sk_buff *skb, xfrm_address_t *daddr,
+ 		     xfrm_address_t *saddr, u8 proto)
  {
- 	struct rt6_info *rt = __ip6_dst_alloc(net, dev, flags);
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -239,7 +239,7 @@ static int xfrm6_tunnel_rcv(struct sk_bu
+ 	__be32 spi;
  
-@@ -365,6 +365,7 @@ static struct rt6_info *ip6_dst_alloc(st
- 
- 	return rt;
+ 	spi = xfrm6_tunnel_spi_lookup(net, (const xfrm_address_t *)&iph->saddr);
+-	return xfrm6_rcv_spi(skb, IPPROTO_IPV6, spi);
++	return xfrm6_rcv_spi(skb, IPPROTO_IPV6, spi, NULL);
  }
-+EXPORT_SYMBOL(ip6_dst_alloc);
  
- static void ip6_dst_destroy(struct dst_entry *dst)
- {
+ static int xfrm6_tunnel_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
 
 
