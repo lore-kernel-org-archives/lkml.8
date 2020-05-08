@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E310C54E4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9120C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46ADC218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49DF20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943825;
-	bh=zleLaBM0XPingcVsYTc+5kLlHBiQnOAVwWkAMGN0/Pw=;
+	s=default; t=1588943829;
+	bh=irPrTDwb1kvQaEoK/vdNjVAPtwRhIg9KA8FpipZ/8Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJHM8TZFbUNkYQR1O/E0xNhOPEd51T88EkJxmMmF31NYtJzd2iyfhquBlDkAFoymG
-	 8H6HAglg6EgnVxPGgm+DW59A7sBDzp6Nwv8lHujBQOO8MUNSuR34TrUW7/qEdRkSCC
-	 qWnHIlFs3dRR8WqgR1RJVTbcVkpkAAYqqIYZiljM=
+	b=Yqbp4cxcmWTpVbb9R20BkAiQZDnlgA1Sfz6ZBGRcZgxEFbDXueAK2BuHkjhFPBdxT
+	 xk5JyYwbSKKGP5o6xekAodcqGySPTFZaOBccY1BfamAja5E4YW5cDe3n1y/4cD7BJ6
+	 GXxDYZuUtw7i1QGHquP8MnDLfH7jI5Pe/PodtN3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEHMoX (ORCPT
+        id S1728632AbgEHNRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:44:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgEHMoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:44:12 -0400
+        id S1729188AbgEHMoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:44:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD5B206B8;
-        Fri,  8 May 2020 12:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC132145D;
+        Fri,  8 May 2020 12:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941852;
-        bh=zleLaBM0XPingcVsYTc+5kLlHBiQnOAVwWkAMGN0/Pw=;
+        s=default; t=1588941860;
+        bh=irPrTDwb1kvQaEoK/vdNjVAPtwRhIg9KA8FpipZ/8Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qy3BiNyv5icMfm6+daafLmlETh3dyntaxnmAbMuFWtlZWx1wm+ELGzmA9B8ELwEz/
-         QWi/B2z+2CR+84vFyOhVPbO9iv7TfHZiqsWZGUCAyXhjeelLJtKOnlXhZp0CbvbXB/
-         Y3bQf4Kj0mSLdL33rGFdRHx65HwxqmqTscIp6KVE=
+        b=wsWZVHypTxLv5BRhADsWSvCqmw3ABwbeeb2Alud7wZ3be4YrUfS90YbTCBIIZx2v8
+         ptPCFaQoZaFZGtaLcoBdiVOq7cApZxaFmX7degjXfnw7f7F3SqlqHAlxFtpS7rwmP7
+         qXPgSJdOhSj9U9MlSv2TQPf7uaii87Eq1eHd2+Fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liping Zhang <zlpnobody@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.4 199/312] netfilter: nf_tables: destroy the set if fail to add transaction
-Date:   Fri,  8 May 2020 14:33:10 +0200
-Message-Id: <20200508123138.434155611@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Gabriel Fernandez <gabriel.fernandez@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 4.4 202/312] clk: st: avoid uninitialized variable use
+Date:   Fri,  8 May 2020 14:33:13 +0200
+Message-Id: <20200508123138.639262427@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -59,39 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liping Zhang <zlpnobody@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit c17c3cdff10b9f59ef1244a14604f10949f17117 upstream.
+commit 2dd52d7f6f9d9d03a82a68040ac3d221dd79af94 upstream.
 
-When the memory is exhausted, then we will fail to add the NFT_MSG_NEWSET
-transaction. In such case, we should destroy the set before we free it.
+quadfs_pll_fs660c32_round_rate prints a few structure members
+that are never initialized, and also doesn't print the only one
+it cares about. We get a gcc warning about the ones that
+are printed:
 
-Fixes: 958bee14d071 ("netfilter: nf_tables: use new transaction infrastructure to handle sets")
-Signed-off-by: Liping Zhang <zlpnobody@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+clk/st/clkgen-fsyn.c:560:93: warning: 'params.sdiv' may be used uninitialized in this function
+clk/st/clkgen-fsyn.c:560:93: warning: 'params.mdiv' may be used uninitialized in this function
+clk/st/clkgen-fsyn.c:560:93: warning: 'params.pe' may be used uninitialized in this function
+clk/st/clkgen-fsyn.c:560:93: warning: 'params.nsdiv' may be used uninitialized in this function
+
+This changes the code to no longer print uninitialized data, and
+for good measure it also prints the ndiv member that is being
+set.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 5f7aa9071e93 ("clk: st: Support for QUADFS inside ClockGenB/C/D/E/F")
+Acked-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/st/clkgen-fsyn.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2849,12 +2849,14 @@ static int nf_tables_newset(struct net *
- 
- 	err = nft_trans_set_add(&ctx, NFT_MSG_NEWSET, set);
- 	if (err < 0)
--		goto err2;
-+		goto err3;
- 
- 	list_add_tail_rcu(&set->list, &table->sets);
- 	table->use++;
+--- a/drivers/clk/st/clkgen-fsyn.c
++++ b/drivers/clk/st/clkgen-fsyn.c
+@@ -549,19 +549,20 @@ static int clk_fs660c32_vco_get_params(u
  	return 0;
+ }
  
-+err3:
-+	ops->destroy(set);
- err2:
- 	kfree(set);
- err1:
+-static long quadfs_pll_fs660c32_round_rate(struct clk_hw *hw, unsigned long rate
+-		, unsigned long *prate)
++static long quadfs_pll_fs660c32_round_rate(struct clk_hw *hw,
++					   unsigned long rate,
++					   unsigned long *prate)
+ {
+ 	struct stm_fs params;
+ 
+-	if (!clk_fs660c32_vco_get_params(*prate, rate, &params))
+-		clk_fs660c32_vco_get_rate(*prate, &params, &rate);
++	if (clk_fs660c32_vco_get_params(*prate, rate, &params))
++		return rate;
+ 
+-	pr_debug("%s: %s new rate %ld [sdiv=0x%x,md=0x%x,pe=0x%x,nsdiv3=%u]\n",
++	clk_fs660c32_vco_get_rate(*prate, &params, &rate);
++
++	pr_debug("%s: %s new rate %ld [ndiv=%u]\n",
+ 		 __func__, clk_hw_get_name(hw),
+-		 rate, (unsigned int)params.sdiv,
+-		 (unsigned int)params.mdiv,
+-		 (unsigned int)params.pe, (unsigned int)params.nsdiv);
++		 rate, (unsigned int)params.ndiv);
+ 
+ 	return rate;
+ }
 
 
